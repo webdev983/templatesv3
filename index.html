@@ -41,7 +41,37 @@
     <button  id="code-tree-add-tag-choose-component"> 🧩 component</button>
 </fieldset>
 
+<!-- menu confirm selected append/insert tags-->
+<fieldset id="code-tree-append-or-insert-approv-menu">
+  <legend><button id="code-tree-menu-cancel">❌</button></legend>    
+  <span>✅<span id="code-tree-amount-selected-for-append-or-insert">7</span> selected</span>  
+  <button id="code-tree-click-tag-insert-before-approve">&#x1F476; append child</button>
+  <button  id="code-tree-click-tag-append-child-approve">&#x2190; insert before</button>    
+</fieldset>
 
+<!--menu choose from tags tabble-->
+<fieldset>
+  <legend> <button id="code-tree-menu-cancel">❌</button></legend>
+  <h2>choose tag</h2>
+          <table id="tagsTable" class="tagsTable-style">
+            <thead>
+              <tr>
+                  <th><input type="text" id="searchTagName" placeholder="Search by Tag Name" onkeyup="filterTable(0)"></th>
+                  <th><input type="text" id="searchTagValue" placeholder="Search by Tag Value" onkeyup="filterTable(1)"></th>
+                  <th><input type="text" id="searchTagType" placeholder="Search by Tag Type" onkeyup="filterTable(2)"></th>
+                  <th><input type="text" id="searchTagComment" placeholder="Search by Tag Comment" onkeyup="filterTable(3)"></th>
+              </tr>
+              <tr>
+                  <th>Tag Name</th>
+                  <th>Tag Value</th>
+                  <th>Tag Type</th>
+                  <th>Tag Comment</th>
+              </tr>
+          </thead>
+          <tbody>
+          </tbody>
+          </table>
+</fieldset>
 
 
 <!--loading screen-->
@@ -83,3 +113,817 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 </script>
+
+<!-- tags table style-->
+<style>
+  .tagsTable-style th, .tagsTable-style td {
+    padding: 5px;
+    text-align: left;
+  }
+  .tagsTable-style tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  .tagsTable-style input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .tagsTable-style tr:hover {
+    cursor: pointer;
+    background-color: #ddd;
+  }
+  </style>
+
+
+<!-- tags table script-->
+  <script>          const tags = 
+  [
+{
+ "tagName": "txt",
+ "tagValue": "<txt></txt",
+ "TagComment": "Contains text content",
+ "TagType": "Custom"
+},
+{
+ "tagName": "doctype",
+ "tagValue": "<!DOCTYPE",
+ "TagComment": "Defines the document type",
+ "TagType": "Basic HTML"
+},
+{
+ "tagName": "html",
+ "tagValue": "<html></html",
+ "TagComment": "Defines an HTML document",
+ "TagType": "Basic HTML"
+},
+{
+ "tagName": "head",
+ "tagValue": "<head></head",
+ "TagComment": "Contains metadata/information for the document",
+ "TagType": "Basic HTML"
+},
+{
+ "tagName": "title",
+ "tagValue": "<title></title",
+ "TagComment": "Defines a title for the document",
+ "TagType": "Basic HTML"
+},
+{
+ "tagName": "body",
+ "tagValue": "<body></body",
+ "TagComment": "Defines the document's body",
+ "TagType": "Basic HTML"
+},
+{
+ "tagName": "h1",
+ "tagValue": "<h1></h1",
+ "TagComment": "Defines HTML headings",
+ "TagType": "Basic HTML"
+},
+{
+ "tagName": "h2",
+ "tagValue": "<h2></h2",
+ "TagComment": "Defines HTML headings",
+ "TagType": "Basic HTML"
+},
+{
+ "tagName": "h3",
+ "tagValue": "<h3></h3",
+ "TagComment": "Defines HTML headings",
+ "TagType": "Basic HTML"
+},
+{
+ "tagName": "h4",
+ "tagValue": "<h4></h4",
+ "TagComment": "Defines HTML headings",
+ "TagType": "Basic HTML"
+},
+{
+ "tagName": "h5",
+ "tagValue": "<h5></h5",
+ "TagComment": "Defines HTML headings",
+ "TagType": "Basic HTML"
+},
+{
+ "tagName": "h6",
+ "tagValue": "<h6></h6",
+ "TagComment": "Defines HTML headings",
+ "TagType": "Basic HTML"
+},
+{
+ "tagName": "p",
+ "tagValue": "<p></p",
+ "TagComment": "Defines a paragraph",
+ "TagType": "Basic HTML"
+},
+{
+ "tagName": "br",
+ "tagValue": "<br",
+ "TagComment": "Inserts a single line break",
+ "TagType": "Basic HTML"
+},
+{
+ "tagName": "hr",
+ "tagValue": "<hr",
+ "TagComment": "Defines a thematic change in the content",
+ "TagType": "Basic HTML"
+},
+{
+ "tagName": "!--...--",
+ "tagValue": "<!--...--",
+ "TagComment": "Defines a comment",
+ "TagType": "Basic HTML"
+},
+{
+ "tagName": "abbr",
+ "tagValue": "<abbr></abbr",
+ "TagComment": "Defines an abbreviation or an acronym",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "address",
+ "tagValue": "<address></address",
+ "TagComment": "Defines contact information for the author/owner of a document/article",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "b",
+ "tagValue": "<b></b",
+ "TagComment": "Defines bold text",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "bdi",
+ "tagValue": "<bdi></bdi",
+ "TagComment": "Isolates a part of text that might be formatted in a different direction from other text outside it",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "bdo",
+ "tagValue": "<bdo></bdo",
+ "TagComment": "Overrides the current text direction",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "blockquote",
+ "tagValue": "<blockquote></blockquote",
+ "TagComment": "Defines a section that is quoted from another source",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "cite",
+ "tagValue": "<cite></cite",
+ "TagComment": "Defines the title of a work",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "code",
+ "tagValue": "<code></code",
+ "TagComment": "Defines a piece of computer code",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "del",
+ "tagValue": "<del></del",
+ "TagComment": "Defines text that has been deleted from a document",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "dfn",
+ "tagValue": "<dfn></dfn",
+ "TagComment": "Specifies a term that is going to be defined within the content",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "em",
+ "tagValue": "<em></em",
+ "TagComment": "Defines emphasized text",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "i",
+ "tagValue": "<i></i",
+ "TagComment": "Defines a part of text in an alternate voice or mood",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "ins",
+ "tagValue": "<ins></ins",
+ "TagComment": "Defines a text that has been inserted into a document",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "kbd",
+ "tagValue": "<kbd></kbd",
+ "TagComment": "Defines keyboard input",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "mark",
+ "tagValue": "<mark></mark",
+ "TagComment": "Defines marked/highlighted text",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "meter",
+ "tagValue": "<meter></meter",
+ "TagComment": "Defines a scalar measurement within a known range (a gauge)",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "pre",
+ "tagValue": "<pre></pre",
+ "TagComment": "Defines preformatted text",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "progress",
+ "tagValue": "<progress></progress",
+ "TagComment": "Represents the progress of a task",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "q",
+ "tagValue": "<q></q",
+ "TagComment": "Defines a short quotation",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "rp",
+ "tagValue": "<rp></rp",
+ "TagComment": "Defines what to show in browsers that do not support ruby annotations",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "rt",
+ "tagValue": "<rt></rt",
+ "TagComment": "Defines an explanation/pronunciation of characters (for East Asian typography)",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "ruby",
+ "tagValue": "<ruby></ruby",
+ "TagComment": "Defines a ruby annotation (for East Asian typography)",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "s",
+ "tagValue": "<s></s",
+ "TagComment": "Defines text that is no longer correct",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "samp",
+ "tagValue": "<samp></samp",
+ "TagComment": "Defines sample output from a computer program",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "small",
+ "tagValue": "<small></small",
+ "TagComment": "Defines smaller text",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "strong",
+ "tagValue": "<strong></strong",
+ "TagComment": "Defines important text",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "sub",
+ "tagValue": "<sub></sub",
+ "TagComment": "Defines subscripted text",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "sup",
+ "tagValue": "<sup></sup",
+ "TagComment": "Defines superscripted text",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "template",
+ "tagValue": "<template></template",
+ "TagComment": "Defines a container for content that should be hidden when the page loads",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "time",
+ "tagValue": "<time></time",
+ "TagComment": "Defines a specific time (or datetime)",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "u",
+ "tagValue": "<u></u",
+ "TagComment": "Defines some text that is unarticulated and styled differently from normal text",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "var",
+ "tagValue": "<var></var",
+ "TagComment": "Defines a variable",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "wbr",
+ "tagValue": "<wbr",
+ "TagComment": "Defines a possible line-break",
+ "TagType": "Formatting"
+},
+{
+ "tagName": "form",
+ "tagValue": "<form></form",
+ "TagComment": "Defines an HTML form for user input",
+ "TagType": "Forms and Input"
+},
+{
+ "tagName": "input",
+ "tagValue": "<input",
+ "TagComment": "Defines an input control",
+ "TagType": "Forms and Input"
+},
+{
+ "tagName": "textarea",
+ "tagValue": "<textarea></textarea",
+ "TagComment": "Defines a multiline input control (text area)",
+ "TagType": "Forms and Input"
+},
+{
+ "tagName": "button",
+ "tagValue": "<button></button",
+ "TagComment": "Defines a clickable button",
+ "TagType": "Forms and Input"
+},
+{
+ "tagName": "select",
+ "tagValue": "<select></select",
+ "TagComment": "Defines a drop-down list",
+ "TagType": "Forms and Input"
+},
+{
+ "tagName": "optgroup",
+ "tagValue": "<optgroup></optgroup",
+ "TagComment": "Defines a group of related options in a drop-down list",
+ "TagType": "Forms and Input"
+},
+{
+ "tagName": "option",
+ "tagValue": "<option></option",
+ "TagComment": "Defines an option in a drop-down list",
+ "TagType": "Forms and Input"
+},
+{
+ "tagName": "label",
+ "tagValue": "<label></label",
+ "TagComment": "Defines a label for an <input> element",
+ "TagType": "Forms and Input"
+},
+{
+ "tagName": "fieldset",
+ "tagValue": "<fieldset></fieldset",
+ "TagComment": "Groups related elements in a form",
+ "TagType": "Forms and Input"
+},
+{
+ "tagName": "legend",
+ "tagValue": "<legend></legend",
+ "TagComment": "Defines a caption for a <fieldset> element",
+ "TagType": "Forms and Input"
+},
+{
+ "tagName": "datalist",
+ "tagValue": "<datalist></datalist",
+ "TagComment": "Specifies a list of pre-defined options for input controls",
+ "TagType": "Forms and Input"
+},
+{
+ "tagName": "output",
+ "tagValue": "<output></output",
+ "TagComment": "Defines the result of a calculation",
+ "TagType": "Forms and Input"
+},
+{
+ "tagName": "iframe",
+ "tagValue": "<iframe></iframe",
+ "TagComment": "Defines an inline frame",
+ "TagType": "Frames"
+},
+{
+ "tagName": "img",
+ "tagValue": "<img",
+ "TagComment": "Defines an image",
+ "TagType": "Images"
+},
+{
+ "tagName": "map",
+ "tagValue": "<map></map",
+ "TagComment": "Defines a client-side image map",
+ "TagType": "Images"
+},
+{
+ "tagName": "area",
+ "tagValue": "<area",
+ "TagComment": "Defines an area inside an image map",
+ "TagType": "Images"
+},
+{
+ "tagName": "canvas",
+ "tagValue": "<canvas></canvas",
+ "TagComment": "Used to draw graphics, on the fly, via scripting (usually JavaScript)",
+ "TagType": "Images"
+},
+{
+ "tagName": "figcaption",
+ "tagValue": "<figcaption></figcaption",
+ "TagComment": "Defines a caption for a <figure> element",
+ "TagType": "Images"
+},
+{
+ "tagName": "figure",
+ "tagValue": "<figure></figure",
+ "TagComment": "Specifies self-contained content",
+ "TagType": "Images"
+},
+{
+ "tagName": "picture",
+ "tagValue": "<picture></picture",
+ "TagComment": "Defines a container for multiple image resources",
+ "TagType": "Images"
+},
+{
+ "tagName": "svg",
+ "tagValue": "<svg></svg",
+ "TagComment": "Defines a container for SVG graphics",
+ "TagType": "Images"
+},
+{
+ "tagName": "audio",
+ "tagValue": "<audio></audio",
+ "TagComment": "Defines sound content",
+ "TagType": "Audio / Video"
+},
+{
+ "tagName": "source",
+ "tagValue": "<source",
+ "TagComment": "Defines multiple media resources for media elements (<video>, <audio> and <picture>)",
+ "TagType": "Audio / Video"
+},
+{
+ "tagName": "track",
+ "tagValue": "<track",
+ "TagComment": "Defines text tracks for media elements (<video> and <audio>)",
+ "TagType": "Audio / Video"
+},
+{
+ "tagName": "video",
+ "tagValue": "<video></video",
+ "TagComment": "Defines a video or movie",
+ "TagType": "Audio / Video"
+},
+{
+ "tagName": "a",
+ "tagValue": "<a></a",
+ "TagComment": "Defines a hyperlink",
+ "TagType": "Links"
+},
+{
+ "tagName": "link",
+ "tagValue": "<link",
+ "TagComment": "Defines the relationship between a document and an external resource (most used to link to style sheets)",
+ "TagType": "Links"
+},
+{
+ "tagName": "nav",
+ "tagValue": "<nav></nav",
+ "TagComment": "Defines navigation links",
+ "TagType": "Links"
+},
+{
+ "tagName": "menu",
+ "tagValue": "<menu></menu",
+ "TagComment": "Defines an alternative unordered list",
+ "TagType": "Lists"
+},
+{
+ "tagName": "ul",
+ "tagValue": "<ul></ul",
+ "TagComment": "Defines an unordered list",
+ "TagType": "Lists"
+},
+{
+ "tagName": "ol",
+ "tagValue": "<ol></ol",
+ "TagComment": "Defines an ordered list",
+ "TagType": "Lists"
+},
+{
+ "tagName": "li",
+ "tagValue": "<li></li",
+ "TagComment": "Defines a list item",
+ "TagType": "Lists"
+},
+{
+ "tagName": "dl",
+ "tagValue": "<dl></dl",
+ "TagComment": "Defines a description list",
+ "TagType": "Lists"
+},
+{
+ "tagName": "dt",
+ "tagValue": "<dt></dt",
+ "TagComment": "Defines a term/name in a description list",
+ "TagType": "Lists"
+},
+{
+ "tagName": "dd",
+ "tagValue": "<dd></dd",
+ "TagComment": "Defines a description of a term/name in a description list",
+ "TagType": "Lists"
+},
+{
+ "tagName": "table",
+ "tagValue": "<table></table",
+ "TagComment": "Defines a table",
+ "TagType": "Tables"
+},
+{
+ "tagName": "caption",
+ "tagValue": "<caption></caption",
+ "TagComment": "Defines a table caption",
+ "TagType": "Tables"
+},
+{
+ "tagName": "th",
+ "tagValue": "<th></th",
+ "TagComment": "Defines a header cell in a table",
+ "TagType": "Tables"
+},
+{
+ "tagName": "tr",
+ "tagValue": "<tr></tr",
+ "TagComment": "Defines a row in a table",
+ "TagType": "Tables"
+},
+{
+ "tagName": "td",
+ "tagValue": "<td></td",
+ "TagComment": "Defines a cell in a table",
+ "TagType": "Tables"
+},
+{
+ "tagName": "thead",
+ "tagValue": "<thead></thead",
+ "TagComment": "Groups the header content in a table",
+ "TagType": "Tables"
+},
+{
+ "tagName": "tbody",
+ "tagValue": "<tbody></tbody",
+ "TagComment": "Groups the body content in a table",
+ "TagType": "Tables"
+},
+{
+ "tagName": "tfoot",
+ "tagValue": "<tfoot></tfoot",
+ "TagComment": "Groups the footer content in a table",
+ "TagType": "Tables"
+},
+{
+ "tagName": "col",
+ "tagValue": "<col",
+ "TagComment": "Specifies column properties for each column within a <colgroup> element",
+ "TagType": "Tables"
+},
+{
+ "tagName": "colgroup",
+ "tagValue": "<colgroup></colgroup",
+ "TagComment": "Specifies a group of one or more columns in a table for formatting",
+ "TagType": "Tables"
+},
+{
+ "tagName": "style",
+ "tagValue": "<style></style",
+ "TagComment": "Defines style information for a document",
+ "TagType": "Styles and Semantics"
+},
+{
+ "tagName": "div",
+ "tagValue": "<div></div",
+ "TagComment": "Defines a section in a document",
+ "TagType": "Styles and Semantics"
+},
+{
+ "tagName": "span",
+ "tagValue": "<span></span",
+ "TagComment": "Defines a section in a document",
+ "TagType": "Styles and Semantics"
+},
+{
+ "tagName": "header",
+ "tagValue": "<header></header",
+ "TagComment": "Defines a header for a document or section",
+ "TagType": "Styles and Semantics"
+},
+{
+ "tagName": "hgroup",
+ "tagValue": "<hgroup></hgroup",
+ "TagComment": "Defines a header and related content",
+ "TagType": "Styles and Semantics"
+},
+{
+ "tagName": "footer",
+ "tagValue": "<footer></footer",
+ "TagComment": "Defines a footer for a document or section",
+ "TagType": "Styles and Semantics"
+},
+{
+ "tagName": "main",
+ "tagValue": "<main></main",
+ "TagComment": "Specifies the main content of a document",
+ "TagType": "Styles and Semantics"
+},
+{
+ "tagName": "section",
+ "tagValue": "<section></section",
+ "TagComment": "Defines a section in a document",
+ "TagType": "Styles and Semantics"
+},
+{
+ "tagName": "search",
+ "tagValue": "<search></search",
+ "TagComment": "Defines a search section",
+ "TagType": "Styles and Semantics"
+},
+{
+ "tagName": "article",
+ "tagValue": "<article></article",
+ "TagComment": "Defines an article",
+ "TagType": "Styles and Semantics"
+},
+{
+ "tagName": "aside",
+ "tagValue": "<aside></aside",
+ "TagComment": "Defines content aside from the page content",
+ "TagType": "Styles and Semantics"
+},
+{
+ "tagName": "details",
+ "tagValue": "<details></details",
+ "TagComment": "Defines additional details that the user can view or hide",
+ "TagType": "Styles and Semantics"
+},
+{
+ "tagName": "dialog",
+ "tagValue": "<dialog></dialog",
+ "TagComment": "Defines a dialog box or window",
+ "TagType": "Styles and Semantics"
+},
+{
+ "tagName": "summary",
+ "tagValue": "<summary></summary",
+ "TagComment": "Defines a visible heading for a <details> element",
+ "TagType": "Styles and Semantics"
+},
+{
+ "tagName": "data",
+ "tagValue": "<data></data",
+ "TagComment": "Adds a machine-readable translation of a given content",
+ "TagType": "Styles and Semantics"
+},
+{
+ "tagName": "meta",
+ "tagValue": "<meta",
+ "TagComment": "Defines metadata about an HTML document",
+ "TagType": "Meta Info"
+},
+{
+ "tagName": "base",
+ "tagValue": "<base",
+ "TagComment": "Specifies the base URL/target for all relative URLs in a document",
+ "TagType": "Meta Info"
+},
+{
+ "tagName": "scrip",
+ "tagValue": "<scrip></scrip",
+ "TagComment": "Defines a client-side script",
+ "TagType": "Programming"
+},
+{
+ "tagName": "noscript",
+ "tagValue": "<noscript></noscript",
+ "TagComment": "Defines an alternate content for users that do not support client-side scripts",
+ "TagType": "Programming"
+},
+{
+ "tagName": "embed",
+ "tagValue": "<embed></embed",
+ "TagComment": "Defines a container for an external (non-HTML) application",
+ "TagType": "Programming"
+},
+{
+ "tagName": "object",
+ "tagValue": "<object></object",
+ "TagComment": "Defines an embedded object",
+ "TagType": "Programming"
+},
+{
+ "tagName": "param",
+ "tagValue": "<param",
+ "TagComment": "Defines a parameter for an object",
+ "TagType": "Programming"
+}
+];
+
+
+function buildTable() {
+        const tableBody = document.getElementById('tagsTable').getElementsByTagName('tbody')[0];
+        tags.forEach((tag, index) => {
+            let row = tableBody.insertRow();
+            row.onclick = function() { chooseTag(index); };
+
+            let tagNameCell = row.insertCell(0);
+            let tagValueCell = row.insertCell(1);
+            let tagTypeCell = row.insertCell(2);
+            let tagCommentCell = row.insertCell(3);
+
+            tagNameCell.textContent = tag.tagName;
+            tagValueCell.textContent = tag.tagValue;
+            tagTypeCell.textContent = tag.TagType;
+            tagCommentCell.textContent = tag.TagComment;
+        });
+    }
+    function filterTable(column) {
+      let input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("tagsTable").getElementsByTagName("thead")[0].getElementsByTagName("input")[column];
+      filter = input.value.toUpperCase();
+      table = document.getElementById("tagsTable");
+      tr = table.getElementsByTagName("tr");
+
+      for (i = 2; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[column];
+          if (td) {
+              txtValue = td.textContent || td.innerText;
+              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                  tr[i].style.display = "";
+              } else {
+                  tr[i].style.display = "none";
+              }
+          }
+      }
+  }
+    function chooseTag(index) {
+        let chosenTag = tags[index];
+        alert("Chosen Tag Name: " + chosenTag.tagName + "\nChosen Tag Value: " + chosenTag.tagValue);
+    }
+
+    window.onload = buildTable;    </script>
+</code-builder>
+
+
+
+<div id="highlight of brothers and childrens of fieldset">
+  <style>
+    .highlight-left-border {
+        border-left-color: blue;
+    } 
+    .highlight-left-border-red {
+        border-left-color: red; 
+    }
+    </style>
+  <script>
+    document.querySelectorAll('button[data-highlight="true"]').forEach(button => {
+        button.addEventListener('mouseover', function() {
+            let currentFieldset = this.closest('fieldset');
+            
+            Array.from(currentFieldset.parentElement.children).forEach(sibling => {
+                if (sibling.tagName === 'FIELDSET') {
+                    sibling.classList.add('highlight-left-border-red');
+                }
+            });
+  
+            Array.from(currentFieldset.children).forEach(child => {
+                if (child.tagName === 'FIELDSET') {
+                    child.classList.add('highlight-left-border');
+                }
+            });
+        });
+  
+        button.addEventListener('mouseout', function() {
+            let currentFieldset = this.closest('fieldset');
+  
+            Array.from(currentFieldset.parentElement.children).forEach(sibling => {
+                if (sibling.tagName === 'FIELDSET') {
+                    sibling.classList.remove('highlight-left-border-red');
+                }
+            });
+  
+            Array.from(currentFieldset.children).forEach(child => {
+                if (child.tagName === 'FIELDSET') {
+                    child.classList.remove('highlight-left-border');
+                }
+            });
+        });
+    });
+  </script>
+
