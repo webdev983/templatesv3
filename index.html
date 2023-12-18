@@ -56,42 +56,42 @@
    </div>
 
 <!--menu click tag-->
-<fieldset id="code-tree-click-tag">
-    <legend><button id="code-tree-menu-cancel">❌</button></legend>
-              <button id="code-tree-click-tag-append-child">&#x1F476; append child</button>
-              <button  id="code-tree-click-tag-insert-before">&#x2190; insert before</button>       
-              <button  id="code-tree-click-tag-inner-html">📄 inner HTML</button>       
-              <button  id="code-tree-click-tag-change-tag">✏️ change tag</button>     
-              <button  id="code-tree-click-tag-dublicate-tag"> 📄📄 dublicate tag</button>
-              <button  id="code-tree-click-tag-remove-tag">&#128465; remove tag</button>
-  </fieldset>
+<fieldset id="code-tree-click-tag" hidden>
+    <legend><button id="code-tree-menu-cancel" onclick = "cancel(event)">❌</button></legend>
+              <button id="code-tree-click-tag-append-child" onclick = "append(event)">&#x1F476; append child</button>
+              <button  id="code-tree-click-tag-insert-before" onclick = "insertB(event)">&#x2190; insert before</button>       
+              <button  id="code-tree-click-tag-inner-html" onclick = "insertHtml(event)">📄 inner HTML</button>       
+              <button  id="code-tree-click-tag-change-tag" onclick = "changeTag(event)">✏️ change tag</button>     
+              <button  id="code-tree-click-tag-dublicate-tag" onclick = "duplicateTag(event)"> 📄📄 dublicate tag</button>
+              <button  id="code-tree-click-tag-remove-tag" onclick = "removeTag(event)">&#128465; remove tag</button>
+  </fieldset >
 
 
 <!--menu add element-->
-<fieldset id="code-tree-add-tag-step-1">
-    <legend><button  id="code-tree-menu-cancel">❌</button></legend>
-    <button id="code-tree-add-tag-choose-new"> 👶 choose new</button>
-    <button  id="code-tree-add-tag-choose-existed"> 👴 choose existed</button>
-    <button  id="code-tree-add-tag-choose-component"> 🧩 component</button>
+<fieldset id="code-tree-add-tag-step-1" hidden>
+    <legend><button  id="code-tree-menu-cancel" onclick="cancel(event)">❌</button></legend>
+    <button id="code-tree-add-tag-choose-new" onclick = "addNew(event)"> 👶 choose new</button>
+    <button  id="code-tree-add-tag-choose-existed" onclick = "addExisting(event)"> 👴 choose existed</button>
+    <button  id="code-tree-add-tag-choose-component" onclick = "choseComponent(event)"> 🧩 component</button>
 </fieldset>
 
 
 
 <!-- menu confirm selected append/insert tags-->
-<fieldset id="code-tree-append-or-insert-approv-menu">
-  <legend><button id="code-tree-menu-cancel">❌</button></legend>    
-  <span>✅<span id="code-tree-amount-selected-for-append-or-insert">7</span> selected</span>  
+<fieldset id="code-tree-append-or-insert-approv-menu" hidden>
+  <legend><button id="code-tree-menu-cancel" onclick = "cancel()">❌</button></legend>    
+  <span>✅<span id="code-tree-amount-selected-for-append-or-insert" >7</span> selected</span>  
   <button id="code-tree-click-tag-insert-before-approve">&#x1F476; append child</button>
   <button  id="code-tree-click-tag-append-child-approve">&#x2190; insert before</button>    
 </fieldset>
 
 
 <!-- menu to receive inner html -->
-<fieldset id="code-tree-inner-html-receive-menu">
-<legend><button id="code-tree-menu-cancel">❌</button></legend>    
+<fieldset id="code-tree-inner-html-receive-menu" hidden>
+<legend><button id="code-tree-menu-cancel" onclick="cancel(event)">❌</button></legend>    
 <textarea placeholder="📄inner HTML" id="code-tree-inner-html-receive-textarea" style="min-width: 150px; min-height: 50px; max-width: 90vw;"></textarea>
 <br>
-<button id="code-tree-inner-html-receiver-save-">💾 save</button>
+<button id="code-tree-inner-html-receiver-save-" onclick ="save(event)">💾 save</button>
 
 
 <!--menu to view and edit attributes-->
@@ -101,7 +101,7 @@
       <td><input id="code-tree-tag-attribute-input-key" type="text" placeholder="attribute 🔑" ></td>
       <td><input id="code-tree-tag-attribute-input-key-value" type="text" placeholder="value 📄">
         <button id="code-tree-tag-attribute-add">➕ add</button></td>
-      <td><button id="code-tree-menu-cancel">❌</button></td>
+      <td><button id="code-tree-menu-cancel" >❌</button></td>
     </tr>
 
     <tr id="code-tree-tag-attributes-list-item">
@@ -110,11 +110,11 @@
       <td><button id="code-tree-tag-attribute-remove-button">&#128465;</button></td>
       </tr>
     </table>
-</div>
-
+   </div>
+</fieldset>
 <!--menu choose from tags tabble-->
-<fieldset>
-  <legend> <button id="code-tree-menu-cancel">❌</button></legend>
+<fieldset id ="tag-table" hidden>
+  <legend> <button id="code-tree-menu-cancel" onclick="cancel(event)">❌</button></legend>
   <h2>choose tag</h2>
           <table id="tagsTable" class="tagsTable-style">
             <thead>
@@ -168,6 +168,7 @@
 
 <!--loading script-->
 <script>
+  /*
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('button').forEach(function(button) {
         button.addEventListener('click', function() {
@@ -193,6 +194,201 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+*/
+</script>
+
+
+<script>
+  var actionLog = []
+  document.addEventListener('DOMContentLoaded', function () {
+    
+
+    async function loader(e, handler) {
+      const loadingScreen = document.getElementById('loading');
+      loadingScreen.style.display = 'flex';
+
+      const timerElement = document.getElementById('timer');
+      let tenthsOfSeconds = 0;
+      const interval = setInterval(function () {
+        tenthsOfSeconds++;
+        timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
+      }, 100);
+
+      await handler(e);
+
+      loadingScreen.style.display = 'none';
+      clearInterval(interval);
+      console.log(timerElement.textContent)
+      const lastActionTime = document.getElementById('last-action-time');
+      lastActionTime.textContent = timerElement.textContent;
+    }
+
+    function handleComponentClick(event) {
+      const button = event.target.closest('button[data-element="code-tree-tag-name-button"]');
+      
+      if (button) {
+        const parentId = button.parentNode.id;
+        const fieldset = document.getElementById('code-tree-click-tag');
+
+        // Check if a cloned fieldset already exists after the parent node
+        if (!button.parentNode.nextElementSibling || !button.parentNode.nextElementSibling.id.startsWith('code-tree-click-tag')) {
+          // Clone the fieldset node
+          const clonedFieldset = fieldset.cloneNode(true);
+          
+          // Assign a unique id to the cloned fieldset
+          clonedFieldset.id = clonedFieldset.id  + ';'+parentId;
+          clonedFieldset.hidden = false
+          // Insert the cloned fieldset after the parent node of the button
+          button.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+        }
+      }
+}
+
+
+    //first menu
+    let buttons = document.querySelectorAll('button[data-element="code-tree-tag-name-button"]');
+    buttons.forEach(function (button) {
+      button.addEventListener('click', e => loader(e, handleComponentClick));
+    });
+
+
+    
+  });
+  const save =(event)=>{
+    const parent = event.target.parentNode
+    const {id,action } = parent
+    
+    if(action ==='innerHtml'){
+      const saveButton = event.target;
+      const fieldset = saveButton.closest('fieldset');
+        
+        
+      const textareaValue = fieldset.querySelector('#code-tree-inner-html-receive-textarea').value;
+            
+        
+      const el = {
+        time: (new Date()).getTime(),
+        action,
+        target_element:id,
+        insertedCode:textareaValue
+
+      }
+      actionLog.push(el)
+    }
+    console.log(JSON.stringify(actionLog))
+
+  }
+  const executeCommand = (command)=>{
+    //todo
+  }
+</script>
+<script>
+
+  //second menu 
+  
+  const cancel = (e)=>{
+    
+    e.target.parentNode.parentNode.remove()
+  }
+  const append = (e)=>{
+    const parentId = e.target.parentNode.id.split(';')[1];
+        const fieldset = document.getElementById('code-tree-add-tag-step-1');
+
+        if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-add-tag-step-1') ) {
+          const clonedFieldset = fieldset.cloneNode(true);
+          
+          clonedFieldset.id = clonedFieldset.id  + ';'+parentId;
+          clonedFieldset.hidden = false
+          clonedFieldset.action = 'Append'
+          e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+        }
+  }
+  const insertB = (e)=>{
+      
+      
+        const parentId = e.target.parentNode.id.split(';')[1];
+        const fieldset = document.getElementById('code-tree-add-tag-step-1');
+
+        if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-add-tag-step-1') ) {
+          const clonedFieldset = fieldset.cloneNode(true);
+          
+          clonedFieldset.id = clonedFieldset.id  + ';'+parentId;
+          clonedFieldset.hidden = false
+          clonedFieldset.action = 'InsertBefore'
+          e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+        }
+      
+  }
+  const insertHtml = (e)=>{
+    
+    const parentId = e.target.parentNode.id.split(';')[1];
+        const fieldset = document.getElementById('code-tree-inner-html-receive-menu');
+
+        if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-inner-html-receive-menu') ) {
+          const clonedFieldset = fieldset.cloneNode(true);
+          
+          clonedFieldset.id = clonedFieldset.id  + ';'+parentId;
+          clonedFieldset.hidden = false
+          clonedFieldset.action = 'innerHtml'
+          e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+        }
+  }
+  const changeTag = (e)=>{
+    const parentId = e.target.parentNode.id.split(';')[1];
+        const fieldset = document.getElementById('tag-table');
+
+        if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('tag-table') ) {
+          const clonedFieldset = fieldset.cloneNode(true);
+          
+          clonedFieldset.id = clonedFieldset.id  + ';'+parentId;
+          clonedFieldset.hidden = false
+          clonedFieldset.action = 'InsertBefore'
+          e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+        }
+  }
+  const duplicateTag = (e)=>{
+
+  }
+  const removeTag = (e)=>{
+
+  }
+
+</script>
+
+
+<script>
+
+  //third menu 
+  const addNew = (e)=>{
+    const parentId = e.target.parentNode.id.split(';')[1];
+        const fieldset = document.getElementById('tag-table');
+
+        if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('tag-table') ) {
+          const clonedFieldset = fieldset.cloneNode(true);
+          
+          clonedFieldset.id = clonedFieldset.id  + ';'+parentId;
+          clonedFieldset.hidden = false
+          clonedFieldset.action = e.target.parentNode.action
+          e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+        }
+  }
+  const addExisting = (e)=>{
+    const parentId = e.target.parentNode.id.split(';')[1];
+        const fieldset = document.getElementById('code-tree-append-or-insert-approv-menu');
+
+        if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-append-or-insert-approv-menu') ) {
+          const clonedFieldset = fieldset.cloneNode(true);
+          
+          clonedFieldset.id = clonedFieldset.id  + ';'+parentId;
+          clonedFieldset.hidden = false
+          clonedFieldset.action = e.target.parentNode.action
+          e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+        }
+  }
+  const choseComponent = (e)=>{
+
+  }
+  
 
 </script>
 
