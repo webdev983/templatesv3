@@ -27,6 +27,7 @@
     <legend><button id="code-tree-menu-cancel">❌</button></legend>
               <button id="code-tree-click-tag-append-child">&#x1F476; append child</button>
               <button  id="code-tree-click-tag-insert-before">&#x2190; insert before</button>       
+              <button  id="code-tree-click-tag-inner-html">📄 inner HTML</button>       
               <button  id="code-tree-click-tag-change-tag">✏️ change tag</button>     
               <button  id="code-tree-click-tag-dublicate-tag"> 📄📄 dublicate tag</button>
               <button  id="code-tree-click-tag-remove-tag">&#128465; remove tag</button>
@@ -48,6 +49,22 @@
   <button id="code-tree-click-tag-insert-before-approve">&#x1F476; append child</button>
   <button  id="code-tree-click-tag-append-child-approve">&#x2190; insert before</button>    
 </fieldset>
+
+<!-- menu confirm selected append/insert tags-->
+<fieldset id="code-tree-append-or-insert-approv-menu">
+  <legend><button id="code-tree-menu-cancel">❌</button></legend>    
+  <span>✅<span id="code-tree-amount-selected-for-append-or-insert">7</span> selected</span>  
+  <button id="code-tree-click-tag-insert-before-approve">&#x1F476; append child</button>
+  <button  id="code-tree-click-tag-append-child-approve">&#x2190; insert before</button>    
+</fieldset>
+
+
+<!-- menu to receive inner html -->
+<fieldset id="code-tree-inner-html-receive-menu">
+<legend><button id="code-tree-menu-cancel">❌</button></legend>    
+<textarea placeholder="📄inner HTML" id="code-tree-inner-html-receive-textarea" style="min-width: 150px; min-height: 50px;Z"></textarea>
+<button id="code-tree-inner-html-receiver-save-">💾 save</button>
+
 
 <!--menu choose from tags tabble-->
 <fieldset>
@@ -137,6 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- tags table script-->
   <script>          const tags = 
   [
+<
 {
  "tagName": "txt",
  "tagValue": "<txt></txt",
@@ -927,3 +945,27 @@ function buildTable() {
     });
   </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var textarea = document.getElementById('code-tree-inner-html-receive-textarea');
+    
+    textarea.addEventListener('input', function() {
+        // Expand height
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+
+        // Expand width
+        var mirrorDiv = document.getElementById('mirror-div');
+        if (!mirrorDiv) {
+            mirrorDiv = document.createElement('div');
+            mirrorDiv.id = 'mirror-div';
+            document.body.appendChild(mirrorDiv);
+        }
+
+        mirrorDiv.style.display = 'inline-block';
+        mirrorDiv.textContent = this.value.replace(/\n/g, '<br/>');
+        this.style.width = Math.min(this.parentElement.offsetWidth, mirrorDiv.offsetWidth + 10) + 'px'; // 10px for some padding
+        mirrorDiv.style.display = 'none';
+    });
+});
+</script>
