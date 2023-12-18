@@ -1,0 +1,97 @@
+<div id="last-action-time"></div>
+<div  id="loading"  style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 1000;">
+  <span  style="font-size: 10.2em; color: white;">⏳</span>
+  <div id="timer" style="font-size: 2em; color: white;">1.12</div>
+</div>
+<style>
+  [data-element="file-path-list"] li:nth-child(odd) {
+      background-color: #ffffff; 
+  }
+
+  [data-element="file-path-list"] li:nth-child(even) {
+      background-color: #f0f0f0; 
+  }
+
+  [data-element="file-path-list"] li:hover {
+      background-color: #dddddd; 
+  }
+
+  [data-element="file-path-list"] li label {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+  }
+
+  [data-element="file-path-list"] li button {
+      margin-left: 10px;
+  }
+</style>
+<button data-action="create-new-file">➕ create new</button>
+<fieldset data-element="create-new-file-path">
+  <legend>enter path</legend>
+  <span>📂 </span>
+  <input type="text" data-input="create-new-file-path-input" oninput="adjustWidthToContent(this)">
+  <button data-action="create-new-file-path-save">💾</button>
+</fieldset>
+<fieldset  data-element="choose-new-file-type">
+<legend>select type</legend>
+</button><button data-action="choose-new-file-type-html" style="font-size: 1.2em;">🧩HTML component</button> 
+<button data-action="choose-new-file-type-css" style="font-size: 1.2em;">🎨 css styles file</button>
+<button data-action="choose-new-file-type-js" style="font-size: 1.2em;">💻 javascript</button>
+</fieldset>
+
+<select data-element="path-selector">
+  <option data-element="path-selector-option-empty">⬇️ select</option>
+  <option data-element="path-selector-option-filled">➡️<span data-value="path-selector-option">dasdsadsadsadsadsada</span></option>
+  <option data-element="path-selector-option-filled">➡️<span data-value="path-selector-option">dasdsadsadsadsadsada</span></option>
+</select>
+
+<ol data-element="file-path-list">
+  <li data-element="file-path">
+    <label data-value="file-path">universal/blablabla/blablabla/coolcss</label><button data-action="file-open">📂</button><button data-action="file-show-id">ℹ️</button><label data-element="page-path-label"> 🧩</label>
+    <div data-element="file-id" ><span style="user-select: none;">🆔</span><span data-value="file-idstyle=" style="font-size: 0.9em">1414124-414221412-4124214124-412412</span></div>
+  </li>
+  <li data-element="file-path">
+    <label data-value="file-path">universal/blablabla/blablabla/coolcss</label><button data-action="file-open">📂</button><button data-action="file-show-id">ℹ️</button><label data-element="page-path-label"> 🎨</label>
+    <div data-element="file-id" hidden><span style="user-select: none;">🆔</span><span data-value="file-idstyle=" style="font-size: 0.9em">1414124-414221412-4124214124-412412</span></div>
+  </li>
+  <li data-element="file-path">
+    <label data-value="file-path">universal/blablabla/blablabla/coolcss</label><button data-action="file-open">📂</button><button data-action="file-show-id">ℹ️</button><label data-element="page-path-label"> 💻</label>
+    <div data-element="file-id" hidden><span style="user-select: none;">🆔</span><span data-value="file-idstyle=" style="font-size: 0.9em">1414124-414221412-4124214124-412412</span></div>
+  </li>
+</ol>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Обработчик события для всех кнопок
+    document.querySelectorAll('button').forEach(function(button) {
+        button.addEventListener('click', function() {
+            // Показываем экран загрузки
+            const loadingScreen = document.getElementById('loading');
+            loadingScreen.style.display = 'flex';
+
+            // Запускаем таймер
+            const timerElement = document.getElementById('timer');
+            let tenthsOfSeconds = 0;
+            const interval = setInterval(function() {
+                tenthsOfSeconds++;
+                timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
+            }, 100);
+
+            // Генерируем случайное время от 1 до 5 секунд
+            const randomTime = Math.random() * 4000 + 1000; // В миллисекундах
+
+            // Через случайное время скрываем экран загрузки и останавливаем таймер
+            setTimeout(function() {
+                loadingScreen.style.display = 'none';
+                clearInterval(interval);
+
+                // Сохраняем время выполнения
+                const lastActionTime = document.getElementById('last-action-time');
+                lastActionTime.textContent = timerElement.textContent;
+            }, randomTime);
+        });
+    });
+});
+
+</script>

@@ -1,0 +1,37 @@
+<div id="last-action-time"></div>
+<div  id="loading"  style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 1000;">
+  <span  style="font-size: 10.2em; color: white;">⏳</span>
+  <div id="timer" style="font-size: 2em; color: white;">1.12</div>
+</div>
+
+
+<button>➕</button>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('button').forEach(function(button) {
+        button.addEventListener('click', function() {
+          const loadingScreen = document.getElementById('loading');
+            loadingScreen.style.display = 'flex';
+
+            const timerElement = document.getElementById('timer');
+            let tenthsOfSeconds = 0;
+            const interval = setInterval(function() {
+                tenthsOfSeconds++;
+                timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
+            }, 100);
+
+            const randomTime = Math.random() * 4000 + 1000; 
+
+            setTimeout(function() {
+                loadingScreen.style.display = 'none';
+                clearInterval(interval);
+
+                const lastActionTime = document.getElementById('last-action-time');
+                lastActionTime.textContent = timerElement.textContent;
+            }, randomTime);
+        });
+    });
+});
+
+</script>
