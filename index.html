@@ -5,10 +5,9 @@
 
   </component>
 </div>
-
-
+<main>
 <h2>builder</h2>
-<div id="code-builder">
+<div id="code-builder" style="position: relative;">
   <div id="code-tree" style="position: relative;">
     <!--tag-->
     <fieldset id="tagid" data-element="code-tree-tag" style="border-bottom: none; border-right: none;" data-highlight="true">
@@ -19,8 +18,7 @@
       <button  data-element="code-tree-attributes-button" style="font-size: 1.2em; position: absolute; right: 138px;">🔑Attributes</button>
       <button data-element="code-tree-attributes-button" style="font-size: 1.2em; position: absolute; right: 0px;">📄Text content</button> 
     </fieldset>           
-</div></div>
-
+   </div>
 
 <!--menu click tag-->
 <fieldset id="code-tree-click-tag">
@@ -83,19 +81,37 @@
           </tbody>
           </table>
 </fieldset>
+</div>
+</main>
+<aside>
+  <table id="code-log">
+    <button id="code-log-toggle" style="font-size: 1.5em;">📚log</button>
+  <thead>
+    <tr>
+        <th style="text-align: left;">🕓time</th>
+        <th style="text-align: left;">✔️action</th>
+    </tr>
+</thead>
+<tbody id="code-log-body">
+  <tr id="code-log-element">
+    <td data-type-code-log="action-time"><span id="code-log-action-time">24.01.01 23:59</span></th>
+    <td data-type-code-log="action-name"><span id="code-log-action">append child</span></th>
+    <td><button data-type-code-log="action-remove" style="font-size: 1.2em; border: 2px;">&#128465;</button><td> 
+</tbody>
 
-
+</aside>
 <!--loading screen-->
 <h2>loading screen</h2>
 <div id="last-action-time"></div>
-<div  id="loading"  style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 1000;">
+<div  id="loading"  style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 900;">
   <span  style="font-size: 10.2em; color: white;">⏳</span>
   <div id="timer" style="font-size: 2em; color: white;">1.12</div>
 </div>
 
 
-<button>➕</button>
 
+
+<!--loading script-->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('button').forEach(function(button) {
@@ -124,6 +140,9 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 </script>
+
+
+
 
 <!-- tags table style-->
 <style>
@@ -894,7 +913,6 @@ function buildTable() {
 
 
 
-<div id="highlight of brothers and childrens of fieldset">
   <style>
     .highlight-left-border {
         border-left-color: blue;
