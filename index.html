@@ -48,7 +48,7 @@
   <div id="code-tree" style="position: relative;">
     <fieldset id="tagid" data-element="code-tree-tag">
       <legend>💬</legend>
-      <input hidden type="checkbox">
+      <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
       <button data-element="code-tree-show-hide-button">&#8594;</button>
       <button data-element="code-tree-tag-name-button">🏷️component</button>
       <button data-element="code-tree-attributes-button">🔑Attributes</button>
@@ -93,8 +93,8 @@
 <!-- menu confirm selected append/insert tags-->
 <fieldset id="code-tree-append-or-insert-approv-menu">
   <legend><button id="code-tree-menu-cancel" onclick = "cancel()">❌</button></legend>    
-  <span>✅<span id="code-tree-amount-selected-for-append-or-insert" >7</span> selected</span>  
-  <button id="code-tree-append-or-insert-approv">&#x2190; approve</button>
+  <span>✅<span id="code-tree-amount-selected-for-append-or-insert" >0</span> selected</span>  
+  <button id="code-tree-click-tag-approve" onclick="approve(event)">&#x1F476; approve</button>
 </fieldset>
 
 
@@ -212,6 +212,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script>
   var actionLog = []
+  var selected = []
+  function handleCheckboxChange(event) {
+    var checkbox = event.target;
+    var fieldsetId = checkbox.parentNode.id;
+
+    if (checkbox.checked) {
+        // Add the ID to the selected array
+        selected.push(fieldsetId);
+    } else {
+        // Remove the ID from the selected array
+        var index = selected.indexOf(fieldsetId);
+        if (index !== -1) {
+            selected.splice(index, 1);
+        }
+      }
+
+      // Update the content of the span with the length of the selected array
+      var amountSelectedSpan = document.getElementById('code-tree-amount-selected-for-append-or-insert');
+      if (amountSelectedSpan) {
+          amountSelectedSpan.textContent = selected.length;
+      }
+
+      // Log the selected array (you can replace this with your desired logic)
+      console.log("Selected Fieldsets:", selected);
+  }
   function generateUUID() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
       const r = Math.random() * 16 | 0,
@@ -425,6 +450,19 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       pushAction(el)
   }
+  const approve = (event)=>{
+     // Get all fieldsets with data-element="code-tree-tag"
+     var codeTreeTagFieldsets = document.querySelectorAll('fieldset[data-element="code-tree-tag"]');
+
+    // Iterate through each fieldset and hide them
+    codeTreeTagFieldsets.forEach(function (fieldset) {
+        var checkbox = fieldset.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+            checkbox.setAttribute('hidden', 'true');
+        }
+    });
+    event.target.parentNode.remove()
+  }
 
 </script>
 
@@ -497,7 +535,18 @@ document.addEventListener('DOMContentLoaded', function() {
           clonedFieldset.setAttribute('action', e.target.parentNode.getAttribute('action'))
           e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
           e.target.parentNode.remove()
+          // Get all fieldsets with data-element="code-tree-tag"
+          var codeTreeTagFieldsets = document.querySelectorAll('fieldset[data-element="code-tree-tag"]');
+
+          // Iterate through each fieldset and make their checkboxes visible
+          codeTreeTagFieldsets.forEach(function (fieldset) {
+              var checkbox = fieldset.querySelector('input[type="checkbox"]');
+              if (checkbox) {
+                  checkbox.removeAttribute('hidden');
+              }
+          });
         }
+
   }
   const choseComponent = (e)=>{
 
