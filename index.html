@@ -160,7 +160,7 @@
       </tr>
   </thead>
   <tbody id="code-log-body">
-      <tr id="code-log-element">
+      <tr id="code-log-element" hidden>
           <td data-type-code-log="action-time"><span id="code-log-action-time">24.01.01 23:59</span></td>
           <td data-type-code-log="action-name"><span id="code-log-action">append child</span></td>
           <td><button data-type-code-log="action-remove" style="font-size: 1.2em; border: none;">&#128465;</button></td> 
@@ -213,6 +213,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script>
   var actionLog = []
+  function generateUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0,
+        v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+  const pushAction = (e)=>{
+    actionLog.push(e)
+    executeCommand(e)
+    insertDataIntoCodeLog(e.time,e.action)
+  }
+  function insertDataIntoCodeLog(actionTime, actionName) {
+      const originalElement = document.getElementById("code-log-element");
+      const clonedElement = originalElement.cloneNode(true);
+
+      clonedElement.removeAttribute("hidden");
+      clonedElement.querySelector("#code-log-action-time").textContent = actionTime;
+      clonedElement.querySelector("#code-log-action").textContent = actionName;
+
+      // Append the cloned element to the code-log-body
+      const codeLogBody = document.getElementById("code-log-body");
+      codeLogBody.appendChild(clonedElement);
+    }
+  const executeCommand = (command)=>{
+    //todo
+  }
   document.addEventListener('DOMContentLoaded', function () {
     
 
@@ -286,15 +313,12 @@ document.addEventListener('DOMContentLoaded', function() {
         insertedCode:textareaValue
 
       }
-      actionLog.push(el)
-      executeCommand(el)
+      pushAction(el)
     }
     console.log(JSON.stringify(actionLog))
 
   }
-  const executeCommand = (command)=>{
-    //todo
-  }
+  
 </script>
 <script>
 
@@ -355,16 +379,33 @@ document.addEventListener('DOMContentLoaded', function() {
           const clonedFieldset = fieldset.cloneNode(true);
           
           clonedFieldset.id = clonedFieldset.id  + ';'+parentId;
-          clonedFieldset.action = 'InsertBefore'
+          clonedFieldset.action = 'ChangeTag'
           e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
           e.target.parentNode.remove()
         }
   }
   const duplicateTag = (e)=>{
+    const parentId = e.target.parentNode.id.split(';')[1];
+    const el =    
+    {
+        time: (new Date()).getTime(),
+        action:'dublicateTag',
+        target_element:parentId,
+        inserted_element:generateUUID()
 
+      }
+      pushAction(el)
   }
   const removeTag = (e)=>{
+    const parentId = e.target.parentNode.id.split(';')[1];
+    const el =    
+    {
+        time: (new Date()).getTime(),
+        action:'removeTag',
+        target_element:parentId,
 
+      }
+      pushAction(el)
   }
 
 </script>
