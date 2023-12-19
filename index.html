@@ -296,8 +296,9 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   const save =(event)=>{
     const parent = event.target.parentNode
-    const {id,action } = parent
-    
+    const {id } = parent
+    const action = parent.getAttribute('action')
+    console.log('ac' + action)
     if(action ==='innerHtml'){
       const saveButton = event.target;
       const fieldset = saveButton.closest('fieldset');
@@ -309,10 +310,11 @@ document.addEventListener('DOMContentLoaded', function() {
       const el = {
         time: (new Date()).getTime(),
         action,
-        target_element:id,
+        target_element:id.split(';')[1],
         insertedCode:textareaValue
 
       }
+      console.log(JSON.stringify(el))
       pushAction(el)
     }
     console.log(JSON.stringify(actionLog))
@@ -456,7 +458,7 @@ document.addEventListener('DOMContentLoaded', function() {
           const clonedFieldset = fieldset.cloneNode(true);
           
           clonedFieldset.id = clonedFieldset.id  + ';'+parentId;
-          clonedFieldset.setAttribute('action', e.target.parentNode.action)
+          clonedFieldset.setAttribute('action', e.target.parentNode.getAttribute('action'))
           e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
           e.target.parentNode.remove()
         }
@@ -469,7 +471,7 @@ document.addEventListener('DOMContentLoaded', function() {
           const clonedFieldset = fieldset.cloneNode(true);
           
           clonedFieldset.id = clonedFieldset.id  + ';'+parentId;
-          clonedFieldset.setAttribute('action', e.target.parentNode.action)
+          clonedFieldset.setAttribute('action', e.target.parentNode.getAttribute('action'))
           e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
           e.target.parentNode.remove()
         }
