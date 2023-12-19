@@ -388,7 +388,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('tag-table') ) {
           const clonedFieldset = fieldset.cloneNode(true);
+
           
+          const clonedRows = clonedFieldset.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+          for (let i = 0; i < clonedRows.length; i++) {
+            const index = i; // Capture the current value of 'i' in a closure
+            clonedRows[i].onclick = function (event) {
+              chooseTag(index,event);
+            };
+          }
           clonedFieldset.id = clonedFieldset.id  + ';'+parentId;
           clonedFieldset.setAttribute('action', 'ChangeTag')
           e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
@@ -466,6 +474,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('tag-table') ) {
           const clonedFieldset = fieldset.cloneNode(true);
           
+          const clonedRows = clonedFieldset.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+          for (let i = 0; i < clonedRows.length; i++) {
+            const index = i; // Capture the current value of 'i' in a closure
+            clonedRows[i].onclick = function (event) {
+              chooseTag(index,event);
+            };
+          }
           clonedFieldset.id = clonedFieldset.id  + ';'+parentId;
           clonedFieldset.setAttribute('action', e.target.parentNode.getAttribute('action'))
           e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
@@ -1240,7 +1255,7 @@ function buildTable() {
         const tableBody = document.getElementById('tagsTable').getElementsByTagName('tbody')[0];
         tags.forEach((tag, index) => {
             let row = tableBody.insertRow();
-            row.onclick = function() { chooseTag(index); };
+            row.onclick = function(event) { chooseTag(index,event); };
 
             let tagNameCell = row.insertCell(0);
             let tagValueCell = row.insertCell(1);
@@ -1272,9 +1287,34 @@ function buildTable() {
           }
       }
   }
-    function chooseTag(index) {
-        let chosenTag = tags[index];
-        alert("Chosen Tag Name: " + chosenTag.tagName + "\nChosen Tag Value: " + chosenTag.tagValue);
+    function chooseTag(index,event) {
+      console.log('in')
+      console.log(event)
+      let chosenTag = tags[index];
+      //alert("Chosen Tag Name: " + chosenTag.tagName + "\nChosen Tag Value: " + chosenTag.tagValue);
+
+      // Get the fieldset attributes
+      const fieldset = event.currentTarget.closest('fieldset');
+      if (fieldset) {
+        const fieldsetId = fieldset.id;
+        const fieldsetAction = fieldset.getAttribute('action');
+        console.log("Fieldset ID:", fieldsetId);
+        console.log("Fieldset Action:", fieldsetAction);
+        const el =    
+        {
+            time: (new Date()).getTime(),
+            action:fieldsetAction,
+            target_element:fieldsetId.split(';')[1],
+
+          }
+          if(fieldsetAction === 'ChangeTag'){
+            el.tag_change = chosenTag.tagValue
+          }
+          else {
+            el.inserted_element = {type:'tag',tag:'chosenTag.tagValue',id:generateUUID()}
+          }
+          pushAction(el)
+      }
     }
 
     window.onload = buildTable;    </script>
