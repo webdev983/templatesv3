@@ -226,17 +226,26 @@ document.addEventListener('DOMContentLoaded', function() {
     insertDataIntoCodeLog(e.time,e.action)
   }
   function insertDataIntoCodeLog(actionTime, actionName) {
-      const originalElement = document.getElementById("code-log-element");
-      const clonedElement = originalElement.cloneNode(true);
+    const originalElement = document.getElementById("code-log-element");
+    const clonedElement = originalElement.cloneNode(true);
 
-      clonedElement.removeAttribute("hidden");
-      clonedElement.querySelector("#code-log-action-time").textContent = actionTime;
-      clonedElement.querySelector("#code-log-action").textContent = actionName;
-
-      // Append the cloned element to the code-log-body
-      const codeLogBody = document.getElementById("code-log-body");
-      codeLogBody.appendChild(clonedElement);
+    // Remove the unwanted button from the cloned element
+    const removeButtonCell = originalElement.querySelector("[data-type-code-log='action-remove']");
+    if (removeButtonCell) {
+      removeButtonCell.parentNode.removeChild(removeButtonCell);
     }
+
+    // Set the content and attributes for the cloned element
+    clonedElement.removeAttribute("hidden");
+    clonedElement.querySelector("#code-log-action-time").textContent = actionTime;
+    clonedElement.querySelector("#code-log-action").textContent = actionName;
+
+    // Get the parent of the original element
+    const parent = originalElement.parentNode;
+
+    // Insert the cloned element before the original element
+    parent.insertBefore(clonedElement, originalElement);
+  }
   const executeCommand = (command)=>{
     //todo
   }
