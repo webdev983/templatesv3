@@ -1279,41 +1279,41 @@ function buildTable() {
         border-left-color: red; 
     }
     </style>
-  <script>
-    document.querySelectorAll('button[data-element="code-tree-show-hide-button"]').forEach(button => {
-        button.addEventListener('mouseover', function() {
-            let currentFieldset = this.closest('fieldset');
-            
-            Array.from(currentFieldset.parentElement.children).forEach(sibling => {
-                if (sibling.tagName === 'FIELDSET') {
-                    sibling.classList.add('highlight-left-border-red');
-                }
-            });
-  
-            Array.from(currentFieldset.children).forEach(child => {
-                if (child.tagName === 'FIELDSET') {
-                    child.classList.add('highlight-left-border');
-                }
-            });
-        });
-  
-        button.addEventListener('mouseout', function() {
-            let currentFieldset = this.closest('fieldset');
-  
-            Array.from(currentFieldset.parentElement.children).forEach(sibling => {
-                if (sibling.tagName === 'FIELDSET') {
-                    sibling.classList.remove('highlight-left-border-red');
-                }
-            });
-  
-            Array.from(currentFieldset.children).forEach(child => {
-                if (child.tagName === 'FIELDSET') {
-                    child.classList.remove('highlight-left-border');
-                }
-            });
-        });
-    });
-  </script>
+<script>
+  document.querySelectorAll('button[data-element="code-tree-show-hide-button"]').forEach(button => {
+      button.addEventListener('mouseover', function() {
+          let currentFieldset = this.closest('[data-element="code-tree-tag"]');
+          
+          Array.from(currentFieldset.parentElement.children).forEach(sibling => {
+              if (sibling.getAttribute('data-element') === 'code-tree-tag') {
+                  sibling.classList.add('highlight-left-border-red');
+              }
+          });
+
+          Array.from(currentFieldset.children).forEach(child => {
+              if (child.getAttribute('data-element') === 'code-tree-tag') {
+                  child.classList.add('highlight-left-border');
+              }
+          });
+      });
+
+      button.addEventListener('mouseout', function() {
+          let currentFieldset = this.closest('[data-element="code-tree-tag"]');
+
+          Array.from(currentFieldset.parentElement.children).forEach(sibling => {
+              if (sibling.getAttribute('data-element') === 'code-tree-tag') {
+                  sibling.classList.remove('highlight-left-border-red');
+              }
+          });
+
+          Array.from(currentFieldset.children).forEach(child => {
+              if (child.getAttribute('data-element') === 'code-tree-tag') {
+                  child.classList.remove('highlight-left-border');
+              }
+          });
+      });
+  });
+</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
