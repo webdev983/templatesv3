@@ -451,17 +451,43 @@ document.addEventListener('DOMContentLoaded', function() {
       pushAction(el)
   }
   const approve = (event)=>{
-     // Get all fieldsets with data-element="code-tree-tag"
-     var codeTreeTagFieldsets = document.querySelectorAll('fieldset[data-element="code-tree-tag"]');
+    var checkbox = event.target;
 
-    // Iterate through each fieldset and hide them
-    codeTreeTagFieldsets.forEach(function (fieldset) {
-        var checkbox = fieldset.querySelector('input[type="checkbox"]');
-        if (checkbox) {
-            checkbox.setAttribute('hidden', 'true');
-        }
-    });
-    event.target.parentNode.remove()
+      // Get the parent fieldset
+      var fieldset = checkbox.closest('fieldset');
+
+      // Get the id and action attributes
+      var fieldsetId = fieldset.id;
+      var fieldsetAction = fieldset.getAttribute('action');
+
+      // Get all fieldsets with data-element="code-tree-tag"
+      var codeTreeTagFieldsets = document.querySelectorAll('fieldset[data-element="code-tree-tag"]');
+
+      // Iterate through each fieldset and hide them
+      codeTreeTagFieldsets.forEach(function (fieldset) {
+          var checkbox = fieldset.querySelector('input[type="checkbox"]');
+          if (checkbox) {
+              checkbox.setAttribute('hidden', 'true');
+          }
+      });
+
+      // Remove the parent fieldset
+      fieldset.remove();
+
+      // Log the id and action attributes (you can replace this with your desired logic)
+      console.log("Fieldset ID:", fieldsetId);
+      console.log("Fieldset Action:", fieldsetAction);
+      const el = {
+        time: (new Date()).getTime(),
+        action:fieldsetAction,
+        target_element:selected.map(id=>{
+          return {type:'tag',id}
+        }),
+        
+
+      }
+      selected = []
+      pushAction(el)
   }
 
 </script>
@@ -1359,7 +1385,7 @@ function buildTable() {
             el.tag_change = chosenTag.tagValue
           }
           else {
-            el.inserted_element = {type:'tag',tag:'chosenTag.tagValue',id:generateUUID()}
+            el.inserted_element = {type:'tag',tag:chosenTag.tagValue,id:generateUUID()}
           }
           pushAction(el)
       }
