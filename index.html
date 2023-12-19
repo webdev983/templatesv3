@@ -45,15 +45,15 @@
   <button id="aside-toggle" style="font-size: 1.5em; position: absolute; right: 0px; margin-top: -30px">&#8592;log</button>
 
   <div id="code-tree" style="position: relative;">
-    <!--tag-->
-    <fieldset id="tagid" data-element="code-tree-tag" style="border-bottom: none; border-right: none;" data-highlight="true">
-      <legend style="user-select: none;"><span data-action="tag-edit-comment" style="user-select: none;">💬</span><span data-value="tag-comment-value"></span></legend>
-      <input hidden type="checkbox" style="transform: scale(1.2);">
-      <button data-element="code-tree-show-hide-button" style="font-size: 1.2em;" data-highlight="true">&#8594;</button>
-      <button data-element="code-tree-tag-name-button" style="font-size: 1.2em;">🏷️<span data-value="code-tree-tag-name">component</span></button>
-      <button data-element="code-tree-attributes-button" style="font-size: 1.2em; position: absolute; right: 138px;">🔑Attributes<span data-value="tag-attributes-amount"></span></button>
-      <button data-element="code-tree-attributes-button" style="font-size: 1.2em; position: absolute; right: 0px;">📄Text content<span data-value="tag-textcontent-letters"></span></button> 
-    </fieldset>           
+    <fieldset id="tagid" data-element="code-tree-tag">
+      <legend>💬</legend>
+      <input hidden type="checkbox">
+      <button data-element="code-tree-show-hide-button">&#8594;</button>
+      <button data-element="code-tree-tag-name-button">🏷️component</button>
+      <button data-element="code-tree-attributes-button">🔑Attributes</button>
+      <button data-element="code-tree-attributes-button">📄Text content</button> 
+  </fieldset>
+            
    </div>
 
 
@@ -366,6 +366,40 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
 </script>
+
+<!-- tag style-->
+<style>
+  [data-element="code-tree-tag"] {
+  border-bottom: none;
+  border-right: none;
+}
+
+[data-element="code-tree-tag"] legend {
+  user-select: none;
+}
+
+[data-element="code-tree-tag"] [data-action="tag-edit-comment"] {
+  user-select: none;
+}
+
+[data-element="code-tree-tag"] input[type="checkbox"] {
+  transform: scale(1.2);
+}
+
+[data-element="code-tree-tag"] button {
+  font-size: 1.2em;
+}
+
+[data-element="code-tree-tag"] [data-element="code-tree-attributes-button"] {
+  position: absolute;
+  right: 138px;
+}
+
+[data-element="code-tree-tag"] [data-element="code-tree-attributes-button"]:last-of-type {
+  right: 0px;
+}
+
+</style>
 
 
 <script>
@@ -1203,7 +1237,7 @@ function buildTable() {
     }
     </style>
   <script>
-    document.querySelectorAll('button[data-highlight="true"]').forEach(button => {
+    document.querySelectorAll('button[data-element="code-tree-show-hide-button"]').forEach(button => {
         button.addEventListener('mouseover', function() {
             let currentFieldset = this.closest('fieldset');
             
