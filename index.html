@@ -47,12 +47,21 @@
 
   <div id="code-tree" style="position: relative;">
     <fieldset id="tagid" data-element="code-tree-tag">
-      <legend>💬</legend>
+      <legend>💬comment</legend>
       <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
       <button data-element="code-tree-show-hide-button">&#8594;</button>
       <button data-element="code-tree-tag-name-button">🏷️component</button>
       <button data-element="code-tree-attributes-button">🔑Attributes</button>
       <button data-element="code-tree-attributes-button">📄Text content</button> 
+      <fieldset id="tagid" data-element="code-tree-tag">
+        <legend>💬comment</legend>
+        <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
+        <button data-element="code-tree-show-hide-button">&#8594;</button>
+        <button data-element="code-tree-tag-name-button">🏷️component</button>
+        <button data-element="code-tree-attributes-button">🔑Attributes</button>
+        <button data-element="code-tree-attributes-button">📄Text content</button> 
+    </fieldset>
+  
   </fieldset>
             
    </div>
@@ -494,6 +503,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- tag style-->
 <style>
+[data-element="code-tree-tag"] legend {
+  margin-bottom: -6px;
+  margin-top: 5px;
+}
+
   [data-element="code-tree-tag"] {
   border-bottom: none;
   border-right: none;
@@ -1396,49 +1410,105 @@ function buildTable() {
 
 
 
-  <style>
-    .highlight-left-border {
-        border-left-color: blue;
-    } 
-    .highlight-left-border-red {
-        border-left-color: red; 
-    }
-    </style>
-<script>
-  document.querySelectorAll('button[data-element="code-tree-show-hide-button"]').forEach(button => {
-      button.addEventListener('mouseover', function() {
-          let currentFieldset = this.closest('[data-element="code-tree-tag"]');
-          
-          Array.from(currentFieldset.parentElement.children).forEach(sibling => {
-              if (sibling.getAttribute('data-element') === 'code-tree-tag') {
-                  sibling.classList.add('highlight-left-border-red');
-              }
-          });
 
-          Array.from(currentFieldset.children).forEach(child => {
-              if (child.getAttribute('data-element') === 'code-tree-tag') {
-                  child.classList.add('highlight-left-border');
-              }
-          });
+
+<style>
+
+  .highlight-left-border-red {
+      border-left-color: red; 
+  }
+
+  .highlight-red {
+  border-color: red; /* Changes the border color to red */
+  box-shadow: 0 0 10px red; /* Creates a glowing effect around the button */
+  transition: all 0.3s ease; /* Smooth transition for the effect */
+}
+
+
+.highlight-left-border-blue {
+  border-left-color: blue;
+}
+
+.highlight-blue {
+  border-color: blue; /* Changes the border color to red */
+  box-shadow: 0 0 10px blue; /* Creates a glowing effect around the button */
+  transition: all 0.3s ease; /* Smooth transition for the effect */
+}
+
+  </style>
+<script>
+document.querySelectorAll('button[data-element="code-tree-show-hide-button"]').forEach(button => {
+  button.addEventListener('mouseover', function() {
+      // Highlight this button in red
+      this.classList.add('highlight-red');
+
+      let parentFieldset = this.closest('[data-element="code-tree-tag"]');
+
+      // Highlight the left border of the parent fieldset in red
+      if (parentFieldset) {
+          parentFieldset.classList.add('highlight-left-border-red');
+      }
+
+      // Highlight the left border of sibling fieldsets and their direct child buttons in red
+      Array.from(parentFieldset.parentElement.children).forEach(sibling => {
+          if (sibling !== parentFieldset && sibling.getAttribute('data-element') === 'code-tree-tag') {
+              sibling.classList.add('highlight-left-border-red');
+              Array.from(sibling.children).forEach(child => {
+                  if (child.tagName === 'BUTTON' && child.getAttribute('data-element') === 'code-tree-show-hide-button') {
+                      child.classList.add('highlight-red');
+                  }
+              });
+          }
       });
 
-      button.addEventListener('mouseout', function() {
-          let currentFieldset = this.closest('[data-element="code-tree-tag"]');
-
-          Array.from(currentFieldset.parentElement.children).forEach(sibling => {
-              if (sibling.getAttribute('data-element') === 'code-tree-tag') {
-                  sibling.classList.remove('highlight-left-border-red');
-              }
-          });
-
-          Array.from(currentFieldset.children).forEach(child => {
-              if (child.getAttribute('data-element') === 'code-tree-tag') {
-                  child.classList.remove('highlight-left-border');
-              }
-          });
+      // Highlight the left border and buttons of direct child fieldsets of parentFieldset in blue
+      Array.from(parentFieldset.children).forEach(child => {
+          if (child.tagName === 'FIELDSET' && child.getAttribute('data-element') === 'code-tree-tag') {
+              child.classList.add('highlight-left-border-blue');
+              Array.from(child.children).forEach(grandchild => {
+                  if (grandchild.tagName === 'BUTTON' && grandchild.getAttribute('data-element') === 'code-tree-show-hide-button') {
+                      grandchild.classList.add('highlight-blue');
+                  }
+              });
+          }
       });
   });
+
+  button.addEventListener('mouseout', function() {
+      let parentFieldset = this.closest('[data-element="code-tree-tag"]');
+
+      // Remove the red and blue highlights
+      this.classList.remove('highlight-red');
+      if (parentFieldset) {
+          parentFieldset.classList.remove('highlight-left-border-red');
+      }
+      Array.from(parentFieldset.parentElement.children).forEach(sibling => {
+          if (sibling !== parentFieldset && sibling.getAttribute('data-element') === 'code-tree-tag') {
+              sibling.classList.remove('highlight-left-border-red');
+              Array.from(sibling.children).forEach(child => {
+                  if (child.tagName === 'BUTTON' && child.getAttribute('data-element') === 'code-tree-show-hide-button') {
+                      child.classList.remove('highlight-red');
+                  }
+              });
+          }
+      });
+      Array.from(parentFieldset.children).forEach(child => {
+          if (child.tagName === 'FIELDSET' && child.getAttribute('data-element') === 'code-tree-tag') {
+              child.classList.remove('highlight-left-border-blue');
+              Array.from(child.children).forEach(grandchild => {
+                  if (grandchild.tagName === 'BUTTON' && grandchild.getAttribute('data-element') === 'code-tree-show-hide-button') {
+                      grandchild.classList.remove('highlight-blue');
+                  }
+              });
+          }
+      });
+  });
+});
+
+
+
 </script>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
