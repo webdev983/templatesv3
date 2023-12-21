@@ -65,8 +65,8 @@
     
   </div>
   <div id="code-tree" style="position: relative;">
-    <fieldset id="tagid" data-element="code-tree-tag">
-      <legend>💬comment</legend>
+    <fieldset id="63ae5927-390f-4391-993d-b25ab09c8ada" data-element="code-tree-tag">
+      <legend>💬</legend>
       <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
       <button data-element="code-tree-show-hide-button">&#8594;</button>
       <button data-element="code-tree-tag-name-button">🏷️component</button>
@@ -339,8 +339,60 @@ document.addEventListener('DOMContentLoaded', function() {
     // Insert the cloned element before the original element
     parent.insertBefore(clonedElement, originalElement);
   }
-  const executeCommand = (command)=>{
-    //todo
+  const executeCommand = (command) => {
+    const { action, target_element, insertedCode } = command;
+
+switch (action) {
+  case 'Append':
+    // Handle the 'Append' action
+    const parentElement = document.getElementById(target_element);
+    const newElement = document.createElement('div'); // Replace 'div' with the desired element type
+    newElement.textContent = 'New Element'; // Customize the content as needed
+    parentElement.appendChild(newElement);
+    break;
+
+  case 'InsertBefore':
+    // Handle the 'InsertBefore' action
+    const referenceElement = document.getElementById(target_element);
+    const newElementBefore = document.createElement('div'); // Replace 'div' with the desired element type
+    newElementBefore.textContent = 'New Element Before'; // Customize the content as needed
+    referenceElement.parentNode.insertBefore(newElementBefore, referenceElement);
+    break;
+
+  case 'innerHtml':
+    // Handle the 'innerHtml' action
+    const targetElement = document.getElementById(target_element);
+    targetElement.innerHTML = insertedCode;
+    break;
+
+  case 'ChangeTag':
+    // Handle the 'ChangeTag' action
+    const elementToChange = document.getElementById(target_element);
+    elementToChange.tagName = 'span'; // Replace 'span' with the desired tag name
+    break;
+
+  case 'dublicateTag':
+    // Handle the 'dublicateTag' action
+    const originalElement = document.getElementById(target_element);
+    const duplicatedElement = originalElement.cloneNode(true);
+    duplicatedElement.id = generateUUID(); // Assign a new ID to the duplicated element
+    originalElement.parentNode.appendChild(duplicatedElement);
+    break;
+
+  case 'removeTag':
+    // Handle the 'removeTag' action
+    const elementToRemove = document.getElementById(target_element);
+    elementToRemove.parentNode.removeChild(elementToRemove);
+    break;
+
+  // Add more cases as needed for other actions
+
+  default:
+    // Handle the default case if no matching action is found
+    console.error(`Unknown action: ${action}`);
+    break;
+}
+
   }
   document.addEventListener('DOMContentLoaded', function () {
     
