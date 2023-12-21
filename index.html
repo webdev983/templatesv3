@@ -474,6 +474,12 @@ function cloneWithDescendants(element) {
     clonedSubFieldsets.forEach(function (clonedSubFieldset) {
         clonedSubFieldset.hidden = false;
     });
+    const buttons = clone.querySelectorAll("[data-element='code-tree-show-hide-button']");
+
+    buttons.forEach(function (button) {
+        button.addEventListener('mouseover', mouseOverTree);
+        button.addEventListener('mouseout', mouseOutTree);
+    });
     
 
     return clone;
@@ -497,7 +503,7 @@ switch (action) {
       const component_el = document.getElementById('component-element')
       const newEl2 = component_el.cloneNode(true)
       const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
-      button2.textContent = inserted_element.tagName;
+      button2.textContent = '🏷️'+inserted_element.tagName;
       const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
       button.addEventListener('mouseover', mouseOverTree);
 
@@ -529,7 +535,7 @@ switch (action) {
       const component_el = document.getElementById('component-element')
       const newEl2 = component_el.cloneNode(true)
       const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
-      button2.textContent = inserted_element.tagName;
+      button2.textContent = '🏷️'+inserted_element.tagName;
       const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
       button.addEventListener('mouseover', mouseOverTree);
 
