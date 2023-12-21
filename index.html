@@ -302,13 +302,16 @@ document.addEventListener('DOMContentLoaded', function() {
         // Find all sub fieldsets inside the parent fieldset
         const subFieldsets = parentFieldset.querySelectorAll('fieldset[data-element="code-tree-tag"]');
 
-        // Toggle the visibility of sub fieldsets
-        subFieldsets.forEach(subFieldset => {
-            subFieldset.hidden = !subFieldset.hidden;
-        });
+        // Check if there are sub fieldsets
+        if (subFieldsets.length > 0) {
+            // Toggle the visibility of sub fieldsets
+            subFieldsets.forEach(subFieldset => {
+                subFieldset.hidden = !subFieldset.hidden;
+            });
 
-        // Toggle the button content
-        button.innerHTML = buttonContent === '→' ? '↓' : '→';
+            // Toggle the button content
+            button.innerHTML = buttonContent === '→' ? '↓' : '→';
+        }
     }
 }
   function handleCheckboxChange(event) {
