@@ -71,7 +71,7 @@
       <button data-element="code-tree-show-hide-button">&#8594;</button>
       <button data-element="code-tree-tag-name-button">🏷️component</button>
       <button data-element="code-tree-attributes-button">🔑Attributes</button>
-      <button data-element="code-tree-attributes-button">📄Text content</button> 
+      <button data-element="code-tree-text-content-button">📄Text content</button> 
   </fieldset>
             
 
@@ -86,7 +86,7 @@
     <button data-element="code-tree-show-hide-button">&#8594;</button>
     <button data-element="code-tree-tag-name-button" onclick="loader(event, handleComponentClick)">🏷️component</button>
     <button data-element="code-tree-attributes-button">🔑Attributes</button>
-    <button data-element="code-tree-attributes-button">📄Text content</button> 
+    <button data-element="code-tree-text-content-button">📄Text content</button> 
 </fieldset>
 <!--menu click component-->
 <fieldset id="component-replace-menu" class="menu">
@@ -639,18 +639,24 @@ switch (action) {
       
       if (button) {
         const parentId = button.parentNode.id;
-        const fieldset = document.getElementById('code-tree-click-tag');
-
+        const textContentButton = button.nextElementSibling.querySelector('[data-element="code-tree-text-content-button"]');
+        
         // Check if a cloned fieldset already exists after the parent node
-        if (!button.parentNode.nextElementSibling || !button.parentNode.nextElementSibling.id.startsWith('code-tree-click-tag')) {
-          // Clone the fieldset node
-          const clonedFieldset = fieldset.cloneNode(true);
-          
-          // Assign a unique id to the cloned fieldset
-          clonedFieldset.id = clonedFieldset.id  + ';'+parentId;
-          // Insert the cloned fieldset after the parent node of the button
-          button.parentNode.insertAdjacentElement('afterend', clonedFieldset);
-          
+        const existingClonedFieldset = button.parentNode.querySelector('[id^="code-tree-click-tag"]');
+        
+        if (!existingClonedFieldset) {
+            // Clone the fieldset node
+            const fieldset = document.getElementById('code-tree-click-tag');
+            const clonedFieldset = fieldset.cloneNode(true);
+
+            // Assign a unique id to the cloned fieldset
+            clonedFieldset.id = 'code-tree-click-tag;' + parentId;
+
+            // Find the position to insert the cloned fieldset
+            const insertAfterElement = textContentButton || button;
+
+            // Insert the cloned fieldset after the specified element
+            insertAfterElement.parentNode.insertBefore(clonedFieldset, insertAfterElement.nextElementSibling);
         }
       }
 }
