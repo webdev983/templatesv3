@@ -303,17 +303,53 @@ document.addEventListener('DOMContentLoaded', function() {
         if (index !== -1) {
             selected.splice(index, 1);
         }
-      }
+    }
 
-      // Update the content of the span with the length of the selected array
-      var amountSelectedSpan = document.getElementById('code-tree-amount-selected-for-append-or-insert');
-      if (amountSelectedSpan) {
-          amountSelectedSpan.textContent = selected.length;
-      }
+    // Update the content of the span with the length of the selected array
+    var amountSelectedSpan = document.getElementById('code-tree-amount-selected-for-append-or-insert');
+    if (amountSelectedSpan) {
+        amountSelectedSpan.textContent = selected.length;
+    }
 
-      // Log the selected array (you can replace this with your desired logic)
-      console.log("Selected Fieldsets:", selected);
-  }
+    // Log the selected array (you can replace this with your desired logic)
+    console.log("Selected Fieldsets:", selected);
+    var arrowButton = checkbox.parentNode.querySelector('[data-element="code-tree-show-hide-button"]');
+        if (checkbox.checked) {
+            arrowButton.textContent = '↓'  ;
+        }
+        else{
+          arrowButton.textContent = '→'  ;
+        }
+    // Hide all subfieldsets and enable their checkboxes
+    hideSubFieldsets(checkbox.parentNode, checkbox.checked);
+}
+function hideSubFieldsets(parentFieldSet, hide) {
+    // Get all fieldsets with data-element="code-tree-tag" under the specified parent
+    var subFieldsets = parentFieldSet.querySelectorAll('fieldset[data-element="code-tree-tag"]');
+
+    // Iterate through each subfieldset and toggle visibility
+    subFieldsets.forEach(function (subFieldset) {
+        // Toggle visibility using the hidden attribute
+        subFieldset.hidden = hide;
+
+        // Enable or disable the checkbox based on the hide parameter
+        var subCheckbox = subFieldset.querySelector('input[type="checkbox"]');
+        if (subCheckbox) {
+            subCheckbox.disabled = false;
+        }
+
+        // If hiding, remove the subFieldsetId from the selected array
+        if (hide) {
+            var subFieldsetId = subFieldset.id;
+            var index = selected.indexOf(subFieldsetId);
+            if (index !== -1) {
+                selected.splice(index, 1);
+            }
+        }
+
+        
+    });
+}
   function generateUUID() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
       const r = Math.random() * 16 | 0,
@@ -351,17 +387,109 @@ document.addEventListener('DOMContentLoaded', function() {
     const { action, target_element, insertedCode ,tag_change,inserted_element} = command;
 let treeElement
 let componentElement
+function handleAppendOrInsert(action, selectedArrayNotSorted) {
+    // Sort
+    var firstElementId = selectedArrayNotSorted[0];
+    var restOfElements = selectedArrayNotSorted.slice(1);
+
+    // Sort the rest of the elements by their order in the DOM
+    restOfElements.sort(function (a, b) {
+        var elementA = document.getElementById(a);
+        var elementB = document.getElementById(b);
+
+        return Array.from(elementA.parentElement.children).indexOf(elementA) -
+            Array.from(elementB.parentElement.children).indexOf(elementB);
+    });
+
+    // Combine the sorted array with the first element
+    var selectedArray = [firstElementId, ...restOfElements];
+
+    // Find the target fieldset based on the ID
+    var targetElementId = selectedArray[0];
+    console.log('selected'+JSON.stringify(selectedArray))
+    // Find the target fieldset based on the ID
+    var targetFieldset = document.getElementById(targetElementId);
+    var targetFieldset2 = document.getElementById(targetElementId.replace('-tree',""));
+
+    // Get the parent fieldset of the target
+    var parentFieldset = targetFieldset.parentNode;
+    var parentFieldset2 = targetFieldset2.parentNode
+
+    // Get the index of the target fieldset within its parent
+    var index = Array.from(parentFieldset.children).indexOf(targetFieldset);
+    var index2 = Array.from(parentFieldset2.children).indexOf(targetFieldset2);
+
+    // Iterate through the selected array (skipping the first element, which is the target)
+    for (var i = 1; i < selectedArray.length; i++) {
+        var selectedId = selectedArray[i];
+
+        // Find all elements based on the selected ID and its replacement
+        var selectedElements = document.querySelectorAll('[id^="' + selectedId + '"]');
+        var selectedElements2 = document.querySelectorAll('[id^="' + selectedId.replace('-tree',"") + '"]');
+
+        // Iterate through each selected element and process it
+        selectedElements.forEach(function(selectedFieldset) {
+            // Clone the selected fieldset and its descendants
+            var clonedFieldset = cloneWithDescendants(selectedFieldset);
+
+            // Insert the cloned fieldset based on the action
+            if (action === 'Append') {
+                targetFieldset.appendChild(clonedFieldset);
+            } else if (action === 'InsertBefore') {
+                var arrowButton = clonedFieldset.querySelector('[data-element="code-tree-show-hide-button"]');
+              
+                arrowButton.textContent = '→'  ;
+                parentFieldset.insertBefore(clonedFieldset, parentFieldset.children[index]);
+                index++; // Increment the index to maintain the correct order
+            }
+
+            // Remove the original fieldset
+            selectedFieldset.remove();
+        });
+        selectedElements2 = Array.from(selectedElements2).filter(function(element) {
+            return !element.id.includes('-tree');
+        });
+        selectedElements2.forEach(function(selectedFieldset2) {
+            // Clone the selected fieldset and its descendants
+            var clonedFieldset2 = cloneWithDescendants(selectedFieldset2);
+
+            // Insert the cloned fieldset based on the action
+            if (action === 'Append') {
+                targetFieldset2.appendChild(clonedFieldset2);
+            } else if (action === 'InsertBefore') {
+                
+              
+                parentFieldset2.insertBefore(clonedFieldset2, parentFieldset2.children[index2]);
+                index2++; // Increment the index to maintain the correct order
+            }
+
+            // Remove the original fieldset
+            selectedFieldset2.remove();
+        });
+    }
+}
+function cloneWithDescendants(element) {
+    var clone = element.cloneNode(true);
+    var clonedSubFieldsets = clone.querySelectorAll('fieldset[data-element="code-tree-tag"]');
+    clonedSubFieldsets.forEach(function (clonedSubFieldset) {
+        clonedSubFieldset.hidden = false;
+    });
+    
+
+    return clone;
+}
+
 switch (action) {
   case 'Append':
     // Handle the 'Append' action
-    //fieldset
-    treeElement = document.getElementById(target_element);
-    //component
-    componentElement = document.getElementById(target_element.replace('-tree',''));
+    
 
     //case insert tag
     if(inserted_element?.tagName){
-      
+      //fieldset
+      treeElement = document.getElementById(target_element);
+      //component
+      componentElement = document.getElementById(target_element.replace('-tree',''));
       const newEl = document.createElement(inserted_element.tagName)
       newEl.id = inserted_element.id
       console.log(newEl.id)
@@ -371,21 +499,24 @@ switch (action) {
       newEl2.querySelector("[data-element='code-tree-tag-name-button']").textContent = inserted_element.tagName;
       newEl2.id = inserted_element.id + '-tree'
       treeElement.appendChild(newEl2)
+      break;
     }
-    
+    if(target_element.length){
+      handleAppendOrInsert('Append',target_element.map(i=>i.id))
+    }
     break;
 
   case 'InsertBefore':
     // Handle the 'InsertBefore' action
     // Handle the 'Append' action
     //fieldset
-    treeElement = document.getElementById(target_element);
-    //component
-    componentElement = document.getElementById(target_element.replace('-tree',''));
+    
 
     //case insert tag
     if(inserted_element?.tagName){
-      
+      treeElement = document.getElementById(target_element);
+      //component
+      componentElement = document.getElementById(target_element.replace('-tree',''));
       const newEl = document.createElement(inserted_element.tagName)
       newEl.id = inserted_element.id
       console.log(newEl.id)
@@ -396,6 +527,10 @@ switch (action) {
       newEl2.id = inserted_element.id
       treeElement.parentNode.insertBefore(newEl2,treeElement)
     }
+    if(target_element.length){
+      console.log(JSON.stringify(target_element))
+      handleAppendOrInsert('InsertBefore',target_element.map(i=>i.id))
+    }
     
     break;
 
@@ -403,6 +538,7 @@ switch (action) {
     // Handle the 'innerHtml' action
     const targetElement = document.getElementById(target_element.replace('-tree',''));
     targetElement.innerHTML = insertedCode;
+    
     break;
 
   case 'ChangeTag':
@@ -670,9 +806,9 @@ switch (action) {
       const el = {
         time: (new Date()).getTime(),
         action:fieldsetAction,
-        target_element:selected.map(id=>{
+        target_element:[{type:'tag',id:fieldsetId.split(';')[1],},... selected.map(id=>{
           return {type:'tag',id}
-        }),
+        })],
         
 
       }
