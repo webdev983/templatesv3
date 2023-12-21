@@ -431,14 +431,14 @@ function handleAppendOrInsert(action, selectedArrayNotSorted) {
         selectedElements.forEach(function(selectedFieldset) {
             // Clone the selected fieldset and its descendants
             var clonedFieldset = cloneWithDescendants(selectedFieldset);
-
+            var arrowButton = clonedFieldset.querySelector('[data-element="code-tree-show-hide-button"]');
+              
+                arrowButton.textContent = '→'  ;
             // Insert the cloned fieldset based on the action
             if (action === 'Append') {
                 targetFieldset.appendChild(clonedFieldset);
             } else if (action === 'InsertBefore') {
-                var arrowButton = clonedFieldset.querySelector('[data-element="code-tree-show-hide-button"]');
-              
-                arrowButton.textContent = '→'  ;
+                
                 parentFieldset.insertBefore(clonedFieldset, parentFieldset.children[index]);
                 index++; // Increment the index to maintain the correct order
             }
@@ -496,7 +496,12 @@ switch (action) {
       componentElement.appendChild(newEl)
       const component_el = document.getElementById('component-element')
       const newEl2 = component_el.cloneNode(true)
-      newEl2.querySelector("[data-element='code-tree-tag-name-button']").textContent = inserted_element.tagName;
+      const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
+      button2.textContent = inserted_element.tagName;
+      const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
+      button.addEventListener('mouseover', mouseOverTree);
+
+      button.addEventListener('mouseout', mouseOutTree);
       newEl2.id = inserted_element.id + '-tree'
       treeElement.appendChild(newEl2)
       break;
@@ -523,7 +528,12 @@ switch (action) {
       componentElement.parentNode.insertBefore(newEl,componentElement)
       const component_el = document.getElementById('component-element')
       const newEl2 = component_el.cloneNode(true)
-      newEl2.querySelector("[data-element='code-tree-tag-name-button']").textContent = inserted_element.tagName;
+      const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
+      button2.textContent = inserted_element.tagName;
+      const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
+      button.addEventListener('mouseover', mouseOverTree);
+
+      button.addEventListener('mouseout', mouseOutTree);
       newEl2.id = inserted_element.id
       treeElement.parentNode.insertBefore(newEl2,treeElement)
     }
@@ -1780,8 +1790,7 @@ function buildTable() {
 
   </style>
 <script>
-document.querySelectorAll('button[data-element="code-tree-show-hide-button"]').forEach(button => {
-  button.addEventListener('mouseover', function() {
+  function mouseOverTree() {
       // Highlight this button in red
       this.classList.add('highlight-red');
 
@@ -1815,9 +1824,8 @@ document.querySelectorAll('button[data-element="code-tree-show-hide-button"]').f
               });
           }
       });
-  });
-
-  button.addEventListener('mouseout', function() {
+  }
+  function mouseOutTree() {
       let parentFieldset = this.closest('[data-element="code-tree-tag"]');
 
       // Remove the red and blue highlights
@@ -1845,13 +1853,16 @@ document.querySelectorAll('button[data-element="code-tree-show-hide-button"]').f
               });
           }
       });
-  });
+  }
+document.querySelectorAll('button[data-element="code-tree-show-hide-button"]').forEach(button => {
+  button.addEventListener('mouseover', mouseOverTree);
+
+  button.addEventListener('mouseout', mouseOutTree);
 });
 </script>
 <!-- dublicate for components-->
 <script>
-  document.querySelectorAll('button[data-element="component-tree-show-hide-button"]').forEach(button => {
-    button.addEventListener('mouseover', function() {
+  function mouseOver() {
         // Highlight this button in red
         this.classList.add('highlight-red');
   
@@ -1885,9 +1896,8 @@ document.querySelectorAll('button[data-element="code-tree-show-hide-button"]').f
                 });
             }
         });
-    });
-  
-    button.addEventListener('mouseout', function() {
+    }
+    function mouseOut() {
         let parentFieldset = this.closest('[data-element="component-tree-tag"]');
   
         // Remove the red and blue highlights
@@ -1915,10 +1925,14 @@ document.querySelectorAll('button[data-element="code-tree-show-hide-button"]').f
                 });
             }
         });
-    });
-  });
-  
-  
+    
+  }
+  document.querySelectorAll('button[data-element="component-tree-show-hide-button"]').forEach(button => {
+    button.addEventListener('mouseover', mouseOver);
+    
+    button.addEventListener('mouseout', mouseOut);
+    
+});
   
   </script>
   
