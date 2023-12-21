@@ -401,7 +401,7 @@ switch (action) {
 
   case 'innerHtml':
     // Handle the 'innerHtml' action
-    const targetElement = document.getElementById(target_element);
+    const targetElement = document.getElementById(target_element.replace('-tree',''));
     targetElement.innerHTML = insertedCode;
     break;
 
@@ -434,7 +434,9 @@ switch (action) {
     // Handle the 'dublicateTag' action
     const originalElement = document.getElementById(target_element);
     const duplicatedElement = originalElement.cloneNode(true);
-    duplicatedElement.id = generateUUID(); // Assign a new ID to the duplicated element
+    //to do
+    duplicatedElement.id = duplicatedElement.id + '-copy'
+    
     originalElement.parentNode.appendChild(duplicatedElement);
     break;
 
