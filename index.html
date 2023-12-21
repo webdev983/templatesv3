@@ -65,7 +65,7 @@
     
   </div>
   <div id="code-tree" style="position: relative;">
-    <fieldset id="63ae5927-390f-4391-993d-b25ab09c8ada" data-element="code-tree-tag">
+    <fieldset id="63ae5927-390f-4391-993d-b25ab09c8ada-tree" data-element="code-tree-tag">
       <legend>💬</legend>
       <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
       <button data-element="code-tree-show-hide-button">&#8594;</button>
@@ -78,8 +78,16 @@
 
 
 <!--menus-->
-<div>
+<div hidden>
 
+  <fieldset id="component-element" data-element="code-tree-tag">
+    <legend>💬</legend>
+    <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
+    <button data-element="code-tree-show-hide-button">&#8594;</button>
+    <button data-element="code-tree-tag-name-button" onclick="loader(event, handleComponentClick)">🏷️component</button>
+    <button data-element="code-tree-attributes-button">🔑Attributes</button>
+    <button data-element="code-tree-attributes-button">📄Text content</button> 
+</fieldset>
 <!--menu click component-->
 <fieldset id="component-replace-menu" class="menu">
   <legend><button onclick = "cancel(event)" style="font-size: 0.9em;">❌</button></legend>
@@ -340,23 +348,55 @@ document.addEventListener('DOMContentLoaded', function() {
     parent.insertBefore(clonedElement, originalElement);
   }
   const executeCommand = (command) => {
-    const { action, target_element, insertedCode } = command;
-
+    const { action, target_element, insertedCode ,tag_change,inserted_element} = command;
+let treeElement
+let componentElement
 switch (action) {
   case 'Append':
     // Handle the 'Append' action
-    const parentElement = document.getElementById(target_element);
-    const newElement = document.createElement('div'); // Replace 'div' with the desired element type
-    newElement.textContent = 'New Element'; // Customize the content as needed
-    parentElement.appendChild(newElement);
+    //fieldset
+    treeElement = document.getElementById(target_element);
+    //component
+    componentElement = document.getElementById(target_element.replace('-tree',''));
+
+    //case insert tag
+    if(inserted_element?.tagName){
+      
+      const newEl = document.createElement(inserted_element.tagName)
+      newEl.id = inserted_element.id
+      console.log(newEl.id)
+      componentElement.appendChild(newEl)
+      const component_el = document.getElementById('component-element')
+      const newEl2 = component_el.cloneNode(true)
+      newEl2.querySelector("[data-element='code-tree-tag-name-button']").textContent = inserted_element.tagName;
+      newEl2.id = inserted_element.id + '-tree'
+      treeElement.appendChild(newEl2)
+    }
+    
     break;
 
   case 'InsertBefore':
     // Handle the 'InsertBefore' action
-    const referenceElement = document.getElementById(target_element);
-    const newElementBefore = document.createElement('div'); // Replace 'div' with the desired element type
-    newElementBefore.textContent = 'New Element Before'; // Customize the content as needed
-    referenceElement.parentNode.insertBefore(newElementBefore, referenceElement);
+    // Handle the 'Append' action
+    //fieldset
+    treeElement = document.getElementById(target_element);
+    //component
+    componentElement = document.getElementById(target_element.replace('-tree',''));
+
+    //case insert tag
+    if(inserted_element?.tagName){
+      
+      const newEl = document.createElement(inserted_element.tagName)
+      newEl.id = inserted_element.id
+      console.log(newEl.id)
+      componentElement.parentNode.insertBefore(newEl,componentElement)
+      const component_el = document.getElementById('component-element')
+      const newEl2 = component_el.cloneNode(true)
+      newEl2.querySelector("[data-element='code-tree-tag-name-button']").textContent = inserted_element.tagName;
+      newEl2.id = inserted_element.id
+      treeElement.parentNode.insertBefore(newEl2,treeElement)
+    }
+    
     break;
 
   case 'innerHtml':
@@ -367,8 +407,27 @@ switch (action) {
 
   case 'ChangeTag':
     // Handle the 'ChangeTag' action
+    // tree el
     const elementToChange = document.getElementById(target_element);
-    elementToChange.tagName = 'span'; // Replace 'span' with the desired tag name
+    elementToChange.querySelector("[data-element='code-tree-tag-name-button']").textContent = tag_change; 
+    // builder el
+    const elementToChange2 = document.getElementById(target_element.replace('-tree',''));
+      if (elementToChange2) {
+        // Create a new p element
+        var newElement = document.createElement(tag_change);
+
+        // Copy attributes from the div to the p element
+        for (var i = 0; i < elementToChange2.attributes.length; i++) {
+            var attribute = elementToChange2.attributes[i];
+            newElement.setAttribute(attribute.name, attribute.value);
+        }
+
+        // Copy content from the div to the p element
+        newElement.innerHTML = elementToChange2.innerHTML;
+
+        // Replace the div element with the new p element
+        elementToChange2.parentNode.replaceChild(newElement, elementToChange2);
+    }
     break;
 
   case 'dublicateTag':
@@ -381,8 +440,15 @@ switch (action) {
 
   case 'removeTag':
     // Handle the 'removeTag' action
+    // tree
     const elementToRemove = document.getElementById(target_element);
     elementToRemove.parentNode.removeChild(elementToRemove);
+
+    // component
+    const elementToRemove2 = document.getElementById(target_element.replace('tree',''));
+    elementToRemove2.parentNode.removeChild(elementToRemove2);
+
+
     break;
 
   // Add more cases as needed for other actions
@@ -394,10 +460,7 @@ switch (action) {
 }
 
   }
-  document.addEventListener('DOMContentLoaded', function () {
-    
-
-    async function loader(e, handler) {
+  async function loader(e, handler) {
       const loadingScreen = document.getElementById('loading');
       loadingScreen.style.display = 'flex';
 
@@ -437,6 +500,10 @@ switch (action) {
         }
       }
 }
+  document.addEventListener('DOMContentLoaded', function () {
+    
+
+    
 
 
     //first menu
@@ -465,7 +532,7 @@ switch (action) {
         time: (new Date()).getTime(),
         action,
         target_element:id.split(';')[1],
-        insertedCode:textareaValue
+        insertedCode:textareaValue,
 
       }
       console.log(JSON.stringify(el))
@@ -1530,10 +1597,10 @@ function buildTable() {
 
           }
           if(fieldsetAction === 'ChangeTag'){
-            el.tag_change = chosenTag.tagValue
+            el.tag_change = chosenTag.tagName
           }
           else {
-            el.inserted_element = {type:'tag',tag:chosenTag.tagValue,id:generateUUID()}
+            el.inserted_element = {type:'tag',tagValue:chosenTag.tagValue,tagName:chosenTag.tagName,id:generateUUID()}
           }
           pushAction(el)
       }
