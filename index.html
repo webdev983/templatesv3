@@ -68,13 +68,13 @@
     <fieldset id="63ae5927-390f-4391-993d-b25ab09c8ada-tree" data-element="code-tree-tag">
       <legend>💬</legend>
       <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
-      <button data-element="code-tree-show-hide-button">&#8594;</button>
+      <button data-element="code-tree-show-hide-button" onclick="toggleSubFields(event)">&#8594;</button>
       <button data-element="code-tree-tag-name-button">🏷️component</button>
       <button data-element="code-tree-attributes-button">🔑Attributes</button>
       <button data-element="code-tree-text-content-button">📄Text content</button> 
   </fieldset>
             
-
+  </div>
 
 
 <!--menus-->
@@ -83,7 +83,7 @@
   <fieldset id="component-element" data-element="code-tree-tag">
     <legend>💬</legend>
     <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
-    <button data-element="code-tree-show-hide-button">&#8594;</button>
+    <button data-element="code-tree-show-hide-button" onclick="toggleSubFields(event)">&#8594;</button>
     <button data-element="code-tree-tag-name-button" onclick="loader(event, handleComponentClick)">🏷️component</button>
     <button data-element="code-tree-attributes-button">🔑Attributes</button>
     <button data-element="code-tree-text-content-button">📄Text content</button> 
@@ -290,6 +290,27 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
   var actionLog = []
   var selected = []
+  function toggleSubFields(event) {
+    // Get the clicked button and its content
+    const button = event.target;
+    const buttonContent = button.innerHTML;
+
+    // Get the parent fieldset
+    const parentFieldset = button.closest('fieldset[data-element="code-tree-tag"]');
+
+    if (parentFieldset) {
+        // Find all sub fieldsets inside the parent fieldset
+        const subFieldsets = parentFieldset.querySelectorAll('fieldset[data-element="code-tree-tag"]');
+
+        // Toggle the visibility of sub fieldsets
+        subFieldsets.forEach(subFieldset => {
+            subFieldset.hidden = !subFieldset.hidden;
+        });
+
+        // Toggle the button content
+        button.innerHTML = buttonContent === '→' ? '↓' : '→';
+    }
+}
   function handleCheckboxChange(event) {
     var checkbox = event.target;
     var fieldsetId = checkbox.parentNode.id;
@@ -617,7 +638,22 @@ switch (action) {
   async function loader(e, handler) {
       const loadingScreen = document.getElementById('loading');
       loadingScreen.style.display = 'flex';
+      const prefixesToRemove = [
+        'component-element',
+        'component-replace-menu',
+        'code-tree-tag-attributes-form',
+        'code-tree-click-tag',
+        'code-tree-add-tag-step-1',
+        'code-tree-append-or-insert-approv-menu',
+        'code-tree-inner-html-receive-menu',
+        'tag-table'
+      ];
 
+      prefixesToRemove.forEach(prefix => {
+          const p = document.getElementById("code-tree")
+          const elementsToRemove = p.querySelectorAll(`fieldset[id^="${prefix}"]`);
+          elementsToRemove.forEach(element => element.remove());
+      });
       const timerElement = document.getElementById('timer');
       let tenthsOfSeconds = 0;
       const interval = setInterval(function () {
