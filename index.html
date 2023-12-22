@@ -825,6 +825,12 @@ switch (action) {
     
     const loadingScreen = document.getElementById('loading');
     loadingScreen.style.display = 'flex';
+    const timerElement = document.getElementById('timer');
+    let tenthsOfSeconds = 0;
+    const interval = setInterval(function () {
+      tenthsOfSeconds++;
+      timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
+    }, 100);
     const urlParams = new URLSearchParams(window.location.search);
     const idFromQuery = urlParams.get('id');
 
@@ -848,7 +854,10 @@ switch (action) {
     buttons.forEach(function (button) {
       button.addEventListener('click', e => loader(e, handleComponentClick));
     });
-
+    clearInterval(interval);
+    console.log(timerElement.textContent)
+    const lastActionTime = document.getElementById('last-action-time');
+    lastActionTime.textContent = timerElement.textContent;
     loadingScreen.style.display = 'none';
     
   });
