@@ -69,7 +69,7 @@
 
 
 <!--menus-->
-<div >
+<div hidden>
   <fieldset id="component-element" data-element="code-tree-tag">
     <legend>💬</legend>
     <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
@@ -241,11 +241,11 @@
 
 
 <!-- menu to receive text area html -->
-<div id="code-tree-tag-text-content-form" style="display: flex; flex-direction: column; align-items: flex-end;">
-  <button id="code-tree-tag-attributes-form-action-back" style="margin-top: 5px;">❌</button>
+<fieldset id="code-tree-tag-text-content-form" style="display: flex; flex-direction: column; align-items: flex-end;">
+  <button id="code-tree-tag-attributes-form-action-back" style="margin-top: 5px;" onclick="cancel()">❌</button>
   <textarea placeholder="📄Text content" id="code-tree-tag-text-content"></textarea>
-  <button id="code-tree-tag-text-content-action-save">💾 save</button>
-  </div>
+  <button id="code-tree-tag-text-content-action-save" onclick="saveText(event)">💾 save</button>
+  </fieldset>
 
 
 
@@ -365,6 +365,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
   var actionLog = []
   var selected = []
+  
   function toggleSubFields(event) {
     // Get the clicked button and its content
     const button = event.target;
@@ -510,7 +511,7 @@ function hideSubFieldsets(parentFieldSet, hide) {
     parent.insertBefore(clonedElement, originalElement);
   }
   const executeCommand = (command) => {
-    const { action, target_element, insertedCode ,tag_change,inserted_element} = command;
+    const { action, target_element, insertedCode ,tag_change,inserted_element,value} = command;
 let treeElement
 let componentElement
 function handleAppendOrInsert(action, selectedArrayNotSorted) {
@@ -731,6 +732,19 @@ switch (action) {
 
 
     break;
+  case 'textContent':
+    // Handle the 'removeTag' action
+    // tree
+    const element1 = document.getElementById(target_element);
+    const textContentButton = element1.querySelector('[data-element="code-tree-text-content-button"]');
+    textContentButton.textContent = `📄Text content(${value.length})`;
+
+    // component
+    const element2 = document.getElementById(target_element.replace('-tree',''));
+    element2.textContent = value;
+
+
+    break;
 
   // Add more cases as needed for other actions
 
@@ -752,7 +766,8 @@ switch (action) {
         'code-tree-add-tag-step-1',
         'code-tree-append-or-insert-approv-menu',
         'code-tree-inner-html-receive-menu',
-        'tag-table'
+        'tag-table',
+        "code-tree-tag-text-content-form"
       ];
 
       prefixesToRemove.forEach(prefix => {
@@ -775,7 +790,31 @@ switch (action) {
       const lastActionTime = document.getElementById('last-action-time');
       lastActionTime.textContent = timerElement.textContent;
     }
+    function openTextContent(event){
+      const button = event.target.closest('button[data-element="code-tree-text-content-button"]');
+      
+      if (button) {
+        const parentId = button.parentNode.id ;
+        const textContentButton = button.parentNode.querySelector('[data-element="code-tree-text-content-button"]');
+        
+        const existingClonedFieldset = button.parentNode.querySelector('[id^="code-tree-tag-text-content-form"]');
+        
+        if (!existingClonedFieldset) {
+            // Clone the fieldset node
+            const fieldset = document.getElementById('code-tree-tag-text-content-form');
+            const clonedFieldset = fieldset.cloneNode(true);
 
+            // Assign a unique id to the cloned fieldset
+            clonedFieldset.id = 'code-tree-tag-text-content-form;' + parentId;
+
+            // Find the position to insert the cloned fieldset
+            const insertAfterElement = textContentButton || button;
+
+            // Insert the cloned fieldset after the specified element
+            insertAfterElement.parentNode.insertBefore(clonedFieldset, insertAfterElement.nextElementSibling);
+        }
+      }
+    }
     function handleComponentClick(event) {
       const button = event.target.closest('button[data-element="code-tree-tag-name-button"]');
       
@@ -848,7 +887,12 @@ switch (action) {
         // Change the id of the element with id "component-element"
         const componentElement = document.getElementById('41412421-412412412-41241212-412412');
         if (componentElement) {
-            componentElement.id = idFromQuery;
+            componentElement.id = idFromQuery + '-tree';
+        }
+
+        const builderElement = document.getElementById('63ae5927-390f-4391-993d-b25ab09c8ada');
+        if (builderElement) {
+          builderElement.id = idFromQuery ;
         }
 
         // Change the text content of the button with data-element "code-tree-tag-name-button"
@@ -894,6 +938,33 @@ switch (action) {
       console.log(JSON.stringify(el))
       pushAction(el)
     }
+    parent.remove()
+    console.log(JSON.stringify(actionLog))
+
+  }
+  const saveText =(event)=>{
+    const parent = event.target.parentNode
+    const {id } = parent
+    const action = 'textContent'
+    console.log('ac' + action)
+    
+      const saveButton = event.target;
+      const fieldset = saveButton.closest('fieldset');
+        
+        
+      const textareaValue = fieldset.querySelector('#code-tree-tag-text-content').value;
+            
+        
+      const el = {
+        time: (new Date()).getTime(),
+        action,
+        target_element:id.split(';')[1],
+        value:textareaValue,
+
+      }
+      console.log(JSON.stringify(el))
+      pushAction(el)
+    
     parent.remove()
     console.log(JSON.stringify(actionLog))
 
