@@ -447,10 +447,37 @@ function hideSubFieldsets(parentFieldSet, hide) {
       return v.toString(16);
     });
   }
-  const pushAction = (e)=>{
+  const pushAction = (e,firstLoad)=>{
     actionLog.push(e)
+    !firstLoad && pushActionToDb(e)
     executeCommand(e)
     insertDataIntoCodeLog(e.time,e.action)
+  }
+  const pushActionToDb = async(action)=>{
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const id = urlSearchParams.get('id');
+    const sk = action.time.toString()
+    delete action.time
+    const payload = { ...action, sk,id };
+
+    
+
+    // Send a POST request using fetch
+    const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    // Ensure the request was successful (status code 2xx)
+    if (!response.ok) {
+      throw new Error(`Failed to push action to the database. Status: ${response.status}`);
+    }
+
+    // Parse and log the response or handle it as needed
+    const responseData = await response.json();
   }
   function insertDataIntoCodeLog(actionTime, actionName) {
     const originalElement = document.getElementById("code-log-element");
@@ -765,11 +792,40 @@ switch (action) {
         }
       }
 }
-  document.addEventListener('DOMContentLoaded', function () {
+  const loadFromDb = async ()=>{
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const idFromLink = urlSearchParams.get('id');
+
+    if (!idFromLink) {
+      throw new Error('Missing id parameter in the URL');
+    }
+
+    // Make a GET request to the API with the 'id' query parameter
+    const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${idFromLink}&startsWith=true`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    // Ensure the request was successful (status code 2xx)
+    if (!response.ok) {
+      throw new Error(`Failed to load data from the database. Status: ${response.status}`);
+    }
+
+    // Parse and log the response or handle it as needed
+    const responseData = await response.json();
+    console.log(JSON.stringify(responseData))
+    for (const item of responseData.items){
+      pushAction({...item,time:item.sk},true)
+    }
+    
+  }
+  document.addEventListener('DOMContentLoaded', async function () {
     
 
     
-
+    await loadFromDb()
 
     //first menu
     let buttons = document.querySelectorAll('button[data-element="code-tree-tag-name-button"]');
