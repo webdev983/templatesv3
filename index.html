@@ -641,6 +641,9 @@ switch (action) {
       button.addEventListener('mouseover', mouseOverTree);
 
       button.addEventListener('mouseout', mouseOutTree);
+      button.addEventListener('mouseover', removeHighlight);
+  button.addEventListener('mouseout', highlightBorder);
+
       newEl2.id = inserted_element.id + '-tree'
       treeElement.appendChild(newEl2)
       break;
@@ -2061,26 +2064,28 @@ function buildTable() {
 
 <script>
   // Function to add the highlight class to the parent fieldset
-  function highlightBorder(element) {
-    const parentFieldset = element.closest('fieldset');
-    if (parentFieldset) {
-      parentFieldset.classList.add('highlight-up-border-blue');
+  function highlightBorder(event) {
+    const element = event.target;
+    if (element.getAttribute('data-element') === 'code-tree-tag-name-button') {
+      const parentFieldset = element.closest('fieldset');
+      if (parentFieldset) {
+        parentFieldset.classList.add('highlight-up-border-blue');
+      }
     }
   }
 
   // Function to remove the highlight class from the parent fieldset
-  function removeHighlight(element) {
-    const parentFieldset = element.closest('fieldset');
-    if (parentFieldset) {
-      parentFieldset.classList.remove('highlight-up-border-blue');
+  function removeHighlight(event) {
+    const element = event.target;
+    if (element.getAttribute('data-element') === 'code-tree-tag-name-button') {
+      const parentFieldset = element.closest('fieldset');
+      if (parentFieldset) {
+        parentFieldset.classList.remove('highlight-up-border-blue');
+      }
     }
   }
 </script>
-
-
-
 <style>
-
 .highlight-up-border-blue {
       border-top-color: blue; 
   }
@@ -2177,6 +2182,11 @@ document.querySelectorAll('button[data-element="code-tree-show-hide-button"]').f
   button.addEventListener('mouseover', mouseOverTree);
 
   button.addEventListener('mouseout', mouseOutTree);
+  button.addEventListener('mouseover', removeHighlight);
+  button.addEventListener('mouseout', highlightBorder);
+
+
+  
 });
 </script>
 <!-- dublicate for components-->
