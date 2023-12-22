@@ -823,8 +823,24 @@ switch (action) {
   }
   document.addEventListener('DOMContentLoaded', async function () {
     
+    const loadingScreen = document.getElementById('loading');
+    loadingScreen.style.display = 'flex';
+    const urlParams = new URLSearchParams(window.location.search);
+    const idFromQuery = urlParams.get('id');
 
-    
+    if (idFromQuery) {
+        // Change the id of the element with id "component-element"
+        const componentElement = document.getElementById('41412421-412412412-41241212-412412');
+        if (componentElement) {
+            componentElement.id = idFromQuery;
+        }
+
+        // Change the text content of the button with data-element "code-tree-tag-name-button"
+        const componentNameButton = document.querySelector('[data-element="code-tree-tag-name-button"]');
+        if (componentNameButton) {
+            componentNameButton.innerText = `🧩${idFromQuery}`;
+        }
+    }
     await loadFromDb()
 
     //first menu
@@ -833,7 +849,7 @@ switch (action) {
       button.addEventListener('click', e => loader(e, handleComponentClick));
     });
 
-
+    loadingScreen.style.display = 'none';
     
   });
   const save =(event)=>{
