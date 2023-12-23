@@ -4,49 +4,5 @@
 <button id="current-page-path-edit">✏️</button>
 <button hidden id="current-page-path-save">💾</button>
 </div>
-
-<!-- edit path-->
-<script>
-    document.getElementById('current-page-path-edit').addEventListener('click', function() {
-        var label = document.getElementById('current-page-path');
-        var input = document.getElementById('current-page-path-input');
-        var saveButton = document.getElementById('current-page-path-save');
-        var editButton = document.getElementById('current-page-path-edit');  // Get the edit button
-    
-        input.value = label.textContent;
-        label.style.display = 'none';
-        input.style.display = 'inline';
-        saveButton.hidden = false;
-        editButton.style.display = 'none';  // Hide the edit button
-    
-        var temp = document.createElement('span');
-        temp.style.visibility = 'hidden';
-        temp.style.font = window.getComputedStyle(label).font;
-        temp.textContent = label.textContent;
-    
-        document.body.appendChild(temp);
-        input.style.width = (temp.offsetWidth * 1.1) + 'px';
-        document.body.removeChild(temp);
-    });
-    
-    document.getElementById('current-page-path-save').addEventListener('click', function() {
-        var label = document.getElementById('current-page-path');
-        var input = document.getElementById('current-page-path-input');
-        var editButton = document.getElementById('current-page-path-edit');  // Get the edit button
-    
-        label.textContent = input.value;
-        label.style.display = 'inline';
-        input.style.display = 'none';
-        this.hidden = true; 
-        editButton.style.display = 'inline';  // Show the edit button again
-    });
-    </script>
   
-
-  
-  <div id="code-builder" style="position: relative;">
-    <div id="buttons-container" style="position: relative; height: 50px;">
-      <button id="aside-toggle-settings" style="font-size: 1.5em; position: absolute; right: 60px; top: 10px;">⚙️</button>
-      <button id="aside-toggle" style="font-size: 1.5em; position: absolute; right: 0px; top: 10px;">log</button>
-    </div>
   
