@@ -314,6 +314,19 @@
 
           // Set file ID
           clonedItem.querySelector('[data-value="file-id"]').textContent = item.id;
+
+          clonedItem.querySelector('[data-action="file-open"]').onclick = function () {
+            redirect(item.id);
+          };
+          clonedItem.querySelector('[data-action="file-remove-button"]').onclick = function (event) {
+            openRemove(event);
+          };
+          clonedItem.querySelector('[data-action="file-show-id"]').onclick = function (event) {
+            showId(event);
+          };
+          clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
+            remove(event, item.id);
+          };
           if (!lvls.includes(item.lsi1.replace(path + '/', '').split('/')[0])) {
             lvls.push(item.lsi1.replace(path + '/', '').split('/')[0])
           }
