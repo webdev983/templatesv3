@@ -20,21 +20,22 @@
       margin-left: 10px;
   }
 </style>
-<button data-action="create-new-file">➕ create new</button>
-<fieldset data-element="create-new-file-path">
+<button data-action="create-new-file" onclick="openTypeSelect()">➕ create new</button>
+<fieldset hidden data-element="create-new-file-path">
   <legend>enter path</legend>
   <span>📂 </span>
   <input type="text" data-input="create-new-file-path-input" oninput="adjustWidthToContent(this)">
-  <button data-action="create-new-file-path-save">💾</button>
+  <button data-action="create-new-file-path-save" onclick="savePath(event)">💾</button>
 </fieldset>
-<fieldset  data-element="choose-new-file-type">
+<fieldset  data-element="choose-new-file-type" hidden>
 <legend>select type</legend>
-</button><button data-action="choose-new-file-type-html" style="font-size: 1.2em;">🧩HTML component</button> 
-<button data-action="choose-new-file-type-css" style="font-size: 1.2em;">🎨 css styles file</button>
-<button data-action="choose-new-file-type-js" style="font-size: 1.2em;">💻 javascript</button>
+<button data-action="choose-new-file-type-html" style="font-size: 1.2em;" onclick="createNew('HTML')">🧩 HTML component</button>
+  <button data-action="choose-new-file-type-css" style="font-size: 1.2em;" onclick="createNew('CSS')">🎨 CSS styles file</button>
+  <button data-action="choose-new-file-type-js" style="font-size: 1.2em;" onclick="createNew('JavaScript')">💻 JavaScript</button>
+
 </fieldset>
 
-<select id="pathSelector" style="margin-top: 10px; min-width: 200px;">
+<select id="pathSelector" style="margin-top: 10px; min-width: 200px;" onchange="handlePathSelection()">
   <option value="path0">⬇️ select</option>
   <option value="path1">⬅️ back</option>
   <option value="path2">➡️ test</option>
@@ -43,17 +44,169 @@
 
 </select>
 
-<ol data-element="file-path-list">
-  <li data-element="file-path">
-    <label data-value="file-path">universal/blablabla/blablabla/coolcss</label><button data-action="file-open" style="user-select: none;">📂</button><button data-action="file-show-id" style="user-select: none;">ℹ️</button><label style="user-select: none;"> 🧩</label>
-  </li>
-  <li data-element="file-path">
-    <label data-value="file-path">universal/blablabla/blablabla/coolcssuniversal/blablabla/blablabla/coolcss</label><button data-action="file-open" style="user-select: none;">📂</button><button data-action="file-show-id" style="user-select: none;">ℹ️</button><label style="user-select: none;"> 🧩</label>
-  </li>
+<ol data-element="file-path-list" id="filePathList">
+  
   <li data-element="file-path">
     <label data-value="file-path">universal/blablabla/blablabla/coolcssuniversal/blablabla/blablabla/coolcss</label><button data-action="file-open" style="user-select: none;">📂</button><button data-action="file-show-id" style="user-select: none;">ℹ️</button><label style="user-select: none;"> 🧩</label>
     <div data-element="file-id" ><span style="user-select: none;">🆔</span><span data-value="file-idstyle=" style="font-size: 0.9em">1414124-414221412-4124214124-412412</span></div>
   </li>
 </ol>
 
+
+<script>
+  const openTypeSelect = ()=>{
+    var fieldset = document.querySelector('[data-element="choose-new-file-type"]');
+    fieldset.removeAttribute('hidden');
+  }
+  function createNew(type) {
+    var fieldset = document.querySelector('[data-element="choose-new-file-type"]');
+    fieldset.setAttribute('hidden','');
+    fieldset.setAttribute('type',type)
+    var fieldset2= document.querySelector('[data-element="create-new-file-path"]');
+    fieldset2.removeAttribute('hidden');
+  }
+  function savePath() {
+    var fieldset2 = document.querySelector('[data-element="create-new-file-path"]');
+    fieldset2.setAttribute('hidden', '');
+
+    // Access the type from the choose-new-file-type fieldset
+    var type = document.querySelector('[data-element="choose-new-file-type"]').getAttribute('type');
+
+    // Get the path from the input element
+    var pathInput = document.querySelector('[data-input="create-new-file-path-input"]');
+    var path = pathInput.value;
+    pathInput.value=''
+
+    // Create a new path based on the type
+    var newPath = type.toLowerCase() + '/' + path;
+
+    // Perform additional actions based on the selected type and path
+    console.log('Creating new file of type:', type, 'at path:', newPath);
+
+    // Fetch POST request
+    fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        sk: 'path',
+        lsi1: newPath,
+        ownerUUID:'path'
+      }),
+    })
+    .then(response => response.json())
+    .then(data => console.log('API Response:', data))
+    .then(e=>loadFileList())
+    .catch(error => console.error('Error:', error));
+  } 
+  let path = ''
+  let lvls= []
+  function loadFileList() {
+    // Fetch GET request
+    fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true')
+      .then(response => response.json())
+      .then(data => {
+        // Replace existing file paths with dynamic content
+        var filePathList = document.getElementById('filePathList');
+        filePathList.innerHTML = '';
+        console.log(JSON.stringify(data))
+        data.items.forEach(item => {
+          var li = document.createElement('li');
+          li.id = item.id
+          li.setAttribute('data-element', 'file-path');
+          li.innerHTML = `
+            <label data-value="file-path">${item.lsi1}</label>
+            <button data-action="file-open" style="user-select: none;">📂</button>
+            <button data-action="file-show-id" style="user-select: none;">ℹ️</button>
+            <label style="user-select: none;"> 🧩</label>
+          `;
+          if(!lvls.includes(item.lsi1)){
+            lvls.push(item.lsi1)
+          }
+          filePathList.appendChild(li);
+        });
+        // Update select options
+        var pathSelector = document.getElementById('pathSelector');
+        pathSelector.innerHTML = '<option value="select">⬇️ select</option><option value="back">⬅️ back</option>';
+        lvls.forEach((lvl, index) => {
+          pathSelector.innerHTML += `<option value="${lvl}">➡️ ${lvl}</option>`;
+        });
+      })
+      .catch(error => console.error('Error:', error));
+    
+  }
+  
+  function handlePathSelection() {
+    // Get the selected value from the pathSelector
+    var selectedValue = document.getElementById('pathSelector').value;
+
+    // Get the corresponding item based on the selected value
+    var selectedItem = selectedValue
+
+    // Handle the selected item as needed
+    console.log('Selected Item:', selectedItem);
+    if( selectedItem ==='select' ||  selectedItem ===undefined){
+      return
+    }
+    if(selectedItem ==='back'){
+      if( path === ''){
+        return
+      }
+      const splited = path.split('/')
+      if(splited.length === 1){
+        loadFileList()
+        return
+      }
+      splited.pop()
+      path = splited.join('/')
+      loadUsingPath()
+      return
+    }
+    if(path ===''){
+      path = selectedItem
+    }
+    else{
+      path = path + '/' + selectedItem
+
+    }
+    loadUsingPath()
+    
+  }
+  const loadUsingPath = ()=>{
+    return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1='+path)
+      .then(response => response.json())
+      .then(data => {
+        // Replace existing file paths with dynamic content
+        var filePathList = document.getElementById('filePathList');
+        filePathList.innerHTML = '';
+        console.log(JSON.stringify(data))
+        data.items.forEach(item => {
+          var li = document.createElement('li');
+          li.id = item.id
+          li.setAttribute('data-element', 'file-path');
+          li.innerHTML = `
+            <label data-value="file-path">${item.lsi1}</label>
+            <button data-action="file-open" style="user-select: none;">📂</button>
+            <button data-action="file-show-id" style="user-select: none;">ℹ️</button>
+            <label style="user-select: none;"> 🧩</label>
+          `;
+          lvls = []
+          if(!lvls.includes(item.lsi1.split('/')[0])){
+            lvls.push(item.lsi1.split('/')[0])
+          }
+          filePathList.appendChild(li);
+        });
+        // Update select options
+        var pathSelector = document.getElementById('pathSelector');
+        pathSelector.innerHTML = '<option value="path0">⬇️ select</option><option value="back">⬅️ back</option>';
+        lvls.forEach((lvl, index) => {
+          pathSelector.innerHTML += `<option value="${lvl}">➡️ ${lvl}</option>`;
+        });
+      })
+      .catch(error => console.error('Error:', error));
+  }
+  document.addEventListener('DOMContentLoaded', loadFileList)
+</script>
+</script>
 
