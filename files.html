@@ -20,7 +20,12 @@
     margin-left: 10px;
   }
 </style>
-
+<!--loading screen-->
+<div id="loading"
+  style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 900;">
+  <span style="font-size: 10.2em; color: white;">⏳</span>
+  <div id="timer" style="font-size: 2em; color: white;">1.12</div>
+</div>
 
 <select id="pathSelector" style="margin-top: 10px; min-width: 200px;" onchange="handlePathSelection()">
   <option value="path0">⬇️ select</option>
@@ -31,16 +36,20 @@
 
 <button data-action="create-new-file" onclick="openTypeSelect()">➕ create new</button>
 <fieldset hidden data-element="create-new-file-path">
-  <legend><button onclick = "cancel(event)" style="font-size: 0.9em;">❌</button></legend>
+  <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
   <span>📂 </span>
-  <input type="text" placeholder="path/path/path/path" data-input="create-new-file-path-input" oninput="adjustWidthToContent(this)" style="min-width: 300px;">
-  <button data-action="create-new-file-path-save" onclick="savePath(event)">💾</button>
+  <input type="text" placeholder="path/path/path/path" data-input="create-new-file-path-input"
+    oninput="adjustWidthToContent(this)" style="min-width: 300px;">
+  <button data-action="create-new-file-path-save" onclick="loader(event,savePath)">💾</button>
 </fieldset>
-<fieldset  data-element="choose-new-file-type" hidden>
-  <legend><button onclick = "cancel(event)" style="font-size: 0.9em;">❌</button></legend>
-<button data-action="choose-new-file-type-html" style="font-size: 1.2em;" onclick="createNew('HTML')">🧩 HTML component</button>
-  <button data-action="choose-new-file-type-css" style="font-size: 1.2em;" onclick="createNew('CSS')">🎨 CSS styles file</button>
-  <button data-action="choose-new-file-type-js" style="font-size: 1.2em;" onclick="createNew('JavaScript')">💻 JavaScript</button>
+<fieldset data-element="choose-new-file-type" hidden>
+  <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
+  <button data-action="choose-new-file-type-html" style="font-size: 1.2em;" onclick="createNew('HTML')">🧩 HTML
+    component</button>
+  <button data-action="choose-new-file-type-css" style="font-size: 1.2em;" onclick="createNew('CSS')">🎨 CSS styles
+    file</button>
+  <button data-action="choose-new-file-type-js" style="font-size: 1.2em;" onclick="createNew('JavaScript')">💻
+    JavaScript</button>
 
 </fieldset>
 
@@ -52,11 +61,16 @@
 </ol>
 
 
+
 <div hidden>
 
   <!-- file path-->
   <li data-element="file-path" id="item">
-    <button data-action="file-show-id" style="user-select: none; margin-right: 5px;">ℹ️</button><button data-action="file-open" style="user-select: none; margin-right: 5px;">📂</button><button data-action="file-remove-button" style="user-select: none; margin-right: 10px;">&#128465;</button><label data-value="file-path">universal/blablabla/blablabla/coolcss</label><label data-value="file-emoji" style="user-select: none;"> 🧩</label>
+    <button data-action="file-show-id" style="user-select: none; margin-right: 5px;">ℹ️</button><button
+      data-action="file-open" style="user-select: none; margin-right: 5px;">📂</button><button
+      data-action="file-remove-button" style="user-select: none; margin-right: 10px;">&#128465;</button><label
+      data-value="file-path">universal/blablabla/blablabla/coolcss</label><label data-value="file-emoji"
+      style="user-select: none;"> 🧩</label>
 
     <!-- file info-->
     <div hidden data-element="file-id"><span style="user-select: none;">🆔</span><span data-value="file-id"
@@ -74,6 +88,25 @@
 
 </div>
 <script>
+  async function loader(e, handler) {
+    const loadingScreen = document.getElementById('loading');
+    loadingScreen.style.display = 'flex';
+
+    const timerElement = document.getElementById('last-action-time');
+    let tenthsOfSeconds = 0;
+    const interval = setInterval(function () {
+      tenthsOfSeconds++;
+      timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
+    }, 100);
+
+    await handler(e);
+
+    loadingScreen.style.display = 'none';
+    clearInterval(interval);
+    console.log(timerElement.textContent)
+    const lastActionTime = document.getElementById('timer');
+    lastActionTime.textContent = timerElement.textContent;
+  }
   const cancel = (event) => {
     event.target.parentNode.parentNode.setAttribute('hidden', "")
   }
@@ -172,7 +205,7 @@
         }
         listItem.remove();
       })
-      
+
       .catch(error => {
         console.error('Error removing file:', error);
       });
@@ -185,45 +218,50 @@
         // Replace existing file paths with dynamic content
         var filePathList = document.getElementById('filePathList');
         filePathList.innerHTML = '';
-
+        let i = 0;
         data.items.forEach(item => {
-          // Clone the fieldset
-          var clonedItem = document.getElementById('item').cloneNode(true);
 
-          // Set unique ID for the cloned item
-          clonedItem.id = item.id;
-
-          // Set file path and emoji
-          clonedItem.querySelector('[data-value="file-path"]').textContent = item.lsi1;
-          let icon = '🧩';
-          if (item.lsi1.startsWith('css')) {
-            icon = '🎨';
-          } else if (item.lsi1.startsWith('javascript')) {
-            icon = '💻';
-          }
-          clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
-
-          // Set file ID
-          clonedItem.querySelector('[data-value="file-id"]').textContent = item.id;
-
-          // Set up onclick for file-open button
-          clonedItem.querySelector('[data-action="file-open"]').onclick = function () {
-            redirect(item.id);
-          };
-          clonedItem.querySelector('[data-action="file-remove-button"]').onclick = function (event) {
-            openRemove(event);
-          };
-          clonedItem.querySelector('[data-action="file-show-id"]').onclick = function (event) {
-            showId(event);
-          };
-          clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
-            remove(event, item.id);
-          };
           if (!lvls.includes(item.lsi1.split('/')[0])) {
             lvls.push(item.lsi1.split('/')[0])
           }
-          // Append the cloned item to the filePathList
-          filePathList.appendChild(clonedItem);
+          if (i < 25) {
+            i++
+            // Clone the fieldset
+            var clonedItem = document.getElementById('item').cloneNode(true);
+
+            // Set unique ID for the cloned item
+            clonedItem.id = item.id;
+
+            // Set file path and emoji
+            clonedItem.querySelector('[data-value="file-path"]').textContent = item.lsi1;
+            let icon = '🧩';
+            if (item.lsi1.startsWith('css')) {
+              icon = '🎨';
+            } else if (item.lsi1.startsWith('javascript')) {
+              icon = '💻';
+            }
+            clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
+
+            // Set file ID
+            clonedItem.querySelector('[data-value="file-id"]').textContent = item.id;
+
+            // Set up onclick for file-open button
+            clonedItem.querySelector('[data-action="file-open"]').onclick = function () {
+              redirect(item.id);
+            };
+            clonedItem.querySelector('[data-action="file-remove-button"]').onclick = function (event) {
+              openRemove(event);
+            };
+            clonedItem.querySelector('[data-action="file-show-id"]').onclick = function (event) {
+              showId(event);
+            };
+            clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
+              remove(event, item.id);
+            };
+            // Append the cloned item to the filePathList
+            filePathList.appendChild(clonedItem);
+          }
+
         });
 
         // Show the cloned fieldsets
@@ -296,42 +334,47 @@
         filePathList.innerHTML = '';
         lvls = []
         data.items.forEach(item => {
-          // Clone the item fieldset
-          var clonedItem = document.getElementById('item').cloneNode(true);
 
-          // Set unique ID for the cloned item
-          clonedItem.id = item.id;
-
-          // Set file path and emoji
-          clonedItem.querySelector('[data-value="file-path"]').textContent = item.lsi1;
-          let icon = '🧩';
-          if (item.lsi1.startsWith('css')) {
-            icon = '🎨';
-          } else if (item.lsi1.startsWith('javascript')) {
-            icon = '💻';
-          }
-          clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
-
-          // Set file ID
-          clonedItem.querySelector('[data-value="file-id"]').textContent = item.id;
-
-          clonedItem.querySelector('[data-action="file-open"]').onclick = function () {
-            redirect(item.id);
-          };
-          clonedItem.querySelector('[data-action="file-remove-button"]').onclick = function (event) {
-            openRemove(event);
-          };
-          clonedItem.querySelector('[data-action="file-show-id"]').onclick = function (event) {
-            showId(event);
-          };
-          clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
-            remove(event, item.id);
-          };
           if (!lvls.includes(item.lsi1.replace(path + '/', '').split('/')[0])) {
             lvls.push(item.lsi1.replace(path + '/', '').split('/')[0])
           }
-          // Append the cloned item to the filePathList
-          filePathList.appendChild(clonedItem);
+          if (i < 25) {
+            i++
+            // Clone the item fieldset
+            var clonedItem = document.getElementById('item').cloneNode(true);
+
+            // Set unique ID for the cloned item
+            clonedItem.id = item.id;
+
+            // Set file path and emoji
+            clonedItem.querySelector('[data-value="file-path"]').textContent = item.lsi1;
+            let icon = '🧩';
+            if (item.lsi1.startsWith('css')) {
+              icon = '🎨';
+            } else if (item.lsi1.startsWith('javascript')) {
+              icon = '💻';
+            }
+            clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
+
+            // Set file ID
+            clonedItem.querySelector('[data-value="file-id"]').textContent = item.id;
+
+            clonedItem.querySelector('[data-action="file-open"]').onclick = function () {
+              redirect(item.id);
+            };
+            clonedItem.querySelector('[data-action="file-remove-button"]').onclick = function (event) {
+              openRemove(event);
+            };
+            clonedItem.querySelector('[data-action="file-show-id"]').onclick = function (event) {
+              showId(event);
+            };
+            clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
+              remove(event, item.id);
+              // Append the cloned item to the filePathList
+              filePathList.appendChild(clonedItem);
+            };
+          }
+
         });
 
         // Show the cloned fieldsets
@@ -350,21 +393,19 @@
       })
       .catch(error => console.error('Error:', error));
   }
-  document.addEventListener('DOMContentLoaded', loadFileList)
+  document.addEventListener('DOMContentLoaded', e => loader(e, loadFileList))
 </script>
 </script>
 
 <script>
   function adjustWidthToContent(input) {
-      const minWidth = 150; // Minimum width of the input in pixels
-      const charWidth = 8; // Average width per character in pixels, adjust as needed for your font
-  
-      // Calculate the new width based on the length of the input's value or the minimum width, whichever is greater
-      const newWidth = Math.max(input.value.length * charWidth, minWidth);
-  
-      // Apply the new width to the input
-      input.style.width = `${newWidth}px`;
+    const minWidth = 150; // Minimum width of the input in pixels
+    const charWidth = 8; // Average width per character in pixels, adjust as needed for your font
+
+    // Calculate the new width based on the length of the input's value or the minimum width, whichever is greater
+    const newWidth = Math.max(input.value.length * charWidth, minWidth);
+
+    // Apply the new width to the input
+    input.style.width = `${newWidth}px`;
   }
-  </script>
-
-
+</script>
