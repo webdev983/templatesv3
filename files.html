@@ -130,11 +130,18 @@
           var li = document.createElement('li');
           li.id = item.id
           li.setAttribute('data-element', 'file-path');
+          let icon = '🧩'
+          if(item.lsi1.startsWith('css')){
+            icon ='🎨'
+          }
+          else if (item.lsi1.startsWith('javascript')){
+            icon = '💻'
+          }
           li.innerHTML = `
             <label data-value="file-path">${item.lsi1}</label>
-            <button data-action="file-open" style="user-select: none;">📂</button>
-            <button data-action="file-show-id" style="user-select: none;">ℹ️</button>
-            <label style="user-select: none;"> 🧩</label>
+            <button data-action="file-open" style="user-select: none;" onclick=redirect("${item.id}")>📂</button>
+            <button data-action="file-show-id" style="user-select: none;">ℹ️${item.id}</button>
+            <label style="user-select: none;"> ${icon}</label>
           `;
           if(!lvls.includes(item.lsi1.split('/')[0])){
             lvls.push(item.lsi1.split('/')[0])
@@ -151,7 +158,13 @@
       .catch(error => console.error('Error:', error));
     
   }
-  
+  const redirect = (id)=>{
+    console.log(id)
+    const redirectURL = `index.html?id=${id}`;
+
+    // Redirect to the new URL
+    window.location.href = redirectURL;
+  }
   function handlePathSelection() {
     // Get the selected value from the pathSelector
     var selectedValue = document.getElementById('pathSelector').value;
@@ -201,11 +214,18 @@
           var li = document.createElement('li');
           li.id = item.id
           li.setAttribute('data-element', 'file-path');
+          let icon = '🧩'
+          if(item.lsi1.startsWith('css')){
+            icon ='🎨'
+          }
+          else if (item.lsi1.startsWith('javascript')){
+            icon = '💻'
+          }
           li.innerHTML = `
             <label data-value="file-path">${item.lsi1}</label>
-            <button data-action="file-open" style="user-select: none;">📂</button>
-            <button data-action="file-show-id" style="user-select: none;">ℹ️</button>
-            <label style="user-select: none;"> 🧩</label>
+            <button data-action="file-open" style="user-select: none;" onclick=redirect("${item.id}")>📂</button>
+            <button data-action="file-show-id" style="user-select: none;">ℹ️${item.id}</button>
+            <label style="user-select: none;">${icon} </label>
           `;
           lvls = []
           if(!lvls.includes(item.lsi1.replace(path +'/','').split('/')[0])){
