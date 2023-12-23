@@ -121,8 +121,8 @@
             <button data-action="file-show-id" style="user-select: none;">ℹ️</button>
             <label style="user-select: none;"> 🧩</label>
           `;
-          if(!lvls.includes(item.lsi1)){
-            lvls.push(item.lsi1)
+          if(!lvls.includes(item.lsi1.split('/')[0])){
+            lvls.push(item.lsi1.split('/')[0])
           }
           filePathList.appendChild(li);
         });
@@ -170,6 +170,7 @@
       path = path + '/' + selectedItem
 
     }
+    console.log(path)
     loadUsingPath()
     
   }
@@ -192,8 +193,8 @@
             <label style="user-select: none;"> 🧩</label>
           `;
           lvls = []
-          if(!lvls.includes(item.lsi1.split('/')[0])){
-            lvls.push(item.lsi1.split('/')[0])
+          if(!lvls.includes(item.lsi1.replace(path +'/','').split('/')[0])){
+            lvls.push(item.lsi1.replace(path +'/','').split('/')[0])
           }
           filePathList.appendChild(li);
         });
