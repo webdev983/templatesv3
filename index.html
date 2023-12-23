@@ -78,7 +78,7 @@
 
 
 <!--menus-->
-<div hidden>
+<div>
   <fieldset id="component-element" data-element="code-tree-tag">
     <legend>💬</legend>
     <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
@@ -94,17 +94,24 @@
 <fieldset id="component-replace-menu" class="menu">
   <legend><button onclick = "cancel(event)" style="font-size: 0.9em;">❌</button></legend>
   <span style="user-select:  none;">📂 </span><label id="current-page-path">universal/blablabla/blablabla/coolcss</label>
-  <input id="current-page-path-input" width="auto" type="text" style="display:none;">
+  <input id="current-page-path-input" width="auto" type="text" style="display:none; min-width:300px">
   <button id="current-page-path-edit" style="user-select:  none;">✏️</button>
   <button hidden id="current-page-path-save">💾</button>
 <div><span style="user-select:  none;">🆔 </span></span><label id="current-page-id">1414124-414221412-4124214124-412412</label></div>
-<br>
+<div>
+
+<span style="font-family: Arial, sans-serif; font-size: 18px;"> 🎨 publish to 🌐 </span><label id="current-page-path"></label>
+<input id="current-page-path-input" width="auto" type="text" style="display:none; min-width:300px" >
+<button id="current-page-path-edit">✏️</button>
+<button hidden id="current-page-path-save">💾</button>
+</div>
+<div>
 <button>🔄 replace component</button>
 <button id="code-tree-click-tag-append-child" onclick = "append(event)">&#x1F476; append child</button>
 <button  id="code-tree-click-tag-insert-before" onclick = "insertB(event)">&#x2190; insert before</button>       
 <button  id="code-tree-click-tag-inner-html" onclick = "insertHtml(event)">📄 inner HTML</button>       
 <button  id="code-tree-click-tag-remove-tag" onclick = "removeTag(event)">🚫 detach component</button>
-
+</div>
 
 </fieldset>
 
@@ -372,6 +379,45 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 */
 </script>
+
+
+<!-- edit path-->
+<script>
+  document.getElementById('current-page-path-edit').addEventListener('click', function() {
+      var label = document.getElementById('current-page-path');
+      var input = document.getElementById('current-page-path-input');
+      var saveButton = document.getElementById('current-page-path-save');
+      var editButton = document.getElementById('current-page-path-edit');  // Get the edit button
+  
+      input.value = label.textContent;
+      label.style.display = 'none';
+      input.style.display = 'inline';
+      saveButton.hidden = false;
+      editButton.style.display = 'none';  // Hide the edit button
+  
+      var temp = document.createElement('span');
+      temp.style.visibility = 'hidden';
+      temp.style.font = window.getComputedStyle(label).font;
+      temp.textContent = label.textContent;
+  
+      document.body.appendChild(temp);
+      input.style.width = (temp.offsetWidth * 1.1) + 'px';
+      document.body.removeChild(temp);
+  });
+  
+  document.getElementById('current-page-path-save').addEventListener('click', function() {
+      var label = document.getElementById('current-page-path');
+      var input = document.getElementById('current-page-path-input');
+      var editButton = document.getElementById('current-page-path-edit');  // Get the edit button
+  
+      label.textContent = input.value;
+      label.style.display = 'inline';
+      input.style.display = 'none';
+      this.hidden = true; 
+      editButton.style.display = 'inline';  // Show the edit button again
+  });
+  </script>
+
 
 
 <script>
@@ -2271,7 +2317,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Check the current state and toggle
   if (btn.innerHTML === 'log') {
-      btn.innerHTML = 'log→';
+      btn.innerHTML = 'log';
       grid.style.gridTemplateColumns = '80% 20%';
   } else {
       btn.innerHTML = 'log';
