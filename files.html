@@ -34,7 +34,7 @@
 <fieldset hidden data-element="create-new-file-path">
   <legend><button onclick = "cancel(event)" style="font-size: 0.9em;">❌</button></legend>
   <span>📂 </span>
-  <input type="text" placeholder="path/path/path/path" data-input="create-new-file-path-input" oninput="adjustWidthToContent(this)">
+  <input type="text" placeholder="path/path/path/path" data-input="create-new-file-path-input" oninput="adjustWidthToContent(this)" style="min-width: 300px;">
   <button data-action="create-new-file-path-save" onclick="savePath(event)">💾</button>
 </fieldset>
 <fieldset  data-element="choose-new-file-type" hidden>
@@ -344,3 +344,18 @@
   document.addEventListener('DOMContentLoaded', loadFileList)
 </script>
 </script>
+
+<script>
+  function adjustWidthToContent(input) {
+      const minWidth = 150; // Minimum width of the input in pixels
+      const charWidth = 8; // Average width per character in pixels, adjust as needed for your font
+  
+      // Calculate the new width based on the length of the input's value or the minimum width, whichever is greater
+      const newWidth = Math.max(input.value.length * charWidth, minWidth);
+  
+      // Apply the new width to the input
+      input.style.width = `${newWidth}px`;
+  }
+  </script>
+
+
