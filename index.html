@@ -6,13 +6,6 @@
             background-color: black; /* Sets the color of the line */
         }
 </style>
-<style>
-
-  .a {
-    position: absolute; right:0px; position: relative; position: absolute; right: 0px;
-  }
-</style>
-
 <script>
   const format = 
   {
@@ -80,13 +73,12 @@
       <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
       <button data-element="code-tree-show-hide-button" onclick="toggleSubFields(event)">&#8594;</button>
       <button data-element="code-tree-tag-name-button" onclick="loader(event, handleComponentClick)">🏷️component</button>
-      <span class="a">
-      <button>🔑</button>
-      <button>🐣</button>
-      <button onclick="openTextContent(event)">📄</button> 
-       </span>
+      <button  data-element="code-tree-inner-html-button"> 🐣</button>
+      <button  data-element="code-tree-attributes-button">🔑</button>
+      <button  data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button> 
   </fieldset>
   
+ 
   </div>
 
 
@@ -97,11 +89,8 @@
     <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
     <button data-element="code-tree-show-hide-button" onclick="toggleSubFields(event)">&#8594;</button>
     <button data-element="code-tree-tag-name-button" onclick="loader(event, handleComponentClick)">🏷️component</button>
-    <span class="a">
-      <button>🔑</button>
-      <button>🐣</button>
-      <button onclick="openTextContent(event)">📄</button> 
-    </span>
+    <button  data-element="code-tree-attributes-button">🔑</button>
+    <button  data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button> 
 </fieldset>
 
 
@@ -1164,6 +1153,13 @@ switch (action) {
 [data-element="component-tree-tag"] button,
 [data-element="code-tree-tag"] button {
   font-size: 1.2em;
+}
+
+[data-element="code-tree-inner-html-button"] {
+  position: absolute;
+  right: 120px;
+  margin-right: 5px;
+
 }
 
 [data-element="component-tree-css-button"],
