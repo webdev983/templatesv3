@@ -1,0 +1,149 @@
+<style>
+
+  .file-entry {
+    display: flex; /* Apply Flexbox */
+    align-items: center; /* Align items vertically in the center */
+    background-color: #ffffff; /* White background for all divs */
+  }
+
+  .file-entry:nth-child(even) {
+    background-color: #f0f0f0; /* Light grey for even-numbered divs */
+  }
+
+  .file-entry:hover {
+    background-color: #dddddd; /* Slightly darker grey on hover */
+    cursor: pointer; /* Changes cursor to the hand icon */
+
+  }
+
+  .file-entry span {
+    font-size: 1.2em; /* Larger font for visibility */
+    display: flex; /* Apply Flexbox */
+    align-items: center; /* Align text and button in the center */
+    width: 100%; /* Take full width of the parent */
+  }
+
+  .file-entry button {
+    margin-right: 10px; /* Space out the button from the text */
+  }
+</style>
+
+<fieldset>
+<legend><button id="code-tree-tag-attributes-form-action-back">❌</button></legend>
+
+
+
+<button title="multi select mode" style="font-size:30px;">☐</button>
+
+<button title="set current folder as home" style="font-size:30px;">📌</button>
+<button title="go to home folder" style="font-size:30px;">🏠</button>
+<button title="refresh"  style="font-size:30px;">🔄</button>
+<button title="go to previous folder" style="font-size:30px;">⬅</button>
+<button title="go to next folder"  style="font-size:30px;">➡</button>
+
+
+
+
+<button style="font-size:30px;">
+  <span style="user-select: none;">👣</span>
+</button>
+<button style="font-size:30px;">
+  <span style="user-select: none;">/</span>
+  <label id="current-page-path" style="font-size: 0.6em;">accbuddy</label>
+</button>
+
+<button style="font-size:30px;">
+  <span style="user-select: none;">/</span>
+  <label id="current-page-path" style="font-size: 0.6em;">sites</label>
+</button>
+<button style="font-size:30px;">
+  <span style="user-select: none;">/</span>
+  <label id="current-page-path" style="font-size: 0.6em;">bablabla</label>
+</button>
+<button style="font-size:30px;">
+  <span style="user-select: none;">/</span>
+  <label id="current-page-path" style="font-size: 0.6em;">blablabla3</label>
+</button>
+
+
+
+  <button style="font-size:30px;" id="current-page-path-edit" style="user-select:  none;">✏️</button>
+  <button hidden id="current-page-path-save">💾</button></button>
+
+
+<div class="file-entry"><button data-action="file-remove-button" style="user-select: none; margin-right: 10px; font-size: 1.5em;">ℹ️</button><span>📂accbuddy</span></div>
+<div class="file-entry"><button  data-action="file-remove-button" style="user-select: none; margin-right: 10px; font-size: 1.5em;">☑️</button><span>📂accbuddy</span></div>
+    
+<div class="file-entry"><button  data-action="file-remove-button" style="user-select: none; margin-right: 10px; font-size: 1.5em; "> ☑️</button><span class="file-or-folder-name">windows-11-pro</span></div>
+<div class="file-entry"><button data-action="file-remove-button" style="user-select: none; margin-right: 10px; font-size: 1.5em;">☐</button><span>🧩windows-10-pro</span></div>
+<div class="file-entry"><button  data-action="file-remove-button" style="user-select: none; margin-right: 10px; font-size: 1.5em;">☐</button><span>🧩windows-server-pro</span></div>
+<div class="file-entry"><button  data-action="file-remove-button" style="user-select: none; margin-right: 10px; font-size: 1.5em;"> ☑️</button><span>🧩windows-fork-pro</span></div>
+<div class="file-entry"><button  data-action="file-remove-button" style="user-select: none; margin-right: 10px; font-size: 1.5em; "> ☑️</button><span>🧩windows-212-pro</span></div>
+<div class="file-entry"><button  data-action="file-remove-button" style="user-select: none; margin-right: 10px; font-size: 1.5em;">☐</button><span>🧩windows-19-pro</span></div>
+<div>
+  <button title="select all" style="font-size:30px;">☑️</button>
+  <button style="font-size:30px;" id="current-page-path-edit" style="user-select:  none;">10</button>
+  <button title="attach all selected" style="font-size:30px;">📎</button>
+  <button title="remove all selected" style="font-size:30px;">🚮</button>
+  <button title="move files to other folder"  style="font-size:30px;">📂➡️️</button>
+
+</div>
+<select  id="amount-of-rows" style="margin-top: 10px; min-width: 50px; position: absolute; right: 10px;">
+  <option value="path0">25</option>
+  <option value="path1">50</option>
+  <option value="path2">100</option>
+  <option value="path3">150</option>
+  <option value="path3">200</option>
+</select>
+</fieldset>
+
+
+  
+<fieldset>
+  
+  <legend><button id="code-tree-tag-attributes-form-action-back">❌</button></legend>
+  <button  data-action="file-remove-button" style="user-select: none; margin-right: 2px; font-size: 30px;">✏️</button>
+  <button  data-action="file-remove-button" style="user-select: none; margin-right: 2px; font-size: 30px;">🗑️</button>
+  <button  data-action="file-remove-button" style="user-select: none; margin-right: 2px; font-size: 30px;">📂➡️</button>
+  <div style="font-size: 1.5em;">🆔4141-4141-41414141-41412412</div>
+  <div style="font-size: 1.5em;">🧩path/path/path/windows-fork-pro</div>  
+</fieldset>
+
+<fieldset id="cancelation">
+  <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
+  <span>are you sure want to remove this file?</span>
+  <div>
+    <button  data-action="file-remove-button" style="user-select: none; margin-right: 2px; font-size: 30px;">🚮 DELETE</button>
+
+  </div>
+</fieldset>
+
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Функция для переключения состояния кнопки
+  function toggleButton(button) {
+    // Переключаем текст кнопки
+    button.textContent = button.textContent.includes('☑️') ? '☐' : '☑️';
+  }
+
+  // Обработчик события mouseenter для file-entry
+  document.querySelectorAll('.file-entry').forEach(entry => {
+    entry.addEventListener('mouseenter', () => {
+      const button = entry.querySelector('[data-action="file-remove-button"]');
+      if (button) {
+        toggleButton(button);
+      }
+    });
+  });
+});
+  </script>
+  
+  <script>
+<div class="file-entry">
+  <button data-action="file-remove-button" style="user-select: none; margin-right: 10px; font-size: 1.5em;">☐</button>
+  <span class="file-or-folder-name">windows-11-pro</span>
+</div>
+  </script>
