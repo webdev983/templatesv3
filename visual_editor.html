@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+
+[data-visual*="move"] {
+  cursor: move; /* Change cursor to indicate movability */
+}
+
+
+/* Highlighting potential drop targets */
+.drop-target {
+  border: 2px dashed #666; /* Visual cue for drop target */
+}
+/* Define the .hover class */
+.hover {
+  position: relative; /* Needed to position the hover-menu correctly */
+  background-color: pink; /* Pink background */
+}
+
+/* Optional: Add smooth transition for elements */
+[data-visual] {
+  transition: all 0.3s; /* Smooth transition for the hover effect */
+}
+
+/* Style for the hover-menu */
+#hover-menu {
+  display: none; /* Hide by default */
+  position: absolute; /* Positioning relative to the hovered element */
+  z-index: 1000; /* Ensure it's above other elements */
+  background-color: white; /* Background of the menu */
+  border: 1px solid #ccc; /* Border around the menu */
+  padding: 5px; /* Some padding around the content */
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.2); /* Shadow for better visibility */
+  margin-top: 1px;
+}
+
+/* Style for the buttons inside the hover-menu */
+#hover-menu button {
+  margin-right: 5px; /* Space between buttons */
+}
+</style>
+</head>
+
+<body>
+<div id="visual-editor" style="margin-top:50px">
+
+<h1 data-visual="duplicate;edit;move">Article Title (h1)</h1>
+<h3 data-visual="duplicate;edit;move">Subheading (h3)</h3>
+<p data-visual="duplicate;edit;move">This is a paragraph.</p>
+
+<ul data-visual="duplicate">
+  <li data-visual="duplicate;edit;move">Item 1</li>
+  <li data-visual="duplicate;edit;move">Item 2</li>
+</ul>
+
+<ol data-visual="duplicate">
+  <li data-visual="duplicate;edit;move">Item 1</li>
+  <li data-visual="duplicate;edit;move">Item 2</li>
+</ol>
+
+</div>
+<div id="hover-menu">
+  <button title="remove element">🗑️</button>
+  <button title="dublicate bold element">📄📄</button>
+  <button title="dublicate element with all data">📄📄🖇️</button>
+  <button title="copy  bold element">📋</button>
+  <button title="copy element with all data">📋🖇️</button>
+  <button title="insert after this">📋➡️</button>
+  <button title="revert last action">↩️</button>
+  <button title="redo last action">↪️</button>
+</div>
+
+<script>
+let currentElement = null;
+let hideMenuTimeout;
+let lastInteractionTime = 0; // Track the time of the last interaction
+
+function showHoverMenu(element) {
+  const hoverMenu = document.getElementById('hover-menu');
+  hoverMenu.style.display = 'block';
+  hoverMenu.style.left = `${element.getBoundingClientRect().left}px`;
+  hoverMenu.style.top = `${element.getBoundingClientRect().top - hoverMenu.offsetHeight - 1}px`;
+  clearTimeout(hideMenuTimeout);
+}
+
+function hideHoverMenu() {
+  hideMenuTimeout = setTimeout(() => {
+    const hoverMenu = document.getElementById('hover-menu');
+    hoverMenu.style.display = 'none';
+  }, 100);
+}
+
+function applyHoverClass(element, add) {
+  const now = Date.now();
+  if(element.hasAttribute('data-visual')){
+    if (add && now - lastInteractionTime > 50) { // Debounce rapid mouse movements
+      lastInteractionTime = now; // Update the last interaction time
+      currentElement = element;
+      element.classList.add('hover');
+      showHoverMenu(element);
+    } else if (!add) {
+      element.classList.remove('hover');
+      hideHoverMenu();
+    }
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('mouseover', function(event) {
+    applyHoverClass(event.target, true);
+  });
+
+  document.addEventListener('mouseout', function(event) {
+    applyHoverClass(event.target, false);
+  });
+
+  document.getElementById('hover-menu').addEventListener('mouseover', function() {
+    if (currentElement) {
+      currentElement.classList.remove('hover');
+    }
+    clearTimeout(hideMenuTimeout);
+  });
+
+  document.getElementById('hover-menu').addEventListener('mouseout', function(event) {
+    if (!event.relatedTarget || !event.relatedTarget.hasAttribute('data-visual')) {
+      hideHoverMenu();
+      if (currentElement) {
+        currentElement.classList.remove('hover');
+        currentElement = null;
+      }
+    }
+  });
+});
+</script>
+
+<script>
+  let doubleClickTimeout = null;
+
+  function makeEditableOnDoubleClick(element) {
+    if (!element.hasAttribute('data-visual') || !element.getAttribute('data-visual').includes('edit')) {
+      return; // Skip elements without 'data-visual="edit"'
+    }
+
+    element.addEventListener('click', () => {
+      if (doubleClickTimeout !== null) {
+        clearTimeout(doubleClickTimeout);
+        doubleClickTimeout = null;
+        makeEditable(element); // Double click makes the element editable
+      } else {
+        doubleClickTimeout = setTimeout(() => {
+          doubleClickTimeout = null;
+        }, 300);
+      }
+    });
+
+    element.addEventListener('blur', () => {
+      // Save changes and remove 'contenteditable' when the element loses focus
+      if (element.getAttribute('contenteditable')) {
+        element.textContent = element.innerText; // Update the text content
+        element.removeAttribute('contenteditable');
+      }
+    });
+  }
+
+  function makeEditable(element) {
+    element.setAttribute('contenteditable', 'true');
+    element.focus();
+
+    // Handler for saving changes on Enter key press
+    element.onkeydown = function(e) {
+      if (e.key === 'Enter') {
+        // Update the text content of the element
+        element.textContent = element.innerText;
+
+        // Remove 'contenteditable' attribute
+        element.removeAttribute('contenteditable');
+
+        // Focus the next element (if available)
+        const nextElement = element.nextElementSibling;
+        if (nextElement && nextElement.getAttribute('data-visual') && nextElement.getAttribute('data-visual').includes('edit')) {
+          nextElement.focus();
+        }
+
+        e.preventDefault();
+      }
+    };
+  }
+
+  // Apply the function to the elements with 'data-visual="edit"'
+  document.querySelectorAll('[data-visual*="edit"]').forEach(makeEditableOnDoubleClick);
+</script>
+
+
+<script>
+  // Function to enable dragging
+  function makeDraggable(element) {
+    if (element.getAttribute('data-visual') && element.getAttribute('data-visual').includes('move')) {
+      element.setAttribute('draggable', 'true');
+  
+      element.addEventListener('click', (event) => {
+        // Single click to initiate dragging
+        element.classList.add('dragging'); // Optional: Add a class to style the dragging element
+      });
+  
+      element.addEventListener('dragstart', (event) => {
+        event.dataTransfer.setData('text/plain', ''); // Necessary to make draggable in some browsers
+        event.target.classList.add('is-dragging');
+      });
+  
+      element.addEventListener('dragend', (event) => {
+        event.target.classList.remove('is-dragging');
+      });
+    }
+  }
+  
+  // Function to handle the drop logic
+  function handleDrop(target, draggedElement) {
+    if (target !== draggedElement) {
+      target.parentNode.insertBefore(draggedElement, target); // Insert before the drop target
+      draggedElement.classList.remove('dragging'); // Optional: Remove the styling for dragging
+    }
+  }
+  
+  // Apply the draggable functionality to elements with 'data-visual="move"'
+  document.querySelectorAll('[data-visual*="move"]').forEach(makeDraggable);
+  
+  // Handling dragover and drop events on all potential drop targets
+  document.addEventListener('dragover', (event) => {
+    event.preventDefault(); // Prevent default to allow drop
+    const target = event.target;
+    const draggedElement = document.querySelector('.is-dragging');
+    if (target !== draggedElement && target.hasAttribute('data-visual')) {
+      target.classList.add('drop-target'); // Highlight potential drop target
+    }
+  });
+  
+  document.addEventListener('drop', (event) => {
+    event.preventDefault(); // Prevent default action (open as link for some elements)
+    const target = event.target;
+    const draggedElement = document.querySelector('.is-dragging');
+    if (draggedElement) {
+      handleDrop(target, draggedElement); // Handle the drop logic
+    }
+    target.classList.remove('drop-target'); // Remove drop target highlighting
+  });
+  
+  document.addEventListener('dragleave', (event) => {
+    event.target.classList.remove('drop-target'); // Remove drop target highlighting when leaving
+  });
+  </script>
+
+
+<script>
+  function duplicateElement(elementId) {
+    // Find the original element using its ID
+    var original = document.getElementById(elementId);
+    if (original) {
+      // Clone the original element
+      var clone = original.cloneNode(true); // 'true' means deep clone (copy all child nodes)
+  
+      // Optional: Update the ID or any attributes of the clone to ensure uniqueness if necessary
+      clone.id = "duplicateOf" + elementId; // Change the ID or remove it entirely if duplicates don't need unique IDs
+  
+      // Insert the cloned node after the original node
+      original.parentNode.insertBefore(clone, original.nextSibling);
+    } else {
+      console.log("Element to duplicate not found");
+    }
+  }
+  </script>
+
+
+
+</body>
+</html>
