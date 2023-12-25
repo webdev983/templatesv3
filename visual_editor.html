@@ -1,7 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <style id="iamge">
+    img[data-visual]:empty,
+img[data-visual][src=''] {
+  display: inline-block; /* Allows width and height */
+  width: 100px; /* Set a default width */
+  height: 100px; /* Set a default height */
+  border: 2px dashed #666; /* Dashed border to indicate emptiness */
+  background-color: #f0f0f0; /* Light background color */
+  position: relative; /* For positioning the text */
+  text-align: center; /* Center the text */
+  line-height: 100px; /* Align the text vertically */
+  color: #666; /* Text color */
+  font-family: Arial, sans-serif; /* Font for the text */
+  font-size: 14px; /* Size of the text */
+}
+
+img[data-visual]:empty::after,
+img[data-visual][src='']::after {
+  content: 'Empty Image'; /* Default text indicating emptiness */
+  position: absolute; /* Position absolutely within the parent */
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Adjust the position to truly center */
+  white-space: nowrap; /* Ensure the text doesn't wrap */
+}
+  </style>
 <style>
+  
 
 [data-visual*="move"] {
   cursor: move; /* Change cursor to indicate movability */
@@ -33,6 +60,8 @@
   padding: 5px; /* Some padding around the content */
   box-shadow: 2px 2px 5px rgba(0,0,0,0.2); /* Shadow for better visibility */
   margin-top: 1px;
+  font-size: 30px;
+
 }
 
 /* Style for the buttons inside the hover-menu */
@@ -42,12 +71,15 @@
 </style>
 </head>
 
+
 <body>
-<div id="visual-editor" style="margin-top:50px">
+<div id="visual-editor" style="margin-top:50px; margin-left: 50px;">
 
 <h1 data-visual="duplicate;edit;move">Article Title (h1)</h1>
 <h3 data-visual="duplicate;edit;move">Subheading (h3)</h3>
 <p data-visual="duplicate;edit;move">This is a paragraph.</p>
+
+<img data-visual="duplicate;edit;move" src="" alt="">
 
 <ul data-visual="duplicate">
   <li data-visual="duplicate;edit;move">Item 1</li>
@@ -61,15 +93,25 @@
 
 </div>
 <div id="hover-menu">
-  <button title="remove element">🗑️</button>
-  <button title="dublicate bold element">📄📄</button>
-  <button title="dublicate element with all data">📄📄🖇️</button>
-  <button title="copy  bold element">📋</button>
-  <button title="copy element with all data">📋🖇️</button>
-  <button title="insert after this">📋➡️</button>
-  <button title="revert last action">↩️</button>
-  <button title="redo last action">↪️</button>
+  <button  style="font-size: 30px;" title="remove element">🗑️</button>
+  <button  style="font-size: 30px;" title="dublicate bold element">📄📄</button>
+  <button  style="font-size: 30px;"  title="dublicate element with all data">📄📄🖇️</button>
+  <button  style="font-size: 30px;" title="copy  bold element">📋</button>
+  <button  style="font-size: 30px;"  title="copy element with all data">📋🖇️</button>
+  <button  style="font-size: 30px;"  title="insert after this">📋➡️</button>
+  <button  style="font-size: 30px;" title="revert last action">↩️</button>
+  <button  style="font-size: 30px;"  title="redo last action">↪️</button>
+  <button  style="font-size: 30px;"  title="add/edit image">🖼️</button>
+  <button  style="font-size: 30px;"  title="add/edit iamge description">🖼️📄</button>
+  <input width="auto" type="text" hidden>
+
+
 </div>
+
+<div> 
+  gallery
+</div>
+
 
 <script>
 let currentElement = null;

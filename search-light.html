@@ -1,0 +1,66 @@
+<body>
+<style>
+
+  .file-entry {
+    display: flex; /* Apply Flexbox */
+    align-items: center; /* Align items vertically in the center */
+    background-color: #ffffff; /* White background for all divs */
+  }
+
+  .file-entry:nth-child(even) {
+    background-color: #f0f0f0; /* Light grey for even-numbered divs */
+  }
+
+  .file-entry:hover {
+    background-color: #dddddd; /* Slightly darker grey on hover */
+    cursor: pointer; /* Changes cursor to the hand icon */
+
+  }
+
+  .file-entry span {
+    font-size: 1.2em; /* Larger font for visibility */
+    display: flex; /* Apply Flexbox */
+    align-items: center; /* Align text and button in the center */
+    width: 100%; /* Take full width of the parent */
+  }
+
+  .file-entry button {
+    margin-right: 10px; /* Space out the button from the text */
+  }
+</style>
+
+<fieldset>
+<legend><button id="code-tree-tag-attributes-form-action-back">❌</button></legend>
+<div style="margin-bottom: 15px; border-bottom:#0000EE">
+
+
+<div class="file-entry"><span>📂accbuddy</span></div>
+<div class="file-entry"><span>🧩windows-10-pro</span></div>
+<div class="file-entry"><span>🧩windows-10-pro</span></div>
+<div class="file-entry"><span>🧩windows-10-pro</span></div>
+<div class="file-entry"><span>🧩windows-10-pro</span></div>
+<div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Функция для переключения состояния кнопки
+  function toggleButton(button) {
+    // Переключаем текст кнопки
+    button.textContent = button.textContent.includes('☑️') ? '☐' : '☑️';
+  }
+
+  // Обработчик события mouseenter для file-entry
+  document.querySelectorAll('.file-entry').forEach(entry => {
+    entry.addEventListener('mouseenter', () => {
+      const button = entry.querySelector('[data-action="file-remove-button"]');
+      if (button) {
+        toggleButton(button);
+      }
+    });
+  });
+});
+  </script>
+  
+  <script>
+  </script>
+  </body>
