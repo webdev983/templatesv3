@@ -1,0 +1,196 @@
+<style>
+.gallery-image {
+    position: relative; /* This is necessary for absolute positioning of children */
+  }
+
+.attached {
+
+  position: absolute;
+    top: -25; /* Adjust if you want to change the vertical positioning */
+    left: -10; /* Adjust if you want to change the horizontal positioning */
+    display: flex; /* Use flex layout to align buttons */
+    gap: 5px; /* Space between buttons */
+    padding: 5px; /* Padding around the buttons */
+    z-index: 10; 
+    font-size: 50px;
+}
+  
+  .picture-actions {
+    position: absolute;
+    top: 0; /* Adjust if you want to change the vertical positioning */
+    right: 20; /* Adjust if you want to change the horizontal positioning */
+    display: flex; /* Use flex layout to align buttons */
+    gap: 5px; /* Space between buttons */
+    padding: 5px; /* Padding around the buttons */
+  }
+  </style>
+<fieldset>
+  <legend><button>❌</button></legend>
+  <div style="font-size: 30px; height: 100px;">
+    <input type="file" id="image-input" accept="image/*" hidden/>
+    <label  style="font-size: 50px;" for="image-input" id="select-file-button" class="file-upload-button">📂</label>
+    <button style="font-size: 50px;" id="upload-button" class="upload-button" hidden>📤</button>
+    <span id="file-name" hidden>No file chosen</span>
+</div>
+
+
+</div>
+  <table>
+      <tbody>
+
+          <tr>
+              <td>
+                <div class="gallery-image">
+                  <img  style="width: 500px" src="https://via.placeholder.com/500/0000FF/FFFFFF?text=image">
+                  <label class="attached">📎</label>
+                    <div class="picture-actions" style="z-index: -10;">
+                          <button>✅</button>
+                          <button>🔍</button>
+                          <button>❌</button>
+                      </div>
+                  </div>
+              </td>
+              <td>
+                dasdasdsads
+              </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="gallery-image">
+                <img  style="width: 500px" src="https://via.placeholder.com/500/0000FF/FFFFFF?text=image">
+                  <div class="picture-actions" style="z-index: -10;">
+                        <button>✅</button>
+                        <button>🔍</button>
+                        <button>❌</button>
+                    </div>
+                </div>
+          </td>
+            <td>
+              dasdasdsads
+            </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="gallery-image">
+              <img  style="width: 500px" src="https://via.placeholder.com/500/0000FF/FFFFFF?text=image">
+                <div class="picture-actions" style="z-index: -10;">
+                      <button>✅</button>
+                      <button>🔍</button>
+                      <button>❌</button>
+                  </div>
+              </div>
+      </td>
+          <td>
+            dasdasdsads
+          </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="gallery-image">
+            <img  style="width: 500px" src="https://via.placeholder.com/500/0000FF/FFFFFF?text=image">
+              <div class="picture-actions" style="z-index: -10;">
+                    <button>✅</button>
+                    <button>🔍</button>
+                    <button>❌</button>
+                </div>
+            </div>
+  </td>
+        <td>
+          dasdasdsads
+        </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="gallery-image">
+          <img  style="width: 500px" src="https://via.placeholder.com/500/0000FF/FFFFFF?text=image">
+            <div class="picture-actions" style="z-index: -10;">
+                  <button>✅</button>
+                  <button>🔍</button>
+                  <button>❌</button>
+              </div>
+          </div>
+</td>
+      <td>
+        dasdasdsads
+      </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="gallery-image">
+        <img  style="width: 500px" src="https://via.placeholder.com/500/0000FF/FFFFFF?text=image">
+            <div class="picture-actions" style="z-index: -10;">
+                <button>✅</button>
+                <button>🔍</button>
+                <button>❌</button>
+            </div>
+        </div>
+    </td>
+    <td>
+      dasdasdsads
+    </td>
+</tr>
+
+      </tbody>
+  </table>
+</fieldset>
+
+ 
+ <script>
+  document.getElementById('image-input').addEventListener('change', function() {
+    var fileNameSpan = document.getElementById('file-name');
+
+    var uploadButton = document.getElementById('upload-button');
+  
+    // Check if a file is selected
+    if (this.files && this.files.length > 0) {
+      // If a file is chosen, show the file name and make the upload button visible
+      var fileName = this.files[0].name; // Get the name of the file
+      fileNameSpan.textContent = fileName; // Set the text content to the file name
+      fileNameSpan.hidden = false; // Make the file name span visible
+
+      uploadButton.hidden = false; // Make the upload button visible
+    } else {
+      // If no file is chosen, hide the file name span and the upload button
+      fileNameSpan.hidden = true;
+      uploadButton.hidden = true;
+    }
+  });
+  </script>
+      
+
+ 
+      
+
+ <script>
+  // Select all gallery images
+  const images = document.querySelectorAll('.gallery-image');
+  
+  images.forEach(image => {
+    const actions = image.querySelector('.picture-actions');
+  
+    // When you hover over an image
+    image.addEventListener('mouseenter', () => {
+      // Set the z-index of the picture actions to 10
+      actions.style.zIndex = '10';
+    });
+  
+    // When the mouse leaves the image
+    image.addEventListener('mouseleave', () => {
+      // Reset the z-index of the picture actions to -10
+      actions.style.zIndex = '-10';
+    });
+  });
+  </script>
+  
+
+
+<fieldset>
+  <legend><button>❌</button>
+    <button style="margin-left:5px;">⬅️</button>
+  </legend>
+   <div></div>
+
+    <img src="https://via.placeholder.com/1000/0000FF/FFFFFF?text=image">
+
+   </div>
+</fieldset>
