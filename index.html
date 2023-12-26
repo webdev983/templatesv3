@@ -1176,7 +1176,11 @@ switch (action) {
         }
         else if(Array.isArray(item.target_element)){
           console.log('e1'+item.target_element + item.target_element.length)
-          item.target_element = item.target_element.map(i=>{return{...i,id:newId +';'+i.id}})
+          item.target_element = item.target_element.map(i=>{
+            if(id.id ===id + '-tree'){
+             return  {...i,id:newId + '-tree'}
+            }
+            return{...i,id:newId +';'+i.id}})
           
           console.log('arr'+item.target_element)
         }
