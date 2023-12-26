@@ -1170,6 +1170,7 @@ switch (action) {
     for (const item of responseData.items){
       if(item.action){
       if(id){
+        console.log(JSON.stringify(item))
         if(item.target_element ===id + '-tree'){
           item.target_element = newId + '-tree'
           item.inserted_element.id && (item.inserted_element.id = newId +';'+ item.inserted_element.id)
@@ -1186,7 +1187,7 @@ switch (action) {
         }
         else{
           item.target_element =newId +';'+ item.target_element
-          item.inserted_element.id && (item.inserted_element.id = newId +';'+ item.inserted_element.id)
+          item.inserted_element?.id && (item.inserted_element.id = newId +';'+ item.inserted_element.id)
           console.log('notArr'+item.target_element)
         }
         executeCommand({...item,time:item.sk})
