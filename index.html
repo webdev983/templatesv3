@@ -1168,19 +1168,31 @@ switch (action) {
     const responseData = await response.json();
     console.log(JSON.stringify(responseData))
     for (const item of responseData.items){
+      if(item.action){
       if(id){
         if(item.target_element ===id + '-tree'){
           item.target_element = newId + '-tree'
+          item.inserted_element.id && (item.inserted_element.id = newId +';'+ item.inserted_element.id)
         }
-        if(item.action){
-          executeCommand({...item,time:item.sk})
+        else if(Array.isArray(item.target_element)){
+          console.log('e1'+item.target_element + item.target_element.length)
+          item.target_element = item.target_element.map(i=>{return{...i,id:newId +';'+i.id}})
+          
+          console.log('arr'+item.target_element)
         }
+        else{
+          item.target_element =newId +';'+ item.target_element
+          item.inserted_element.id && (item.inserted_element.id = newId +';'+ item.inserted_element.id)
+          console.log('notArr'+item.target_element)
+        }
+        executeCommand({...item,time:item.sk})
+        
         continue
       }
       
       
          pushAction({...item,time:item.sk},true)
-      
+      }
      
     }
     
