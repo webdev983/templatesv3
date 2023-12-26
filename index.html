@@ -1071,6 +1071,7 @@ document.addEventListener('DOMContentLoaded', function() {
       case 'textContent':
         // Handle the 'removeTag' action
         // tree
+        console.log('pr'+target_element)
         const element1 = document.getElementById(target_element);
         const textContentButton = element1.querySelector('[data-element="code-tree-text-content-button"]');
         textContentButton.textContent = `📄${value.length}`;
@@ -1209,7 +1210,7 @@ document.addEventListener('DOMContentLoaded', function() {
           console.log(JSON.stringify(item))
           if (item.target_element === id + '-tree') {
             item.target_element = newId + '-tree'
-            item.inserted_element.id && (item.inserted_element.id = newId + ';' + item.inserted_element.id)
+            item.inserted_element?.id && (item.inserted_element.id = newId + ';' + item.inserted_element.id)
           }
           else if (Array.isArray(item.target_element)) {
             console.log('e1' + item.target_element + item.target_element.length)
@@ -1223,9 +1224,13 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('arr' + item.target_element)
           }
           else {
-            item.target_element = newId + ';' + item.target_element
+            const splited = item.target_element.split(';')
+            if(splited.length < 2){
+              item.target_element = newId + ';' + item.target_element
             item.inserted_element?.id && (item.inserted_element.id = newId + ';' + item.inserted_element.id)
             console.log('notArr' + item.target_element)
+            }
+            
           }
           await executeCommand({ ...item, time: item.sk })
 
