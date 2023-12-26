@@ -27,15 +27,11 @@
   <div id="timer" style="font-size: 2em; color: white;">1.12</div>
 </div>
 
-<div hidden>
-<button title="set as home" style="font-size:30px;">📌</button>
-<button title="go to home path(path/path/path)" style="font-size:30px;">🏠</button>
-<button style="font-size:30px;">🔙</button>
-<button style="font-size:30px;">🔜</button>
-</div>
 <select id="pathSelector" style="margin-top: 10px; min-width: 200px;" onchange="handlePathSelection()">
   <option value="path0">⬇️ select</option>
   <option value="path1">⬅️back</option>
+  <option value="path99">🏠 home</option>
+
 </select>
 
 <button data-action="create-new-file" onclick="openTypeSelect()">➕ create new</button>
@@ -64,15 +60,6 @@
 
 </ol>
 
-<select hidden id="amount-of-rows" style="margin-top: 10px; min-width: 50px; position: absolute; right: 0;">
-  <option value="path0">25</option>
-  <option value="path1">50</option>
-  <option value="path2">100</option>
-  <option value="path3">150</option>
-  <option value="path3">200</option>
-
-
-</select>
 
 
 <div hidden>
@@ -117,6 +104,7 @@
     loadingScreen.style.display = 'none';
     clearInterval(interval);
     console.log(timerElement.textContent)
+    console.log(tenthsOfSeconds)
     const lastActionTime = document.getElementById('timer');
     lastActionTime.textContent = timerElement.textContent;
   }
@@ -346,6 +334,7 @@
         var filePathList = document.getElementById('filePathList');
         filePathList.innerHTML = '';
         lvls = []
+        let i = 0
         data.items.forEach(item => {
 
           if (!lvls.includes(item.lsi1.replace(path + '/', '').split('/')[0])) {
@@ -383,9 +372,10 @@
             };
             clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
               remove(event, item.id);
-              // Append the cloned item to the filePathList
-              filePathList.appendChild(clonedItem);
+              
             };
+            // Append the cloned item to the filePathList
+            filePathList.appendChild(clonedItem);
           }
 
         });
@@ -406,7 +396,22 @@
       })
       .catch(error => console.error('Error:', error));
   }
-  document.addEventListener('DOMContentLoaded', e => loader(e, loadFileList))
+  document.addEventListener('DOMContentLoaded', async function (){
+    const loadingScreen = document.getElementById('loading');
+    loadingScreen.style.display = 'flex';
+    const timerElement = document.getElementById('timer');
+    let tenthsOfSeconds = 0;
+    const interval = setInterval(function () {
+      tenthsOfSeconds++;
+      timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
+    }, 100);
+    await loadFileList()
+    clearInterval(interval);
+    console.log(timerElement.textContent)
+    const lastActionTime = document.getElementById('last-action-time');
+    lastActionTime.textContent = timerElement.textContent;
+    loadingScreen.style.display = 'none';
+  })
 </script>
 </script>
 

@@ -132,7 +132,7 @@
   </legend>
   <label id="code-tree-tag-attributes-form-action-back">🔄 select new component</label>
   <br>
-  <select id="pathSelector" style="margin-top: 10px;">
+  <select id="pathSelector" style="margin-top: 10px;" onchange="handlePathSelection()">
     <option value="path1">⬇️ select</option>
     <option value="path1">⬅️ back</option>
     <option value="path2">➡️ dasdsadsadsadsadsada</option>
@@ -182,7 +182,7 @@
        <fieldset id="code-tree-tag-attributes-form" class="menu"       >
         <legend><button onclick = "cancel(event)" style="font-size: 0.9em;">❌</button></legend>
       <div>
-          <select id="pathSelector" style="margin-top: 10px; min-width: 200px; font-size: 1.2em;">
+          <select onchange="handlePathSelection()" id="pathSelector" style="margin-top: 10px; min-width: 200px; font-size: 1.2em;">
               <option value="path0">⬇️ select</option>
               <option value="path1">⬅️ back</option>
               <option value="path2">➡️ universal</option>
@@ -387,6 +387,226 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 */
 </script>
+<script>
+  let path = ''
+  let lvls = []
+  function handlePathSelection() {
+    // Get the selected value from the pathSelector
+    var selectedValue = document.getElementById('pathSelector').value;
+    console.log(selectedValue)
+    // Get the corresponding item based on the selected value
+    var selectedItem = selectedValue
+
+    // Handle the selected item as needed
+    console.log('Selected Item:', selectedItem);
+    if (selectedItem === 'select' || selectedItem === undefined) {
+      return
+    }
+    if (selectedItem === 'back') {
+      if (path === '') {
+        return
+      }
+      const splited = path.split('/')
+      if (splited.length === 1) {
+        loadFileList()
+        return
+      }
+      splited.pop()
+      path = splited.join('/')
+      loadUsingPath()
+      return
+    }
+    if (path === '') {
+      path = selectedItem
+    }
+    else {
+      path = path + '/' + selectedItem
+
+    }
+    console.log(path)
+    loadUsingPath()
+
+  }
+  function selectFile(event, fileId) {
+  // Add logic to handle the selected file, if needed
+  console.log('File selected with ID:', fileId);
+  var el = event.target;
+
+  // Get the parent fieldset
+  var fieldset = el.closest('fieldset');
+
+  // Get the id and action attributes
+  var fieldsetId = fieldset.id;
+  var fieldsetAction = fieldset.getAttribute('action');
+
+  // Log the id and action attributes (you can replace this with your desired logic)
+  console.log("Fieldset ID:", fieldsetId);
+  console.log("Fieldset Action:", fieldsetAction);
+  const actionObject = {
+    time: (new Date()).getTime(),
+    action: fieldsetAction,
+    target_element: fieldsetId.split(';')[1],
+    inserted_component: {componentId:fileId,id:generateUUID()},
+  };
+  pushAction(actionObject);
+  // Remove the parent fieldset
+  fieldset.remove();
+}
+  function loadFileList() {
+    // Fetch GET request
+    fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true')
+      .then(response => response.json())
+      .then(data => {
+        // Replace existing file paths with dynamic content
+        var fileListTable = document.getElementById('code-tree-tag-attributes-form-attributes-list');
+        fileListTable.innerHTML = '';
+
+        let i = 0;
+        data.items.forEach(item => {
+
+          if (!lvls.includes(item.lsi1.split('/')[0])) {
+            lvls.push(item.lsi1.split('/')[0])
+          }
+          if (i < 25) {
+            i++
+            // Clone the fieldset
+            var newRow = fileListTable.insertRow();
+          newRow.innerHTML = `
+            <td><button onclick="selectFile(event,'${item.id}')">✅select</button></td>
+            <td>📂 ${item.lsi1}</td>
+            <td><label>🧩</label></td>
+          `;
+          }
+
+        });
+
+        // Show the cloned fieldsets
+        document.querySelectorAll('#filePathList fieldset').forEach(fieldset => {
+          fieldset.id !== 'cancelation' && fieldset.removeAttribute('hidden');
+        });
+
+
+
+        // Update select options
+        var pathSelector = document.getElementById('pathSelector');
+        pathSelector.innerHTML = '<option value="select">⬇️ select</option><option value="back">⬅️ back</option>';
+        lvls.forEach((lvl, index) => {
+          pathSelector.innerHTML += `<option value="${lvl}">➡️ ${lvl}</option>`;
+        });
+      })
+      .catch(error => console.error('Error:', error));
+
+  }
+  const loadUsingPath = () => {
+    return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + path)
+      .then(response => response.json())
+      .then(data => {
+        // Replace existing file paths with dynamic content
+        var fileListTable = document.getElementById('code-tree-tag-attributes-form-attributes-list');
+        fileListTable.innerHTML = '';
+        lvls = []
+        let i = 0
+        data.items.forEach(item => {
+
+          if (!lvls.includes(item.lsi1.replace(path + '/', '').split('/')[0])) {
+            lvls.push(item.lsi1.replace(path + '/', '').split('/')[0])
+          }
+          if (i < 25) {
+            i++
+            var newRow = fileListTable.insertRow();
+          newRow.innerHTML = `
+            <td><button onclick="selectFile(event,'${item.id}')">✅select</button></td>
+            <td>📂 ${item.lsi1}</td>
+            <td><label>🧩</label></td>
+          `;
+          }
+
+        });
+
+        // Show the cloned fieldsets
+        document.querySelectorAll('#filePathList fieldset').forEach(fieldset => {
+          fieldset.id !== 'cancelation' && fieldset.removeAttribute('hidden');
+        });
+
+
+
+        // Update select options
+        var pathSelector = document.getElementById('pathSelector');
+        pathSelector.innerHTML = '<option value="path0">⬇️ select</option><option value="back">⬅️ back</option>';
+        lvls.forEach((lvl, index) => {
+          pathSelector.innerHTML += `<option value="${lvl}">➡️ ${lvl}</option>`;
+        });
+      })
+      .catch(error => console.error('Error:', error));
+  }
+</script>
+<script>
+
+  //third menu 
+  const addNew = (e)=>{
+    const parentId = e.target.parentNode.id.split(';')[1];
+        const fieldset = document.getElementById('tag-table');
+
+        if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('tag-table') ) {
+          const clonedFieldset = fieldset.cloneNode(true);
+          
+          const clonedRows = clonedFieldset.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+          for (let i = 0; i < clonedRows.length; i++) {
+            const index = i; // Capture the current value of 'i' in a closure
+            clonedRows[i].onclick = function (event) {
+              chooseTag(index,event);
+            };
+          }
+          clonedFieldset.id = clonedFieldset.id  + ';'+parentId;
+          clonedFieldset.setAttribute('action', e.target.parentNode.getAttribute('action'))
+          e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+          e.target.parentNode.remove()
+        }
+  }
+  const addExisting = (e)=>{
+    const parentId = e.target.parentNode.id.split(';')[1];
+        const fieldset = document.getElementById('code-tree-append-or-insert-approv-menu');
+
+        if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-append-or-insert-approv-menu') ) {
+          const clonedFieldset = fieldset.cloneNode(true);
+          
+          clonedFieldset.id = clonedFieldset.id  + ';'+parentId;
+          clonedFieldset.setAttribute('action', e.target.parentNode.getAttribute('action'))
+          e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+          e.target.parentNode.remove()
+          // Get all fieldsets with data-element="code-tree-tag"
+          var codeTreeTagFieldsets = document.querySelectorAll('fieldset[data-element="code-tree-tag"]');
+
+          // Iterate through each fieldset and make their checkboxes visible
+          codeTreeTagFieldsets.forEach(function (fieldset) {
+              var checkbox = fieldset.querySelector('input[type="checkbox"]');
+              if (checkbox) {
+                  checkbox.removeAttribute('hidden');
+              }
+          });
+        }
+
+  }
+  const choseComponent = async(e)=>{
+    const parentId = e.target.parentNode.id.split(';')[1];
+        const fieldset = document.getElementById('code-tree-tag-attributes-form');
+
+        if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-tag-attributes-form') ) {
+          const clonedFieldset = fieldset.cloneNode(true);
+          
+          clonedFieldset.id = clonedFieldset.id  + ';'+parentId;
+          
+          clonedFieldset.setAttribute('action', e.target.parentNode.getAttribute('action'))
+          e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+          await loadFileList()
+          e.target.parentNode.remove()
+          // Get all fieldsets with data-element="code-tree-tag"
+          
+        }
+  }
+  
+
+</script>
 
 
 <script>
@@ -537,8 +757,8 @@ function hideSubFieldsets(parentFieldSet, hide) {
     // Insert the cloned element before the original element
     parent.insertBefore(clonedElement, originalElement);
   }
-  const executeCommand = (command) => {
-    const { action, target_element, insertedCode ,tag_change,inserted_element,value} = command;
+  const executeCommand = async(command) => {
+    const { action, target_element, insertedCode ,tag_change,inserted_element,value, inserted_component} = command;
 let treeElement
 let componentElement
 function handleAppendOrInsert(action, selectedArrayNotSorted) {
@@ -642,10 +862,37 @@ function cloneWithDescendants(element) {
 switch (action) {
   case 'Append':
     // Handle the 'Append' action
-    
+    if(inserted_component){
+      //fieldset
+      console.log('in')
+      console.log(target_element)
+      treeElement = document.getElementById(target_element);
+      //component
+      componentElement = document.getElementById(target_element.replace('-tree',''));
+      const newEl = document.createElement("div")
+      newEl.id = inserted_component.id
+      console.log(newEl.id)
+      componentElement.appendChild(newEl)
+      const component_el = document.getElementById('component-element')
+      const newEl2 = component_el.cloneNode(true)
+      const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
+      button2.textContent = '🧩'+inserted_component.componentId;
+      const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
+      button.addEventListener('mouseover', mouseOverTree);
+
+      button.addEventListener('mouseout', mouseOutTree);
+
+      newEl2.id = inserted_component.id + '-tree'
+
+      treeElement.appendChild(newEl2)
+      console.log('prob'+inserted_component.componentId)
+      await loadFromDb(inserted_component.componentId,inserted_component.id)
+      break;
+    }
 
     //case insert tag
     if(inserted_element?.tagName){
+      console.log(command)
       //fieldset
       treeElement = document.getElementById(target_element);
       //component
@@ -677,7 +924,33 @@ switch (action) {
     // Handle the 'Append' action
     //fieldset
     
+    if(inserted_component){
+      //fieldset
+      console.log('in')
+      console.log(target_element)
+      treeElement = document.getElementById(target_element);
+      //component
+      componentElement = document.getElementById(target_element.replace('-tree',''));
+      const newEl = document.createElement("div")
+      newEl.id = inserted_component.id
+      console.log(newEl.id)
+      componentElement.appendChild(newEl)
+      const component_el = document.getElementById('component-element')
+      const newEl2 = component_el.cloneNode(true)
+      const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
+      button2.textContent = '🧩'+inserted_component.componentId;
+      const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
+      button.addEventListener('mouseover', mouseOverTree);
 
+      button.addEventListener('mouseout', mouseOutTree);
+
+      newEl2.id = inserted_component.id + '-tree'
+
+      treeElement.parentNode.insertBefore(newEl2,treeElement)
+      console.log(inserted_component.componentId)
+      await loadFromDb(inserted_component.componentId,inserted_component.id)
+      break;
+    }
     //case insert tag
     if(inserted_element?.tagName){
       treeElement = document.getElementById(target_element);
@@ -869,10 +1142,11 @@ switch (action) {
         }
       }
 }
-  const loadFromDb = async ()=>{
+  const loadFromDb = async (id,newId)=>{
+    console.log('load from db' + id)
     const urlSearchParams = new URLSearchParams(window.location.search);
-    const idFromLink = urlSearchParams.get('id');
-
+    let idFromLink = urlSearchParams.get('id');
+    id && (idFromLink = id)
     if (!idFromLink) {
       throw new Error('Missing id parameter in the URL');
     }
@@ -894,7 +1168,20 @@ switch (action) {
     const responseData = await response.json();
     console.log(JSON.stringify(responseData))
     for (const item of responseData.items){
-      pushAction({...item,time:item.sk},true)
+      if(id){
+        if(item.target_element ===id + '-tree'){
+          item.target_element = newId + '-tree'
+        }
+        if(item.action){
+          executeCommand({...item,time:item.sk})
+        }
+        continue
+      }
+      
+      
+         pushAction({...item,time:item.sk},true)
+      
+     
     }
     
   }
@@ -1222,59 +1509,6 @@ switch (action) {
 </style>
 
 
-<script>
-
-  //third menu 
-  const addNew = (e)=>{
-    const parentId = e.target.parentNode.id.split(';')[1];
-        const fieldset = document.getElementById('tag-table');
-
-        if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('tag-table') ) {
-          const clonedFieldset = fieldset.cloneNode(true);
-          
-          const clonedRows = clonedFieldset.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-          for (let i = 0; i < clonedRows.length; i++) {
-            const index = i; // Capture the current value of 'i' in a closure
-            clonedRows[i].onclick = function (event) {
-              chooseTag(index,event);
-            };
-          }
-          clonedFieldset.id = clonedFieldset.id  + ';'+parentId;
-          clonedFieldset.setAttribute('action', e.target.parentNode.getAttribute('action'))
-          e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
-          e.target.parentNode.remove()
-        }
-  }
-  const addExisting = (e)=>{
-    const parentId = e.target.parentNode.id.split(';')[1];
-        const fieldset = document.getElementById('code-tree-append-or-insert-approv-menu');
-
-        if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-append-or-insert-approv-menu') ) {
-          const clonedFieldset = fieldset.cloneNode(true);
-          
-          clonedFieldset.id = clonedFieldset.id  + ';'+parentId;
-          clonedFieldset.setAttribute('action', e.target.parentNode.getAttribute('action'))
-          e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
-          e.target.parentNode.remove()
-          // Get all fieldsets with data-element="code-tree-tag"
-          var codeTreeTagFieldsets = document.querySelectorAll('fieldset[data-element="code-tree-tag"]');
-
-          // Iterate through each fieldset and make their checkboxes visible
-          codeTreeTagFieldsets.forEach(function (fieldset) {
-              var checkbox = fieldset.querySelector('input[type="checkbox"]');
-              if (checkbox) {
-                  checkbox.removeAttribute('hidden');
-              }
-          });
-        }
-
-  }
-  const choseComponent = (e)=>{
-
-  }
-  
-
-</script>
 
 
 <!-- attributes table style-->
