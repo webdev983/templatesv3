@@ -704,10 +704,10 @@ function hideSubFieldsets(parentFieldSet, hide) {
       return v.toString(16);
     });
   }
-  const pushAction = (e,firstLoad)=>{
+  const pushAction = async(e,firstLoad)=>{
     actionLog.push(e)
     !firstLoad && pushActionToDb(e)
-    executeCommand(e)
+    await executeCommand(e)
     insertDataIntoCodeLog(e.time,e.action)
   }
   const pushActionToDb = async(action)=>{
@@ -759,9 +759,9 @@ function hideSubFieldsets(parentFieldSet, hide) {
   }
   const executeCommand = async(command) => {
     const { action, target_element, insertedCode ,tag_change,inserted_element,value, inserted_component} = command;
-let treeElement
-let componentElement
-function handleAppendOrInsert(action, selectedArrayNotSorted) {
+    let treeElement
+    let componentElement
+    function handleAppendOrInsert(action, selectedArrayNotSorted) {
     // Sort
     var firstElementId = selectedArrayNotSorted[0];
     var restOfElements = selectedArrayNotSorted.slice(1);
@@ -858,7 +858,7 @@ function cloneWithDescendants(element) {
 
     return clone;
 }
-
+console.log("action"+action)
 switch (action) {
   case 'Append':
     // Handle the 'Append' action
@@ -1168,6 +1168,7 @@ switch (action) {
     const responseData = await response.json();
     console.log(JSON.stringify(responseData))
     for (const item of responseData.items){
+      console.log('item'+ JSON.stringify(item))
       if(item.action){
       if(id){
         console.log(JSON.stringify(item))
@@ -1190,13 +1191,13 @@ switch (action) {
           item.inserted_element?.id && (item.inserted_element.id = newId +';'+ item.inserted_element.id)
           console.log('notArr'+item.target_element)
         }
-        executeCommand({...item,time:item.sk})
+        await executeCommand({...item,time:item.sk})
         
         continue
       }
       
       
-         pushAction({...item,time:item.sk},true)
+         await pushAction({...item,time:item.sk},true)
       }
      
     }
@@ -1247,7 +1248,7 @@ switch (action) {
     loadingScreen.style.display = 'none';
     
   });
-  const save =(event)=>{
+  const save =async(event)=>{
     const parent = event.target.parentNode
     const {id } = parent
     const action = parent.getAttribute('action')
@@ -1256,25 +1257,26 @@ switch (action) {
       const saveButton = event.target;
       const fieldset = saveButton.closest('fieldset');
         
-        
+      console.log(id)
       const textareaValue = fieldset.querySelector('#code-tree-inner-html-receive-textarea').value;
             
-        
+      const splited = id.split(';')
+      const [e,...rest] = splited
       const el = {
         time: (new Date()).getTime(),
         action,
-        target_element:id.split(';')[1],
+        target_element:rest.join(';'),
         insertedCode:textareaValue,
 
       }
       console.log(JSON.stringify(el))
-      pushAction(el)
+      await pushAction(el)
     }
     parent.remove()
     console.log(JSON.stringify(actionLog))
 
   }
-  const saveText =(event)=>{
+  const saveText =async(event)=>{
     const parent = event.target.parentNode
     const {id } = parent
     const action = 'textContent'
@@ -1285,17 +1287,18 @@ switch (action) {
         
         
       const textareaValue = fieldset.querySelector('#code-tree-tag-text-content').value;
-            
+      const splited = id.split(';')
+      const [e,...rest] = splited
         
       const el = {
         time: (new Date()).getTime(),
         action,
-        target_element:id.split(';')[1],
+        target_element:rest.join(';'),
         value:textareaValue,
 
       }
       console.log(JSON.stringify(el))
-      pushAction(el)
+      await pushAction(el)
     
     parent.remove()
     console.log(JSON.stringify(actionLog))
