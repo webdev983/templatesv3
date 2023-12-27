@@ -1,7 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <!-- right click menu-->
+
   <style>
+    .body {
+  cursor: default;
+}
+  </style>
+  <style>
+    .right-click-menu {
+      display: none;
+      position: absolute;
+      z-index: 1000;
+      width: 150px;
+      background: white;
+      border: 1px solid #ddd;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+      margin: 0; /* Убираем внешние отступы */
+      padding: 0; /* Убираем внутренние отступы */
+    }
+  
+    .menu-option {
+      padding: 10px;
+      cursor: pointer;
+      border-bottom: 1px solid #b6b4b4; /* Разделительные линии между опциями */
+    }
+  
+    .menu-option:last-child {
+      border-bottom: none; /* Убираем линию у последнего элемента */
+    }
+  
+    .menu-option:hover {
+      background-color: #d8d6d6;
+    }
+  </style>  <style>
+
 
     .receive-insert-element {
       border: 2px
@@ -24,9 +58,6 @@
             box-shadow: 0px 2px 5px rgba(0,0,0,0.2); /* Optional: Adds shadow for depth */
             z-index: 1000; /* Ensure it's above other content */
             width: 100px
-}
-[data-visual*="move"] {
-  cursor: move; /* Change cursor to indicate movability */
 }
 
 
@@ -64,23 +95,24 @@
   margin-right: 5px; /* Space between buttons */
 }
 </style>
-</head>
+<body>
 <div class="back-soon-buttons">
+  <div id="move_started"></div>
+
 <button  style="font-size: 30px;" title="revert last action">↩️</button>
 <button  style="font-size: 30px;"  title="redo last action">↪️</button>
 </div>
 
 
 
-<body>
 
 <div id="visual-editor" style=" margin-left: 100px;">
 
   <article data-product='{"id":"1", "options":{"size":"xl"}}'>
-  <fieldset draggable="true"><legend><div style="font-size: 30px; font-family: Arial, Helvetica, sans-serif;">⬇️🖱️product title </div></legend>
-    <h1 data-visual="duplicate;edit;move">Cool product</h1>
+  <fieldset draggable="true"><legend style="font-size: 30px; font-family: Arial, Helvetica, sans-serif; cursor: default">⬇️🖱️product title</legend>
+    <h1 draggable="true" data-visual="duplicate;edit;move">Cool product</h1>
     </fieldset>
-    <fieldset><legend><div style="font-size: 30px; font-family: Arial, Helvetica, sans-serif;">⬇️  product main image </div></legend>
+    <fieldset><legend><div title="🖱️"  style="font-size: 30px; font-family: Arial, Helvetica, sans-serif;">⬇️  product main image </div></legend>
     <img data-visual="duplicate;edit;move" data-type="main-image" src="https://via.placeholder.com/150/0000FF/FFFFFF?text=main-image" alt="main image of product">
     </fieldset>
 
@@ -159,7 +191,7 @@
   To explore an alternative to the Google Authenticator, you can use an online generator for creating 2FA codes available at our site, follow the link to accbuddy.com/2fa. This tool can be a handy resource in maintaining strong, reliable security for your online accounts. Be sure to understand the features and benefits of any 2FA solution you choose to use, and to always prioritize your online safety.</p>
 
 <img data-visual="duplicate;edit;move" src="https://via.placeholder.com/150/" alt="">
-        <fieldset draggable="true"><legend><div style="font-size: 30px; font-family: Arial, Helvetica, sans-serif;">⬇️ list 🖱️</div></legend>
+        <fieldset ><legend><div style="font-size: 30px; font-family: Arial, Helvetica, sans-serif;">⬇️ list 🖱️</div></legend>
 <ul data-visual="duplicate;move">
   <li data-visual="duplicate;edit;move">Item 1</li>
   <li data-visual="duplicate;edit;move">Item 2</li>
@@ -193,10 +225,16 @@
   To explore an alternative to the Google Authenticator, you can use an online generator for creating 2FA codes available at our site, follow the link to accbuddy.com/2fa. This tool can be a handy resource in maintaining strong, reliable security for your online accounts. Be sure to understand the features and benefits of any 2FA solution you choose to use, and to always prioritize your online safety.</p>
 
 <img data-visual="duplicate;edit;move" src="https://via.placeholder.com/150/" alt="">
-        <fieldset draggable="true"><legend><div style="font-size: 30px; font-family: Arial, Helvetica, sans-serif;">⬇️ list 🖱️</div></legend>
+        <fieldset ><legend><div style="font-size: 30px; font-family: Arial, Helvetica, sans-serif;">⬇️ list 🖱️</div></legend>
 <ul data-visual="duplicate;move">
+  <div class="receive-insert-element"><button style="font-size: 30px;">✅↪️</button></div>
+
   <li data-visual="duplicate;edit;move">Item 1</li>
+  <div class="receive-insert-element"><button style="font-size: 30px;">✅↪️</button></div>
+
   <li data-visual="duplicate;edit;move">Item 2</li>
+  <div class="receive-insert-element"><button style="font-size: 30px;">✅↪️</button></div>
+
 </ul>
 </fieldset>
 
@@ -213,207 +251,98 @@
 </style>
 </div>
 
+<div id="right-click-menu" class="right-click-menu">
+  <div class="menu-option" onclick="alert('Option 1 selected')">➕ h1</div>
+  <div class="menu-option" onclick="alert('Option 2 selected')">➕ h2</div>
+  <div class="menu-option" onclick="alert('Option 3 selected')">➕ p</div>
+</div>
+
+<!-- content editable when double click-->
+<script>// Выберите элемент, на который вы хотите повесить обработчик
+// Функция, которая будет вызвана при двойном клике по любому элементу
+function onDoubleClick(e) {
+    // Получаем элемент, по которому был сделан клик
+    var target = e.target;
+
+    // Предотвратить стандартное поведение двойного клика
+    e.preventDefault();
+
+    // Установить атрибут contenteditable в 'true', делая элемент редактируемым
+    target.setAttribute('contenteditable', 'true');
+    event.target.style.backgroundColor = '';
+
+
+    // Установить фокус на редактируемый элемент
+    target.focus();
+}
+
+// Добавляем обработчик события на весь документ для отслеживания двойного клика
+document.addEventListener('dblclick', onDoubleClick);
+  </script>
+
+<!-- HOVER-->
 
 <script>
-let currentElement = null;
-let hideMenuTimeout;
-let lastInteractionTime = 0; // Track the time of the last interaction
-
-function showHoverMenu(element) {
-  const hoverMenu = document.getElementById('hover-menu');
-  hoverMenu.style.display = 'block';
-  hoverMenu.style.left = `${element.getBoundingClientRect().left}px`;
-  hoverMenu.style.top = `${element.getBoundingClientRect().top - hoverMenu.offsetHeight - 1}px`;
-  clearTimeout(hideMenuTimeout);
-}
-
-function hideHoverMenu() {
-  hideMenuTimeout = setTimeout(() => {
-    const hoverMenu = document.getElementById('hover-menu');
-    hoverMenu.style.display = 'none';
-  }, 100);
-}
-
-function applyHoverClass(element, add) {
-  const now = Date.now();
-  if(element.hasAttribute('data-visual')){
-    if (add && now - lastInteractionTime > 50) { // Debounce rapid mouse movements
-      lastInteractionTime = now; // Update the last interaction time
-      currentElement = element;
-      element.classList.add('hover');
-      showHoverMenu(element);
-    } else if (!add) {
-      element.classList.remove('hover');
-      hideHoverMenu();
-    }
-  }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('mouseover', function(event) {
-    applyHoverClass(event.target, true);
+    // При наведении курсора на элемент с атрибутом 'data-visual' меняем фон на розовый
+    if (event.target.hasAttribute('data-visual')) {
+      event.target.style.backgroundColor = 'pink';
+    }
   });
-
+  
   document.addEventListener('mouseout', function(event) {
-    applyHoverClass(event.target, false);
-  });
-
-  document.getElementById('hover-menu').addEventListener('mouseover', function() {
-    if (currentElement) {
-      currentElement.classList.remove('hover');
+    // Когда курсор покидает элемент с атрибутом 'data-visual', возвращаем исходный фон
+    if (event.target.hasAttribute('data-visual')) {
+      event.target.style.backgroundColor = '';
     }
-    clearTimeout(hideMenuTimeout);
-  });
-
-  document.getElementById('hover-menu').addEventListener('mouseout', function(event) {
-    if (!event.relatedTarget || !event.relatedTarget.hasAttribute('data-visual')) {
-      hideHoverMenu();
-      if (currentElement) {
-        currentElement.classList.remove('hover');
-        currentElement = null;
-      }
-    }
-  });
-});
-</script>
-
-<script>
-  let doubleClickTimeout = null;
-
-  function makeEditableOnDoubleClick(element) {
-    if (!element.hasAttribute('data-visual') || !element.getAttribute('data-visual').includes('edit')) {
-      return; // Skip elements without 'data-visual="edit"'
-    }
-
-    element.addEventListener('click', () => {
-      if (doubleClickTimeout !== null) {
-        clearTimeout(doubleClickTimeout);
-        doubleClickTimeout = null;
-        makeEditable(element); // Double click makes the element editable
-      } else {
-        doubleClickTimeout = setTimeout(() => {
-          doubleClickTimeout = null;
-        }, 300);
-      }
-    });
-
-    element.addEventListener('blur', () => {
-      // Save changes and remove 'contenteditable' when the element loses focus
-      if (element.getAttribute('contenteditable')) {
-        element.textContent = element.innerText; // Update the text content
-        element.removeAttribute('contenteditable');
-      }
-    });
-  }
-
-  function makeEditable(element) {
-    element.setAttribute('contenteditable', 'true');
-    element.focus();
-
-    // Handler for saving changes on Enter key press
-    element.onkeydown = function(e) {
-      if (e.key === 'Enter') {
-        // Update the text content of the element
-        element.textContent = element.innerText;
-
-        // Remove 'contenteditable' attribute
-        element.removeAttribute('contenteditable');
-
-        // Focus the next element (if available)
-        const nextElement = element.nextElementSibling;
-        if (nextElement && nextElement.getAttribute('data-visual') && nextElement.getAttribute('data-visual').includes('edit')) {
-          nextElement.focus();
-        }
-
-        e.preventDefault();
-      }
-    };
-  }
-
-  // Apply the function to the elements with 'data-visual="edit"'
-  document.querySelectorAll('[data-visual*="edit"]').forEach(makeEditableOnDoubleClick);
-</script>
-
-
-<script>
-  // Function to enable dragging
-  function makeDraggable(element) {
-    if (element.getAttribute('data-visual') && element.getAttribute('data-visual').includes('move')) {
-      element.setAttribute('draggable', 'true');
-  
-      element.addEventListener('click', (event) => {
-        // Single click to initiate dragging
-        element.classList.add('dragging'); // Optional: Add a class to style the dragging element
-      });
-  
-      element.addEventListener('dragstart', (event) => {
-        event.dataTransfer.setData('text/plain', ''); // Necessary to make draggable in some browsers
-        event.target.classList.add('is-dragging');
-      });
-  
-      element.addEventListener('dragend', (event) => {
-        event.target.classList.remove('is-dragging');
-      });
-    }
-  }
-  
-  // Function to handle the drop logic
-  function handleDrop(target, draggedElement) {
-    if (target !== draggedElement) {
-      target.parentNode.insertBefore(draggedElement, target); // Insert before the drop target
-      draggedElement.classList.remove('dragging'); // Optional: Remove the styling for dragging
-    }
-  }
-  
-  // Apply the draggable functionality to elements with 'data-visual="move"'
-  document.querySelectorAll('[data-visual*="move"]').forEach(makeDraggable);
-  
-  // Handling dragover and drop events on all potential drop targets
-  document.addEventListener('dragover', (event) => {
-    event.preventDefault(); // Prevent default to allow drop
-    const target = event.target;
-    const draggedElement = document.querySelector('.is-dragging');
-    if (target !== draggedElement && target.hasAttribute('data-visual')) {
-      target.classList.add('drop-target'); // Highlight potential drop target
-    }
-  });
-  
-  document.addEventListener('drop', (event) => {
-    event.preventDefault(); // Prevent default action (open as link for some elements)
-    const target = event.target;
-    const draggedElement = document.querySelector('.is-dragging');
-    if (draggedElement) {
-      handleDrop(target, draggedElement); // Handle the drop logic
-    }
-    target.classList.remove('drop-target'); // Remove drop target highlighting
-  });
-  
-  document.addEventListener('dragleave', (event) => {
-    event.target.classList.remove('drop-target'); // Remove drop target highlighting when leaving
   });
   </script>
+<!-- right click menu-->
+<script>
+  const menu = document.querySelector('.right-click-menu');
 
+  // Display the context menu
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault(); // Prevent the default context menu from opening
+    menu.style.display = 'block';
+    menu.style.left = `${e.pageX}px`;
+    menu.style.top = `${e.pageY}px`;
+  });
+
+  // Hide the menu when clicking the left mouse button
+  window.addEventListener('click', function() {
+    menu.style.display = 'none';
+  });
+
+
+  
+</script>  
 
 <script>
-  function duplicateElement(elementId) {
-    // Find the original element using its ID
-    var original = document.getElementById(elementId);
-    if (original) {
-      // Clone the original element
-      var clone = original.cloneNode(true); // 'true' means deep clone (copy all child nodes)
-  
-      // Optional: Update the ID or any attributes of the clone to ensure uniqueness if necessary
-      clone.id = "duplicateOf" + elementId; // Change the ID or remove it entirely if duplicates don't need unique IDs
-  
-      // Insert the cloned node after the original node
-      original.parentNode.insertBefore(clone, original.nextSibling);
-    } else {
-      console.log("Element to duplicate not found");
+
+  let isDragging = false;
+  const moveStarted = document.getElementById('move_started');
+
+  // Обработчик события начала перетаскивания для всех элементов с draggable="true"
+  document.addEventListener('dragstart', (e) => {
+    isDragging = true;
+    moveStarted.textContent = 'NO'; // Сбрасываем статус
+  });
+
+  // Обработчик события окончания перетаскивания для всех элементов с draggable="true"
+  document.addEventListener('dragend', () => {
+    isDragging = false;
+  });
+
+  // Обработчик события движения мыши
+  document.addEventListener('mousemove', (e) => {
+    if (isDragging) {
+      moveStarted.textContent = 'YES DRAG STARTED'; // Устанавливаем статус в "YES" при начале движения
     }
-  }
-  </script>
-
-
-
+  })
+</script>
 </body>
+
+
+
 </html>
