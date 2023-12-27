@@ -570,7 +570,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 </script>
 <script>
-
+  var memData = {}
   //third menu 
   const addNew = (e) => {
     const splited = e.target.parentNode.id.split(';')
@@ -792,7 +792,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Insert the cloned element before the original element
     parent.insertBefore(clonedElement, originalElement);
   }
-  const executeCommand = async (command,path) => {
+  const executeCommand = async (command, path) => {
     const { action, target_element, insertedCode, tag_change, inserted_element, value, inserted_component } = command;
     let treeElement
     let componentElement
@@ -906,7 +906,7 @@ document.addEventListener('DOMContentLoaded', function() {
           //component
           componentElement = document.getElementById(target_element.replace('-tree', ''));
           const newEl = document.createElement("div")
-          newEl.id = path+ inserted_component.id
+          newEl.id = path + inserted_component.id
           console.log(newEl.id)
           componentElement.appendChild(newEl)
           const component_el = document.getElementById('component-element')
@@ -918,13 +918,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
           button.addEventListener('mouseout', mouseOutTree);
 
-          newEl2.id =path+ inserted_component.id + '-tree'
+          newEl2.id = path + inserted_component.id + '-tree'
 
           treeElement.appendChild(newEl2)
           console.log('prob' + inserted_component.componentId)
-          components.push(path+inserted_component.id)
-          console.log('err '+ path)
-          await loadFromDb(inserted_component.componentId, inserted_component.id,path)
+          components.push(path + inserted_component.id)
+          console.log('err ' + path)
+          await loadFromDb(inserted_component.componentId, inserted_component.id, path)
           break;
         }
 
@@ -986,7 +986,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
           treeElement.parentNode.insertBefore(newEl2, treeElement)
           console.log(inserted_component.componentId)
-          
+
           await loadFromDb(inserted_component.componentId, inserted_component.id)
           break;
         }
@@ -1075,7 +1075,7 @@ document.addEventListener('DOMContentLoaded', function() {
       case 'textContent':
         // Handle the 'removeTag' action
         // tree
-        console.log('pr'+target_element)
+        console.log('pr' + target_element)
         const element1 = document.getElementById(target_element);
         const textContentButton = element1.querySelector('[data-element="code-tree-text-content-button"]');
         textContentButton.textContent = `📄${value.length}`;
@@ -1182,20 +1182,15 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   }
-  const loadFromDb = async (id, newId,p) => {
-    console.log('load from db' + id)
-    console.log('err2 ' + p)
-    let path =""
-    p && (path = p)
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    let idFromLink = urlSearchParams.get('id');
-    id && (idFromLink = id)
-    if (!idFromLink) {
-      throw new Error('Missing id parameter in the URL');
-    }
+  const cache = {};
 
+  const getRes = async (id) => {
+  // Check if the response is already in the cache
+ 
+
+  try {
     // Make a GET request to the API with the 'id' query parameter
-    const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${idFromLink}&startsWith=true`, {
+    const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -1209,26 +1204,54 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Parse and log the response or handle it as needed
     const responseData = await response.json();
-    console.log(JSON.stringify(responseData))
+
+    // Store the response in the cache for future use
+    cache[id] = responseData;
+
+    return responseData;
+  } catch (error) {
+    console.error(`Error fetching data for id: ${id}`, error);
+    throw error; // Re-throw the error to let the caller handle it
+  }
+};
+
+  const loadFromDb = async (id, newId, p) => {
+    console.log('load from db' + id)
+    console.log('err2 ' + p)
+    let path = ""
+    p && (path = p)
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    let idFromLink = urlSearchParams.get('id');
+    id && (idFromLink = id)
+    if (!idFromLink) {
+      throw new Error('Missing id parameter in the URL');
+    }
+
+    // Make a GET request to the API with the 'id' query parameter
+    let responseData
+
+    responseData = await getRes(idFromLink)
+
+
     for (const item of responseData.items) {
       console.log('item' + JSON.stringify(item))
       if (item.action) {
         if (id) {
           console.log(JSON.stringify(item))
-          console.log('id1 '+id)
-          console.log('id2 '+newId)
+          console.log('id1 ' + id)
+          console.log('id2 ' + newId)
           console.log(item.target_element)
           console.log(components)
 
-          
+
           if (item.target_element === id + '-tree') {
             console.log('case1')
             console.log(path)
-            item.target_element =path + newId + '-tree'
-            item.inserted_element?.id && (item.inserted_element.id =path + newId + ';' + item.inserted_element.id)
+            item.target_element = path + newId + '-tree'
+            item.inserted_element?.id && (item.inserted_element.id = path + newId + ';' + item.inserted_element.id)
           }
-          else if(components.includes(item.target_element.replace('-tree',''))){
-            item.target_element =path + item.target_element
+          else if (components.includes(item.target_element.replace('-tree', ''))) {
+            item.target_element = path + item.target_element
             console.log('case2')
             console.log('in')
           }
@@ -1236,9 +1259,9 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('case3')
             item.target_element = item.target_element.map(i => {
               if (id.id === id + '-tree') {
-                return { ...i, id:path + newId + '-tree' }
+                return { ...i, id: path + newId + '-tree' }
               }
-              return { ...i, id:path + newId + ';' + i.id }
+              return { ...i, id: path + newId + ';' + i.id }
             })
 
             console.log('arr' + item.target_element)
@@ -1246,19 +1269,19 @@ document.addEventListener('DOMContentLoaded', function() {
           else {
             console.log('case4')
             const splited = item.target_element.split(';')
-            
-              item.target_element =path + newId + ';' + item.target_element
-            item.inserted_element?.id && (item.inserted_element.id =path + newId + ';' + item.inserted_element.id)
+
+            item.target_element = path + newId + ';' + item.target_element
+            item.inserted_element?.id && (item.inserted_element.id = path + newId + ';' + item.inserted_element.id)
             console.log('notArr' + item.target_element)
-            
-            
+
+
 
           }
-          let toAdd =newId +';'
-          if(path){
-            toAdd = path + newId
+          let toAdd = newId + ';'
+          if (path) {
+            toAdd = path + newId + ';'
           }
-          await executeCommand({ ...item, time: item.sk },toAdd)
+          await executeCommand({ ...item, time: item.sk }, toAdd)
 
           continue
         }
