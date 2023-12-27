@@ -647,7 +647,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
   var actionLog = []
   var selected = []
-
+  var components = []
   function toggleSubFields(event) {
     // Get the clicked button and its content
     const button = event.target;
@@ -921,6 +921,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
           treeElement.appendChild(newEl2)
           console.log('prob' + inserted_component.componentId)
+          components.push(inserted_component.id)
           await loadFromDb(inserted_component.componentId, inserted_component.id)
           break;
         }
@@ -1208,9 +1209,16 @@ document.addEventListener('DOMContentLoaded', function() {
       if (item.action) {
         if (id) {
           console.log(JSON.stringify(item))
+          console.log('id1 '+id)
+          console.log('id2 '+newId)
+          console.log(item.target_element)
+          console.log(components)
           if (item.target_element === id + '-tree') {
             item.target_element = newId + '-tree'
             item.inserted_element?.id && (item.inserted_element.id = newId + ';' + item.inserted_element.id)
+          }
+          else if(components.includes(item.target_element.replace('-tree',''))){
+            console.log('in')
           }
           else if (Array.isArray(item.target_element)) {
             console.log('e1' + item.target_element + item.target_element.length)
