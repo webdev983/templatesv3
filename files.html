@@ -186,30 +186,47 @@
   }
   let path = ''
   let lvls = []
-  const remove = (event, id) => {
+  const remove = async(event, id) => {
     event.preventDefault();
 
     // Get the closest list item (li) element
     var listItem = event.currentTarget.closest('li');
 
-    // Send a DELETE request to the API endpoint
-    fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:path`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        // Add any additional headers if needed
-      },
-    })
+    
+    fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`)
       .then(response => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        listItem.remove();
+        return response.json(); // Parse the response JSON
       })
+      .then(data => {
+        // Step 2: Iterate through the items and send a DELETE request for each
+        data.items.forEach(item => {
+          const { id, sk } = item;
 
+          fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:${sk}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              // Add any additional headers if needed
+            },
+          })
+            .then(deleteResponse => {
+              if (!deleteResponse.ok) {
+                throw new Error(`HTTP error! Status: ${deleteResponse.status}`);
+              }
+              console.log(`Successfully deleted item with id:${id} and sk:${sk}`);
+            })
+            .catch(deleteError => {
+              console.error(`Error deleting item with id:${id} and sk:${sk}`, deleteError);
+            });
+        });
+      })
       .catch(error => {
-        console.error('Error removing file:', error);
+        console.error('Error retrieving items:', error);
       });
+      listItem.remove();
   }
   function loadFileList() {
     // Fetch GET request
@@ -372,7 +389,7 @@
             };
             clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
               remove(event, item.id);
-              
+
             };
             // Append the cloned item to the filePathList
             filePathList.appendChild(clonedItem);
@@ -396,7 +413,7 @@
       })
       .catch(error => console.error('Error:', error));
   }
-  document.addEventListener('DOMContentLoaded', async function (){
+  document.addEventListener('DOMContentLoaded', async function () {
     const loadingScreen = document.getElementById('loading');
     loadingScreen.style.display = 'flex';
     const timerElement = document.getElementById('timer');

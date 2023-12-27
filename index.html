@@ -792,7 +792,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Insert the cloned element before the original element
     parent.insertBefore(clonedElement, originalElement);
   }
-  const executeCommand = async (command) => {
+  const executeCommand = async (command,path) => {
     const { action, target_element, insertedCode, tag_change, inserted_element, value, inserted_component } = command;
     let treeElement
     let componentElement
@@ -894,6 +894,7 @@ document.addEventListener('DOMContentLoaded', function() {
       return clone;
     }
     console.log("action" + action)
+    !path && (path = '')
     switch (action) {
       case 'Append':
         // Handle the 'Append' action
@@ -905,7 +906,7 @@ document.addEventListener('DOMContentLoaded', function() {
           //component
           componentElement = document.getElementById(target_element.replace('-tree', ''));
           const newEl = document.createElement("div")
-          newEl.id = inserted_component.id
+          newEl.id = path+ inserted_component.id
           console.log(newEl.id)
           componentElement.appendChild(newEl)
           const component_el = document.getElementById('component-element')
@@ -917,12 +918,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
           button.addEventListener('mouseout', mouseOutTree);
 
-          newEl2.id = inserted_component.id + '-tree'
+          newEl2.id =path+ inserted_component.id + '-tree'
 
           treeElement.appendChild(newEl2)
           console.log('prob' + inserted_component.componentId)
-          components.push(inserted_component.id)
-          await loadFromDb(inserted_component.componentId, inserted_component.id)
+          components.push(path+inserted_component.id)
+          console.log('err '+ path)
+          await loadFromDb(inserted_component.componentId, inserted_component.id,path)
           break;
         }
 
@@ -984,6 +986,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
           treeElement.parentNode.insertBefore(newEl2, treeElement)
           console.log(inserted_component.componentId)
+          
           await loadFromDb(inserted_component.componentId, inserted_component.id)
           break;
         }
@@ -1179,8 +1182,11 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   }
-  const loadFromDb = async (id, newId) => {
+  const loadFromDb = async (id, newId,p) => {
     console.log('load from db' + id)
+    console.log('err2 ' + p)
+    let path =""
+    p && (path = p)
     const urlSearchParams = new URLSearchParams(window.location.search);
     let idFromLink = urlSearchParams.get('id');
     id && (idFromLink = id)
@@ -1213,34 +1219,46 @@ document.addEventListener('DOMContentLoaded', function() {
           console.log('id2 '+newId)
           console.log(item.target_element)
           console.log(components)
+
+          
           if (item.target_element === id + '-tree') {
-            item.target_element = newId + '-tree'
-            item.inserted_element?.id && (item.inserted_element.id = newId + ';' + item.inserted_element.id)
+            console.log('case1')
+            console.log(path)
+            item.target_element =path + newId + '-tree'
+            item.inserted_element?.id && (item.inserted_element.id =path + newId + ';' + item.inserted_element.id)
           }
           else if(components.includes(item.target_element.replace('-tree',''))){
+            item.target_element =path + item.target_element
+            console.log('case2')
             console.log('in')
           }
           else if (Array.isArray(item.target_element)) {
-            console.log('e1' + item.target_element + item.target_element.length)
+            console.log('case3')
             item.target_element = item.target_element.map(i => {
               if (id.id === id + '-tree') {
-                return { ...i, id: newId + '-tree' }
+                return { ...i, id:path + newId + '-tree' }
               }
-              return { ...i, id: newId + ';' + i.id }
+              return { ...i, id:path + newId + ';' + i.id }
             })
 
             console.log('arr' + item.target_element)
           }
           else {
+            console.log('case4')
             const splited = item.target_element.split(';')
-            if(splited.length < 2){
-              item.target_element = newId + ';' + item.target_element
-            item.inserted_element?.id && (item.inserted_element.id = newId + ';' + item.inserted_element.id)
-            console.log('notArr' + item.target_element)
-            }
             
+              item.target_element =path + newId + ';' + item.target_element
+            item.inserted_element?.id && (item.inserted_element.id =path + newId + ';' + item.inserted_element.id)
+            console.log('notArr' + item.target_element)
+            
+            
+
           }
-          await executeCommand({ ...item, time: item.sk })
+          let toAdd =newId +';'
+          if(path){
+            toAdd = path + newId
+          }
+          await executeCommand({ ...item, time: item.sk },toAdd)
 
           continue
         }
