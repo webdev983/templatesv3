@@ -94,7 +94,7 @@
           <button data-element="code-tree-tag-name-button"
             onclick="loader(event, handleComponentClick)">🏷️component</button>
           <button data-element="code-tree-inner-html-button"> 🐣</button>
-          <button data-element="code-tree-attributes-button">🔑</button>
+          <button data-element="code-tree-attributes-button" onclick="openAttributeContent(event)">🔑</button>
           <button data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
         </fieldset>
 
@@ -103,15 +103,16 @@
 
 
       <!--menus-->
-      <div hidden>
+      <div>
         <fieldset id="component-element" data-element="code-tree-tag">
           <legend>💬</legend>
           <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
           <button data-element="code-tree-show-hide-button" onclick="toggleSubFields(event)">&#8594;</button>
           <button data-element="code-tree-tag-name-button"
             onclick="loader(event, handleComponentClick)">🏷️component</button>
-          <button data-element="code-tree-attributes-button">🔑</button>
+          <button data-element="code-tree-attributes-button" onclick="openAttributeContent(event)">🔑</button>
           <button data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
+          
         </fieldset>
 
 
@@ -297,13 +298,13 @@
 
 
         <!--menu to view and edit attributes-->
-        <div class="menu" id="code-tree-tag-attributes-form"
+        <div class="menu" id="code-tree-tag-attributes-form-1"
           style="display: flex; flex-direction: column; align-items: flex-end;">
           <table id="code-tree-tag-attributes-list">
             <tr>
               <td><input id="code-tree-tag-attribute-input-key" type="text" placeholder="attribute 🔑"></td>
               <td><input id="code-tree-tag-attribute-input-key-value" type="text" placeholder="value 📄">
-                <button id="code-tree-tag-attribute-add">➕ add</button>
+                <button id="code-tree-tag-attribute-add" onclick="saveAttribute(event)">➕ add</button>
               </td>
               <td><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></td>
             </tr>
@@ -793,7 +794,7 @@ document.addEventListener('DOMContentLoaded', function() {
     parent.insertBefore(clonedElement, originalElement);
   }
   const executeCommand = async (command, path) => {
-    const { action, target_element, insertedCode, tag_change, inserted_element, value, inserted_component } = command;
+    const { action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
     let treeElement
     let componentElement
     function handleAppendOrInsert(action, selectedArrayNotSorted) {
@@ -1088,6 +1089,17 @@ document.addEventListener('DOMContentLoaded', function() {
         break;
 
       // Add more cases as needed for other actions
+      case 'setAttribute':
+        console.log('pr' + target_element);
+
+
+        // component
+        const element22 = document.getElementById(target_element.replace('-tree', ''));
+        element22.setAttribute(key, value);
+
+        break;
+
+      // Add more cases as needed for other actions
 
       default:
         // Handle the default case if no matching action is found
@@ -1130,6 +1142,31 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log(timerElement.textContent)
     const lastActionTime = document.getElementById('last-action-time');
     lastActionTime.textContent = timerElement.textContent;
+  }
+  function openAttributeContent(event) {
+    const button = event.target.closest('button[data-element="code-tree-attributes-button"]');
+
+    if (button) {
+      const parentId = button.parentNode.id;
+      const textContentButton = button.parentNode.querySelector('[data-element="code-tree-attributes-button]');
+
+      const existingClonedFieldset = button.parentNode.querySelector('[id^="code-tree-tag-attributes-form-1"]');
+
+      if (!existingClonedFieldset) {
+        // Clone the fieldset node
+        const fieldset = document.getElementById('code-tree-tag-attributes-form-1');
+        const clonedFieldset = fieldset.cloneNode(true);
+
+        // Assign a unique id to the cloned fieldset
+        clonedFieldset.id = 'code-tree-tag-attributes-form-1;' + parentId;
+
+        // Find the position to insert the cloned fieldset
+        const insertAfterElement = textContentButton || button;
+
+        // Insert the cloned fieldset after the specified element
+        insertAfterElement.parentNode.insertBefore(clonedFieldset, insertAfterElement.nextElementSibling);
+      }
+    }
   }
   function openTextContent(event) {
     const button = event.target.closest('button[data-element="code-tree-text-content-button"]');
@@ -1185,35 +1222,35 @@ document.addEventListener('DOMContentLoaded', function() {
   const cache = {};
 
   const getRes = async (id) => {
-  // Check if the response is already in the cache
- 
+    // Check if the response is already in the cache
 
-  try {
-    // Make a GET request to the API with the 'id' query parameter
-    const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
 
-    // Ensure the request was successful (status code 2xx)
-    if (!response.ok) {
-      throw new Error(`Failed to load data from the database. Status: ${response.status}`);
+    try {
+      // Make a GET request to the API with the 'id' query parameter
+      const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // Ensure the request was successful (status code 2xx)
+      if (!response.ok) {
+        throw new Error(`Failed to load data from the database. Status: ${response.status}`);
+      }
+
+      // Parse and log the response or handle it as needed
+      const responseData = await response.json();
+
+      // Store the response in the cache for future use
+      cache[id] = responseData;
+
+      return responseData;
+    } catch (error) {
+      console.error(`Error fetching data for id: ${id}`, error);
+      throw error; // Re-throw the error to let the caller handle it
     }
-
-    // Parse and log the response or handle it as needed
-    const responseData = await response.json();
-
-    // Store the response in the cache for future use
-    cache[id] = responseData;
-
-    return responseData;
-  } catch (error) {
-    console.error(`Error fetching data for id: ${id}`, error);
-    throw error; // Re-throw the error to let the caller handle it
-  }
-};
+  };
 
   const loadFromDb = async (id, newId, p) => {
     console.log('load from db' + id)
@@ -1387,6 +1424,44 @@ document.addEventListener('DOMContentLoaded', function() {
       value: textareaValue,
 
     }
+    console.log(JSON.stringify(el))
+    await pushAction(el)
+
+    parent.remove()
+    console.log(JSON.stringify(actionLog))
+
+  }
+  const saveAttribute = async (event) => {
+    const parentMenu = event.target.closest('.menu');
+
+    if (!parentMenu) {
+      console.error('Could not find parent menu element');
+      return;
+    }
+
+    const { id } = parentMenu
+    const action = 'setAttribute'
+    console.log('ac' + action)
+
+    const saveButton = event.target;
+    const fieldset = saveButton.closest('fieldset');
+
+
+    const textareaValue = fieldset.querySelector('#code-tree-tag-attribute-input-key').value;
+    const textareaValue2 = fieldset.querySelector('#code-tree-tag-attribute-input-key-value').value;
+    const splited = id.split(';')
+    const [toRemove, ...rest] = splited
+
+    const el = {
+      time: (new Date()).getTime(),
+      action,
+      target_element: rest.join(';'),
+      key: textareaValue,
+      value: textareaValue2,
+
+    }
+    fieldset.querySelector('#code-tree-tag-attribute-input-key').value = ''
+    fieldset.querySelector('#code-tree-tag-attribute-input-key-value').value = ''
     console.log(JSON.stringify(el))
     await pushAction(el)
 
