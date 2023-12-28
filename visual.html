@@ -1,263 +1,123 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <!-- right click menu-->
-<style>
 
-img[data-visual]:hover {
-  /* Прозрачность */
-  opacity: 0.8;
-  /* Увеличение яркости */
-  filter: brightness(120%);
-  /* Тень */
-  box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
-  /* Трансформации */
-  transform: scale(1.1) ;
-  /* Плавный переход для всех изменений */
-  transition: all 0.3s ease;
-}
-</style>
-  <style>
-
-.data-visual-zone {
-
-  border-bottom: none;
-  border-top-left-radius: 10px;
-  margin-bottom: 20px;
-  border-left: 2px solid #4A90E2;
-  border-top: 2px solid #4A90E2;
-  border-right: none;
-}
-
-.closed {
-  border-left: none; 
-  border-right: none; 
-  border-bottom: none;
-  border-top-left-radius: 0;
-  
+<link rel="stylesheet" href="css/left-panel.css" media="all">
+<link rel="stylesheet" href="css/visual-editor.css" media="all">
+<link rel="stylesheet" href="css/right-click-menu.css" media="all">
 
 
-}
-
-*:not([class]) {
-  font-size: 18px; /* Пример размера текста */
-}
-
-*:not([class]) h1 {
-  font-size: 30px; /* Пример размера текста */
-}
-
-*:not([class])  h2 {
-  font-size: 24px; /* Пример размера текста */
-}
-
-*:not([class])  h3 {
-  font-size: 21px; /* Пример размера текста */
-}
-
-
-
-.body {
-  cursor: default;
-}
-  </style>
-  <style>
-    .right-click-menu {
-      display: none;
-      position: absolute;
-      z-index: 1000;
-      width: 150px;
-      background: white;
-      border: 1px solid #ddd;
-      box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-      margin: 0; /* Убираем внешние отступы */
-      padding: 0; /* Убираем внутренние отступы */
-      color:#05356d;
-      border-radius: 10px;
-    }
-  
-    .menu-option {
-      padding: 10px;
-      cursor: pointer;
-      border-bottom: 1px solid #b6b4b4; /* Разделительные линии между опциями */
-    }
-  
-    .menu-option:last-child {
-      border-bottom: none; /* Убираем линию у последнего элемента */
-    }
-  
-    .menu-option:hover {
-      background-color: #d8d6d6;
-    }
-  </style>  <style>
-
-
-    .receive-insert-element {
-      border: 2px dashed #4A90E2;
-      padding: 1px;
-    }
-
-    .receive-insert-element:hover {
-  transform: scaleY(1.2);
-}
-  </style>
-<style>
-.back-soon-buttons {
-
-
-            position: fixed; /* Fix position to the top of the page */
-            top: 0; /* Align to the very top */
-            width: 100%; /* Stretch across the screen */
-            background: white; /* Optional: Change as needed */
-            padding: 10px 0; /* Add some padding at the top and bottom */
-            box-shadow: 0px 2px 5px rgba(0,0,0,0.2); /* Optional: Adds shadow for depth */
-            z-index: 1000; /* Ensure it's above other content */
-            width: 100px
-}
-
-
-/* Highlighting potential drop targets */
-.drop-target {
-  border: 2px dashed #666; /* Visual cue for drop target */
-}
-/* Define the .hover class */
-.hover {
-  position: relative; /* Needed to position the hover-menu correctly */
-  background-color: pink; /* Pink background */
-}
-
-
-
-
-
-
-/* Optional: Add smooth transition for elements */
-[data-visual] {
-  transition: all 0.3s; /* Smooth transition for the hover effect */
-}
-
-/* Style for the hover-menu */
-#hover-menu {
-  display: none; /* Hide by default */
-  position: absolute; /* Positioning relative to the hovered element */
-  z-index: 1000; /* Ensure it's above other elements */
-  background-color: white; /* Background of the menu */
-  border: 1px solid #ccc; /* Border around the menu */
-  padding: 5px; /* Some padding around the content */
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.2); /* Shadow for better visibility */
-  margin-top: 1px;
-  font-size: 30px;
-
-}
-
-/* Style for the buttons inside the hover-menu */
-#hover-menu button {
-  margin-right: 5px; /* Space between buttons */
-}
-</style>
-<body>
-<div class="back-soon-buttons">
+<div class="left-side-panel">
 
 <div id="move_started" style="border-radius: 10px;"></div>
-<button style="font-size: 30px; border-radius: 10px; border-color: #4A90E2;" title="revert last action">↩️</button>
-<button style="font-size: 30px; border-radius: 10px; border-color: #4A90E2;"   title="redo last action">↪️</button>
+
+<div class="back-soon-buttons">
+<a href="https://webdev983.github.io/templatesv3/files"><button style="font-size: 1.5em;">🏠</button></a>
+<button title="revert last action">↩️</button>
+<button title="redo last action">↪️</button>
+<button id="log-open" style="font-size: 1.5em; top: 10px;">🪵</button>
+</div>
+
+<table id="code-log" hidden>
+  <thead>
+    <tr>
+      <th style="text-align: left;">🕓time</th>
+      <th style="text-align: left;">✔️action</th>
+    </tr>
+  </thead>
+  <tbody id="code-log-body">
+    <tr id="code-log-element">
+      <td data-type-code-log="action-time"><span id="code-log-action-time">1703707728031</span></td>
+      <td data-type-code-log="action-name"><span id="code-log-action">append child</span></td>
+      <td><button data-type-code-log="action-remove" style="font-size: 1.2em; border: none;">&#128465;</button></td>
+    </tr>
+  </tbody>
+</table>
 </div>
 
 
 
-
-<div id="visual-editor" style=" margin-left: 104px;">
-
-  <fieldset class="data-visual-zone"><legend style="font-size: 30px; font-family: Arial, Helvetica, sans-serif; cursor: default; color: #4A90E2; border-radius: 10px;"><button style="font-size: 30px; border-radius: 10px; border-color: #4A90E2; border-radius: 10px;">⬇️</button>Product title📝</legend>
-    <h1 draggable="true" data-visual="duplicate;edit;move">Cool product</h1>
-    </fieldset>
-    <div>
-    <fieldset class="data-visual-zone"><legend><div title=""  style="font-size: 30px; font-family: Arial, Helvetica, sans-serif; cursor: default; color: #4A90E2;"><button style="font-size: 30px; border-radius: 10px; border-color: #4A90E2;">⬇️</button>Product main image🖼️</div></legend>
-    <img data-visual="duplicate;edit;move" data-type="main-image" src="https://via.placeholder.com/150/5deca4/FFFFFF?text=main-image" alt="main image of product">
-    </fieldset>
+<div id="main-content" style="margin-left:65px">
+<div id="visual-editor" >
 
 <fieldset class="data-visual-zone">
-  <legend>
-    <div style="font-size: 30px; font-family: Arial, Helvetica, sans-serif; cursor: default; color: #4A90E2;">
-      Product thumbnails🖼️ 
-    </div>
-  </legend>
-
-  <div class="thumbnails-container">
-    <img data-visual="duplicate;edit;move" data-type="thumbnail" src="https://via.placeholder.com/75/ec9e5d/FFFFFF?text=thumbnail" alt="main image of product">
-    <button class="arrow-down">⬇️</button>
-    <img data-visual="" src="https://via.placeholder.com/75/4fdb66/FFFFFF?text=thumbnail" alt="main image of product">
-    <img data-visual="" src="https://via.placeholder.com/75/db4fad/FFFFFF?text=thumbnail" alt="main image of product">
-  </div>
-
+    <legend>
+        <button class="data-visual-toggle">⬇️</button>
+        <span class="data-visual-zone-name">Product title📝</span>
+    </legend>
+    <h1 draggable="true" data-visual="duplicate;edit;move">Cool product</h1>
 </fieldset>
-<style>
-.arrow-down {
-  padding: 0 10px; /* Отступы вокруг стрелок */
-  font-size: 24px; /* Размер символа стрелки */
-  border-radius: 10px;
-  margin: 5px;
-  border: 2px dashed #4A90E2; 
 
-}
+<fieldset class="data-visual-zone closed">
+  <legend><button class="data-visual-toggle">➡️</button>
+    <span class="data-visual-zone-name">Additional info📝</span>
+  </legend>
+  </fieldset>
+<!--🖼️📝-->
 
-.arrow-down:hover {
-  transform: scale(1.2); /* Увеличиваем размер стрелки в 2 раза */
-  cursor: pointer; /* Меняем указатель, чтобы показать, что это интерактивный элемент */
-} </style>
-
-      
-
-      <fieldset class="data-visual-zone closed"><legend><div style="font-size: 30px; font-family: Arial, Helvetica, sans-serif; cursor: default; color: #4A90E2;"><button style="font-size: 30px; border-radius: 10px; border-color: #4A90E2;">➡️</button>Additional info📝</div></legend>
-       
+<div id="example">
+      <fieldset class="data-visual-zone">
+        <legend><button class="data-visual-toggle">⬇️</button><span class="data-visual-zone-name">Product main image🖼️</span></legend>
+        <img data-visual-element="true"  src="https://via.placeholder.com/150/5deca4/FFFFFF?text=main-image" alt="main image of product">
     </fieldset>
 
-      <fieldset class="data-visual-zone"><legend><div style="font-size: 30px; font-family: Arial, Helvetica, sans-serif; cursor: default; color: #4A90E2;"><button style="font-size: 30px; border-radius: 10px; border-color: #4A90E2;">⬇️</button>Product short description📝 </div></legend>
-        
-        
 
+    <fieldset class="data-visual-zone">
+      <legend><button class="data-visual-toggle">⬇️</button><span class="data-visual-zone-name">Product thumbnails🖼️ </span></legend>
+    <img data-visual-element="true"  data-type="thumbnail" src="https://via.placeholder.com/75/ec9e5d/FFFFFF?text=thumbnail" alt="main image of product">
+    <img data-visual-element="true"  src="https://via.placeholder.com/75/4fdb66/FFFFFF?text=thumbnail" alt="main image of product">
+    <img data-visual-element="true"   src="https://via.placeholder.com/75/db4fad/FFFFFF?text=thumbnail" alt="main image of product">
+    <img data-visual-element="true"   src="https://via.placeholder.com/75/db4fad/FFFFFF?text=thumbnail" alt="main image of product">
+</fieldset>
+      
+
+      <fieldset class="data-visual-zone closed"><legend><button class="data-visual-toggle">➡️</button><span class="data-visual-zone-name">Additional info📝 </span></legend>
+    </fieldset>      
+    <fieldset class="data-visual-zone">
+      <legend><button class="data-visual-toggle">⬇️</button><span class="data-visual-zone-name">Product title📝</span></legend>
         <p data-visual="duplicate;edit;move">this is cool product to buy</p>
 </fieldset>
-<fieldset class="data-visual-zone"><legend><div style="font-size: 30px; font-family: Arial, Helvetica, sans-serif; cursor: default; color: #4A90E2;"><button style="font-size: 30px; border-radius: 10px; border-color: #4A90E2;">⬇️</button>Product-option-button-group📝</div></legend>
-  <fieldset  style="border: none;">
+
+<fieldset class="data-visual-zone">
+  <legend><button class="data-visual-toggle">⬇️</button><span class="data-visual-zone-name">Product title📝</span></legend>
+
+<fieldset  style="border: none;">
          <legend data-visual="duplicate;edit;move">color</legend>
         <button data-visual="duplicate;edit;move">red</button>
         <button data-visual="duplicate;edit;move">blue</button>
         </fieldset>
         </fieldset>
 
-        <fieldset class="data-visual-zone"><legend><div style="font-size: 30px; font-family: Arial, Helvetica, sans-serif; cursor: default; color: #4A90E2;"><button style="font-size: 30px; border-radius: 10px; border-color: #4A90E2;">⬇️</button>Product-option-button-group📝</div></legend>
-
+        <fieldset class="data-visual-zone">
+          <legend><button class="data-visual-toggle">⬇️</button><span class="data-visual-zone-name">Product title📝</span></legend>
         <fieldset  style="border: none;">
           <legend data-visual="duplicate;edit;move">size</legend>
           <button data-visual="duplicate;edit;move">xl</button>
           <button data-visual="duplicate;edit;move">l</button>
           </fieldset>
-  
 </fieldset>
-<fieldset class="data-visual-zone"><legend><div style="font-size: 30px; font-family: Arial, Helvetica, sans-serif; cursor: default; color: #4A90E2;"><button style="font-size: 30px; border-radius: 10px; border-color: #4A90E2;">⬇️</button>Product price💵</div></legend>
 
+<fieldset class="data-visual-zone">
+  <legend><button class="data-visual-toggle">⬇️</button><span class="data-visual-zone-name">Product title📝</span></legend>
         <span data-visual="duplicate;edit;move">5.00</span>
-    
 </fieldset>
 
-<fieldset class="data-visual-zone"><legend><div style="font-size: 30px; font-family: Arial, Helvetica, sans-serif; cursor: default; color: #4A90E2;"><button style="font-size: 30px; border-radius: 10px; border-color: #4A90E2;">⬇️</button>Product specifications📝</div></legend>
-
-
+<fieldset class="data-visual-zone">
+  <legend><button class="data-visual-toggle">⬇️</button><span class="data-visual-zone-name">Product title📝</span></legend>
           <ul>
             <li data-visual="duplicate;edit;move">this is best product to buy</li>
             <li data-visual="duplicate;edit;move">very good product</li>
         </ul>
         </fieldset>
 
-        <fieldset class="data-visual-zone"><legend><div style="font-size: 30px; font-family: Arial, Helvetica, sans-serif; cursor: default; color: #4A90E2;"><button style="font-size: 30px; border-radius: 10px; border-color: #4A90E2;">⬇️</button>Product detailed information📝</div></legend>
-          <H2 data-visual="duplicate;edit;move">product manufacture</H2>
+        <fieldset class="data-visual-zone">
+          <legend><button class="data-visual-toggle">⬇️</button><span class="data-visual-zone-name">Product title📝</span></legend>
+      
+                <H2 data-visual="duplicate;edit;move">product manufacture</H2>
         <p data-visual="duplicate;edit;move">manufactured with best specialist blablablablabla blablabla blablabla blablabla blablabla blablabla blablabla blablabla blablabla blablabla blablabla</p>
-
 </fieldset>
 
-<fieldset class="data-visual-zone"><legend><div style="font-size: 30px; font-family: Arial, Helvetica, sans-serif; cursor: default; color: #4A90E2;"id draggable="true"><button style="font-size: 30px; border-radius: 10px; border-color: #4A90E2; border-radius: 10px;">⬇️</button>Article📊</div></legend>
-  <h1 draggable="true" data-visual="duplicate;edit;move">2FA Code Authenticators: Securing Digital Identities in a Connected World</h1>
+<fieldset class="data-visual-zone">
+  <legend><button class="data-visual-toggle">⬇️</button><span class="data-visual-zone-name">Product title📝</span></legend>
+
+<h1 draggable="true" data-visual="duplicate;edit;move">2FA Code Authenticators: Securing Digital Identities in a Connected World</h1>
     
 
   <h2 data-visual="duplicate;edit;move">Introduction</h2>
@@ -276,74 +136,33 @@ img[data-visual]:hover {
 <p data-visual="duplicate;edit;move">In conclusion, 2FA code authenticators such as Google Authenticator offer an extra layer of security, leveraging TOTP and HOTP protocols to protect your online accounts through a two-step verification process. While setting up a 2FA is a substantial move towards a more secure digital presence, it is important to choose an authenticator that meets your individual or organizational needs.
 
   To explore an alternative to the Google Authenticator, you can use an online generator for creating 2FA codes available at our site, follow the link to accbuddy.com/2fa. This tool can be a handy resource in maintaining strong, reliable security for your online accounts. Be sure to understand the features and benefits of any 2FA solution you choose to use, and to always prioritize your online safety.</p>
-  <fieldset class="data-visual-zone"><legend><div title=""  style="font-size: 30px; font-family: Arial, Helvetica, sans-serif; cursor: default; color: #4A90E2;"><button style="font-size: 30px; border-radius: 10px; border-color: #4A90E2;">⬇️</button>article image🖼️</div></legend>
+  <fieldset class="data-visual-zone">
+    <legend><button class="data-visual-toggle">⬇️</button><span class="data-visual-zone-name">Product title📝</span></legend>
+
 
 <img data-visual="duplicate;edit;move" src="https://via.placeholder.com/150/" alt="">
 </fieldset>
-        <fieldset class="data-visual-zone"><legend><div style="font-size: 30px; font-family: Arial, Helvetica, sans-serif; cursor: default; color: #4A90E2;"><button style="font-size: 30px; border-radius: 10px; border-color: #4A90E2;">⬇️</button>list📝 </div></legend>
+<fieldset class="data-visual-zone">
+  <legend><button class="data-visual-toggle">⬇️</button><span class="data-visual-zone-name">Product title📝</span></legend>
+
 <ul data-visual="duplicate;move">
   <li data-visual="duplicate;edit;move">Item 1</li>
   <li data-visual="duplicate;edit;move">Item 2</li>
 </ul>
 </fieldset>
 </fieldset>
-<fieldset  style="border-radius: 10px;"><legend><div style="font-size: 30px; font-family: Arial, Helvetica, sans-serif; cursor: default; color: #4A90E2;"><button style="font-size: 30px; border-radius: 10px; border-color: #4A90E2;">⬇️</button>Article </div></legend>
-  <h1 draggable="true" data-visual="duplicate;edit;move">2FA Code Authenticators: Securing Digital Identities in a Connected World</h1>
-    
-  <div class="receive-insert-element"><button style="font-size: 30px; border-radius: 10px; color: #4A90E2;">✅↪️</button></div>
+</div>
+</div>
 
-  <h2 data-visual="duplicate;edit;move">Introduction</h2>
-
-  <div class="receive-insert-element"><button style="font-size: 30px; border-radius: 10px; color: #4A90E2;">✅↪️</button></div>
   
-  <p data-visual="duplicate;edit;move">In a digitalized world, safeguarding confidential information and protecting digital identities has become paramount. Two-factor authentication (2FA) provides anAdditional layer of security to the standard password authentication process. Google Authenticator is one of the most well-known 2FA code authenticators available today. This article sheds light on 2FA code authenticators, focusing on the Google Authenticator and the protocols it operates on</p>
-  <div class="receive-insert-element"><button style="font-size: 30px; border-radius: 10px; color: #4A90E2;">✅↪️</button></div>
 
-<h2 data-visual="duplicate;edit;move">What is a 2FA Code Authenticator</h2>
-<div class="receive-insert-element"><button style="font-size: 30px; border-radius: 10px; color: #4A90E2;">✅↪️</button></div>
-
-<p data-visual="duplicate;edit;move">Download and install the Google Authenticator app from the Google Play Store or Apple App Store. On the service or application you want to secure, find and select "2FA" or "Two-factor authentication" in the security settings. Follow the on-screen instructions, which typically involve scanning a QR code with the Google Authenticator app to link your account and the app securely. Once linked, the app will generate 2FA codes for your account.</p>
-<div class="receive-insert-element"><button style="font-size: 30px; border-radius: 10px; color: #4A90E2;">✅↪️</button></div>
-
-
-
-
-<h3 data-visual="duplicate;edit;move">Conclusion</h3>
-<p data-visual="duplicate;edit;move">In conclusion, 2FA code authenticators such as Google Authenticator offer an extra layer of security, leveraging TOTP and HOTP protocols to protect your online accounts through a two-step verification process. While setting up a 2FA is a substantial move towards a more secure digital presence, it is important to choose an authenticator that meets your individual or organizational needs.
-
-  To explore an alternative to the Google Authenticator, you can use an online generator for creating 2FA codes available at our site, follow the link to accbuddy.com/2fa. This tool can be a handy resource in maintaining strong, reliable security for your online accounts. Be sure to understand the features and benefits of any 2FA solution you choose to use, and to always prioritize your online safety.</p>
-
-<fieldset class="data-visual-zone"><legend><div title=""  style="font-size: 30px; font-family: Arial, Helvetica, sans-serif; cursor: default; color: #4A90E2;"><button style="font-size: 30px; border-radius: 10px; border-color: #4A90E2;">⬇️</button>article image🖼️</div></legend>
-
-<img data-visual="duplicate;edit;move" src="https://via.placeholder.com/150/" alt="">
-</fieldset>
-        <fieldset style="border-radius: 10px;" ><legend><div style="font-size: 30px; font-family: Arial, Helvetica, sans-serif; cursor: default; color: #4A90E2;"><button style="font-size: 30px; border-radius: 10px; border-color: #4A90E2;">⬇️</button>list📝</div></legend>
-<ul data-visual="duplicate;move">
-  <div class="receive-insert-element"><button style="font-size: 30px; color: #4A90E2; border-radius: 10px; border-radius: 10px;">✅↪️</button></div>
-
-  <li data-visual="duplicate;edit;move">Item 1</li>
-  <div class="receive-insert-element"><button style="font-size: 30px; color: #4A90E2; border-radius: 10px; border-radius: 10px;">✅↪️</button></div>
-
-  <li data-visual="duplicate;edit;move">Item 2</li>
-  <div class="receive-insert-element"><button style="font-size: 30px; color: #4A90E2; border-radius: 10px; border-radius: 10px;">✅↪️</button></div>
-
-</ul>
-</fieldset>
-
-<fieldset class="data-visual-zone"><legend><div style="font-size: 30px; font-family: Arial, Helvetica, sans-serif; cursor: default; color: #4A90E2;"><button style="font-size: 30px; border-radius: 10px; border-color: #4A90E2;">⬇️</button>list numeric </div></legend>
-  <ol data-visual="duplicate">
+<!-- vertical drag-and-drop-target-->
+<button  class="vertical-receive-target">⬆️</button>
   
-  <li data-visual="duplicate;edit;move">Item 1</li>
-  <li data-visual="duplicate;edit;move">Item 2</li>
-</ol>
-</fieldset>
-</fieldset>
-</div>
-<style>
-</style>
-</div>
-</div>
+<!-- horizontal drag-and-drop-target-->
+<div  class="horizontal-receive-target"><button >✅↪️</button></div>
 
+  <!-- right-clic-menu-->
 <div id="right-click-menu" class="right-click-menu">
   <div class="menu-option" onclick="alert('Option 0 selected')">🖼️ edit pic</div>
   <div class="menu-option" onclick="alert('Option 0 selected')">📄 edit alt</div>
@@ -353,92 +172,8 @@ img[data-visual]:hover {
   <div class="menu-option" onclick="alert('Option 3 selected')">➕ p</div>
 </div>
 
-<!-- content editable when double click-->
-<script>// Выберите элемент, на который вы хотите повесить обработчик
-// Функция, которая будет вызвана при двойном клике по любому элементу
-function onDoubleClick(e) {
-    // Получаем элемент, по которому был сделан клик
-    var target = e.target;
-
-    // Предотвратить стандартное поведение двойного клика
-    e.preventDefault();
-
-    // Установить атрибут contenteditable в 'true', делая элемент редактируемым
-    target.setAttribute('contenteditable', 'true');
-    event.target.style.backgroundColor = '';
-
-
-    // Установить фокус на редактируемый элемент
-    target.focus();
-}
-
-// Добавляем обработчик события на весь документ для отслеживания двойного клика
-document.addEventListener('dblclick', onDoubleClick);
-  </script>
-
-<!-- HOVER-->
-
-<script>
-  document.addEventListener('mouseover', function(event) {
-    // При наведении курсора на элемент с атрибутом 'data-visual' меняем фон на розовый
-    if (event.target.hasAttribute('data-visual')) {
-      event.target.style.backgroundColor = 'pink';
-    }
-  });
   
-  document.addEventListener('mouseout', function(event) {
-    // Когда курсор покидает элемент с атрибутом 'data-visual', возвращаем исходный фон
-    if (event.target.hasAttribute('data-visual')) {
-      event.target.style.backgroundColor = '';
-    }
-  });
-  </script>
-<!-- right click menu-->
-<script>
-  const menu = document.querySelector('.right-click-menu');
-
-  // Display the context menu
-  document.addEventListener('contextmenu', function(e) {
-    e.preventDefault(); // Prevent the default context menu from opening
-    menu.style.display = 'block';
-    menu.style.left = `${e.pageX}px`;
-    menu.style.top = `${e.pageY}px`;
-  });
-
-  // Hide the menu when clicking the left mouse button
-  window.addEventListener('click', function() {
-    menu.style.display = 'none';
-  });
-
-
   
-</script>  
-
-<script>
-
-  let isDragging = false;
-  const moveStarted = document.getElementById('move_started');
-
-  // Обработчик события начала перетаскивания для всех элементов с draggable="true"
-  document.addEventListener('dragstart', (e) => {
-    isDragging = true;
-    moveStarted.textContent = 'NO'; // Сбрасываем статус
-  });
-
-  // Обработчик события окончания перетаскивания для всех элементов с draggable="true"
-  document.addEventListener('dragend', () => {
-    isDragging = false;
-  });
-
-  // Обработчик события движения мыши
-  document.addEventListener('mousemove', (e) => {
-    if (isDragging) {
-      moveStarted.textContent = 'YES DRAG STARTED'; // Устанавливаем статус в "YES" при начале движения
-    }
-  })
-</script>
-</body>
-
-
-
-</html>
+  <script src="js/left-panel.js" async=""></script>
+  <script src="js/visual-editor.js" async=""></script>
+  <script src="js/right-click-menu.js" async=""></script>
