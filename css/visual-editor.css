@@ -20,17 +20,20 @@ cursor: default
 .data-visual-zone {
 border-top-left-radius: 20px;
 margin-bottom: 20px;
-border-left: 2px solid #a1a1a1;
-border-top: 2px solid #a1a1a1;
+border-left: 1px solid #a1a1a1;
+border-top: 1px solid #a1a1a1;
 border-right: none;
 border-bottom: none;
 cursor: default
 }
 .data-visual-toggle {
-font-size: 30px; border-radius: 10px; border-color: #a1a1a1;
+  font-size: 30px; 
+  border-radius: 10px;
+  border-color: #4A90E2;
+  border-width: 1px;
 }
 .data-visual-zone-name {
-font-size: 30px; font-family: Arial, Helvetica, sans-serif; cursor: default; color: #4A90E2;
+font-size: 30px; font-family: Arial, Helvetica, sans-serif; cursor: default; color: 
 }
 .closed {
 border-left: none; 
@@ -62,35 +65,37 @@ font-size: 21px; /* Пример размера текста */
 }
 
 
-
-  /*vertical-receive-target*/
-.vertical-receive-target {
-  padding: 0 10px; /* Отступы вокруг стрелок */
-  font-size: 24px; /* Размер символа стрелки */
+/* Define the basic look of .receive-target */
+.receive-target {
+  padding: 0 10px;
+  font-size: 24px;
   border-radius: 10px;
   margin: 5px;
-  border: 2px dashed #4A90E2; 
-
+  border: 1px dashed #4A90E2;
+  transition: transform 0.5s ease-in-out; /* Smooth transition for the transform */
+  margin: 10px;
 }
-.vertical-receive-target:hover {
-  transform: scale(1.5); /* Увеличиваем размер стрелки в 2 раза */
-  cursor: pointer; /* Меняем указатель, чтобы показать, что это интерактивный элемент */
-} 
 
-  /*horizontal-receive-target*/
+/* Define the hover effect using keyframes */
+@keyframes hoverEffect {
+  0%, 100% {
+    transform: scale(1); /* Regular size */
+    cursor: default; /* Regular cursor */
+  }
+  50% {
+    transform: scale(1.5); /* Enlarged size */
+    cursor: pointer; /* Pointer cursor */
+  }
+}
 
-.horizontal-receive-target {
-      border: 2px dashed #4A90E2;
-      padding: 1px;
-  }
-    .horizontal-receive-target:hover {
-  transform: scaleY(1.2);
-  }
-  .horizontal-receive-target button{
-  
-  font-size: 30px; 
-  border-radius: 10px; 
-  color: #4A90E2;
-  }
+/* Apply the animation to .receive-target */
+.receive-target {
+  animation: hoverEffect 1s infinite; /* Run the animation continuously with a duration of 2 seconds */
+}
 
+
+.receive-target:hover {
+  background-color: #63e24a; /* Change background color */
+  cursor: pointer; /* Pointer cursor */
+}
 
