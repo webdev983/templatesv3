@@ -57,16 +57,16 @@
 
 <ol data-element="file-path-list" id="filePathList">
 
+ 
 
 </ol>
 
 
 
 <div hidden>
-
   <!-- file path-->
   <li data-element="file-path" id="item">
-    <button data-action="file-show-id" style="user-select: none; margin-right: 5px;">ℹ️</button><button
+    <button class="file-entry-selector">☑️</button><button data-action="file-show-id" style="user-select: none; margin-right: 5px;">ℹ️</button><button
       data-action="file-open" style="user-select: none; margin-right: 5px;">📂</button><button
       data-action="file-remove-button" style="user-select: none; margin-right: 10px;">&#128465;</button><label
       data-value="file-path">universal/blablabla/blablabla/coolcss</label><label data-value="file-emoji"
@@ -85,6 +85,7 @@
       </div>
     </fieldset>
   </li>
+
 
 </div>
 <script>
@@ -444,3 +445,31 @@
     input.style.width = `${newWidth}px`;
   }
 </script>
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Функция для переключения состояния кнопки
+    function toggleButton(button) {
+      // Переключаем текст кнопки
+      button.textContent = button.textContent.includes('☑️') ? '☐' : '☑️';
+    }
+  
+    // Обработчик события mouseenter для file-entry
+    document.querySelectorAll('li[data-element="file-path"]').forEach(entry => {
+      entry.addEventListener('mouseenter', () => {
+        const button = entry.querySelector('.file-entry-selector');
+        if (button) {
+          toggleButton(button);
+        }
+      });
+    });
+  });
+    </script>
+
+
+
+  
+
+
