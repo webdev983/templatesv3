@@ -14,6 +14,8 @@
   <label id="current-page-path" style="font-size:20px; cursor: pointer; color: #0000EE;">windows-11-pro</label>
   <button class='file-explorer-button' title="copy path">📋</button>
   <button class='file-explorer-button' title="refresh">🔄</button>
+  <button class='file-explorer-button'  data-action="create-new-file" onclick="openTypeSelect()">➕ </button>
+
 </div>
 <div class="left-side-panel">
 <div id="move_started" style="border-radius: 10px;"></div>
@@ -50,6 +52,61 @@
 <!--==============================================================================================================-->
 <!--==============================================================================================================-->
 <!--==============================================================================================================-->
+<style>
+  [data-element="file-path-list"] li:nth-child(odd) {
+    background-color: #ffffff;
+  }
+
+  [data-element="file-path-list"] li:nth-child(even) {
+    background-color: #f0f0f0;
+  }
+
+  [data-element="file-path-list"] li:hover {
+    background-color: #dddddd;
+  }
+
+  [data-element="file-path-list"] li label {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+  }
+
+  [data-element="file-path-list"] li button {
+    margin-left: 10px;
+  }
+</style>
+
+
+<ol data-element="file-path-list" id="filePathList">
+
+ <!-- file path-->
+ <li data-element="file-path" id="item">
+  <button class="file-entry-selector">☑️</button><button data-action="file-show-id" style="user-select: none; margin-right: 5px;">ℹ️</button><button
+    data-action="file-open" style="user-select: none; margin-right: 5px;">📂</button><button
+    data-action="file-remove-button" style="user-select: none; margin-right: 10px;">&#128465;</button><label
+    data-value="file-path">universal/blablabla/blablabla/coolcss</label><label data-value="file-emoji"
+    style="user-select: none;"> 🧩</label>
+
+  <!-- file info-->
+  <div hidden data-element="file-id"><span style="user-select: none;">🆔</span><span data-value="file-id"
+      style="font-size: 0.9em">1414124-414221412-4124214124-412412</span></div>
+  <!-- remove file menu-->
+  <fieldset hidden id="cancelation">
+    <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
+
+    <span>are you sure want to remove this file?</span>
+    <div>
+      <button data-action="remove-file-confirmation">✅ DELETE</button>
+    </div>
+  </fieldset>
+</li>
+
+
+</ol>
+
+
+
+  
+
 
 <style>
   /*
