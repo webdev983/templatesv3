@@ -4,19 +4,6 @@
 
 <link rel="stylesheet" href="css/visual-editor.css" media="all">
 <link rel="stylesheet" href="css/right-click-menu.css" media="all">
-
-<div class="up-panel">
-  <button class='file-explorer-button' title="edit path">👣</button>
-  <label id="current-page-path" style="font-size:20px; cursor: pointer; color: #0000EE;">accbuddy</label>
-  <span style="user-select: none; font-size:20px">/</span>
-  <label id="current-page-path" style="font-size:20px; cursor: pointer; color: #0000EE;">universal</label>
-  <span style="user-select: none; font-size:20px">/</span>
-  <label id="current-page-path" style="font-size:20px; cursor: pointer; color: #0000EE;">windows-11-pro</label>
-  <button class='file-explorer-button' title="copy path">📋</button>
-  <button class='file-explorer-button' title="refresh">🔄</button>
-  <button class='file-explorer-button'  data-action="create-new-file" onclick="openTypeSelect()">➕ </button>
-
-</div>
 <div class="left-side-panel">
 <div id="move_started" style="border-radius: 10px;"></div>
 
@@ -45,6 +32,11 @@
 </table>
 </div>
 
+<style>
+  . {
+    border-width: 0px
+  }
+</style>
 
 
 <div id="main-content" style="margin-left:65px; margin-top: 80px;">
@@ -121,11 +113,14 @@
       .tag-fs {
           border-right: none;
           border-bottom: none;
+
           border-left-width: 1px;
           border-top-width: 1px;
           border-top-left-radius: 10px;
       }
       
+      .tag-fs legend{
+        }
 
 
 
@@ -272,32 +267,22 @@
 <!--==============================================================================================================-->
 <!--==============================================================================================================-->
 <div id="visual-editor" >
-<fieldset class="data-visual-zone">
-    <legend>
-        <button class="data-visual-toggle">⬇️</button>
-        <span class="data-visual-zone-name">Product title📝</span>
-    </legend>
-    <h1 draggable="true" data-visual="duplicate;edit;move">Cool product</h1>
+  <fieldset class="tag-fs">
+    <legend class="comment">product title</legend>
+<h1 draggable="true" data-visual="duplicate;edit;move">Cool product</h1>
 </fieldset>
 
-<fieldset class="data-visual-zone closed">
-  <legend><button class="data-visual-toggle">➡️</button>
-    <span class="data-visual-zone-name">Additional info📝</span>
-  </legend>
-  </fieldset>
-<!--🖼️📝-->
-
 <div id="example">
-      <fieldset class="data-visual-zone">
-        <legend><button class="data-visual-toggle">⬇️</button><span class="data-visual-zone-name">Product main image🖼️</span></legend>
+  <fieldset class="tag-fs">
+    <legend class="comment">main image</legend>
         <img data-visual-element="true"  src="https://via.placeholder.com/150/5deca4/FFFFFF?text=main-image" alt="main image of product">
     </fieldset>
     <button  class="receive-target">↪️</button>
 
 
-    <fieldset class="data-visual-zone">
-      <legend><button class="data-visual-toggle">⬇️</button><span class="data-visual-zone-name">Product thumbnails🖼️ </span></legend>
-    <img data-visual-element="true"  data-type="thumbnail" src="https://via.placeholder.com/75/ec9e5d/FFFFFF?text=thumbnail" alt="main image of product">
+    <fieldset class="tag-fs">
+      <legend class="comment">thumbnail</legend>
+      <img data-visual-element="true"  data-type="thumbnail" src="https://via.placeholder.com/75/ec9e5d/FFFFFF?text=thumbnail" alt="main image of product">
     <img data-visual-element="true"  src="https://via.placeholder.com/75/4fdb66/FFFFFF?text=thumbnail" alt="main image of product">
 
     <img data-visual-element="true"   src="https://via.placeholder.com/75/db4fad/FFFFFF?text=thumbnail" alt="main image of product">
@@ -306,15 +291,14 @@
 </fieldset>
 
 
-      <fieldset class="data-visual-zone closed"><legend><button class="data-visual-toggle">➡️</button><span class="data-visual-zone-name">Additional info📝 </span></legend>
     </fieldset>      
-    <fieldset class="data-visual-zone">
-      <legend><button class="data-visual-toggle">⬇️</button><span class="data-visual-zone-name">Product title📝</span></legend>
-        <p data-visual="duplicate;edit;move">this is cool product to buy</p>
+      <fieldset class="tag-fs">
+        <legend class="comment">product-short-description</legend>
+            <p data-visual="duplicate;edit;move">this is cool product to buy</p>
 </fieldset>
 
-<fieldset class="data-visual-zone">
-  <legend><button class="data-visual-toggle">⬇️</button><span class="data-visual-zone-name">Product title📝</span></legend>
+<fieldset class="tag-fs">
+  <legend class="comment">product-button-group</legend>
 
 <fieldset  style="border: none;">
          <legend data-visual="duplicate;edit;move">color</legend>
@@ -323,50 +307,71 @@
         </fieldset>
         </fieldset>
 
-        <fieldset class="data-visual-zone">
-          <legend><button class="data-visual-toggle">⬇️</button><span class="data-visual-zone-name">Product title📝</span></legend>
-        <fieldset  style="border: none;">
+        <fieldset class="tag-fs">
+          <legend class="comment">product-button-group</legend>
+              <fieldset  style="border: none;">
           <legend data-visual="duplicate;edit;move">size</legend>
           <button data-visual="duplicate;edit;move">xl</button>
           <button data-visual="duplicate;edit;move">l</button>
           </fieldset>
 </fieldset>
 
-<fieldset class="data-visual-zone">
-  <legend><button class="data-visual-toggle">⬇️</button><span class="data-visual-zone-name">Product title📝</span></legend>
-        <span data-visual="duplicate;edit;move">5.00</span>
+<fieldset class="tag-fs">
+  <legend class="comment">product-price</legend>
+      <span data-visual="duplicate;edit;move">5.00</span>
 </fieldset>
 
-<fieldset class="data-visual-zone">
-  <legend><button class="data-visual-toggle">⬇️</button><span class="data-visual-zone-name">Product title📝</span></legend>
-          <ul>
+<fieldset class="tag-fs">
+  <legend class="comment">product specifications</legend>
+        <ul>
+          
             <li data-visual="duplicate;edit;move">this is best product to buy</li>
             <li data-visual="duplicate;edit;move">very good product</li>
         </ul>
         </fieldset>
 
-        <fieldset class="data-visual-zone">
-          <legend><button class="data-visual-toggle">⬇️</button><span class="data-visual-zone-name">Product title📝</span></legend>
-      
+        <fieldset class="tag-fs">
+          <legend class="comment">💬article</legend>
+        
                 <H2 data-visual="duplicate;edit;move">product manufacture</H2>
         <p data-visual="duplicate;edit;move">manufactured with best specialist blablablablabla blablabla blablabla blablabla blablabla blablabla blablabla blablabla blablabla blablabla blablabla</p>
 </fieldset>
 
-<fieldset class="data-visual-zone">
-  <legend><button class="data-visual-toggle">⬇️</button><span class="data-visual-zone-name">Product title📝</span></legend>
+<fieldset class="tag-fs ">
+  <legend class="comment">article</legend>
 
-<h1 draggable="true" data-visual="duplicate;edit;move">2FA Code Authenticators: Securing Digital Identities in a Connected World</h1>
-    
+  <fieldset class="tag-fs  ">
+    <legend class="comment">article title</legend>
+
+  <h1 draggable="true" data-visual="duplicate;edit;move">2FA Code Authenticators: Securing Digital Identities in a Connected World</h1>
+    </fieldset>
+    <button  class="receive-target">↪️</button>
+
+    <fieldset class="tag-fs ">
+      <legend class="comment">article h2</legend>
 
   <h2 data-visual="duplicate;edit;move">Introduction</h2>
+    </fieldset>
+    <button  class="receive-target">↪️</button>
+
+    <fieldset class="tag-fs">
+      <legend class="comment">article paragraph</legend>
+
+  <p data-visual="duplicate;edit;move">In a digitalized world, safeguarding confidential information and protecting digital identities has become paramount. Two-factor authentication (2FA) provides anAdditional layer of security to the standard password authentication process. Google Authenticator is one of the most well-known 2FA code authenticators available today. This article sheds light on 2FA code authenticators, focusing on the Google Authenticator and the protocols it operates on</p>
+  </fieldset>
+  <button  class="receive-target">↪️</button>
 
   
-  <p data-visual="duplicate;edit;move">In a digitalized world, safeguarding confidential information and protecting digital identities has become paramount. Two-factor authentication (2FA) provides anAdditional layer of security to the standard password authentication process. Google Authenticator is one of the most well-known 2FA code authenticators available today. This article sheds light on 2FA code authenticators, focusing on the Google Authenticator and the protocols it operates on</p>
+<fieldset class="tag-fs">
+  <legend class="comment">article h2</legend>
 
 <h2 data-visual="duplicate;edit;move">What is a 2FA Code Authenticator</h2>
+</fieldset>
+<fieldset class="tag-fs">
+  <legend class="comment">article h2</legend>
 
 <p data-visual="duplicate;edit;move">Download and install the Google Authenticator app from the Google Play Store or Apple App Store. On the service or application you want to secure, find and select "2FA" or "Two-factor authentication" in the security settings. Follow the on-screen instructions, which typically involve scanning a QR code with the Google Authenticator app to link your account and the app securely. Once linked, the app will generate 2FA codes for your account.</p>
-
+</fieldset>
 
 
 
@@ -374,14 +379,14 @@
 <p data-visual="duplicate;edit;move">In conclusion, 2FA code authenticators such as Google Authenticator offer an extra layer of security, leveraging TOTP and HOTP protocols to protect your online accounts through a two-step verification process. While setting up a 2FA is a substantial move towards a more secure digital presence, it is important to choose an authenticator that meets your individual or organizational needs.
 
   To explore an alternative to the Google Authenticator, you can use an online generator for creating 2FA codes available at our site, follow the link to accbuddy.com/2fa. This tool can be a handy resource in maintaining strong, reliable security for your online accounts. Be sure to understand the features and benefits of any 2FA solution you choose to use, and to always prioritize your online safety.</p>
-  <fieldset class="data-visual-zone">
-    <legend><button class="data-visual-toggle">⬇️</button><span class="data-visual-zone-name">Product title📝</span></legend>
-
+  <fieldset class="tag-fs">
+    <legend class="comment">article image</legend>
+  
 
 <img data-visual="duplicate;edit;move" src="https://via.placeholder.com/150/" alt="">
 </fieldset>
-<fieldset class="data-visual-zone">
-  <legend><button class="data-visual-toggle">⬇️</button><span class="data-visual-zone-name">Product title📝</span></legend>
+<fieldset class="tag-fs">
+  <legend class="comment">article list</legend>
 
 <ul data-visual="duplicate;move">
   <li data-visual="duplicate;edit;move">Item 1</li>
