@@ -383,7 +383,7 @@
             <tr id="code-tree-tag-attributes-list-item">
               <td>🔑<span id="code-tree-tag-attribute-key">data-type</span></td>
               <td>📄<span id="code-tree-tag-attribute-value">cool product<span></td>
-              <td><button id="code-tree-tag-attribute-remove-button">&#128465;</button></td>
+              <td><button id="code-tree-tag-attribute-remove-button" onclick="removeAttribute1(event)">&#128465;</button></td>
             </tr>
           </table>
           <h2>choose attribute</h2>
@@ -529,6 +529,45 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
   let path = ''
   let lvls = []
+  async function removeAttribute1(event) {
+    const saveButton = event.target;
+    const tr = saveButton.closest('#code-tree-tag-attributes-list-item');
+
+    if (!tr) {
+        console.error('Could not find parent tr element');
+        return;
+    }
+
+    const keyElement = tr.querySelector('#code-tree-tag-attribute-key');
+    const key = keyElement.textContent.replace('🔑','');
+
+    const parentMenu = event.target.closest('.menu');
+
+    if (!parentMenu) {
+        console.error('Could not find parent menu element');
+        return;
+    }
+
+    const { id } = parentMenu;
+    const action = 'removeAttribute';
+    console.log('Action: ' + action);
+
+    const splited = id.split(';');
+    const [toRemove, ...rest] = splited;
+
+    const el = {
+        time: (new Date()).getTime(),
+        action,
+        target_element: rest.join(';'),
+        key,
+    };
+
+    tr.remove();
+    console.log(JSON.stringify(el));
+    await pushAction(el);
+
+    console.log(JSON.stringify(actionLog));
+}
   function transformToVisual() {
     console.log('transforming')
     var generatedPage = document.getElementById("generated-page");
@@ -1250,6 +1289,15 @@ document.addEventListener('DOMContentLoaded', function() {
         // component
         const element22 = document.getElementById(target_element.replace('-tree', ''));
         element22.setAttribute(key, value);
+
+        break;
+      case 'removeAttribute':
+        console.log('pr' + target_element);
+
+
+        // component
+        const elementToRemoveAttribute  = document.getElementById(target_element.replace('-tree', ''));
+        elementToRemoveAttribute.removeAttribute(key);
 
         break;
 
