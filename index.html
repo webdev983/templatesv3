@@ -383,7 +383,8 @@
             <tr id="code-tree-tag-attributes-list-item">
               <td>🔑<span id="code-tree-tag-attribute-key">data-type</span></td>
               <td>📄<span id="code-tree-tag-attribute-value">cool product<span></td>
-              <td><button id="code-tree-tag-attribute-remove-button" onclick="removeAttribute1(event)">&#128465;</button></td>
+              <td><button id="code-tree-tag-attribute-remove-button"
+                  onclick="removeAttribute1(event)">&#128465;</button></td>
             </tr>
           </table>
           <h2>choose attribute</h2>
@@ -534,18 +535,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const tr = saveButton.closest('#code-tree-tag-attributes-list-item');
 
     if (!tr) {
-        console.error('Could not find parent tr element');
-        return;
+      console.error('Could not find parent tr element');
+      return;
     }
 
     const keyElement = tr.querySelector('#code-tree-tag-attribute-key');
-    const key = keyElement.textContent.replace('🔑','');
+    const key = keyElement.textContent.replace('🔑', '');
 
     const parentMenu = event.target.closest('.menu');
 
     if (!parentMenu) {
-        console.error('Could not find parent menu element');
-        return;
+      console.error('Could not find parent menu element');
+      return;
     }
 
     const { id } = parentMenu;
@@ -556,10 +557,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const [toRemove, ...rest] = splited;
 
     const el = {
-        time: (new Date()).getTime(),
-        action,
-        target_element: rest.join(';'),
-        key,
+      time: (new Date()).getTime(),
+      action,
+      target_element: rest.join(';'),
+      key,
     };
 
     tr.remove();
@@ -567,7 +568,7 @@ document.addEventListener('DOMContentLoaded', function() {
     await pushAction(el);
 
     console.log(JSON.stringify(actionLog));
-}
+  }
   function transformToVisual() {
     console.log('transforming')
     var generatedPage = document.getElementById("generated-page");
@@ -577,6 +578,39 @@ document.addEventListener('DOMContentLoaded', function() {
     for (var i = 0; i < children.length; i++) {
       processElement(children[i]);
     }
+    document.addEventListener('mouseover', function (event) {
+      if (event.target.hasAttribute('data-visual-element')) {
+        event.target.style.backgroundColor = 'pink';
+      }
+    });
+
+    document.addEventListener('mouseout', function (event) {
+      if (event.target.hasAttribute('data-visual-element')) {
+        event.target.style.backgroundColor = '';
+      }
+    });
+    function onDoubleClick(e) {
+      // Get the element that was double-clicked
+      var target = e.target;
+
+      // Check if the element has the 'data-visual-contenteditable' attribute
+      if (target.getAttribute('data-visual-contenteditable') !== null) {
+        // Prevent the default double-click behavior
+        e.preventDefault();
+
+        // Set the 'contenteditable' attribute to 'true', making the element editable
+        target.setAttribute('contenteditable', 'true');
+
+        // Reset the background color of the element
+        target.style.backgroundColor = '';
+
+        // Set focus on the editable element
+        target.focus();
+      }
+    }
+
+    // Add an event listener to the entire document to track double-clicks
+    document.addEventListener('dblclick', onDoubleClick);
   }
   function processElement(element) {
     // Check if the element has the data-visual-border attribute
@@ -1296,7 +1330,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         // component
-        const elementToRemoveAttribute  = document.getElementById(target_element.replace('-tree', ''));
+        const elementToRemoveAttribute = document.getElementById(target_element.replace('-tree', ''));
         elementToRemoveAttribute.removeAttribute(key);
 
         break;
@@ -1710,13 +1744,13 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   const cancel1 = (e) => {
 
-      // Assuming e is an event object
+    // Assuming e is an event object
     const elementToRemove = e.target.closest('[id^="code-tree-tag-attributes-form-1;"]');
 
     if (elementToRemove) {
-        elementToRemove.remove();
+      elementToRemove.remove();
     }
-}
+  }
   var append = (e) => {
     const splited = e.target.parentNode.id.split(';')
     const [toRemove, ...rest] = splited
