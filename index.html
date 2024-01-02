@@ -5,12 +5,15 @@
 <style>
 </style>
 <style>
-   button[data-element="code-tree-attributes-button"],button[data-element="code-tree-text-content-button"],
-   button[data-element="code-tree-inner-html-button"],button[data-element="code-tree-tag-name-button"] {
+  button[data-element="code-tree-attributes-button"],
+  button[data-element="code-tree-text-content-button"],
+  button[data-element="code-tree-inner-html-button"],
+  button[data-element="code-tree-tag-name-button"] {
     border-radius: 10px;
     border-color: #4A90E2;
     border-width: 1px;
   }
+
   fieldset[data-element="code-tree-tag"] {
     border-top-width: 1px;
   }
@@ -20,7 +23,7 @@
 
   }
 
-  fieldset[data-element="code-tree-tag"]  {
+  fieldset[data-element="code-tree-tag"] {
     border-top-left-radius: 10px;
     border-top-width: 1px;
     border-left-width: 2px;
@@ -32,7 +35,7 @@
 
   .arrow {
 
-    border-width:3px;
+    border-width: 3px;
   }
 
   hr {
@@ -87,21 +90,21 @@
 
 <div class="left-side-panel">
   <div id="move_started" style="border-radius: 10px;"></div>
-  
-  <div class="back-soon-buttons">
-  <button disabled id="last-action-time" style="color: black; font-size: 24px;">⏳</button>
 
-  <a href="https://webdev983.github.io/templatesv3/files">
-   <button>🏠</button></a>
-  <button title="visual editor">👁</button>
-  <button title="revert last action">↩️</button>
-  <button title="redo last action">↪️</button>
-  <button id="log-open" style="font-size: 1.5em; top: 10px;">🪵</button>
-  <button hidden id="aside-toggle" style="font-size: 1.5em; top: 10px;">log</button>
+  <div class="back-soon-buttons">
+    <button disabled id="last-action-time" style="color: black; font-size: 24px;">⏳</button>
+
+    <a href="https://webdev983.github.io/templatesv3/files">
+      <button>🏠</button></a>
+    <button title="visual editor" onclick="transformToVisual()">👁</button>
+    <button title="revert last action">↩️</button>
+    <button title="redo last action">↪️</button>
+    <button id="log-open" style="font-size: 1.5em; top: 10px;">🪵</button>
+    <button hidden id="aside-toggle" style="font-size: 1.5em; top: 10px;">log</button>
 
 
   </div>
-  
+
   <table id="code-log" hidden>
     <thead>
       <tr>
@@ -117,8 +120,8 @@
       </tr>
     </tbody>
   </table>
-  </div>
-  
+</div>
+
 <div id="content-grid" style="display: grid; grid-template-columns: 100% 0%;">
 
   <main id="main-content" style="margin-left:65px;">
@@ -126,7 +129,7 @@
       <component id="63ae5927-390f-4391-993d-b25ab09c8ada">
       </component>
     </div>
-    
+
     <div class="up-panel">
       <button class='file-explorer-button' title="edit path">👣</button>
       <label class="file-explorer-path-part">accbuddy</label>
@@ -136,10 +139,10 @@
       <label class="file-explorer-path-part">windows-11-pro</label>
       <button class='file-explorer-button' title="copy path">📋</button>
     </div>
-    
 
-    <div   id="code-builder" style="position: relative;">
-      <div  hidden style="margin-bottom: 15px; border-bottom:#0000EE">
+
+    <div id="code-builder" style="position: relative;">
+      <div hidden style="margin-bottom: 15px; border-bottom:#0000EE">
         <button title="edit path" style="font-size:30px;">🧩</button>
         <label id="current-page-path"
           style="font-size: 0.6em; font-size:30px; cursor: pointer; color: #0000EE;">accbuddy</label>
@@ -149,7 +152,7 @@
         <span style="user-select: none; font-size:30px">/</span>
         <label id="current-page-path" style="font-size: 0.6em; font-size:30px; color: #363638;">windows-11-pro</label>
         <button title="copy path" style="font-size:30px;">📋</button>
-       </div>
+      </div>
 
 
       <div id="components-tree" style="position: relative">
@@ -159,7 +162,8 @@
         <fieldset id="41412421-412412412-41241212-412412" data-element="code-tree-tag">
           <legend>💬</legend>
           <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
-          <button class="arrow" data-element="code-tree-show-hide-button" onclick="toggleSubFields(event)">&#8594;</button>
+          <button class="arrow" data-element="code-tree-show-hide-button"
+            onclick="toggleSubFields(event)">&#8594;</button>
           <button data-element="code-tree-tag-name-button"
             onclick="loader(event, handleComponentClick)">🏷️component</button>
           <button data-element="code-tree-inner-html-button"> ▶️</button>
@@ -174,7 +178,8 @@
         <fieldset id="component-element" data-element="code-tree-tag">
           <legend>💬</legend>
           <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
-          <button  class="arrow" data-element="code-tree-show-hide-button" onclick="toggleSubFields(event)">&#8594;</button>
+          <button class="arrow" data-element="code-tree-show-hide-button"
+            onclick="toggleSubFields(event)">&#8594;</button>
           <button data-element="code-tree-tag-name-button"
             onclick="loader(event, handleComponentClick)">🏷️component</button>
           <button data-element="code-tree-inner-html-button"> ▶️</button>
@@ -373,7 +378,7 @@
               <td><input id="code-tree-tag-attribute-input-key-value" type="text" placeholder="value 📄">
                 <button id="code-tree-tag-attribute-add" onclick="saveAttribute(event)">➕ add</button>
               </td>
-              <td><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></td>
+              <td><button onclick="cancel1(event)" style="font-size: 0.9em;">❌</button></td>
             </tr>
             <tr id="code-tree-tag-attributes-list-item">
               <td>🔑<span id="code-tree-tag-attribute-key">data-type</span></td>
@@ -391,40 +396,48 @@
 
 
 
-          
-          
-          
-          
-          
-          
-      
-    <style>
-        .attr-entry {
-        display: flex; /* Apply Flexbox */
-        align-items: center; /* Align items vertically in the center */
-        background-color: #ffffff; /* White background for all divs */
-      }
-    
-      .attr-entry:nth-child(even) {
-        background-color: #f0f0f0; /* Light grey for even-numbered divs */
-      }
-    
-      .attr-entry:hover {
-        background-color: #dddddd; /* Slightly darker grey on hover */
-        cursor: pointer; /* Changes cursor to the hand icon */
-    
-      }
-    
-      .attr-entry span {
-        font-size: 1.2em; /* Larger font for visibility */
-        display: flex; /* Apply Flexbox */
-        align-items: center; /* Align text and button in the center */
-        width: 100%; /* Take full width of the parent */
-      }
-    
-    
-    </style>
-    
+
+
+
+
+
+
+
+          <style>
+            .attr-entry {
+              display: flex;
+              /* Apply Flexbox */
+              align-items: center;
+              /* Align items vertically in the center */
+              background-color: #ffffff;
+              /* White background for all divs */
+            }
+
+            .attr-entry:nth-child(even) {
+              background-color: #f0f0f0;
+              /* Light grey for even-numbered divs */
+            }
+
+            .attr-entry:hover {
+              background-color: #dddddd;
+              /* Slightly darker grey on hover */
+              cursor: pointer;
+              /* Changes cursor to the hand icon */
+
+            }
+
+            .attr-entry span {
+              font-size: 1.2em;
+              /* Larger font for visibility */
+              display: flex;
+              /* Apply Flexbox */
+              align-items: center;
+              /* Align text and button in the center */
+              width: 100%;
+              /* Take full width of the parent */
+            }
+          </style>
+
 
         </div>
 
@@ -468,10 +481,10 @@
       </div>
   </main>
   <aside style="overflow-y: auto;">
-<div>
- here can be sme content
-</div>
-</aside>
+    <div>
+      here can be sme content
+    </div>
+  </aside>
 </div>
 
 
@@ -516,6 +529,51 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
   let path = ''
   let lvls = []
+  function transformToVisual() {
+    console.log('transforming')
+    var generatedPage = document.getElementById("generated-page");
+
+    // Process each child element
+    var children = generatedPage.children;
+    for (var i = 0; i < children.length; i++) {
+      processElement(children[i]);
+    }
+  }
+  function processElement(element) {
+    // Check if the element has the data-visual-border attribute
+    if (element.hasAttribute("data-visual-border")) {
+      // Create a new fieldset element
+      var fieldset = document.createElement("fieldset");
+
+      // Set the id of the fieldset to be the id of the original element + "-fieldset"
+      fieldset.id = element.id + "-fieldset";
+      fieldset.className = "tag-fs";
+
+      // Create a legend element with the content of data-visual-title attribute
+      var legend = document.createElement("legend");
+      legend.className = "comment";
+      legend.textContent = element.getAttribute("data-visual-title");
+
+      // Append the legend to the fieldset
+      fieldset.appendChild(legend);
+
+      // Replace the current element with the new fieldset
+      element.parentNode.replaceChild(fieldset, element);
+      fieldset.appendChild(element);
+
+      // Process nested children
+      var nestedChildren = element.children;
+      for (var i = 0; i < nestedChildren.length; i++) {
+        processElement(nestedChildren[i]);
+      }
+    } else {
+      // Process nested children if the element doesn't have the attribute
+      var children = element.children;
+      for (var i = 0; i < children.length; i++) {
+        processElement(children[i]);
+      }
+    }
+  }
   function handlePathSelection() {
     // Get the selected value from the pathSelector
     var selectedValue = document.getElementById('pathSelector').value;
@@ -1244,6 +1302,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (button) {
       const parentId = button.parentNode.id;
+      const generatedId = parentId.replace('-tree', '')
       const textContentButton = button.parentNode.querySelector('[data-element="code-tree-attributes-button]');
 
       const existingClonedFieldset = button.parentNode.querySelector('[id^="code-tree-tag-attributes-form-1"]');
@@ -1261,6 +1320,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Insert the cloned fieldset after the specified element
         insertAfterElement.parentNode.insertBefore(clonedFieldset, insertAfterElement.nextElementSibling);
+        const elementWithAttributes = document.getElementById(generatedId);
+        if (elementWithAttributes) {
+          const attributesList = clonedFieldset.querySelector('#code-tree-tag-attributes-list');
+
+
+
+          // Clone the original tr element for each attribute
+          const originalTr = clonedFieldset.querySelector('#code-tree-tag-attributes-list-item');
+          for (const attribute of elementWithAttributes.attributes) {
+            const clonedTr = originalTr.cloneNode(true);
+
+            // Modify data based on attributes of the elementWithAttributes
+            const keyElement = clonedTr.querySelector('#code-tree-tag-attribute-key');
+            const valueElement = clonedTr.querySelector('#code-tree-tag-attribute-value');
+
+            keyElement.textContent = '🔑' + attribute.name;
+            valueElement.textContent = '📄' + attribute.value;
+
+            // Append the modified tr to the list
+            attributesList.appendChild(clonedTr);
+          }
+
+          // Remove the original tr element
+          originalTr.remove();
+
+        }
       }
     }
   }
@@ -1561,7 +1646,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log(JSON.stringify(el))
     await pushAction(el)
 
-    parent.remove()
+    parentMenu.remove()
     console.log(JSON.stringify(actionLog))
 
   }
@@ -1575,6 +1660,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     e.target.parentNode.parentNode.remove()
   }
+  const cancel1 = (e) => {
+
+      // Assuming e is an event object
+    const elementToRemove = e.target.closest('[id^="code-tree-tag-attributes-form-1;"]');
+
+    if (elementToRemove) {
+        elementToRemove.remove();
+    }
+}
   var append = (e) => {
     const splited = e.target.parentNode.id.split(';')
     const [toRemove, ...rest] = splited
@@ -1764,7 +1858,7 @@ document.addEventListener('DOMContentLoaded', function() {
     position: absolute;
     right: 102px;
     margin-right: 5px;
-    width:100px;
+    width: 100px;
   }
 
   [data-element="code-tree-text-content-button"] {
@@ -1772,6 +1866,7 @@ document.addEventListener('DOMContentLoaded', function() {
     right: 145px;
     margin-right: 5px;
   }
+
   [data-element="code-tree-text-content-button"]:last-of-type {
     position: absolute;
     right: 0px;
