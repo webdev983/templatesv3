@@ -2,9 +2,12 @@
 <link rel="stylesheet" href="css/up-panel.css" media="all">
 <link rel="stylesheet" href="css/fieldset.css" media="all">
 <link rel="stylesheet" href="css/right-click-menu.css" media="all">
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> 24f3b0b (a)
 <style>
 
 
@@ -126,7 +129,12 @@
     </tbody>
   </table>
 </div>
-
+<!-- right-clic-menu-->
+<div style="display: none;" id="right-click-menu" class="right-click-menu">
+  <div class="menu-option" onclick="alert('Option 0 selected')">🖼️ edit pic</div>
+  <div class="menu-option" onclick="alert('Option 0 selected')">📄 edit alt</div>
+  <div class="menu-option" onclick="alert('Option 0 selected')">🗑️ remove</div>
+</div>
 <div id="content-grid" style="display: grid; grid-template-columns: 100% 0%;">
 
   <main id="main-content" style="margin-left:65px;">
@@ -594,6 +602,90 @@ document.addEventListener('DOMContentLoaded', function() {
         event.target.style.backgroundColor = '';
       }
     });
+    
+    // Display the context menu
+    document.addEventListener('contextmenu', function (e) {
+      if (e.target.hasAttribute('data-visual-element')) {
+        e.preventDefault(); // Prevent the default context menu from opening
+        console.log('in11');
+        const menu = document.querySelector('#right-click-menu'); // Use # for ID selector
+        menu.innerHTML = '';
+
+        // Check for data-visual-duplicate siblings
+        const siblingsWithDuplicate = Array.from(e.target.parentElement.children).filter(
+          sibling => sibling !== e.target && sibling.hasAttribute('data-visual-dublicate')
+        );
+
+        // Check for fieldset siblings containing data-visual-duplicate elements
+        const fieldsetSiblings = Array.from(e.target.parentElement.parentElement.children).filter(
+          sibling => sibling !== e.target.parentElement && sibling.tagName === 'FIELDSET' &&
+            Array.from(sibling.querySelectorAll('[data-visual-dublicate]')).length > 0
+        );
+
+        console.log(JSON.stringify([...fieldsetSiblings, ...siblingsWithDuplicate]));
+
+        
+
+        // Check if parent has data-visual-appendChild
+        const parentWithAppendChild = e.target.parentElement.parentElement.hasAttribute('data-visual-appendchild');
+
+        // Check sibling for data-visual-insertBefore
+        const siblingWithInsertBefore = e.target.previousElementSibling && e.target.previousElementSibling.hasAttribute('data-visual-insertbefore')
+          ? e.target.previousElementSibling
+          : null;
+
+        
+        // Add entries for data-visual-duplicate siblings
+        siblingsWithDuplicate.forEach(sibling => {
+          addMenuEntry(menu, `➕ ${sibling.tagName.toLowerCase()}`, () => {
+            setSelected(e,e.target.id, sibling.id,siblingWithInsertBefore,parentWithAppendChild);
+          });
+        });
+
+        // Add entries for fieldset siblings
+        fieldsetSiblings.forEach(fieldsetSibling => {
+          addMenuEntry(menu, `➕ ${fieldsetSibling.tagName.toLowerCase()}`, () => {
+            setSelected(e,e.target.id, sibling.id,siblingWithInsertBefore,parentWithAppendChild);
+          });
+        });
+        // Adjust the position relative to the viewport
+        const offsetX = e.pageX - window.scrollX;
+        const offsetY = e.pageY - window.scrollY;
+
+        menu.style.display = 'block';
+        menu.style.left = `${offsetX}px`;
+        menu.style.top = `${offsetY}px`;
+
+        // Hide the menu when clicking the left mouse button
+        window.addEventListener('click', function () {
+          menu.style.display = 'none';
+        });
+      }
+    });
+
+    // Example function, adjust as needed
+    function setSelected(event,sourceId, targetId) {
+      alert(`Selected: ${sourceId} - ${targetId}`);
+    }
+    
+    // Example function, adjust as needed
+    function insertBefore(nextElementId, selectedElementId) {
+      alert(`Inserting Before: ${nextElementId} - ${selectedElementId}`);
+    }
+
+    // Example function, adjust as needed
+    function append(parentId, selectedElementId) {
+      alert(`Appending: ${parentId} - ${selectedElementId}`);
+    }
+
+    // Utility function to add menu entry
+    function addMenuEntry(menu, text, clickHandler) {
+      const entry = document.createElement('div');
+      entry.className = 'menu-option';
+      entry.innerHTML = text;
+      entry.onclick = clickHandler;
+      menu.appendChild(entry);
+    }
     function onDoubleClick(e) {
       // Get the element that was double-clicked
       var target = e.target;
