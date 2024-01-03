@@ -606,47 +606,79 @@ document.addEventListener('DOMContentLoaded', function() {
 
       // You can perform additional actions here if needed
     }
+    function generateNewId(originalId) {
+      const existingElements = document.querySelectorAll(`[id^="${originalId}"]`);
+      let highestCopyNumber = 0;
+
+      existingElements.forEach(element => {
+        const match = element.id.match(/-copy-(\d+)$/);
+        if (match) {
+          const copyNumber = parseInt(match[1], 10);
+          highestCopyNumber = Math.max(highestCopyNumber, copyNumber);
+        }
+      });
+
+      const newCopyNumber = highestCopyNumber + 1;
+      return `${originalId}-copy-${newCopyNumber}`;
+    }
+
+    // Function to generate a new ID based on a specific copy number
+    function duplicateId(originalId, copyNumber) {
+      const splited = originalId.split(';');
+      return splited.map((part, index) => (index === splited.length - 1)
+        ? part.replace(/-copy-\d+-tree$/, '').replace(/-tree$/, '') + `-copy-${copyNumber}-tree`
+        : part
+      ).join(';');
+    }
+
     // Example function, adjust as needed
     function insertBefore(nextElementId, selectedElementId) {
       const actionObject = {
         time: (new Date()).getTime(),
         action: 'InsertBefore',
         target_element: nextElementId + '-tree',
-        inserted_element: { originalId: selectedElementId + '-tree', id: generateUUID() + '-tree' },
-      }
+        inserted_element: { originalId: selectedElementId + '-tree', id: duplicateId(selectedElementId + '-tree', generateNewCopyNumber(selectedElementId + '-tree')) },
+      };
       pushAction(actionObject);
-      // Get a NodeList of all elements with the class 'receive-target'
-      const buttonsToRemove = document.querySelectorAll('.receive-target');
-
-      // Iterate through the NodeList and remove each button
-      buttonsToRemove.forEach(button => {
-        button.parentNode.removeChild(button);
-      });
+      removeReceiveButtons();
     }
 
     // Example function, adjust as needed
     function append(parentId, selectedElementId) {
-
-      // Create a new element (adjust this part based on your requirements)
-
       // Perform additional actions if needed
       const actionObject = {
         time: (new Date()).getTime(),
         action: 'Append',
         target_element: parentId + '-tree',
-        inserted_element: { originalId: selectedElementId + '-tree', id: generateUUID() + '-tree' },
-      }
+        inserted_element: { originalId: selectedElementId + '-tree', id: duplicateId(selectedElementId + '-tree', generateNewCopyNumber(selectedElementId + '-tree')) },
+      };
       pushAction(actionObject);
-      // Get a NodeList of all elements with the class 'receive-target'
-      const buttonsToRemove = document.querySelectorAll('.receive-target');
+      removeReceiveButtons();
+    }
 
-      // Iterate through the NodeList and remove each button
+    // Function to generate a new copy number based on the highest copy number
+    function generateNewCopyNumber(originalId) {
+      const existingElements = document.querySelectorAll(`[id^="${originalId}"]`);
+      let highestCopyNumber = 0;
+
+      existingElements.forEach(element => {
+        const match = element.id.match(/-copy-(\d+)-tree$/);
+        if (match) {
+          const copyNumber = parseInt(match[1], 10);
+          highestCopyNumber = Math.max(highestCopyNumber, copyNumber);
+        }
+      });
+
+      return highestCopyNumber + 1;
+    }
+    // Function to remove all elements with the class 'receive-target'
+    function removeReceiveButtons() {
+      const buttonsToRemove = document.querySelectorAll('.receive-target');
       buttonsToRemove.forEach(button => {
         button.parentNode.removeChild(button);
       });
-
     }
-    function moveItem(parentId, selectedElementId,action) {
+    function moveItem(parentId, selectedElementId, action) {
 
       // Create a new element (adjust this part based on your requirements)
 
@@ -654,7 +686,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const actionObject = {
         time: (new Date()).getTime(),
         action: action,
-        target_element: [{id:parentId + '-tree'},{id:selectedElementId+ '-tree'}],
+        target_element: [{ id: parentId + '-tree' }, { id: selectedElementId + '-tree' }],
       }
       pushAction(actionObject);
       // Get a NodeList of all elements with the class 'receive-target'
@@ -708,15 +740,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Check for data-visual-duplicate siblings
         const siblingsWithDuplicate = Array.from(e.target.parentElement.children).filter(
-          sibling => sibling !== e.target && sibling.hasAttribute('data-visual-dublicate')
+          sibling => sibling !== e.target && sibling.hasAttribute('data-visual-dublicate') && !isDuplicate(sibling)
         );
 
         // Check for fieldset siblings containing data-visual-duplicate elements
         const fieldsetSiblings = Array.from(e.target.parentElement.parentElement.children).filter(
           sibling => sibling !== e.target.parentElement && sibling.tagName === 'FIELDSET' &&
-            Array.from(sibling.querySelectorAll('[data-visual-dublicate]')).length > 0
+            Array.from(sibling.querySelectorAll('[data-visual-dublicate]')).length > 0 &&
+            !isDuplicate(sibling)
         );
 
+        function isDuplicate(element) {
+          return element.id.includes('-copy-');
+        }
         console.log(JSON.stringify([...fieldsetSiblings, ...siblingsWithDuplicate]));
 
         // Check if parent has data-visual-appendChild
@@ -821,7 +857,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // Log the element id and target element id
       console.log(`Element ID: ${draggedElementId}, Target Element ID: ${targetElementId} action ${action}`);
       if (targetElementId) {
-        moveItem(targetElementId, draggedElementId,action)
+        moveItem(targetElementId, draggedElementId, action)
 
       }
 
@@ -1406,7 +1442,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
           // Set the id of the duplicated element to inserted_element.id
           newEl.id = inserted_element.id.replace('-tree', '');
-
+          newEl.textContent =''
           console.log(newEl.id);
 
           // Append the duplicated element to the componentElement
@@ -1514,7 +1550,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
           // Duplicate the element
           const newEl = componentElement.cloneNode(true);
-
+          newEl.textContent =''
           // Set the id of the duplicated element to inserted_element.id
           newEl.id = inserted_element.id.replace('-tree', '');
 
@@ -2161,19 +2197,50 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   const duplicateTag = (e) => {
-    const splited = e.target.parentNode.id.split(';')
-    const [toRemove, ...rest] = splited
+    const splited = e.target.parentNode.id.split(';');
+    const [toRemove, ...rest] = splited;
     const parentId = rest.join(';');
-    const el =
-    {
+
+    // Find existing elements with IDs starting with parentId and ending with -tree
+    const existingElements = document.querySelectorAll(`[id^="${parentId}"][id$="-tree"]`);
+
+    let existingCopyNumbers = new Set();
+
+    // Iterate through existing elements to find the existing copy numbers
+    existingElements.forEach(element => {
+      const match = element.id.match(/-copy-(\d+)-tree$/);
+      if (match) {
+        const copyNumber = parseInt(match[1], 10);
+        existingCopyNumbers.add(copyNumber);
+      }
+    });
+
+    // Find the next available copy number
+    let newCopyNumber = 1;
+    while (existingCopyNumbers.has(newCopyNumber)) {
+      newCopyNumber++;
+    }
+
+    // Generate the new ID based on the new copy number
+
+    const duplicateTag = (id) => {
+      const splited = id.split(';');
+      return splited.map((part, index) => (index === splited.length - 1)
+        ? part.replace(/-copy-\d+-tree$/, '').replace(/-tree$/, '') + `-copy-${newCopyNumber}-tree`
+        : part
+      ).join(';');
+
+      // Rest of the function remains unchanged...
+    };
+    const el = {
       time: (new Date()).getTime(),
       action: 'dublicateTag',
       target_element: parentId,
-      inserted_element: generateUUID()
+      inserted_element: duplicateTag(parentId)
+    };
 
-    }
-    pushAction(el)
-  }
+    pushAction(el);
+  };
   const removeTag = (e) => {
     const splited = e.target.parentNode.id.split(';')
     const [toRemove, ...rest] = splited
