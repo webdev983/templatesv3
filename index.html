@@ -613,7 +613,7 @@ document.addEventListener('DOMContentLoaded', function() {
         event.target.style.backgroundColor = '';
       }
     });
-    
+
 
     function handleMenuEntryClick(sourceId, targetId, siblingWithInsertBefore, parentWithAppendChild) {
       console.log('t');
@@ -688,6 +688,26 @@ document.addEventListener('DOMContentLoaded', function() {
       });
 
     }
+    function moveItem(parentId, selectedElementId,action) {
+
+      // Create a new element (adjust this part based on your requirements)
+
+      // Perform additional actions if needed
+      const actionObject = {
+        time: (new Date()).getTime(),
+        action: action,
+        target_element: [{id:parentId + '-tree'},{id:selectedElementId+ '-tree'}],
+      }
+      pushAction(actionObject);
+      // Get a NodeList of all elements with the class 'receive-target'
+      const buttonsToRemove = document.querySelectorAll('.receive-target');
+
+      // Iterate through the NodeList and remove each button
+      buttonsToRemove.forEach(button => {
+        button.parentNode.removeChild(button);
+      });
+
+    }
 
     // Utility function to add menu entry
     function addMenuEntry(menu, text, clickHandler) {
@@ -720,7 +740,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add an event listener to the entire document to track double-clicks
     document.addEventListener('dblclick', onDoubleClick);
-    
+
     document.addEventListener('contextmenu', function (e) {
       if (e.target.hasAttribute('data-visual-element')) {
         e.preventDefault(); // Prevent the default context menu from opening
@@ -842,12 +862,11 @@ document.addEventListener('DOMContentLoaded', function() {
       const action = e.target.getAttribute('data-action');
       // Log the element id and target element id
       console.log(`Element ID: ${draggedElementId}, Target Element ID: ${targetElementId} action ${action}`);
-      if(action ==='InsertBefore'){
-        insertBefore(targetElementId,draggedElementId)
+      if (targetElementId) {
+        moveItem(targetElementId, draggedElementId,action)
+
       }
-      else{
-        append(targetElementId,draggedElementId)
-      }
+
       // Log the data attributes of the "+" button after drop
       const plusButtons = document.querySelectorAll('.receive-target');
       plusButtons.forEach(button => {
@@ -1428,7 +1447,7 @@ document.addEventListener('DOMContentLoaded', function() {
           const newEl = componentElement.cloneNode(true);
 
           // Set the id of the duplicated element to inserted_element.id
-          newEl.id = inserted_element.id.replace('-tree','');
+          newEl.id = inserted_element.id.replace('-tree', '');
 
           console.log(newEl.id);
 
@@ -1461,7 +1480,7 @@ document.addEventListener('DOMContentLoaded', function() {
           }
 
           // Update ids of child elements within the duplicated elements recursively
-          updateChildIdsRecursive(newEl, inserted_element.id.replace('-tree','') + ';');
+          updateChildIdsRecursive(newEl, inserted_element.id.replace('-tree', '') + ';');
           updateChildIdsRecursive(newEl2, inserted_element.id + ';');
           break;
         }
@@ -1539,7 +1558,7 @@ document.addEventListener('DOMContentLoaded', function() {
           const newEl = componentElement.cloneNode(true);
 
           // Set the id of the duplicated element to inserted_element.id
-          newEl.id = inserted_element.id.replace('-tree','');
+          newEl.id = inserted_element.id.replace('-tree', '');
 
           console.log(newEl.id);
 
@@ -1573,7 +1592,7 @@ document.addEventListener('DOMContentLoaded', function() {
           }
 
           // Update ids of child elements within the duplicated elements recursively
-          updateChildIdsRecursive(newEl, inserted_element.id.replace('-tree','') + ';');
+          updateChildIdsRecursive(newEl, inserted_element.id.replace('-tree', '') + ';');
           updateChildIdsRecursive(newEl2, inserted_element.id + ';');
 
           break;
