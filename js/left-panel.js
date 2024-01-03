@@ -12,7 +12,7 @@ document.getElementById('log-open').addEventListener('click', function() {
   } else {
     leftSidePanel.classList.add('log-open');
     codeLog.removeAttribute('hidden');
-    mainContent.style.marginLeft = '300px'; // Устанавливаем margin-left на 300px
+    mainContent.style.marginLeft = '302px'; // Устанавливаем margin-left на 300px
   }
 });
 
