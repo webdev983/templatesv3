@@ -116,7 +116,7 @@
     <button class="b-1" hidden id="aside-toggle" style="font-size: 1.5em; top: 10px;">log</button>
   </div>
 
-  <table id="code-log"  class="table-1" hidden>
+  <table id="code-log" class="table-1" hidden>
     <thead>
       <tr>
         <th style="text-align: left;">🕓time</th>
@@ -1355,7 +1355,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
           // Append the duplicated treeElement to the treeElement's parent
           treeElement.parentNode.appendChild(newEl2);
+          function updateChildIdsRecursive(element, prefix) {
+            element.querySelectorAll('[id]').forEach(child => {
+              const newId = prefix + child.id;
+              child.id = newId;
+              // Recursively update ids for child's children
+              updateChildIdsRecursive(child, newId + ';');
+            });
+          }
 
+          // Update ids of child elements within the duplicated elements recursively
+          updateChildIdsRecursive(newEl, inserted_element.id + ';');
+          updateChildIdsRecursive(newEl2, inserted_element.id + ';');
           break;
         }
         //case insert tag
@@ -1456,6 +1467,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
           // Append the duplicated treeElement to the treeElement's parent
           treeElement.parentNode.insertBefore(newEl2, treeElement)
+          function updateChildIdsRecursive(element, prefix) {
+            element.querySelectorAll('[id]').forEach(child => {
+              const newId = prefix + child.id;
+              child.id = newId;
+              // Recursively update ids for child's children
+              updateChildIdsRecursive(child, newId + ';');
+            });
+          }
+
+          // Update ids of child elements within the duplicated elements recursively
+          updateChildIdsRecursive(newEl, inserted_element.id + ';');
+          updateChildIdsRecursive(newEl2, inserted_element.id + ';');
 
           break;
         }
