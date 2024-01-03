@@ -588,10 +588,12 @@ document.addEventListener('DOMContentLoaded', function() {
   let visualOn = false
   function transformToVisual(event) {
     event.target.classList.add('b-selected');
+
     if (visualOn) {
-      return
+      return;
     }
-    console.log('transforming')
+
+    console.log('transforming');
     var generatedPage = document.getElementById("generated-page");
 
     // Process each child element
@@ -599,6 +601,7 @@ document.addEventListener('DOMContentLoaded', function() {
     for (var i = 0; i < children.length; i++) {
       processElement(children[i]);
     }
+
     document.addEventListener('mouseover', function (event) {
       if (event.target.hasAttribute('data-visual-element')) {
         event.target.style.backgroundColor = 'pink';
@@ -610,6 +613,7 @@ document.addEventListener('DOMContentLoaded', function() {
         event.target.style.backgroundColor = '';
       }
     });
+    
 
     function handleMenuEntryClick(sourceId, targetId, siblingWithInsertBefore, parentWithAppendChild) {
       console.log('t');
@@ -644,65 +648,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
       // You can perform additional actions here if needed
     }
-
-    document.addEventListener('contextmenu', function (e) {
-      if (e.target.hasAttribute('data-visual-element')) {
-        e.preventDefault(); // Prevent the default context menu from opening
-        console.log('in11');
-        const menu = document.querySelector('#right-click-menu'); // Use # for ID selector
-        menu.innerHTML = '';
-
-        // Check for data-visual-duplicate siblings
-        const siblingsWithDuplicate = Array.from(e.target.parentElement.children).filter(
-          sibling => sibling !== e.target && sibling.hasAttribute('data-visual-dublicate')
-        );
-
-        // Check for fieldset siblings containing data-visual-duplicate elements
-        const fieldsetSiblings = Array.from(e.target.parentElement.parentElement.children).filter(
-          sibling => sibling !== e.target.parentElement && sibling.tagName === 'FIELDSET' &&
-            Array.from(sibling.querySelectorAll('[data-visual-dublicate]')).length > 0
-        );
-
-        console.log(JSON.stringify([...fieldsetSiblings, ...siblingsWithDuplicate]));
-
-        // Check if parent has data-visual-appendChild
-        const parentWithAppendChild = e.target.parentElement.hasAttribute('data-visual-appendchild') && e.target.parentElement;
-
-        // Check sibling for data-visual-insertBefore
-        const siblingWithInsertBefore = e.target.parentElement && Array.from(e.target.parentElement.children).filter(
-          child => child !== e.target && child.hasAttribute('data-visual-insertbefore')
-        );
-
-
-        // Add entries for data-visual-duplicate siblings
-        siblingsWithDuplicate.forEach(sibling => {
-          addMenuEntry(menu, `➕ ${sibling.tagName.toLowerCase()}`, () => {
-            handleMenuEntryClick(e.target.id, sibling.id, siblingWithInsertBefore, parentWithAppendChild);
-          });
-        });
-
-        // Add entries for fieldset siblings
-        fieldsetSiblings.forEach(fieldsetSibling => {
-          addMenuEntry(menu, `➕ ${fieldsetSibling.tagName.toLowerCase()}`, () => {
-            handleMenuEntryClick(e.target.id, sibling.id, siblingWithInsertBefore, parentWithAppendChild);
-          });
-        });
-
-        // Adjust the position relative to the viewport
-        const offsetX = e.pageX - window.scrollX;
-        const offsetY = e.pageY - window.scrollY;
-
-        menu.style.display = 'block';
-        menu.style.left = `${offsetX}px`;
-        menu.style.top = `${offsetY}px`;
-
-        // Hide the menu when clicking the left mouse button
-        window.addEventListener('click', function () {
-          menu.style.display = 'none';
-        });
-      }
-    });
-
     // Example function, adjust as needed
     function insertBefore(nextElementId, selectedElementId) {
       const actionObject = {
@@ -775,9 +720,160 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add an event listener to the entire document to track double-clicks
     document.addEventListener('dblclick', onDoubleClick);
-    visualOn = true
+    
+    document.addEventListener('contextmenu', function (e) {
+      if (e.target.hasAttribute('data-visual-element')) {
+        e.preventDefault(); // Prevent the default context menu from opening
+        console.log('in11');
+        const menu = document.querySelector('#right-click-menu'); // Use # for ID selector
+        menu.innerHTML = '';
+
+        // Check for data-visual-duplicate siblings
+        const siblingsWithDuplicate = Array.from(e.target.parentElement.children).filter(
+          sibling => sibling !== e.target && sibling.hasAttribute('data-visual-dublicate')
+        );
+
+        // Check for fieldset siblings containing data-visual-duplicate elements
+        const fieldsetSiblings = Array.from(e.target.parentElement.parentElement.children).filter(
+          sibling => sibling !== e.target.parentElement && sibling.tagName === 'FIELDSET' &&
+            Array.from(sibling.querySelectorAll('[data-visual-dublicate]')).length > 0
+        );
+
+        console.log(JSON.stringify([...fieldsetSiblings, ...siblingsWithDuplicate]));
+
+        // Check if parent has data-visual-appendChild
+        const parentWithAppendChild = e.target.parentElement.hasAttribute('data-visual-appendchild') && e.target.parentElement;
+
+        // Check sibling for data-visual-insertBefore
+        const siblingWithInsertBefore = e.target.parentElement && Array.from(e.target.parentElement.children).filter(
+          child => child !== e.target && child.hasAttribute('data-visual-insertbefore')
+        );
+
+
+        // Add entries for data-visual-duplicate siblings
+        siblingsWithDuplicate.forEach(sibling => {
+          addMenuEntry(menu, `➕ ${sibling.tagName.toLowerCase()}`, () => {
+            handleMenuEntryClick(e.target.id, sibling.id, siblingWithInsertBefore, parentWithAppendChild);
+          });
+        });
+
+        // Add entries for fieldset siblings
+        fieldsetSiblings.forEach(fieldsetSibling => {
+          addMenuEntry(menu, `➕ ${fieldsetSibling.tagName.toLowerCase()}`, () => {
+            handleMenuEntryClick(e.target.id, sibling.id, siblingWithInsertBefore, parentWithAppendChild);
+          });
+        });
+
+        // Adjust the position relative to the viewport
+        const offsetX = e.pageX - window.scrollX;
+        const offsetY = e.pageY - window.scrollY;
+
+        menu.style.display = 'block';
+        menu.style.left = `${offsetX}px`;
+        menu.style.top = `${offsetY}px`;
+
+        // Hide the menu when clicking the left mouse button
+        window.addEventListener('click', function () {
+          menu.style.display = 'none';
+        });
+      }
+    });
+
+    // Function to check if an element has the 'data-visual-draggable' attribute
+    function isDraggable(element) {
+      return element.hasAttribute('data-visual-draggable');
+    }
+
+    function handleDragStart(e) {
+      if (isDraggable(e.target)) {
+        console.log('draggable');
+        e.dataTransfer.setData('text/plain', e.target.id);
+
+        // Create the "+" button element
+        const plusButton = document.createElement('button');
+        plusButton.className = 'receive-target';
+        plusButton.innerHTML = '➕';
+
+        // Check if the parent has data-visual-appendchild
+        const parentWithAppendChild = e.target.parentElement.hasAttribute('data-visual-appendchild') && e.target.parentElement;
+
+        // Check sibling for data-visual-insertBefore
+        const siblingWithInsertBefore = e.target.parentElement && Array.from(e.target.parentElement.children).filter(
+          child => child !== e.target && child.hasAttribute('data-visual-insertbefore')
+        );
+
+        siblingWithInsertBefore.forEach(sibling => {
+          // Create the "+" button element with data attributes
+          const plusButton = createButton('InsertBefore', sibling.id);
+          sibling.parentNode.insertBefore(plusButton, sibling);
+        });
+
+        if (parentWithAppendChild) {
+          // Create the "+" button element with data attributes
+          const plusButton = createButton('Append', parentWithAppendChild.id);
+          parentWithAppendChild.appendChild(plusButton);
+        }
+
+        function createButton(action, elementId) {
+          const plusButton = document.createElement('button');
+          plusButton.className = 'receive-target';
+          plusButton.innerHTML = '➕';
+          plusButton.setAttribute('data-action', action);
+          plusButton.setAttribute('data-element-id', elementId);
+          return plusButton;
+        }
+        // Update the dragover and drop event listeners
+        document.addEventListener('dragover', handleDragOver);
+        document.addEventListener('drop', handleDrop);
+      }
+      visualOn = true
+    }
+
+    // Function to handle the drag over an element
+
+
+    // Function to handle the drop on an element
+    // Function to handle the drop on an element
+    function handleDrop(e) {
+      e.preventDefault();
+
+      const draggedElementId = e.dataTransfer.getData('text/plain');
+      const targetElementId = e.target.getAttribute('data-element-id');
+      const action = e.target.getAttribute('data-action');
+      // Log the element id and target element id
+      console.log(`Element ID: ${draggedElementId}, Target Element ID: ${targetElementId} action ${action}`);
+      if(action ==='InsertBefore'){
+        insertBefore(targetElementId,draggedElementId)
+      }
+      else{
+        append(targetElementId,draggedElementId)
+      }
+      // Log the data attributes of the "+" button after drop
+      const plusButtons = document.querySelectorAll('.receive-target');
+      plusButtons.forEach(button => {
+
+        button.parentNode.removeChild(button); // Remove the "+" button after logging the information
+      });
+
+      // Reset the dragover and drop event listeners
+      document.removeEventListener('dragover', handleDragOver);
+      document.removeEventListener('drop', handleDrop);
+    }
+
+    // Attach dragstart event listener to each draggable element
+    document.addEventListener('dragstart', handleDragStart);
+
+    function handleDragOver(e) {
+      e.preventDefault();
+    }
   }
+
   function processElement(element) {
+    // Check if the element has the data-visual-draggable attribute
+    if (element.hasAttribute("data-visual-draggable")) {
+      // Apply draggable logic here
+      element.draggable = true;
+    }
     // Check if the element has the data-visual-border attribute
     if (element.hasAttribute("data-visual-border")) {
       // Create a new fieldset element
@@ -1332,7 +1428,7 @@ document.addEventListener('DOMContentLoaded', function() {
           const newEl = componentElement.cloneNode(true);
 
           // Set the id of the duplicated element to inserted_element.id
-          newEl.id = inserted_element.id;
+          newEl.id = inserted_element.id.replace('-tree','');
 
           console.log(newEl.id);
 
@@ -1365,7 +1461,7 @@ document.addEventListener('DOMContentLoaded', function() {
           }
 
           // Update ids of child elements within the duplicated elements recursively
-          updateChildIdsRecursive(newEl, inserted_element.id + ';');
+          updateChildIdsRecursive(newEl, inserted_element.id.replace('-tree','') + ';');
           updateChildIdsRecursive(newEl2, inserted_element.id + ';');
           break;
         }
@@ -1443,7 +1539,7 @@ document.addEventListener('DOMContentLoaded', function() {
           const newEl = componentElement.cloneNode(true);
 
           // Set the id of the duplicated element to inserted_element.id
-          newEl.id = inserted_element.id;
+          newEl.id = inserted_element.id.replace('-tree','');
 
           console.log(newEl.id);
 
@@ -1477,7 +1573,7 @@ document.addEventListener('DOMContentLoaded', function() {
           }
 
           // Update ids of child elements within the duplicated elements recursively
-          updateChildIdsRecursive(newEl, inserted_element.id + ';');
+          updateChildIdsRecursive(newEl, inserted_element.id.replace('-tree','') + ';');
           updateChildIdsRecursive(newEl2, inserted_element.id + ';');
 
           break;
