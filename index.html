@@ -100,21 +100,21 @@
     <button class="b-4" disabled id="last-action-time" style="color: black;">⏳</button>
 
   </div>
-    <div id="nav-buttons">
-      <a href="https://webdev983.github.io/templatesv3/files">
-        <button class="b-1">📂</button></a>
-      <!--<a href="https://webdev983.github.io/templatesv3/orders">
+  <div id="nav-buttons">
+    <a href="https://webdev983.github.io/templatesv3/files">
+      <button class="b-1">📂</button></a>
+    <!--<a href="https://webdev983.github.io/templatesv3/orders">
           <button>🛍️</button></a>  
           <a href="https://webdev983.github.io/templatesv3/orders">
-            <button style="font-style: italic; font-weight: bold; margin-left: 2px;">PP</button></a> -->  
-      </div>
-    <div style="margin-top: 30px;">
-    <button class="b-1" title="visual editor" onclick="transformToVisual()">👁️</button>
+            <button style="font-style: italic; font-weight: bold; margin-left: 2px;">PP</button></a> -->
+  </div>
+  <div style="margin-top: 30px;">
+    <button class="b-1" title="visual editor" onclick="transformToVisual(event)">👁️</button>
     <button class="b-1" title="revert last action">↩️</button>
     <button class="b-1" title="redo last action">↪️</button>
     <button class="b-1" id="log-open">🪵</button>
     <button class="b-1" hidden id="aside-toggle" style="font-size: 1.5em; top: 10px;">log</button>
-    </div>
+  </div>
 
   <table id="code-log"  class="table-1" hidden>
     <thead>
@@ -585,7 +585,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     console.log(JSON.stringify(actionLog));
   }
-  function transformToVisual() {
+  let visualOn = false
+  function transformToVisual(event) {
+    event.target.classList.add('b-selected');
+    if (visualOn) {
+      return
+    }
     console.log('transforming')
     var generatedPage = document.getElementById("generated-page");
 
@@ -605,8 +610,41 @@ document.addEventListener('DOMContentLoaded', function() {
         event.target.style.backgroundColor = '';
       }
     });
-    
-    // Display the context menu
+
+    function handleMenuEntryClick(sourceId, targetId, siblingWithInsertBefore, parentWithAppendChild) {
+      console.log('t');
+      console.log(parentWithAppendChild);
+      console.log(siblingWithInsertBefore);
+
+      // Check if siblingWithInsertBefore is present
+      if (siblingWithInsertBefore.length > 0) {
+        // Insert <button class="receive-target">➕</button> before each siblingWithInsertBefore
+        siblingWithInsertBefore.forEach(sibling => {
+          const addButton = document.createElement('button');
+          addButton.className = 'receive-target';
+          addButton.innerHTML = '➕';
+          addButton.onclick = function () {
+            insertBefore(sibling.id, targetId);
+          };
+          sibling.parentNode.insertBefore(addButton, sibling);
+        });
+      }
+
+      // Check if parentWithAppendChild is present
+      if (parentWithAppendChild) {
+        // Append <button class="receive-target">➕</button> to parentWithAppendChild
+        const addButton = document.createElement('button');
+        addButton.className = 'receive-target';
+        addButton.innerHTML = '➕';
+        addButton.onclick = function () {
+          append(parentWithAppendChild.id, targetId);
+        };
+        parentWithAppendChild.appendChild(addButton);
+      }
+
+      // You can perform additional actions here if needed
+    }
+
     document.addEventListener('contextmenu', function (e) {
       if (e.target.hasAttribute('data-visual-element')) {
         e.preventDefault(); // Prevent the default context menu from opening
@@ -627,30 +665,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
         console.log(JSON.stringify([...fieldsetSiblings, ...siblingsWithDuplicate]));
 
-        
-
         // Check if parent has data-visual-appendChild
-        const parentWithAppendChild = e.target.parentElement.parentElement.hasAttribute('data-visual-appendchild');
+        const parentWithAppendChild = e.target.parentElement.hasAttribute('data-visual-appendchild') && e.target.parentElement;
 
         // Check sibling for data-visual-insertBefore
-        const siblingWithInsertBefore = e.target.previousElementSibling && e.target.previousElementSibling.hasAttribute('data-visual-insertbefore')
-          ? e.target.previousElementSibling
-          : null;
+        const siblingWithInsertBefore = e.target.parentElement && Array.from(e.target.parentElement.children).filter(
+          child => child !== e.target && child.hasAttribute('data-visual-insertbefore')
+        );
 
-        
+
         // Add entries for data-visual-duplicate siblings
         siblingsWithDuplicate.forEach(sibling => {
           addMenuEntry(menu, `➕ ${sibling.tagName.toLowerCase()}`, () => {
-            setSelected(e,e.target.id, sibling.id,siblingWithInsertBefore,parentWithAppendChild);
+            handleMenuEntryClick(e.target.id, sibling.id, siblingWithInsertBefore, parentWithAppendChild);
           });
         });
 
         // Add entries for fieldset siblings
         fieldsetSiblings.forEach(fieldsetSibling => {
           addMenuEntry(menu, `➕ ${fieldsetSibling.tagName.toLowerCase()}`, () => {
-            setSelected(e,e.target.id, sibling.id,siblingWithInsertBefore,parentWithAppendChild);
+            handleMenuEntryClick(e.target.id, sibling.id, siblingWithInsertBefore, parentWithAppendChild);
           });
         });
+
         // Adjust the position relative to the viewport
         const offsetX = e.pageX - window.scrollX;
         const offsetY = e.pageY - window.scrollY;
@@ -667,18 +704,44 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Example function, adjust as needed
-    function setSelected(event,sourceId, targetId) {
-      alert(`Selected: ${sourceId} - ${targetId}`);
-    }
-    
-    // Example function, adjust as needed
     function insertBefore(nextElementId, selectedElementId) {
-      alert(`Inserting Before: ${nextElementId} - ${selectedElementId}`);
+      const actionObject = {
+        time: (new Date()).getTime(),
+        action: 'InsertBefore',
+        target_element: nextElementId + '-tree',
+        inserted_element: { originalId: selectedElementId + '-tree', id: generateUUID() + '-tree' },
+      }
+      pushAction(actionObject);
+      // Get a NodeList of all elements with the class 'receive-target'
+      const buttonsToRemove = document.querySelectorAll('.receive-target');
+
+      // Iterate through the NodeList and remove each button
+      buttonsToRemove.forEach(button => {
+        button.parentNode.removeChild(button);
+      });
     }
 
     // Example function, adjust as needed
     function append(parentId, selectedElementId) {
-      alert(`Appending: ${parentId} - ${selectedElementId}`);
+
+      // Create a new element (adjust this part based on your requirements)
+
+      // Perform additional actions if needed
+      const actionObject = {
+        time: (new Date()).getTime(),
+        action: 'Append',
+        target_element: parentId + '-tree',
+        inserted_element: { originalId: selectedElementId + '-tree', id: generateUUID() + '-tree' },
+      }
+      pushAction(actionObject);
+      // Get a NodeList of all elements with the class 'receive-target'
+      const buttonsToRemove = document.querySelectorAll('.receive-target');
+
+      // Iterate through the NodeList and remove each button
+      buttonsToRemove.forEach(button => {
+        button.parentNode.removeChild(button);
+      });
+
     }
 
     // Utility function to add menu entry
@@ -689,6 +752,7 @@ document.addEventListener('DOMContentLoaded', function() {
       entry.onclick = clickHandler;
       menu.appendChild(entry);
     }
+
     function onDoubleClick(e) {
       // Get the element that was double-clicked
       var target = e.target;
@@ -711,6 +775,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add an event listener to the entire document to track double-clicks
     document.addEventListener('dblclick', onDoubleClick);
+    visualOn = true
   }
   function processElement(element) {
     // Check if the element has the data-visual-border attribute
@@ -1255,7 +1320,44 @@ document.addEventListener('DOMContentLoaded', function() {
           await loadFromDb(inserted_component.componentId, inserted_component.id, path)
           break;
         }
+        //case duplicate append
+        if (inserted_element?.originalId) {
+          console.log(command);
+          // fieldset
+          treeElement = document.getElementById(inserted_element?.originalId);
+          // component
+          componentElement = document.getElementById(inserted_element.originalId.replace('-tree', ''));
 
+          // Duplicate the element
+          const newEl = componentElement.cloneNode(true);
+
+          // Set the id of the duplicated element to inserted_element.id
+          newEl.id = inserted_element.id;
+
+          console.log(newEl.id);
+
+          // Append the duplicated element to the componentElement
+          document.getElementById(target_element.replace('-tree', '')).appendChild(newEl);
+
+          // Duplicate the treeElement content
+          const newEl2 = treeElement.cloneNode(true);
+
+          // Set the id of the duplicated treeElement to inserted_element.id + '-tree'
+          newEl2.id = inserted_element.id;
+
+          // Update the button text in the duplicated treeElement
+          const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']");
+
+          // Attach event listeners to the buttons in the duplicated treeElement
+          const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']");
+          button.addEventListener('mouseover', mouseOverTree);
+          button.addEventListener('mouseout', mouseOutTree);
+
+          // Append the duplicated treeElement to the treeElement's parent
+          treeElement.parentNode.appendChild(newEl2);
+
+          break;
+        }
         //case insert tag
         if (inserted_element?.tagName) {
           console.log(command)
@@ -1316,6 +1418,45 @@ document.addEventListener('DOMContentLoaded', function() {
           console.log(inserted_component.componentId)
 
           await loadFromDb(inserted_component.componentId, inserted_component.id)
+          break;
+        }
+        //case duplicate insert before
+        if (inserted_element?.originalId) {
+          console.log(command);
+          // fieldset
+          treeElement = document.getElementById(inserted_element?.originalId);
+          // component
+          componentElement = document.getElementById(inserted_element.originalId.replace('-tree', ''));
+
+          // Duplicate the element
+          const newEl = componentElement.cloneNode(true);
+
+          // Set the id of the duplicated element to inserted_element.id
+          newEl.id = inserted_element.id;
+
+          console.log(newEl.id);
+
+          // Append the duplicated element to the componentElement
+          const compEl = document.getElementById(target_element.replace('-tree', ''))
+          compEl.parentNode.insertBefore(newEl, compEl);
+
+          // Duplicate the treeElement content
+          const newEl2 = treeElement.cloneNode(true);
+
+          // Set the id of the duplicated treeElement to inserted_element.id + '-tree'
+          newEl2.id = inserted_element.id;
+
+          // Update the button text in the duplicated treeElement
+          const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']");
+
+          // Attach event listeners to the buttons in the duplicated treeElement
+          const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']");
+          button.addEventListener('mouseover', mouseOverTree);
+          button.addEventListener('mouseout', mouseOutTree);
+
+          // Append the duplicated treeElement to the treeElement's parent
+          treeElement.parentNode.insertBefore(newEl2, treeElement)
+
           break;
         }
         //case insert tag
@@ -1383,7 +1524,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const originalElement = document.getElementById(target_element);
         const duplicatedElement = originalElement.cloneNode(true);
         //to do
-        duplicatedElement.id = duplicatedElement.id + '-copy'
+        duplicatedElement.id = inserted_element
 
         originalElement.parentNode.appendChild(duplicatedElement);
         break;
