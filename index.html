@@ -175,7 +175,7 @@
       </div>
 
       <div id="code-tree" style="position: relative;">
-        <fieldset  id="41412421-412412412-41241212-412412" data-element="code-tree-tag">
+        <fieldset id="41412421-412412412-41241212-412412" data-element="code-tree-tag">
           <legend>💬</legend>
           <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
           <button class="arrow" data-element="code-tree-show-hide-button"
@@ -560,11 +560,16 @@ document.addEventListener('DOMContentLoaded', function() {
       processElement(children[i]);
     }
 
-    document.addEventListener('mouseover', function (event) {
+    // Define the function to be removed
+    function handleMouseOver(event) {
       if (event.target.hasAttribute('data-visual-element')) {
         event.target.style.backgroundColor = 'pink';
       }
-    });
+    }
+
+    // Add the event listener
+    document.addEventListener('mouseover', handleMouseOver);
+
 
     document.addEventListener('mouseout', function (event) {
       if (event.target.hasAttribute('data-visual-element')) {
@@ -587,6 +592,7 @@ document.addEventListener('DOMContentLoaded', function() {
           addButton.innerHTML = '➕';
           addButton.onclick = function () {
             insertBefore(sibling.id, targetId);
+            document.addEventListener('mouseover', handleMouseOver);
           };
           sibling.parentNode.insertBefore(addButton, sibling);
         });
@@ -600,10 +606,11 @@ document.addEventListener('DOMContentLoaded', function() {
         addButton.innerHTML = '➕';
         addButton.onclick = function () {
           append(parentWithAppendChild.id, targetId);
+          document.addEventListener('mouseover', handleMouseOver);
         };
         parentWithAppendChild.appendChild(addButton);
       }
-
+      document.removeEventListener('mouseover', handleMouseOver);
       // You can perform additional actions here if needed
     }
     function generateNewId(originalId) {
@@ -803,14 +810,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('draggable');
         e.dataTransfer.setData('text/plain', e.target.id);
 
-        // Create the "+" button element
-        const plusButton = document.createElement('button');
-        plusButton.className = 'receive-target';
-        plusButton.innerHTML = '➕';
-
-        // Check if the parent has data-visual-appendchild
-        const parentWithAppendChild = e.target.parentElement.hasAttribute('data-visual-appendchild') && e.target.parentElement;
-
         // Check sibling for data-visual-insertBefore
         const siblingWithInsertBefore = e.target.parentElement && Array.from(e.target.parentElement.children).filter(
           child => child !== e.target && child.hasAttribute('data-visual-insertbefore')
@@ -820,65 +819,96 @@ document.addEventListener('DOMContentLoaded', function() {
           // Create the "+" button element with data attributes
           const plusButton = createButton('InsertBefore', sibling.id);
           sibling.parentNode.insertBefore(plusButton, sibling);
+          addHoverListeners(plusButton);
         });
+
+        // Check if the parent has data-visual-appendchild
+        const parentWithAppendChild = e.target.parentElement.hasAttribute('data-visual-appendchild') && e.target.parentElement;
 
         if (parentWithAppendChild) {
           // Create the "+" button element with data attributes
           const plusButton = createButton('Append', parentWithAppendChild.id);
           parentWithAppendChild.appendChild(plusButton);
+          addHoverListeners(plusButton);
         }
 
-        function createButton(action, elementId) {
-          const plusButton = document.createElement('button');
-          plusButton.className = 'receive-target';
-          plusButton.innerHTML = '➕';
-          plusButton.setAttribute('data-action', action);
-          plusButton.setAttribute('data-element-id', elementId);
-          return plusButton;
-        }
         // Update the dragover and drop event listeners
         document.addEventListener('dragover', handleDragOver);
         document.addEventListener('drop', handleDrop);
       }
-      visualOn = true
     }
 
-    // Function to handle the drag over an element
+    function createButton(action, elementId) {
+      const plusButton = document.createElement('button');
+      plusButton.className = 'receive-target';
+      plusButton.innerHTML = '➕';
+      plusButton.setAttribute('data-action', action);
+      plusButton.setAttribute('data-element-id', elementId);
+      return plusButton;
+    }
 
+    function addHoverListeners(plusButton) {
+      plusButton.addEventListener('dragenter', handleDragEnter);
+      plusButton.addEventListener('dragleave', handleDragLeave);
+    }
 
-    // Function to handle the drop on an element
-    // Function to handle the drop on an element
+    
     function handleDrop(e) {
       e.preventDefault();
 
       const draggedElementId = e.dataTransfer.getData('text/plain');
       const targetElementId = e.target.getAttribute('data-element-id');
       const action = e.target.getAttribute('data-action');
+
       // Log the element id and target element id
       console.log(`Element ID: ${draggedElementId}, Target Element ID: ${targetElementId} action ${action}`);
       if (targetElementId) {
         moveItem(targetElementId, draggedElementId, action)
-
       }
 
-      // Log the data attributes of the "+" button after drop
-      const plusButtons = document.querySelectorAll('.receive-target');
-      plusButtons.forEach(button => {
+      // Remove the drag-over class from the target element
+      if (e.target.classList.contains('receive-target')) {
+        e.target.classList.remove('drag-over');
+      }
 
-        button.parentNode.removeChild(button); // Remove the "+" button after logging the information
-      });
+      // Remove the "+" button after logging the information
+      const plusButtons = document.querySelectorAll('.receive-target');
+      plusButtons.forEach(button => button.parentNode.removeChild(button));
 
       // Reset the dragover and drop event listeners
       document.removeEventListener('dragover', handleDragOver);
       document.removeEventListener('drop', handleDrop);
     }
 
-    // Attach dragstart event listener to each draggable element
-    document.addEventListener('dragstart', handleDragStart);
+
 
     function handleDragOver(e) {
       e.preventDefault();
+
+      // Add the drag-over class to the target element
+      if (e.target.classList.contains('receive-target')) {
+        e.target.classList.add('drag-over');
+      }
     }
+
+    function handleDragEnter(e) {
+      e.preventDefault();
+
+      // Add the drag-over class to the target element
+      if (e.target.classList.contains('receive-target')) {
+        e.target.classList.add('drag-over');
+      }
+    }
+
+    function handleDragLeave(e) {
+      // Remove the drag-over class from the target element
+      if (e.target.classList.contains('receive-target')) {
+        e.target.classList.remove('drag-over');
+      }
+    }
+
+    document.addEventListener('dragstart', handleDragStart);
+    visualOn = true
   }
 
   function processElement(element) {
