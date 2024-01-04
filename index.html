@@ -776,12 +776,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Check for data-visual-duplicate siblings
         const siblingsWithDuplicate = Array.from(e.target.parentElement.children).filter(
-          sibling => sibling !== e.target && sibling.hasAttribute('data-visual-dublicate') && !isDuplicate(sibling)
+          sibling => sibling.hasAttribute('data-visual-dublicate') && !isDuplicate(sibling)
         );
 
         // Check for fieldset siblings containing data-visual-duplicate elements
         const fieldsetSiblings = Array.from(e.target.parentElement.parentElement.children).filter(
-          sibling => sibling !== e.target.parentElement && sibling.tagName === 'FIELDSET' &&
+          sibling =>sibling.tagName === 'FIELDSET' &&
             Array.from(sibling.querySelectorAll('[data-visual-dublicate]')).length > 0 &&
             !isDuplicate(sibling)
         );
@@ -796,7 +796,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Check sibling for data-visual-insertBefore
         const siblingWithInsertBefore = e.target.parentElement && Array.from(e.target.parentElement.children).filter(
-          child => child !== e.target && child.hasAttribute('data-visual-insertbefore')
+          child =>  child.hasAttribute('data-visual-insertbefore')
         );
 
 
