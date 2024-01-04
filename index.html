@@ -592,7 +592,8 @@ document.addEventListener('DOMContentLoaded', function() {
       console.log('t');
       console.log(parentWithAppendChild);
       console.log(siblingWithInsertBefore);
-
+      const original = document.getElementById(sourceId);
+      const originalRect = original.getBoundingClientRect();
       // Check if siblingWithInsertBefore is present
       if (siblingWithInsertBefore.length > 0) {
         // Insert <button class="receive-target">➕</button> before each siblingWithInsertBefore
@@ -625,8 +626,15 @@ document.addEventListener('DOMContentLoaded', function() {
         parentWithAppendChild.appendChild(addButton);
       }
       document.removeEventListener('mouseover', handleMouseOver);
+      const newElement = document.getElementById(sourceId);
+      const newRect = newElement.getBoundingClientRect();
+      window.scrollTo({
+        top: newRect.top - originalRect.top + window.scrollY,
+        behavior: 'auto' // You can use 'auto' or 'smooth' for smooth scrolling
+      });
       // You can perform additional actions here if needed
     }
+    
     function handleMouseOver1() {
       this.classList.add('drag-over'); // Add a class to apply hover effect
     }
@@ -801,13 +809,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Add entries for fieldset siblings
         fieldsetSiblings.forEach(fieldsetSibling => {
-          addMenuEntry(menu, `➕ ${fieldsetSibling.tagName.toLowerCase()}`, () => {
-            handleMenuEntryClick(e.target.id, sibling.id, siblingWithInsertBefore, parentWithAppendChild);
+          addMenuEntry(menu, `➕ ${fieldsetSibling.children[1].tagName.toLowerCase()}`, () => {
+            handleMenuEntryClick(e.target.id, fieldsetSibling.id, siblingWithInsertBefore, parentWithAppendChild, true);
           });
         });
 
         // Adjust the position relative to the viewport
-        const offsetX = e.pageX ;
+        const offsetX = e.pageX;
         const offsetY = e.pageY;
 
         menu.style.display = 'block';
@@ -942,7 +950,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (element.hasAttribute("data-visual-border")) {
       // Create a new fieldset element
       var fieldset = document.createElement("fieldset");
-
+      for (var i = 0; i < element.attributes.length; i++) {
+        var attr = element.attributes[i];
+        fieldset.setAttribute(attr.name, attr.value);
+      }
       // Set the id of the fieldset to be the id of the original element + "-fieldset"
       fieldset.id = element.id + "-fieldset";
       fieldset.className = "tag-fs";
