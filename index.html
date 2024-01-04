@@ -634,7 +634,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
       // You can perform additional actions here if needed
     }
-    
+
     function handleMouseOver1() {
       this.classList.add('drag-over'); // Add a class to apply hover effect
     }
@@ -838,7 +838,8 @@ document.addEventListener('DOMContentLoaded', function() {
       if (isDraggable(e.target)) {
         console.log('draggable');
         e.dataTransfer.setData('text/plain', e.target.id);
-
+        const original = document.getElementById(e.target.id);
+        const originalRect = original.getBoundingClientRect();
         // Check sibling for data-visual-insertBefore
         const siblingWithInsertBefore = e.target.parentElement && Array.from(e.target.parentElement.children).filter(
           child => child !== e.target && child.hasAttribute('data-visual-insertbefore')
@@ -860,7 +861,12 @@ document.addEventListener('DOMContentLoaded', function() {
           parentWithAppendChild.appendChild(plusButton);
           addHoverListeners(plusButton);
         }
-
+        const newElement = document.getElementById(e.target.id);
+        const newRect = newElement.getBoundingClientRect();
+        window.scrollTo({
+          top: newRect.top - originalRect.top + window.scrollY,
+          behavior: 'auto' // You can use 'auto' or 'smooth' for smooth scrolling
+        });
         // Update the dragover and drop event listeners
         document.addEventListener('dragover', handleDragOver);
         document.addEventListener('drop', handleDrop);
