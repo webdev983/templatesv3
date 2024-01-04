@@ -588,7 +588,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-    function handleMenuEntryClick(sourceId, targetId, siblingWithInsertBefore, parentWithAppendChild,flag) {
+    function handleMenuEntryClick(sourceId, targetId, siblingWithInsertBefore, parentWithAppendChild, flag) {
       console.log('t');
       console.log(parentWithAppendChild);
       console.log(siblingWithInsertBefore);
@@ -602,7 +602,7 @@ document.addEventListener('DOMContentLoaded', function() {
           addButton.className = 'receive-target';
           addButton.innerHTML = '➕';
           addButton.onclick = function () {
-            insertBefore(sibling.id, targetId,flag);
+            insertBefore(sibling.id, targetId, flag);
             document.addEventListener('mouseover', handleMouseOver);
           };
           addButton.addEventListener('mouseover', handleMouseOver1);
@@ -618,7 +618,7 @@ document.addEventListener('DOMContentLoaded', function() {
         addButton.className = 'receive-target';
         addButton.innerHTML = '➕';
         addButton.onclick = function () {
-          append(parentWithAppendChild.id, targetId,flag);
+          append(parentWithAppendChild.id, targetId, flag);
           document.addEventListener('mouseover', handleMouseOver);
         };
         addButton.addEventListener('mouseover', handleMouseOver1);
@@ -668,19 +668,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Example function, adjust as needed
-    async function insertBefore(nextElementId, selectedElementId,flag) {
+    async function insertBefore(nextElementId, selectedElementId, flag) {
       const actionObject = {
         time: (new Date()).getTime(),
         action: 'InsertBefore',
         target_element: nextElementId + '-tree',
         inserted_element: { originalId: selectedElementId + '-tree', id: duplicateId(selectedElementId + '-tree', generateNewCopyNumber(selectedElementId + '-tree')) },
       };
-      await pushAction(actionObject,false,flag);
+      await pushAction(actionObject, false, flag);
       removeReceiveButtons();
     }
 
     // Example function, adjust as needed
-    async function append(parentId, selectedElementId,flag) {
+    async function append(parentId, selectedElementId, flag) {
       // Perform additional actions if needed
       const actionObject = {
         time: (new Date()).getTime(),
@@ -688,7 +688,7 @@ document.addEventListener('DOMContentLoaded', function() {
         target_element: parentId + '-tree',
         inserted_element: { originalId: selectedElementId + '-tree', id: duplicateId(selectedElementId + '-tree', generateNewCopyNumber(selectedElementId + '-tree')) },
       };
-      await pushAction(actionObject,false,flag);
+      await pushAction(actionObject, false, flag);
       removeReceiveButtons();
     }
 
@@ -773,18 +773,38 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('in11');
         const menu = document.querySelector('#right-click-menu'); // Use # for ID selector
         menu.innerHTML = '';
+        let siblingsWithDuplicate
+        let fieldsetSiblings
+        if (
+          e.target.parentElement.id === e.target.id + '-fieldset') {
+          // Check for data-visual-duplicate siblings
+          console.log('case1')
+          siblingsWithDuplicate = Array.from(e.target.parentElement.parentElement.children).filter(
+            sibling => sibling.hasAttribute('data-visual-dublicate') && !isDuplicate(sibling)
+          );
 
-        // Check for data-visual-duplicate siblings
-        const siblingsWithDuplicate = Array.from(e.target.parentElement.children).filter(
-          sibling => sibling.hasAttribute('data-visual-dublicate') && !isDuplicate(sibling)
-        );
+          // Check for fieldset siblings containing data-visual-duplicate elements
+          fieldsetSiblings = Array.from(e.target.parentElement.parentElement.children).filter(
+            sibling => sibling.tagName === 'FIELDSET' &&
+              Array.from(sibling.querySelectorAll('[data-visual-dublicate]')).length > 0 &&
+              !isDuplicate(sibling)
+          );
+        }
+        else {
+          console.log('case2')
+          // Check for data-visual-duplicate siblings
+          siblingsWithDuplicate = Array.from(e.target.parentElement.children).filter(
+            sibling => sibling.hasAttribute('data-visual-dublicate') && !isDuplicate(sibling)
+          );
 
-        // Check for fieldset siblings containing data-visual-duplicate elements
-        const fieldsetSiblings = Array.from(e.target.parentElement.parentElement.children).filter(
-          sibling =>sibling.tagName === 'FIELDSET' &&
-            Array.from(sibling.querySelectorAll('[data-visual-dublicate]')).length > 0 &&
-            !isDuplicate(sibling)
-        );
+          // Check for fieldset siblings containing data-visual-duplicate elements
+          fieldsetSiblings = Array.from(e.target.parentElement.children).filter(
+            sibling => sibling.tagName === 'FIELDSET' &&
+              Array.from(sibling.querySelectorAll('[data-visual-dublicate]')).length > 0 &&
+              !isDuplicate(sibling)
+          );
+        }
+
 
         function isDuplicate(element) {
           return element.id.includes('-copy-');
@@ -796,7 +816,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Check sibling for data-visual-insertBefore
         const siblingWithInsertBefore = e.target.parentElement && Array.from(e.target.parentElement.children).filter(
-          child =>  child.hasAttribute('data-visual-insertbefore')
+          child => child.hasAttribute('data-visual-insertbefore')
         );
 
 
@@ -956,10 +976,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (element.hasAttribute("data-visual-border")) {
       // Create a new fieldset element
       var fieldset = document.createElement("fieldset");
-      for (var i = 0; i < element.attributes.length; i++) {
-        var attr = element.attributes[i];
-        fieldset.setAttribute(attr.name, attr.value);
-      }
+
       // Set the id of the fieldset to be the id of the original element + "-fieldset"
       fieldset.id = element.id + "-fieldset";
       fieldset.className = "tag-fs";
@@ -1309,10 +1326,10 @@ document.addEventListener('DOMContentLoaded', function() {
       return v.toString(16);
     });
   }
-  const pushAction = async (e, firstLoad,visual) => {
+  const pushAction = async (e, firstLoad, visual) => {
     actionLog.push(e)
     !firstLoad && pushActionToDb(e)
-    await executeCommand(e,undefined,visual)
+    await executeCommand(e, undefined, visual)
     insertDataIntoCodeLog(e.time, e.action)
   }
   const pushActionToDb = async (action) => {
@@ -1362,7 +1379,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Insert the cloned element before the original element
     parent.insertBefore(clonedElement, originalElement);
   }
-  const executeCommand = async (command, path,visual) => {
+  const executeCommand = async (command, path, visual) => {
     const { action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
     let treeElement
     let componentElement
@@ -1507,19 +1524,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
           // Duplicate the element
           let newEl = componentElement.cloneNode(true);
-          
+
           // Set the id of the duplicated element to inserted_element.id
           newEl.id = inserted_element.id.replace('-tree', '');
           newEl.textContent = newEl.tagName.toLowerCase();
           console.log(newEl.id);
 
           // Append the duplicated element to the componentElement
-          if(visual){
+          if (visual) {
             document.getElementById(target_element.replace('-tree', '')).parentNode.appendChild(newEl);
             processElement(newEl)
           }
-          else{
-          document.getElementById(target_element.replace('-tree', '')).appendChild(newEl);
+          else {
+            document.getElementById(target_element.replace('-tree', '')).appendChild(newEl);
           }
           // Duplicate the treeElement content
           const newEl2 = treeElement.cloneNode(true);
@@ -1536,10 +1553,10 @@ document.addEventListener('DOMContentLoaded', function() {
           button.addEventListener('mouseout', mouseOutTree);
 
           // Append the duplicated treeElement to the treeElement's parent
-          
-            treeElement.parentNode.appendChild(newEl2);
-          
-          
+
+          treeElement.parentNode.appendChild(newEl2);
+
+
           function updateChildIdsRecursive(element, prefix) {
             element.querySelectorAll('[id]').forEach(child => {
               const newId = prefix + child.id;
@@ -1634,11 +1651,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
           // Append the duplicated element to the componentElement
           const compEl = document.getElementById(target_element.replace('-tree', ''))
-          if(visual){
+          if (visual) {
             compEl.parentNode.parentNode.insertBefore(newEl, compEl.parentNode);
             processElement(newEl)
           }
-          else{
+          else {
             compEl.parentNode.insertBefore(newEl, compEl);
           }
           // Duplicate the treeElement content
