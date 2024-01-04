@@ -593,6 +593,7 @@ document.addEventListener('DOMContentLoaded', function() {
       console.log('t');
       console.log(parentWithAppendChild);
       console.log(siblingWithInsertBefore);
+      removeButtons()
       const original = document.getElementById(sourceId);
       const originalRect = original.getBoundingClientRect();
       // Check if siblingWithInsertBefore is present
@@ -924,7 +925,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function handleDragStart(e) {
       if (isDraggable(e.target)) {
+        
         console.log('draggable');
+        removeButtons()
         e.dataTransfer.setData('text/plain', e.target.id);
         const original = document.getElementById(e.target.id);
         const originalRect = original.getBoundingClientRect();
@@ -1007,16 +1010,18 @@ document.addEventListener('DOMContentLoaded', function() {
         e.target.classList.remove('drag-over');
       }
 
-      // Remove the "+" button after logging the information
-      const plusButtons = document.querySelectorAll('.receive-target');
-      plusButtons.forEach(button => button.parentNode.removeChild(button));
-
+      
+      removeButtons()
       // Reset the dragover and drop event listeners
       document.removeEventListener('dragover', handleDragOver);
       document.removeEventListener('drop', handleDrop);
     }
 
-
+    function removeButtons(){
+      // Remove the "+" button after logging the information
+      const plusButtons = document.querySelectorAll('.receive-target');
+      plusButtons.forEach(button => button.parentNode.removeChild(button));
+    }
 
     function handleDragOver(e) {
       e.preventDefault();
