@@ -588,7 +588,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-    function handleMenuEntryClick(sourceId, targetId, siblingWithInsertBefore, parentWithAppendChild) {
+    function handleMenuEntryClick(sourceId, targetId, siblingWithInsertBefore, parentWithAppendChild,flag) {
       console.log('t');
       console.log(parentWithAppendChild);
       console.log(siblingWithInsertBefore);
@@ -602,7 +602,7 @@ document.addEventListener('DOMContentLoaded', function() {
           addButton.className = 'receive-target';
           addButton.innerHTML = '➕';
           addButton.onclick = function () {
-            insertBefore(sibling.id, targetId);
+            insertBefore(sibling.id, targetId,flag);
             document.addEventListener('mouseover', handleMouseOver);
           };
           addButton.addEventListener('mouseover', handleMouseOver1);
@@ -618,7 +618,7 @@ document.addEventListener('DOMContentLoaded', function() {
         addButton.className = 'receive-target';
         addButton.innerHTML = '➕';
         addButton.onclick = function () {
-          append(parentWithAppendChild.id, targetId);
+          append(parentWithAppendChild.id, targetId,flag);
           document.addEventListener('mouseover', handleMouseOver);
         };
         addButton.addEventListener('mouseover', handleMouseOver1);
@@ -668,19 +668,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Example function, adjust as needed
-    function insertBefore(nextElementId, selectedElementId) {
+    async function insertBefore(nextElementId, selectedElementId,flag) {
       const actionObject = {
         time: (new Date()).getTime(),
         action: 'InsertBefore',
         target_element: nextElementId + '-tree',
         inserted_element: { originalId: selectedElementId + '-tree', id: duplicateId(selectedElementId + '-tree', generateNewCopyNumber(selectedElementId + '-tree')) },
       };
-      pushAction(actionObject);
+      await pushAction(actionObject,false,flag);
       removeReceiveButtons();
     }
 
     // Example function, adjust as needed
-    function append(parentId, selectedElementId) {
+    async function append(parentId, selectedElementId,flag) {
       // Perform additional actions if needed
       const actionObject = {
         time: (new Date()).getTime(),
@@ -688,7 +688,7 @@ document.addEventListener('DOMContentLoaded', function() {
         target_element: parentId + '-tree',
         inserted_element: { originalId: selectedElementId + '-tree', id: duplicateId(selectedElementId + '-tree', generateNewCopyNumber(selectedElementId + '-tree')) },
       };
-      pushAction(actionObject);
+      await pushAction(actionObject,false,flag);
       removeReceiveButtons();
     }
 
@@ -1309,10 +1309,10 @@ document.addEventListener('DOMContentLoaded', function() {
       return v.toString(16);
     });
   }
-  const pushAction = async (e, firstLoad) => {
+  const pushAction = async (e, firstLoad,visual) => {
     actionLog.push(e)
     !firstLoad && pushActionToDb(e)
-    await executeCommand(e)
+    await executeCommand(e,undefined,visual)
     insertDataIntoCodeLog(e.time, e.action)
   }
   const pushActionToDb = async (action) => {
@@ -1362,7 +1362,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Insert the cloned element before the original element
     parent.insertBefore(clonedElement, originalElement);
   }
-  const executeCommand = async (command, path) => {
+  const executeCommand = async (command, path,visual) => {
     const { action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
     let treeElement
     let componentElement
@@ -1506,16 +1506,21 @@ document.addEventListener('DOMContentLoaded', function() {
           componentElement = document.getElementById(inserted_element.originalId.replace('-tree', ''));
 
           // Duplicate the element
-          const newEl = componentElement.cloneNode(true);
-
+          let newEl = componentElement.cloneNode(true);
+          
           // Set the id of the duplicated element to inserted_element.id
           newEl.id = inserted_element.id.replace('-tree', '');
           newEl.textContent = newEl.tagName.toLowerCase();
           console.log(newEl.id);
 
           // Append the duplicated element to the componentElement
+          if(visual){
+            document.getElementById(target_element.replace('-tree', '')).parentNode.appendChild(newEl);
+            processElement(newEl)
+          }
+          else{
           document.getElementById(target_element.replace('-tree', '')).appendChild(newEl);
-
+          }
           // Duplicate the treeElement content
           const newEl2 = treeElement.cloneNode(true);
 
@@ -1531,7 +1536,10 @@ document.addEventListener('DOMContentLoaded', function() {
           button.addEventListener('mouseout', mouseOutTree);
 
           // Append the duplicated treeElement to the treeElement's parent
-          treeElement.parentNode.appendChild(newEl2);
+          
+            treeElement.parentNode.appendChild(newEl2);
+          
+          
           function updateChildIdsRecursive(element, prefix) {
             element.querySelectorAll('[id]').forEach(child => {
               const newId = prefix + child.id;
@@ -1626,8 +1634,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
           // Append the duplicated element to the componentElement
           const compEl = document.getElementById(target_element.replace('-tree', ''))
-          compEl.parentNode.insertBefore(newEl, compEl);
-
+          if(visual){
+            compEl.parentNode.parentNode.insertBefore(newEl, compEl.parentNode);
+            processElement(newEl)
+          }
+          else{
+            compEl.parentNode.insertBefore(newEl, compEl);
+          }
           // Duplicate the treeElement content
           const newEl2 = treeElement.cloneNode(true);
 
