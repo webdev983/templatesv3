@@ -555,12 +555,13 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   let visualOn = false
   function transformToVisual(event) {
-    event.target.classList.add('b-selected');
+
 
     if (visualOn) {
       return;
     }
-
+    event.target.classList.add('b-selected');
+    visualOn = true
     console.log('transforming');
     var generatedPage = document.getElementById("generated-page");
 
@@ -774,12 +775,12 @@ document.addEventListener('DOMContentLoaded', function() {
             target_element: id,
 
           })
-          const el =document.getElementById(event.target.id+ '-fieldset')
-          if(el){
+          const el = document.getElementById(event.target.id + '-fieldset')
+          if (el) {
             el.remove()
-          } 
+          }
         }
-        else{
+        else {
           alert('last element')
         }
         return
@@ -832,6 +833,8 @@ document.addEventListener('DOMContentLoaded', function() {
         menu.innerHTML = '';
         let siblingsWithDuplicate
         let fieldsetSiblings
+        let parentWithAppendChild
+        let siblingWithInsertBefore
         if (
           e.target.parentElement.id === e.target.id + '-fieldset') {
           // Check for data-visual-duplicate siblings
@@ -845,6 +848,13 @@ document.addEventListener('DOMContentLoaded', function() {
             sibling => sibling.tagName === 'FIELDSET' &&
               Array.from(sibling.querySelectorAll('[data-visual-dublicate]')).length > 0 &&
               !isDuplicate(sibling)
+          );
+          // Check if parent has data-visual-appendChild
+          parentWithAppendChild = e.target.parentElement.parentElement.hasAttribute('data-visual-appendchild') && e.target.parentElement.parentElement;
+
+          // Check sibling for data-visual-insertBefore
+          siblingWithInsertBefore = e.target.parentElement.parentElement && Array.from(e.target.parentElement.parentElement.children).filter(
+            child => child.hasAttribute('data-visual-insertbefore') || (child.id.endsWith('-fieldset') && child.children[1].hasAttribute('data-visual-insertbefore'))
           );
         }
         else {
@@ -860,6 +870,14 @@ document.addEventListener('DOMContentLoaded', function() {
               Array.from(sibling.querySelectorAll('[data-visual-dublicate]')).length > 0 &&
               !isDuplicate(sibling)
           );
+          // Check if parent has data-visual-appendChild
+          parentWithAppendChild = e.target.parentElement.hasAttribute('data-visual-appendchild') && e.target.parentElement;
+
+          // Check sibling for data-visual-insertBefore
+          siblingWithInsertBefore = e.target.parentElement && Array.from(e.target.parentElement.children).filter(
+            child => child.hasAttribute('data-visual-insertbefore')
+          );
+
         }
 
 
@@ -868,13 +886,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         console.log(JSON.stringify([...fieldsetSiblings, ...siblingsWithDuplicate]));
 
-        // Check if parent has data-visual-appendChild
-        const parentWithAppendChild = e.target.parentElement.hasAttribute('data-visual-appendchild') && e.target.parentElement;
-
-        // Check sibling for data-visual-insertBefore
-        const siblingWithInsertBefore = e.target.parentElement && Array.from(e.target.parentElement.children).filter(
-          child => child.hasAttribute('data-visual-insertbefore')
-        );
 
 
         // Add entries for data-visual-duplicate siblings
@@ -917,21 +928,34 @@ document.addEventListener('DOMContentLoaded', function() {
         e.dataTransfer.setData('text/plain', e.target.id);
         const original = document.getElementById(e.target.id);
         const originalRect = original.getBoundingClientRect();
-        // Check sibling for data-visual-insertBefore
-        const siblingWithInsertBefore = e.target.parentElement && Array.from(e.target.parentElement.children).filter(
-          child => child !== e.target && child.hasAttribute('data-visual-insertbefore')
-        );
+        let siblingWithInsertBefore
+        let parentWithAppendChild
+        if (
+          e.target.parentElement.id === e.target.id + '-fieldset') {
+          // Check sibling for data-visual-insertBefore
+          siblingWithInsertBefore = e.target.parentElement.parentElement && Array.from(e.target.parentElement.parentElement.children).filter(
+            child => child.hasAttribute('data-visual-insertbefore') || (child.id.endsWith('-fieldset') && child.children[1].hasAttribute('data-visual-insertbefore'))
+          );
 
+          // Check if the parent has data-visual-appendchild
+          parentWithAppendChild = e.target.parentElement.parentElement.hasAttribute('data-visual-appendchild') && e.target.parentElement.parentElement;
+
+        }
+        else {
+          // Check sibling for data-visual-insertBefore
+          siblingWithInsertBefore = e.target.parentElement && Array.from(e.target.parentElement.children).filter(
+            child => child !== e.target && child.hasAttribute('data-visual-insertbefore')
+          );
+
+          // Check if the parent has data-visual-appendchild
+          parentWithAppendChild = e.target.parentElement.hasAttribute('data-visual-appendchild') && e.target.parentElement;
+        }
         siblingWithInsertBefore.forEach(sibling => {
           // Create the "+" button element with data attributes
           const plusButton = createButton('InsertBefore', sibling.id);
           sibling.parentNode.insertBefore(plusButton, sibling);
           addHoverListeners(plusButton);
         });
-
-        // Check if the parent has data-visual-appendchild
-        const parentWithAppendChild = e.target.parentElement.hasAttribute('data-visual-appendchild') && e.target.parentElement;
-
         if (parentWithAppendChild) {
           // Create the "+" button element with data attributes
           const plusButton = createButton('Append', parentWithAppendChild.id);
