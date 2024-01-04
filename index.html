@@ -751,7 +751,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
       const textareaValue = event.target.textContent;
+      if (!textareaValue) {
+        function findRelatedElements(inputId) {
+          // Step 1: Remove the -tree suffix
 
+          // Step 2: If it ends with -copy-x, remove that part
+          let modifiedId = inputId.replace(/-copy-\d+$/, '');
+
+          // Step 3: Query for elements starting with the modified ID
+          const selector = '[id^="' + modifiedId + '"]';
+          const matchingElements = document.querySelectorAll(selector);
+
+          // Step 4: Filter to get only elements that end with -tree
+          const filteredElements = Array.from(matchingElements).filter(element => element.id.endsWith('-tree'));
+
+          return Array.from(filteredElements).length
+        }
+        if (findRelatedElements(event.target.id) > 1) {
+          pushAction({
+            time: (new Date()).getTime(),
+            action: 'removeTag',
+            target_element: id,
+
+          })
+          const el =document.getElementById(event.target.id+ '-fieldset')
+          if(el){
+            el.remove()
+          } 
+        }
+        else{
+          alert('last element')
+        }
+        return
+      }
 
       const el = {
         time: (new Date()).getTime(),
