@@ -743,7 +743,26 @@ document.addEventListener('DOMContentLoaded', function() {
       entry.onclick = clickHandler;
       menu.appendChild(entry);
     }
+    function saveT(event) {
+      const id = event.target.id + '-tree'
+      const action = 'textContent'
+      console.log('ac' + action)
 
+
+
+      const textareaValue = event.target.textContent;
+
+
+      const el = {
+        time: (new Date()).getTime(),
+        action,
+        target_element: id,
+        value: textareaValue,
+
+      }
+      console.log('ac' + JSON.stringify(el))
+      pushAction(el)
+    }
     function onDoubleClick(e) {
       // Get the element that was double-clicked
       var target = e.target;
@@ -761,6 +780,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Set focus on the editable element
         target.focus();
+
+
+        target.addEventListener('blur', function (blurEvent) {
+          // Call the saveT function when the element loses focus
+          saveT(blurEvent);
+        });
       }
     }
 
