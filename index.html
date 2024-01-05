@@ -97,18 +97,18 @@
 <div class="left-side-panel">
   <div id="move_started" style="border-radius: 10px;"></div>
   <div>
-    <button  class="b-4" disabled id="last-action-time" style="color: black;">⏳</button>
+    <button class="b-4" disabled id="last-action-time" style="color: black;">⏳</button>
 
   </div>
   <div id="nav-buttons">
     <a href="https://webdev983.github.io/templatesv3/files">
       <button class="b-1">📂</button></a>
-      <!-- <a href="https://webdev983.github.io/templatesv3/orders">
+    <!-- <a href="https://webdev983.github.io/templatesv3/orders">
         <button class="b-1">🛍️</button></a>  
         <a href="https://webdev983.github.io/templatesv3/orders">
           <button class="b-1"><label style="font-style: italic; font-weight: bold; padding-right: 2px; font-size: 0.9em;">PP</label></button></a>  -->
-    </div>
-<div style="margin-top: 30px;">
+  </div>
+  <div style="margin-top: 30px;">
     <button class="b-1" title="visual editor" onclick="transformToVisual(event)">👁️</button>
     <!--<button class="b-1" title="revert last action">↩️</button>
     <button class="b-1" title="redo last action">↪️</button>-->
@@ -127,7 +127,7 @@
       <tr id="code-log-element">
         <td data-type-code-log="action-time"><span id="code-log-action-time">1703707728031</span></td>
         <td data-type-code-log="action-name"><span id="code-log-action">append child</span></td>
-        <td><button data-type-code-log="action-remove" class="b-5">&#128465;</button></td>
+        <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button></td>
       </tr>
     </tbody>
   </table>
@@ -588,6 +588,19 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
+    function clickRemoveButton(clickEvent) {
+      // Check if the clicked element or its ancestor is a button
+      const isButton = clickEvent.target.closest('.receive-target');
+
+      // Check if the clicked element or its ancestor has the class 'menu-option'
+      const isMenuOption = clickEvent.target.closest('.menu-option');
+
+      if (!isButton && !isMenuOption) {
+        // If the clicked element is not a button and not inside an element with class 'menu-option', remove the buttons
+        removeButtons();
+      }
+    }
+
     function handleMenuEntryClick(sourceId, targetId, siblingWithInsertBefore, parentWithAppendChild, flag) {
       console.log('t');
       console.log(parentWithAppendChild);
@@ -604,6 +617,7 @@ document.addEventListener('DOMContentLoaded', function() {
           addButton.innerHTML = '➕';
           addButton.onclick = function () {
             insertBefore(sibling.id, targetId, flag);
+            document.removeEventListener('click', clickRemoveButton);
             document.addEventListener('mouseover', handleMouseOver);
           };
           addButton.addEventListener('mouseover', handleMouseOver1);
@@ -620,6 +634,7 @@ document.addEventListener('DOMContentLoaded', function() {
         addButton.innerHTML = '➕';
         addButton.onclick = function () {
           append(parentWithAppendChild.id, targetId, flag);
+          document.removeEventListener('click', clickRemoveButton);
           document.addEventListener('mouseover', handleMouseOver);
         };
         addButton.addEventListener('mouseover', handleMouseOver1);
@@ -627,6 +642,7 @@ document.addEventListener('DOMContentLoaded', function() {
         parentWithAppendChild.appendChild(addButton);
       }
       document.removeEventListener('mouseover', handleMouseOver);
+      document.addEventListener('click', clickRemoveButton);
       const newElement = document.getElementById(sourceId);
       const newRect = newElement.getBoundingClientRect();
       window.scrollTo({
@@ -744,7 +760,7 @@ document.addEventListener('DOMContentLoaded', function() {
       entry.onclick = clickHandler;
       menu.appendChild(entry);
     }
-    function saveT(event) {
+    function saveT(event,previousValue) {
       const id = event.target.id + '-tree'
       const action = 'textContent'
       console.log('ac' + action)
@@ -752,6 +768,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
       const textareaValue = event.target.textContent;
+      if(textareaValue === previousValue){
+        event.target.removeAttribute('contenteditable')
+        return textareaValue
+      }
       if (!textareaValue) {
         function findRelatedElements(inputId) {
           // Step 1: Remove the -tree suffix
@@ -795,6 +815,8 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       console.log('ac' + JSON.stringify(el))
       pushAction(el)
+      event.target.removeAttribute('contenteditable')
+      return textareaValue
     }
     function onDoubleClick(e) {
       // Get the element that was double-clicked
@@ -814,10 +836,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Set focus on the editable element
         target.focus();
 
-
+        let textContent = target.textContent
         target.addEventListener('blur', function (blurEvent) {
           // Call the saveT function when the element loses focus
-          saveT(blurEvent);
+          textContent && (textContent = saveT(blurEvent,textContent))
         });
       }
     }
@@ -924,7 +946,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function handleDragStart(e) {
       if (isDraggable(e.target)) {
-        
+
         console.log('draggable');
         removeButtons()
         e.dataTransfer.setData('text/plain', e.target.id);
@@ -966,6 +988,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         const newElement = document.getElementById(e.target.id);
         const newRect = newElement.getBoundingClientRect();
+        console.log(window.scrollY)
+        console.log(newRect.top)
+        console.log(originalRect.top)
         window.scrollTo({
           top: newRect.top - originalRect.top + window.scrollY,
           behavior: 'auto' // You can use 'auto' or 'smooth' for smooth scrolling
@@ -1009,14 +1034,14 @@ document.addEventListener('DOMContentLoaded', function() {
         e.target.classList.remove('drag-over');
       }
 
-      
+
       removeButtons()
       // Reset the dragover and drop event listeners
       document.removeEventListener('dragover', handleDragOver);
       document.removeEventListener('drop', handleDrop);
     }
 
-    function removeButtons(){
+    function removeButtons() {
       // Remove the "+" button after logging the information
       const plusButtons = document.querySelectorAll('.receive-target');
       plusButtons.forEach(button => button.parentNode.removeChild(button));
@@ -1411,11 +1436,72 @@ document.addEventListener('DOMContentLoaded', function() {
       return v.toString(16);
     });
   }
-  const pushAction = async (e, firstLoad, visual) => {
-    actionLog.push(e)
-    !firstLoad && pushActionToDb(e)
-    await executeCommand(e, undefined, visual)
-    insertDataIntoCodeLog(e.time, e.action)
+  async function deleteAction(e) {
+
+    event.preventDefault();
+
+    // Access the parent element of the clicked button
+    const parentRow = event.target.closest('tr');
+
+    if (parentRow) {
+      // Find the span with id "code-log-action-time" within the parent element
+      //delete action from db
+      await deleteActionFromDb(parentRow)
+      location.reload();
+    }
+
+
+    //regenerate page
+  }
+  function deleteActionFromLog(row) {
+    row.remove()
+    //add remove to next
+  }
+  async function deleteActionFromDb(parentRow) {
+    const actionTimeElement = parentRow.querySelector('#code-log-action-time');
+
+    if (actionTimeElement) {
+      // Retrieve the action time value
+      const actionTime = actionTimeElement.textContent;
+
+      // Construct the URL for the delete request
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      const id = urlSearchParams.get('id');
+      const deleteUrl = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:${actionTime}`;
+
+      try {
+        // Send the delete request using the fetch API
+        const response = await fetch(deleteUrl, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            // Add any additional headers if needed
+          },
+          // You can include a request body if necessary
+          // body: JSON.stringify({ action: actionName }),
+        });
+
+        if (response.ok) {
+          // Delete was successful, you can handle the response or perform additional actions
+          console.log('Action deleted successfully');
+        } else {
+          // Delete request failed, handle the error
+          console.error('Error deleting action:', response.statusText);
+        }
+      } catch (error) {
+        // An error occurred while processing the request
+        console.error('Error:', error.message);
+      }
+    }
+  }
+  const pushAction = async (element, firstLoad, visual) => {
+    console.log(JSON.stringify(element))
+    const time = element.time
+    console.log('time' + time)
+    actionLog.push(element)
+    !firstLoad && pushActionToDb(element)
+    await executeCommand(element, undefined, visual)
+    insertDataIntoCodeLog(time, element.action)
   }
   const pushActionToDb = async (action) => {
     const urlSearchParams = new URLSearchParams(window.location.search);
@@ -2149,7 +2235,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
   }
-  document.addEventListener('DOMContentLoaded', async function () {
+  document.addEventListener('DOMContentLoaded',loadFirst);
+  async function loadFirst() {
 
     const loadingScreen = document.getElementById('loading');
     loadingScreen.style.display = 'flex';
@@ -2193,7 +2280,7 @@ document.addEventListener('DOMContentLoaded', function() {
     lastActionTime.textContent = timerElement.textContent;
     loadingScreen.style.display = 'none';
 
-  });
+  }
   const save = async (event) => {
     const parent = event.target.parentNode
     const { id } = parent
