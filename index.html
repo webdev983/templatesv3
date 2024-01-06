@@ -97,7 +97,7 @@
 <div class="left-side-panel">
   <div id="move_started" style="border-radius: 10px;"></div>
   <div>
-    <button class="b-4" disabled id="last-action-time" style="color: black;">⏳</button>
+    <button class="b-4" id="last-action-time" style="color: black;z-index:1;">⏳</button>
 
   </div>
   <div id="nav-buttons">
@@ -474,7 +474,8 @@
 
 <!--loading screen-->
 <div id="loading"
-  style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 900;">
+  style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 2;">
+  
   <span style="font-size: 10.2em; color: white;">⏳</span>
   <div id="timer" style="font-size: 2em; color: white;">1.12</div>
 </div>
@@ -857,6 +858,18 @@ document.addEventListener('DOMContentLoaded', function() {
         let fieldsetSiblings
         let parentWithAppendChild
         let siblingWithInsertBefore
+        console.log('tag ' + e.target.tagName)
+        const redirectToImgPage = (imgId,src)=>{
+          const urlSearchParams = new URLSearchParams(window.location.search);
+          const id = urlSearchParams.get('id');
+          console.log('in1')
+          window.location.href = `gallery.html?id=${id}&imgId=${imgId}&src=${src}`;
+        }
+        if(e.target.tagName.toLowerCase() ==='img'){
+          addMenuEntry(menu, `➕ edit image`, () => {
+            redirectToImgPage(e.target.id,e.target.getAttribute('src'))
+          });
+        }
         if (
           e.target.parentElement.id === e.target.id + '-fieldset') {
           // Check for data-visual-duplicate siblings
@@ -1500,8 +1513,9 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('time' + time)
     actionLog.push(element)
     !firstLoad && pushActionToDb(element)
-    await executeCommand(element, undefined, visual)
     insertDataIntoCodeLog(time, element.action)
+
+    await executeCommand(element, undefined, visual)
   }
   const pushActionToDb = async (action) => {
     const urlSearchParams = new URLSearchParams(window.location.search);
@@ -2019,6 +2033,7 @@ document.addEventListener('DOMContentLoaded', function() {
     clearInterval(interval);
     console.log(timerElement.textContent)
     const lastActionTime = document.getElementById('last-action-time');
+    
     lastActionTime.textContent = timerElement.textContent;
   }
   function openAttributeContent(event) {
@@ -2237,7 +2252,12 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   document.addEventListener('DOMContentLoaded',loadFirst);
   async function loadFirst() {
-
+    const lastActionTime = document.getElementById('last-action-time');
+      lastActionTime.addEventListener('dblclick', function () {
+      // Handle double-click event here
+      console.log('Double-clicked on the button');
+      // Add your custom logic for double-click handling
+    });
     const loadingScreen = document.getElementById('loading');
     loadingScreen.style.display = 'flex';
     const timerElement = document.getElementById('timer');
@@ -2276,7 +2296,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     clearInterval(interval);
     console.log(timerElement.textContent)
-    const lastActionTime = document.getElementById('last-action-time');
+    
     lastActionTime.textContent = timerElement.textContent;
     loadingScreen.style.display = 'none';
 
