@@ -87,17 +87,18 @@
   var src = urlSearchParams.get('src');
   function selectImage(event) {
     const imageSrc = event.target.closest('.gallery-image').querySelector('img').src;
+    const galleryImage = event.target.closest('.gallery-image');
     // Remove all existing "selected" labels
-    const selectedLabels = galleryImage.querySelectorAll('.selected');
+    const selectedLabels = document.querySelectorAll('.selected');
     selectedLabels.forEach(label => label.remove());
 
     // Add your logic for selecting the image here
     setImg(imageSrc);
 
     // Add a "selected" label to the selected image
-    const attachedLabel = galleryImage.querySelector('.attached');
+    const attachedLabel = galleryImage.querySelector('img')
     if (attachedLabel) {
-      attachedLabel.insertAdjacentHTML('afterend', '<label class="selected">✅ Selected</label>');
+      attachedLabel.insertAdjacentHTML('afterend', '<label class="attached">📎</label>');
     }
 
     // Store the selected image source in a variable (if needed)
