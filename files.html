@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="css/left-panel.css" media="all">
 <link rel="stylesheet" href="css/buttons-and-menus.css" media="all">
 <link rel="stylesheet" href="css/up-panel.css" media="all">
+<link rel="stylesheet" href="css/right-click-menu.css" media="all">
 
 <div id="loading"
   style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 900;">
@@ -30,7 +31,16 @@
       <div style="margin-top: 30px;">
   
   <button class="b-1" onclick="openTypeSelect()">➕</button>
+  <button id='btn-all' class='b-1' onclick="fileTypeFilter('all')">🧱</button>
+  <button id='btn-page' class='b-1' onclick="fileTypeFilter('page')" hidden>🌐</button>
+  <button id='btn-component' class='b-1' onclick="fileTypeFilter('component')" hidden>🧩</button>
+  <button id='btn-css' class='b-1' onclick="fileTypeFilter('css')" hidden>🎨</button>
+  <button id='btn-js' class='b-1' onclick="fileTypeFilter('js')" hidden>💻</button>
+  
   <button  class="b-1" title="select few files">☑️</button>
+
+  
+  <button  hidden title="publish status" class="b-1">🪄</button>
 
   <button title="publish status" class="b-1">📰</button>
   <button title="include in sitemap.xlm" class="b-1">📋</button>
@@ -40,11 +50,11 @@
 
 
 
-
   <button hidden title="remove option" class="b-1">🗑️</button>
   <button hidden class="b-1" title="multi select mode">🔲</button>
 
   
+
   
   
   
@@ -91,7 +101,6 @@
   <label class="file-explorer-path-part">universal</label>
   <span style="user-select: none; font-size:20px">/</span>
   <label class="file-explorer-path-part">windows-11-pro</label>
-  <button class='b-1 b-selected' title="pin-current-path" >📌</button>
 
   
 </div>
@@ -537,7 +546,84 @@
     </script>
 
 
+<div style="display: none;" id="R-click-file-type" class="right-click-menu">
+  <div class="menu-option" onclick="fileTypeChoose('page')">🌐 Page</div>
+  <div class="menu-option" onclick="fileTypeChoose('component')">🧩 HTML</div>
+  <div class="menu-option" onclick="fileTypeChoose('css')">🎨 CSS</div>
+  <div class="menu-option" onclick="fileTypeChoose('js')">💻 JS</div>
 
-  
+</div>
+<script>
+  // Функция для обновления видимости и стилей кнопок
+  function updateButtons(selectedType) {
+    const allButtonsIds = ['btn-all', 'btn-page', 'btn-component', 'btn-css', 'btn-js'];
 
+    allButtonsIds.forEach(btnId => {
+      const btn = document.getElementById(btnId);
+      if(btnId === `btn-${selectedType}`) {
+        // Показываем выбранную кнопку и добавляем класс b-selected
+        btn.hidden = false;
+        btn.classList.add('b-selected');
+      } else {
+        // Скрываем все другие кнопки и удаляем класс b-selected
+        btn.hidden = true;
+        btn.classList.remove('b-selected');
+      }
+    });
 
+    // Специальная обработка для "hide" опции
+    if (selectedType === 'hide') {
+      const btnAll = document.getElementById('btn-all');
+      btnAll.hidden = false; // Показываем btn-all
+      btnAll.classList.remove('b-selected'); // Удаляем класс b-selected, если он есть
+    }
+  }
+
+  // Обработчик левого клика по кнопке
+  function handleLeftClickOnButton(clickedButtonId) {
+    const allButtonsIds = ['btn-page', 'btn-component', 'btn-css', 'btn-js'];
+
+    if (clickedButtonId === 'btn-all') {
+      // Переключаем класс b-selected для btn-all
+      document.getElementById(clickedButtonId).classList.toggle('b-selected');
+    } else {
+      // Скрываем все кнопки, кроме btn-all, и добавляем btn-all класс b-selected
+      allButtonsIds.forEach(btnId => {
+        document.getElementById(btnId).hidden = true;
+      });
+      const btnAll = document.getElementById('btn-all');
+      btnAll.hidden = false;
+      btnAll.classList.add('b-selected');
+    }
+  }
+
+  const allButtonsIds1 = ['btn-all', 'btn-page', 'btn-component', 'btn-css', 'btn-js'];
+
+  allButtonsIds1.forEach(btnId => {
+    const button = document.getElementById(btnId);
+    button.addEventListener('click', function(e) {
+      handleLeftClickOnButton(e.target.id);
+    });
+  });
+
+  // Функция для контекстного меню
+  const menu = document.querySelector('#R-click-file-type');
+  document.addEventListener('contextmenu', function(e) {
+    if(e.target.id.startsWith('btn-')) {
+      e.preventDefault();
+      menu.style.display = 'block';
+      menu.style.left = `${e.pageX}px`;
+      menu.style.top = `${e.pageY}px`;
+    }
+  });
+
+  // Скрываем меню при клике
+  window.addEventListener('click', function() {
+    menu.style.display = 'none';
+  });
+
+  // Обработчик выбора из контекстного меню
+  function fileTypeChoose(selectedType) {
+    updateButtons(selectedType);
+  }
+</script>
