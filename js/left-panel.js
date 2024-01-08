@@ -8,11 +8,11 @@ document.getElementById('log-open').addEventListener('click', function() {
     leftSidePanel.classList.remove('log-open');
     codeLog.setAttribute('hidden', '');
     mainContent.style.marginLeft = '65px';
-    myButton.classList.remove('b-select'); // Remove the 'b-select' class
+    myButton.classList.remove('b-selected'); // Remove the 'b-select' class
   } else {
     leftSidePanel.classList.add('log-open');
     codeLog.removeAttribute('hidden');
     mainContent.style.marginLeft = '302px';
-    myButton.classList.add('b-select'); // Add the 'b-select' class
+    myButton.classList.add('b-selected'); // Add the 'b-select' class
   }
 });
