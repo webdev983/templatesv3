@@ -157,6 +157,27 @@
     transition: background-color 0.3s; /* Smooth transition for hover effect */
 }
 
+.table-1 {
+  counter-reset: rowNumber; /* Инициализация счетчика */
+}
+
+.table-1 tr {
+  counter-increment: rowNumber; /* Увеличение счетчика для каждой строки */
+}
+
+.table-1 tr td:first-child {
+  position: relative; /* Делаем первую ячейку каждой строки относительно позиционированной */
+}
+
+.table-1 tr td:first-child::before {
+  content: counter(rowNumber) "."; /* Добавление номера строки */
+  position: absolute; /* Абсолютное позиционирование */
+  left: -20px; /* Сдвигаем влево от начала ячейки */
+  top: 50%; /* Выравнивание по центру ячейки */
+  transform: translateY(-50%); /* Центрирование относительно высоты ячейки */
+  font-size: 18px; /* Размер шрифта номера */
+}
+
 
 
 .list-1
