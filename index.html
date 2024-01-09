@@ -174,7 +174,7 @@
             onclick="toggleSubFields(event)">&#8594;</button>
           <button data-element="code-tree-tag-name-button"
             onclick="loader(event, handleComponentClick)">🏷️component</button>
-          <button data-element="code-tree-inner-html-button"> ▶️</button>
+          <button data-element="code-tree-inner-html-button" > ▶️</button>
           <button data-element="code-tree-attributes-button" onclick="openAttributeContent(event)">🔑</button>
           <button data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
         </fieldset>
@@ -190,7 +190,7 @@
             onclick="toggleSubFields(event)">&#8594;</button>
           <button data-element="code-tree-tag-name-button"
             onclick="loader(event, handleComponentClick)">🏷️component</button>
-          <button data-element="code-tree-inner-html-button"> ▶️</button>
+          <button data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)"> ▶️</button>
           <button data-element="code-tree-attributes-button" onclick="openAttributeContent(event)">🔑</button>
           <button data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
         </fieldset>
@@ -379,10 +379,17 @@
         <!-- menu to receive text area html -->
         <!-- menu to receive text area html -->
         <fieldset id="code-tree-tag-text-content-form" class="menu">
-          <legend><button id="code-tree-tag-attributes-form-action-back" class="b-6" onclick="cancel()">❌</button>
+          <legend><button id="code-tree-tag-attributes-form-action-back" class="b-6" onclick="cancel(event)">❌</button>
           </legend>
           <textarea placeholder="📄Text content" id="code-tree-tag-text-content"></textarea>
           <button id="code-tree-tag-text-content-action-save" onclick="saveText(event)" class="b-3">💾 save</button>
+        </fieldset>
+         <!-- menu to receive inner html -->
+         <fieldset id="code-tree-tag-html-content-form" class="menu">
+          <legend><button id="code-tree-tag-attributes-form-action-back" class="b-6" onclick="cancel(event)">❌</button>
+          </legend>
+          <textarea placeholder="📄html content" id="code-tree-tag-html-content"></textarea>
+          <button id="code-tree-tag-text-content-action-save" onclick="saveInnerHtml(event)" class="b-3">💾 save</button>
         </fieldset>
 
 
@@ -2106,6 +2113,32 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   }
+  function openInnerHtmlContent(event) {
+    const button = event.target.closest('button[data-element="code-tree-inner-html-button"]');
+
+    if (button) {
+      const parentId = button.parentNode.id;
+      const textContentButton = button.parentNode.querySelector('[data-element="code-tree-inner-html-button"]');
+
+      const existingClonedFieldset = button.parentNode.querySelector('[id^="code-tree-tag-html-content-form"]');
+
+      if (!existingClonedFieldset) {
+        // Clone the fieldset node
+        const fieldset = document.getElementById('code-tree-tag-html-content-form');
+        const clonedFieldset = fieldset.cloneNode(true);
+
+        // Assign a unique id to the cloned fieldset
+        clonedFieldset.id = 'code-tree-tag-html-content-form;' + parentId;
+
+        // Find the position to insert the cloned fieldset
+        const insertAfterElement = textContentButton || button;
+
+        // Insert the cloned fieldset after the specified element
+        insertAfterElement.parentNode.insertBefore(clonedFieldset, insertAfterElement.nextElementSibling);
+      }
+    }
+  }
+  
   function handleComponentClick(event) {
     const button = event.target.closest('button[data-element="code-tree-tag-name-button"]');
 
@@ -2382,6 +2415,34 @@ document.addEventListener('DOMContentLoaded', function() {
       action,
       target_element: rest.join(';'),
       value: textareaValue,
+
+    }
+    console.log(JSON.stringify(el))
+    await pushAction(el)
+
+    parent.remove()
+    console.log(JSON.stringify(actionLog))
+
+  }
+  const saveInnerHtml = async (event) => {
+    const parent = event.target.parentNode
+    const { id } = parent
+    const action = 'innerHtml'
+    console.log('ac' + action)
+
+    const saveButton = event.target;
+    const fieldset = saveButton.closest('fieldset');
+
+
+    const textareaValue = fieldset.querySelector('#code-tree-tag-html-content').value;
+    const splited = id.split(';')
+    const [toRemove, ...rest] = splited
+
+    const el = {
+      time: (new Date()).getTime(),
+      action,
+      target_element: rest.join(';'),
+      insertedCode: textareaValue,
 
     }
     console.log(JSON.stringify(el))
