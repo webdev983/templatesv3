@@ -148,7 +148,7 @@
     </div>
 
       <div class="up-panel" style="margin-left: 15px;">
-        <button hidden class='b-1'>🌐</button><button  class='b-1' title="edit path" style="user-select: none;">🧩</button><button hidden class='b-1 b-selected b-green' title="edit path" style="user-select: none;">🎨</button><button  hidden class='b-1 b-selected b-green' title="edit path" style="user-select: none;">💻</button><label class="l-2" style="cursor: pointer; color:#4A90E2;">keyzon.com/product/winVmware17pro</label>
+        <button hidden class='b-1'>🌐</button><button  class='b-1' onclick="publish(event)" title="edit path" style="user-select: none;">🧩</button><button hidden class='b-1 b-selected b-green' title="edit path" style="user-select: none;">🎨</button><button  hidden class='b-1 b-selected b-green' title="edit path" style="user-select: none;">💻</button><label id="page-path" class="l-2" style="cursor: pointer; color:#4A90E2;" >keyzon.com/product/winVmware17pro</label>
     </div>
 
 
@@ -2188,6 +2188,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     for (const item of responseData.items) {
       console.log('item' + JSON.stringify(item))
+      if(item.sk ==='path'){
+        console.log('eeeeeer')
+        const el = document.getElementById('page-path')
+        el.textContent = item.lsi1
+        if(item.lsi1.includes('publish:published')){
+          el.classList.add('b-green');
+        }
+      }
       if (item.action) {
         if (id) {
           console.log(JSON.stringify(item))
@@ -2245,6 +2253,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
     }
 
+  }
+  const publish = async(e)=>{
+    console.log('eeer')
+    const pagePathContent = document.getElementById('page-path').textContent;
+
+    // Use the textContent as needed, for example, log it to the console
+    console.log('Publishing:', pagePathContent);
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    let idFromLink = urlSearchParams.get('id');
+   
+    const html = document.getElementById('generated-page').innerHTML
+    const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/publishv2', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({id:idFromLink,html,path:pagePathContent}),
+    });
+    console.log(html)
   }
   document.addEventListener('DOMContentLoaded',loadFirst);
   async function loadFirst() {
