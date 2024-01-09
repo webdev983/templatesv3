@@ -148,7 +148,7 @@
     </div>
 
       <div class="up-panel" style="margin-left: 15px;">
-       <button  class='b-1' onclick="publish(event)" style="user-select: none;">🧩</button><label id="page-path" class="l-2" style="cursor: pointer; color:#4A90E2;" >keyzon.com/product/winVmware17pro</label>
+       <button id="path-icon" class='b-1' onclick="publish(event)" style="user-select: none;">🧩</button><label id="page-path" class="l-2" style="cursor: pointer; color:#4A90E2;" >keyzon.com/product/winVmware17pro</label>
     </div>
 <!--🌐🎨💻-->
 
@@ -2192,8 +2192,13 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('eeeeeer')
         const el = document.getElementById('page-path')
         el.textContent = item.lsi1
+        
         if(item.lsi1.includes('publish:published')){
-          el.classList.add('b-green');
+          const el2 = document.getElementById("path-icon")
+          el2.classList.add('b-green');
+          el2.classList.add('b-selected');
+          
+          el2.innerText ='🌐'
         }
       }
       if (item.action) {
@@ -2271,7 +2276,17 @@ document.addEventListener('DOMContentLoaded', function() {
       },
       body: JSON.stringify({id:idFromLink,html,path:pagePathContent}),
     });
-    console.log(html)
+    const el = document.getElementById('page-path')
+   
+    
+    if(!pagePathContent.includes(':publish:published')){
+      document.getElementById('page-path').textContent = pagePathContent+';publish:published'
+      const el2 = document.getElementById("path-icon")
+      el2.classList.add('b-green');
+      el2.classList.add('b-selected');
+      
+      el2.innerText ='🌐'
+    }
   }
   document.addEventListener('DOMContentLoaded',loadFirst);
   async function loadFirst() {
