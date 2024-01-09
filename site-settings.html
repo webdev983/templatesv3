@@ -8,22 +8,16 @@
 
   <div id="nav-buttons">
     <a href="https://webdev983.github.io/templatesv3/files"><button class="b-1">📂</button></a>
-      <a href="https://webdev983.github.io/templatesv3/sites"><button class="b-1">🌐</button></a>
-      <a href="https://webdev983.github.io/templatesv3/orders"><button class="b-1">🛍️</button></a>  
-        <a href="https://webdev983.github.io/templatesv3/paypals"><button class="b-1">💳</button></a>  
-        <a href="https://webdev983.github.io/templatesv3/settings"><button class="b-1">⚙️</button></a>  
-
-    </div>
+    <a href="https://webdev983.github.io/templatesv3/sites"><button class="b-1">🌐</button></a>
+    <a href="https://webdev983.github.io/templatesv3/orders"><button class="b-1">🛍️</button></a>
+    <a href="https://webdev983.github.io/templatesv3/paypals"><button class="b-1">💳</button></a>
+    <a href="https://webdev983.github.io/templatesv3/settings"><button class="b-1">⚙️</button></a>
 
   </div>
-  <div class="bottom-buttons">
-    <button class="b-1">📴</button>
-    </div>
-    
+
 </div>
-  <div id="main-content" style="margin-left:80px;" class="main-content">
-  <label class="l-1" style="margin-left: 40px; user-select: none; margin-right: 5px;">🌐</label><label class="l-1"  id="site-name-value">accbuddy.com</label>
-<div>
+<div class="bottom-buttons">
+  <button class="b-1">📴</button>
 </div>
   <fieldset class="section"  style="margin-left: 30px; margin-top: 40px;">
   <legend>edit aws creds</legend>
@@ -33,4 +27,116 @@
 </ul>
 </fieldset>
 
+</div>
+<div id="main-content" style="margin-left:80px;" class="main-content">
+  <label class="l-1" style="margin-left: 40px; user-select: none; margin-right: 5px;">🌐</label><label class="l-1"
+    id="site-name-value">accbuddy.com</label>
+  <div>
   </div>
+  <fieldset class="section" style="margin-left: 30px; margin-top: 40px;">
+    <legend>edit aws creds</legend>
+    <ul class="list-1 hide-bullets" id="aws-creds" style="margin-left: 30px;">
+      <li><label class="l-3" style="user-select: none; margin-right: 5px;">🆔</label><label class="l-3" id="aws-id"
+          ondblclick="onDoubleClick(event,'access_key')">214141241241241241241414141</label></li>
+      <li><label class="l-3" style="user-select: none; margin-right: 5px;">🔑</label><label class="l-3" id="aws-secret"
+          ondblclick="onDoubleClick(event,'secret_key')">214141241241241241241414141</label></td>
+      </li>
+      <li><label class="l-3" style="user-select: none; margin-right: 5px;">🌍</label><label class="l-3"
+          id="aws-bucket-region" ondblclick="onDoubleClick(event,'region')">us-east-2</label></td>
+      </li>
+      <li><label class="l-3" style="user-select: none; margin-right: 5px;">🪣</label><label class="l-3"
+          id="s3-bucket-name" ondblclick="onDoubleClick(event,'bucket')">accbuddy.com</label></td>
+      </li>
+
+
+    </ul>
+  </fieldset>
+
+</div>
+<script>
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  const site = urlSearchParams.get('site');
+  let response 
+
+  function onDoubleClick(e, name) {
+    var target = e.target;
+
+    // Prevent the default double-click behavior
+    e.preventDefault();
+
+    // Set the 'contenteditable' attribute to 'true', making the element editable
+    target.setAttribute('contenteditable', 'true');
+
+    // Set focus on the editable element
+    target.focus();
+
+    let textContent = target.textContent;
+
+    target.addEventListener('blur', function (blurEvent) {
+      // Call the save function when the element loses focus
+
+      if (textContent) {
+        save(name, blurEvent.target.textContent);
+      }
+
+      // Remove the 'contenteditable' attribute after blur
+      target.removeAttribute('contenteditable');
+    });
+  }
+
+
+  const save = async (name, text) => {
+    // Create a new object to only send the updated field to the server
+    response[name] = text
+    console.log(name + text)
+    console.log(JSON.stringify(response))
+
+    const res1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(response),
+    });
+    console.log(JSON.stringify(await res1.json()))
+  }
+  const getSite = async () => {
+    const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${site}:creds`)
+    response = await res.json()
+    console.log('1'+JSON.stringify(response))
+    if (!response) {
+      response = {
+        id: site,
+        sk: 'creds',
+        access_key: 'your_access_key',
+        secret_key: 'your_secret_key',
+        region: 'your_region',
+        bucket: 'your_bucket'
+      };
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(response),
+      })
+      
+    }
+    response.id= site
+    // Get references to the HTML elements
+    const awsIdElement = document.getElementById('aws-id');
+    const awsSecretElement = document.getElementById('aws-secret');
+    const awsRegionElement = document.getElementById('aws-bucket-region');
+    const s3BucketNameElement = document.getElementById('s3-bucket-name');
+    const siteName = document.getElementById('site-name-value');
+
+    // Update the content of the HTML elements with the values from the 'response' object
+    awsIdElement.textContent = response.access_key;
+    awsSecretElement.textContent = response.secret_key;
+    awsRegionElement.textContent = response.region;
+    s3BucketNameElement.textContent = response.bucket;
+    siteName.textContent = site;
+
+  }
+  document.addEventListener('DOMContentLoaded', getSite);
+</script>
