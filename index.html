@@ -185,7 +185,7 @@
 
       </div>
       <!--menus-->
-      <div   hidden>
+      <div  hidden >
         <fieldset id="component-element" data-element="code-tree-tag">
           <legend>💬</legend>
           <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
@@ -3842,5 +3842,24 @@ document.addEventListener('DOMContentLoaded', function() {
     /* Example pressed effect */
   }
 </style>
+
+
+
+<script>
+  //RESIZE TEXST AREAS BY TEXT
+  function autoResizeTextarea() {
+    this.style.height = 'auto'; // Сброс текущей высоты
+    this.style.height = (this.scrollHeight) + 'px'; // Установка новой высоты
+}
+
+// Получение элементов textarea по ID
+const htmlContentTextarea = document.getElementById('code-tree-tag-html-content');
+const textContentTextarea = document.getElementById('code-tree-tag-text-content');
+
+// Добавление обработчика событий для каждого textarea
+htmlContentTextarea.addEventListener('input', autoResizeTextarea);
+textContentTextarea.addEventListener('input', autoResizeTextarea);
+
+</script>
 
 <script src="js/left-panel.js" async=""></script>
