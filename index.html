@@ -682,6 +682,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
 
       const newCopyNumber = highestCopyNumber + 1;
+      console.log(newCopyNumber)
       return `${originalId}-copy-${newCopyNumber}`;
     }
 
@@ -700,7 +701,7 @@ document.addEventListener('DOMContentLoaded', function() {
         time: (new Date()).getTime(),
         action: 'InsertBefore',
         target_element: nextElementId + '-tree',
-        inserted_element: { originalId: selectedElementId + '-tree', id: duplicateId(selectedElementId + '-tree', generateNewCopyNumber(selectedElementId + '-tree')) },
+        inserted_element: { originalId: selectedElementId + '-tree', id: duplicateId(selectedElementId + '-tree', generateNewCopyNumber(selectedElementId)) },
       };
       await pushAction(actionObject, false, flag);
       removeReceiveButtons();
@@ -713,7 +714,7 @@ document.addEventListener('DOMContentLoaded', function() {
         time: (new Date()).getTime(),
         action: 'Append',
         target_element: parentId + '-tree',
-        inserted_element: { originalId: selectedElementId + '-tree', id: duplicateId(selectedElementId + '-tree', generateNewCopyNumber(selectedElementId + '-tree')) },
+        inserted_element: { originalId: selectedElementId + '-tree', id: duplicateId(selectedElementId + '-tree', generateNewCopyNumber(selectedElementId)) },
       };
       await pushAction(actionObject, false, flag);
       removeReceiveButtons();
@@ -721,9 +722,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to generate a new copy number based on the highest copy number
     function generateNewCopyNumber(originalId) {
+      console.log("selected"+ originalId)
       const existingElements = document.querySelectorAll(`[id^="${originalId}"]`);
       let highestCopyNumber = 0;
-
+      console.log("existing"+ JSON.stringify(existingElements))
       existingElements.forEach(element => {
         const match = element.id.match(/-copy-(\d+)-tree$/);
         if (match) {
