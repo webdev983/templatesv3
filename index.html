@@ -57,7 +57,7 @@
 <style>
   .arrow-hover:hover {
     background-color: green;
-    border-color:  rgb(0, 92, 0);
+    border-color: rgb(0, 92, 0);
   }
 </style>
 <script>
@@ -101,18 +101,19 @@
 
 
 <div class="left-top-panel">
-  <button disabled class="b-1" id="last-action-time" style="color: black;z-index:1; position: absolute;top: 50%;left: 50%; transform: translate(-50%, -50%);">⏳</button>
+  <button disabled class="b-1" id="last-action-time"
+    style="color: black;z-index:1; position: absolute;top: 50%;left: 50%; transform: translate(-50%, -50%);">⏳</button>
 </div>
 
 <div class="left-side-panel">
 
   <div id="nav-buttons">
-    <a href="https://webdev983.github.io/templatesv3/summary"><button class="b-1">🧠</button></a>  
+    <a href="https://webdev983.github.io/templatesv3/summary"><button class="b-1">🧠</button></a>
     <a href="https://webdev983.github.io/templatesv3/files"><button class="b-1">📂</button></a>
   </div>
 
 
-    <div style="margin-top: 30px;">
+  <div style="margin-top: 30px;">
     <button class="b-1  b-selected">🛠️</button>
     <button class="b-1  b-selected">👁️</button>
     <button class="b-1 b-select" title="visual editor" onclick="transformToVisual(event)">✍️</button>
@@ -120,7 +121,7 @@
     <button class="b-1 b-select" id="log-open">🪵</button>
     <button class="b-1" hidden id="aside-toggle" style="font-size: 1.5em; top: 10px;">log</button>
   </div>
-  
+
   <table id="code-log" class="table-1" hidden>
     <thead>
       <tr>
@@ -141,9 +142,9 @@
 </div>
 <div class="bottom-buttons">
   <button class="b-1">📴</button>
-  </div>
-  
-  
+</div>
+
+
 <!-- right-clic-menu-->
 <div style="display: none;" id="right-click-menu" class="right-click-menu">
   <div class="menu-option" onclick="alert('Option 0 selected')">🖼️ edit pic</div>
@@ -154,10 +155,11 @@
 
   <main id="main-content" style="margin-left:80px; margin-top: -60" class="main-content">
 
-      <div class="up-panel" style="margin-left: 15px;">
-       <button id="path-icon" class='b-1' onclick="publish(event)" style="user-select: none;">🧩</button><label id="page-path" class="l-2" style="cursor: pointer; color:#4A90E2;" >~</label>
+    <div class="up-panel" style="margin-left: 15px;">
+      <button id="path-icon" class='b-1' onclick="publish(event)" style="user-select: none;">🧩</button><label
+        id="page-path" class="l-2" style="cursor: pointer; color:#4A90E2;">~</label>
     </div>
-<!--🌐🎨💻-->
+    <!--🌐🎨💻-->
 
     <div id="code-builder" style="position: relative;">
       <div hidden style="margin-bottom: 15px; border-bottom:#0000EE">
@@ -184,24 +186,27 @@
             onclick="toggleSubFields(event)">&#8594;</button>
           <button class="b-3" data-element="code-tree-tag-name-button"
             onclick="loader(event, handleComponentClick)">🏷️component</button>
-          <button class="b-3" data-element="code-tree-inner-html-button" > ▶️</button>
-          <button class="b-3" data-element="code-tree-attributes-button" onclick="openAttributeContent(event)">🔑</button>
+          <button class="b-3" data-element="code-tree-inner-html-button"> ▶️</button>
+          <button class="b-3" data-element="code-tree-attributes-button"
+            onclick="openAttributeContent(event)">🔑</button>
           <button class="b-3" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
         </fieldset>
 
 
       </div>
       <!--menus-->
-      <div   hidden>
+      <div hidden>
         <fieldset id="component-element" data-element="code-tree-tag">
           <legend>💬</legend>
           <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
-          <button  class="b-3 arrow-hover" data-element="code-tree-show-hide-button"
+          <button class="b-3 arrow-hover" data-element="code-tree-show-hide-button"
             onclick="toggleSubFields(event)">&#8594;</button>
-          <button  class="b-3" data-element="code-tree-tag-name-button"
+          <button class="b-3" data-element="code-tree-tag-name-button"
             onclick="loader(event, handleComponentClick)">🏷️component</button>
-          <button class="b-3" data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)"> ▶️</button>
-          <button class="b-3" data-element="code-tree-attributes-button" onclick="openAttributeContent(event)">🔑</button>
+          <button class="b-3" data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)">
+            ▶️</button>
+          <button class="b-3" data-element="code-tree-attributes-button"
+            onclick="openAttributeContent(event)">🔑</button>
           <button class="b-3" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
         </fieldset>
 
@@ -394,26 +399,26 @@
           <textarea class="text1" placeholder=" 📄 Text content" id="code-tree-tag-text-content"></textarea>
           <button id="code-tree-tag-text-content-action-save" onclick="saveText(event)" class="b-3">💾 save</button>
         </fieldset>
-         <!-- menu to receive inner html -->
-         <fieldset id="code-tree-tag-html-content-form" class="menu">
+        <!-- menu to receive inner html -->
+        <fieldset id="code-tree-tag-html-content-form" class="menu">
           <legend><button id="code-tree-tag-attributes-form-action-back" class="b-6" onclick="cancel(event)">❌</button>
-          </legend> 
+          </legend>
           <textarea class="text1" placeholder=" ▶️ HTML content" id="code-tree-tag-html-content"></textarea>
-          <button id="code-tree-tag-text-content-action-save" onclick="saveInnerHtml(event)" class="b-3">💾 save</button>
+          <button id="code-tree-tag-text-content-action-save" onclick="saveInnerHtml(event)" class="b-3">💾
+            save</button>
         </fieldset>
 
 
 
         <!--menu to view and edit attributes-->
-        <fieldset class="menu" id="code-tree-tag-attributes-form-1"
-          style="padding: 30px;">
+        <fieldset class="menu" id="code-tree-tag-attributes-form-1" style="padding: 30px;">
           <legend><button onclick="cancel1(event)" style="font-size: 0.9em;" class="b-6">❌</button></legend>
           <div style="margin-bottom: 10px;">
-            <input  id="code-tree-tag-attribute-input-key" type="text" placeholder="attribute 🔑"></td>
-            <input  id="code-tree-tag-attribute-input-key-value" type="text" placeholder="value 📄">
+            <input id="code-tree-tag-attribute-input-key" type="text" placeholder="attribute 🔑"></td>
+            <input id="code-tree-tag-attribute-input-key-value" type="text" placeholder="value 📄">
             <button id="code-tree-tag-attribute-add" class="b-3" onclick="saveAttribute(event)">➕</button>
           </div>
-            <table class="table-1" id="code-tree-tag-attributes-list">
+          <table class="table-1" id="code-tree-tag-attributes-list">
 
             <tr id="code-tree-tag-attributes-list-item">
               <td>🔑<span id="code-tree-tag-attribute-key">data-type</span></td>
@@ -473,7 +478,7 @@
           </table>
         </fieldset>
 
-    
+
       </div>
       <div id="generated-page">
         <component id="63ae5927-390f-4391-993d-b25ab09c8ada"></component>
@@ -491,7 +496,7 @@
 <!--loading screen-->
 <div id="loading"
   style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 2;">
-  
+
   <span style="font-size: 10.2em; color: white;">⏳</span>
   <div id="timer" style="font-size: 2em; color: white;">1.12</div>
 </div>
@@ -676,22 +681,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleMouseOut1() {
       this.classList.remove('drag-over'); // Remove the class to stop hover effect
     }
-    function generateNewId(originalId) {
-      const existingElements = document.querySelectorAll(`[id^="${originalId}"]`);
-      let highestCopyNumber = 0;
-
-      existingElements.forEach(element => {
-        const match = element.id.match(/-copy-(\d+)$/);
-        if (match) {
-          const copyNumber = parseInt(match[1], 10);
-          highestCopyNumber = Math.max(highestCopyNumber, copyNumber);
-        }
-      });
-
-      const newCopyNumber = highestCopyNumber + 1;
-      console.log(newCopyNumber)
-      return `${originalId}-copy-${newCopyNumber}`;
-    }
+    
 
     // Function to generate a new ID based on a specific copy number
     function duplicateId(originalId, copyNumber) {
@@ -707,7 +697,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const actionObject = {
         time: (new Date()).getTime(),
         action: 'InsertBefore',
-        target_element: nextElementId.replace('-fieldset','') + '-tree',
+        target_element: nextElementId.replace('-fieldset', '') + '-tree',
         inserted_element: { originalId: selectedElementId + '-tree', id: duplicateId(selectedElementId + '-tree', generateNewCopyNumber(selectedElementId)) },
       };
       await pushAction(actionObject, false, flag);
@@ -729,10 +719,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to generate a new copy number based on the highest copy number
     function generateNewCopyNumber(originalId) {
-      console.log("selected"+ originalId)
+      console.log("selected" + originalId)
       const existingElements = document.querySelectorAll(`[id^="${originalId}"]`);
       let highestCopyNumber = 0;
-      console.log("existing"+ JSON.stringify(existingElements))
+      console.log("existing" + JSON.stringify(existingElements))
       existingElements.forEach(element => {
         const match = element.id.match(/-copy-(\d+)-tree$/);
         if (match) {
@@ -779,7 +769,7 @@ document.addEventListener('DOMContentLoaded', function() {
       entry.onclick = clickHandler;
       menu.appendChild(entry);
     }
-    function saveT(event,previousValue) {
+    function saveT(event, previousValue) {
       const id = event.target.id + '-tree'
       const action = 'textContent'
       console.log('ac' + action)
@@ -787,7 +777,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
       const textareaValue = event.target.textContent;
-      if(textareaValue === previousValue){
+      if (textareaValue === previousValue) {
         event.target.removeAttribute('contenteditable')
         return textareaValue
       }
@@ -858,7 +848,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let textContent = target.textContent
         target.addEventListener('blur', function (blurEvent) {
           // Call the saveT function when the element loses focus
-          textContent && (textContent = saveT(blurEvent,textContent))
+          textContent && (textContent = saveT(blurEvent, textContent))
         });
       }
     }
@@ -877,15 +867,15 @@ document.addEventListener('DOMContentLoaded', function() {
         let parentWithAppendChild
         let siblingWithInsertBefore
         console.log('tag ' + e.target.tagName)
-        const redirectToImgPage = (imgId,src)=>{
+        const redirectToImgPage = (imgId, src) => {
           const urlSearchParams = new URLSearchParams(window.location.search);
           const id = urlSearchParams.get('id');
           console.log('in1')
           window.location.href = `gallery.html?id=${id}&imgId=${imgId}&src=${src}`;
         }
-        if(e.target.tagName.toLowerCase() ==='img'){
+        if (e.target.tagName.toLowerCase() === 'img') {
           addMenuEntry(menu, `➕ edit image`, () => {
-            redirectToImgPage(e.target.id,e.target.getAttribute('src'))
+            redirectToImgPage(e.target.id, e.target.getAttribute('src'))
           });
         }
         if (
@@ -1955,11 +1945,15 @@ document.addEventListener('DOMContentLoaded', function() {
       case 'dublicateTag':
         // Handle the 'dublicateTag' action
         const originalElement = document.getElementById(target_element);
+        const originalElement2 = document.getElementById(target_element.replace('-tree', ''));
         const duplicatedElement = originalElement.cloneNode(true);
+        const duplicatedElement2 = originalElement2.cloneNode(true);
         //to do
         duplicatedElement.id = inserted_element
+        duplicatedElement2.id = inserted_element.replace('-tree', '');
 
         originalElement.parentNode.appendChild(duplicatedElement);
+        originalElement2.parentNode.appendChild(duplicatedElement2);
         break;
 
       case 'removeTag':
@@ -2051,7 +2045,7 @@ document.addEventListener('DOMContentLoaded', function() {
     clearInterval(interval);
     console.log(timerElement.textContent)
     const lastActionTime = document.getElementById('last-action-time');
-    
+
     lastActionTime.textContent = timerElement.textContent;
   }
   function openAttributeContent(event) {
@@ -2156,7 +2150,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   }
-  
+
   function handleComponentClick(event) {
     const button = event.target.closest('button[data-element="code-tree-tag-name-button"]');
 
@@ -2236,16 +2230,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     for (const item of responseData.items) {
       console.log('item' + JSON.stringify(item))
-      if(item.sk ==='path'){
+      if (item.sk === 'path') {
         console.log('eeeeeer')
         const el = document.getElementById('page-path')
-        el.textContent = item.lsi1.replace(';publish:published','')
-        
-        if(item.lsi1.includes('publish:published')){
+        el.textContent = item.lsi1.replace(';publish:published', '')
+
+        if (item.lsi1.includes('publish:published')) {
           const el2 = document.getElementById("path-icon")
           el2.classList.add('b-green');
           el2.classList.add('b-selected');
-          
+
         }
       }
       if (item.action) {
@@ -2308,7 +2302,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
   }
-  const publish = async(e)=>{
+  const publish = async (e) => {
     console.log('eeer')
     const pagePathContent = document.getElementById('page-path').textContent;
 
@@ -2316,31 +2310,31 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Publishing:', pagePathContent);
     const urlSearchParams = new URLSearchParams(window.location.search);
     let idFromLink = urlSearchParams.get('id');
-   
+
     const html = document.getElementById('generated-page').innerHTML
     const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/publishv2', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({id:idFromLink,html,path:pagePathContent}),
+      body: JSON.stringify({ id: idFromLink, html, path: pagePathContent }),
     });
     const el = document.getElementById('page-path')
-   
-    
-    if(!pagePathContent.includes(':publish:published')){
+
+
+    if (!pagePathContent.includes(':publish:published')) {
       document.getElementById('page-path').textContent = pagePathContent
       const el2 = document.getElementById("path-icon")
       el2.classList.add('b-green');
       el2.classList.add('b-selected');
-      
-      
+
+
     }
   }
-  document.addEventListener('DOMContentLoaded',loadFirst);
+  document.addEventListener('DOMContentLoaded', loadFirst);
   async function loadFirst() {
     const lastActionTime = document.getElementById('last-action-time');
-      lastActionTime.addEventListener('dblclick', function () {
+    lastActionTime.addEventListener('dblclick', function () {
       // Handle double-click event here
       console.log('Double-clicked on the button');
       // Add your custom logic for double-click handling
@@ -2383,7 +2377,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     clearInterval(interval);
     console.log(timerElement.textContent)
-    
+
     lastActionTime.textContent = timerElement.textContent;
     loadingScreen.style.display = 'none';
 
@@ -2660,12 +2654,17 @@ document.addEventListener('DOMContentLoaded', function() {
     pushAction(el)
     e.target.parentNode.remove()
   }
-  const approve = (event) => {
+  const approve = async (event) => {
     var checkbox = event.target;
 
     // Get the parent fieldset
     var fieldset = checkbox.closest('fieldset');
 
+    // Get the "Duplicate with Parent" checkbox
+    var duplicateCheckbox = fieldset.querySelector('#code-tree-menu-dublicate-with-parent-option');
+
+    // Check if the "Duplicate with Parent" checkbox is checked
+    var isDuplicateWithParent = duplicateCheckbox.checked;
     // Get the id and action attributes
     var fieldsetId = fieldset.id;
     var fieldsetAction = fieldset.getAttribute('action');
@@ -2687,18 +2686,79 @@ document.addEventListener('DOMContentLoaded', function() {
     // Log the id and action attributes (you can replace this with your desired logic)
     console.log("Fieldset ID:", fieldsetId);
     console.log("Fieldset Action:", fieldsetAction);
-    const el = {
+    const splited = fieldsetId.split(';')
+    splited.shift()
+    const id = splited.join(';')
+    let el2 = {
       time: (new Date()).getTime(),
       action: fieldsetAction,
-      target_element: [{ type: 'tag', id: fieldsetId.split(';')[1], }, ...selected.map(id => {
+      target_element: [{ type: 'tag', id, }, ...selected.map(id => {
         return { type: 'tag', id }
       })],
+    }
+    if (isDuplicateWithParent) {
+      const [first, ...rest] = selected.map(id => {
+        return { type: 'tag', id }
+      });
 
+      for (const el of rest) {
+        
 
+        // Function to generate a new ID based on a specific copy number
+        function duplicateId(originalId, copyNumber) {
+          const splited = originalId.split(';');
+          return splited.map((part, index) => (index === splited.length - 1)
+            ? part.replace(/-copy-\d+-tree$/, '').replace(/-tree$/, '') + `-copy-${copyNumber}-tree`
+            : part
+          ).join(';');
+        }
+        async function append(parentId, selectedElementId, flag) {
+          console.log('parent id'+ parentId)
+          console.log('el id'+ selectedElementId)
+          // Perform additional actions if needed
+          const actionObject = {
+            time: (new Date()).getTime(),
+            action: 'Append',
+            target_element: parentId + '-tree',
+            inserted_element: { originalId: selectedElementId + '-tree', id: duplicateId(selectedElementId + '-tree', generateNewCopyNumber(selectedElementId)) },
+          };
+          await pushAction(actionObject, false, flag);
+          return actionObject.inserted_element.id
+        }
+        // Function to generate a new copy number based on the highest copy number
+        function generateNewCopyNumber(originalId) {
+          console.log("selected" + originalId)
+          const existingElements = document.querySelectorAll(`[id^="${originalId}"]`);
+          let highestCopyNumber = 0;
+          console.log("existing" + JSON.stringify(existingElements))
+          existingElements.forEach(element => {
+            const match = element.id.match(/-copy-(\d+)-tree$/);
+            if (match) {
+              const copyNumber = parseInt(match[1], 10);
+              highestCopyNumber = Math.max(highestCopyNumber, copyNumber);
+            }
+          });
+
+          return highestCopyNumber + 1;
+        }
+        const t = await append(document.getElementById(id).parentNode.id.replace('-tree',''),id.replace('-tree',''))
+        await pushAction({
+          time: (new Date()).getTime(),
+          action: fieldsetAction,
+          target_element: [{ type: 'tag', id: t, }, el],
+        });
+      }
+      pushAction({
+        time: (new Date()).getTime(),
+        action: fieldsetAction,
+        target_element: [{ type: 'tag', id, }, first],
+      });
+    }
+    else {
+      pushAction(el2)
     }
     selected = []
-    pushAction(el)
-    e.target.parentNode.remove()
+    event.target.parentNode.remove()
   }
 
 </script>
@@ -3613,15 +3673,14 @@ document.addEventListener('DOMContentLoaded', function() {
 <style>
   .highlight-left-border-red {
     border-left-color: blue;
-    transition:  0.1s ease;
+    transition: 0.1s ease;
 
   }
 
   .highlight-red {
     border-color: blue;
-    transition:  0.1s ease;
+    transition: 0.1s ease;
     background-color: rgb(88, 105, 255)
-
   }
 
 
@@ -3633,11 +3692,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
   .highlight-blue {
     border-color: red;
-    transition:  0.1s ease;
+    transition: 0.1s ease;
     background-color: rgb(255, 88, 88)
-
-
-
   }
 </style>
 <script>
@@ -3861,15 +3917,15 @@ document.addEventListener('DOMContentLoaded', function() {
   function autoResizeTextarea() {
     this.style.height = 'auto'; // Сброс текущей высоты
     this.style.height = (this.scrollHeight) + 'px'; // Установка новой высоты
-}
+  }
 
-// Получение элементов textarea по ID
-const htmlContentTextarea = document.getElementById('code-tree-tag-html-content');
-const textContentTextarea = document.getElementById('code-tree-tag-text-content');
+  // Получение элементов textarea по ID
+  const htmlContentTextarea = document.getElementById('code-tree-tag-html-content');
+  const textContentTextarea = document.getElementById('code-tree-tag-text-content');
 
-// Добавление обработчика событий для каждого textarea
-htmlContentTextarea.addEventListener('input', autoResizeTextarea);
-textContentTextarea.addEventListener('input', autoResizeTextarea);
+  // Добавление обработчика событий для каждого textarea
+  htmlContentTextarea.addEventListener('input', autoResizeTextarea);
+  textContentTextarea.addEventListener('input', autoResizeTextarea);
 
 </script>
 
