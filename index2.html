@@ -1,0 +1,3851 @@
+<link rel="stylesheet" href="css/left-panel.css" media="all">
+<link rel="stylesheet" href="css/up-panel.css" media="all">
+<link rel="stylesheet" href="css/fieldset.css" media="all">
+<link rel="stylesheet" href="css/right-click-menu.css" media="all">
+<link rel="stylesheet" href="css/buttons-and-menus.css" media="all">
+
+
+
+<style>
+
+
+</style>
+<style>
+  button[data-element="code-tree-attributes-button"],
+  button[data-element="code-tree-text-content-button"],
+  button[data-element="code-tree-inner-html-button"],
+  button[data-element="code-tree-tag-name-button"] {
+    border-radius: 10px;
+    border-color: #4A90E2;
+    border-width: 1px;
+  }
+
+  fieldset[data-element="code-tree-tag"] {
+    border-top-width: 1px;
+  }
+
+  button[data-element="code-tree-show-hide-button"] {
+    border-radius: 10px;
+
+  }
+
+  fieldset[data-element="code-tree-tag"] {
+    border-top-left-radius: 10px;
+    border-top-width: 1px;
+    border-left-width: 1px;
+
+  }
+
+
+
+
+  .arrow {
+
+    border-width: 3px;
+  }
+
+  hr {
+    border: none;
+    /* Removes the default border */
+    height: 3px;
+    /* Sets the height of the line */
+    background-color: black;
+    /* Sets the color of the line */
+  }
+</style>
+<script>
+  const format =
+  {
+    "time": "41421412412412",
+    "action": [
+      "appendChild",
+      "insertBefore",
+      "innerHtml",
+      "removeTag",
+      "dublicateTag",
+      "changeTag",
+      "setAttribute",
+      "removeAttribut",
+      "textContent"
+    ],
+    "target-element": "uuid",
+    "inserted-element": [
+      [{ type: "tag", id: "uuid" }],
+      [{ type: "tag", id: "uuid1" }, { type: "tag", id: "uuid2" }],
+      [{ type: "component", id: "uuid" }]
+    ],
+    "inserted-code": "html code for inner html element",
+    "tag-change": "div",
+
+    "key": "class",
+    "value": "cool-class",
+    "text-content": "12421412412414141241",
+    "option": "dublicate-with-parent"
+  };
+
+</script>
+<style>
+  .menu button {
+    border-radius: 5px;
+    font-size: 1.2em;
+  }
+</style>
+
+
+
+<div class="left-top-panel">
+  <button disabled class="b-1" id="last-action-time" style="color: black;z-index:1; position: absolute;top: 50%;left: 50%; transform: translate(-50%, -50%);">⏳</button>
+</div>
+
+<div class="left-side-panel">
+
+  <div id="nav-buttons">
+    <a href="https://webdev983.github.io/templatesv3/summary"><button class="b-1">🧠</button></a>  
+    <a href="https://webdev983.github.io/templatesv3/files"><button class="b-1">📂</button></a>
+  </div>
+
+
+    <div style="margin-top: 30px;">
+    <button class="b-1  b-selected">🛠️</button>
+    <button class="b-1  b-selected">👁️</button>
+    <button class="b-1 b-select" title="visual editor" onclick="transformToVisual(event)">✍️</button>
+    <button class="b-1" onclick="transformToVisual(event)">🗂️</button>
+    <button class="b-1 b-select" id="log-open">🪵</button>
+    <button class="b-1" hidden id="aside-toggle" style="font-size: 1.5em; top: 10px;">log</button>
+  </div>
+  
+  <table id="code-log" class="table-1" hidden>
+    <thead>
+      <tr>
+        <th style="text-align: left;">🕓time</th>
+        <th style="text-align: left;">✔️action</th>
+      </tr>
+    </thead>
+    <tbody id="code-log-body">
+      <tr id="code-log-element">
+        <td data-type-code-log="action-time"><span id="code-log-action-time">1703707728031</span></td>
+        <td data-type-code-log="action-name"><span id="code-log-action">append child</span></td>
+        <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+</div>
+<div class="bottom-buttons">
+  <button class="b-1">📴</button>
+  </div>
+  
+  
+<!-- right-clic-menu-->
+<div style="display: none;" id="right-click-menu" class="right-click-menu">
+  <div class="menu-option" onclick="alert('Option 0 selected')">🖼️ edit pic</div>
+  <div class="menu-option" onclick="alert('Option 0 selected')">📄 edit alt</div>
+  <div class="menu-option" onclick="alert('Option 0 selected')">🗑️ remove</div>
+</div>
+<div id="content-grid" style="display: grid; grid-template-columns: 100% 0%;">
+
+  <main id="main-content" style="margin-left:80px; margin-top: -60" class="main-content">
+
+      <div class="up-panel" style="margin-left: 15px;">
+       <button id="path-icon" class='b-1' onclick="publish(event)" style="user-select: none;">🧩</button><label id="page-path" class="l-2" style="cursor: pointer; color:#4A90E2;" >~</label>
+    </div>
+<!--🌐🎨💻-->
+
+    <div id="code-builder" style="position: relative;">
+      <div hidden style="margin-bottom: 15px; border-bottom:#0000EE">
+        <button title="edit path" style="font-size:30px;">🧩</button>
+        <label id="current-page-path"
+          style="font-size: 0.6em; font-size:30px; cursor: pointer; color: #0000EE;">accbuddy</label>
+        <span style="user-select: none; font-size:30px">/</span>
+        <label id="current-page-path"
+          style="font-size: 0.6em; font-size:30px; cursor: pointer; color: #0000EE;">universal</label>
+        <span style="user-select: none; font-size:30px">/</span>
+        <label id="current-page-path" style="font-size: 0.6em; font-size:30px; color: #363638;">windows-11-pro</label>
+        <button title="copy path" style="font-size:30px;">📋</button>
+      </div>
+
+
+      <div id="components-tree" style="position: relative">
+      </div>
+
+      <div id="code-tree" style="position: relative; margin-left:15px;">
+        <fieldset id="41412421-412412412-41241212-412412" data-element="code-tree-tag">
+          <legend>💬</legend>
+          <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
+          <button class="arrow" data-element="code-tree-show-hide-button"
+            onclick="toggleSubFields(event)">&#8594;</button>
+          <button data-element="code-tree-tag-name-button"
+            onclick="loader(event, handleComponentClick)">🏷️component</button>
+          <button data-element="code-tree-inner-html-button" > ▶️</button>
+          <button data-element="code-tree-attributes-button" onclick="openAttributeContent(event)">🔑</button>
+          <button data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
+        </fieldset>
+
+
+      </div>
+      <!--menus-->
+      <div >
+        <fieldset id="component-element" data-element="code-tree-tag">
+          <legend>💬</legend>
+          <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
+          <button class="arrow" data-element="code-tree-show-hide-button"
+            onclick="toggleSubFields(event)">&#8594;</button>
+          <button data-element="code-tree-tag-name-button"
+            onclick="loader(event, handleComponentClick)">🏷️component</button>
+          <button data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)"> ▶️</button>
+          <button data-element="code-tree-attributes-button" onclick="openAttributeContent(event)">🔑</button>
+          <button data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
+        </fieldset>
+
+
+
+        <!--menu click component-->
+        <fieldset id="component-replace-menu" class="menu">
+          <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
+          <span style="user-select:  none;">📂 </span><label
+            id="current-page-path">universal/blablabla/blablabla/coolcss</label>
+          <input id="current-page-path-input" width="auto" type="text" style="display:none;">
+          <button id="current-page-path-edit" style="user-select:  none;">✏️</button>
+          <button hidden id="current-page-path-save">💾</button>
+          <div><span style="user-select:  none;">🆔 </span></span><label
+              id="current-page-id">1414124-414221412-4124214124-412412</label></div>
+          <br>
+          <button>🔄 replace content</button>
+          <button class="b-2" id="code-tree-click-tag-append-child" onclick="append(event)">&#x1F476; append
+            child</button>
+          <button class="b-2" id="code-tree-click-tag-insert-before" onclick="insertB(event)">&#x2190; insert
+            before</button>
+          <button class="b-2" id="code-tree-click-tag-inner-html" onclick="insertHtml(event)">📄 inner HTML</button>
+          <button class="b-2" id="code-tree-click-tag-remove-tag" onclick="removeTag(event)">🚫 detach
+            component</button>
+
+
+        </fieldset>
+
+
+        <fieldset id="code-tree-tag-attributes-form" class="menu">
+          <legend><button id="code-tree-tag-attributes-form-action-back">❌</button>
+          </legend>
+          <label id="code-tree-tag-attributes-form-action-back">🔄 select new component</label>
+          <br>
+          <select id="pathSelector" style="margin-top: 10px;" onchange="handlePathSelection()">
+            <option value="path1">⬇️ select</option>
+            <option value="path1">⬅️ back</option>
+            <option value="path2">➡️ dasdsadsadsadsadsada</option>
+            <option value="path3">➡️ dsadsadsaddasd</option>
+            <!-- Добавьте сюда другие пути -->
+          </select>
+
+          <table id="code-tree-tag-attributes-form-attributes-list">
+            <br>
+            <tr>
+              <td><button>✅select</button></td>
+              <td>📂 universal/blablabla/blablabla/coolcss</td>
+              <td><label>🧩</label></td>
+            </tr>
+            <tr>
+              <td><button>✅select</button></td>
+
+              <td>📂 accbuddy/1/</td>
+              <td><label>🧩</label></td>
+            </tr>
+            <tr>
+              <td><button>✅select</button></td>
+
+              <td>📂 orange/33/4214124121/4124141414141</td>
+              <td><label>🧩</label></td>
+            </tr>
+            <tr>
+              <td><button>✅select</button></td>
+
+              <td>📂 accbuddy/blablabla/blablabla/coolcss/14414124141</td>
+              <td><label>🧩</label></td>
+            </tr>
+
+            <tr>
+              <td><button>✅select</button></td>
+
+              <td>📂 accbuddy/blablabla/blablabla/coolcss/14414124141accbuddy/blablabla/blablabla/coolcss/14414124141
+              </td>
+              <td><label>🧩</label></td>
+            </tr>
+
+          </table>
+
+        </fieldset>
+
+
+        <!-- menu select new path-->
+        <fieldset id="code-tree-tag-attributes-form" class="menu">
+          <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
+          <div>
+            <select onchange="handlePathSelection()" id="pathSelector"
+              style="margin-top: 10px; min-width: 200px; font-size: 1.2em;">
+              <option value="path0">⬇️ select</option>
+              <option value="path1">⬅️ back</option>
+              <option value="path2">➡️ universal</option>
+              <option value="path3">➡️ orange</option>
+            </select>
+          </div>
+
+          <table id="code-tree-tag-attributes-form-attributes-list" class="menu">
+            <tr>
+              <td><label style="font-size: 1.9em;">🗑</label></td>
+
+              <td><span style="user-select:  none;">📂</span><span
+                  data-value="path">universal/blablabla/blablabla/coolcss</span></td>
+              <td><label>🧩</label></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td><span style="user-select:  none;">📂</span><span
+                  data-value="path">universal/blablabla/blablabla/coolcss</span></td>
+              <td><label>🧩</label></td>
+            </tr>
+            <td><input type="checkbox"></td>
+            <td><span style="user-select:  none;">📂</span><span
+                data-value="path">universal/blablabla/blablabla/coolcss</span></td>
+            <td><label>🧩</label></td>
+            </tr>
+            <tr>
+              <td> <span></span><span id="code-tree-amount-selected-for-append-or-insert"
+                  style="font-size: 24px;">0</span></td>
+              <td> <button id="code-tree-click-tag-approve" onclick="approve(event)"> ✅ APPROVE</button></td>
+              <td> </td>
+            </tr>
+          </table>
+
+
+        </fieldset>
+
+        </fieldset>
+
+
+
+        <!--menu click tag-->
+        <fieldset id="code-tree-click-tag" class="menu">
+          <legend><button class="b-6" onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
+          <button class="b-2" id="code-tree-click-tag-append-child" onclick="append(event)">&#x1F476; append
+            child</button>
+          <button class="b-2" id="code-tree-click-tag-insert-before" onclick="insertB(event)">&#x2190; insert
+            before</button>
+          <button class="b-2" id="code-tree-click-tag-inner-html" onclick="insertHtml(event)">📄 inner HTML</button>
+          <button class="b-2" id="code-tree-click-tag-change-tag" onclick="changeTag(event)">✏️ change tag</button>
+          <button class="b-2" id="code-tree-click-tag-dublicate-tag" onclick="duplicateTag(event)"> 📄📄 dublicate
+            element</button>
+          <button class="b-2" id="code-tree-click-tag-remove-tag" onclick="removeTag(event)">&#128465; remove
+            element</button>
+        </fieldset>
+
+        <!--menu enter comment-->
+        <span id="code-tree-tag-comment-form" class="menu">
+          <input placeholder="💬 enter comment" type="text" id="code-tree-tag-comment-input">
+          <button id="code-tree-tag-comment-save">💾</button>
+          <button onclick="cancel(event)" style="font-size: 0.9em;">❌</button>
+        </span>
+
+        <!--menu add element-->
+        <fieldset id="code-tree-add-tag-step-1" class="menu">
+          <legend><button class="b-6" onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
+          <button class="b-2" id="code-tree-add-tag-choose-new" onclick="addNew(event)"> 🆕 choose new</button>
+          <button class="b-2" id="code-tree-add-tag-choose-existed" onclick="addExisting(event)"> ✔️ choose
+            existed</button>
+          <button class="b-2" id="code-tree-add-tag-choose-component" onclick="choseComponent(event)"> 🧩
+            component</button>
+        </fieldset>
+
+
+
+        <!-- menu confirm selected append/insert tags-->
+        <fieldset id="code-tree-append-or-insert-approv-menu" style="user-select: none;" class="menu">
+          <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
+          <span></span><span id="code-tree-amount-selected-for-append-or-insert" style="font-size: 24px;">0</span>
+          <button class="b-2" id="code-tree-click-tag-approve" onclick="approve(event)"> ✅ APPROVE</button>
+          <label label for="code-tree-menu-dublicate-with-parent-option">⚠️</label><input
+            id="code-tree-menu-dublicate-with-parent-option" type="checkbox"><label
+            for="code-tree-menu-dublicate-with-parent-option">Duplicate with Parent</label>
+        </fieldset>
+
+
+        <!-- menu to receive inner html -->
+        <fieldset id="code-tree-inner-html-receive-menu" class="menu">
+          <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
+          <textarea placeholder="📄inner HTML" id="code-tree-inner-html-receive-textarea"
+            style="min-width: 150px; min-height: 50px; max-width: 90vw;"></textarea>
+          <br>
+          <button id="code-tree-inner-html-receiver-save-" onclick="save(event)">💾 save</button>
+
+        </fieldset>
+
+
+        <!-- menu to receive text area html -->
+        <!-- menu to receive text area html -->
+        <fieldset id="code-tree-tag-text-content-form" class="menu">
+          <legend><button id="code-tree-tag-attributes-form-action-back" class="b-6" onclick="cancel(event)">❌</button>
+          </legend>
+          <textarea placeholder="📄Text content" id="code-tree-tag-text-content"></textarea>
+          <button id="code-tree-tag-text-content-action-save" onclick="saveText(event)" class="b-3">💾 save</button>
+        </fieldset>
+         <!-- menu to receive inner html -->
+         <fieldset id="code-tree-tag-html-content-form" class="menu">
+          <legend><button id="code-tree-tag-attributes-form-action-back" class="b-6" onclick="cancel(event)">❌</button>
+          </legend>
+          <textarea placeholder="📄html content" id="code-tree-tag-html-content"></textarea>
+          <button id="code-tree-tag-text-content-action-save" onclick="saveInnerHtml(event)" class="b-3">💾 save</button>
+        </fieldset>
+
+
+
+        <!--menu to view and edit attributes-->
+        <fieldset class="menu" id="code-tree-tag-attributes-form-1"
+          style="padding: 30px;">
+          <legend><button onclick="cancel1(event)" style="font-size: 0.9em;" class="b-6">❌</button></legend>
+          <div style="margin-bottom: 10px;">
+            <input  id="code-tree-tag-attribute-input-key" type="text" placeholder="attribute 🔑"></td>
+            <input  id="code-tree-tag-attribute-input-key-value" type="text" placeholder="value 📄">
+            <button id="code-tree-tag-attribute-add" class="b-3" onclick="saveAttribute(event)">➕</button>
+          </div>
+            <table class="table-1" id="code-tree-tag-attributes-list">
+
+            <tr id="code-tree-tag-attributes-list-item">
+              <td>🔑<span id="code-tree-tag-attribute-key">data-type</span></td>
+              <td>📄<span id="code-tree-tag-attribute-value">cool product<span></td>
+              <td><button id="code-tree-tag-attribute-remove-button" class="b-4"
+                  onclick="removeAttribute1(event)">&#128465;</button></td>
+            </tr>
+
+          </table>
+
+
+
+
+
+
+
+
+
+
+        </fieldset>
+
+        <!-- needed elements -->
+        <fieldset>
+          <button data-element="component-tree-tag-name-button">🧩 accbuddy windows 11 product key page🖇🔄</button>
+          <button data-element="component-tree-css-button">🎨css(0)</button>
+          <button data-element="component-tree-js-button">💻js(0)</button>
+        </fieldset>
+        <label label for="code-tree-menu-insert-as-copy-option"> ⚠️</label><input
+          id="code-tree-menu-insert-as-copy-option" type="checkbox"><label
+          for="code-tree-menu-insert-as-copy-option">Insert as copy</label>
+
+        <!--menu choose from tags tabble-->
+        <fieldset id="tag-table">
+          <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
+          <h2>choose tag</h2>
+          <table id="tagsTable" class="tagsTable-style">
+            <thead>
+              <tr>
+                <th><input type="text" id="searchTagName" placeholder="Search by Tag Name" onkeyup="filterTable(0)">
+                </th>
+                <th><input type="text" id="searchTagValue" placeholder="Search by Tag Value" onkeyup="filterTable(1)">
+                </th>
+                <th><input type="text" id="searchTagType" placeholder="Search by Tag Type" onkeyup="filterTable(2)">
+                </th>
+                <th><input type="text" id="searchTagComment" placeholder="Search by Tag Comment"
+                    onkeyup="filterTable(3)"></th>
+              </tr>
+              <tr>
+                <th>Tag Name</th>
+                <th>Tag Value</th>
+                <th>Tag Type</th>
+                <th>Tag Comment</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </fieldset>
+
+    
+      </div>
+      <div id="generated-page">
+        <component id="63ae5927-390f-4391-993d-b25ab09c8ada"></component>
+      </div>
+
+  </main>
+  <aside style="overflow-y: auto;">
+    <div>
+      here can be sme content
+    </div>
+  </aside>
+</div>
+
+
+<!--loading screen-->
+<div id="loading!"
+  style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 2;">
+  
+  <span style="font-size: 10.2em; color: white;">⏳</span>
+  <div id="timer" style="font-size: 2em; color: white;">1.12</div>
+</div>
+
+
+<!--loading script-->
+<script>
+  /*
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('button').forEach(function(button) {
+        button.addEventListener('click', function() {
+          const loadingScreen = document.getElementById('loading');
+            loadingScreen.style.display = 'flex';
+
+            const timerElement = document.getElementById('timer');
+            let tenthsOfSeconds = 0;
+            const interval = setInterval(function() {
+                tenthsOfSeconds++;
+                timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
+            }, 100);
+
+            const randomTime = Math.random() * 1000 + 100; 
+
+            setTimeout(function() {
+                loadingScreen.style.display = 'none';
+                clearInterval(interval);
+
+                const lastActionTime = document.getElementById('last-action-time');
+                lastActionTime.textContent = timerElement.textContent;
+            }, randomTime);
+        });
+    });
+});
+*/
+</script>
+<script>
+  let path = ''
+  let lvls = []
+  async function removeAttribute1(event) {
+    const saveButton = event.target;
+    const tr = saveButton.closest('#code-tree-tag-attributes-list-item');
+
+    if (!tr) {
+      console.error('Could not find parent tr element');
+      return;
+    }
+
+    const keyElement = tr.querySelector('#code-tree-tag-attribute-key');
+    const key = keyElement.textContent.replace('🔑', '');
+
+    const parentMenu = event.target.closest('.menu');
+
+    if (!parentMenu) {
+      console.error('Could not find parent menu element');
+      return;
+    }
+
+    const { id } = parentMenu;
+    const action = 'removeAttribute';
+    console.log('Action: ' + action);
+
+    const splited = id.split(';');
+    const [toRemove, ...rest] = splited;
+
+    const el = {
+      time: (new Date()).getTime(),
+      action,
+      target_element: rest.join(';'),
+      key,
+    };
+
+    tr.remove();
+    console.log(JSON.stringify(el));
+    await pushAction(el);
+
+    console.log(JSON.stringify(actionLog));
+  }
+  let visualOn = false
+  function transformToVisual(event) {
+
+
+    if (visualOn) {
+      return;
+    }
+    event.target.classList.add('b-selected');
+    visualOn = true
+    console.log('transforming');
+    var generatedPage = document.getElementById("generated-page");
+
+    // Process each child element
+    var children = generatedPage.children;
+    for (var i = 0; i < children.length; i++) {
+      processElement(children[i]);
+    }
+
+    // Define the function to be removed
+    function handleMouseOver(event) {
+      if (event.target.hasAttribute('data-visual-element')) {
+        event.target.style.backgroundColor = 'pink';
+      }
+    }
+
+    // Add the event listener
+    document.addEventListener('mouseover', handleMouseOver);
+
+
+    document.addEventListener('mouseout', function (event) {
+      if (event.target.hasAttribute('data-visual-element')) {
+        event.target.style.backgroundColor = '';
+      }
+    });
+
+
+    function clickRemoveButton(clickEvent) {
+      // Check if the clicked element or its ancestor is a button
+      const isButton = clickEvent.target.closest('.receive-target');
+
+      // Check if the clicked element or its ancestor has the class 'menu-option'
+      const isMenuOption = clickEvent.target.closest('.menu-option');
+
+      if (!isButton && !isMenuOption) {
+        // If the clicked element is not a button and not inside an element with class 'menu-option', remove the buttons
+        removeButtons();
+      }
+    }
+
+    function handleMenuEntryClick(sourceId, targetId, siblingWithInsertBefore, parentWithAppendChild, flag) {
+      console.log('t');
+      console.log(parentWithAppendChild);
+      console.log(siblingWithInsertBefore);
+      removeButtons()
+      const original = document.getElementById(sourceId);
+      const originalRect = original.getBoundingClientRect();
+      // Check if siblingWithInsertBefore is present
+      if (siblingWithInsertBefore.length > 0) {
+        // Insert <button class="receive-target">➕</button> before each siblingWithInsertBefore
+        siblingWithInsertBefore.forEach(sibling => {
+          const addButton = document.createElement('button');
+          addButton.className = 'receive-target';
+          addButton.innerHTML = '➕';
+          addButton.onclick = function () {
+            insertBefore(sibling.id, targetId, flag);
+            document.removeEventListener('click', clickRemoveButton);
+            document.addEventListener('mouseover', handleMouseOver);
+          };
+          addButton.addEventListener('mouseover', handleMouseOver1);
+          addButton.addEventListener('mouseout', handleMouseOut1);
+          sibling.parentNode.insertBefore(addButton, sibling);
+        });
+      }
+
+      // Check if parentWithAppendChild is present
+      if (parentWithAppendChild) {
+        // Append <button class="receive-target">➕</button> to parentWithAppendChild
+        const addButton = document.createElement('button');
+        addButton.className = 'receive-target';
+        addButton.innerHTML = '➕';
+        addButton.onclick = function () {
+          append(parentWithAppendChild.id, targetId, flag);
+          document.removeEventListener('click', clickRemoveButton);
+          document.addEventListener('mouseover', handleMouseOver);
+        };
+        addButton.addEventListener('mouseover', handleMouseOver1);
+        addButton.addEventListener('mouseout', handleMouseOut1);
+        parentWithAppendChild.appendChild(addButton);
+      }
+      document.removeEventListener('mouseover', handleMouseOver);
+      document.addEventListener('click', clickRemoveButton);
+      const newElement = document.getElementById(sourceId);
+      const newRect = newElement.getBoundingClientRect();
+      window.scrollTo({
+        top: newRect.top - originalRect.top + window.scrollY,
+        behavior: 'auto' // You can use 'auto' or 'smooth' for smooth scrolling
+      });
+      // You can perform additional actions here if needed
+    }
+
+    function handleMouseOver1() {
+      this.classList.add('drag-over'); // Add a class to apply hover effect
+    }
+
+    function handleMouseOut1() {
+      this.classList.remove('drag-over'); // Remove the class to stop hover effect
+    }
+    function generateNewId(originalId) {
+      const existingElements = document.querySelectorAll(`[id^="${originalId}"]`);
+      let highestCopyNumber = 0;
+
+      existingElements.forEach(element => {
+        const match = element.id.match(/-copy-(\d+)$/);
+        if (match) {
+          const copyNumber = parseInt(match[1], 10);
+          highestCopyNumber = Math.max(highestCopyNumber, copyNumber);
+        }
+      });
+
+      const newCopyNumber = highestCopyNumber + 1;
+      return `${originalId}-copy-${newCopyNumber}`;
+    }
+
+    // Function to generate a new ID based on a specific copy number
+    function duplicateId(originalId, copyNumber) {
+      const splited = originalId.split(';');
+      return splited.map((part, index) => (index === splited.length - 1)
+        ? part.replace(/-copy-\d+-tree$/, '').replace(/-tree$/, '') + `-copy-${copyNumber}-tree`
+        : part
+      ).join(';');
+    }
+
+    // Example function, adjust as needed
+    async function insertBefore(nextElementId, selectedElementId, flag) {
+      const actionObject = {
+        time: (new Date()).getTime(),
+        action: 'InsertBefore',
+        target_element: nextElementId + '-tree',
+        inserted_element: { originalId: selectedElementId + '-tree', id: duplicateId(selectedElementId + '-tree', generateNewCopyNumber(selectedElementId + '-tree')) },
+      };
+      await pushAction(actionObject, false, flag);
+      removeReceiveButtons();
+    }
+
+    // Example function, adjust as needed
+    async function append(parentId, selectedElementId, flag) {
+      // Perform additional actions if needed
+      const actionObject = {
+        time: (new Date()).getTime(),
+        action: 'Append',
+        target_element: parentId + '-tree',
+        inserted_element: { originalId: selectedElementId + '-tree', id: duplicateId(selectedElementId + '-tree', generateNewCopyNumber(selectedElementId + '-tree')) },
+      };
+      await pushAction(actionObject, false, flag);
+      removeReceiveButtons();
+    }
+
+    // Function to generate a new copy number based on the highest copy number
+    function generateNewCopyNumber(originalId) {
+      const existingElements = document.querySelectorAll(`[id^="${originalId}"]`);
+      let highestCopyNumber = 0;
+
+      existingElements.forEach(element => {
+        const match = element.id.match(/-copy-(\d+)-tree$/);
+        if (match) {
+          const copyNumber = parseInt(match[1], 10);
+          highestCopyNumber = Math.max(highestCopyNumber, copyNumber);
+        }
+      });
+
+      return highestCopyNumber + 1;
+    }
+    // Function to remove all elements with the class 'receive-target'
+    function removeReceiveButtons() {
+      const buttonsToRemove = document.querySelectorAll('.receive-target');
+      buttonsToRemove.forEach(button => {
+        button.parentNode.removeChild(button);
+      });
+    }
+    function moveItem(parentId, selectedElementId, action) {
+
+      // Create a new element (adjust this part based on your requirements)
+
+      // Perform additional actions if needed
+      const actionObject = {
+        time: (new Date()).getTime(),
+        action: action,
+        target_element: [{ id: parentId + '-tree' }, { id: selectedElementId + '-tree' }],
+      }
+      pushAction(actionObject);
+      // Get a NodeList of all elements with the class 'receive-target'
+      const buttonsToRemove = document.querySelectorAll('.receive-target');
+
+      // Iterate through the NodeList and remove each button
+      buttonsToRemove.forEach(button => {
+        button.parentNode.removeChild(button);
+      });
+
+    }
+
+    // Utility function to add menu entry
+    function addMenuEntry(menu, text, clickHandler) {
+      const entry = document.createElement('div');
+      entry.className = 'menu-option';
+      entry.innerHTML = text;
+      entry.onclick = clickHandler;
+      menu.appendChild(entry);
+    }
+    function saveT(event,previousValue) {
+      const id = event.target.id + '-tree'
+      const action = 'textContent'
+      console.log('ac' + action)
+
+
+
+      const textareaValue = event.target.textContent;
+      if(textareaValue === previousValue){
+        event.target.removeAttribute('contenteditable')
+        return textareaValue
+      }
+      if (!textareaValue) {
+        function findRelatedElements(inputId) {
+          // Step 1: Remove the -tree suffix
+
+          // Step 2: If it ends with -copy-x, remove that part
+          let modifiedId = inputId.replace(/-copy-\d+$/, '');
+
+          // Step 3: Query for elements starting with the modified ID
+          const selector = '[id^="' + modifiedId + '"]';
+          const matchingElements = document.querySelectorAll(selector);
+
+          // Step 4: Filter to get only elements that end with -tree
+          const filteredElements = Array.from(matchingElements).filter(element => element.id.endsWith('-tree'));
+
+          return Array.from(filteredElements).length
+        }
+        if (findRelatedElements(event.target.id) > 1) {
+          pushAction({
+            time: (new Date()).getTime(),
+            action: 'removeTag',
+            target_element: id,
+
+          })
+          const el = document.getElementById(event.target.id + '-fieldset')
+          if (el) {
+            el.remove()
+          }
+        }
+        else {
+          alert('last element')
+        }
+        return
+      }
+
+      const el = {
+        time: (new Date()).getTime(),
+        action,
+        target_element: id,
+        value: textareaValue,
+
+      }
+      console.log('ac' + JSON.stringify(el))
+      pushAction(el)
+      event.target.removeAttribute('contenteditable')
+      return textareaValue
+    }
+    function onDoubleClick(e) {
+      // Get the element that was double-clicked
+      var target = e.target;
+
+      // Check if the element has the 'data-visual-contenteditable' attribute
+      if (target.getAttribute('data-visual-contenteditable') !== null) {
+        // Prevent the default double-click behavior
+        e.preventDefault();
+
+        // Set the 'contenteditable' attribute to 'true', making the element editable
+        target.setAttribute('contenteditable', 'true');
+
+        // Reset the background color of the element
+        target.style.backgroundColor = '';
+
+        // Set focus on the editable element
+        target.focus();
+
+        let textContent = target.textContent
+        target.addEventListener('blur', function (blurEvent) {
+          // Call the saveT function when the element loses focus
+          textContent && (textContent = saveT(blurEvent,textContent))
+        });
+      }
+    }
+
+    // Add an event listener to the entire document to track double-clicks
+    document.addEventListener('dblclick', onDoubleClick);
+
+    document.addEventListener('contextmenu', function (e) {
+      if (e.target.hasAttribute('data-visual-element')) {
+        e.preventDefault(); // Prevent the default context menu from opening
+        console.log('in11');
+        const menu = document.querySelector('#right-click-menu'); // Use # for ID selector
+        menu.innerHTML = '';
+        let siblingsWithDuplicate
+        let fieldsetSiblings
+        let parentWithAppendChild
+        let siblingWithInsertBefore
+        console.log('tag ' + e.target.tagName)
+        const redirectToImgPage = (imgId,src)=>{
+          const urlSearchParams = new URLSearchParams(window.location.search);
+          const id = urlSearchParams.get('id');
+          console.log('in1')
+          window.location.href = `gallery.html?id=${id}&imgId=${imgId}&src=${src}`;
+        }
+        if(e.target.tagName.toLowerCase() ==='img'){
+          addMenuEntry(menu, `➕ edit image`, () => {
+            redirectToImgPage(e.target.id,e.target.getAttribute('src'))
+          });
+        }
+        if (
+          e.target.parentElement.id === e.target.id + '-fieldset') {
+          // Check for data-visual-duplicate siblings
+          console.log('case1')
+          siblingsWithDuplicate = Array.from(e.target.parentElement.parentElement.children).filter(
+            sibling => sibling.hasAttribute('data-visual-dublicate') && !isDuplicate(sibling)
+          );
+
+          // Check for fieldset siblings containing data-visual-duplicate elements
+          fieldsetSiblings = Array.from(e.target.parentElement.parentElement.children).filter(
+            sibling => sibling.tagName === 'FIELDSET' &&
+              Array.from(sibling.querySelectorAll('[data-visual-dublicate]')).length > 0 &&
+              !isDuplicate(sibling)
+          );
+          // Check if parent has data-visual-appendChild
+          parentWithAppendChild = e.target.parentElement.parentElement.hasAttribute('data-visual-appendchild') && e.target.parentElement.parentElement;
+
+          // Check sibling for data-visual-insertBefore
+          siblingWithInsertBefore = e.target.parentElement.parentElement && Array.from(e.target.parentElement.parentElement.children).filter(
+            child => child.hasAttribute('data-visual-insertbefore') || (child.id.endsWith('-fieldset') && child.children[1].hasAttribute('data-visual-insertbefore'))
+          );
+        }
+        else {
+          console.log('case2')
+          // Check for data-visual-duplicate siblings
+          siblingsWithDuplicate = Array.from(e.target.parentElement.children).filter(
+            sibling => sibling.hasAttribute('data-visual-dublicate') && !isDuplicate(sibling)
+          );
+
+          // Check for fieldset siblings containing data-visual-duplicate elements
+          fieldsetSiblings = Array.from(e.target.parentElement.children).filter(
+            sibling => sibling.tagName === 'FIELDSET' &&
+              Array.from(sibling.querySelectorAll('[data-visual-dublicate]')).length > 0 &&
+              !isDuplicate(sibling)
+          );
+          // Check if parent has data-visual-appendChild
+          parentWithAppendChild = e.target.parentElement.hasAttribute('data-visual-appendchild') && e.target.parentElement;
+
+          // Check sibling for data-visual-insertBefore
+          siblingWithInsertBefore = e.target.parentElement && Array.from(e.target.parentElement.children).filter(
+            child => child.hasAttribute('data-visual-insertbefore')
+          );
+
+        }
+
+
+        function isDuplicate(element) {
+          return element.id.includes('-copy-');
+        }
+        console.log(JSON.stringify([...fieldsetSiblings, ...siblingsWithDuplicate]));
+
+
+
+        // Add entries for data-visual-duplicate siblings
+        siblingsWithDuplicate.forEach(sibling => {
+          addMenuEntry(menu, `➕ ${sibling.tagName.toLowerCase()}`, () => {
+            handleMenuEntryClick(e.target.id, sibling.id, siblingWithInsertBefore, parentWithAppendChild);
+          });
+        });
+
+        // Add entries for fieldset siblings
+        fieldsetSiblings.forEach(fieldsetSibling => {
+          addMenuEntry(menu, `➕ ${fieldsetSibling.children[0].textContent.toLowerCase()}`, () => {
+            handleMenuEntryClick(e.target.id, fieldsetSibling.children[1].id, siblingWithInsertBefore, parentWithAppendChild, true);
+          });
+        });
+
+        // Adjust the position relative to the viewport
+        const offsetX = e.pageX;
+        const offsetY = e.pageY;
+
+        menu.style.display = 'block';
+        menu.style.left = `${offsetX}px`;
+        menu.style.top = `${offsetY}px`;
+
+        // Hide the menu when clicking the left mouse button
+        window.addEventListener('click', function () {
+          menu.style.display = 'none';
+        });
+      }
+    });
+
+    // Function to check if an element has the 'data-visual-draggable' attribute
+    function isDraggable(element) {
+      return element.hasAttribute('data-visual-draggable');
+    }
+
+    function handleDragStart(e) {
+      if (isDraggable(e.target)) {
+
+        console.log('draggable');
+        removeButtons()
+        e.dataTransfer.setData('text/plain', e.target.id);
+        const original = document.getElementById(e.target.id);
+        const originalRect = original.getBoundingClientRect();
+        let siblingWithInsertBefore
+        let parentWithAppendChild
+        if (
+          e.target.parentElement.id === e.target.id + '-fieldset') {
+          // Check sibling for data-visual-insertBefore
+          siblingWithInsertBefore = e.target.parentElement.parentElement && Array.from(e.target.parentElement.parentElement.children).filter(
+            child => child.hasAttribute('data-visual-insertbefore') || (child.id.endsWith('-fieldset') && child.children[1].hasAttribute('data-visual-insertbefore'))
+          );
+
+          // Check if the parent has data-visual-appendchild
+          parentWithAppendChild = e.target.parentElement.parentElement.hasAttribute('data-visual-appendchild') && e.target.parentElement.parentElement;
+
+        }
+        else {
+          // Check sibling for data-visual-insertBefore
+          siblingWithInsertBefore = e.target.parentElement && Array.from(e.target.parentElement.children).filter(
+            child => child !== e.target && child.hasAttribute('data-visual-insertbefore')
+          );
+
+          // Check if the parent has data-visual-appendchild
+          parentWithAppendChild = e.target.parentElement.hasAttribute('data-visual-appendchild') && e.target.parentElement;
+        }
+        siblingWithInsertBefore.forEach(sibling => {
+          // Create the "+" button element with data attributes
+          const plusButton = createButton('InsertBefore', sibling.id);
+          sibling.parentNode.insertBefore(plusButton, sibling);
+          addHoverListeners(plusButton);
+        });
+        if (parentWithAppendChild) {
+          // Create the "+" button element with data attributes
+          const plusButton = createButton('Append', parentWithAppendChild.id);
+          parentWithAppendChild.appendChild(plusButton);
+          addHoverListeners(plusButton);
+        }
+        const newElement = document.getElementById(e.target.id);
+        const newRect = newElement.getBoundingClientRect();
+        console.log(window.scrollY)
+        console.log(newRect.top)
+        console.log(originalRect.top)
+        window.scrollTo({
+          top: newRect.top - originalRect.top + window.scrollY,
+          behavior: 'auto' // You can use 'auto' or 'smooth' for smooth scrolling
+        });
+        // Update the dragover and drop event listeners
+        document.addEventListener('dragover', handleDragOver);
+        document.addEventListener('drop', handleDrop);
+      }
+    }
+
+    function createButton(action, elementId) {
+      const plusButton = document.createElement('button');
+      plusButton.className = 'receive-target';
+      plusButton.innerHTML = '➕';
+      plusButton.setAttribute('data-action', action);
+      plusButton.setAttribute('data-element-id', elementId);
+      return plusButton;
+    }
+
+    function addHoverListeners(plusButton) {
+      plusButton.addEventListener('dragenter', handleDragEnter);
+      plusButton.addEventListener('dragleave', handleDragLeave);
+    }
+
+
+    function handleDrop(e) {
+      e.preventDefault();
+
+      const draggedElementId = e.dataTransfer.getData('text/plain');
+      const targetElementId = e.target.getAttribute('data-element-id');
+      const action = e.target.getAttribute('data-action');
+
+      // Log the element id and target element id
+      console.log(`Element ID: ${draggedElementId}, Target Element ID: ${targetElementId} action ${action}`);
+      if (targetElementId) {
+        moveItem(targetElementId, draggedElementId, action)
+      }
+
+      // Remove the drag-over class from the target element
+      if (e.target.classList.contains('receive-target')) {
+        e.target.classList.remove('drag-over');
+      }
+
+
+      removeButtons()
+      // Reset the dragover and drop event listeners
+      document.removeEventListener('dragover', handleDragOver);
+      document.removeEventListener('drop', handleDrop);
+    }
+
+    function removeButtons() {
+      // Remove the "+" button after logging the information
+      const plusButtons = document.querySelectorAll('.receive-target');
+      plusButtons.forEach(button => button.parentNode.removeChild(button));
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+
+      // Add the drag-over class to the target element
+      if (e.target.classList.contains('receive-target')) {
+        e.target.classList.add('drag-over');
+      }
+    }
+
+    function handleDragEnter(e) {
+      e.preventDefault();
+
+      // Add the drag-over class to the target element
+      if (e.target.classList.contains('receive-target')) {
+        e.target.classList.add('drag-over');
+      }
+    }
+
+    function handleDragLeave(e) {
+      // Remove the drag-over class from the target element
+      if (e.target.classList.contains('receive-target')) {
+        e.target.classList.remove('drag-over');
+      }
+    }
+
+    document.addEventListener('dragstart', handleDragStart);
+    visualOn = true
+  }
+
+  function processElement(element) {
+    // Check if the element has the data-visual-draggable attribute
+    if (element.hasAttribute("data-visual-draggable")) {
+      // Apply draggable logic here
+      element.draggable = true;
+    }
+    // Check if the element has the data-visual-border attribute
+    if (element.hasAttribute("data-visual-border")) {
+      // Create a new fieldset element
+      var fieldset = document.createElement("fieldset");
+
+      // Set the id of the fieldset to be the id of the original element + "-fieldset"
+      fieldset.id = element.id + "-fieldset";
+      fieldset.className = "tag-fs";
+
+      // Create a legend element with the content of data-visual-title attribute
+      var legend = document.createElement("legend");
+      legend.className = "comment";
+      legend.textContent = element.getAttribute("data-visual-title");
+
+      // Append the legend to the fieldset
+      fieldset.appendChild(legend);
+
+      // Replace the current element with the new fieldset
+      element.parentNode.replaceChild(fieldset, element);
+      fieldset.appendChild(element);
+
+      // Process nested children
+      var nestedChildren = element.children;
+      for (var i = 0; i < nestedChildren.length; i++) {
+        processElement(nestedChildren[i]);
+      }
+    } else {
+      // Process nested children if the element doesn't have the attribute
+      var children = element.children;
+      for (var i = 0; i < children.length; i++) {
+        processElement(children[i]);
+      }
+    }
+  }
+  function handlePathSelection() {
+    // Get the selected value from the pathSelector
+    var selectedValue = document.getElementById('pathSelector').value;
+    console.log(selectedValue)
+    // Get the corresponding item based on the selected value
+    var selectedItem = selectedValue
+
+    // Handle the selected item as needed
+    console.log('Selected Item:', selectedItem);
+    if (selectedItem === 'select' || selectedItem === undefined) {
+      return
+    }
+    if (selectedItem === 'back') {
+      if (path === '') {
+        return
+      }
+      const splited = path.split('/')
+      if (splited.length === 1) {
+        loadFileList()
+        return
+      }
+      splited.pop()
+      path = splited.join('/')
+      loadUsingPath()
+      return
+    }
+    if (path === '') {
+      path = selectedItem
+    }
+    else {
+      path = path + '/' + selectedItem
+
+    }
+    console.log(path)
+    loadUsingPath()
+
+  }
+  function selectFile(event, fileId) {
+    // Add logic to handle the selected file, if needed
+    console.log('File selected with ID:', fileId);
+    var el = event.target;
+
+    // Get the parent fieldset
+    var fieldset = el.closest('fieldset');
+
+    // Get the id and action attributes
+    var fieldsetId = fieldset.id;
+    var fieldsetAction = fieldset.getAttribute('action');
+
+    // Log the id and action attributes (you can replace this with your desired logic)
+    console.log("Fieldset ID:", fieldsetId);
+    console.log("Fieldset Action:", fieldsetAction);
+    const actionObject = {
+      time: (new Date()).getTime(),
+      action: fieldsetAction,
+      target_element: fieldsetId.split(';')[1],
+      inserted_component: { componentId: fileId, id: generateUUID() },
+    };
+    pushAction(actionObject);
+    // Remove the parent fieldset
+    fieldset.remove();
+  }
+  function loadFileList() {
+    // Fetch GET request
+    fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true')
+      .then(response => response.json())
+      .then(data => {
+        // Replace existing file paths with dynamic content
+        var fileListTable = document.getElementById('code-tree-tag-attributes-form-attributes-list');
+        fileListTable.innerHTML = '';
+
+        let i = 0;
+        data.items.forEach(item => {
+
+          if (!lvls.includes(item.lsi1.split('/')[0])) {
+            lvls.push(item.lsi1.split('/')[0])
+          }
+          if (i < 25) {
+            i++
+            // Clone the fieldset
+            var newRow = fileListTable.insertRow();
+            newRow.innerHTML = `
+            <td><button onclick="selectFile(event,'${item.id}')">✅select</button></td>
+            <td>📂 ${item.lsi1}</td>
+            <td><label>🧩</label></td>
+          `;
+          }
+
+        });
+
+        // Show the cloned fieldsets
+        document.querySelectorAll('#filePathList fieldset').forEach(fieldset => {
+          fieldset.id !== 'cancelation' && fieldset.removeAttribute('hidden');
+        });
+
+
+
+        // Update select options
+        var pathSelector = document.getElementById('pathSelector');
+        pathSelector.innerHTML = '<option value="select">⬇️ select</option><option value="back">⬅️ back</option>';
+        lvls.forEach((lvl, index) => {
+          pathSelector.innerHTML += `<option value="${lvl}">➡️ ${lvl}</option>`;
+        });
+      })
+      .catch(error => console.error('Error:', error));
+
+  }
+  const loadUsingPath = () => {
+    return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + path)
+      .then(response => response.json())
+      .then(data => {
+        // Replace existing file paths with dynamic content
+        var fileListTable = document.getElementById('code-tree-tag-attributes-form-attributes-list');
+        fileListTable.innerHTML = '';
+        lvls = []
+        let i = 0
+        data.items.forEach(item => {
+
+          if (!lvls.includes(item.lsi1.replace(path + '/', '').split('/')[0])) {
+            lvls.push(item.lsi1.replace(path + '/', '').split('/')[0])
+          }
+          if (i < 25) {
+            i++
+            var newRow = fileListTable.insertRow();
+            newRow.innerHTML = `
+            <td><button onclick="selectFile(event,'${item.id}')">✅select</button></td>
+            <td>📂 ${item.lsi1}</td>
+            <td><label>🧩</label></td>
+          `;
+          }
+
+        });
+
+        // Show the cloned fieldsets
+        document.querySelectorAll('#filePathList fieldset').forEach(fieldset => {
+          fieldset.id !== 'cancelation' && fieldset.removeAttribute('hidden');
+        });
+
+
+
+        // Update select options
+        var pathSelector = document.getElementById('pathSelector');
+        pathSelector.innerHTML = '<option value="path0">⬇️ select</option><option value="back">⬅️ back</option>';
+        lvls.forEach((lvl, index) => {
+          pathSelector.innerHTML += `<option value="${lvl}">➡️ ${lvl}</option>`;
+        });
+      })
+      .catch(error => console.error('Error:', error));
+  }
+</script>
+<script>
+  var memData = {}
+  //third menu 
+  const addNew = (e) => {
+    const splited = e.target.parentNode.id.split(';')
+    const [toRemove, ...rest] = splited
+    const parentId = rest.join(';');
+    const fieldset = document.getElementById('tag-table');
+
+    if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('tag-table')) {
+      const clonedFieldset = fieldset.cloneNode(true);
+
+      const clonedRows = clonedFieldset.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+      for (let i = 0; i < clonedRows.length; i++) {
+        const index = i; // Capture the current value of 'i' in a closure
+        clonedRows[i].onclick = function (event) {
+          chooseTag(index, event);
+        };
+      }
+      clonedFieldset.id = clonedFieldset.id + ';' + parentId;
+      clonedFieldset.setAttribute('action', e.target.parentNode.getAttribute('action'))
+      e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+      e.target.parentNode.remove()
+    }
+  }
+  const addExisting = (e) => {
+    const splited = e.target.parentNode.id.split(';')
+    const [toRemove, ...rest] = splited
+    const parentId = rest.join(';');
+    const fieldset = document.getElementById('code-tree-append-or-insert-approv-menu');
+
+    if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-append-or-insert-approv-menu')) {
+      const clonedFieldset = fieldset.cloneNode(true);
+
+      clonedFieldset.id = clonedFieldset.id + ';' + parentId;
+      clonedFieldset.setAttribute('action', e.target.parentNode.getAttribute('action'))
+      e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+      e.target.parentNode.remove()
+      // Get all fieldsets with data-element="code-tree-tag"
+      var codeTreeTagFieldsets = document.querySelectorAll('fieldset[data-element="code-tree-tag"]');
+
+      // Iterate through each fieldset and make their checkboxes visible
+      codeTreeTagFieldsets.forEach(function (fieldset) {
+        var checkbox = fieldset.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+          checkbox.removeAttribute('hidden');
+        }
+      });
+    }
+
+  }
+  const choseComponent = async (e) => {
+    const splited = e.target.parentNode.id.split(';')
+    const [toRemove, ...rest] = splited
+    const parentId = rest.join(';');
+    const fieldset = document.getElementById('code-tree-tag-attributes-form');
+
+    if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-tag-attributes-form')) {
+      const clonedFieldset = fieldset.cloneNode(true);
+
+      clonedFieldset.id = clonedFieldset.id + ';' + parentId;
+
+      clonedFieldset.setAttribute('action', e.target.parentNode.getAttribute('action'))
+      e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+      await loadFileList()
+      e.target.parentNode.remove()
+      // Get all fieldsets with data-element="code-tree-tag"
+
+    }
+  }
+
+
+</script>
+
+
+<script>
+  var actionLog = []
+  var selected = []
+  var components = []
+  function toggleSubFields(event) {
+    // Get the clicked button and its content
+    const button = event.target;
+    const buttonContent = button.innerHTML;
+
+    // Get the parent fieldset
+    const parentFieldset = button.closest('fieldset[data-element="code-tree-tag"]');
+
+    if (parentFieldset) {
+      // Find all sub fieldsets inside the parent fieldset
+      const subFieldsets = parentFieldset.querySelectorAll('fieldset[data-element="code-tree-tag"]');
+
+      // Check if there are sub fieldsets
+      if (subFieldsets.length > 0) {
+        // Toggle the visibility of sub fieldsets
+        subFieldsets.forEach(subFieldset => {
+          subFieldset.hidden = !subFieldset.hidden;
+        });
+
+        // Toggle the button content
+        button.innerHTML = buttonContent === '→' ? '↓' : '→';
+      }
+    }
+  }
+  function handleCheckboxChange(event) {
+    var checkbox = event.target;
+    var fieldsetId = checkbox.parentNode.id;
+
+    if (checkbox.checked) {
+      // Add the ID to the selected array
+      selected.push(fieldsetId);
+    } else {
+      // Remove the ID from the selected array
+      var index = selected.indexOf(fieldsetId);
+      if (index !== -1) {
+        selected.splice(index, 1);
+      }
+    }
+
+    // Update the content of the span with the length of the selected array
+    var amountSelectedSpan = document.getElementById('code-tree-amount-selected-for-append-or-insert');
+    if (amountSelectedSpan) {
+      amountSelectedSpan.textContent = selected.length;
+    }
+
+    // Log the selected array (you can replace this with your desired logic)
+    console.log("Selected Fieldsets:", selected);
+    var arrowButton = checkbox.parentNode.querySelector('[data-element="code-tree-show-hide-button"]');
+    if (checkbox.checked) {
+      arrowButton.textContent = '↓';
+    }
+    else {
+      arrowButton.textContent = '→';
+    }
+    // Hide all subfieldsets and enable their checkboxes
+    hideSubFieldsets(checkbox.parentNode, checkbox.checked);
+  }
+  function hideSubFieldsets(parentFieldSet, hide) {
+    // Get all fieldsets with data-element="code-tree-tag" under the specified parent
+    var subFieldsets = parentFieldSet.querySelectorAll('fieldset[data-element="code-tree-tag"]');
+
+    // Iterate through each subfieldset and toggle visibility
+    subFieldsets.forEach(function (subFieldset) {
+      // Toggle visibility using the hidden attribute
+      subFieldset.hidden = hide;
+
+      // Enable or disable the checkbox based on the hide parameter
+      var subCheckbox = subFieldset.querySelector('input[type="checkbox"]');
+      if (subCheckbox) {
+        subCheckbox.disabled = false;
+      }
+
+      // If hiding, remove the subFieldsetId from the selected array
+      if (hide) {
+        var subFieldsetId = subFieldset.id;
+        var index = selected.indexOf(subFieldsetId);
+        if (index !== -1) {
+          selected.splice(index, 1);
+        }
+      }
+
+
+    });
+  }
+  function generateUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      const r = Math.random() * 16 | 0,
+        v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+  async function deleteAction(e) {
+
+    event.preventDefault();
+
+    // Access the parent element of the clicked button
+    const parentRow = event.target.closest('tr');
+
+    if (parentRow) {
+      // Find the span with id "code-log-action-time" within the parent element
+      //delete action from db
+      await deleteActionFromDb(parentRow)
+      location.reload();
+    }
+
+
+    //regenerate page
+  }
+  function deleteActionFromLog(row) {
+    row.remove()
+    //add remove to next
+  }
+  async function deleteActionFromDb(parentRow) {
+    const actionTimeElement = parentRow.querySelector('#code-log-action-time');
+
+    if (actionTimeElement) {
+      // Retrieve the action time value
+      const actionTime = actionTimeElement.textContent;
+
+      // Construct the URL for the delete request
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      const id = urlSearchParams.get('id');
+      const deleteUrl = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:${actionTime}`;
+
+      try {
+        // Send the delete request using the fetch API
+        const response = await fetch(deleteUrl, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            // Add any additional headers if needed
+          },
+          // You can include a request body if necessary
+          // body: JSON.stringify({ action: actionName }),
+        });
+
+        if (response.ok) {
+          // Delete was successful, you can handle the response or perform additional actions
+          console.log('Action deleted successfully');
+        } else {
+          // Delete request failed, handle the error
+          console.error('Error deleting action:', response.statusText);
+        }
+      } catch (error) {
+        // An error occurred while processing the request
+        console.error('Error:', error.message);
+      }
+    }
+  }
+  const pushAction = async (element, firstLoad, visual) => {
+    console.log(JSON.stringify(element))
+    const time = element.time
+    console.log('time' + time)
+    actionLog.push(element)
+    !firstLoad && pushActionToDb(element)
+    insertDataIntoCodeLog(time, element.action)
+
+    await executeCommand(element, undefined, visual)
+  }
+  const pushActionToDb = async (action) => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const id = urlSearchParams.get('id');
+    const sk = action.time.toString()
+    delete action.time
+    const payload = { ...action, sk, id };
+
+
+
+    // Send a POST request using fetch
+    const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    // Ensure the request was successful (status code 2xx)
+    if (!response.ok) {
+      throw new Error(`Failed to push action to the database. Status: ${response.status}`);
+    }
+
+    // Parse and log the response or handle it as needed
+    const responseData = await response.json();
+  }
+  function insertDataIntoCodeLog(actionTime, actionName) {
+    const originalElement = document.getElementById("code-log-element");
+    const clonedElement = originalElement.cloneNode(true);
+
+    // Remove the unwanted button from the cloned element
+    const removeButtonCell = originalElement.querySelector("[data-type-code-log='action-remove']");
+    if (removeButtonCell) {
+      removeButtonCell.parentNode.removeChild(removeButtonCell);
+    }
+
+    // Set the content and attributes for the cloned element
+    clonedElement.removeAttribute("hidden");
+    clonedElement.querySelector("#code-log-action-time").textContent = actionTime;
+    clonedElement.querySelector("#code-log-action").textContent = actionName;
+
+    // Get the parent of the original element
+    const parent = originalElement.parentNode;
+
+    // Insert the cloned element before the original element
+    parent.insertBefore(clonedElement, originalElement);
+  }
+  const executeCommand = async (command, path, visual) => {
+    const { action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
+    let treeElement
+    let componentElement
+    function handleAppendOrInsert(action, selectedArrayNotSorted) {
+      // Sort
+      var firstElementId = selectedArrayNotSorted[0];
+      var restOfElements = selectedArrayNotSorted.slice(1);
+
+      // Sort the rest of the elements by their order in the DOM
+      restOfElements.sort(function (a, b) {
+        var elementA = document.getElementById(a);
+        var elementB = document.getElementById(b);
+
+        return Array.from(elementA.parentElement.children).indexOf(elementA) -
+          Array.from(elementB.parentElement.children).indexOf(elementB);
+      });
+
+      // Combine the sorted array with the first element
+      var selectedArray = [firstElementId, ...restOfElements];
+
+      // Find the target fieldset based on the ID
+      var targetElementId = selectedArray[0];
+      console.log('selected' + JSON.stringify(selectedArray))
+      // Find the target fieldset based on the ID
+      var targetFieldset = document.getElementById(targetElementId);
+      var targetFieldset2 = document.getElementById(targetElementId.replace('-tree', ""));
+
+      // Get the parent fieldset of the target
+      var parentFieldset = targetFieldset.parentNode;
+      var parentFieldset2 = targetFieldset2.parentNode
+
+      // Get the index of the target fieldset within its parent
+      var index = Array.from(parentFieldset.children).indexOf(targetFieldset);
+      var index2 = Array.from(parentFieldset2.children).indexOf(targetFieldset2);
+
+      // Iterate through the selected array (skipping the first element, which is the target)
+      for (var i = 1; i < selectedArray.length; i++) {
+        var selectedId = selectedArray[i];
+
+        // Find all elements based on the selected ID and its replacement
+        var selectedElements = document.querySelectorAll('[id^="' + selectedId + '"]');
+        var selectedElements2 = document.querySelectorAll('[id^="' + selectedId.replace('-tree', "") + '"]');
+
+        // Iterate through each selected element and process it
+        selectedElements.forEach(function (selectedFieldset) {
+          // Clone the selected fieldset and its descendants
+          var clonedFieldset = cloneWithDescendants(selectedFieldset);
+          var arrowButton = clonedFieldset.querySelector('[data-element="code-tree-show-hide-button"]');
+
+          arrowButton.textContent = '→';
+          // Insert the cloned fieldset based on the action
+          if (action === 'Append') {
+            targetFieldset.appendChild(clonedFieldset);
+          } else if (action === 'InsertBefore') {
+
+            parentFieldset.insertBefore(clonedFieldset, parentFieldset.children[index]);
+            index++; // Increment the index to maintain the correct order
+          }
+
+          // Remove the original fieldset
+          selectedFieldset.remove();
+        });
+        selectedElements2 = Array.from(selectedElements2).filter(function (element) {
+          return !element.id.includes('-tree');
+        });
+        selectedElements2.forEach(function (selectedFieldset2) {
+          // Clone the selected fieldset and its descendants
+          var clonedFieldset2 = cloneWithDescendants(selectedFieldset2);
+
+          // Insert the cloned fieldset based on the action
+          if (action === 'Append') {
+            targetFieldset2.appendChild(clonedFieldset2);
+          } else if (action === 'InsertBefore') {
+
+
+            parentFieldset2.insertBefore(clonedFieldset2, parentFieldset2.children[index2]);
+            index2++; // Increment the index to maintain the correct order
+          }
+
+          // Remove the original fieldset
+          selectedFieldset2.remove();
+        });
+      }
+    }
+    function cloneWithDescendants(element) {
+      var clone = element.cloneNode(true);
+      var clonedSubFieldsets = clone.querySelectorAll('fieldset[data-element="code-tree-tag"]');
+      clonedSubFieldsets.forEach(function (clonedSubFieldset) {
+        clonedSubFieldset.hidden = false;
+      });
+      const buttons = clone.querySelectorAll("[data-element='code-tree-show-hide-button']");
+
+      buttons.forEach(function (button) {
+        button.addEventListener('mouseover', mouseOverTree);
+        button.addEventListener('mouseout', mouseOutTree);
+      });
+
+
+      return clone;
+    }
+    console.log("action" + action)
+    !path && (path = '')
+    switch (action) {
+      case 'Append':
+        // Handle the 'Append' action
+        if (inserted_component) {
+          //fieldset
+          console.log('in')
+          console.log(target_element)
+          treeElement = document.getElementById(target_element);
+          //component
+          componentElement = document.getElementById(target_element.replace('-tree', ''));
+          const newEl = document.createElement("div")
+          newEl.id = path + inserted_component.id
+          console.log(newEl.id)
+          componentElement.appendChild(newEl)
+          const component_el = document.getElementById('component-element')
+          const newEl2 = component_el.cloneNode(true)
+          const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
+          button2.textContent = '🧩' + inserted_component.componentId;
+          const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
+          button.addEventListener('mouseover', mouseOverTree);
+
+          button.addEventListener('mouseout', mouseOutTree);
+
+          newEl2.id = path + inserted_component.id + '-tree'
+
+          treeElement.appendChild(newEl2)
+          console.log('prob' + inserted_component.componentId)
+          components.push(path + inserted_component.id)
+          console.log('err ' + path)
+          await loadFromDb(inserted_component.componentId, inserted_component.id, path)
+          break;
+        }
+        //case duplicate append
+        if (inserted_element?.originalId) {
+          console.log(command);
+          // fieldset
+          treeElement = document.getElementById(inserted_element?.originalId);
+          // component
+          componentElement = document.getElementById(inserted_element.originalId.replace('-tree', ''));
+
+          // Duplicate the element
+          let newEl = componentElement.cloneNode(true);
+
+          // Set the id of the duplicated element to inserted_element.id
+          newEl.id = inserted_element.id.replace('-tree', '');
+          newEl.textContent = newEl.tagName.toLowerCase();
+          console.log(newEl.id);
+
+          // Append the duplicated element to the componentElement
+          if (visual) {
+            document.getElementById(target_element.replace('-tree', '')).parentNode.appendChild(newEl);
+            processElement(newEl)
+          }
+          else {
+            document.getElementById(target_element.replace('-tree', '')).appendChild(newEl);
+          }
+          // Duplicate the treeElement content
+          const newEl2 = treeElement.cloneNode(true);
+
+          // Set the id of the duplicated treeElement to inserted_element.id + '-tree'
+          newEl2.id = inserted_element.id;
+
+          // Update the button text in the duplicated treeElement
+          const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']");
+
+          // Attach event listeners to the buttons in the duplicated treeElement
+          const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']");
+          button.addEventListener('mouseover', mouseOverTree);
+          button.addEventListener('mouseout', mouseOutTree);
+
+          // Append the duplicated treeElement to the treeElement's parent
+
+          treeElement.parentNode.appendChild(newEl2);
+
+
+          function updateChildIdsRecursive(element, prefix) {
+            element.querySelectorAll('[id]').forEach(child => {
+              const newId = prefix + child.id;
+              child.id = newId;
+              // Recursively update ids for child's children
+              updateChildIdsRecursive(child, newId + ';');
+            });
+          }
+
+          // Update ids of child elements within the duplicated elements recursively
+          updateChildIdsRecursive(newEl, inserted_element.id.replace('-tree', '') + ';');
+          updateChildIdsRecursive(newEl2, inserted_element.id + ';');
+          break;
+        }
+        //case insert tag
+        if (inserted_element?.tagName) {
+          console.log(command)
+          //fieldset
+          treeElement = document.getElementById(target_element);
+          //component
+          componentElement = document.getElementById(target_element.replace('-tree', ''));
+          const newEl = document.createElement(inserted_element.tagName)
+          newEl.id = inserted_element.id
+          console.log(newEl.id)
+          componentElement.appendChild(newEl)
+          const component_el = document.getElementById('component-element')
+          const newEl2 = component_el.cloneNode(true)
+          const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
+          button2.textContent = '🏷️' + inserted_element.tagName;
+          const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
+          button.addEventListener('mouseover', mouseOverTree);
+
+          button.addEventListener('mouseout', mouseOutTree);
+
+          newEl2.id = inserted_element.id + '-tree'
+          treeElement.appendChild(newEl2)
+          break;
+        }
+        if (target_element.length) {
+          handleAppendOrInsert('Append', target_element.map(i => i.id))
+        }
+        break;
+
+      case 'InsertBefore':
+        // Handle the 'InsertBefore' action
+        // Handle the 'Append' action
+        //fieldset
+
+        if (inserted_component) {
+          //fieldset
+          console.log('in')
+          console.log(target_element)
+          treeElement = document.getElementById(target_element);
+          //component
+          componentElement = document.getElementById(target_element.replace('-tree', ''));
+          const newEl = document.createElement("div")
+          newEl.id = inserted_component.id
+          console.log(newEl.id)
+          componentElement.appendChild(newEl)
+          const component_el = document.getElementById('component-element')
+          const newEl2 = component_el.cloneNode(true)
+          const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
+          button2.textContent = '🧩' + inserted_component.componentId;
+          const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
+          button.addEventListener('mouseover', mouseOverTree);
+
+          button.addEventListener('mouseout', mouseOutTree);
+
+          newEl2.id = inserted_component.id + '-tree'
+
+          treeElement.parentNode.insertBefore(newEl2, treeElement)
+          console.log(inserted_component.componentId)
+
+          await loadFromDb(inserted_component.componentId, inserted_component.id)
+          break;
+        }
+        //case duplicate insert before
+        if (inserted_element?.originalId) {
+          console.log(command);
+          // fieldset
+          treeElement = document.getElementById(inserted_element?.originalId);
+          // component
+          componentElement = document.getElementById(inserted_element.originalId.replace('-tree', ''));
+
+          // Duplicate the element
+          const newEl = componentElement.cloneNode(true);
+          newEl.textContent = newEl.tagName.toLowerCase();
+          // Set the id of the duplicated element to inserted_element.id
+          newEl.id = inserted_element.id.replace('-tree', '');
+
+          console.log(newEl.id);
+
+          // Append the duplicated element to the componentElement
+          const compEl = document.getElementById(target_element.replace('-tree', ''))
+          if (visual) {
+            compEl.parentNode.parentNode.insertBefore(newEl, compEl.parentNode);
+            processElement(newEl)
+          }
+          else {
+            compEl.parentNode.insertBefore(newEl, compEl);
+          }
+          // Duplicate the treeElement content
+          const newEl2 = treeElement.cloneNode(true);
+
+          // Set the id of the duplicated treeElement to inserted_element.id + '-tree'
+          newEl2.id = inserted_element.id;
+
+          // Update the button text in the duplicated treeElement
+          const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']");
+
+          // Attach event listeners to the buttons in the duplicated treeElement
+          const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']");
+          button.addEventListener('mouseover', mouseOverTree);
+          button.addEventListener('mouseout', mouseOutTree);
+
+          // Append the duplicated treeElement to the treeElement's parent
+          treeElement.parentNode.insertBefore(newEl2, treeElement)
+          function updateChildIdsRecursive(element, prefix) {
+            element.querySelectorAll('[id]').forEach(child => {
+              const newId = prefix + child.id;
+              child.id = newId;
+              // Recursively update ids for child's children
+              updateChildIdsRecursive(child, newId + ';');
+            });
+          }
+
+          // Update ids of child elements within the duplicated elements recursively
+          updateChildIdsRecursive(newEl, inserted_element.id.replace('-tree', '') + ';');
+          updateChildIdsRecursive(newEl2, inserted_element.id + ';');
+
+          break;
+        }
+        //case insert tag
+        if (inserted_element?.tagName) {
+          treeElement = document.getElementById(target_element);
+          //component
+          componentElement = document.getElementById(target_element.replace('-tree', ''));
+          const newEl = document.createElement(inserted_element.tagName)
+          newEl.id = inserted_element.id
+          console.log(newEl.id)
+          componentElement.parentNode.insertBefore(newEl, componentElement)
+          const component_el = document.getElementById('component-element')
+          const newEl2 = component_el.cloneNode(true)
+          const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
+          button2.textContent = '🏷️' + inserted_element.tagName;
+          const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
+          button.addEventListener('mouseover', mouseOverTree);
+
+          button.addEventListener('mouseout', mouseOutTree);
+          newEl2.id = inserted_element.id + '-tree'
+          treeElement.parentNode.insertBefore(newEl2, treeElement)
+          break;
+        }
+        if (target_element.length) {
+          console.log(JSON.stringify(target_element))
+          handleAppendOrInsert('InsertBefore', target_element.map(i => i.id))
+        }
+
+        break;
+
+      case 'innerHtml':
+        // Handle the 'innerHtml' action
+        const targetElement = document.getElementById(target_element.replace('-tree', ''));
+        targetElement.innerHTML = insertedCode;
+
+        break;
+
+      case 'ChangeTag':
+        // Handle the 'ChangeTag' action
+        // tree el
+        const elementToChange = document.getElementById(target_element);
+        elementToChange.querySelector("[data-element='code-tree-tag-name-button']").textContent = tag_change;
+        // builder el
+        const elementToChange2 = document.getElementById(target_element.replace('-tree', ''));
+        if (elementToChange2) {
+          // Create a new p element
+          var newElement = document.createElement(tag_change);
+
+          // Copy attributes from the div to the p element
+          for (var i = 0; i < elementToChange2.attributes.length; i++) {
+            var attribute = elementToChange2.attributes[i];
+            newElement.setAttribute(attribute.name, attribute.value);
+          }
+
+          // Copy content from the div to the p element
+          newElement.innerHTML = elementToChange2.innerHTML;
+
+          // Replace the div element with the new p element
+          elementToChange2.parentNode.replaceChild(newElement, elementToChange2);
+        }
+        break;
+
+      case 'dublicateTag':
+        // Handle the 'dublicateTag' action
+        const originalElement = document.getElementById(target_element);
+        const duplicatedElement = originalElement.cloneNode(true);
+        //to do
+        duplicatedElement.id = inserted_element
+
+        originalElement.parentNode.appendChild(duplicatedElement);
+        break;
+
+      case 'removeTag':
+        // Handle the 'removeTag' action
+        // tree
+        const elementToRemove = document.getElementById(target_element);
+        elementToRemove.parentNode.removeChild(elementToRemove);
+
+        // component
+        const elementToRemove2 = document.getElementById(target_element.replace('-tree', ''));
+        elementToRemove2.parentNode.removeChild(elementToRemove2);
+
+
+        break;
+      case 'textContent':
+        // Handle the 'removeTag' action
+        // tree
+        console.log('pr' + target_element)
+        const element1 = document.getElementById(target_element);
+        const textContentButton = element1.querySelector('[data-element="code-tree-text-content-button"]');
+        textContentButton.textContent = `📄${value.length}`;
+
+        // component
+        const element2 = document.getElementById(target_element.replace('-tree', ''));
+        element2.textContent = value;
+
+
+        break;
+
+      // Add more cases as needed for other actions
+      case 'setAttribute':
+        console.log('pr' + target_element);
+
+
+        // component
+        const element22 = document.getElementById(target_element.replace('-tree', ''));
+        element22.setAttribute(key, value);
+
+        break;
+      case 'removeAttribute':
+        console.log('pr' + target_element);
+
+
+        // component
+        const elementToRemoveAttribute = document.getElementById(target_element.replace('-tree', ''));
+        elementToRemoveAttribute.removeAttribute(key);
+
+        break;
+
+      // Add more cases as needed for other actions
+
+      default:
+        // Handle the default case if no matching action is found
+        console.error(`Unknown action: ${action}`);
+        break;
+    }
+
+  }
+  async function loader(e, handler) {
+    const loadingScreen = document.getElementById('loading');
+    loadingScreen.style.display = 'flex';
+    const prefixesToRemove = [
+      'component-element',
+      'component-replace-menu',
+      'code-tree-tag-attributes-form',
+      'code-tree-click-tag',
+      'code-tree-add-tag-step-1',
+      'code-tree-append-or-insert-approv-menu',
+      'code-tree-inner-html-receive-menu',
+      'tag-table',
+      "code-tree-tag-text-content-form"
+    ];
+
+    prefixesToRemove.forEach(prefix => {
+      const p = document.getElementById("code-tree")
+      const elementsToRemove = p.querySelectorAll(`fieldset[id^="${prefix}"]`);
+      elementsToRemove.forEach(element => element.remove());
+    });
+    const timerElement = document.getElementById('timer');
+    let tenthsOfSeconds = 0;
+    const interval = setInterval(function () {
+      tenthsOfSeconds++;
+      timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
+    }, 100);
+
+    await handler(e);
+
+    loadingScreen.style.display = 'none';
+    clearInterval(interval);
+    console.log(timerElement.textContent)
+    const lastActionTime = document.getElementById('last-action-time');
+    
+    lastActionTime.textContent = timerElement.textContent;
+  }
+  function openAttributeContent(event) {
+    const button = event.target.closest('button[data-element="code-tree-attributes-button"]');
+
+    if (button) {
+      const parentId = button.parentNode.id;
+      const generatedId = parentId.replace('-tree', '')
+      const textContentButton = button.parentNode.querySelector('[data-element="code-tree-attributes-button]');
+
+      const existingClonedFieldset = button.parentNode.querySelector('[id^="code-tree-tag-attributes-form-1"]');
+
+      if (!existingClonedFieldset) {
+        // Clone the fieldset node
+        const fieldset = document.getElementById('code-tree-tag-attributes-form-1');
+        const clonedFieldset = fieldset.cloneNode(true);
+
+        // Assign a unique id to the cloned fieldset
+        clonedFieldset.id = 'code-tree-tag-attributes-form-1;' + parentId;
+
+        // Find the position to insert the cloned fieldset
+        const insertAfterElement = textContentButton || button;
+
+        // Insert the cloned fieldset after the specified element
+        insertAfterElement.parentNode.insertBefore(clonedFieldset, insertAfterElement.nextElementSibling);
+        const elementWithAttributes = document.getElementById(generatedId);
+        if (elementWithAttributes) {
+          const attributesList = clonedFieldset.querySelector('#code-tree-tag-attributes-list');
+
+
+
+          // Clone the original tr element for each attribute
+          const originalTr = clonedFieldset.querySelector('#code-tree-tag-attributes-list-item');
+          for (const attribute of elementWithAttributes.attributes) {
+            const clonedTr = originalTr.cloneNode(true);
+
+            // Modify data based on attributes of the elementWithAttributes
+            const keyElement = clonedTr.querySelector('#code-tree-tag-attribute-key');
+            const valueElement = clonedTr.querySelector('#code-tree-tag-attribute-value');
+
+            keyElement.textContent = '🔑' + attribute.name;
+            valueElement.textContent = '📄' + attribute.value;
+
+            // Append the modified tr to the list
+            attributesList.appendChild(clonedTr);
+          }
+
+          // Remove the original tr element
+          originalTr.remove();
+
+        }
+      }
+    }
+  }
+  function openTextContent(event) {
+    const button = event.target.closest('button[data-element="code-tree-text-content-button"]');
+
+    if (button) {
+      const parentId = button.parentNode.id;
+      const textContentButton = button.parentNode.querySelector('[data-element="code-tree-text-content-button"]');
+
+      const existingClonedFieldset = button.parentNode.querySelector('[id^="code-tree-tag-text-content-form"]');
+
+      if (!existingClonedFieldset) {
+        // Clone the fieldset node
+        const fieldset = document.getElementById('code-tree-tag-text-content-form');
+        const clonedFieldset = fieldset.cloneNode(true);
+
+        // Assign a unique id to the cloned fieldset
+        clonedFieldset.id = 'code-tree-tag-text-content-form;' + parentId;
+
+        // Find the position to insert the cloned fieldset
+        const insertAfterElement = textContentButton || button;
+
+        // Insert the cloned fieldset after the specified element
+        insertAfterElement.parentNode.insertBefore(clonedFieldset, insertAfterElement.nextElementSibling);
+      }
+    }
+  }
+  function openInnerHtmlContent(event) {
+    const button = event.target.closest('button[data-element="code-tree-inner-html-button"]');
+
+    if (button) {
+      const parentId = button.parentNode.id;
+      const textContentButton = button.parentNode.querySelector('[data-element="code-tree-inner-html-button"]');
+
+      const existingClonedFieldset = button.parentNode.querySelector('[id^="code-tree-tag-html-content-form"]');
+
+      if (!existingClonedFieldset) {
+        // Clone the fieldset node
+        const fieldset = document.getElementById('code-tree-tag-html-content-form');
+        const clonedFieldset = fieldset.cloneNode(true);
+
+        // Assign a unique id to the cloned fieldset
+        clonedFieldset.id = 'code-tree-tag-html-content-form;' + parentId;
+
+        // Find the position to insert the cloned fieldset
+        const insertAfterElement = textContentButton || button;
+
+        // Insert the cloned fieldset after the specified element
+        insertAfterElement.parentNode.insertBefore(clonedFieldset, insertAfterElement.nextElementSibling);
+      }
+    }
+  }
+  
+  function handleComponentClick(event) {
+    const button = event.target.closest('button[data-element="code-tree-tag-name-button"]');
+
+    if (button) {
+      const parentId = button.parentNode.id;
+      const textContentButton = button.parentNode.querySelector('[data-element="code-tree-text-content-button"]');
+
+      // Check if a cloned fieldset already exists after the parent node
+      const existingClonedFieldset = button.parentNode.querySelector('[id^="code-tree-click-tag"]');
+
+      if (!existingClonedFieldset) {
+        // Clone the fieldset node
+        const fieldset = document.getElementById('code-tree-click-tag');
+        const clonedFieldset = fieldset.cloneNode(true);
+
+        // Assign a unique id to the cloned fieldset
+        clonedFieldset.id = 'code-tree-click-tag;' + parentId;
+
+        // Find the position to insert the cloned fieldset
+        const insertAfterElement = textContentButton || button;
+
+        // Insert the cloned fieldset after the specified element
+        insertAfterElement.parentNode.insertBefore(clonedFieldset, insertAfterElement.nextElementSibling);
+      }
+    }
+  }
+  const cache = {};
+
+  const getRes = async (id) => {
+    // Check if the response is already in the cache
+
+
+    try {
+      // Make a GET request to the API with the 'id' query parameter
+      const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // Ensure the request was successful (status code 2xx)
+      if (!response.ok) {
+        throw new Error(`Failed to load data from the database. Status: ${response.status}`);
+      }
+
+      // Parse and log the response or handle it as needed
+      const responseData = await response.json();
+
+      // Store the response in the cache for future use
+      cache[id] = responseData;
+
+      return responseData;
+    } catch (error) {
+      console.error(`Error fetching data for id: ${id}`, error);
+      throw error; // Re-throw the error to let the caller handle it
+    }
+  };
+
+  const loadFromDb = async (id, newId, p) => {
+    console.log('load from db' + id)
+    console.log('err2 ' + p)
+    let path = ""
+    p && (path = p)
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    let idFromLink = urlSearchParams.get('id');
+    id && (idFromLink = id)
+    if (!idFromLink) {
+      throw new Error('Missing id parameter in the URL');
+    }
+
+    // Make a GET request to the API with the 'id' query parameter
+    let responseData
+
+    responseData = await getRes(idFromLink)
+
+
+    for (const item of responseData.items) {
+      console.log('item' + JSON.stringify(item))
+      if(item.sk ==='path'){
+        console.log('eeeeeer')
+        const el = document.getElementById('page-path')
+        el.textContent = item.lsi1.replace(';publish:published','')
+        
+        if(item.lsi1.includes('publish:published')){
+          const el2 = document.getElementById("path-icon")
+          el2.classList.add('b-green');
+          el2.classList.add('b-selected');
+          
+        }
+      }
+      if (item.action) {
+        if (id) {
+          console.log(JSON.stringify(item))
+          console.log('id1 ' + id)
+          console.log('id2 ' + newId)
+          console.log(item.target_element)
+          console.log(components)
+
+
+          if (item.target_element === id + '-tree') {
+            console.log('case1')
+            console.log(path)
+            item.target_element = path + newId + '-tree'
+            item.inserted_element?.id && (item.inserted_element.id = path + newId + ';' + item.inserted_element.id)
+          }
+          else if (components.includes(item.target_element.replace('-tree', ''))) {
+            item.target_element = path + item.target_element
+            console.log('case2')
+            console.log('in')
+          }
+          else if (Array.isArray(item.target_element)) {
+            console.log('case3')
+            item.target_element = item.target_element.map(i => {
+              if (id.id === id + '-tree') {
+                return { ...i, id: path + newId + '-tree' }
+              }
+              return { ...i, id: path + newId + ';' + i.id }
+            })
+
+            console.log('arr' + item.target_element)
+          }
+          else {
+            console.log('case4')
+            const splited = item.target_element.split(';')
+
+            item.target_element = path + newId + ';' + item.target_element
+            item.inserted_element?.id && (item.inserted_element.id = path + newId + ';' + item.inserted_element.id)
+            console.log('notArr' + item.target_element)
+
+
+
+          }
+          let toAdd = newId + ';'
+          if (path) {
+            toAdd = path + newId + ';'
+          }
+          await executeCommand({ ...item, time: item.sk }, toAdd)
+
+          continue
+        }
+
+
+        await pushAction({ ...item, time: item.sk }, true)
+      }
+
+    }
+
+  }
+  const publish = async(e)=>{
+    console.log('eeer')
+    const pagePathContent = document.getElementById('page-path').textContent;
+
+    // Use the textContent as needed, for example, log it to the console
+    console.log('Publishing:', pagePathContent);
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    let idFromLink = urlSearchParams.get('id');
+   
+    const html = document.getElementById('generated-page').innerHTML
+    const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/publishv2', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({id:idFromLink,html,path:pagePathContent}),
+    });
+    const el = document.getElementById('page-path')
+   
+    
+    if(!pagePathContent.includes(':publish:published')){
+      document.getElementById('page-path').textContent = pagePathContent
+      const el2 = document.getElementById("path-icon")
+      el2.classList.add('b-green');
+      el2.classList.add('b-selected');
+      
+      
+    }
+  }
+  document.addEventListener('DOMContentLoaded',loadFirst);
+  async function loadFirst() {
+    const lastActionTime = document.getElementById('last-action-time');
+      lastActionTime.addEventListener('dblclick', function () {
+      // Handle double-click event here
+      console.log('Double-clicked on the button');
+      // Add your custom logic for double-click handling
+    });
+    const loadingScreen = document.getElementById('loading');
+    loadingScreen.style.display = 'flex';
+    const timerElement = document.getElementById('timer');
+    let tenthsOfSeconds = 0;
+    const interval = setInterval(function () {
+      tenthsOfSeconds++;
+      timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
+    }, 100);
+    const urlParams = new URLSearchParams(window.location.search);
+    const idFromQuery = urlParams.get('id');
+
+    if (idFromQuery) {
+      // Change the id of the element with id "component-element"
+      const componentElement = document.getElementById('41412421-412412412-41241212-412412');
+      if (componentElement) {
+        componentElement.id = idFromQuery + '-tree';
+      }
+
+      const builderElement = document.getElementById('63ae5927-390f-4391-993d-b25ab09c8ada');
+      if (builderElement) {
+        builderElement.id = idFromQuery;
+      }
+
+      // Change the text content of the button with data-element "code-tree-tag-name-button"
+      const componentNameButton = document.querySelector('[data-element="code-tree-tag-name-button"]');
+      if (componentNameButton) {
+        componentNameButton.innerText = `🧩${idFromQuery}`;
+      }
+    }
+    await loadFromDb()
+
+    //first menu
+    let buttons = document.querySelectorAll('button[data-element="code-tree-tag-name-button"]');
+    buttons.forEach(function (button) {
+      button.addEventListener('click', e => loader(e, handleComponentClick));
+    });
+    clearInterval(interval);
+    console.log(timerElement.textContent)
+    
+    lastActionTime.textContent = timerElement.textContent;
+    loadingScreen.style.display = 'none';
+
+  }
+  const save = async (event) => {
+    const parent = event.target.parentNode
+    const { id } = parent
+    const action = parent.getAttribute('action')
+    console.log('ac' + action)
+    if (action === 'innerHtml') {
+      const saveButton = event.target;
+      const fieldset = saveButton.closest('fieldset');
+
+      console.log(id)
+      const textareaValue = fieldset.querySelector('#code-tree-inner-html-receive-textarea').value;
+
+      const splited = id.split(';')
+      const [toRemove, ...rest] = splited
+      const el = {
+        time: (new Date()).getTime(),
+        action,
+        target_element: rest.join(';'),
+        insertedCode: textareaValue,
+
+      }
+      console.log(JSON.stringify(el))
+      await pushAction(el)
+    }
+    parent.remove()
+    console.log(JSON.stringify(actionLog))
+
+  }
+  const saveText = async (event) => {
+    const parent = event.target.parentNode
+    const { id } = parent
+    const action = 'textContent'
+    console.log('ac' + action)
+
+    const saveButton = event.target;
+    const fieldset = saveButton.closest('fieldset');
+
+
+    const textareaValue = fieldset.querySelector('#code-tree-tag-text-content').value;
+    const splited = id.split(';')
+    const [toRemove, ...rest] = splited
+
+    const el = {
+      time: (new Date()).getTime(),
+      action,
+      target_element: rest.join(';'),
+      value: textareaValue,
+
+    }
+    console.log(JSON.stringify(el))
+    await pushAction(el)
+
+    parent.remove()
+    console.log(JSON.stringify(actionLog))
+
+  }
+  const saveInnerHtml = async (event) => {
+    const parent = event.target.parentNode
+    const { id } = parent
+    const action = 'innerHtml'
+    console.log('ac' + action)
+
+    const saveButton = event.target;
+    const fieldset = saveButton.closest('fieldset');
+
+
+    const textareaValue = fieldset.querySelector('#code-tree-tag-html-content').value;
+    const splited = id.split(';')
+    const [toRemove, ...rest] = splited
+
+    const el = {
+      time: (new Date()).getTime(),
+      action,
+      target_element: rest.join(';'),
+      insertedCode: textareaValue,
+
+    }
+    console.log(JSON.stringify(el))
+    await pushAction(el)
+
+    parent.remove()
+    console.log(JSON.stringify(actionLog))
+
+  }
+  const saveAttribute = async (event) => {
+    const parentMenu = event.target.closest('.menu');
+
+    if (!parentMenu) {
+      console.error('Could not find parent menu element');
+      return;
+    }
+
+    const { id } = parentMenu
+    const action = 'setAttribute'
+    console.log('ac' + action)
+
+    const saveButton = event.target;
+    const fieldset = saveButton.closest('fieldset');
+
+
+    const textareaValue = fieldset.querySelector('#code-tree-tag-attribute-input-key').value;
+    const textareaValue2 = fieldset.querySelector('#code-tree-tag-attribute-input-key-value').value;
+    const splited = id.split(';')
+    const [toRemove, ...rest] = splited
+
+    const el = {
+      time: (new Date()).getTime(),
+      action,
+      target_element: rest.join(';'),
+      key: textareaValue,
+      value: textareaValue2,
+
+    }
+    fieldset.querySelector('#code-tree-tag-attribute-input-key').value = ''
+    fieldset.querySelector('#code-tree-tag-attribute-input-key-value').value = ''
+    console.log(JSON.stringify(el))
+    await pushAction(el)
+
+    parentMenu.remove()
+    console.log(JSON.stringify(actionLog))
+
+  }
+
+</script>
+<script>
+
+  //second menu 
+
+  const cancel = (e) => {
+
+    e.target.parentNode.parentNode.remove()
+  }
+  const cancel1 = (e) => {
+
+    // Assuming e is an event object
+    const elementToRemove = e.target.closest('[id^="code-tree-tag-attributes-form-1;"]');
+
+    if (elementToRemove) {
+      elementToRemove.remove();
+    }
+  }
+  var append = (e) => {
+    const splited = e.target.parentNode.id.split(';')
+    const [toRemove, ...rest] = splited
+    const parentId = rest.join(';');
+    const fieldset = document.getElementById('code-tree-add-tag-step-1');
+
+    if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-add-tag-step-1')) {
+      const clonedFieldset = fieldset.cloneNode(true);
+
+      clonedFieldset.id = clonedFieldset.id + ';' + parentId;
+      clonedFieldset.setAttribute('action', 'Append')
+      e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+      e.target.parentNode.remove()
+    }
+  }
+  const insertB = (e) => {
+
+
+    const splited = e.target.parentNode.id.split(';')
+    const [toRemove, ...rest] = splited
+    const parentId = rest.join(';');
+    const fieldset = document.getElementById('code-tree-add-tag-step-1');
+
+    if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-add-tag-step-1')) {
+      const clonedFieldset = fieldset.cloneNode(true);
+
+      clonedFieldset.id = clonedFieldset.id + ';' + parentId;
+      clonedFieldset.setAttribute('action', 'InsertBefore')
+      e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+      e.target.parentNode.remove()
+    }
+
+  }
+  const insertHtml = (e) => {
+
+    const splited = e.target.parentNode.id.split(';')
+    const [toRemove, ...rest] = splited
+    const parentId = rest.join(';');
+    const fieldset = document.getElementById('code-tree-inner-html-receive-menu');
+
+    if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-inner-html-receive-menu')) {
+      const clonedFieldset = fieldset.cloneNode(true);
+
+      clonedFieldset.id = clonedFieldset.id + ';' + parentId;
+      clonedFieldset.setAttribute('action', 'innerHtml')
+      e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+      e.target.parentNode.remove()
+    }
+  }
+  const changeTag = (e) => {
+    const splited = e.target.parentNode.id.split(';')
+    const [toRemove, ...rest] = splited
+    const parentId = rest.join(';');
+    const fieldset = document.getElementById('tag-table');
+
+    if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('tag-table')) {
+      const clonedFieldset = fieldset.cloneNode(true);
+
+
+      const clonedRows = clonedFieldset.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+      for (let i = 0; i < clonedRows.length; i++) {
+        const index = i; // Capture the current value of 'i' in a closure
+        clonedRows[i].onclick = function (event) {
+          chooseTag(index, event);
+        };
+      }
+      clonedFieldset.id = clonedFieldset.id + ';' + parentId;
+      clonedFieldset.setAttribute('action', 'ChangeTag')
+      e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+      e.target.parentNode.remove()
+    }
+  }
+  const duplicateTag = (e) => {
+    const splited = e.target.parentNode.id.split(';');
+    const [toRemove, ...rest] = splited;
+    const parentId = rest.join(';');
+
+    // Find existing elements with IDs starting with parentId and ending with -tree
+    const existingElements = document.querySelectorAll(`[id^="${parentId}"][id$="-tree"]`);
+
+    let existingCopyNumbers = new Set();
+
+    // Iterate through existing elements to find the existing copy numbers
+    existingElements.forEach(element => {
+      const match = element.id.match(/-copy-(\d+)-tree$/);
+      if (match) {
+        const copyNumber = parseInt(match[1], 10);
+        existingCopyNumbers.add(copyNumber);
+      }
+    });
+
+    // Find the next available copy number
+    let newCopyNumber = 1;
+    while (existingCopyNumbers.has(newCopyNumber)) {
+      newCopyNumber++;
+    }
+
+    // Generate the new ID based on the new copy number
+
+    const duplicateTag = (id) => {
+      const splited = id.split(';');
+      return splited.map((part, index) => (index === splited.length - 1)
+        ? part.replace(/-copy-\d+-tree$/, '').replace(/-tree$/, '') + `-copy-${newCopyNumber}-tree`
+        : part
+      ).join(';');
+
+      // Rest of the function remains unchanged...
+    };
+    const el = {
+      time: (new Date()).getTime(),
+      action: 'dublicateTag',
+      target_element: parentId,
+      inserted_element: duplicateTag(parentId)
+    };
+
+    pushAction(el);
+  };
+  const removeTag = (e) => {
+    const splited = e.target.parentNode.id.split(';')
+    const [toRemove, ...rest] = splited
+    const parentId = rest.join(';');
+    const el =
+    {
+      time: (new Date()).getTime(),
+      action: 'removeTag',
+      target_element: parentId,
+
+    }
+    pushAction(el)
+    e.target.parentNode.remove()
+  }
+  const approve = (event) => {
+    var checkbox = event.target;
+
+    // Get the parent fieldset
+    var fieldset = checkbox.closest('fieldset');
+
+    // Get the id and action attributes
+    var fieldsetId = fieldset.id;
+    var fieldsetAction = fieldset.getAttribute('action');
+
+    // Get all fieldsets with data-element="code-tree-tag"
+    var codeTreeTagFieldsets = document.querySelectorAll('fieldset[data-element="code-tree-tag"]');
+
+    // Iterate through each fieldset and hide them
+    codeTreeTagFieldsets.forEach(function (fieldset) {
+      var checkbox = fieldset.querySelector('input[type="checkbox"]');
+      if (checkbox) {
+        checkbox.setAttribute('hidden', 'true');
+      }
+    });
+
+    // Remove the parent fieldset
+    fieldset.remove();
+
+    // Log the id and action attributes (you can replace this with your desired logic)
+    console.log("Fieldset ID:", fieldsetId);
+    console.log("Fieldset Action:", fieldsetAction);
+    const el = {
+      time: (new Date()).getTime(),
+      action: fieldsetAction,
+      target_element: [{ type: 'tag', id: fieldsetId.split(';')[1], }, ...selected.map(id => {
+        return { type: 'tag', id }
+      })],
+
+
+    }
+    selected = []
+    pushAction(el)
+    e.target.parentNode.remove()
+  }
+
+</script>
+
+<!-- tag style-->
+<style>
+  [data-element="code-tree-tag"],
+  [data-element="component-tree-tag"] {
+    user-select: none;
+  }
+
+  [data-element="code-tree-tag"] legend,
+  [data-element="component-tree-tag"] legend {
+    margin-bottom: -6px;
+    margin-top: 5px;
+  }
+
+  [data-element="component-tree-tag"],
+  [data-element="code-tree-tag"] {
+    border-bottom: none;
+    border-right: none;
+  }
+
+
+
+  [data-element="code-tree-tag"] input[type="checkbox"] {
+    transform: scale(1.2);
+  }
+
+  [data-element="component-tree-tag"] button,
+  [data-element="code-tree-tag"] button {
+    font-size: 1.2em;
+  }
+
+  /*
+
+ [data-element="code-tree-inner-html-button"] {
+    position: absolute;
+    right: 204px;
+    margin-right: 5px;
+    width: 100px;
+
+  } 
+
+
+  [data-element="component-tree-css-button"],
+  [data-element="code-tree-attributes-button"] {
+    position: absolute;
+    right: 102px;
+    margin-right: 5px;
+    width: 100px;
+  }
+
+
+  [data-element="code-tree-text-content-button"] {
+    position: absolute;
+    right: 145px;
+    margin-right: 5px;
+  }
+
+  [data-element="code-tree-text-content-button"]:last-of-type {
+    position: absolute;
+    right: 0px;
+    margin-left: 5px;
+    width: 100px;
+    white-space: nowrap;
+  }
+  */
+
+  [data-element="component-tree-js-button"]:last-of-type,
+  [data-element="code-tree-attributes-button"]:last-of-type {
+    position: absolute;
+    right: 0px;
+    margin-left: 5px;
+    width: 70px;
+  }
+
+
+  [data-element="component-tree-css-button"] {
+    position: absolute;
+    right: 70px;
+    margin-right: 5px;
+  }
+
+
+  [data-element="component-tree-js-button"]:last-of-type {
+    position: absolute;
+    right: 0px;
+    margin-left: 5px;
+  }
+</style>
+
+
+
+
+<!-- attributes table style-->
+<style>
+  #code-tree-tag-attributes-list tr:nth-child(odd) {
+    background-color: #f0f0f0;
+  }
+
+  #code-tree-tag-attributes-list tr:hover {
+    background-color: #dddddd;
+  }
+
+  #code-tree-tag-attributes-list {
+    border-collapse: collapse;
+  }
+
+  #code-tree-tag-attributes-list td {
+    padding: 7px;
+    word-wrap: break-word;
+  }
+</style>
+<!-- tags table style-->
+<style>
+  .tagsTable-style th,
+  .tagsTable-style td {
+    padding: 5px;
+    text-align: left;
+  }
+
+  .tagsTable-style tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  .tagsTable-style input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .tagsTable-style tr:hover {
+    cursor: pointer;
+    background-color: #ddd;
+  }
+</style>
+
+
+<!-- tags table script-->
+<script>          const tags =
+    [
+
+      {
+        "tagName": "textNode",
+        "tagValue": "<textNode></textNode>",
+        "TagComment": "Contains text node",
+        "TagType": "Custom"
+      },
+      {
+        "tagName": "doctype",
+        "tagValue": "<!DOCTYPE>",
+        "TagComment": "Defines the document type",
+        "TagType": "Basic HTML"
+      },
+      {
+        "tagName": "html",
+        "tagValue": "<html></html>",
+        "TagComment": "Defines an HTML document",
+        "TagType": "Basic HTML"
+      },
+      {
+        "tagName": "head",
+        "tagValue": "<head></head>",
+        "TagComment": "Contains metadata/information for the document",
+        "TagType": "Basic HTML"
+      },
+      {
+        "tagName": "title",
+        "tagValue": "<title></title>",
+        "TagComment": "Defines a title for the document",
+        "TagType": "Basic HTML"
+      },
+      {
+        "tagName": "body",
+        "tagValue": "<body></body>",
+        "TagComment": "Defines the document's body",
+        "TagType": "Basic HTML"
+      },
+      {
+        "tagName": "h1",
+        "tagValue": "<h1></h1>",
+        "TagComment": "Defines HTML headings",
+        "TagType": "Basic HTML"
+      },
+      {
+        "tagName": "h2",
+        "tagValue": "<h2></h2>",
+        "TagComment": "Defines HTML headings",
+        "TagType": "Basic HTML"
+      },
+      {
+        "tagName": "h3",
+        "tagValue": "<h3></h3>",
+        "TagComment": "Defines HTML headings",
+        "TagType": "Basic HTML"
+      },
+      {
+        "tagName": "h4",
+        "tagValue": "<h4></h4>",
+        "TagComment": "Defines HTML headings",
+        "TagType": "Basic HTML"
+      },
+      {
+        "tagName": "h5",
+        "tagValue": "<h5></h5>",
+        "TagComment": "Defines HTML headings",
+        "TagType": "Basic HTML"
+      },
+      {
+        "tagName": "h6",
+        "tagValue": "<h6></h6>",
+        "TagComment": "Defines HTML headings",
+        "TagType": "Basic HTML"
+      },
+      {
+        "tagName": "p",
+        "tagValue": "<p></p>",
+        "TagComment": "Defines a paragraph",
+        "TagType": "Basic HTML"
+      },
+      {
+        "tagName": "br",
+        "tagValue": "<br>",
+        "TagComment": "Inserts a single line break",
+        "TagType": "Basic HTML"
+      },
+      {
+        "tagName": "hr",
+        "tagValue": "<hr>",
+        "TagComment": "Defines a thematic change in the content",
+        "TagType": "Basic HTML"
+      },
+      {
+        "tagName": "!--...--",
+        "tagValue": "<!--...-->",
+        "TagComment": "Defines a comment",
+        "TagType": "Basic HTML"
+      },
+      {
+        "tagName": "abbr",
+        "tagValue": "<abbr></abbr>",
+        "TagComment": "Defines an abbreviation or an acronym",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "address",
+        "tagValue": "<address></address>",
+        "TagComment": "Defines contact information for the author/owner of a document/article",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "b",
+        "tagValue": "<b></b>",
+        "TagComment": "Defines bold text",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "bdi",
+        "tagValue": "<bdi></bdi>",
+        "TagComment": "Isolates a part of text that might be formatted in a different direction from other text outside it",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "bdo",
+        "tagValue": "<bdo></bdo>",
+        "TagComment": "Overrides the current text direction",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "blockquote",
+        "tagValue": "<blockquote></blockquote>",
+        "TagComment": "Defines a section that is quoted from another source",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "cite",
+        "tagValue": "<cite></cite>",
+        "TagComment": "Defines the title of a work",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "code",
+        "tagValue": "<code></code>",
+        "TagComment": "Defines a piece of computer code",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "del",
+        "tagValue": "<del></del>",
+        "TagComment": "Defines text that has been deleted from a document",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "dfn",
+        "tagValue": "<dfn></dfn>",
+        "TagComment": "Specifies a term that is going to be defined within the content",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "em",
+        "tagValue": "<em></em>",
+        "TagComment": "Defines emphasized text",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "i",
+        "tagValue": "<i></i>",
+        "TagComment": "Defines a part of text in an alternate voice or mood",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "ins",
+        "tagValue": "<ins></ins>",
+        "TagComment": "Defines a text that has been inserted into a document",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "kbd",
+        "tagValue": "<kbd></kbd>",
+        "TagComment": "Defines keyboard input",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "mark",
+        "tagValue": "<mark></mark>",
+        "TagComment": "Defines marked/highlighted text",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "meter",
+        "tagValue": "<meter></meter>",
+        "TagComment": "Defines a scalar measurement within a known range (a gauge)",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "pre",
+        "tagValue": "<pre></pre>",
+        "TagComment": "Defines preformatted text",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "progress",
+        "tagValue": "<progress></progress>",
+        "TagComment": "Represents the progress of a task",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "q",
+        "tagValue": "<q></q>",
+        "TagComment": "Defines a short quotation",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "rp",
+        "tagValue": "<rp></rp>",
+        "TagComment": "Defines what to show in browsers that do not support ruby annotations",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "rt",
+        "tagValue": "<rt></rt>",
+        "TagComment": "Defines an explanation/pronunciation of characters (for East Asian typography)",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "ruby",
+        "tagValue": "<ruby></ruby>",
+        "TagComment": "Defines a ruby annotation (for East Asian typography)",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "s",
+        "tagValue": "<s></s>",
+        "TagComment": "Defines text that is no longer correct",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "samp",
+        "tagValue": "<samp></samp>",
+        "TagComment": "Defines sample output from a computer program",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "small",
+        "tagValue": "<small></small>",
+        "TagComment": "Defines smaller text",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "strong",
+        "tagValue": "<strong></strong>",
+        "TagComment": "Defines important text",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "sub",
+        "tagValue": "<sub></sub>",
+        "TagComment": "Defines subscripted text",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "sup",
+        "tagValue": "<sup></sup>",
+        "TagComment": "Defines superscripted text",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "template",
+        "tagValue": "<template></template>",
+        "TagComment": "Defines a container for content that should be hidden when the page loads",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "time",
+        "tagValue": "<time></time>",
+        "TagComment": "Defines a specific time (or datetime)",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "u",
+        "tagValue": "<u></u>",
+        "TagComment": "Defines some text that is unarticulated and styled differently from normal text",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "var",
+        "tagValue": "<var></var>",
+        "TagComment": "Defines a variable",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "wbr",
+        "tagValue": "<wbr>",
+        "TagComment": "Defines a possible line-break",
+        "TagType": "Formatting"
+      },
+      {
+        "tagName": "form",
+        "tagValue": "<form></form>",
+        "TagComment": "Defines an HTML form for user input",
+        "TagType": "Forms and Input"
+      },
+      {
+        "tagName": "input",
+        "tagValue": "<input>",
+        "TagComment": "Defines an input control",
+        "TagType": "Forms and Input"
+      },
+      {
+        "tagName": "textarea",
+        "tagValue": "<textarea></textarea>",
+        "TagComment": "Defines a multiline input control (text area)",
+        "TagType": "Forms and Input"
+      },
+      {
+        "tagName": "button",
+        "tagValue": "<button></button>",
+        "TagComment": "Defines a clickable button",
+        "TagType": "Forms and Input"
+      },
+      {
+        "tagName": "select",
+        "tagValue": "<select></select>",
+        "TagComment": "Defines a drop-down list",
+        "TagType": "Forms and Input"
+      },
+      {
+        "tagName": "optgroup",
+        "tagValue": "<optgroup></optgroup>",
+        "TagComment": "Defines a group of related options in a drop-down list",
+        "TagType": "Forms and Input"
+      },
+      {
+        "tagName": "option",
+        "tagValue": "<option></option>",
+        "TagComment": "Defines an option in a drop-down list",
+        "TagType": "Forms and Input"
+      },
+      {
+        "tagName": "label",
+        "tagValue": "<label></label>",
+        "TagComment": "Defines a label for an <input> element",
+        "TagType": "Forms and Input"
+      },
+      {
+        "tagName": "fieldset",
+        "tagValue": "<fieldset></fieldset>",
+        "TagComment": "Groups related elements in a form",
+        "TagType": "Forms and Input"
+      },
+      {
+        "tagName": "legend",
+        "tagValue": "<legend></legend>",
+        "TagComment": "Defines a caption for a <fieldset> element",
+        "TagType": "Forms and Input"
+      },
+      {
+        "tagName": "datalist",
+        "tagValue": "<datalist></datalist>",
+        "TagComment": "Specifies a list of pre-defined options for input controls",
+        "TagType": "Forms and Input"
+      },
+      {
+        "tagName": "output",
+        "tagValue": "<output></output>",
+        "TagComment": "Defines the result of a calculation",
+        "TagType": "Forms and Input"
+      },
+      {
+        "tagName": "iframe",
+        "tagValue": "<iframe></iframe>",
+        "TagComment": "Defines an inline frame",
+        "TagType": "Frames"
+      },
+      {
+        "tagName": "img",
+        "tagValue": "<img>",
+        "TagComment": "Defines an image",
+        "TagType": "Images"
+      },
+      {
+        "tagName": "map",
+        "tagValue": "<map></map>",
+        "TagComment": "Defines a client-side image map",
+        "TagType": "Images"
+      },
+      {
+        "tagName": "area",
+        "tagValue": "<area>",
+        "TagComment": "Defines an area inside an image map",
+        "TagType": "Images"
+      },
+      {
+        "tagName": "canvas",
+        "tagValue": "<canvas></canvas>",
+        "TagComment": "Used to draw graphics, on the fly, via scripting (usually JavaScript)",
+        "TagType": "Images"
+      },
+      {
+        "tagName": "figcaption",
+        "tagValue": "<figcaption></figcaption>",
+        "TagComment": "Defines a caption for a <figure> element",
+        "TagType": "Images"
+      },
+      {
+        "tagName": "figure",
+        "tagValue": "<figure></figure>",
+        "TagComment": "Specifies self-contained content",
+        "TagType": "Images"
+      },
+      {
+        "tagName": "picture",
+        "tagValue": "<picture></picture>",
+        "TagComment": "Defines a container for multiple image resources",
+        "TagType": "Images"
+      },
+      {
+        "tagName": "svg",
+        "tagValue": "<svg></svg>",
+        "TagComment": "Defines a container for SVG graphics",
+        "TagType": "Images"
+      },
+      {
+        "tagName": "audio",
+        "tagValue": "<audio></audio>",
+        "TagComment": "Defines sound content",
+        "TagType": "Audio / Video"
+      },
+      {
+        "tagName": "source",
+        "tagValue": "<source>",
+        "TagComment": "Defines multiple media resources for media elements (<video>, <audio> and <picture>)",
+        "TagType": "Audio / Video"
+      },
+      {
+        "tagName": "track",
+        "tagValue": "<track>",
+        "TagComment": "Defines text tracks for media elements (<video> and <audio>)",
+        "TagType": "Audio / Video"
+      },
+      {
+        "tagName": "video",
+        "tagValue": "<video></video>",
+        "TagComment": "Defines a video or movie",
+        "TagType": "Audio / Video"
+      },
+      {
+        "tagName": "a",
+        "tagValue": "<a></a>",
+        "TagComment": "Defines a hyperlink",
+        "TagType": "Links"
+      },
+      {
+        "tagName": "link",
+        "tagValue": "<link>",
+        "TagComment": "Defines the relationship between a document and an external resource (most used to link to style sheets)",
+        "TagType": "Links"
+      },
+      {
+        "tagName": "nav",
+        "tagValue": "<nav></nav>",
+        "TagComment": "Defines navigation links",
+        "TagType": "Links"
+      },
+      {
+        "tagName": "menu",
+        "tagValue": "<menu></menu>",
+        "TagComment": "Defines an alternative unordered list",
+        "TagType": "Lists"
+      },
+      {
+        "tagName": "ul",
+        "tagValue": "<ul></ul>",
+        "TagComment": "Defines an unordered list",
+        "TagType": "Lists"
+      },
+      {
+        "tagName": "ol",
+        "tagValue": "<ol></ol>",
+        "TagComment": "Defines an ordered list",
+        "TagType": "Lists"
+      },
+      {
+        "tagName": "li",
+        "tagValue": "<li></li>",
+        "TagComment": "Defines a list item",
+        "TagType": "Lists"
+      },
+      {
+        "tagName": "dl",
+        "tagValue": "<dl></dl>",
+        "TagComment": "Defines a description list",
+        "TagType": "Lists"
+      },
+      {
+        "tagName": "dt",
+        "tagValue": "<dt></dt>",
+        "TagComment": "Defines a term/name in a description list",
+        "TagType": "Lists"
+      },
+      {
+        "tagName": "dd",
+        "tagValue": "<dd></dd>",
+        "TagComment": "Defines a description of a term/name in a description list",
+        "TagType": "Lists"
+      },
+      {
+        "tagName": "table",
+        "tagValue": "<table></table>",
+        "TagComment": "Defines a table",
+        "TagType": "Tables"
+      },
+      {
+        "tagName": "caption",
+        "tagValue": "<caption></caption>",
+        "TagComment": "Defines a table caption",
+        "TagType": "Tables"
+      },
+      {
+        "tagName": "th",
+        "tagValue": "<th></th>",
+        "TagComment": "Defines a header cell in a table",
+        "TagType": "Tables"
+      },
+      {
+        "tagName": "tr",
+        "tagValue": "<tr></tr>",
+        "TagComment": "Defines a row in a table",
+        "TagType": "Tables"
+      },
+      {
+        "tagName": "td",
+        "tagValue": "<td></td>",
+        "TagComment": "Defines a cell in a table",
+        "TagType": "Tables"
+      },
+      {
+        "tagName": "thead",
+        "tagValue": "<thead></thead>",
+        "TagComment": "Groups the header content in a table",
+        "TagType": "Tables"
+      },
+      {
+        "tagName": "tbody",
+        "tagValue": "<tbody></tbody>",
+        "TagComment": "Groups the body content in a table",
+        "TagType": "Tables"
+      },
+      {
+        "tagName": "tfoot",
+        "tagValue": "<tfoot></tfoot>",
+        "TagComment": "Groups the footer content in a table",
+        "TagType": "Tables"
+      },
+      {
+        "tagName": "col",
+        "tagValue": "<col>",
+        "TagComment": "Specifies column properties for each column within a <colgroup> element",
+        "TagType": "Tables"
+      },
+      {
+        "tagName": "colgroup",
+        "tagValue": "<colgroup></colgroup>",
+        "TagComment": "Specifies a group of one or more columns in a table for formatting",
+        "TagType": "Tables"
+      },
+      {
+        "tagName": "style",
+        "tagValue": "<style></style>",
+        "TagComment": "🎨Defines style information for a document🎨",
+        "TagType": "Styles and Semantics"
+      },
+      {
+        "tagName": "div",
+        "tagValue": "<div></div>",
+        "TagComment": "Defines a section in a document",
+        "TagType": "Styles and Semantics"
+      },
+      {
+        "tagName": "span",
+        "tagValue": "<span></span>",
+        "TagComment": "Defines a section in a document",
+        "TagType": "Styles and Semantics"
+      },
+      {
+        "tagName": "header",
+        "tagValue": "<header></header>",
+        "TagComment": "Defines a header for a document or section",
+        "TagType": "Styles and Semantics"
+      },
+      {
+        "tagName": "hgroup",
+        "tagValue": "<hgroup></hgroup>",
+        "TagComment": "Defines a header and related content",
+        "TagType": "Styles and Semantics"
+      },
+      {
+        "tagName": "footer",
+        "tagValue": "<footer></footer>",
+        "TagComment": "Defines a footer for a document or section",
+        "TagType": "Styles and Semantics"
+      },
+      {
+        "tagName": "main",
+        "tagValue": "<main></main>",
+        "TagComment": "Specifies the main content of a document",
+        "TagType": "Styles and Semantics"
+      },
+      {
+        "tagName": "section",
+        "tagValue": "<section></section>",
+        "TagComment": "Defines a section in a document",
+        "TagType": "Styles and Semantics"
+      },
+      {
+        "tagName": "search",
+        "tagValue": "<search></search>",
+        "TagComment": "Defines a search section",
+        "TagType": "Styles and Semantics"
+      },
+      {
+        "tagName": "article",
+        "tagValue": "<article></article>",
+        "TagComment": "Defines an article",
+        "TagType": "Styles and Semantics"
+      },
+      {
+        "tagName": "aside",
+        "tagValue": "<aside></aside>",
+        "TagComment": "Defines content aside from the page content",
+        "TagType": "Styles and Semantics"
+      },
+      {
+        "tagName": "details",
+        "tagValue": "<details></details>",
+        "TagComment": "Defines additional details that the user can view or hide",
+        "TagType": "Styles and Semantics"
+      },
+      {
+        "tagName": "dialog",
+        "tagValue": "<dialog></dialog>",
+        "TagComment": "Defines a dialog box or window",
+        "TagType": "Styles and Semantics"
+      },
+      {
+        "tagName": "summary",
+        "tagValue": "<summary></summary>",
+        "TagComment": "Defines a visible heading for a <details> element",
+        "TagType": "Styles and Semantics"
+      },
+      {
+        "tagName": "data",
+        "tagValue": "<data></data>",
+        "TagComment": "Adds a machine-readable translation of a given content",
+        "TagType": "Styles and Semantics"
+      },
+      {
+        "tagName": "meta",
+        "tagValue": "<meta>",
+        "TagComment": "Defines metadata about an HTML document",
+        "TagType": "Meta Info"
+      },
+      {
+        "tagName": "base",
+        "tagValue": "<base>",
+        "TagComment": "Specifies the base URL/target for all relative URLs in a document",
+        "TagType": "Meta Info"
+      },
+      {
+        "tagName": "script",
+        "tagValue": "<scrip></scrip>",
+        "TagComment": "💻Defines a client-side script💻",
+        "TagType": "Programming"
+      },
+      {
+        "tagName": "noscript",
+        "tagValue": "<noscript></noscript>",
+        "TagComment": "Defines an alternate content for users that do not support client-side scripts",
+        "TagType": "Programming"
+      },
+      {
+        "tagName": "embed",
+        "tagValue": "<embed></embed>",
+        "TagComment": "Defines a container for an external (non-HTML) application",
+        "TagType": "Programming"
+      },
+      {
+        "tagName": "object",
+        "tagValue": "<object></object>",
+        "TagComment": "Defines an embedded object",
+        "TagType": "Programming"
+      },
+      {
+        "tagName": "param",
+        "tagValue": "<param>",
+        "TagComment": "Defines a parameter for an object",
+        "TagType": "Programming"
+      }
+    ];
+
+
+  function buildTable() {
+    const tableBody = document.getElementById('tagsTable').getElementsByTagName('tbody')[0];
+    tags.forEach((tag, index) => {
+      let row = tableBody.insertRow();
+      row.onclick = function (event) { chooseTag(index, event); };
+
+      let tagNameCell = row.insertCell(0);
+      let tagValueCell = row.insertCell(1);
+      let tagTypeCell = row.insertCell(2);
+      let tagCommentCell = row.insertCell(3);
+
+      tagNameCell.textContent = tag.tagName;
+      tagValueCell.textContent = tag.tagValue;
+      tagTypeCell.textContent = tag.TagType;
+      tagCommentCell.textContent = tag.TagComment;
+    });
+  }
+  function filterTable(column) {
+    let input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("tagsTable").getElementsByTagName("thead")[0].getElementsByTagName("input")[column];
+    filter = input.value.toUpperCase();
+    table = document.getElementById("tagsTable");
+    tr = table.getElementsByTagName("tr");
+
+    for (i = 2; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[column];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
+  function chooseTag(index, event) {
+    console.log('in')
+    console.log(event)
+    let chosenTag = tags[index];
+    //alert("Chosen Tag Name: " + chosenTag.tagName + "\nChosen Tag Value: " + chosenTag.tagValue);
+
+    // Get the fieldset attributes
+    const fieldset = event.currentTarget.closest('fieldset');
+    if (fieldset) {
+      const fieldsetId = fieldset.id;
+      const fieldsetAction = fieldset.getAttribute('action');
+      console.log("Fieldset ID:", fieldsetId);
+      console.log("Fieldset Action:", fieldsetAction);
+      const el =
+      {
+        time: (new Date()).getTime(),
+        action: fieldsetAction,
+        target_element: fieldsetId.split(';')[1],
+
+      }
+      if (fieldsetAction === 'ChangeTag') {
+        el.tag_change = chosenTag.tagName
+      }
+      else {
+        el.inserted_element = { type: 'tag', tagValue: chosenTag.tagValue, tagName: chosenTag.tagName, id: generateUUID() }
+      }
+      pushAction(el)
+      fieldset.remove()
+    }
+  }
+
+  window.onload = buildTable;    </script>
+</code-builder>
+
+<style>
+  .highlight-left-border-red {
+    border-left-color: blue;
+    border-width: 2.5px;
+  }
+
+  .highlight-red {
+    border-color: blue;
+    /* Changes the border color to red */
+    box-shadow: 0 0 10px blue;
+    /* Creates a glowing effect around the button */
+    transition: all 0.3s ease;
+    /* Smooth transition for the effect */
+    border-width: 2.5px;
+
+  }
+
+
+  .highlight-left-border-blue {
+    border-left-color: red;
+    border-width: 2.5px;
+
+  }
+
+  .highlight-blue {
+    border-color: red;
+    /* Changes the border color to red */
+    box-shadow: 0 0 10px red;
+    /* Creates a glowing effect around the button */
+    transition: all 0.3s ease;
+    border-width: 2.5px;
+
+    /* Smooth transition for the effect */
+  }
+</style>
+<script>
+  function mouseOverTree() {
+    // Highlight this button in red
+    this.classList.add('highlight-red');
+
+    let parentFieldset = this.closest('[data-element="code-tree-tag"]');
+
+    // Highlight the left border of the parent fieldset in red
+    if (parentFieldset) {
+      parentFieldset.classList.add('highlight-left-border-red');
+    }
+
+    // Highlight the left border of sibling fieldsets and their direct child buttons in red
+    Array.from(parentFieldset.parentElement.children).forEach(sibling => {
+      if (sibling !== parentFieldset && sibling.getAttribute('data-element') === 'code-tree-tag') {
+        sibling.classList.add('highlight-left-border-red');
+        Array.from(sibling.children).forEach(child => {
+          if (child.tagName === 'BUTTON' && child.getAttribute('data-element') === 'code-tree-show-hide-button') {
+            child.classList.add('highlight-red');
+          }
+        });
+      }
+    });
+
+    // Highlight the left border and buttons of direct child fieldsets of parentFieldset in blue
+    Array.from(parentFieldset.children).forEach(child => {
+      if (child.tagName === 'FIELDSET' && child.getAttribute('data-element') === 'code-tree-tag') {
+        child.classList.add('highlight-left-border-blue');
+        Array.from(child.children).forEach(grandchild => {
+          if (grandchild.tagName === 'BUTTON' && grandchild.getAttribute('data-element') === 'code-tree-show-hide-button') {
+            grandchild.classList.add('highlight-blue');
+          }
+        });
+      }
+    });
+  }
+  function mouseOutTree() {
+    let parentFieldset = this.closest('[data-element="code-tree-tag"]');
+
+    // Remove the red and blue highlights
+    this.classList.remove('highlight-red');
+    if (parentFieldset) {
+      parentFieldset.classList.remove('highlight-left-border-red');
+    }
+    Array.from(parentFieldset.parentElement.children).forEach(sibling => {
+      if (sibling !== parentFieldset && sibling.getAttribute('data-element') === 'code-tree-tag') {
+        sibling.classList.remove('highlight-left-border-red');
+        Array.from(sibling.children).forEach(child => {
+          if (child.tagName === 'BUTTON' && child.getAttribute('data-element') === 'code-tree-show-hide-button') {
+            child.classList.remove('highlight-red');
+          }
+        });
+      }
+    });
+    Array.from(parentFieldset.children).forEach(child => {
+      if (child.tagName === 'FIELDSET' && child.getAttribute('data-element') === 'code-tree-tag') {
+        child.classList.remove('highlight-left-border-blue');
+        Array.from(child.children).forEach(grandchild => {
+          if (grandchild.tagName === 'BUTTON' && grandchild.getAttribute('data-element') === 'code-tree-show-hide-button') {
+            grandchild.classList.remove('highlight-blue');
+          }
+        });
+      }
+    });
+  }
+  document.querySelectorAll('button[data-element="code-tree-show-hide-button"]').forEach(button => {
+    button.addEventListener('mouseover', mouseOverTree);
+
+    button.addEventListener('mouseout', mouseOutTree);
+  });
+</script>
+<!-- dublicate for components-->
+<script>
+  function mouseOver() {
+    // Highlight this button in red
+    this.classList.add('highlight-red');
+
+    let parentFieldset = this.closest('[data-element="component-tree-tag"]');
+
+    // Highlight the left border of the parent fieldset in red
+    if (parentFieldset) {
+      parentFieldset.classList.add('highlight-left-border-red');
+    }
+
+    // Highlight the left border of sibling fieldsets and their direct child buttons in red
+    Array.from(parentFieldset.parentElement.children).forEach(sibling => {
+      if (sibling !== parentFieldset && sibling.getAttribute('data-element') === 'component-tree-tag') {
+        sibling.classList.add('highlight-left-border-red');
+        Array.from(sibling.children).forEach(child => {
+          if (child.tagName === 'BUTTON' && child.getAttribute('data-element') === 'component-tree-show-hide-button') {
+            child.classList.add('highlight-red');
+          }
+        });
+      }
+    });
+
+    // Highlight the left border and buttons of direct child fieldsets of parentFieldset in blue
+    Array.from(parentFieldset.children).forEach(child => {
+      if (child.tagName === 'FIELDSET' && child.getAttribute('data-element') === 'component-tree-tag') {
+        child.classList.add('highlight-left-border-blue');
+        Array.from(child.children).forEach(grandchild => {
+          if (grandchild.tagName === 'BUTTON' && grandchild.getAttribute('data-element') === 'component-tree-show-hide-button') {
+            grandchild.classList.add('highlight-blue');
+          }
+        });
+      }
+    });
+  }
+  function mouseOut() {
+    let parentFieldset = this.closest('[data-element="component-tree-tag"]');
+
+    // Remove the red and blue highlights
+    this.classList.remove('highlight-red');
+    if (parentFieldset) {
+      parentFieldset.classList.remove('highlight-left-border-red');
+    }
+    Array.from(parentFieldset.parentElement.children).forEach(sibling => {
+      if (sibling !== parentFieldset && sibling.getAttribute('data-element') === 'component-tree-tag') {
+        sibling.classList.remove('highlight-left-border-red');
+        Array.from(sibling.children).forEach(child => {
+          if (child.tagName === 'BUTTON' && child.getAttribute('data-element') === 'component-tree-show-hide-button') {
+            child.classList.remove('highlight-red');
+          }
+        });
+      }
+    });
+    Array.from(parentFieldset.children).forEach(child => {
+      if (child.tagName === 'FIELDSET' && child.getAttribute('data-element') === 'component-tree-tag') {
+        child.classList.remove('highlight-left-border-blue');
+        Array.from(child.children).forEach(grandchild => {
+          if (grandchild.tagName === 'BUTTON' && grandchild.getAttribute('data-element') === 'component-tree-show-hide-button') {
+            grandchild.classList.remove('highlight-blue');
+          }
+        });
+      }
+    });
+
+  }
+  document.querySelectorAll('button[data-element="component-tree-show-hide-button"]').forEach(button => {
+    button.addEventListener('mouseover', mouseOver);
+
+    button.addEventListener('mouseout', mouseOut);
+
+  });
+
+</script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var textarea = document.getElementById('code-tree-inner-html-receive-textarea');
+
+    textarea.addEventListener('input', function () {
+      // Expand height
+      this.style.height = 'auto';
+      this.style.height = (this.scrollHeight) + 'px';
+
+      // Expand width
+      var mirrorDiv = document.getElementById('mirror-div');
+      if (!mirrorDiv) {
+        mirrorDiv = document.createElement('div');
+        mirrorDiv.id = 'mirror-div';
+        document.body.appendChild(mirrorDiv);
+      }
+
+      mirrorDiv.style.display = 'inline-block';
+      mirrorDiv.textContent = this.value.replace(/\n/g, '<br/>');
+      this.style.width = Math.min(this.parentElement.offsetWidth, mirrorDiv.offsetWidth + 10) + 'px'; // 10px for some padding
+      mirrorDiv.style.display = 'none';
+    });
+  });
+</script>
+
+<!--aside toggle-->
+<script>document.getElementById('aside-toggle').addEventListener('click', function () {
+    var btn = document.getElementById('aside-toggle');
+    var grid = document.getElementById('content-grid');
+
+    // Check the current state and toggle
+    if (btn.innerHTML === 'log') {
+      btn.innerHTML = 'log→';
+      grid.style.gridTemplateColumns = '80% 20%';
+    } else {
+      btn.innerHTML = 'log';
+      grid.style.gridTemplateColumns = '100% 0%';
+    }
+  });
+</script>
+
+<!--add comment style-->
+<style>
+  [data-action="code-tree-tag-comment-add"] {
+    display: inline-block;
+    /* Ensures transform applies */
+    user-select: none;
+    /* Disables text selection */
+  }
+
+  [data-action="code-tree-tag-comment-add"]:hover {
+    /* Scale the element up slightly on hover */
+    transform: scale(1.3);
+    /* Adjust the scale value as needed */
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    /* Smooth transition for the scaling effect */
+  }
+
+  .pressed {
+    /* Define your pressed state styles here */
+    transform: scale(0.95);
+    /* Example pressed effect */
+  }
+</style>
+
+<script src="js/left-panel.js" async=""></script>
