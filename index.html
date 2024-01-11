@@ -2069,9 +2069,11 @@ document.addEventListener('DOMContentLoaded', function() {
           const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']");
           button.addEventListener('mouseover', mouseOverTree);
           button.addEventListener('mouseout', mouseOutTree);
-
+          const trEl = document.getElementById(target_element)
           // Append the duplicated treeElement to the treeElement's parent
-          treeElement.parentNode.insertBefore(newEl2, treeElement)
+          treeElement.parentNode.insertBefore(newEl2, trEl)
+
+
           function updateChildIdsRecursive(element, prefix) {
             element.querySelectorAll('[id]').forEach(child => {
               const newId = prefix + child.id;
