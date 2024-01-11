@@ -1517,7 +1517,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   const pushAction = async (element, firstLoad, visual) => {
-    console.log(JSON.stringify(element))
+    console.log('pushed'+JSON.stringify(element))
     const time = element.time
     console.log('time' + time)
     actionLog.push(element)
@@ -1574,10 +1574,10 @@ document.addEventListener('DOMContentLoaded', function() {
     parent.insertBefore(clonedElement, originalElement);
   }
   const executeCommand = async (command, path, visual) => {
-    const { action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
+    const { move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
     let treeElement
     let componentElement
-    function handleAppendOrInsert(action, selectedArrayNotSorted) {
+    function handleAppendOrInsert(action, selectedArrayNotSorted, move) {
       // Sort
 
       console.log('start')
@@ -1592,11 +1592,14 @@ document.addEventListener('DOMContentLoaded', function() {
         return Array.from(elementA.parentElement.children).indexOf(elementA) -
           Array.from(elementB.parentElement.children).indexOf(elementB);
       });
-      restOfElements = restOfElements.map(el => el.replace('-tree', '')).map(el =>
-        el.split('-copy')[0]
-      ).map(el=>el+'-tree')
-      console.log('rest ELS'+ JSON.stringify(restOfElements))
-      restOfElements = removeDuplicates(restOfElements)
+      if (!move) {
+        restOfElements = restOfElements.map(el => el.replace('-tree', '')).map(el =>
+          el.split('-copy')[0]
+        ).map(el => el + '-tree')
+        console.log('rest ELS' + JSON.stringify(restOfElements))
+        restOfElements = removeDuplicates(restOfElements)
+      }
+
       // Combine the sorted array with the first element
       var selectedArray = [firstElementId, ...restOfElements];
 
@@ -1605,6 +1608,7 @@ document.addEventListener('DOMContentLoaded', function() {
       console.log('selected' + JSON.stringify(selectedArray))
       // Find the target fieldset based on the ID
       var targetFieldset = document.getElementById(targetElementId);
+      
       var targetFieldset2 = document.getElementById(targetElementId.replace('-tree', ""));
 
       // Get the parent fieldset of the target
@@ -1618,24 +1622,69 @@ document.addEventListener('DOMContentLoaded', function() {
       // Iterate through the selected array (skipping the first element, which is the target)
       for (var i = 1; i < selectedArray.length; i++) {
         var selectedId = selectedArray[i];
-        const l = selectedId.split(';').length
-        // Find all elements based on the selected ID and its replacement
-        var selectedElements = []
-        var selectedElements2 = []
-        document.querySelectorAll('[id^="' + selectedId.replace('-tree', "") + '"]').forEach(el=>{
-          el.id.endsWith('-tree') ? selectedElements.push(el) : selectedElements2.push(el)
-        });
-        selectedElements = selectedElements.filter(el=>el.id.split(';').length === l)
-        selectedElements2 = selectedElements2.filter(el=>el.id.split(';').length === l)
-        // Iterate through each selected element and process it
-        selectedElements.forEach(function (selectedFieldset) {
-          // Clone the selected fieldset and its descendants
-          console.log('found 11' + selectedFieldset.id)
-          var clonedFieldset = cloneWithDescendants(selectedFieldset);
+        if (!move) {
+
+
+          const l = selectedId.split(';').length
+          // Find all elements based on the selected ID and its replacement
+          var selectedElements = []
+          var selectedElements2 = []
+          document.querySelectorAll('[id^="' + selectedId.replace('-tree', "") + '"]').forEach(el => {
+            el.id.endsWith('-tree') ? selectedElements.push(el) : selectedElements2.push(el)
+          });
+          selectedElements = selectedElements.filter(el => el.id.split(';').length === l)
+          selectedElements2 = selectedElements2.filter(el => el.id.split(';').length === l)
+          // Iterate through each selected element and process it
+          selectedElements.forEach(function (selectedFieldset) {
+            // Clone the selected fieldset and its descendants
+            console.log('found 11' + selectedFieldset.id)
+            var clonedFieldset = cloneWithDescendants(selectedFieldset);
+            var arrowButton = clonedFieldset.querySelector('[data-element="code-tree-show-hide-button"]');
+
+            arrowButton.textContent = '→';
+            // Insert the cloned fieldset based on the action
+            if (action === 'Append') {
+              targetFieldset.appendChild(clonedFieldset);
+            } else if (action === 'InsertBefore') {
+
+              parentFieldset.insertBefore(clonedFieldset, parentFieldset.children[index]);
+              index++; // Increment the index to maintain the correct order
+            }
+
+            // Remove the original fieldset
+            selectedFieldset.remove();
+          });
+
+
+
+          selectedElements2 = Array.from(selectedElements2).filter(function (element) {
+            return !element.id.includes('-tree');
+          });
+          selectedElements2.forEach(function (selectedFieldset2) {
+            // Clone the selected fieldset and its descendants
+            var clonedFieldset2 = cloneWithDescendants(selectedFieldset2);
+
+            // Insert the cloned fieldset based on the action
+            if (action === 'Append') {
+              targetFieldset2.appendChild(clonedFieldset2);
+            } else if (action === 'InsertBefore') {
+
+
+              parentFieldset2.insertBefore(clonedFieldset2, parentFieldset2.children[index2]);
+              index2++; // Increment the index to maintain the correct order
+            }
+
+            // Remove the original fieldset
+            selectedFieldset2.remove();
+          });
+        }
+        else {
+          const treeEl = document.getElementById(selectedId)
+          const pageEl = document.getElementById(selectedId.replace('-tree', ''))
+          var clonedFieldset = cloneWithDescendants(treeEl);
           var arrowButton = clonedFieldset.querySelector('[data-element="code-tree-show-hide-button"]');
 
           arrowButton.textContent = '→';
-          // Insert the cloned fieldset based on the action
           if (action === 'Append') {
             targetFieldset.appendChild(clonedFieldset);
           } else if (action === 'InsertBefore') {
@@ -1643,18 +1692,7 @@ document.addEventListener('DOMContentLoaded', function() {
             parentFieldset.insertBefore(clonedFieldset, parentFieldset.children[index]);
             index++; // Increment the index to maintain the correct order
           }
-
-          // Remove the original fieldset
-          selectedFieldset.remove();
-        });
-        selectedElements2 = Array.from(selectedElements2).filter(function (element) {
-          return !element.id.includes('-tree');
-        });
-        selectedElements2.forEach(function (selectedFieldset2) {
-          // Clone the selected fieldset and its descendants
-          var clonedFieldset2 = cloneWithDescendants(selectedFieldset2);
-
-          // Insert the cloned fieldset based on the action
+          var clonedFieldset2 = cloneWithDescendants(pageEl);
           if (action === 'Append') {
             targetFieldset2.appendChild(clonedFieldset2);
           } else if (action === 'InsertBefore') {
@@ -1663,10 +1701,9 @@ document.addEventListener('DOMContentLoaded', function() {
             parentFieldset2.insertBefore(clonedFieldset2, parentFieldset2.children[index2]);
             index2++; // Increment the index to maintain the correct order
           }
-
-          // Remove the original fieldset
-          selectedFieldset2.remove();
-        });
+          treeEl.remove();
+          pageEl.remove()
+        }
       }
     }
     function cloneWithDescendants(element) {
@@ -1800,7 +1837,7 @@ document.addEventListener('DOMContentLoaded', function() {
           break;
         }
         if (target_element.length) {
-          handleAppendOrInsert('Append', target_element.map(i => i.id))
+          handleAppendOrInsert('Append', target_element.map(i => i.id), move)
         }
         break;
 
@@ -1917,7 +1954,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         if (target_element.length) {
           console.log(JSON.stringify(target_element))
-          handleAppendOrInsert('InsertBefore', target_element.map(i => i.id))
+          handleAppendOrInsert('InsertBefore', target_element.map(i => i.id), move)
         }
 
         break;
@@ -2640,8 +2677,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const el = {
       time: (new Date()).getTime(),
       action: 'InsertBefore',
-      target_element:  parentId,
-      inserted_element: { originalId: parentId, id: duplicateId(parentId, generateNewCopyNumber(parentId.replace('-tree',''))) },
+      target_element: parentId,
+      inserted_element: { originalId: parentId, id: duplicateId(parentId, generateNewCopyNumber(parentId.replace('-tree', ''))) },
     };
 
     pushAction(el);
@@ -2706,9 +2743,23 @@ document.addEventListener('DOMContentLoaded', function() {
       const [first, ...rest] = selected.map(id => {
         return { type: 'tag', id }
       });
+      // get all copies 
 
-      for (const el of rest) {
-
+      let restOfElements = selected.map(el => el.replace('-tree', '')).map(el =>
+        el.split('-copy')[0]
+      ).map(el => el + '-tree')
+      console.log('rest ELS' + JSON.stringify(restOfElements))
+      restOfElements = removeDuplicates(restOfElements)
+      // Combine the sorted array with the first element
+      const items = []
+      for (const element of restOfElements) {
+        document.querySelectorAll('[id^="' + element.replace('-tree', "") + '"]').forEach(el => {
+          el.id.endsWith('-tree') && items.push(el.id)
+        });
+      }
+      console.log('iteeems' + JSON.stringify(items))
+      const [firstId, ...restIds] = items
+      for (const el of restIds) {
 
         // Function to generate a new ID based on a specific copy number
         function duplicateId(originalId, copyNumber) {
@@ -2751,13 +2802,15 @@ document.addEventListener('DOMContentLoaded', function() {
         await pushAction({
           time: (new Date()).getTime(),
           action: fieldsetAction,
-          target_element: [{ type: 'tag', id: t, }, el],
+          target_element: [{ type: 'tag', id: t, } , { type: 'tag', id:el, }],
+          move: true
         });
       }
       pushAction({
         time: (new Date()).getTime(),
         action: fieldsetAction,
-        target_element: [{ type: 'tag', id, }, first],
+        target_element: [{ type: 'tag', id, }, { type: 'tag', id:firstId, }],
+        move:true
       });
     }
     else {
