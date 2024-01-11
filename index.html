@@ -1517,7 +1517,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   const pushAction = async (element, firstLoad, visual) => {
-    console.log('pushed'+JSON.stringify(element))
+    console.log('pushed' + JSON.stringify(element))
     const time = element.time
     console.log('time' + time)
     actionLog.push(element)
@@ -1574,7 +1574,7 @@ document.addEventListener('DOMContentLoaded', function() {
     parent.insertBefore(clonedElement, originalElement);
   }
   const executeCommand = async (command, path, visual) => {
-    const { move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
+    const { withParent, move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
     let treeElement
     let componentElement
     function handleAppendOrInsert(action, selectedArrayNotSorted, move) {
@@ -1608,7 +1608,7 @@ document.addEventListener('DOMContentLoaded', function() {
       console.log('selected' + JSON.stringify(selectedArray))
       // Find the target fieldset based on the ID
       var targetFieldset = document.getElementById(targetElementId);
-      
+
       var targetFieldset2 = document.getElementById(targetElementId.replace('-tree', ""));
 
       // Get the parent fieldset of the target
@@ -1727,6 +1727,78 @@ document.addEventListener('DOMContentLoaded', function() {
     switch (action) {
       case 'Append':
         // Handle the 'Append' action
+        if (withParent) {
+          // get all copies 
+          const id = target_element[0].id
+          target_element.shift()
+          let restOfElements = target_element.map(el => el.id.replace('-tree', '')).map(el =>
+            el.split('-copy')[0]
+          ).map(el => el + '-tree')
+          console.log('rest ELS' + JSON.stringify(restOfElements))
+          restOfElements = removeDuplicates(restOfElements)
+          // Combine the sorted array with the first element
+          const items = []
+          for (const element of restOfElements) {
+            document.querySelectorAll('[id^="' + element.replace('-tree', "") + '"]').forEach(el => {
+              el.id.endsWith('-tree') && items.push(el.id)
+            });
+          }
+          console.log('iteeems' + JSON.stringify(items))
+          const [firstId, ...restIds] = items
+          for (const el of restIds) {
+
+            // Function to generate a new ID based on a specific copy number
+            function duplicateId(originalId, copyNumber) {
+              const splited = originalId.split(';');
+              return splited.map((part, index) => (index === splited.length - 1)
+                ? part.replace(/-copy-\d+-tree$/, '').replace(/-tree$/, '') + `-copy-${copyNumber}-tree`
+                : part
+              ).join(';');
+            }
+            async function append(parentId, selectedElementId, flag) {
+              console.log('parent id' + parentId)
+              console.log('el id' + selectedElementId)
+              // Perform additional actions if needed
+              const actionObject = {
+                time: (new Date()).getTime(),
+                action: 'Append',
+                target_element: parentId + '-tree',
+                inserted_element: { originalId: selectedElementId + '-tree', id: duplicateId(selectedElementId + '-tree', generateNewCopyNumber(selectedElementId)) },
+              };
+              await executeCommand(actionObject, path, visual);
+              return actionObject.inserted_element.id
+            }
+            // Function to generate a new copy number based on the highest copy number
+            function generateNewCopyNumber(originalId) {
+              console.log("selected" + originalId)
+              const existingElements = document.querySelectorAll(`[id^="${originalId}"]`);
+              let highestCopyNumber = 0;
+              console.log("existing" + JSON.stringify(existingElements))
+              existingElements.forEach(element => {
+                const match = element.id.match(/-copy-(\d+)-tree$/);
+                if (match) {
+                  const copyNumber = parseInt(match[1], 10);
+                  highestCopyNumber = Math.max(highestCopyNumber, copyNumber);
+                }
+              });
+
+              return highestCopyNumber + 1;
+            }
+            const t = await append(document.getElementById(id).parentNode.id.replace('-tree', ''), id.replace('-tree', ''))
+            await executeCommand({
+              time: (new Date()).getTime(),
+              action: 'Append',
+              target_element: [{ type: 'tag', id: t, }, { type: 'tag', id: el, }],
+              move: true
+            }, path, visual);
+          }
+          await executeCommand({
+            time: (new Date()).getTime(),
+            action: 'Append',
+            target_element: [{ type: 'tag', id, }, { type: 'tag', id: firstId, }],
+            move: true
+          }, path, visual);
+        }
         if (inserted_component) {
           //fieldset
           console.log('in')
@@ -1845,7 +1917,78 @@ document.addEventListener('DOMContentLoaded', function() {
         // Handle the 'InsertBefore' action
         // Handle the 'Append' action
         //fieldset
+        if (withParent) {
+          // get all copies 
+          const id = target_element[0].id
+          target_element.shift()
+          let restOfElements = target_element.map(el => el.id.replace('-tree', '')).map(el =>
+            el.split('-copy')[0]
+          ).map(el => el + '-tree')
+          console.log('rest ELS' + JSON.stringify(restOfElements))
+          restOfElements = removeDuplicates(restOfElements)
+          // Combine the sorted array with the first element
+          const items = []
+          for (const element of restOfElements) {
+            document.querySelectorAll('[id^="' + element.replace('-tree', "") + '"]').forEach(el => {
+              el.id.endsWith('-tree') && items.push(el.id)
+            });
+          }
+          console.log('iteeems' + JSON.stringify(items))
+          const [firstId, ...restIds] = items
+          for (const el of restIds) {
 
+            // Function to generate a new ID based on a specific copy number
+            function duplicateId(originalId, copyNumber) {
+              const splited = originalId.split(';');
+              return splited.map((part, index) => (index === splited.length - 1)
+                ? part.replace(/-copy-\d+-tree$/, '').replace(/-tree$/, '') + `-copy-${copyNumber}-tree`
+                : part
+              ).join(';');
+            }
+            async function append(parentId, selectedElementId, flag) {
+              console.log('parent id' + parentId)
+              console.log('el id' + selectedElementId)
+              // Perform additional actions if needed
+              const actionObject = {
+                time: (new Date()).getTime(),
+                action: 'Append',
+                target_element: parentId + '-tree',
+                inserted_element: { originalId: selectedElementId + '-tree', id: duplicateId(selectedElementId + '-tree', generateNewCopyNumber(selectedElementId)) },
+              };
+              await executeCommand(actionObject, path, visual);
+              return actionObject.inserted_element.id
+            }
+            // Function to generate a new copy number based on the highest copy number
+            function generateNewCopyNumber(originalId) {
+              console.log("selected" + originalId)
+              const existingElements = document.querySelectorAll(`[id^="${originalId}"]`);
+              let highestCopyNumber = 0;
+              console.log("existing" + JSON.stringify(existingElements))
+              existingElements.forEach(element => {
+                const match = element.id.match(/-copy-(\d+)-tree$/);
+                if (match) {
+                  const copyNumber = parseInt(match[1], 10);
+                  highestCopyNumber = Math.max(highestCopyNumber, copyNumber);
+                }
+              });
+
+              return highestCopyNumber + 1;
+            }
+            const t = await append(document.getElementById(id).parentNode.id.replace('-tree', ''), id.replace('-tree', ''))
+            await executeCommand({
+              time: (new Date()).getTime(),
+              action: 'InsertBefore',
+              target_element: [{ type: 'tag', id: t, }, { type: 'tag', id: el, }],
+              move: true
+            }, path, visual);
+          }
+          await executeCommand({
+            time: (new Date()).getTime(),
+            action: 'InsertBefore',
+            target_element: [{ type: 'tag', id, }, { type: 'tag', id: firstId, }],
+            move: true
+          }, path, visual);
+        }
         if (inserted_component) {
           //fieldset
           console.log('in')
@@ -1965,6 +2108,7 @@ document.addEventListener('DOMContentLoaded', function() {
         targetElement.innerHTML = insertedCode;
 
         break;
+
 
       case 'ChangeTag':
         // Handle the 'ChangeTag' action
@@ -2740,78 +2884,16 @@ document.addEventListener('DOMContentLoaded', function() {
       })],
     }
     if (isDuplicateWithParent) {
-      const [first, ...rest] = selected.map(id => {
-        return { type: 'tag', id }
-      });
-      // get all copies 
-
-      let restOfElements = selected.map(el => el.replace('-tree', '')).map(el =>
-        el.split('-copy')[0]
-      ).map(el => el + '-tree')
-      console.log('rest ELS' + JSON.stringify(restOfElements))
-      restOfElements = removeDuplicates(restOfElements)
-      // Combine the sorted array with the first element
-      const items = []
-      for (const element of restOfElements) {
-        document.querySelectorAll('[id^="' + element.replace('-tree', "") + '"]').forEach(el => {
-          el.id.endsWith('-tree') && items.push(el.id)
-        });
-      }
-      console.log('iteeems' + JSON.stringify(items))
-      const [firstId, ...restIds] = items
-      for (const el of restIds) {
-
-        // Function to generate a new ID based on a specific copy number
-        function duplicateId(originalId, copyNumber) {
-          const splited = originalId.split(';');
-          return splited.map((part, index) => (index === splited.length - 1)
-            ? part.replace(/-copy-\d+-tree$/, '').replace(/-tree$/, '') + `-copy-${copyNumber}-tree`
-            : part
-          ).join(';');
-        }
-        async function append(parentId, selectedElementId, flag) {
-          console.log('parent id' + parentId)
-          console.log('el id' + selectedElementId)
-          // Perform additional actions if needed
-          const actionObject = {
-            time: (new Date()).getTime(),
-            action: 'Append',
-            target_element: parentId + '-tree',
-            inserted_element: { originalId: selectedElementId + '-tree', id: duplicateId(selectedElementId + '-tree', generateNewCopyNumber(selectedElementId)) },
-          };
-          await pushAction(actionObject, false, flag);
-          return actionObject.inserted_element.id
-        }
-        // Function to generate a new copy number based on the highest copy number
-        function generateNewCopyNumber(originalId) {
-          console.log("selected" + originalId)
-          const existingElements = document.querySelectorAll(`[id^="${originalId}"]`);
-          let highestCopyNumber = 0;
-          console.log("existing" + JSON.stringify(existingElements))
-          existingElements.forEach(element => {
-            const match = element.id.match(/-copy-(\d+)-tree$/);
-            if (match) {
-              const copyNumber = parseInt(match[1], 10);
-              highestCopyNumber = Math.max(highestCopyNumber, copyNumber);
-            }
-          });
-
-          return highestCopyNumber + 1;
-        }
-        const t = await append(document.getElementById(id).parentNode.id.replace('-tree', ''), id.replace('-tree', ''))
-        await pushAction({
-          time: (new Date()).getTime(),
-          action: fieldsetAction,
-          target_element: [{ type: 'tag', id: t, } , { type: 'tag', id:el, }],
-          move: true
-        });
-      }
       pushAction({
         time: (new Date()).getTime(),
         action: fieldsetAction,
-        target_element: [{ type: 'tag', id, }, { type: 'tag', id:firstId, }],
-        move:true
-      });
+        withParent: true,
+        target_element: [{ type: 'tag', id, }, ...selected.map(id => {
+          return { type: 'tag', id }
+        })],
+      })
+
+
     }
     else {
       pushAction(el2)
