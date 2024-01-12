@@ -68,7 +68,8 @@
 
 
     <fieldset hidden data-element="create-new-file-path">
-      <legend><button data-action="create-new-file-path-cancel"  onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
+      <legend><button data-action="create-new-file-path-cancel" onclick="cancel(event)"
+          style="font-size: 0.9em;">❌</button></legend>
       <span>📂 </span>
       <input type="text" placeholder="path/path/path/path" data-input="create-new-file-path-input"
         oninput="adjustWidthToContent(this)" style="min-width: 300px;">
@@ -106,14 +107,10 @@
   </div>
   <div hidden>
     <!-- file path-->
-    <div id="item">
-      <li data-element="file-path" >
-        <button hidden class="b-4">☑️</button><label data-value="file-path"
-          class="l-3">universal/blablabla/blablabla/coolcss</label><label data-value="file-emoji"
-          style="user-select: none;" class="l-3"> 🧩</label>
-
-
-      </li>
+    <li data-element="file-path" id="item">
+      <button hidden class="b-4">☑️</button><label data-value="file-path"
+        class="l-3">universal/blablabla/blablabla/coolcss</label><label data-value="file-emoji"
+        style="user-select: none;" class="l-3"> 🧩</label>
       <!-- file info-->
       <div hidden data-element="file-id"><span style="user-select: none;">🆔</span><span data-value="file-id"
           style="font-size: 0.9em">1414124-414221412-4124214124-412412</span></div>
@@ -126,7 +123,9 @@
           <button data-action="remove-file-confirmation">✅ DELETE</button>
         </div>
       </fieldset>
-    </div>
+
+    </li>
+
 
 
   </div>
@@ -153,15 +152,19 @@
           const cloned = editArea.cloneNode(true);
           const saveButton = cloned.querySelector('[data-action="create-new-file-path-save"]');
           const cancelButton = cloned.querySelector('[data-action="create-new-file-path-cancel"]');
-          cancelButton.onclick = (e)=>{
+          cancelButton.onclick = (e) => {
+            e.stopPropagation()
             e.target.parentNode.parentNode.remove()
           }
           const input = cloned.querySelector('[data-input="create-new-file-path-input"]');
           const name = fieldset.querySelector('[data-value="file-path"]').textContent;
 
           input.value = path + name;
-
+          input.onclick =(event)=>{
+            event.stopPropagation()
+          }
           saveButton.onclick = async function (e) {
+            e.stopPropagation()
             const new_value = cloned.querySelector('[data-input="create-new-file-path-input"]').value
             await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
               method: 'POST',
@@ -249,6 +252,7 @@
       lastActionTime.textContent = timerElement.textContent;
     }
     const cancel = (event) => {
+      event.stopPropagation()
       console.log("cancelling")
       event.target.parentNode.parentNode.setAttribute('hidden', "")
     }
@@ -320,7 +324,7 @@
       })
         .then(response => response.json())
         .then(data => console.log('API Response:', data))
-        .then(e => loadFileList())
+        .then(e => { path ? loadUsingPath() :loadFileList()})
         .catch(error => console.error('Error:', error));
     }
     let path = ''
@@ -409,12 +413,12 @@
 
               // Set file path and emoji
               const item_path = clonedItem.querySelector('[data-value="file-path"]')
-              const li_element =  clonedItem.querySelector('[data-element="file-path"]')
               item_path.textContent = item.name;
-              li_element.onclick = function () {
+              clonedItem.onclick = function (event) {
+                event.stopPropagation()
                 redirect(item.id);
               };
-              li_element.addEventListener('contextmenu', (e) => addMenu(e, item.id))
+              clonedItem.addEventListener('contextmenu', (e) => addMenu(e, item.id))
               let icon = '🧩';
               if (item.lsi1.startsWith('css')) {
                 icon = '🎨';
@@ -429,6 +433,7 @@
               // Set up onclick for file-open button
 
               clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
+                event.stopPropagation()
                 remove(event, item.id);
               };
               // Append the cloned item to the filePathList
@@ -646,9 +651,8 @@
               // Set file path and emoji
               const item_path = clonedItem.querySelector('[data-value="file-path"]')
               item_path.textContent = item.name;
-              const li_element =  clonedItem.querySelector('[data-element="file-path"]')
-              li_element.addEventListener('contextmenu', (e) => addMenu(e, item.id))
-              li_element.onclick = function () {
+              clonedItem.addEventListener('contextmenu', (e) => addMenu(e, item.id))
+              clonedItem.onclick = function (event) {
                 redirect(item.id);
               };
               let icon = '🧩';
@@ -663,6 +667,7 @@
               clonedItem.querySelector('[data-value="file-id"]').textContent = item.id;
 
               clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
+                event.stopPropagation()
                 remove(event, item.id);
               };
               // Append the cloned item to the filePathList
