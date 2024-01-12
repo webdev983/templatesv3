@@ -4,6 +4,9 @@
 <link rel="stylesheet" href="css/right-click-menu.css" media="all">
 
 <body style="background: #fcfcfc">
+  <div style="display: none;" id="right-click-menu" class="right-click-menu">
+    <div class="menu-option" onclick="alert('Option 0 selected')">🖼️ edit pic</div>
+  </div>
   <div id="loading"
     style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 900;">
     <span style="font-size: 10.2em; color: white;">⏳</span>
@@ -59,7 +62,7 @@
     <div class="up-panel">
       <button id="path_select" class='b-1' title="change mode"
         style="user-select: none; margin-left: 30px;">👣</button><label class="l-2"
-        style="cursor: pointer; color:#4A90E2;" onclick="labelClick(event)">All</label>
+        style="cursor: pointer; color:#4A90E2;" onclick="labelClick(event)">www</label>
 
     </div>
 
@@ -128,6 +131,35 @@
 
   </div>
   <script>
+    function addMenu(e) {
+      e.preventDefault(); // Prevent the default context menu from opening
+      console.log('in11');
+      const menu = document.querySelector('#right-click-menu'); // Use # for ID selector
+      menu.innerHTML = '';
+
+      function addMenuEntry(menu, text, clickHandler) {
+        const entry = document.createElement('div');
+        entry.className = 'menu-option';
+        entry.innerHTML = text;
+        entry.onclick = clickHandler;
+        menu.appendChild(entry);
+      }
+      const edit = ()=>{}
+      addMenuEntry(menu,'edit',edit)
+      // Adjust the position relative to the viewport
+      const offsetX = e.pageX;
+      const offsetY = e.pageY;
+
+      menu.style.display = 'block';
+      menu.style.left = `${offsetX}px`;
+      menu.style.top = `${offsetY}px`;
+
+      // Hide the menu when clicking the left mouse button
+      window.addEventListener('click', function () {
+        menu.style.display = 'none';
+      });
+
+    }
     async function loader(e, handler) {
       const loadingScreen = document.getElementById('loading');
       loadingScreen.style.display = 'flex';
@@ -372,7 +404,7 @@
                 const labelElement = document.querySelector('.l-2');
 
                 // Update the text content of the label
-                labelElement.textContent = `All/${path}`;
+                labelElement.textContent = `www.${path}`;
                 openPath();
               };
               clonedItem.querySelector('[data-action="file-open"]').onclick = setPath
@@ -453,24 +485,24 @@
     function labelClick(event) {
       // Extract the clicked part of the text based on the click position
       const clickedText = getClickedText(event, event.target.textContent);
-      if (clickedText === 'All') {
+      if (clickedText === 'www') {
         path = ''
         localStorage.setItem('storedPath', path)
         const labelElement = document.querySelector('.l-2');
 
         // Update the text content of the label
-        labelElement.textContent = `All`;
+        labelElement.textContent = `www`;
         loadFileList()
       }
       else {
-        const p = clickedText.replace('All/', '')
+        const p = clickedText.replace('www.', '')
         path = p + '/'
         localStorage.setItem('storedPath', path)
         console.log(path)
         const labelElement = document.querySelector('.l-2');
 
         // Update the text content of the label
-        labelElement.textContent = `All/${path}`;
+        labelElement.textContent = `www.${path}`;
         openPath();
       }
       // Do something with the extracted text (for example, log it)
@@ -483,7 +515,7 @@
       const relativeClickX = clickX - labelRect.left;
 
       // Split the label text into parts based on the '/' separator
-      const parts = labelText.split('/');
+      const parts = ['www',...labelText.replace('www.','').split('/')];
 
       // Find the part that corresponds to the clicked position
       let accumulatedWidth = 0;
@@ -491,7 +523,9 @@
         const partWidth = getTextWidth(part, event.target);
         accumulatedWidth += partWidth;
         if (accumulatedWidth >= relativeClickX) {
-          return parts.slice(0, parts.indexOf(part) + 1).join('/');
+          const parts1 =  parts.slice(0, parts.indexOf(part) + 1)
+          parts1.shift()
+          return 'www'+ (parts1.length ? '.' + parts1.join('/') : '');
         }
       }
 
@@ -616,7 +650,7 @@
                 const labelElement = document.querySelector('.l-2');
 
                 // Update the text content of the label
-                labelElement.textContent = `All/${path}`;
+                labelElement.textContent = `www.${path}`;
                 openPath();
               };
               clonedItem.querySelector('[data-action="file-open"]').onclick = setPath
@@ -650,7 +684,7 @@
         const labelElement = document.querySelector('.l-2');
 
         // Update the text content of the label
-        labelElement.textContent = `All/${path}`;
+        labelElement.textContent = `www.${path}`;
         loadUsingPath()
       }
       else {
