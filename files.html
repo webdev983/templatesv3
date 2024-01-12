@@ -2,634 +2,835 @@
 <link rel="stylesheet" href="css/buttons-and-menus.css" media="all">
 <link rel="stylesheet" href="css/up-panel.css" media="all">
 <link rel="stylesheet" href="css/right-click-menu.css" media="all">
+
 <body style="background: #fcfcfc">
-<div id="loading"
-  style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 900;">
-  <span style="font-size: 10.2em; color: white;">⏳</span>
-  <div id="timer" style="font-size: 2em; color: white;">0</div>
-</div>
-
-
-<div class="left-top-panel">
-  <button disabled class="b-1" id="last-action-time" style="color: black;z-index:1; position: absolute;top: 50%;left: 50%; transform: translate(-50%, -50%);">0.7</button>
-</div>
-
-<div class="left-side-panel">
-
-  <div id="nav-buttons">
-    <a href="https://webdev983.github.io/templatesv3/summary"><button class="b-1">🧠</button></a>  
-    <a href="https://webdev983.github.io/templatesv3/files"><button class="b-1 b-selected">📂</button></a>
+  <div id="loading"
+    style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 900;">
+    <span style="font-size: 10.2em; color: white;">⏳</span>
+    <div id="timer" style="font-size: 2em; color: white;">0</div>
   </div>
 
- 
-  <div class="local-buttons" style="margin-top: 30px;">
-  <button class="b-1" onclick="openTypeSelect()">➕</button>
-  <button   class="b-1" title="select few files">🔲</button>
-<div id="filters">
-  <button title="publish status" id="filters-open" class="b-1">🪄</button>
-  <button id='btn-all' class='b-1' onclick="fileTypeFilter('all')" hidden>🧱</button>
-  <button id='btn-page' class='b-1' onclick="fileTypeFilter('page')" hidden>🌐</button>
-  <button id='btn-component' class='b-1' onclick="fileTypeFilter('component')" hidden>🧩</button>
-  <button id='btn-css' class='b-1' onclick="fileTypeFilter('css')" hidden>🎨</button>
-  <button id='btn-js' class='b-1' onclick="fileTypeFilter('js')" hidden>💻</button>
-  <button id="publish" hidden class="b-1">📰</button>
-  <button id="sitemap" hidden  class="b-1">📋</button>
-  <button id="robots" hidden class="b-1">📵</button>
-  <button id="dates" hidden class="b-1" title="select few files">📅</button>
-</div>
-</div>
-</div>
 
-<div class="bottom-buttons">
-<button class="b-1">📴</button>
-</div>
+  <div class="left-top-panel">
+    <button disabled class="b-1" id="last-action-time"
+      style="color: black;z-index:1; position: absolute;top: 50%;left: 50%; transform: translate(-50%, -50%);">0.7</button>
+  </div>
+
+  <div class="left-side-panel">
+
+    <div id="nav-buttons">
+      <a href="https://webdev983.github.io/templatesv3/summary"><button class="b-1">🧠</button></a>
+      <a href="https://webdev983.github.io/templatesv3/files"><button class="b-1 b-selected">📂</button></a>
+    </div>
 
 
-<div id="main-content" style="margin-left:80px; margin-top: -60" class="main-content" >
-
-<select  hidden id="pathSelector" style="margin-top: 10px; min-width: 200px;" onchange="handlePathSelection()">
-  <option value="path0">⬇️ select</option>
-  <option value="path1">⬅️back</option>
-  <option value="path99">🏠 home</option>
-
-</select>
-
-<div class="up-panel">
-  <button class='b-1' title="change mode" style="user-select: none; margin-left: 30px;">👣</button><label class="l-2" style="cursor: pointer; color:#4A90E2;">keyzon.com/product/</label>
-
-</div>
-
-
-<fieldset hidden data-element="create-new-file-path">
-  <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
-  <span>📂 </span>
-  <input type="text" placeholder="path/path/path/path" data-input="create-new-file-path-input"
-    oninput="adjustWidthToContent(this)" style="min-width: 300px;">
-  <button data-action="create-new-file-path-save" onclick="loader(event,savePath)">💾</button>
-</fieldset>
-<fieldset data-element="choose-new-file-type" hidden>
-  <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
-  <button data-action="choose-new-file-type-html" style="font-size: 1.2em;" onclick="createNew('HTML')">🧩 HTML
-    component</button>
-  <button data-action="choose-new-file-type-css" style="font-size: 1.2em;" onclick="createNew('CSS')">🎨 CSS stylesfile</button>
-  <button data-action="choose-new-file-type-js" style="font-size: 1.2em;" onclick="createNew('JavaScript')">💻JavaScript</button>
-
-</fieldset>
-
-
-<ol data-element="file-path-list" id="filePathList" class="list-1" style="margin-left: -10px;">
-
- 
-
-</ol>
-<select  id="amount-of-rows" style="margin-top: 10px; min-width: 50px; position: absolute; right: 10px; font-size:20px;">
-  <option value="path0">25</option>
-  <option value="path1">50</option>
-  <option value="path2">100</option>
-  <option value="path3">150</option>
-  <option value="path3">200</option>
-</select>
-
-
-</main>
-
-</div>
-<div hidden >
-  <!-- file path-->
-  <li data-element="file-path" id="item">
-    <button hidden class="b-4">☑️</button><button class="b-4" data-action="file-show-id" style="user-select: none; margin-right: 5px;">ℹ️</button><button class="b-4 b-green"
-      data-action="file-open" style="user-select: none; margin-right: 5px;">📂</button><button class="b-4"
-      data-action="file-remove-button" style="user-select: none; margin-right: 10px;">🗑️</button><label
-      data-value="file-path" class="l-3">universal/blablabla/blablabla/coolcss</label><label data-value="file-emoji"
-      style="user-select: none;" class="l-3"> 🧩</label>
-
-    <!-- file info-->
-    <div hidden data-element="file-id"><span style="user-select: none;">🆔</span><span data-value="file-id"
-        style="font-size: 0.9em">1414124-414221412-4124214124-412412</span></div>
-    <!-- remove file menu-->
-    <fieldset hidden id="cancelation">
-      <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
-
-      <span>are you sure want to remove this file?</span>
-      <div>
-        <button data-action="remove-file-confirmation">✅ DELETE</button>
+    <div class="local-buttons" style="margin-top: 30px;">
+      <button class="b-1" onclick="createNew()">➕</button>
+      <button class="b-1" title="select few files">🔲</button>
+      <div id="filters">
+        <button title="publish status" id="filters-open" class="b-1">🪄</button>
+        <button id='btn-all' class='b-1' onclick="fileTypeFilter('all')" hidden>🧱</button>
+        <button id='btn-page' class='b-1' onclick="fileTypeFilter('page')" hidden>🌐</button>
+        <button id='btn-component' class='b-1' onclick="fileTypeFilter('component')" hidden>🧩</button>
+        <button id='btn-css' class='b-1' onclick="fileTypeFilter('css')" hidden>🎨</button>
+        <button id='btn-js' class='b-1' onclick="fileTypeFilter('js')" hidden>💻</button>
+        <button id="publish" hidden class="b-1">📰</button>
+        <button id="sitemap" hidden class="b-1">📋</button>
+        <button id="robots" hidden class="b-1">📵</button>
+        <button id="dates" hidden class="b-1" title="select few files">📅</button>
       </div>
+    </div>
+  </div>
+
+  <div class="bottom-buttons">
+    <button class="b-1">📴</button>
+  </div>
+
+
+  <div id="main-content" style="margin-left:80px; margin-top: -60" class="main-content">
+
+    <select hidden id="pathSelector" style="margin-top: 10px; min-width: 200px;" onchange="handlePathSelection()">
+      <option value="path0">⬇️ select</option>
+      <option value="path1">⬅️back</option>
+      <option value="path99">🏠 home</option>
+
+    </select>
+
+    <div class="up-panel">
+      <button id="path_select" class='b-1' title="change mode"
+        style="user-select: none; margin-left: 30px;">👣</button><label class="l-2"
+        style="cursor: pointer; color:#4A90E2;" onclick="labelClick(event)">All</label>
+
+    </div>
+
+
+    <fieldset hidden data-element="create-new-file-path">
+      <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
+      <span>📂 </span>
+      <input type="text" placeholder="path/path/path/path" data-input="create-new-file-path-input"
+        oninput="adjustWidthToContent(this)" style="min-width: 300px;">
+      <button data-action="create-new-file-path-save" onclick="loader(event,savePath)">💾</button>
     </fieldset>
-  </li>
+    <fieldset data-element="choose-new-file-type" hidden>
+      <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
+      <button data-action="choose-new-file-type-html" style="font-size: 1.2em;" onclick="createNew('HTML')">🧩 HTML
+        component</button>
+      <button data-action="choose-new-file-type-css" style="font-size: 1.2em;" onclick="createNew('CSS')">🎨 CSS
+        stylesfile</button>
+      <button data-action="choose-new-file-type-js" style="font-size: 1.2em;"
+        onclick="createNew('JavaScript')">💻JavaScript</button>
+
+    </fieldset>
 
 
-</div>
-<script>
-  async function loader(e, handler) {
-    const loadingScreen = document.getElementById('loading');
-    loadingScreen.style.display = 'flex';
+    <ol data-element="file-path-list" id="filePathList" class="list-1" style="margin-left: -10px;">
 
-    const timerElement = document.getElementById('last-action-time');
-    let tenthsOfSeconds = 0;
-    const interval = setInterval(function () {
-      tenthsOfSeconds++;
-      timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
-    }, 100);
 
-    await handler(e);
 
-    loadingScreen.style.display = 'none';
-    clearInterval(interval);
-    console.log(timerElement.textContent)
-    console.log(tenthsOfSeconds)
-    const lastActionTime = document.getElementById('timer');
-    lastActionTime.textContent = timerElement.textContent;
-  }
-  const cancel = (event) => {
-    event.target.parentNode.parentNode.setAttribute('hidden', "")
-  }
-  const openRemove = (event) => {
-    var fieldset = event.currentTarget.closest('li');
+    </ol>
+    <select id="amount-of-rows"
+      style="margin-top: 10px; min-width: 50px; position: absolute; right: 10px; font-size:20px;">
+      <option value="path0">25</option>
+      <option value="path1">50</option>
+      <option value="path2">100</option>
+      <option value="path3">150</option>
+      <option value="path3">200</option>
+    </select>
 
-    // Get the file ID element within the fieldset
-    var fileIdElement = fieldset.querySelector('[data-element="file-id"]');
 
-    // Log the file ID
-    console.log('File ID:', fileIdElement.lastElementChild.textContent);
+    </main>
 
-    // Toggle the visibility of the file ID element
-    fileIdElement.hidden = false;
+  </div>
+  <div hidden>
+    <!-- file path-->
+    <li data-element="file-path" id="item">
+      <button hidden class="b-4">☑️</button><button class="b-4" data-action="file-show-id"
+        style="user-select: none; margin-right: 5px;">ℹ️</button><button class="b-4 b-green" data-action="file-open"
+        style="user-select: none; margin-right: 5px;">📂</button><button class="b-4" data-action="file-remove-button"
+        style="user-select: none; margin-right: 10px;">🗑️</button><label data-value="file-path"
+        class="l-3">universal/blablabla/blablabla/coolcss</label><label data-value="file-emoji"
+        style="user-select: none;" class="l-3"> 🧩</label>
 
-    // Toggle the visibility of the "cancelation" fieldset
-    var cancelationFieldset = fieldset.querySelector('#cancelation');
-    cancelationFieldset.hidden = !cancelationFieldset.hidden;
+      <!-- file info-->
+      <div hidden data-element="file-id"><span style="user-select: none;">🆔</span><span data-value="file-id"
+          style="font-size: 0.9em">1414124-414221412-4124214124-412412</span></div>
+      <!-- remove file menu-->
+      <fieldset hidden id="cancelation">
+        <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
 
-  }
-  function showId(event) {
-    // Get the parent fieldset of the clicked button
-    var fieldset = event.currentTarget.closest('li');
+        <span>are you sure want to remove this file?</span>
+        <div>
+          <button data-action="remove-file-confirmation">✅ DELETE</button>
+        </div>
+      </fieldset>
+    </li>
 
-    // Get the file ID element within the fieldset
-    var fileIdElement = fieldset.querySelector('[data-element="file-id"]');
 
-    // Toggle the visibility of the file ID element
-    fileIdElement.hidden = !fileIdElement.hidden;
-  }
-  const openTypeSelect = () => {
-    var fieldset = document.querySelector('[data-element="choose-new-file-type"]');
-    fieldset.removeAttribute('hidden');
-  }
-  function createNew(type) {
-    var fieldset = document.querySelector('[data-element="choose-new-file-type"]');
-    fieldset.setAttribute('hidden', '');
-    fieldset.setAttribute('type', type)
-    var fieldset2 = document.querySelector('[data-element="create-new-file-path"]');
-    fieldset2.removeAttribute('hidden');
-  }
-  function savePath() {
-    var fieldset2 = document.querySelector('[data-element="create-new-file-path"]');
-    fieldset2.setAttribute('hidden', '');
+  </div>
+  <script>
+    async function loader(e, handler) {
+      const loadingScreen = document.getElementById('loading');
+      loadingScreen.style.display = 'flex';
 
-    // Access the type from the choose-new-file-type fieldset
-    var type = document.querySelector('[data-element="choose-new-file-type"]').getAttribute('type');
+      const timerElement = document.getElementById('last-action-time');
+      let tenthsOfSeconds = 0;
+      const interval = setInterval(function () {
+        tenthsOfSeconds++;
+        timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
+      }, 100);
 
-    // Get the path from the input element
-    var pathInput = document.querySelector('[data-input="create-new-file-path-input"]');
-    var path = pathInput.value;
-    pathInput.value = ''
+      await handler(e);
 
-    // Create a new path based on the type
-    var newPath = type.toLowerCase() + '/' + path;
+      loadingScreen.style.display = 'none';
+      clearInterval(interval);
+      console.log(timerElement.textContent)
+      console.log(tenthsOfSeconds)
+      const lastActionTime = document.getElementById('timer');
+      lastActionTime.textContent = timerElement.textContent;
+    }
+    const cancel = (event) => {
+      event.target.parentNode.parentNode.setAttribute('hidden', "")
+    }
+    const openRemove = (event) => {
+      var fieldset = event.currentTarget.closest('li');
 
-    // Perform additional actions based on the selected type and path
-    console.log('Creating new file of type:', type, 'at path:', newPath);
+      // Get the file ID element within the fieldset
+      var fileIdElement = fieldset.querySelector('[data-element="file-id"]');
 
-    // Fetch POST request
-    fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        sk: 'path',
-        lsi1: newPath,
-        ownerUUID: 'path'
-      }),
-    })
-      .then(response => response.json())
-      .then(data => console.log('API Response:', data))
-      .then(e => loadFileList())
-      .catch(error => console.error('Error:', error));
-  }
-  let path = ''
-  let lvls = []
-  const remove = async(event, id) => {
-    event.preventDefault();
+      // Log the file ID
+      console.log('File ID:', fileIdElement.lastElementChild.textContent);
 
-    // Get the closest list item (li) element
-    var listItem = event.currentTarget.closest('li');
+      // Toggle the visibility of the file ID element
+      fileIdElement.hidden = false;
 
-    
-    fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json(); // Parse the response JSON
+      // Toggle the visibility of the "cancelation" fieldset
+      var cancelationFieldset = fieldset.querySelector('#cancelation');
+      cancelationFieldset.hidden = !cancelationFieldset.hidden;
+
+    }
+    function showId(event) {
+      // Get the parent fieldset of the clicked button
+      var fieldset = event.currentTarget.closest('li');
+
+      // Get the file ID element within the fieldset
+      var fileIdElement = fieldset.querySelector('[data-element="file-id"]');
+
+      // Toggle the visibility of the file ID element
+      fileIdElement.hidden = !fileIdElement.hidden;
+    }
+    const openTypeSelect = () => {
+      var fieldset = document.querySelector('[data-element="choose-new-file-type"]');
+      fieldset.removeAttribute('hidden');
+    }
+    function createNew() {
+
+      var fieldset2 = document.querySelector('[data-element="create-new-file-path"]');
+      fieldset2.removeAttribute('hidden');
+    }
+    function savePath() {
+      var fieldset2 = document.querySelector('[data-element="create-new-file-path"]');
+      fieldset2.setAttribute('hidden', '');
+
+      // Access the type from the choose-new-file-type fieldset
+      // var type = document.querySelector('[data-element="choose-new-file-type"]').getAttribute('type');
+
+      // Get the path from the input element
+      var pathInput = document.querySelector('[data-input="create-new-file-path-input"]');
+      var path = pathInput.value;
+      pathInput.value = ''
+
+      // Create a new path based on the type
+      var newPath = path;
+
+      // Perform additional actions based on the selected type and path
+      console.log('at path:', newPath);
+
+      // Fetch POST request
+      fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          sk: 'path',
+          lsi1: newPath,
+          ownerUUID: 'path'
+        }),
       })
-      .then(data => {
-        // Step 2: Iterate through the items and send a DELETE request for each
-        data.items.forEach(item => {
-          const { id, sk } = item;
+        .then(response => response.json())
+        .then(data => console.log('API Response:', data))
+        .then(e => loadFileList())
+        .catch(error => console.error('Error:', error));
+    }
+    let path = ''
+    let lvls = []
+    const remove = async (event, id) => {
+      event.preventDefault();
 
-          fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:${sk}`, {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-              // Add any additional headers if needed
-            },
-          })
-            .then(deleteResponse => {
-              if (!deleteResponse.ok) {
-                throw new Error(`HTTP error! Status: ${deleteResponse.status}`);
-              }
-              console.log(`Successfully deleted item with id:${id} and sk:${sk}`);
+      // Get the closest list item (li) element
+      var listItem = event.currentTarget.closest('li');
+
+
+      fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json(); // Parse the response JSON
+        })
+        .then(data => {
+          // Step 2: Iterate through the items and send a DELETE request for each
+          data.items.forEach(item => {
+            const { id, sk } = item;
+
+            fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:${sk}`, {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+                // Add any additional headers if needed
+              },
             })
-            .catch(deleteError => {
-              console.error(`Error deleting item with id:${id} and sk:${sk}`, deleteError);
-            });
+              .then(deleteResponse => {
+                if (!deleteResponse.ok) {
+                  throw new Error(`HTTP error! Status: ${deleteResponse.status}`);
+                }
+                console.log(`Successfully deleted item with id:${id} and sk:${sk}`);
+              })
+              .catch(deleteError => {
+                console.error(`Error deleting item with id:${id} and sk:${sk}`, deleteError);
+              });
+          });
+        })
+        .catch(error => {
+          console.error('Error retrieving items:', error);
         });
-      })
-      .catch(error => {
-        console.error('Error retrieving items:', error);
-      });
       listItem.remove();
-  }
-  function loadFileList() {
-    // Fetch GET request
-    fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true')
-      .then(response => response.json())
-      .then(data => {
-        // Replace existing file paths with dynamic content
-        var filePathList = document.getElementById('filePathList');
-        filePathList.innerHTML = '';
-        let i = 0;
-        data.items.forEach(item => {
-
-          if (!lvls.includes(item.lsi1.split('/')[0])) {
-            lvls.push(item.lsi1.split('/')[0])
-          }
-          if (i < 25) {
-            i++
-            // Clone the fieldset
-            var clonedItem = document.getElementById('item').cloneNode(true);
-
-            // Set unique ID for the cloned item
-            clonedItem.id = item.id;
-
-            // Set file path and emoji
-            clonedItem.querySelector('[data-value="file-path"]').textContent = item.lsi1;
-            let icon = '🧩';
-            if (item.lsi1.startsWith('css')) {
-              icon = '🎨';
-            } else if (item.lsi1.startsWith('javascript')) {
-              icon = '💻';
-            }
-            clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
-
-            // Set file ID
-            clonedItem.querySelector('[data-value="file-id"]').textContent = item.id;
-
-            // Set up onclick for file-open button
-            clonedItem.querySelector('[data-action="file-open"]').onclick = function () {
-              redirect(item.id);
-            };
-            clonedItem.querySelector('[data-action="file-remove-button"]').onclick = function (event) {
-              openRemove(event);
-            };
-            clonedItem.querySelector('[data-action="file-show-id"]').onclick = function (event) {
-              showId(event);
-            };
-            clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
-              remove(event, item.id);
-            };
-            // Append the cloned item to the filePathList
-            filePathList.appendChild(clonedItem);
-          }
-
-        });
-
-        // Show the cloned fieldsets
-        document.querySelectorAll('#filePathList fieldset').forEach(fieldset => {
-          fieldset.id !== 'cancelation' && fieldset.removeAttribute('hidden');
-        });
-
-
-
-        // Update select options
-        var pathSelector = document.getElementById('pathSelector');
-        pathSelector.innerHTML = '<option value="select">⬇️ select</option><option value="back">⬅️ back</option>';
-        lvls.forEach((lvl, index) => {
-          pathSelector.innerHTML += `<option value="${lvl}">➡️ ${lvl}</option>`;
-        });
-      })
-      .catch(error => console.error('Error:', error));
-
-  }
-  const redirect = (id) => {
-    console.log(id)
-    const redirectURL = `index.html?id=${id}`;
-
-    // Redirect to the new URL
-    window.location.href = redirectURL;
-  }
-  function handlePathSelection() {
-    // Get the selected value from the pathSelector
-    var selectedValue = document.getElementById('pathSelector').value;
-
-    // Get the corresponding item based on the selected value
-    var selectedItem = selectedValue
-
-    // Handle the selected item as needed
-    console.log('Selected Item:', selectedItem);
-    if (selectedItem === 'select' || selectedItem === undefined) {
-      return
     }
-    if (selectedItem === 'back') {
-      if (path === '') {
-        return
-      }
-      const splited = path.split('/')
-      if (splited.length === 1) {
-        loadFileList()
-        return
-      }
-      splited.pop()
-      path = splited.join('/')
+    function removeDuplicates(arr) {
+      return Array.from(new Set(arr));
+    }
+    function loadFileList() {
+      // Fetch GET request
+
+      fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true')
+        .then(response => response.json())
+        .then(data => {
+          // Replace existing file paths with dynamic content
+          var filePathList = document.getElementById('filePathList');
+          filePathList.innerHTML = '';
+          let i = 0;
+          let folders = []
+          const elements = []
+          console.log(JSON.stringify(data))
+          const items = data.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace(path, '') } })
+          console.log(JSON.stringify(items))
+          for (const item of items) {
+            const splited = item.name.split(';')[0].split('/')
+            if (splited.length > 1) {
+              folders.push(splited[0])
+            }
+            else {
+              elements.push({ name: splited[0], ...item })
+            }
+          }
+          folders = removeDuplicates(folders)
+          console.log(JSON.stringify(elements))
+          elements && elements.forEach(item => {
+
+
+            if (i < 1000) {
+              i++
+              // Clone the fieldset
+              var clonedItem = document.getElementById('item').cloneNode(true);
+
+              // Set unique ID for the cloned item
+              clonedItem.id = item.id;
+
+              // Set file path and emoji
+              const item_path = clonedItem.querySelector('[data-value="file-path"]')
+              item_path.textContent = item.name;
+              item_path.onclick = function () {
+                redirect(item.id);
+              };
+              let icon = '🧩';
+              if (item.lsi1.startsWith('css')) {
+                icon = '🎨';
+              } else if (item.lsi1.startsWith('javascript')) {
+                icon = '💻';
+              }
+              clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
+
+              // Set file ID
+              clonedItem.querySelector('[data-value="file-id"]').textContent = item.id;
+
+              // Set up onclick for file-open button
+              clonedItem.querySelector('[data-action="file-open"]').onclick = function () {
+                redirect(item.id);
+              };
+              clonedItem.querySelector('[data-action="file-remove-button"]').onclick = function (event) {
+                openRemove(event);
+              };
+              clonedItem.querySelector('[data-action="file-show-id"]').onclick = function (event) {
+                showId(event);
+              };
+              clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
+                remove(event, item.id);
+              };
+              // Append the cloned item to the filePathList
+              filePathList.appendChild(clonedItem);
+            }
+
+          });
+
+          folders.forEach(item => {
+
+
+            if (i < 1000) {
+              i++
+              // Clone the fieldset
+              var clonedItem = document.getElementById('item').cloneNode(true);
+
+              // Set unique ID for the cloned item
+              clonedItem.id = item;
+
+              // Set file path and emoji
+              const file_path = clonedItem.querySelector('[data-value="file-path"]')
+              file_path.textContent = item;
+              file_path.onclick = setPath
+              let icon = '📂';
+
+              clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
+
+              // Set file ID
+              clonedItem.querySelector('[data-value="file-id"]').textContent = item;
+
+              // Set up onclick for file-open button
+              function setPath() {
+                path = item + '/'
+                localStorage.setItem('storedPath', path)
+                console.log(path)
+                const labelElement = document.querySelector('.l-2');
+
+                // Update the text content of the label
+                labelElement.textContent = `All/${path}`;
+                openPath();
+              };
+              clonedItem.querySelector('[data-action="file-open"]').onclick = setPath
+              clonedItem.querySelector('[data-action="file-remove-button"]').remove()
+              clonedItem.querySelector('[data-action="file-show-id"]').remove()
+              clonedItem.querySelector('[data-action="remove-file-confirmation"]').remove()
+
+              // Append the cloned item to the filePathList
+              filePathList.appendChild(clonedItem);
+            }
+
+          });
+
+          // Show the cloned fieldsets
+          document.querySelectorAll('#filePathList fieldset').forEach(fieldset => {
+            fieldset.id !== 'cancelation' && fieldset.removeAttribute('hidden');
+          });
+
+
+
+          // Update select options
+          var pathSelector = document.getElementById('pathSelector');
+          pathSelector.innerHTML = '<option value="select">⬇️ select</option><option value="back">⬅️ back</option>';
+          lvls.forEach((lvl, index) => {
+            pathSelector.innerHTML += `<option value="${lvl}">➡️ ${lvl}</option>`;
+          });
+        })
+        .catch(error => console.error('Error:', error));
+
+    }
+    const openPath = () => {
       loadUsingPath()
-      return
     }
-    if (path === '') {
-      path = selectedItem
+    const redirect = (id) => {
+      console.log(id)
+      const redirectURL = `index.html?id=${id}`;
+
+      // Redirect to the new URL
+      window.location.href = redirectURL;
     }
-    else {
-      path = path + '/' + selectedItem
+    function handlePathSelection() {
+      // Get the selected value from the pathSelector
+      var selectedValue = document.getElementById('pathSelector').value;
+
+      // Get the corresponding item based on the selected value
+      var selectedItem = selectedValue
+
+      // Handle the selected item as needed
+      console.log('Selected Item:', selectedItem);
+      if (selectedItem === 'select' || selectedItem === undefined) {
+        return
+      }
+      if (selectedItem === 'back') {
+        if (path === '') {
+          return
+        }
+        const splited = path.split('/')
+        if (splited.length === 1) {
+          loadFileList()
+          return
+        }
+        splited.pop()
+        path = splited.join('/')
+        loadUsingPath()
+        return
+      }
+      if (path === '') {
+        path = selectedItem
+      }
+      else {
+        path = path + '/' + selectedItem
+
+      }
+      console.log(path)
+      loadUsingPath()
 
     }
-    console.log(path)
-    loadUsingPath()
+    function labelClick(event) {
+      // Extract the clicked part of the text based on the click position
+      const clickedText = getClickedText(event, event.target.textContent);
+      if (clickedText === 'All') {
+        path = ''
+        localStorage.setItem('storedPath', path)
+        const labelElement = document.querySelector('.l-2');
 
-  }
-  const loadUsingPath = () => {
-    return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + path)
-      .then(response => response.json())
-      .then(data => {
-        // Replace existing file paths with dynamic content
-        var filePathList = document.getElementById('filePathList');
-        filePathList.innerHTML = '';
-        lvls = []
-        let i = 0
-        data.items.forEach(item => {
+        // Update the text content of the label
+        labelElement.textContent = `All`;
+        loadFileList()
+      }
+      else {
+        const p = clickedText.replace('All/', '')
+        path = p + '/'
+        localStorage.setItem('storedPath', path)
+        console.log(path)
+        const labelElement = document.querySelector('.l-2');
 
-          if (!lvls.includes(item.lsi1.replace(path + '/', '').split('/')[0])) {
-            lvls.push(item.lsi1.replace(path + '/', '').split('/')[0])
-          }
-          if (i < 25) {
-            i++
-            // Clone the item fieldset
-            var clonedItem = document.getElementById('item').cloneNode(true);
+        // Update the text content of the label
+        labelElement.textContent = `All/${path}`;
+        openPath();
+      }
+      // Do something with the extracted text (for example, log it)
+      console.log(clickedText);
+    }
 
-            // Set unique ID for the cloned item
-            clonedItem.id = item.id;
+    function getClickedText(event, labelText) {
+      const clickX = event.clientX;
+      const labelRect = event.target.getBoundingClientRect();
+      const relativeClickX = clickX - labelRect.left;
 
-            // Set file path and emoji
-            clonedItem.querySelector('[data-value="file-path"]').textContent = item.lsi1;
-            let icon = '🧩';
-            if (item.lsi1.startsWith('css')) {
-              icon = '🎨';
-            } else if (item.lsi1.startsWith('javascript')) {
-              icon = '💻';
+      // Split the label text into parts based on the '/' separator
+      const parts = labelText.split('/');
+
+      // Find the part that corresponds to the clicked position
+      let accumulatedWidth = 0;
+      for (const part of parts) {
+        const partWidth = getTextWidth(part, event.target);
+        accumulatedWidth += partWidth;
+        if (accumulatedWidth >= relativeClickX) {
+          return parts.slice(0, parts.indexOf(part) + 1).join('/');
+        }
+      }
+
+      // Default: return the entire label text
+      return labelText;
+    }
+
+    function getTextWidth(text, element) {
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      const computedStyle = window.getComputedStyle(element);
+      context.font = computedStyle.font;
+
+      // Measure the width of the text
+      const width = context.measureText(text).width;
+
+      // Cleanup
+      canvas.remove();
+
+      return width;
+    }
+    const loadUsingPath = () => {
+      return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + path)
+        .then(response => response.json())
+        .then(data => {
+          // Replace existing file paths with dynamic content
+          var filePathList = document.getElementById('filePathList');
+          filePathList.innerHTML = '';
+          lvls = []
+          let i = 0
+          let folders = []
+          const elements = []
+          console.log(JSON.stringify(data))
+          const items = data.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace(path, '') } })
+          console.log(JSON.stringify(items))
+          for (const item of items) {
+            const splited = item.name.split(';')[0].split('/')
+            if (splited.length > 1) {
+              folders.push(splited[0])
             }
-            clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
-
-            // Set file ID
-            clonedItem.querySelector('[data-value="file-id"]').textContent = item.id;
-
-            clonedItem.querySelector('[data-action="file-open"]').onclick = function () {
-              redirect(item.id);
-            };
-            clonedItem.querySelector('[data-action="file-remove-button"]').onclick = function (event) {
-              openRemove(event);
-            };
-            clonedItem.querySelector('[data-action="file-show-id"]').onclick = function (event) {
-              showId(event);
-            };
-            clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
-              remove(event, item.id);
-
-            };
-            // Append the cloned item to the filePathList
-            filePathList.appendChild(clonedItem);
+            else {
+              elements.push({ name: splited[0], ...item })
+            }
           }
-
-        });
-
-        // Show the cloned fieldsets
-        document.querySelectorAll('#filePathList fieldset').forEach(fieldset => {
-          fieldset.id !== 'cancelation' && fieldset.removeAttribute('hidden');
-        });
+          folders = removeDuplicates(folders)
+          console.log(JSON.stringify(folders))
+          console.log(JSON.stringify(elements))
+          elements && elements.forEach(item => {
 
 
+            if (i < 1000) {
+              i++
+              // Clone the fieldset
+              var clonedItem = document.getElementById('item').cloneNode(true);
 
-        // Update select options
-        var pathSelector = document.getElementById('pathSelector');
-        pathSelector.innerHTML = '<option value="path0">⬇️ select</option><option value="back">⬅️ back</option>';
-        lvls.forEach((lvl, index) => {
-          pathSelector.innerHTML += `<option value="${lvl}">➡️ ${lvl}</option>`;
-        });
-      })
-      .catch(error => console.error('Error:', error));
-  }
-  document.addEventListener('DOMContentLoaded', async function () {
-    const loadingScreen = document.getElementById('loading');
-    loadingScreen.style.display = 'flex';
-    const timerElement = document.getElementById('timer');
-    let tenthsOfSeconds = 0;
-    const interval = setInterval(function () {
-      tenthsOfSeconds++;
-      timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
-    }, 100);
-    await loadFileList()
-    clearInterval(interval);
-    console.log(timerElement.textContent)
-    const lastActionTime = document.getElementById('last-action-time');
-    lastActionTime.textContent = timerElement.textContent;
-    loadingScreen.style.display = 'none';
-  })
-</script>
-</script>
+              // Set unique ID for the cloned item
+              clonedItem.id = item.id;
 
-<script>
-  function adjustWidthToContent(input) {
-    const minWidth = 150; // Minimum width of the input in pixels
-    const charWidth = 8; // Average width per character in pixels, adjust as needed for your font
+              // Set file path and emoji
+              const item_path = clonedItem.querySelector('[data-value="file-path"]')
+              item_path.textContent = item.name;
+              item_path.onclick = function () {
+                redirect(item.id);
+              };
+              let icon = '🧩';
+              if (item.lsi1.startsWith('css')) {
+                icon = '🎨';
+              } else if (item.lsi1.startsWith('javascript')) {
+                icon = '💻';
+              }
+              clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
 
-    // Calculate the new width based on the length of the input's value or the minimum width, whichever is greater
-    const newWidth = Math.max(input.value.length * charWidth, minWidth);
+              // Set file ID
+              clonedItem.querySelector('[data-value="file-id"]').textContent = item.id;
 
-    // Apply the new width to the input
-    input.style.width = `${newWidth}px`;
-  }
-</script>
+              // Set up onclick for file-open button
+              clonedItem.querySelector('[data-action="file-open"]').onclick = function () {
+                redirect(item.id);
+              };
+              clonedItem.querySelector('[data-action="file-remove-button"]').onclick = function (event) {
+                openRemove(event);
+              };
+              clonedItem.querySelector('[data-action="file-show-id"]').onclick = function (event) {
+                showId(event);
+              };
+              clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
+                remove(event, item.id);
+              };
+              // Append the cloned item to the filePathList
+              filePathList.appendChild(clonedItem);
+            }
+
+          });
+
+          folders.forEach(item => {
+
+
+            if (i < 1000) {
+              i++
+              // Clone the fieldset
+              var clonedItem = document.getElementById('item').cloneNode(true);
+
+              // Set unique ID for the cloned item
+              clonedItem.id = item;
+
+              // Set file path and emoji
+              const file_path = clonedItem.querySelector('[data-value="file-path"]')
+              file_path.textContent = item;
+              file_path.onclick = setPath
+              let icon = '📂';
+
+              clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
+
+              // Set file ID
+              clonedItem.querySelector('[data-value="file-id"]').textContent = item;
+
+              // Set up onclick for file-open button
+              function setPath() {
+                path = path + item + '/'
+                localStorage.setItem('storedPath', path)
+                console.log(path)
+                const labelElement = document.querySelector('.l-2');
+
+                // Update the text content of the label
+                labelElement.textContent = `All/${path}`;
+                openPath();
+              };
+              clonedItem.querySelector('[data-action="file-open"]').onclick = setPath
+              clonedItem.querySelector('[data-action="file-remove-button"]').remove()
+              clonedItem.querySelector('[data-action="file-show-id"]').remove()
+              clonedItem.querySelector('[data-action="remove-file-confirmation"]').remove()
+
+              // Append the cloned item to the filePathList
+              filePathList.appendChild(clonedItem);
+            }
+
+          });
 
 
 
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // Функция для переключения состояния кнопки
-    function toggleButton(button) {
-      // Переключаем текст кнопки
-      button.textContent = button.textContent.includes('☑️') ? '☐' : '☑️';
+        })
+        .catch(error => console.error('Error:', error));
     }
-  
-    // Обработчик события mouseenter для file-entry
-    document.querySelectorAll('li[data-element="file-path"]').forEach(entry => {
-      entry.addEventListener('mouseenter', () => {
-        const button = entry.querySelector('.file-entry-selector');
-        if (button) {
-          toggleButton(button);
+    document.addEventListener('DOMContentLoaded', async function () {
+      const loadingScreen = document.getElementById('loading');
+      loadingScreen.style.display = 'flex';
+      const timerElement = document.getElementById('timer');
+      let tenthsOfSeconds = 0;
+      const interval = setInterval(function () {
+        tenthsOfSeconds++;
+        timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
+      }, 100);
+      const storedPath = localStorage.getItem('storedPath')
+      if (storedPath) {
+        path = storedPath
+        const labelElement = document.querySelector('.l-2');
+
+        // Update the text content of the label
+        labelElement.textContent = `All/${path}`;
+        loadUsingPath()
+      }
+      else {
+        loadFileList()
+      }
+      clearInterval(interval);
+      console.log(timerElement.textContent)
+      const lastActionTime = document.getElementById('last-action-time');
+      lastActionTime.textContent = timerElement.textContent;
+      loadingScreen.style.display = 'none';
+    })
+  </script>
+  </script>
+
+  <script>
+    function adjustWidthToContent(input) {
+      const minWidth = 150; // Minimum width of the input in pixels
+      const charWidth = 8; // Average width per character in pixels, adjust as needed for your font
+
+      // Calculate the new width based on the length of the input's value or the minimum width, whichever is greater
+      const newWidth = Math.max(input.value.length * charWidth, minWidth);
+
+      // Apply the new width to the input
+      input.style.width = `${newWidth}px`;
+    }
+  </script>
+
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Функция для переключения состояния кнопки
+      function toggleButton(button) {
+        // Переключаем текст кнопки
+        button.textContent = button.textContent.includes('☑️') ? '☐' : '☑️';
+      }
+
+      // Обработчик события mouseenter для file-entry
+      document.querySelectorAll('li[data-element="file-path"]').forEach(entry => {
+        entry.addEventListener('mouseenter', () => {
+          const button = entry.querySelector('.file-entry-selector');
+          if (button) {
+            toggleButton(button);
+          }
+        });
+      });
+    });
+  </script>
+  <!--herehere-->
+
+
+
+
+
+  <div style="display: none;" id="R-click-file-type-x" class="right-click-menu">
+    <div class="menu-option" onclick="fileTypeChoose('component')">ℹ️ Info</div>
+
+    <div class="menu-option" onclick="fileTypeChoose('page')">🔲 Multi select</div>
+
+    <div class="menu-option" onclick="fileTypeChoose('component')">🗑️ Remove</div>
+
+
+    <div class="menu-option" onclick="fileTypeChoose('page')">✅ Robots Disallow 📵</div>
+    <div class="menu-option" onclick="fileTypeChoose('page')">🚫 Robots Disallow 📵</div>
+
+    <div class="menu-option" onclick="fileTypeChoose('page')">✅ Publish 📰</div>
+    <div class="menu-option" onclick="fileTypeChoose('component')">🚫 Publish 📰</div>
+    <div class="menu-option" onclick="fileTypeChoose('page')">✅ Sitemap 📋 </div>
+    <div class="menu-option" onclick="fileTypeChoose('component')">🚫 Sitemap 📋 </div>
+
+  </div>
+  <div style="display: none;" id="R-click-file-type" class="right-click-menu">
+    <div class="menu-option" onclick="fileTypeChoose('page')">🌐 Page</div>
+    <div class="menu-option" onclick="fileTypeChoose('component')">🧩 HTML</div>
+    <div class="menu-option" onclick="fileTypeChoose('css')">🎨 CSS</div>
+    <div class="menu-option" onclick="fileTypeChoose('js')">💻 JS</div>
+  </div>
+
+
+
+  <script>
+    // Функция для обновления видимости и стилей кнопок
+    function updateButtons(selectedType) {
+      const allButtonsIds = ['btn-all', 'btn-page', 'btn-component', 'btn-css', 'btn-js'];
+
+      allButtonsIds.forEach(btnId => {
+        const btn = document.getElementById(btnId);
+        if (btnId === `btn-${selectedType}`) {
+          // Показываем выбранную кнопку и добавляем класс b-selected
+          btn.hidden = false;
+          btn.classList.add('b-selected');
+        } else {
+          // Скрываем все другие кнопки и удаляем класс b-selected
+          btn.hidden = true;
+          btn.classList.remove('b-selected');
         }
       });
-    });
-  });
-    </script>
-<!--herehere-->
 
+      // Специальная обработка для "hide" опции
+      if (selectedType === 'hide') {
+        const btnAll = document.getElementById('btn-all');
+        btnAll.hidden = false; // Показываем btn-all
+        btnAll.classList.remove('b-selected'); // Удаляем класс b-selected, если он есть
+      }
+    }
 
+    // Обработчик левого клика по кнопке
+    function handleLeftClickOnButton(clickedButtonId) {
+      const allButtonsIds = ['btn-page', 'btn-component', 'btn-css', 'btn-js'];
 
-
-
-<div style="display: none;" id="R-click-file-type-x" class="right-click-menu">
-  <div class="menu-option" onclick="fileTypeChoose('component')">ℹ️ Info</div>
-
-  <div class="menu-option" onclick="fileTypeChoose('page')">🔲 Multi select</div>
-
-  <div class="menu-option" onclick="fileTypeChoose('component')">🗑️ Remove</div>
-
-
-  <div class="menu-option" onclick="fileTypeChoose('page')">✅ Robots Disallow 📵</div>
-  <div class="menu-option" onclick="fileTypeChoose('page')">🚫 Robots Disallow 📵</div>
-
-  <div class="menu-option"  onclick="fileTypeChoose('page')">✅ Publish  📰</div>
-  <div class="menu-option" onclick="fileTypeChoose('component')">🚫 Publish 📰</div>
-  <div class="menu-option" onclick="fileTypeChoose('page')">✅ Sitemap 📋 </div>
-  <div class="menu-option" onclick="fileTypeChoose('component')">🚫 Sitemap 📋 </div>
-
-</div>
-<div style="display: none;" id="R-click-file-type" class="right-click-menu">
-  <div class="menu-option" onclick="fileTypeChoose('page')">🌐 Page</div>
-  <div class="menu-option" onclick="fileTypeChoose('component')">🧩 HTML</div>
-  <div class="menu-option" onclick="fileTypeChoose('css')">🎨 CSS</div>
-  <div class="menu-option" onclick="fileTypeChoose('js')">💻 JS</div>
-</div>
-
-
-
-<script>
-  // Функция для обновления видимости и стилей кнопок
-  function updateButtons(selectedType) {
-    const allButtonsIds = ['btn-all', 'btn-page', 'btn-component', 'btn-css', 'btn-js'];
-
-    allButtonsIds.forEach(btnId => {
-      const btn = document.getElementById(btnId);
-      if(btnId === `btn-${selectedType}`) {
-        // Показываем выбранную кнопку и добавляем класс b-selected
-        btn.hidden = false;
-        btn.classList.add('b-selected');
+      if (clickedButtonId === 'btn-all') {
+        // Переключаем класс b-selected для btn-all
+        document.getElementById(clickedButtonId).classList.toggle('b-selected');
       } else {
-        // Скрываем все другие кнопки и удаляем класс b-selected
-        btn.hidden = true;
-        btn.classList.remove('b-selected');
+        // Скрываем все кнопки, кроме btn-all, и добавляем btn-all класс b-selected
+        allButtonsIds.forEach(btnId => {
+          document.getElementById(btnId).hidden = true;
+        });
+        const btnAll = document.getElementById('btn-all');
+        btnAll.hidden = false;
+        btnAll.classList.add('b-selected');
+      }
+    }
+
+    const allButtonsIds1 = ['btn-all', 'btn-page', 'btn-component', 'btn-css', 'btn-js'];
+
+    allButtonsIds1.forEach(btnId => {
+      const button = document.getElementById(btnId);
+      button.addEventListener('click', function (e) {
+        handleLeftClickOnButton(e.target.id);
+      });
+    });
+
+    // Функция для контекстного меню
+    const menu = document.querySelector('#R-click-file-type');
+    document.addEventListener('contextmenu', function (e) {
+      if (e.target.id.startsWith('btn-')) {
+        e.preventDefault();
+        menu.style.display = 'block';
+        menu.style.left = `${e.pageX}px`;
+        menu.style.top = `${e.pageY}px`;
       }
     });
 
-    // Специальная обработка для "hide" опции
-    if (selectedType === 'hide') {
-      const btnAll = document.getElementById('btn-all');
-      btnAll.hidden = false; // Показываем btn-all
-      btnAll.classList.remove('b-selected'); // Удаляем класс b-selected, если он есть
-    }
-  }
-
-  // Обработчик левого клика по кнопке
-  function handleLeftClickOnButton(clickedButtonId) {
-    const allButtonsIds = ['btn-page', 'btn-component', 'btn-css', 'btn-js'];
-
-    if (clickedButtonId === 'btn-all') {
-      // Переключаем класс b-selected для btn-all
-      document.getElementById(clickedButtonId).classList.toggle('b-selected');
-    } else {
-      // Скрываем все кнопки, кроме btn-all, и добавляем btn-all класс b-selected
-      allButtonsIds.forEach(btnId => {
-        document.getElementById(btnId).hidden = true;
-      });
-      const btnAll = document.getElementById('btn-all');
-      btnAll.hidden = false;
-      btnAll.classList.add('b-selected');
-    }
-  }
-
-  const allButtonsIds1 = ['btn-all', 'btn-page', 'btn-component', 'btn-css', 'btn-js'];
-
-  allButtonsIds1.forEach(btnId => {
-    const button = document.getElementById(btnId);
-    button.addEventListener('click', function(e) {
-      handleLeftClickOnButton(e.target.id);
+    // Скрываем меню при клике
+    window.addEventListener('click', function () {
+      menu.style.display = 'none';
     });
-  });
 
-  // Функция для контекстного меню
-  const menu = document.querySelector('#R-click-file-type');
-  document.addEventListener('contextmenu', function(e) {
-    if(e.target.id.startsWith('btn-')) {
-      e.preventDefault();
-      menu.style.display = 'block';
-      menu.style.left = `${e.pageX}px`;
-      menu.style.top = `${e.pageY}px`;
+    // Обработчик выбора из контекстного меню
+    function fileTypeChoose(selectedType) {
+      updateButtons(selectedType);
     }
-  });
+  </script>
+  <script>document.addEventListener('DOMContentLoaded', function () {
+      var filtersOpenButton = document.getElementById('filters-open');
+      var mainContent = document.getElementById('main-content');
+      var leftSidePanel = document.querySelector('.left-side-panel');
+      var buttonsToShowOrHide = ['publish', 'sitemap', 'robots', 'dates', 'btn-all']; // ID кнопок для показа/скрытия
 
-  // Скрываем меню при клике
-  window.addEventListener('click', function() {
-    menu.style.display = 'none';
-  });
+      filtersOpenButton.addEventListener('click', function () {
+        // Переключаем класс b-selected
+        filtersOpenButton.classList.toggle('b-selected');
 
-  // Обработчик выбора из контекстного меню
-  function fileTypeChoose(selectedType) {
-    updateButtons(selectedType);
-  }
-</script>
-<script>document.addEventListener('DOMContentLoaded', function() {
-  var filtersOpenButton = document.getElementById('filters-open');
-  var mainContent = document.getElementById('main-content');
-  var leftSidePanel = document.querySelector('.left-side-panel');
-  var buttonsToShowOrHide = ['publish', 'sitemap', 'robots', 'dates', 'btn-all']; // ID кнопок для показа/скрытия
+        // Переключаем ширину left-side-panel
+        var currentWidth = leftSidePanel.style.width;
+        leftSidePanel.style.width = currentWidth === '300px' ? '65px' : '300px';
 
-  filtersOpenButton.addEventListener('click', function() {
-      // Переключаем класс b-selected
-      filtersOpenButton.classList.toggle('b-selected');
+        // Переключаем margin-left для main-content
+        var currentMargin = mainContent.style.marginLeft;
+        mainContent.style.marginLeft = currentMargin === '315px' ? '80px' : '315px';
 
-      // Переключаем ширину left-side-panel
-      var currentWidth = leftSidePanel.style.width;
-      leftSidePanel.style.width = currentWidth === '300px' ? '65px' : '300px';
-
-      // Переключаем margin-left для main-content
-      var currentMargin = mainContent.style.marginLeft;
-      mainContent.style.marginLeft = currentMargin === '315px' ? '80px' : '315px';
-
-      // Переключаем видимость кнопок
-      buttonsToShowOrHide.forEach(function(buttonId) {
+        // Переключаем видимость кнопок
+        buttonsToShowOrHide.forEach(function (buttonId) {
           var button = document.getElementById(buttonId);
           if (button) {
-              button.hidden = !button.hidden;
+            button.hidden = !button.hidden;
           }
+        });
       });
-  });
-});
-</script>
+    });
+  </script>
 </body>
