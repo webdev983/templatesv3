@@ -160,7 +160,7 @@
           const name = fieldset.querySelector('[data-value="file-path"]').textContent;
 
           input.value = path + name;
-          input.onclick =(event)=>{
+          input.onclick = (event) => {
             event.stopPropagation()
           }
           saveButton.onclick = async function (e) {
@@ -324,7 +324,7 @@
       })
         .then(response => response.json())
         .then(data => console.log('API Response:', data))
-        .then(e => { path ? loadUsingPath() :loadFileList()})
+        .then(e => { path ? loadUsingPath() : loadFileList() })
         .catch(error => console.error('Error:', error));
     }
     let path = ''
@@ -400,6 +400,45 @@
           }
           folders = removeDuplicates(folders)
           console.log(JSON.stringify(elements))
+          folders.forEach(item => {
+
+
+            if (i < 1000) {
+              i++
+              // Clone the fieldset
+              var clonedItem = document.getElementById('item').cloneNode(true);
+
+              // Set unique ID for the cloned item
+              clonedItem.id = item;
+
+              // Set file path and emoji
+              const file_path = clonedItem.querySelector('[data-value="file-path"]')
+              file_path.textContent = item;
+              file_path.onclick = setPath
+              let icon = '📂';
+
+              clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
+
+              // Set file ID
+              clonedItem.querySelector('[data-value="file-id"]').textContent = item;
+
+              // Set up onclick for file-open button
+              function setPath() {
+                path = item + '/'
+                localStorage.setItem('storedPath', path)
+                console.log(path)
+                const labelElement = document.querySelector('.l-2');
+
+                // Update the text content of the label
+                labelElement.textContent = `${path}`;
+                openPath();
+              };
+
+              // Append the cloned item to the filePathList
+              filePathList.appendChild(clonedItem);
+            }
+
+          });
           elements && elements.forEach(item => {
 
 
@@ -442,45 +481,7 @@
 
           });
 
-          folders.forEach(item => {
 
-
-            if (i < 1000) {
-              i++
-              // Clone the fieldset
-              var clonedItem = document.getElementById('item').cloneNode(true);
-
-              // Set unique ID for the cloned item
-              clonedItem.id = item;
-
-              // Set file path and emoji
-              const file_path = clonedItem.querySelector('[data-value="file-path"]')
-              file_path.textContent = item;
-              file_path.onclick = setPath
-              let icon = '📂';
-
-              clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
-
-              // Set file ID
-              clonedItem.querySelector('[data-value="file-id"]').textContent = item;
-
-              // Set up onclick for file-open button
-              function setPath() {
-                path = item + '/'
-                localStorage.setItem('storedPath', path)
-                console.log(path)
-                const labelElement = document.querySelector('.l-2');
-
-                // Update the text content of the label
-                labelElement.textContent = `${path}`;
-                openPath();
-              };
-
-              // Append the cloned item to the filePathList
-              filePathList.appendChild(clonedItem);
-            }
-
-          });
 
           // Show the cloned fieldsets
           document.querySelectorAll('#filePathList fieldset').forEach(fieldset => {
@@ -637,44 +638,6 @@
           folders = removeDuplicates(folders)
           console.log(JSON.stringify(folders))
           console.log(JSON.stringify(elements))
-          elements && elements.forEach(item => {
-
-
-            if (i < 1000) {
-              i++
-              // Clone the fieldset
-              var clonedItem = document.getElementById('item').cloneNode(true);
-
-              // Set unique ID for the cloned item
-              clonedItem.id = item.id;
-
-              // Set file path and emoji
-              const item_path = clonedItem.querySelector('[data-value="file-path"]')
-              item_path.textContent = item.name;
-              clonedItem.addEventListener('contextmenu', (e) => addMenu(e, item.id))
-              clonedItem.onclick = function (event) {
-                redirect(item.id);
-              };
-              let icon = '🧩';
-              if (item.lsi1.startsWith('css')) {
-                icon = '🎨';
-              } else if (item.lsi1.startsWith('javascript')) {
-                icon = '💻';
-              }
-              clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
-
-              // Set file ID
-              clonedItem.querySelector('[data-value="file-id"]').textContent = item.id;
-
-              clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
-                event.stopPropagation()
-                remove(event, item.id);
-              };
-              // Append the cloned item to the filePathList
-              filePathList.appendChild(clonedItem);
-            }
-
-          });
 
           folders.forEach(item => {
 
@@ -710,6 +673,44 @@
                 openPath();
               };
 
+              // Append the cloned item to the filePathList
+              filePathList.appendChild(clonedItem);
+            }
+
+          });
+          elements && elements.forEach(item => {
+
+
+            if (i < 1000) {
+              i++
+              // Clone the fieldset
+              var clonedItem = document.getElementById('item').cloneNode(true);
+
+              // Set unique ID for the cloned item
+              clonedItem.id = item.id;
+
+              // Set file path and emoji
+              const item_path = clonedItem.querySelector('[data-value="file-path"]')
+              item_path.textContent = item.name;
+              clonedItem.addEventListener('contextmenu', (e) => addMenu(e, item.id))
+              clonedItem.onclick = function (event) {
+                redirect(item.id);
+              };
+              let icon = '🧩';
+              if (item.lsi1.startsWith('css')) {
+                icon = '🎨';
+              } else if (item.lsi1.startsWith('javascript')) {
+                icon = '💻';
+              }
+              clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
+
+              // Set file ID
+              clonedItem.querySelector('[data-value="file-id"]').textContent = item.id;
+
+              clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
+                event.stopPropagation()
+                remove(event, item.id);
+              };
               // Append the cloned item to the filePathList
               filePathList.appendChild(clonedItem);
             }
