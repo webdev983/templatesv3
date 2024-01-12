@@ -60,9 +60,9 @@
     </select>
 
     <div class="up-panel">
-      <button id="path_select" class='b-1' title="change mode"
+      <button id="path_select" onclick="loadRoot()" class='b-1' title="change mode"
         style="user-select: none; margin-left: 30px;">👣</button><label class="l-2"
-        style="cursor: pointer; color:#4A90E2;" onclick="labelClick(event)">www/</label>
+        style="cursor: pointer; color:#4A90E2;" onclick="labelClick(event)"></label>
 
     </div>
 
@@ -107,10 +107,7 @@
   <div hidden>
     <!-- file path-->
     <li data-element="file-path" id="item">
-      <button hidden class="b-4">☑️</button><button class="b-4" data-action="file-show-id"
-        style="user-select: none; margin-right: 5px;">ℹ️</button><button class="b-4 b-green" data-action="file-open"
-        style="user-select: none; margin-right: 5px;">📂</button><button class="b-4" data-action="file-remove-button"
-        style="user-select: none; margin-right: 10px;">🗑️</button><label data-value="file-path"
+      <button hidden class="b-4">☑️</button><label data-value="file-path"
         class="l-3">universal/blablabla/blablabla/coolcss</label><label data-value="file-emoji"
         style="user-select: none;" class="l-3"> 🧩</label>
 
@@ -157,7 +154,7 @@
 
           input.value = path + name;
 
-          saveButton.onclick =async function (e) {
+          saveButton.onclick = async function (e) {
             const new_value = cloned.querySelector('[data-input="create-new-file-path-input"]').value
             await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
               method: 'POST',
@@ -405,10 +402,10 @@
               // Set file path and emoji
               const item_path = clonedItem.querySelector('[data-value="file-path"]')
               item_path.textContent = item.name;
-              item_path.onclick = function () {
+              clonedItem.onclick = function () {
                 redirect(item.id);
               };
-              item_path.addEventListener('contextmenu', (e) => addMenu(e, item.id))
+              clonedItem.addEventListener('contextmenu', (e) => addMenu(e, item.id))
               let icon = '🧩';
               if (item.lsi1.startsWith('css')) {
                 icon = '🎨';
@@ -421,15 +418,7 @@
               clonedItem.querySelector('[data-value="file-id"]').textContent = item.id;
 
               // Set up onclick for file-open button
-              clonedItem.querySelector('[data-action="file-open"]').onclick = function () {
-                redirect(item.id);
-              };
-              clonedItem.querySelector('[data-action="file-remove-button"]').onclick = function (event) {
-                openRemove(event);
-              };
-              clonedItem.querySelector('[data-action="file-show-id"]').onclick = function (event) {
-                showId(event);
-              };
+
               clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
                 remove(event, item.id);
               };
@@ -469,13 +458,9 @@
                 const labelElement = document.querySelector('.l-2');
 
                 // Update the text content of the label
-                labelElement.textContent = `www.${path}`;
+                labelElement.textContent = `${path}`;
                 openPath();
               };
-              clonedItem.querySelector('[data-action="file-open"]').onclick = setPath
-              clonedItem.querySelector('[data-action="file-remove-button"]').remove()
-              clonedItem.querySelector('[data-action="file-show-id"]').remove()
-              clonedItem.querySelector('[data-action="remove-file-confirmation"]').remove()
 
               // Append the cloned item to the filePathList
               filePathList.appendChild(clonedItem);
@@ -547,29 +532,30 @@
       loadUsingPath()
 
     }
+    function loadRoot(){
+      
+      path = ''
+      localStorage.setItem('storedPath', path)
+      const labelElement = document.querySelector('.l-2');
+
+      // Update the text content of the label
+      labelElement.textContent = `${path}`;
+      loadFileList();
+    }
     function labelClick(event) {
       // Extract the clicked part of the text based on the click position
       const clickedText = getClickedText(event, event.target.textContent);
-      if (clickedText === 'www') {
-        path = ''
-        localStorage.setItem('storedPath', path)
-        const labelElement = document.querySelector('.l-2');
 
-        // Update the text content of the label
-        labelElement.textContent = `www/`;
-        loadFileList()
-      }
-      else {
-        const p = clickedText.replace('www.', '')
-        path = p + '/'
-        localStorage.setItem('storedPath', path)
-        console.log(path)
-        const labelElement = document.querySelector('.l-2');
+      const p = clickedText
+      path = p + '/'
+      localStorage.setItem('storedPath', path)
+      console.log(path)
+      const labelElement = document.querySelector('.l-2');
 
-        // Update the text content of the label
-        labelElement.textContent = `www.${path}`;
-        openPath();
-      }
+      // Update the text content of the label
+      labelElement.textContent = `${path}`;
+      openPath();
+
       // Do something with the extracted text (for example, log it)
       console.log(clickedText);
     }
@@ -580,7 +566,7 @@
       const relativeClickX = clickX - labelRect.left;
 
       // Split the label text into parts based on the '/' separator
-      const parts = ['www', ...labelText.replace('www.', '').split('/')];
+      const parts = labelText.split('/');
 
       // Find the part that corresponds to the clicked position
       let accumulatedWidth = 0;
@@ -589,8 +575,7 @@
         accumulatedWidth += partWidth;
         if (accumulatedWidth >= relativeClickX) {
           const parts1 = parts.slice(0, parts.indexOf(part) + 1)
-          parts1.shift()
-          return 'www' + (parts1.length ? '.' + parts1.join('/') : '');
+          return parts1.join('/')
         }
       }
 
@@ -652,8 +637,8 @@
               // Set file path and emoji
               const item_path = clonedItem.querySelector('[data-value="file-path"]')
               item_path.textContent = item.name;
-              item_path.addEventListener('contextmenu', (e) => addMenu(e, item.id))
-              item_path.onclick = function () {
+              clonedItem.addEventListener('contextmenu', (e) => addMenu(e, item.id))
+              clonedItem.onclick = function () {
                 redirect(item.id);
               };
               let icon = '🧩';
@@ -667,16 +652,6 @@
               // Set file ID
               clonedItem.querySelector('[data-value="file-id"]').textContent = item.id;
 
-              // Set up onclick for file-open button
-              clonedItem.querySelector('[data-action="file-open"]').onclick = function () {
-                redirect(item.id);
-              };
-              clonedItem.querySelector('[data-action="file-remove-button"]').onclick = function (event) {
-                openRemove(event);
-              };
-              clonedItem.querySelector('[data-action="file-show-id"]').onclick = function (event) {
-                showId(event);
-              };
               clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
                 remove(event, item.id);
               };
@@ -716,13 +691,9 @@
                 const labelElement = document.querySelector('.l-2');
 
                 // Update the text content of the label
-                labelElement.textContent = `www.${path}`;
+                labelElement.textContent = `${path}`;
                 openPath();
               };
-              clonedItem.querySelector('[data-action="file-open"]').onclick = setPath
-              clonedItem.querySelector('[data-action="file-remove-button"]').remove()
-              clonedItem.querySelector('[data-action="file-show-id"]').remove()
-              clonedItem.querySelector('[data-action="remove-file-confirmation"]').remove()
 
               // Append the cloned item to the filePathList
               filePathList.appendChild(clonedItem);
@@ -750,7 +721,7 @@
         const labelElement = document.querySelector('.l-2');
 
         // Update the text content of the label
-        labelElement.textContent = `www.${path}`;
+        labelElement.textContent = `${path}`;
         loadUsingPath()
       }
       else {
