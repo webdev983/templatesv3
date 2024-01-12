@@ -131,7 +131,7 @@
 
   </div>
   <script>
-    function addMenu(e) {
+    function addMenu(e, id) {
       e.preventDefault(); // Prevent the default context menu from opening
       console.log('in11');
       const menu = document.querySelector('#right-click-menu'); // Use # for ID selector
@@ -144,8 +144,72 @@
         entry.onclick = clickHandler;
         menu.appendChild(entry);
       }
-      const edit = ()=>{}
-      addMenuEntry(menu,'edit',edit)
+      const edit = (id) => {
+        const editArea = document.querySelector('[data-element="create-new-file-path"]');
+        const fieldset = document.getElementById(id);
+
+        if (editArea && fieldset) {
+          console.log('editing')
+          const cloned = editArea.cloneNode(true);
+          const saveButton = cloned.querySelector('[data-action="create-new-file-path-save"]');
+          const input = cloned.querySelector('[data-input="create-new-file-path-input"]');
+          const name = fieldset.querySelector('[data-value="file-path"]').textContent;
+
+          input.value = path + name;
+
+          saveButton.onclick =async function (e) {
+            const new_value = cloned.querySelector('[data-input="create-new-file-path-input"]').value
+            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                id,
+                sk: 'path',
+                lsi1: new_value,
+                ownerUUID: 'path'
+              }),
+            })
+            loadUsingPath()
+            cloned.remove();
+          };
+
+          cloned.style.display = 'block';
+          fieldset.appendChild(cloned);
+        }
+      };
+      const openRemove1 = (id) => {
+        var fieldset = document.getElementById(id);
+
+        // Get the file ID element within the fieldset
+        var fileIdElement = fieldset.querySelector('[data-element="file-id"]');
+
+        // Log the file ID
+        console.log('File ID:', fileIdElement.lastElementChild.textContent);
+
+        // Toggle the visibility of the file ID element
+        fileIdElement.hidden = false;
+
+        // Toggle the visibility of the "cancelation" fieldset
+        var cancelationFieldset = fieldset.querySelector('#cancelation');
+        cancelationFieldset.hidden = !cancelationFieldset.hidden;
+
+      }
+      function showId1(id) {
+        console.log('event' + JSON.stringify(event.target.target))
+        // Get the parent fieldset of the clicked button
+        var fieldset = document.getElementById(id);
+
+        // Get the file ID element within the fieldset
+        var fileIdElement = fieldset.querySelector('[data-element="file-id"]');
+
+        // Toggle the visibility of the file ID element
+        fileIdElement.hidden = !fileIdElement.hidden;
+      }
+      addMenuEntry(menu, 'edit', (e) => edit(id))
+      addMenuEntry(menu, 'delete', (e) => openRemove1(id))
+      addMenuEntry(menu, 'info', (e) => showId1(id))
       // Adjust the position relative to the viewport
       const offsetX = e.pageX;
       const offsetY = e.pageY;
@@ -344,6 +408,7 @@
               item_path.onclick = function () {
                 redirect(item.id);
               };
+              item_path.addEventListener('contextmenu', (e) => addMenu(e, item.id))
               let icon = '🧩';
               if (item.lsi1.startsWith('css')) {
                 icon = '🎨';
@@ -515,7 +580,7 @@
       const relativeClickX = clickX - labelRect.left;
 
       // Split the label text into parts based on the '/' separator
-      const parts = ['www',...labelText.replace('www.','').split('/')];
+      const parts = ['www', ...labelText.replace('www.', '').split('/')];
 
       // Find the part that corresponds to the clicked position
       let accumulatedWidth = 0;
@@ -523,9 +588,9 @@
         const partWidth = getTextWidth(part, event.target);
         accumulatedWidth += partWidth;
         if (accumulatedWidth >= relativeClickX) {
-          const parts1 =  parts.slice(0, parts.indexOf(part) + 1)
+          const parts1 = parts.slice(0, parts.indexOf(part) + 1)
           parts1.shift()
-          return 'www'+ (parts1.length ? '.' + parts1.join('/') : '');
+          return 'www' + (parts1.length ? '.' + parts1.join('/') : '');
         }
       }
 
@@ -587,6 +652,7 @@
               // Set file path and emoji
               const item_path = clonedItem.querySelector('[data-value="file-path"]')
               item_path.textContent = item.name;
+              item_path.addEventListener('contextmenu', (e) => addMenu(e, item.id))
               item_path.onclick = function () {
                 redirect(item.id);
               };
