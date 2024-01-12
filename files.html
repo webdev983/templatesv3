@@ -59,7 +59,7 @@
     <div class="up-panel">
       <button id="path_select" class='b-1' title="change mode"
         style="user-select: none; margin-left: 30px;">👣</button><label class="l-2"
-        style="cursor: pointer; color:#4A90E2;" onclick="labelClick(event)">All</label>
+        style="cursor: pointer; color:#4A90E2;" onclick="labelClick(event)">www.</label>
 
     </div>
 
@@ -372,7 +372,7 @@
                 const labelElement = document.querySelector('.l-2');
 
                 // Update the text content of the label
-                labelElement.textContent = `All/${path}`;
+                labelElement.textContent = `www.${path}`;
                 openPath();
               };
               clonedItem.querySelector('[data-action="file-open"]').onclick = setPath
@@ -453,24 +453,24 @@
     function labelClick(event) {
       // Extract the clicked part of the text based on the click position
       const clickedText = getClickedText(event, event.target.textContent);
-      if (clickedText === 'All') {
+      if (clickedText === 'www.') {
         path = ''
         localStorage.setItem('storedPath', path)
         const labelElement = document.querySelector('.l-2');
 
         // Update the text content of the label
-        labelElement.textContent = `All`;
+        labelElement.textContent = `www.`;
         loadFileList()
       }
       else {
-        const p = clickedText.replace('All/', '')
+        const p = clickedText.replace('www.', '')
         path = p + '/'
         localStorage.setItem('storedPath', path)
         console.log(path)
         const labelElement = document.querySelector('.l-2');
 
         // Update the text content of the label
-        labelElement.textContent = `All/${path}`;
+        labelElement.textContent = `www.${path}`;
         openPath();
       }
       // Do something with the extracted text (for example, log it)
@@ -616,7 +616,7 @@
                 const labelElement = document.querySelector('.l-2');
 
                 // Update the text content of the label
-                labelElement.textContent = `All/${path}`;
+                labelElement.textContent = `www.${path}`;
                 openPath();
               };
               clonedItem.querySelector('[data-action="file-open"]').onclick = setPath
@@ -650,7 +650,7 @@
         const labelElement = document.querySelector('.l-2');
 
         // Update the text content of the label
-        labelElement.textContent = `All/${path}`;
+        labelElement.textContent = `www.${path}`;
         loadUsingPath()
       }
       else {
