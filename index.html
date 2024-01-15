@@ -3849,11 +3849,14 @@ document.addEventListener('DOMContentLoaded', function() {
       const fieldsetAction = fieldset.getAttribute('action');
       console.log("Fieldset ID:", fieldsetId);
       console.log("Fieldset Action:", fieldsetAction);
+      const splited = fieldsetId.split(';')
+      splited.shift()
+      splited.join(';')
       const el =
       {
         time: (new Date()).getTime(),
         action: fieldsetAction,
-        target_element: fieldsetId.split(';')[1],
+        target_element: splited.join(';'),
 
       }
       if (fieldsetAction === 'ChangeTag') {
