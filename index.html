@@ -892,14 +892,13 @@ document.addEventListener('DOMContentLoaded', function() {
           // Check for data-visual-duplicate siblings
           console.log('case1')
           siblingsWithDuplicate = Array.from(e.target.parentElement.parentElement.children).filter(
-            sibling => sibling.hasAttribute('data-visual-dublicate') && !isDuplicate(sibling)
+            sibling => sibling.hasAttribute('data-visual-dublicate')
           );
 
           // Check for fieldset siblings containing data-visual-duplicate elements
           fieldsetSiblings = Array.from(e.target.parentElement.parentElement.children).filter(
             sibling => sibling.tagName === 'FIELDSET' &&
-              Array.from(sibling.querySelectorAll('[data-visual-dublicate]')).length > 0 &&
-              !isDuplicate(sibling)
+              Array.from(sibling.querySelectorAll('[data-visual-dublicate]')).length > 0
           );
           // Check if parent has data-visual-appendChild
           parentWithAppendChild = e.target.parentElement.parentElement.hasAttribute('data-visual-appendchild') && e.target.parentElement.parentElement;
@@ -976,6 +975,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Add entries for data-visual-duplicate siblings
         siblingsWithDuplicate.forEach(sibling => {
+          console.log('taag'+sibling.tagName)
           addMenuEntry(menu, `➕ ${sibling.tagName.toLowerCase()}`, () => {
             handleMenuEntryClick(e.target.id, sibling.id, siblingWithInsertBefore, parentWithAppendChild);
           });
@@ -1880,11 +1880,12 @@ document.addEventListener('DOMContentLoaded', function() {
           // Append the duplicated element to the componentElement
           if (visual) {
             document.getElementById(removeLastOccurrence(target_element, '-tree')).parentNode.appendChild(newEl);
-            processElement(newEl)
+            
           }
           else {
             document.getElementById(removeLastOccurrence(target_element, '-tree')).appendChild(newEl);
           }
+          processElement(newEl)
           // Duplicate the treeElement content
           const newEl2 = treeElement.cloneNode(true);
 
