@@ -590,6 +590,18 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log(JSON.stringify(actionLog));
   }
   let visualOn = false
+  function duplicateId(originalId,) {
+      const splited = originalId.split(';');
+      const lastId = splited[splited.length - 1]
+      let newLastUUID
+      const splited2 = lastId.split(':')
+      const copyId = generateUUID()
+      newLastUUID = splited2[0] + ':' + copyId
+      splited.pop()
+      return {id:[...splited, newLastUUID].join(';') + '-tree',copyId}
+
+    }
+
   function transformToVisual(event) {
 
 
@@ -698,24 +710,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 
-    function duplicateId(originalId,) {
-      const splited = originalId.split(';');
-      const lastId = splited[splited.length - 1]
-      let newLastUUID
-      const splited2 = lastId.split(':')
-      newLastUUID = splited2[0] + ':' + generateUUID()
-      splited.pop()
-      return [...splited, newLastUUID].join(';') + '-tree'
-
-    }
-
+    
     // Example function, adjust as needed
     async function insertBefore(nextElementId, selectedElementId, flag) {
       const actionObject = {
         time: (new Date()).getTime(),
         action: 'InsertBefore',
         target_element: nextElementId.replace('-fieldset', '') + '-tree',
-        inserted_element: { originalId: selectedElementId + '-tree', id: duplicateId(selectedElementId) },
+        inserted_element: { originalId: selectedElementId + '-tree', id: duplicateId(selectedElementId).id },
       };
       await pushAction(actionObject, false, flag);
       removeReceiveButtons();
@@ -728,7 +730,7 @@ document.addEventListener('DOMContentLoaded', function() {
         time: (new Date()).getTime(),
         action: 'Append',
         target_element: parentId + '-tree',
-        inserted_element: { originalId: selectedElementId + '-tree', id: duplicateId(selectedElementId) },
+        inserted_element: { originalId: selectedElementId + '-tree', id: duplicateId(selectedElementId).id },
       };
       await pushAction(actionObject, false, flag);
       removeReceiveButtons();
@@ -1617,6 +1619,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const { withParent, move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
     let treeElement
     let componentElement
+    console.log('command is ' + JSON.stringify(command))
     function handleAppendOrInsert(action, selectedArrayNotSorted, move) {
       // Sort
 
@@ -1634,8 +1637,8 @@ document.addEventListener('DOMContentLoaded', function() {
       });
       if (!move) {
         restOfElements = restOfElements.map(el => removeLastOccurrence(el, '-tree')).map(el =>
-          el.split('-copy')[0]
-        ).map(el => el + '-tree')
+          getWithoutCopyId(el)
+        ).map(el => el )
         console.log('rest ELS' + JSON.stringify(restOfElements))
         restOfElements = removeDuplicates(restOfElements)
       }
@@ -1669,7 +1672,7 @@ document.addEventListener('DOMContentLoaded', function() {
           // Find all elements based on the selected ID and its replacement
           var selectedElements = []
           var selectedElements2 = []
-          document.querySelectorAll('[id^="' + removeLastOccurrence(selectedId, '-tree') + '"]').forEach(el => {
+          document.querySelectorAll('[id^="' + selectedId + '"]').forEach(el => {
             el.id.endsWith('-tree') ? selectedElements.push(el) : selectedElements2.push(el)
           });
           selectedElements = selectedElements.filter(el => el.id.split(';').length === l)
@@ -1763,6 +1766,13 @@ document.addEventListener('DOMContentLoaded', function() {
       return clone;
     }
     console.log("action" + action)
+    const getWithoutCopyId = (id) => {
+      const splited = id.split(';');
+      const splited2 = splited[splited.length - 1].replace('-tree', '').split(':')
+      splited.pop()
+      const processed1 = [...splited, splited2[0]].join(';')
+      return processed1
+    }
     !path && (path = '')
     switch (action) {
       case 'Append':
@@ -1772,63 +1782,42 @@ document.addEventListener('DOMContentLoaded', function() {
           const id = target_element[0].id
           target_element.shift()
           let restOfElements = target_element.map(el => removeLastOccurrence(el.id, '-tree')).map(el =>
-            el.split('-copy')[0]
-          ).map(el => el + '-tree')
-          console.log('rest ELS' + JSON.stringify(restOfElements))
-          restOfElements = removeDuplicates(restOfElements)
-          // Combine the sorted array with the first element
+            getWithoutCopyId(el))
+          restOfElements =removeDuplicates(restOfElements)
+         
           const items = []
           for (const element of restOfElements) {
-            document.querySelectorAll('[id^="' + removeLastOccurrence(element, '-tree') + '"]').forEach(el => {
-              el.id.endsWith('-tree') && items.push(el.id)
+            const l = element.split(';').length
+            document.querySelectorAll('[id^="' + element, '-tree' + '"]').forEach(el => {
+              el.id.endsWith('-tree') && el.id.split(';').length ===l && items.push(el.id)
             });
           }
           console.log('iteeems' + JSON.stringify(items))
           const [firstId, ...restIds] = items
           for (const el of restIds) {
 
-            // Function to generate a new ID based on a specific copy number
-            function duplicateId(originalId, copyNumber) {
-              const splited = originalId.split(';');
-              return splited.map((part, index) => (index === splited.length - 1)
-                ? part.replace(/-copy-\d+-tree$/, '').replace(/-tree$/, '') + `-copy-${copyNumber}-tree`
-                : part
-              ).join(';');
-            }
+           
             async function append(parentId, selectedElementId, flag) {
               console.log('parent id' + parentId)
               console.log('el id' + selectedElementId)
+              const {id,copyId} = duplicateId(selectedElementId)
               // Perform additional actions if needed
               const actionObject = {
                 time: (new Date()).getTime(),
                 action: 'Append',
                 target_element: parentId + '-tree',
-                inserted_element: { originalId: selectedElementId + '-tree', id: duplicateId(selectedElementId + '-tree', generateNewCopyNumber(selectedElementId)) },
+                inserted_element: { originalId: selectedElementId + '-tree', id  },
               };
               await executeCommand(actionObject, path, visual);
-              return actionObject.inserted_element.id
+              return {t:actionObject.inserted_element.id,copyId}
             }
-            // Function to generate a new copy number based on the highest copy number
-            function generateNewCopyNumber(originalId) {
-              console.log("selected" + originalId)
-              const existingElements = document.querySelectorAll(`[id^="${originalId}"]`);
-              let highestCopyNumber = 0;
-              console.log("existing" + JSON.stringify(existingElements))
-              existingElements.forEach(element => {
-                const match = element.id.match(/-copy-(\d+)-tree$/);
-                if (match) {
-                  const copyNumber = parseInt(match[1], 10);
-                  highestCopyNumber = Math.max(highestCopyNumber, copyNumber);
-                }
-              });
-
-              return highestCopyNumber + 1;
-            }
-            const t = await append(removeLastOccurrence(document.getElementById(id).parentNode.id, '-tree'), removeLastOccurrence(id, '-tree'))
+           
+            const {t,copyId} = await append(removeLastOccurrence(document.getElementById(id).parentNode.id, '-tree'), removeLastOccurrence(id, '-tree'))
+            
             await executeCommand({
               time: (new Date()).getTime(),
               action: 'Append',
-              target_element: [{ type: 'tag', id: t, }, { type: 'tag', id: el, }],
+              target_element: [{ type: 'tag', id: t, }, { type: 'tag', id:el, }],
               move: true
             }, path, visual);
           }
@@ -2000,14 +1989,7 @@ document.addEventListener('DOMContentLoaded', function() {
           const [firstId, ...restIds] = items
           for (const el of restIds) {
 
-            // Function to generate a new ID based on a specific copy number
-            function duplicateId(originalId, copyNumber) {
-              const splited = originalId.split(';');
-              return splited.map((part, index) => (index === splited.length - 1)
-                ? part.replace(/-copy-\d+-tree$/, '').replace(/-tree$/, '') + `-copy-${copyNumber}-tree`
-                : part
-              ).join(';');
-            }
+            
             async function append(parentId, selectedElementId, flag) {
               console.log('parent id' + parentId)
               console.log('el id' + selectedElementId)
