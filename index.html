@@ -1982,6 +1982,7 @@ document.addEventListener('DOMContentLoaded', function() {
           // Combine the sorted array with the first element
           const items = []
           for (const element of restOfElements) {
+            const l = element.split(';').length
             document.querySelectorAll('[id^="' + removeLastOccurrence(element, '-tree') + '"]').forEach(el => {
               el.id.endsWith('-tree') && el.id.split(';').length ===l && items.push(el.id)
             });
@@ -2008,7 +2009,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             // Function to generate a new copy number based on the highest copy number
             
-            const t = await append(removeLastOccurrence(document.getElementById(id).parentNode.id, '-tree'), removeLastOccurrence(id, '-tree'))
+            const {t} = await append(removeLastOccurrence(document.getElementById(id).parentNode.id, '-tree'), removeLastOccurrence(id, '-tree'))
             await executeCommand({
               time: (new Date()).getTime(),
               action: 'InsertBefore',
