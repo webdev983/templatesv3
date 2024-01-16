@@ -12,7 +12,7 @@ document.getElementById('log-open').addEventListener('click', function() {
   } else {
     leftSidePanel.classList.add('log-open');
     codeLog.removeAttribute('hidden');
-    mainContent.style.marginLeft = '315px';
+    mainContent.style.marginLeft = '900px';
     myButton.classList.add('b-selected'); // Add the 'b-select' class
   }
 });
