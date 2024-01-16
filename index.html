@@ -120,6 +120,11 @@
     <button class="b-1" onclick="transformToVisual(event)">🗂️</button>
     <button class="b-1" hidden id="aside-toggle" style="font-size: 1.5em; top: 10px;">log</button>
   </div>
+  <div>
+    <button class="b-1" id="post-play-scripts">🎥</button>
+    <button class="b-1" id="enable-post-play-scripts">🎥</button>
+
+  </div>
   <div id="logs-menu">
     <button class="b-1 b-select" id="log-open">🪵</button>
   </div>
@@ -4176,5 +4181,37 @@ document.addEventListener('DOMContentLoaded', function() {
   textContentTextarea.addEventListener('input', autoResizeTextarea);
 
 </script>
+
+
+<script>document.addEventListener('DOMContentLoaded', function () {
+  var filtersOpenButton = document.getElementById('post-play-scripts');
+  var mainContent = document.getElementById('main-content');
+  var leftSidePanel = document.querySelector('.left-side-panel');
+  var buttonsToShowOrHide = ['enable-post-play-scripts']; // ID кнопок для показа/скрытия
+
+  filtersOpenButton.addEventListener('click', function () {
+    // Переключаем класс b-selected
+    filtersOpenButton.classList.toggle('b-selected');
+
+    // Переключаем ширину left-side-panel
+    var currentWidth = leftSidePanel.style.width;
+    leftSidePanel.style.width = currentWidth === '300px' ? '65px' : '300px';
+
+    // Переключаем margin-left для main-content
+    var currentMargin = mainContent.style.marginLeft;
+    mainContent.style.marginLeft = currentMargin === '315px' ? '80px' : '315px';
+
+    // Переключаем видимость кнопок
+    buttonsToShowOrHide.forEach(function (buttonId) {
+      var button = document.getElementById(buttonId);
+      if (button) {
+        button.hidden = !button.hidden;
+      }
+    });
+  });
+});
+</script>
+
+
 
 <script src="js/left-panel.js" async=""></script>
