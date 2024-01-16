@@ -132,7 +132,7 @@
       </tr>
     </thead>
     <tbody id="code-log-body">
-      <tr id="code-log-element">
+      <tr hidden id="code-log-element">
         <td data-type-code-log="action-time"><span id="code-log-action-time">1703707728031</span></td>
         <td data-type-code-log="action-name"><span id="code-log-action">append child</span></td>
         <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button></td>
@@ -1608,7 +1608,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function insertDataIntoCodeLog(actionTime, actionName,inserted_component) {
     const originalElement = document.getElementById("code-log-element");
     const clonedElement = originalElement.cloneNode(true);
-
+    clonedElement.removeAttribute('hidden')
     // Remove the unwanted button from the cloned element
     const removeButtonCell = originalElement.querySelector("[data-type-code-log='action-remove']");
     if (removeButtonCell) {
@@ -1712,7 +1712,7 @@ document.addEventListener('DOMContentLoaded', function() {
           const treeEl = document.getElementById(selectedId)
           const pageEl = document.getElementById(removeLastOccurrence(selectedId, '-tree'))
           var clonedFieldset = cloneWithDescendants(treeEl);
-          var arrowButton = clonedFieldset.querySelector('[data-element="code-tree-show-hide-button"]');
+          var arrowButton = clonedFieldset.querySelect.or('[data-element="code-tree-show-hide-button"]');
 
           arrowButton.textContent = '→';
           if (action === 'Append') {
