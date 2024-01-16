@@ -178,9 +178,6 @@
 
 
       <div id="components-tree" style="position: relative">
-      </div>
-
-      <div id="code-tree" style="position: relative; margin-left:15px;">
         <fieldset id="41412421-412412412-41241212-412412" data-element="code-tree-tag">
           <legend>💬</legend>
           <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
@@ -195,6 +192,10 @@
           <button class="b-3 b-green">🎭 3</button>
 
         </fieldset>
+      </div>
+
+      <div id="code-tree" style="position: relative; margin-left:15px;">
+        
 
       </div>
       <!--menus-->
@@ -1969,8 +1970,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (inserted_element?.tagName) {
           console.log(command)
           //fieldset
-          treeElement = document.getElementById(target_element);
+          treeElement = components.find(i=>i===removeLastOccurrence(target_element, '-tree')) ?
+          document.getElementById('code-tree')
+           :document.getElementById(target_element)
           //component
+          
           componentElement = document.getElementById(removeLastOccurrence(target_element, '-tree'));
           const newEl = document.createElement(inserted_element.tagName)
           newEl.id = inserted_element.id
@@ -2167,7 +2171,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         //case insert tag
         if (inserted_element?.tagName) {
-          treeElement = document.getElementById(target_element);
+          treeElement = components.find(i=>i===removeLastOccurrence(target_element, '-tree')) ?
+          document.getElementById('code-tree')
+           :document.getElementById(target_element)
           //component
           componentElement = document.getElementById(removeLastOccurrence(target_element, '-tree'));
           const newEl = document.createElement(inserted_element.tagName)
@@ -2505,7 +2511,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let idFromLink = urlSearchParams.get('id');
     if(id){ idFromLink = id}
     else{
-      insertDataIntoCodeLog('root',idFromLink)
+      insertDataIntoCodeLog('root',idFromLink,{id:idFromLink})
     }
     if (!idFromLink) {
       throw new Error('Missing id parameter in the URL');
