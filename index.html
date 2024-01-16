@@ -1228,7 +1228,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadUsingPath()
 
   }
-  function selectFile(event, fileId) {
+  function selectFile(event, fileId,name) {
     // Add logic to handle the selected file, if needed
     console.log('File selected with ID:', fileId);
     var el = event.target;
@@ -1247,7 +1247,7 @@ document.addEventListener('DOMContentLoaded', function() {
       time: (new Date()).getTime(),
       action: fieldsetAction,
       target_element: fieldsetId.split(';')[1],
-      inserted_component: { componentId: fileId, id: generateUUID() },
+      inserted_component: { componentId: fileId, id: generateUUID(),name },
     };
     pushAction(actionObject);
     // Remove the parent fieldset
@@ -1273,7 +1273,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Clone the fieldset
             var newRow = fileListTable.insertRow();
             newRow.innerHTML = `
-            <td><button onclick="selectFile(event,'${item.id}')">✅select</button></td>
+            <td><button onclick="selectFile(event,'${item.id}','${item.lsi1.split(';')[0]}')">✅select</button></td>
             <td>📂 ${item.lsi1}</td>
             <td><label>🧩</label></td>
           `;
@@ -1620,7 +1620,7 @@ document.addEventListener('DOMContentLoaded', function() {
     clonedElement.querySelector("#code-log-action-time").textContent = actionTime;
     if(inserted_component){  
       console.log('iiiiiiiiiiin0')
-      clonedElement.querySelector("#code-log-action").textContent = '🧩'+inserted_component.id;
+      clonedElement.querySelector("#code-log-action").textContent = '🧩'+inserted_component.name;
     }
     else{
       clonedElement.querySelector("#code-log-action").textContent = actionName;
@@ -1871,7 +1871,7 @@ document.addEventListener('DOMContentLoaded', function() {
           const component_el = document.getElementById('component-element')
           const newEl2 = component_el.cloneNode(true)
           const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
-          button2.textContent = '🧩' + inserted_component.componentId;
+          button2.textContent = '🧩' + inserted_component.name;
           const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
           button.addEventListener('mouseover', mouseOverTree);
 
@@ -2070,7 +2070,7 @@ document.addEventListener('DOMContentLoaded', function() {
           const component_el = document.getElementById('component-element')
           const newEl2 = component_el.cloneNode(true)
           const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
-          button2.textContent = '🧩' + inserted_component.componentId;
+          button2.textContent = '🧩' + inserted_component.name;
           const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
           button.addEventListener('mouseover', mouseOverTree);
 
@@ -2082,7 +2082,7 @@ document.addEventListener('DOMContentLoaded', function() {
           components.push(path + inserted_component.id)
           console.log(inserted_component.componentId)
 
-          await loadFromDb(inserted_component.componentId, inserted_component.id, path)
+          await loadFromDb(inserted_component.componentId, inserted_component.id, path,inserted_component.name)
           break;
         }
         //case duplicate insert before
@@ -2502,34 +2502,38 @@ document.addEventListener('DOMContentLoaded', function() {
   function removeDuplicates(arr) {
     return Array.from(new Set(arr));
   }
-  const loadFromDb = async (id, newId, p) => {
+  const loadFromDb = async (id, newId, p,name) => {
     console.log('load from db' + id)
     console.log('err2 ' + p)
     let path = ""
     p && (path = p)
     const urlSearchParams = new URLSearchParams(window.location.search);
     let idFromLink = urlSearchParams.get('id');
-    if(id){ idFromLink = id}
+    let responseData
+    if(id){  responseData = await getRes(id)}
     else{
-      insertDataIntoCodeLog('root',idFromLink,{id:idFromLink})
+      responseData = await getRes(idFromLink)
+      const {items } = responseData
+      insertDataIntoCodeLog('root',idFromLink,{name:items[items.length-1].lsi1.replace(';publish:published', '')})
     }
     if (!idFromLink) {
       throw new Error('Missing id parameter in the URL');
     }
 
     // Make a GET request to the API with the 'id' query parameter
-    let responseData
+    
 
-    responseData = await getRes(idFromLink)
+   
     
 
     for (const item of responseData.items) {
       console.log('item' + JSON.stringify(item))
-      if (item.sk === 'path') {
+      if (!id && item.sk === 'path') {
         console.log('eeeeeer')
         const el = document.getElementById('page-path')
+        
         el.textContent = item.lsi1.replace(';publish:published', '')
-
+        
         if (item.lsi1.includes('publish:published')) {
           const el2 = document.getElementById("path-icon")
           el2.classList.add('b-green');
