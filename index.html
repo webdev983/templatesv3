@@ -1247,7 +1247,7 @@ document.addEventListener('DOMContentLoaded', function() {
       time: (new Date()).getTime(),
       action: fieldsetAction,
       target_element: fieldsetId.split(';')[1],
-      inserted_component: { componentId: fileId, id: generateUUID(),name },
+      inserted_component: { componentId: fileId, id: generateUUID() },
     };
     pushAction(actionObject);
     // Remove the parent fieldset
@@ -1575,7 +1575,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('time' + time)
     actionLog.push(element)
     !firstLoad && pushActionToDb(element)
-    insertDataIntoCodeLog(time, element.action,element.inserted_component)
+    !element.inserted_component && insertDataIntoCodeLog(time, element.action)
 
     await executeCommand(element, undefined, visual)
   }
@@ -1871,7 +1871,7 @@ document.addEventListener('DOMContentLoaded', function() {
           const component_el = document.getElementById('component-element')
           const newEl2 = component_el.cloneNode(true)
           const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
-          button2.textContent = '🧩' + inserted_component.name;
+          button2.textContent = '🧩' + inserted_component.id;
           const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
           button.addEventListener('mouseover', mouseOverTree);
 
@@ -1883,7 +1883,7 @@ document.addEventListener('DOMContentLoaded', function() {
           console.log('prob' + inserted_component.componentId)
           components.push(path + inserted_component.id)
           console.log('err ' + path)
-          await loadFromDb(inserted_component.componentId, inserted_component.id, path)
+          await loadFromDb(inserted_component.componentId, inserted_component.id, path,command.sk)
           break;
         }
         //case duplicate append
@@ -2502,7 +2502,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function removeDuplicates(arr) {
     return Array.from(new Set(arr));
   }
-  const loadFromDb = async (id, newId, p,name) => {
+  const loadFromDb = async (id, newId, p,timestamp) => {
     console.log('load from db' + id)
     console.log('err2 ' + p)
     let path = ""
@@ -2510,10 +2510,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const urlSearchParams = new URLSearchParams(window.location.search);
     let idFromLink = urlSearchParams.get('id');
     let responseData
-    if(id){  responseData = await getRes(id)}
+    if(id){  responseData = await getRes(id)
+      
+      const {items } = responseData
+      //change component 
+      const name = items[items.length-1].lsi1.replace(';publish:published', '')
+      document.getElementById(path + newId + '-tree').querySelector("[data-element='code-tree-tag-name-button']").textContent = '🧩' + name
+      insertDataIntoCodeLog(timestamp,idFromLink,{name})
+    }
     else{
+      components.push(idFromLink)
       responseData = await getRes(idFromLink)
       const {items } = responseData
+      const name = items[items.length-1].lsi1.replace(';publish:published', '')
+      document.getElementById(idFromLink + '-tree').querySelector("[data-element='code-tree-tag-name-button']").textContent = '🧩' + name
       insertDataIntoCodeLog('root',idFromLink,{name:items[items.length-1].lsi1.replace(';publish:published', '')})
     }
     if (!idFromLink) {
