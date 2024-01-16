@@ -3,15 +3,22 @@ document.getElementById('log-open').addEventListener('click', function() {
   var codeLog = document.getElementById('code-log');
   var mainContent = document.getElementById('main-content');
   var myButton = document.getElementById('log-open'); // Get the button element
+  var bottomButton = document.getElementById('log-open'); // Get the button element
+
+
+  var myButton = document.getElementById('log-open'); // Get the button element
 
   if (leftSidePanel.classList.contains('log-open')) {
     leftSidePanel.classList.remove('log-open');
     codeLog.setAttribute('hidden', '');
     mainContent.style.marginLeft = '80px';
+    bottomButton.removeAttribute('hidden');
+
     myButton.classList.remove('b-selected'); // Remove the 'b-select' class
   } else {
     leftSidePanel.classList.add('log-open');
-    codeLog.removeAttribute('hidden');
+    codeLog.setAttribute('hidden', '');
+    bottomButton.removeAttribute('hidden');
     mainContent.style.marginLeft = '702px';
     myButton.classList.add('b-selected'); // Add the 'b-select' class
   }
