@@ -3,7 +3,7 @@ document.getElementById('log-open').addEventListener('click', function() {
   var codeLog = document.getElementById('code-log');
   var mainContent = document.getElementById('main-content');
   var myButton = document.getElementById('log-open'); // Get the button element
-  var bottomButton = document.getElementById('log-open'); // Get the button element
+  var bottomButton = document.getElementById('bottom-buttons'); // Get the button element
 
 
   var myButton = document.getElementById('log-open'); // Get the button element
