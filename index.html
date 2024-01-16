@@ -1574,7 +1574,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('time' + time)
     actionLog.push(element)
     !firstLoad && pushActionToDb(element)
-    insertDataIntoCodeLog(time, element.action)
+    insertDataIntoCodeLog(time, element.action,element.inserted_component)
 
     await executeCommand(element, undefined, visual)
   }
@@ -1604,7 +1604,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Parse and log the response or handle it as needed
     const responseData = await response.json();
   }
-  function insertDataIntoCodeLog(actionTime, actionName) {
+  function insertDataIntoCodeLog(actionTime, actionName,inserted_component) {
     const originalElement = document.getElementById("code-log-element");
     const clonedElement = originalElement.cloneNode(true);
 
@@ -1617,7 +1617,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set the content and attributes for the cloned element
     clonedElement.removeAttribute("hidden");
     clonedElement.querySelector("#code-log-action-time").textContent = actionTime;
-    clonedElement.querySelector("#code-log-action").textContent = actionName;
+    if(inserted_component){  
+      console.log('iiiiiiiiiiin0')
+      clonedElement.querySelector("#code-log-action").textContent = '🧩'+inserted_component.id;
+    }
+    else{
+      clonedElement.querySelector("#code-log-action").textContent = actionName;
+    }
 
     // Get the parent of the original element
     const parent = originalElement.parentNode;
@@ -2497,7 +2503,10 @@ document.addEventListener('DOMContentLoaded', function() {
     p && (path = p)
     const urlSearchParams = new URLSearchParams(window.location.search);
     let idFromLink = urlSearchParams.get('id');
-    id && (idFromLink = id)
+    if(id){ idFromLink = id}
+    else{
+      insertDataIntoCodeLog('root',id)
+    }
     if (!idFromLink) {
       throw new Error('Missing id parameter in the URL');
     }
@@ -2506,7 +2515,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let responseData
 
     responseData = await getRes(idFromLink)
-
+    
 
     for (const item of responseData.items) {
       console.log('item' + JSON.stringify(item))
@@ -2570,6 +2579,7 @@ document.addEventListener('DOMContentLoaded', function() {
           if (path) {
             toAdd = path + newId + ';'
           }
+          insertDataIntoCodeLog(item.sk , item.action)
           await executeCommand({ ...item, time: item.sk }, toAdd)
 
           continue
