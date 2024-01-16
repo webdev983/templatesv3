@@ -2514,7 +2514,8 @@ document.addEventListener('DOMContentLoaded', function() {
       
       const {items } = responseData
       //change component 
-      const name = items[items.length-1].lsi1.replace(';publish:published', '')
+      const splited = items[items.length-1].lsi1.split(';')[0].split('/')
+      const name = splited[splited.length-1]
       document.getElementById(path + newId + '-tree').querySelector("[data-element='code-tree-tag-name-button']").textContent = '🧩' + name
       insertDataIntoCodeLog(timestamp,idFromLink,{name})
     }
@@ -2522,9 +2523,10 @@ document.addEventListener('DOMContentLoaded', function() {
       components.push(idFromLink)
       responseData = await getRes(idFromLink)
       const {items } = responseData
-      const name = items[items.length-1].lsi1.replace(';publish:published', '')
+      const splited = items[items.length-1].lsi1.split(';')[0].split('/')
+      const name = splited[splited.length-1]
       document.getElementById(idFromLink + '-tree').querySelector("[data-element='code-tree-tag-name-button']").textContent = '🧩' + name
-      insertDataIntoCodeLog('root',idFromLink,{name:items[items.length-1].lsi1.replace(';publish:published', '')})
+      insertDataIntoCodeLog('root',idFromLink,{name})
     }
     if (!idFromLink) {
       throw new Error('Missing id parameter in the URL');
