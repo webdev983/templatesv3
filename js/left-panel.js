@@ -12,13 +12,13 @@ document.getElementById('log-open').addEventListener('click', function() {
     leftSidePanel.classList.remove('log-open');
     codeLog.setAttribute('hidden', '');
     mainContent.style.marginLeft = '80px';
+    myButton.classList.remove('b-selected'); // Remove the 'b-select' class
     bottomButton.removeAttribute('hidden');
 
-    myButton.classList.remove('b-selected'); // Remove the 'b-select' class
   } else {
     leftSidePanel.classList.add('log-open');
-    codeLog.setAttribute('hidden', '');
-    bottomButton.removeAttribute('hidden');
+    codeLog.removeAttribute('hidden');
+    bottomButton.setAttribute('hidden', '');
     mainContent.style.marginLeft = '702px';
     myButton.classList.add('b-selected'); // Add the 'b-select' class
   }
