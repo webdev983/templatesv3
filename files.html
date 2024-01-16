@@ -387,7 +387,7 @@
           let folders = []
           const elements = []
           console.log(JSON.stringify(data))
-          const items = data.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace(path, '') } })
+          const items = data.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace(path, '').split(';')[0] } })
           console.log(JSON.stringify(items))
           for (const item of items) {
             const splited = item.name.split(';')[0].split('/')
@@ -624,7 +624,7 @@
           let folders = []
           const elements = []
           console.log(JSON.stringify(data))
-          const items = data.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace(path, '') } })
+          const items = data.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace(path, '').split(';')[0] } })
           console.log(JSON.stringify(items))
           for (const item of items) {
             const splited = item.name.split(';')[0].split('/')

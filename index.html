@@ -591,16 +591,16 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   let visualOn = false
   function duplicateId(originalId,) {
-      const splited = originalId.split(';');
-      const lastId = splited[splited.length - 1]
-      let newLastUUID
-      const splited2 = lastId.split(':')
-      const copyId = generateUUID()
-      newLastUUID = splited2[0] + ':' + copyId
-      splited.pop()
-      return {id:[...splited, newLastUUID].join(';') + '-tree',copyId}
+    const splited = originalId.split(';');
+    const lastId = splited[splited.length - 1]
+    let newLastUUID
+    const splited2 = lastId.split(':')
+    const copyId = generateUUID()
+    newLastUUID = splited2[0] + ':' + copyId
+    splited.pop()
+    return { id: [...splited, newLastUUID].join(';') + '-tree', copyId }
 
-    }
+  }
 
   function transformToVisual(event) {
 
@@ -710,7 +710,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 
-    
+
     // Example function, adjust as needed
     async function insertBefore(nextElementId, selectedElementId, flag) {
       const actionObject = {
@@ -975,15 +975,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Add entries for data-visual-duplicate siblings
         siblingsWithDuplicate.forEach(sibling => {
-          console.log('taag'+sibling.tagName)
-          addMenuEntry(menu, `➕ ${sibling.tagName.toLowerCase()}`, () => {
+          console.log('taag' + sibling.tagName)
+          let name = `➕ ${sibling.tagName.toLowerCase()}`
+          if (sibling.hasAttribute('data-visual-title')) {
+            name = `➕ ${sibling.getAttribute('data-visual-title')}`
+          }
+          addMenuEntry(menu, name, () => {
             handleMenuEntryClick(e.target.id, sibling.id, siblingWithInsertBefore, parentWithAppendChild);
           });
         });
 
         // Add entries for fieldset siblings
         fieldsetSiblings.forEach(fieldsetSibling => {
-          addMenuEntry(menu, `➕ ${fieldsetSibling.children[0].textContent.toLowerCase()}`, () => {
+          let name = `➕ ${fieldsetSibling.children[0].textContent.toLowerCase()}`
+          if (sibling.hasAttribute('data-visual-title')) {
+            name = `➕ ${sibling.getAttribute('data-visual-title')}`
+          }
+          addMenuEntry(menu, name, () => {
             handleMenuEntryClick(e.target.id, fieldsetSibling.children[1].id, siblingWithInsertBefore, parentWithAppendChild, true);
           });
         });
@@ -1628,17 +1636,25 @@ document.addEventListener('DOMContentLoaded', function() {
       var restOfElements = selectedArrayNotSorted.slice(1);
 
       // Sort the rest of the elements by their order in the DOM
-      restOfElements.sort(function (a, b) {
+      function sortByPlace(a, b) {
         var elementA = document.getElementById(a);
         var elementB = document.getElementById(b);
 
         return Array.from(elementA.parentElement.children).indexOf(elementA) -
           Array.from(elementB.parentElement.children).indexOf(elementB);
-      });
+      }
+      function sortByPlace1(a, b) {
+        var elementA = a
+        var elementB = b
+
+        return Array.from(elementA.parentElement.children).indexOf(elementA) -
+          Array.from(elementB.parentElement.children).indexOf(elementB);
+      }
+      restOfElements.sort(sortByPlace);
       if (!move) {
         restOfElements = restOfElements.map(el => removeLastOccurrence(el, '-tree')).map(el =>
           getWithoutCopyId(el)
-        ).map(el => el )
+        ).map(el => el)
         console.log('rest ELS' + JSON.stringify(restOfElements))
         restOfElements = removeDuplicates(restOfElements)
       }
@@ -1661,7 +1677,8 @@ document.addEventListener('DOMContentLoaded', function() {
       // Get the index of the target fieldset within its parent
       var index = Array.from(parentFieldset.children).indexOf(targetFieldset);
       var index2 = Array.from(parentFieldset2.children).indexOf(targetFieldset2);
-
+      const treeEls = []
+      const compEls = []
       // Iterate through the selected array (skipping the first element, which is the target)
       for (var i = 1; i < selectedArray.length; i++) {
         var selectedId = selectedArray[i];
@@ -1677,49 +1694,10 @@ document.addEventListener('DOMContentLoaded', function() {
           });
           selectedElements = selectedElements.filter(el => el.id.split(';').length === l)
           selectedElements2 = selectedElements2.filter(el => el.id.split(';').length === l)
+          treeEls.push(...selectedElements)
+          compEls.push(...selectedElements2)
           // Iterate through each selected element and process it
-          selectedElements.forEach(function (selectedFieldset) {
-            // Clone the selected fieldset and its descendants
-            console.log('found 11' + selectedFieldset.id)
-            var clonedFieldset = cloneWithDescendants(selectedFieldset);
-            var arrowButton = clonedFieldset.querySelector('[data-element="code-tree-show-hide-button"]');
-
-            arrowButton.textContent = '→';
-            // Insert the cloned fieldset based on the action
-            if (action === 'Append') {
-              targetFieldset.appendChild(clonedFieldset);
-            } else if (action === 'InsertBefore') {
-
-              parentFieldset.insertBefore(clonedFieldset, parentFieldset.children[index]);
-              index++; // Increment the index to maintain the correct order
-            }
-
-            // Remove the original fieldset
-            selectedFieldset.remove();
-          });
-
-
-
-          selectedElements2 = Array.from(selectedElements2).filter(function (element) {
-            return !element.id.includes('-tree');
-          });
-          selectedElements2.forEach(function (selectedFieldset2) {
-            // Clone the selected fieldset and its descendants
-            var clonedFieldset2 = cloneWithDescendants(selectedFieldset2);
-
-            // Insert the cloned fieldset based on the action
-            if (action === 'Append') {
-              targetFieldset2.appendChild(clonedFieldset2);
-            } else if (action === 'InsertBefore') {
-
-
-              parentFieldset2.insertBefore(clonedFieldset2, parentFieldset2.children[index2]);
-              index2++; // Increment the index to maintain the correct order
-            }
-
-            // Remove the original fieldset
-            selectedFieldset2.remove();
-          });
+          
         }
         else {
           const treeEl = document.getElementById(selectedId)
@@ -1746,6 +1724,46 @@ document.addEventListener('DOMContentLoaded', function() {
           }
           treeEl.remove();
           pageEl.remove()
+        }
+      }
+      if (!move) {
+        
+        treeEls.sort(sortByPlace1)
+        compEls.sort(sortByPlace1)
+        for (const selectedFieldset of treeEls) {
+          console.log('found 11' + selectedFieldset.id)
+          var clonedFieldset = cloneWithDescendants(selectedFieldset);
+          var arrowButton = clonedFieldset.querySelector('[data-element="code-tree-show-hide-button"]');
+
+          arrowButton.textContent = '→';
+          // Insert the cloned fieldset based on the action
+          if (action === 'Append') {
+            targetFieldset.appendChild(clonedFieldset);
+          } else if (action === 'InsertBefore') {
+
+            parentFieldset.insertBefore(clonedFieldset, parentFieldset.children[index]);
+            index++; // Increment the index to maintain the correct order
+          }
+
+          // Remove the original fieldset
+          selectedFieldset.remove();
+        }
+        for (const selectedFieldset2 of compEls) {
+          // Clone the selected fieldset and its descendants
+          var clonedFieldset2 = cloneWithDescendants(selectedFieldset2);
+
+          // Insert the cloned fieldset based on the action
+          if (action === 'Append') {
+            targetFieldset2.appendChild(clonedFieldset2);
+          } else if (action === 'InsertBefore') {
+
+
+            parentFieldset2.insertBefore(clonedFieldset2, parentFieldset2.children[index2]);
+            index2++; // Increment the index to maintain the correct order
+          }
+
+          // Remove the original fieldset
+          selectedFieldset2.remove();
         }
       }
     }
@@ -1784,41 +1802,41 @@ document.addEventListener('DOMContentLoaded', function() {
           target_element.shift()
           let restOfElements = target_element.map(el => removeLastOccurrence(el.id, '-tree')).map(el =>
             getWithoutCopyId(el))
-          restOfElements =removeDuplicates(restOfElements)
-         
+          restOfElements = removeDuplicates(restOfElements)
+
           const items = []
           for (const element of restOfElements) {
             const l = element.split(';').length
             document.querySelectorAll('[id^="' + element + '"]').forEach(el => {
-              el.id.endsWith('-tree') && el.id.split(';').length ===l && items.push(el.id)
+              el.id.endsWith('-tree') && el.id.split(';').length === l && items.push(el.id)
             });
           }
           console.log('iteeems' + JSON.stringify(items))
           const [firstId, ...restIds] = items
           for (const el of restIds) {
 
-           
+
             async function append(parentId, selectedElementId, flag) {
               console.log('parent id' + parentId)
               console.log('el id' + selectedElementId)
-              const {id,copyId} = duplicateId(selectedElementId)
+              const { id, copyId } = duplicateId(selectedElementId)
               // Perform additional actions if needed
               const actionObject = {
                 time: (new Date()).getTime(),
                 action: 'InsertBefore',
                 target_element: document.getElementById(selectedElementId + '-tree').nextElementSibling.id,
-                inserted_element: { originalId: selectedElementId + '-tree', id  },
+                inserted_element: { originalId: selectedElementId + '-tree', id },
               };
               await executeCommand(actionObject, path, visual);
-              return {t:actionObject.inserted_element.id,copyId}
+              return { t: actionObject.inserted_element.id, copyId }
             }
-           
-            const {t,copyId} = await append(removeLastOccurrence(document.getElementById(id).parentNode.id, '-tree'), removeLastOccurrence(id, '-tree'))
-            
+
+            const { t, copyId } = await append(removeLastOccurrence(document.getElementById(id).parentNode.id, '-tree'), removeLastOccurrence(id, '-tree'))
+
             await executeCommand({
               time: (new Date()).getTime(),
               action: 'Append',
-              target_element: [{ type: 'tag', id: t, }, { type: 'tag', id:el, }],
+              target_element: [{ type: 'tag', id: t, }, { type: 'tag', id: el, }],
               move: true
             }, path, visual);
           }
@@ -1861,7 +1879,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         //case duplicate append
         if (inserted_element?.originalId) {
-          console.log('insert2'+JSON.stringify(command));
+          console.log('insert2' + JSON.stringify(command));
           // fieldset
           treeElement = document.getElementById(inserted_element?.originalId);
           // component
@@ -1880,7 +1898,7 @@ document.addEventListener('DOMContentLoaded', function() {
           // Append the duplicated element to the componentElement
           if (visual) {
             document.getElementById(removeLastOccurrence(target_element, '-tree')).parentNode.appendChild(newEl);
-            
+
           }
           else {
             document.getElementById(removeLastOccurrence(target_element, '-tree')).appendChild(newEl);
@@ -1978,39 +1996,39 @@ document.addEventListener('DOMContentLoaded', function() {
           target_element.shift()
           let restOfElements = target_element.map(el => removeLastOccurrence(el.id, '-tree')).map(el =>
             getWithoutCopyId(el))
-          restOfElements =removeDuplicates(restOfElements)
+          restOfElements = removeDuplicates(restOfElements)
           console.log('rest ELS' + JSON.stringify(restOfElements))
           // Combine the sorted array with the first element
           const items = []
           for (const element of restOfElements) {
             const l = element.split(';').length
             document.querySelectorAll('[id^="' + removeLastOccurrence(element, '-tree') + '"]').forEach(el => {
-              el.id.endsWith('-tree') && el.id.split(';').length ===l && items.push(el.id)
+              el.id.endsWith('-tree') && el.id.split(';').length === l && items.push(el.id)
             });
           }
           console.log('iteeems' + JSON.stringify(items))
           const [firstId, ...restIds] = items
           for (const el of restIds) {
 
-            
+
             async function append(parentId, selectedElementId, flag) {
               console.log('parent id' + parentId)
               console.log('el id' + selectedElementId)
               // Perform additional actions if needed
-              const {id,copyId} = duplicateId(selectedElementId)
+              const { id, copyId } = duplicateId(selectedElementId)
               // Perform additional actions if needed
               const actionObject = {
                 time: (new Date()).getTime(),
                 action: 'InsertBefore',
                 target_element: document.getElementById(selectedElementId + '-tree').nextElementSibling.id,
-                inserted_element: { originalId: selectedElementId + '-tree', id  },
+                inserted_element: { originalId: selectedElementId + '-tree', id },
               };
               await executeCommand(actionObject, path, visual);
-              return {t:actionObject.inserted_element.id,copyId}
+              return { t: actionObject.inserted_element.id, copyId }
             }
             // Function to generate a new copy number based on the highest copy number
-            
-            const {t} = await append(removeLastOccurrence(document.getElementById(id).parentNode.id, '-tree'), removeLastOccurrence(id, '-tree'))
+
+            const { t } = await append(removeLastOccurrence(document.getElementById(id).parentNode.id, '-tree'), removeLastOccurrence(id, '-tree'))
             await executeCommand({
               time: (new Date()).getTime(),
               action: 'InsertBefore',
@@ -2057,7 +2075,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         //case duplicate insert before
         if (inserted_element?.originalId) {
-          console.log('insert1'+JSON.stringify(command));
+          console.log('insert1' + JSON.stringify(command));
           // fieldset
           treeElement = document.getElementById(inserted_element?.originalId);
           // component
@@ -2078,7 +2096,7 @@ document.addEventListener('DOMContentLoaded', function() {
           const compEl = document.getElementById(removeLastOccurrence(target_element, '-tree'))
           if (visual) {
             compEl.parentNode.parentNode.insertBefore(newEl, compEl.parentNode);
-            
+
           }
           else {
             compEl.parentNode.insertBefore(newEl, compEl);
