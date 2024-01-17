@@ -19,7 +19,7 @@ document.getElementById('log-open').addEventListener('click', function() {
     leftSidePanel.classList.add('log-open');
     codeLog.removeAttribute('hidden');
     bottomButton.setAttribute('hidden', '');
-    mainContent.style.marginLeft = '520px';
+    mainContent.style.marginLeft = '515px';
     myButton.classList.add('b-selected'); // Add the 'b-select' class
   }
 });
