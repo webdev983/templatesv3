@@ -171,7 +171,7 @@
         <label class="l-1" style="margin-right: 10px; user-select: none;">🧩</label>
         <button class="b-1" style="margin-right: 5px;">➕</button>
         <button class="b-1 b-1 b-selected" style="margin-right: 5px;" id="link-by-id">🆔 📎</button>
-        <button hidden class="b-1 b-selected" style="margin-right: 5px;" id="link-by-path">📁 📎</button>    
+        <button hidden class="b-1 b-selected" style="margin-right: 5px;" id="link-by-path">📁 📎</button>
         <button class="b-1" style="margin-right: 5px;" id="post-script">🎥</button>
         <button class="b-1" style="margin-right: 5px;" id="test-component">🧪</button>
 
@@ -195,15 +195,15 @@
         </fieldset>
       </div>
 
-  
-      
+
+
       <hr hidden id="code-tree-menu-hr" class="on-page-menu-hr">
       <div id="code-tree-menu" class="on-page-menu">
         <label class="l-1" style="margin-right: 10px; user-select: none;">🏷️</label>
         <button class="b-1">➕</button>
       </div>
       <div id="code-tree" style="position: relative; margin-left: 10px;">
-        
+
 
       </div>
       <!--menus-->
@@ -366,10 +366,13 @@
         <!--menu click component-->
         <fieldset id="code-tree-click-component" class="menu">
           <legend><button class="b-6" onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
-          <button class="b-2" onclick="append(event)">🔄 replace component</button>
-          <button class="b-2" id="code-tree-click-tag-append-child" onclick="append(event)">&#x1F476; append child</button>
-          <button class="b-2" id="code-tree-click-tag-insert-before" onclick="insertB(event)">&#x2190; insert before</button> 
-          <button class="b-2" id="code-tree-click-tag-remove-tag" onclick="removeTag(event)">🗑 remove component</button>
+          <button class="b-2" onclick="replaceComponent(event)">🔄 replace component</button>
+          <button class="b-2" id="code-tree-click-tag-append-child" onclick="append(event)">&#x1F476; append
+            child</button>
+          <button class="b-2" id="code-tree-click-tag-insert-before" onclick="insertB(event)">&#x2190; insert
+            before</button>
+          <button class="b-2" id="code-tree-click-tag-remove-tag" onclick="removeTag(event)">🗑 remove
+            component</button>
         </fieldset>
 
 
@@ -545,6 +548,42 @@
   <div id="timer" style="font-size: 2em; color: white;">1.12</div>
 </div>
 
+<!--files menus-->
+<div hidden>
+  <!-- file path-->
+  <li data-element="file-path" id="item">
+
+    <label hidden class="l-3" style="margin-right: 3px;" id="Pushpin">📌</label><button hidden
+      class="b-4">☑️</button><label data-value="file-path"
+      class="l-3">universal/blablabla/blablabla/coolcss</label><label data-value="file-emoji"
+      style="user-select: none; margin-left: 5px;" class="l-3"> 🧩</label>
+    <!-- file info-->
+    <div hidden data-element="file-id"><span style="user-select: none;">🆔</span><span data-value="file-id"
+        style="font-size: 0.9em">1414124-414221412-4124214124-412412</span></div>
+    <!-- remove file menu-->
+    <fieldset hidden id="cancelation">
+      <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
+
+      <span>are you sure want to remove this file?</span>
+      <div>
+        <button data-action="remove-file-confirmation">✅ DELETE</button>
+      </div>
+    </fieldset>
+
+  </li>
+  <ol data-element="file-path-list" id="selectedFilePathList" class="list-1" style="margin-left: -10px;">
+
+
+
+  </ol>
+  <ol data-element="file-path-list" id="filePathList" class="list-1" style="margin-left: -10px;">
+
+
+
+  </ol>
+
+
+</div>
 
 <!--loading script-->
 <script>
@@ -575,6 +614,283 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 */
+</script>
+
+
+<script>
+  //file list scripts
+  var replaceComponent = (e) => {
+    const splited = e.target.parentNode.id.split(';')
+    const path = e.target.parentNode.getAttribute('path')
+    const [toRemove, ...rest] = splited
+    const parentId = rest.join(';');
+    const fieldset = document.getElementById('filePathList');
+    const fieldset2 = document.getElementById('selectedFilePathList');
+    if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('filePathList')) {
+      const clonedFieldset = fieldset.cloneNode(true);
+      const clonedFieldset2 = fieldset2.cloneNode(true);
+      clonedFieldset2.id = clonedFieldset2.id + ';' + parentId;
+      clonedFieldset.id = clonedFieldset.id + ';' + parentId;
+      clonedFieldset.setAttribute('action', 'Replace')
+      clonedFieldset2.setAttribute('action', 'Replace')
+      e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+      e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset2);
+      e.target.parentNode.remove()
+      var clonedItem = document.getElementById('item').cloneNode(true);
+
+      clonedItem.id = parentId;
+      const file_path = clonedItem.querySelector('[data-value="file-path"]')
+      file_path.textContent = path;
+      clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
+      clonedFieldset2.appendChild(clonedItem)
+      clonedItem.onclick = (e)=>e.target.remove()
+      loadFileList1(parentId)
+    }
+
+  }
+
+  var addSelected = (id, itemId, path) => {
+    const clonedFieldset2 = document.getElementById('selectedFilePathList;' + id)
+    if(Array.from(clonedFieldset2.children).find(el=>el.id === itemId)){
+      return
+    }
+    var clonedItem = document.getElementById('item').cloneNode(true);
+
+    clonedItem.id = itemId;
+    const file_path = clonedItem.querySelector('[data-value="file-path"]')
+    file_path.textContent = path;
+    clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
+    clonedItem.onclick = (e)=>e.target.remove()
+    clonedFieldset2.appendChild(clonedItem)
+
+  }
+  var loadUsingPath1 = (id, path) => {
+    return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + path)
+      .then(response => response.json())
+      .then(data => {
+        // Replace existing file paths with dynamic content
+        var filePathList = document.getElementById('filePathList;' + id);
+        filePathList.innerHTML = '';
+        lvls = []
+        let i = 0
+        let folders = []
+        const elements = []
+        console.log(JSON.stringify(data))
+        const items = data.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace(path, '').split(';')[0] } })
+        console.log(JSON.stringify(items))
+        for (const item of items) {
+          const splited = item.name.split(';')[0].split('/')
+          if (splited.length > 1) {
+            folders.push(splited[0])
+          }
+          else {
+            elements.push({ name: splited[0], ...item })
+          }
+        }
+        folders = removeDuplicates(folders)
+        console.log(JSON.stringify(folders))
+        console.log(JSON.stringify(elements))
+
+        folders.forEach(item => {
+
+
+          if (i < 1000) {
+            i++
+            // Clone the fieldset
+            var clonedItem = document.getElementById('item').cloneNode(true);
+
+            // Set unique ID for the cloned item
+            clonedItem.id = item;
+
+            // Set file path and emoji
+            const file_path = clonedItem.querySelector('[data-value="file-path"]')
+            file_path.textContent = item;
+            clonedItem.onclick = setPath
+            let icon = '📂';
+
+            clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
+
+            // Set file ID
+            clonedItem.querySelector('[data-value="file-id"]').textContent = item;
+
+            // Set up onclick for file-open button
+            function setPath() {
+              path = path + item + '/'
+              loadUsingPath1(id, path)
+            };
+
+            // Append the cloned item to the filePathList
+            filePathList.appendChild(clonedItem);
+          }
+
+        });
+        elements && elements.forEach(item => {
+
+
+          if (i < 1000) {
+            i++
+            // Clone the fieldset
+            var clonedItem = document.getElementById('item').cloneNode(true);
+
+            // Set unique ID for the cloned item
+            clonedItem.id = item.id;
+
+            // Set file path and emoji
+            const item_path = clonedItem.querySelector('[data-value="file-path"]')
+            item_path.textContent = item.name;
+            clonedItem.addEventListener('contextmenu', (e) => addMenu(e, item.id))
+            clonedItem.onclick = function (event) {
+              addSelected(id, item.id, item.lsi1);
+            };
+            let icon = '🧩';
+            if (item.lsi1.startsWith('css')) {
+              icon = '🎨';
+            } else if (item.lsi1.startsWith('javascript')) {
+              icon = '💻';
+            }
+            clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
+
+            // Set file ID
+            clonedItem.querySelector('[data-value="file-id"]').textContent = item.id;
+
+            clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
+              event.stopPropagation()
+              remove(event, item.id);
+            };
+            // Append the cloned item to the filePathList
+            filePathList.appendChild(clonedItem);
+          }
+
+        });
+
+
+
+      })
+      .catch(error => console.error('Error:', error));
+  }
+  var loadFileList1 = (id) => {
+    // Fetch GET request
+
+    fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true')
+      .then(response => response.json())
+      .then(data => {
+        // Replace existing file paths with dynamic content
+        var filePathList = document.getElementById('filePathList;' + id);
+        filePathList.innerHTML = '';
+        let i = 0;
+        let folders = []
+        const elements = []
+        console.log(JSON.stringify(data))
+        const items = data.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace(path, '').split(';')[0] } })
+        console.log(JSON.stringify(items))
+        for (const item of items) {
+          const splited = item.name.split(';')[0].split('/')
+          if (splited.length > 1) {
+            folders.push(splited[0])
+          }
+          else {
+            elements.push({ name: splited[0], ...item })
+          }
+        }
+        folders = removeDuplicates(folders)
+        console.log(JSON.stringify(elements))
+        folders.forEach(item => {
+
+
+          if (i < 1000) {
+            i++
+            // Clone the fieldset
+            var clonedItem = document.getElementById('item').cloneNode(true);
+
+            // Set unique ID for the cloned item
+            clonedItem.id = item;
+
+            // Set file path and emoji
+            const file_path = clonedItem.querySelector('[data-value="file-path"]')
+            file_path.textContent = item;
+            clonedItem.onclick = setPath
+            let icon = '📂';
+
+            clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
+
+            // Set file ID
+            clonedItem.querySelector('[data-value="file-id"]').textContent = item;
+
+            // Set up onclick for file-open button
+            function setPath() {
+              path = item + '/'
+
+
+              loadUsingPath1(id, path)
+            };
+
+            // Append the cloned item to the filePathList
+            filePathList.appendChild(clonedItem);
+          }
+
+        });
+        elements && elements.forEach(item => {
+
+
+          if (i < 1000) {
+            i++
+            // Clone the fieldset
+            var clonedItem = document.getElementById('item').cloneNode(true);
+
+            // Set unique ID for the cloned item
+            clonedItem.id = item.id;
+
+            // Set file path and emoji
+            const item_path = clonedItem.querySelector('[data-value="file-path"]')
+            item_path.textContent = item.name;
+            clonedItem.onclick = function (event) {
+              event.stopPropagation()
+              addSelected(id, item.id, item.lsi1);
+            };
+            clonedItem.addEventListener('contextmenu', (e) => addMenu(e, item.id))
+            let icon = '🧩';
+            if (item.lsi1.startsWith('css')) {
+              icon = '🎨';
+            } else if (item.lsi1.startsWith('javascript')) {
+              icon = '💻';
+            }
+            clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
+
+            // Set file ID
+            clonedItem.querySelector('[data-value="file-id"]').textContent = item.id;
+
+            // Set up onclick for file-open button
+
+            clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
+              event.stopPropagation()
+              remove(event, item.id);
+            };
+            // Append the cloned item to the filePathList
+            filePathList.appendChild(clonedItem);
+          }
+
+        });
+
+
+
+        // Show the cloned fieldsets
+        document.querySelectorAll('#filePathList fieldset').forEach(fieldset => {
+          fieldset.id !== 'cancelation' && fieldset.removeAttribute('hidden');
+        });
+
+
+
+        // Update select options
+        var pathSelector = document.getElementById('pathSelector');
+        pathSelector.innerHTML = '<option value="select">⬇️ select</option><option value="back">⬅️ back</option>';
+        lvls.forEach((lvl, index) => {
+          pathSelector.innerHTML += `<option value="${lvl}">➡️ ${lvl}</option>`;
+        });
+      })
+      .catch(error => console.error('Error:', error));
+
+  }
+
 </script>
 <script>
   let path = ''
@@ -1267,7 +1583,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadUsingPath()
 
   }
-  function selectFile(event, fileId,name) {
+  function selectFile(event, fileId, name) {
     // Add logic to handle the selected file, if needed
     console.log('File selected with ID:', fileId);
     var el = event.target;
@@ -1644,7 +1960,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Parse and log the response or handle it as needed
     const responseData = await response.json();
   }
-  function insertDataIntoCodeLog(actionTime, actionName,inserted_component) {
+  function insertDataIntoCodeLog(actionTime, actionName, inserted_component) {
     const originalElement = document.getElementById("code-log-element");
     const clonedElement = originalElement.cloneNode(true);
     clonedElement.removeAttribute('hidden')
@@ -1657,11 +1973,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set the content and attributes for the cloned element
     clonedElement.removeAttribute("hidden");
     clonedElement.querySelector("#code-log-action-time").textContent = actionTime;
-    if(inserted_component){  
+    if (inserted_component) {
       console.log('iiiiiiiiiiin0')
-      clonedElement.querySelector("#code-log-action").textContent = '🧩'+inserted_component.name;
+      clonedElement.querySelector("#code-log-action").textContent = '🧩' + inserted_component.name;
     }
-    else{
+    else {
       clonedElement.querySelector("#code-log-action").textContent = actionName;
     }
 
@@ -1745,7 +2061,7 @@ document.addEventListener('DOMContentLoaded', function() {
           treeEls.push(...selectedElements)
           compEls.push(...selectedElements2)
           // Iterate through each selected element and process it
-          
+
         }
         else {
           const treeEl = document.getElementById(selectedId)
@@ -1775,7 +2091,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }
       if (!move) {
-        
+
         treeEls.sort(sortByPlace1)
         compEls.sort(sortByPlace1)
         for (const selectedFieldset of treeEls) {
@@ -1922,7 +2238,7 @@ document.addEventListener('DOMContentLoaded', function() {
           console.log('prob' + inserted_component.componentId)
           components.push(path + inserted_component.id)
           console.log('err ' + path)
-          await loadFromDb(inserted_component.componentId, inserted_component.id, path,command.sk)
+          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk)
           break;
         }
         //case duplicate append
@@ -2009,11 +2325,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (inserted_element?.tagName) {
           console.log(command)
           //fieldset
-          treeElement = components.find(i=>i===removeLastOccurrence(target_element, '-tree')) ?
-          document.getElementById('code-tree')
-           :document.getElementById(target_element)
+          treeElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
+            document.getElementById('code-tree')
+            : document.getElementById(target_element)
           //component
-          
+
           componentElement = document.getElementById(removeLastOccurrence(target_element, '-tree'));
           const newEl = document.createElement(inserted_element.tagName)
           newEl.id = inserted_element.id
@@ -2121,7 +2437,7 @@ document.addEventListener('DOMContentLoaded', function() {
           components.push(path + inserted_component.id)
           console.log(inserted_component.componentId)
 
-          await loadFromDb(inserted_component.componentId, inserted_component.id, path,inserted_component.name)
+          await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name)
           break;
         }
         //case duplicate insert before
@@ -2210,9 +2526,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         //case insert tag
         if (inserted_element?.tagName) {
-          treeElement = components.find(i=>i===removeLastOccurrence(target_element, '-tree')) ?
-          document.getElementById('code-tree')
-           :document.getElementById(target_element)
+          treeElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
+            document.getElementById('code-tree')
+            : document.getElementById(target_element)
           //component
           componentElement = document.getElementById(removeLastOccurrence(target_element, '-tree'));
           const newEl = document.createElement(inserted_element.tagName)
@@ -2498,7 +2814,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Assign a unique id to the cloned fieldset
         clonedFieldset.id = 'code-tree-click-component;' + parentId;
-
+        clonedFieldset.setAttribute('path', button.getAttribute('path'))
         // Find the position to insert the cloned fieldset
         const insertAfterElement = textContentButton || button;
 
@@ -2570,7 +2886,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function removeDuplicates(arr) {
     return Array.from(new Set(arr));
   }
-  const loadFromDb = async (id, newId, p,timestamp) => {
+  const loadFromDb = async (id, newId, p, timestamp) => {
     console.log('load from db' + id)
     console.log('err2 ' + p)
     let path = ""
@@ -2578,42 +2894,47 @@ document.addEventListener('DOMContentLoaded', function() {
     const urlSearchParams = new URLSearchParams(window.location.search);
     let idFromLink = urlSearchParams.get('id');
     let responseData
-    if(id){  responseData = await getRes(id)
-      
-      const {items } = responseData
+    if (id) {
+      responseData = await getRes(id)
+
+      const { items } = responseData
       //change component 
-      const splited = items[items.length-1].lsi1.split(';')[0].split('/')
-      const name = splited[splited.length-1]
-      document.getElementById(path + newId + '-tree').querySelector("[data-element='code-tree-tag-name-button']").textContent = '🧩' + name
-      insertDataIntoCodeLog(timestamp,idFromLink,{name})
+      const splited = items[items.length - 1].lsi1.split(';')[0].split('/')
+      const name = splited[splited.length - 1]
+      const el = document.getElementById(path + newId + '-tree').querySelector("[data-element='code-tree-tag-name-button']")
+      el.textContent = '🧩' + name
+      el.setAttribute('path', items[items.length - 1].lsi1)
+      insertDataIntoCodeLog(timestamp, idFromLink, { name })
     }
-    else{
+    else {
       components.push(idFromLink)
       responseData = await getRes(idFromLink)
-      const {items } = responseData
-      const splited = items[items.length-1].lsi1.split(';')[0].split('/')
-      const name = splited[splited.length-1]
-      document.getElementById(idFromLink + '-tree').querySelector("[data-element='code-tree-tag-name-button']").textContent = '🧩' + name
-      insertDataIntoCodeLog('root',idFromLink,{name})
+      const { items } = responseData
+      const splited = items[items.length - 1].lsi1.split(';')[0].split('/')
+      const name = splited[splited.length - 1]
+      const el = document.getElementById(idFromLink + '-tree').querySelector("[data-element='code-tree-tag-name-button']")
+      el.textContent = '🧩' + name
+      el.setAttribute('path', items[items.length - 1].lsi1)
+      insertDataIntoCodeLog('root', idFromLink, { name })
     }
     if (!idFromLink) {
       throw new Error('Missing id parameter in the URL');
     }
 
     // Make a GET request to the API with the 'id' query parameter
-    
 
-   
-    
+
+
+
 
     for (const item of responseData.items) {
       console.log('item' + JSON.stringify(item))
       if (!id && item.sk === 'path') {
         console.log('eeeeeer')
         const el = document.getElementById('page-path')
-        
+
         el.textContent = item.lsi1.replace(';publish:published', '')
-        
+
         if (item.lsi1.includes('publish:published')) {
           const el2 = document.getElementById("path-icon")
           el2.classList.add('b-green');
@@ -2669,7 +2990,7 @@ document.addEventListener('DOMContentLoaded', function() {
           if (path) {
             toAdd = path + newId + ';'
           }
-          insertDataIntoCodeLog(item.sk , item.action)
+          insertDataIntoCodeLog(item.sk, item.action)
           await executeCommand({ ...item, time: item.sk }, toAdd)
 
           continue
@@ -2919,6 +3240,7 @@ document.addEventListener('DOMContentLoaded', function() {
       e.target.parentNode.remove()
     }
   }
+
   const insertB = (e) => {
 
 
@@ -4255,17 +4577,17 @@ document.addEventListener('DOMContentLoaded', function() {
   var buttonByPath = document.getElementById('link-by-path');
 
   // Добавляем обработчик событий для первой кнопки
-  buttonById.addEventListener('click', function() {
-      // Скрываем первую кнопку и показываем вторую
-      buttonById.hidden = true;
-      buttonByPath.hidden = false;
+  buttonById.addEventListener('click', function () {
+    // Скрываем первую кнопку и показываем вторую
+    buttonById.hidden = true;
+    buttonByPath.hidden = false;
   });
 
   // Добавляем обработчик событий для второй кнопки
-  buttonByPath.addEventListener('click', function() {
-      // Скрываем вторую кнопку и показываем первую
-      buttonByPath.hidden = true;
-      buttonById.hidden = false;
+  buttonByPath.addEventListener('click', function () {
+    // Скрываем вторую кнопку и показываем первую
+    buttonByPath.hidden = true;
+    buttonById.hidden = false;
   });
 </script>
 
