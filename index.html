@@ -121,13 +121,6 @@
     <button class="b-1  b-selected">👁️</button>
     <button class="b-1" hidden id="aside-toggle" style="font-size: 1.5em; top: 10px;">log</button>
   </div>
-  <div>
-    <button class="b-1" id="test-post-mode">👨🏽‍🔬</button>
-    <button class="b-1" hidden id="id-mode">🆔</button>
-    <button class="b-1" hidden  id="path-mode">📁🎭</button>
-    <button class="b-1" hidden id="post-script">🎥</button>
-    <button class="b-1" hidden id="test-mode">🧪</button>
-  </div>
   <div id="logs-menu">
     <button class="b-1 b-select" id="log-open">🪵</button>
   </div>
@@ -186,8 +179,10 @@
       <hr hidden id="components-tree-menu-hr" class="on-page-menu-hr">
       <div id="components-tree-menu" class="on-page-menu">
         <label class="l-1" style="margin-right: 10px; user-select: none;">🧩</label>
-
-        <button class="b-1">🆕</button>
+        <button class="b-1" style="margin-right: 5px;">🆕</button>
+        <button class="b-1 b-1 b-selected" style="margin-right: 5px;" id="link-by-id">🆔 📎</button>
+        <button hidden class="b-1 b-selected" style="margin-right: 5px;" id="link-by-path">📁 📎</button>    
+        <button class="b-1" style="margin-right: 5px;" id="post-script">🎥</button>
       </div>
       <div id="components-tree" style="position: relative">
         <fieldset id="41412421-412412412-41241212-412412" data-element="code-tree-tag">
@@ -4215,35 +4210,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-<script>document.addEventListener('DOMContentLoaded', function () {
-  var filtersOpenButton = document.getElementById('test-post-mode');
-  var mainContent = document.getElementById('main-content');
-  var leftSidePanel = document.querySelector('.left-side-panel');
-  var buttonsToShowOrHide = ['post-script', 'test-mode', "id-mode", "path-mode"]; // ID кнопок для показа/скрытия
 
-  filtersOpenButton.addEventListener('click', function () {
-    // Переключаем класс b-selected
-    filtersOpenButton.classList.toggle('b-selected');
+<script>
+  // Получаем элементы кнопок
+  var buttonById = document.getElementById('link-by-id');
+  var buttonByPath = document.getElementById('link-by-path');
 
-    // Переключаем ширину left-side-panel
-    var currentWidth = leftSidePanel.style.width;
-    leftSidePanel.style.width = currentWidth === '500px' ? '65px' : '500px';
-
-    // Переключаем margin-left для main-content
-    var currentMargin = mainContent.style.marginLeft;
-    mainContent.style.marginLeft = currentMargin === '515px' ? '80px' : '515px';
-
-    // Переключаем видимость кнопок
-    buttonsToShowOrHide.forEach(function (buttonId) {
-      var button = document.getElementById(buttonId);
-      if (button) {
-        button.hidden = !button.hidden;
-      }
-    });
+  // Добавляем обработчик событий для первой кнопки
+  buttonById.addEventListener('click', function() {
+      // Скрываем первую кнопку и показываем вторую
+      buttonById.hidden = true;
+      buttonByPath.hidden = false;
   });
-});
+
+  // Добавляем обработчик событий для второй кнопки
+  buttonByPath.addEventListener('click', function() {
+      // Скрываем вторую кнопку и показываем первую
+      buttonByPath.hidden = true;
+      buttonById.hidden = false;
+  });
 </script>
-
-
 
 <script src="js/left-panel.js" async=""></script>
