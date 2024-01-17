@@ -173,7 +173,7 @@
         <button class="b-1 b-1 b-selected" style="margin-right: 5px;" id="link-by-id">🆔 📎</button>
         <button hidden class="b-1 b-selected" style="margin-right: 5px;" id="link-by-path">📁 📎</button>    
         <button class="b-1" style="margin-right: 5px;" id="post-script">🎥</button>
-        <button class="b-1" style="margin-right: 5px;" id="post-script">🧪</button>
+        <button class="b-1" style="margin-right: 5px;" id="test-component">🧪</button>
 
        
       </div>
@@ -4267,6 +4267,34 @@ document.addEventListener('DOMContentLoaded', function() {
       buttonByPath.hidden = true;
       buttonById.hidden = false;
   });
+</script>
+
+<script>
+  var buttonTestComponent = document.getElementById('test-component');
+
+  // Добавляем обработчик событий для первой кнопки
+  buttonTestComponent.addEventListener('click', function() {
+      // Скрываем первую кнопку и показываем вторую
+      buttonById.hidden = true;
+      buttonByPath.hidden = false;
+  });
+
+  // Добавляем обработчик событий для второй кнопки
+  buttonByPath.addEventListener('click', function() {
+      // Скрываем вторую кнопку и показываем первую
+      buttonByPath.hidden = true;
+      buttonById.hidden = false;
+  });
+</script>
+
+
+<script>document.addEventListener('DOMContentLoaded', function() {
+  var testcomponent = document.getElementById('test-component');
+
+  testcomponent.addEventListener('click', function() {
+      this.classList.toggle('b-selected');
+  });
+});
 </script>
 
 <script src="js/left-panel.js" async=""></script>
