@@ -220,6 +220,21 @@
           <button hidden class="b-3" data-element="post-script">🔄 10</button>
 
         </fieldset>
+        <fieldset id="tree-element" data-element="code-tree-tag">
+          <legend>💬</legend>
+          <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
+          <button class="b-3 arrow-hover" data-element="code-tree-show-hide-button"
+            onclick="toggleSubFields(event)">&#8594;</button>
+          <button class="b-3" data-element="code-tree-tag-name-button"
+            onclick="loader(event, handleTreeClick)">🏷️component</button>
+          <button class="b-3" data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)">
+            ▶️</button>
+          <button class="b-3" data-element="code-tree-attributes-button"
+            onclick="openAttributeContent(event)">🔑</button>
+          <button class="b-3" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
+          <button hidden class="b-3" data-element="post-script">🔄 10</button>
+
+        </fieldset>
 
 
 
@@ -346,7 +361,7 @@
         </fieldset>
 
         <!--menu click component-->
-        <fieldset id="code-tree-click-tag" class="menu">
+        <fieldset id="code-tree-click-component" class="menu">
           <legend><button class="b-6" onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
           <button class="b-2" onclick="append(event)">🔄 replace component</button>
           <button class="b-2" id="code-tree-click-tag-append-child" onclick="append(event)">&#x1F476; append child</button>
@@ -2001,7 +2016,7 @@ document.addEventListener('DOMContentLoaded', function() {
           newEl.id = inserted_element.id
           console.log(newEl.id)
           componentElement.appendChild(newEl)
-          const component_el = document.getElementById('component-element')
+          const component_el = document.getElementById('tree-element')
           const newEl2 = component_el.cloneNode(true)
           const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
           button2.textContent = '🏷️' + inserted_element.tagName;
@@ -2201,7 +2216,7 @@ document.addEventListener('DOMContentLoaded', function() {
           newEl.id = inserted_element.id
           console.log(newEl.id)
           componentElement.parentNode.insertBefore(newEl, componentElement)
-          const component_el = document.getElementById('component-element')
+          const component_el = document.getElementById('tree-element')
           const newEl2 = component_el.cloneNode(true)
           const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
           button2.textContent = '🏷️' + inserted_element.tagName;
@@ -2328,6 +2343,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadingScreen.style.display = 'flex';
     const prefixesToRemove = [
       'component-element',
+      'tree-element',
       'component-replace-menu',
       'code-tree-tag-attributes-form',
       'code-tree-click-tag',
@@ -2464,17 +2480,45 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function handleComponentClick(event) {
     const button = event.target.closest('button[data-element="code-tree-tag-name-button"]');
-
+    console.log('in111')
     if (button) {
       const parentId = button.parentNode.id;
       const textContentButton = button.parentNode.querySelector('[data-element="code-tree-text-content-button"]');
 
       // Check if a cloned fieldset already exists after the parent node
-      const existingClonedFieldset = button.parentNode.querySelector('[id^="code-tree-click-tag"]');
+      const existingClonedFieldset = button.parentNode.querySelector('[id^="code-tree-click-component"]');
 
       if (!existingClonedFieldset) {
         // Clone the fieldset node
+        const fieldset = document.getElementById('code-tree-click-component');
+        const clonedFieldset = fieldset.cloneNode(true);
+
+        // Assign a unique id to the cloned fieldset
+        clonedFieldset.id = 'code-tree-click-component;' + parentId;
+
+        // Find the position to insert the cloned fieldset
+        const insertAfterElement = textContentButton || button;
+
+        // Insert the cloned fieldset after the specified element
+        insertAfterElement.parentNode.insertBefore(clonedFieldset, insertAfterElement.nextElementSibling);
+      }
+    }
+  }
+  function handleTreeClick(event) {
+    const button = event.target
+    console.log('tree clicked')
+    if (button) {
+      const parentId = button.parentNode.id;
+      const textContentButton = button.parentNode.querySelector('[data-element="code-tree-text-content-button"]');
+
+      // Check if a cloned fieldset already exists after the parent node
+      const existingClonedFieldset = button.parentNode.querySelector('[id^="code-tree-click-tag;"]');
+
+      if (!existingClonedFieldset) {
+        // Clone the fieldset node
+        console.log('in1')
         const fieldset = document.getElementById('code-tree-click-tag');
+        console.log(fieldset.innerHTML)
         const clonedFieldset = fieldset.cloneNode(true);
 
         // Assign a unique id to the cloned fieldset
@@ -2705,9 +2749,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     //first menu
     let buttons = document.querySelectorAll('button[data-element="code-tree-tag-name-button"]');
+    /*
     buttons.forEach(function (button) {
       button.addEventListener('click', e => loader(e, handleComponentClick));
-    });
+    });*/
     clearInterval(interval);
     console.log(timerElement.textContent)
 
