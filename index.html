@@ -169,13 +169,13 @@
       <hr hidden id="components-tree-menu-hr" class="on-page-menu-hr">
       <div id="components-tree-menu" class="on-page-menu">
         <label class="l-1" style="margin-right: 10px; user-select: none;">🧩</label>
-        <button class="b-1" style="margin-right: 5px;">➕</button>
+        <button class="b-1" style="margin-right: 5px;" onclick="addComponent(event)">➕</button>
         <button class="b-1 b-1 b-selected" style="margin-right: 5px;" id="link-by-id">🆔 📎</button>
         <button hidden class="b-1 b-selected" style="margin-right: 5px;" id="link-by-path">📁 📎</button>
         <button class="b-1" style="margin-right: 5px;" id="post-script">🎥</button>
         <button class="b-1" style="margin-right: 5px;" id="test-component">🧪</button>
 
-       
+
       </div>
       <div id="components-tree" style="position: relative; margin-left: 10px;">
         <fieldset id="41412421-412412412-41241212-412412" data-element="code-tree-tag">
@@ -200,7 +200,7 @@
       <hr hidden id="code-tree-menu-hr" class="on-page-menu-hr">
       <div id="code-tree-menu" class="on-page-menu">
         <label class="l-1" style="margin-right: 10px; user-select: none;">🏷️</label>
-        <button class="b-1">➕</button>
+        <button class="b-1" onclick="addTreeElement(event)">➕</button>
       </div>
       <div id="code-tree" style="position: relative; margin-left: 10px;">
 
@@ -616,22 +616,268 @@ document.addEventListener('DOMContentLoaded', function() {
 */
 </script>
 
-
 <script>
-  var approveReplace = (e)=>{
-    const ids = Array.from(e.target.parentNode.children).map(child=>child.id).filter(i=>i.id)
-    const parentId = e.target.parentNode.id.replace('file-path-list;','')
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  const page_id = urlSearchParams.get('id');
+  const addComponent1 = (id) => {
+    const actionObject = {
+      time: (new Date()).getTime(),
+      action: 'Add_Component',
+      target_element: page_id + '-tree',
+      inserted_component: { componentId: id, id: generateUUID() },
+    };
+    pushAction(actionObject);
+  }
+  var loadUsingPath2 = (path1, filePathList) => {
+    return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + path1)
+      .then(response => response.json())
+      .then(data => {
+        // Replace existing file paths with dynamic content
+
+        filePathList.innerHTML = '';
+        let i = 0
+        let folders = []
+        const elements = []
+        console.log(JSON.stringify(data))
+        const items = data.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace(path1, '').split(';')[0] } })
+        console.log(JSON.stringify(items))
+        for (const item of items) {
+          const splited = item.name.split(';')[0].split('/')
+          if (splited.length > 1) {
+            folders.push(splited[0])
+          }
+          else {
+            elements.push({ name: splited[0], ...item })
+          }
+        }
+        folders = removeDuplicates(folders)
+        console.log(JSON.stringify(folders))
+        console.log(JSON.stringify(elements))
+
+        folders.forEach(item => {
+
+
+          if (i < 1000) {
+            i++
+            // Clone the fieldset
+            var clonedItem = document.getElementById('item').cloneNode(true);
+
+            // Set unique ID for the cloned item
+            clonedItem.id = item;
+
+            // Set file path and emoji
+            const file_path = clonedItem.querySelector('[data-value="file-path"]')
+            file_path.textContent = item;
+            clonedItem.onclick = setPath
+            let icon = '📂';
+
+            clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
+
+            // Set file ID
+            clonedItem.querySelector('[data-value="file-id"]').textContent = item;
+
+            // Set up onclick for file-open button
+            function setPath() {
+              path1 = path1 + item + '/'
+              loadUsingPath2(path1)
+            };
+
+            // Append the cloned item to the filePathList
+            filePathList.appendChild(clonedItem);
+          }
+
+        });
+        elements && elements.forEach(item => {
+
+
+          if (i < 1000) {
+            i++
+            // Clone the fieldset
+            var clonedItem = document.getElementById('item').cloneNode(true);
+
+            // Set unique ID for the cloned item
+            clonedItem.id = item.id;
+
+            // Set file path and emoji
+            const item_path = clonedItem.querySelector('[data-value="file-path"]')
+            item_path.textContent = item.name;
+            clonedItem.onclick = function (event) {
+              addComponent1(item.id)
+              filePathList.remove()
+            };
+            let icon = '🧩';
+            if (item.lsi1.startsWith('css')) {
+              icon = '🎨';
+            } else if (item.lsi1.startsWith('javascript')) {
+              icon = '💻';
+            }
+            clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
+
+            // Set file ID
+            clonedItem.querySelector('[data-value="file-id"]').textContent = item.id;
+
+            clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
+              event.stopPropagation()
+              remove(event, item.id);
+            };
+            // Append the cloned item to the filePathList
+            filePathList.appendChild(clonedItem);
+          }
+
+        });
+
+
+
+      })
+      .catch(error => console.error('Error:', error));
+  }
+  var loadFileList2 = (filePathList) => {
+    // Fetch GET request
+
+    fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true')
+      .then(response => response.json())
+      .then(data => {
+        // Replace existing file paths with dynamic content
+        filePathList.innerHTML = '';
+        let i = 0;
+        let folders = []
+        const elements = []
+        console.log(JSON.stringify(data))
+        const items = data.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.split(';')[0] } })
+        console.log('ites' + JSON.stringify(items))
+        for (const item of items) {
+          const splited = item.name.split(';')[0].split('/')
+          if (splited.length > 1) {
+            folders.push(splited[0])
+          }
+          else {
+            elements.push({ name: splited[0], ...item })
+          }
+        }
+        folders = removeDuplicates(folders)
+        console.log(JSON.stringify(elements))
+        folders.forEach(item => {
+
+
+          if (i < 1000) {
+            i++
+            // Clone the fieldset
+            var clonedItem = document.getElementById('item').cloneNode(true);
+
+            // Set unique ID for the cloned item
+            clonedItem.id = item;
+
+            // Set file path and emoji
+            const file_path = clonedItem.querySelector('[data-value="file-path"]')
+            file_path.textContent = item;
+            clonedItem.onclick = setPath
+            let icon = '📂';
+
+            clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
+
+            // Set file ID
+            clonedItem.querySelector('[data-value="file-id"]').textContent = item;
+
+            // Set up onclick for file-open button
+            function setPath() {
+              const path1 = item + '/'
+
+
+              loadUsingPath2(path1, filePathList)
+            };
+
+            // Append the cloned item to the filePathList
+            filePathList.appendChild(clonedItem);
+          }
+
+        });
+        elements && elements.forEach(item => {
+
+
+          if (i < 1000) {
+            i++
+            // Clone the fieldset
+            var clonedItem = document.getElementById('item').cloneNode(true);
+
+            // Set unique ID for the cloned item
+            clonedItem.id = item.id;
+
+            // Set file path and emoji
+            const item_path = clonedItem.querySelector('[data-value="file-path"]')
+            item_path.textContent = item.name;
+            clonedItem.onclick = function (event) {
+              event.stopPropagation()
+              addComponent1(item.id)
+              filePathList.remove()
+            };
+            let icon = '🧩';
+            if (item.lsi1.startsWith('css')) {
+              icon = '🎨';
+            } else if (item.lsi1.startsWith('javascript')) {
+              icon = '💻';
+            }
+            clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
+
+            // Set file ID
+            clonedItem.querySelector('[data-value="file-id"]').textContent = item.id;
+
+            // Set up onclick for file-open button
+
+            clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
+              event.stopPropagation()
+              remove(event, item.id);
+            };
+            // Append the cloned item to the filePathList
+            filePathList.appendChild(clonedItem);
+          }
+
+        });
+
+
+
+        // Show the cloned fieldsets
+        document.querySelectorAll('#filePathList fieldset').forEach(fieldset => {
+          fieldset.id !== 'cancelation' && fieldset.removeAttribute('hidden');
+        });
+
+
+
+
+      })
+      .catch(error => console.error('Error:', error));
+
+  }
+  var addComponent = (e) => {
+
+    const fieldset = document.getElementById('filePathList');
+    if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('filePathList')) {
+      const clonedFieldset = fieldset.cloneNode(true);
+      e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+
+
+      loadFileList2(clonedFieldset)
+    }
+
+  }
+  var addTreeElement = (element) => {
+    const treeMenu = document.getElementById('code-tree-menu')
+  }
+</script>
+<script>
+  var approveReplace = (e) => {
+    const ids = Array.from(e.target.parentNode.children).map(child => child.id).filter(i => i.id)
+    const parentId = e.target.parentNode.id.replace('file-path-list;', '')
     const el = {
       time: (new Date()).getTime(),
-      action:'Replace',
-      target_element: [parentId,...ids],
+      action: 'Replace_Component',
+      target_element: [parentId, ...ids],
     };
     pushAction(el)
   }
   //file list scripts
   var replaceComponent = (e) => {
     let selected = []
-    let path1 =''
+    let path1 = ''
     var addSelected = (id, itemId, path) => {
       const clonedFieldset2 = document.getElementById('selectedFilePathList;' + id)
       if (Array.from(clonedFieldset2.children).find(el => el.id === itemId)) {
@@ -643,12 +889,12 @@ document.addEventListener('DOMContentLoaded', function() {
       const file_path = clonedItem.querySelector('[data-value="file-path"]')
       file_path.textContent = path;
       clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
-      clonedItem.onclick = (e) => { e.target.closest('li').remove();selected.filter(el=>el!==itemId)}
+      clonedItem.onclick = (e) => { e.target.closest('li').remove(); selected.filter(el => el !== itemId) }
       clonedFieldset2.appendChild(clonedItem)
       console.log(JSON.stringify(selected))
 
     }
-    
+
 
 
 
@@ -769,7 +1015,7 @@ document.addEventListener('DOMContentLoaded', function() {
           const elements = []
           console.log(JSON.stringify(data))
           const items = data.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace(path1, '').split(';')[0] } })
-          console.log('ites'+JSON.stringify(items))
+          console.log('ites' + JSON.stringify(items))
           for (const item of items) {
             const splited = item.name.split(';')[0].split('/')
             if (splited.length > 1) {
@@ -900,7 +1146,7 @@ document.addEventListener('DOMContentLoaded', function() {
       file_path.textContent = path;
       clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
       clonedFieldset2.appendChild(clonedItem)
-      clonedItem.onclick = (e) =>{ e.target.closest('li').remove();selected.filter(el=>el!==parentId)}
+      clonedItem.onclick = (e) => { e.target.closest('li').remove(); selected.filter(el => el !== parentId) }
       loadFileList1(parentId)
     }
   }
@@ -1946,7 +2192,7 @@ document.addEventListener('DOMContentLoaded', function() {
     !firstLoad && pushActionToDb(element)
     !element.inserted_component && insertDataIntoCodeLog(time, element.action)
 
-    await executeCommand(element, undefined, visual)
+    await executeCommand(element, '', visual)
   }
   const pushActionToDb = async (action) => {
     const urlSearchParams = new URLSearchParams(window.location.search);
@@ -2171,6 +2417,45 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     !path && (path = '')
     switch (action) {
+
+      case 'Add_Component':
+        console.log(inserted_component.componentId)
+        console.log('inb')
+        console.log(path)
+
+        treeElement = document.getElementById(target_element);
+        //component
+        componentElement = document.getElementById('generated-page');
+
+
+        const newEl = document.createElement("component");
+        newEl.id = path + inserted_component.id;
+        console.log('comp idddd'+newEl.id);
+
+        // Check if componentElement and its parent node are valid
+        if (componentElement) {
+          // Insert newEl as the first child of the parent node
+          componentElement.insertBefore(newEl, componentElement.firstChild);
+        } else {
+          console.error("Invalid componentElement or parent node.");
+        }
+
+        const component_el = document.getElementById('component-element')
+        const newEl2 = component_el.cloneNode(true)
+        const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
+        button2.textContent = '🧩' + inserted_component.id;
+        const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
+        button.addEventListener('mouseover', mouseOverTree);
+
+        button.addEventListener('mouseout', mouseOutTree);
+
+        newEl2.id = path + inserted_component.id + '-tree'
+
+        treeElement.parentNode.insertBefore(newEl2, treeElement.parentNode.firstChild);
+        console.log('prob' + inserted_component.componentId)
+        components.push(path + inserted_component.id)
+        await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk)
+        break;
       case 'Append':
         // Handle the 'Append' action
         if (withParent) {
@@ -2572,6 +2857,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // Handle the 'innerHtml' action
         const targetElement = document.getElementById(removeLastOccurrence(target_element, '-tree'));
         targetElement.innerHTML = insertedCode;
+
+        break;
+      case 'Replace_Component':
+        // Handle the 'innerHtml' action
+        const targetElement1 = document.getElementById(removeLastOccurrence(target_element, '-tree'));
+        targetElement1.innerHTML = insertedCode;
 
         break;
 
@@ -4613,40 +4904,40 @@ document.addEventListener('DOMContentLoaded', function() {
   var buttonTestComponent = document.getElementById('test-component');
 
   // Добавляем обработчик событий для первой кнопки
-  buttonTestComponent.addEventListener('click', function() {
-      // Скрываем первую кнопку и показываем вторую
-      buttonById.hidden = true;
-      buttonByPath.hidden = false;
+  buttonTestComponent.addEventListener('click', function () {
+    // Скрываем первую кнопку и показываем вторую
+    buttonById.hidden = true;
+    buttonByPath.hidden = false;
   });
 
   // Добавляем обработчик событий для второй кнопки
-  buttonByPath.addEventListener('click', function() {
-      // Скрываем вторую кнопку и показываем первую
-      buttonByPath.hidden = true;
-      buttonById.hidden = false;
+  buttonByPath.addEventListener('click', function () {
+    // Скрываем вторую кнопку и показываем первую
+    buttonByPath.hidden = true;
+    buttonById.hidden = false;
   });
 </script>
 
 
-<script>document.addEventListener('DOMContentLoaded', function() {
-  var testcomponent = document.getElementById('test-component');
+<script>document.addEventListener('DOMContentLoaded', function () {
+    var testcomponent = document.getElementById('test-component');
 
-  testcomponent.addEventListener('click', function() {
+    testcomponent.addEventListener('click', function () {
       this.classList.toggle('b-selected');
+    });
   });
-});
 </script>
 
 </script>
 
 
-<script>document.addEventListener('DOMContentLoaded', function() {
-  var postscript = document.getElementById('post-script');
+<script>document.addEventListener('DOMContentLoaded', function () {
+    var postscript = document.getElementById('post-script');
 
-  postscript.addEventListener('click', function() {
+    postscript.addEventListener('click', function () {
       this.classList.toggle('b-selected');
+    });
   });
-});
 </script>
 
 <script src="js/left-panel.js" async=""></script>
