@@ -119,6 +119,10 @@
     <button class="b-1  b-selected">🧩</button>
     <button class="b-1  b-selected">🏷️</button>
     <button class="b-1  b-selected">👁️</button>
+    <button class="b-1  b-selected" id="optional-script-off">🔴</button>
+    <button hidden class="b-1  b-selected" id="optional-script-on">🟢</button>
+
+  
     <button class="b-1" hidden id="aside-toggle" style="font-size: 1.5em; top: 10px;">log</button>
   </div>
   <div id="logs-menu">
@@ -172,7 +176,7 @@
         <button class="b-1" style="margin-right: 5px;" onclick="addComponent(event)">➕</button>
         <button class="b-1 b-1 b-selected" style="margin-right: 5px;" id="link-by-id">🆔 📎</button>
         <button hidden class="b-1 b-selected" style="margin-right: 5px;" id="link-by-path">📁 📎</button>
-        <button class="b-1" style="margin-right: 5px;" id="post-script">🎥</button>
+        <button class="b-1" style="margin-right: 5px;" id="optional-script">🔴🟢</button>
         <button class="b-1" style="margin-right: 5px;" id="test-component">🧪</button>
 
 
@@ -189,8 +193,8 @@
           <button class="b-3" data-element="code-tree-attributes-button"
             onclick="openAttributeContent(event)">🔑</button>
           <button class="b-3" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
-          <button hidden class="b-3" data-element="post-script">🎥</button>
-          <button hidden class="b-3" data-element="post-script">🔄</button>
+          <button hidden class="b-3" data-element="optional-script">🎥</button>
+          <button hidden class="b-3" data-element="optional-script">🔄</button>
 
         </fieldset>
       </div>
@@ -220,7 +224,7 @@
           <button class="b-3" data-element="code-tree-attributes-button"
             onclick="openAttributeContent(event)">🔑</button>
           <button class="b-3" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
-          <button hidden class="b-3" data-element="post-script">🔄 10</button>
+          <button hidden class="b-3" data-element="optional-script">🔄 10</button>
 
         </fieldset>
         <fieldset id="tree-element" data-element="code-tree-tag">
@@ -235,7 +239,7 @@
           <button class="b-3" data-element="code-tree-attributes-button"
             onclick="openAttributeContent(event)">🔑</button>
           <button class="b-3" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
-          <button hidden class="b-3" data-element="post-script">🔄 10</button>
+          <button hidden class="b-3" data-element="optional-script">🔄 10</button>
 
         </fieldset>
 
@@ -4932,12 +4936,37 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 <script>document.addEventListener('DOMContentLoaded', function () {
-    var postscript = document.getElementById('post-script');
+    var postscript = document.getElementById('optional-script');
 
     postscript.addEventListener('click', function () {
       this.classList.toggle('b-selected');
     });
   });
 </script>
+
+
+<script>
+  // Получаем элементы кнопок
+  var buttonById = document.getElementById('optional-script-on');
+  var buttonByPath = document.getElementById('optional-script-off');
+
+  // Добавляем обработчик событий для первой кнопки
+  buttonById.addEventListener('click', function () {
+    // Скрываем первую кнопку и показываем вторую
+    buttonById.hidden = true;
+    buttonByPath.hidden = false;
+  });
+
+  // Добавляем обработчик событий для второй кнопки
+  buttonByPath.addEventListener('click', function () {
+    // Скрываем вторую кнопку и показываем первую
+    buttonByPath.hidden = true;
+    buttonById.hidden = false;
+  });
+</script>
+
+
+
+
 
 <script src="js/left-panel.js" async=""></script>
