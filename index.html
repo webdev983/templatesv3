@@ -863,8 +863,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
   }
-  var addTreeElement = (element) => {
-    const treeMenu = document.getElementById('code-tree-menu')
+  var addTreeElement = (e) => {
+    const fieldset = document.getElementById('tag-table');
+    console.log('clicked')
+    if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('tag-table')) {
+      const clonedFieldset = fieldset.cloneNode(true);
+
+      const clonedRows = clonedFieldset.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+      for (let i = 0; i < clonedRows.length; i++) {
+        const index = i; // Capture the current value of 'i' in a closure
+        clonedRows[i].onclick = function (event) {
+          chooseTag(index, event);
+        };
+      }
+      clonedFieldset.id = clonedFieldset.id + ';' + page_id + '-tree';
+      clonedFieldset.setAttribute('action', 'Insert_First')
+      e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+    }
+
   }
 </script>
 <script>
@@ -2434,7 +2450,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const newEl = document.createElement("component");
         newEl.id = path + inserted_component.id;
-        console.log('comp idddd'+newEl.id);
+        console.log('comp idddd' + newEl.id);
 
         // Check if componentElement and its parent node are valid
         if (componentElement) {
@@ -2459,6 +2475,29 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('prob' + inserted_component.componentId)
         components.push(path + inserted_component.id)
         await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk)
+        break;
+      case 'Insert_First':
+        treeElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
+          document.getElementById('code-tree')
+          : document.getElementById(target_element)
+        //component
+
+        componentElement = document.getElementById(removeLastOccurrence(target_element, '-tree'));
+        const newEle = document.createElement(inserted_element.tagName)
+        newEle.id = inserted_element.id
+        console.log(newEle.id)
+        componentElement.insertBefore(newEle, componentElement.firstChild);
+        const component_ele = document.getElementById('tree-element')
+        const newEle2 = component_ele.cloneNode(true)
+        const button22 = newEle2.querySelector("[data-element='code-tree-tag-name-button']")
+        button22.textContent = '🏷️' + inserted_element.tagName;
+        const button11 = newEle2.querySelector("[data-element='code-tree-show-hide-button']")
+        button11.addEventListener('mouseover', mouseOverTree);
+
+        button11.addEventListener('mouseout', mouseOutTree);
+
+        newEle2.id = inserted_element.id + '-tree'
+        treeElement.insertBefore(newEle2, treeElement.firstChild);
         break;
       case 'Append':
         // Handle the 'Append' action
