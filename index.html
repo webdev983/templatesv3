@@ -122,8 +122,8 @@
     <button class="b-1  b-selected" id="optional-script-off">🔴</button>
     <button hidden class="b-1  b-selected" id="optional-script-on">🟢</button>
 
-  
-    
+
+
     <button class="b-1" hidden id="aside-toggle" style="font-size: 1.5em; top: 10px;">log</button>
   </div>
   <div id="logs-menu">
@@ -180,10 +180,11 @@
         <button class="b-1" style="margin-right: 5px;" id="optional-script">🚦</button>
         <button class="b-1 b-selected" style="margin-right: 5px;" id="link-by-path">*📁</button>
 
-        <button class="b-1 b-selected" style="margin-right: 5px;" id="index-max-elements">🏋️<label id="index-max-elements-amount" contenteditable>53</label></button>
+        <button class="b-1 b-selected" style="margin-right: 5px;" id="index-max-elements">🏋️<label
+            id="index-max-elements-amount" contenteditable>53</label></button>
 
 
-       
+
 
       </div>
       <div id="components-tree" style="position: relative; margin-left: 10px;">
@@ -535,8 +536,8 @@
         <label class="l-1" style="margin-right: 10px; user-select: none;">👁️</label>
         <button class="b-1" onclick="transformToVisual(event)">✍️</button>
 
-        
-        
+
+
       </div>
 
       <div id="generated-page" style="margin-bottom: 200px;">
@@ -893,12 +894,12 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <script>
   var approveReplace = (e) => {
-    const ids = Array.from(e.target.parentNode.children).map(child => child.id).filter(i => i.id)
+    const ids = Array.from(e.target.parentNode.children).map(child => child.id).filter(i => i)
     const parentId = e.target.parentNode.id.replace('file-path-list;', '')
     const el = {
       time: (new Date()).getTime(),
       action: 'Replace_Component',
-      target_element: [parentId, ...ids],
+      target_element: [parentId.replace('selectedFilePathList;', ''), ...ids.map(el => { return { componentId: el, id: generateUUID(), path: document.getElementById(el).querySelector('[data-value="file-path"]').textContent } })],
     };
     pushAction(el)
   }
@@ -1152,6 +1153,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     const splited = e.target.parentNode.id.split(';')
     const path = e.target.parentNode.getAttribute('path')
+    const replacedString = e.target.parentNode.getAttribute('replaced')
+    const replaced = replacedString ? JSON.parse(replacedString) : undefined
     const [toRemove, ...rest] = splited
     const parentId = rest.join(';');
     const fieldset = document.getElementById('filePathList');
@@ -1166,15 +1169,31 @@ document.addEventListener('DOMContentLoaded', function() {
       e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
       e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset2);
       e.target.parentNode.remove()
-      var clonedItem = document.getElementById('item').cloneNode(true);
+      if (!replaced) {
+        var clonedItem = document.getElementById('item').cloneNode(true);
 
-      clonedItem.id = parentId;
-      selected.push(parentId)
-      const file_path = clonedItem.querySelector('[data-value="file-path"]')
-      file_path.textContent = path;
-      clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
-      clonedFieldset2.appendChild(clonedItem)
-      clonedItem.onclick = (e) => { e.target.closest('li').remove(); selected.filter(el => el !== parentId) }
+        clonedItem.id = parentId;
+        selected.push(parentId)
+        const file_path = clonedItem.querySelector('[data-value="file-path"]')
+        file_path.textContent = path;
+        clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
+        clonedFieldset2.appendChild(clonedItem)
+        clonedItem.onclick = (e) => { e.target.closest('li').remove(); selected.filter(el => el !== parentId) }
+      }
+      else {
+        for (const el of replaced) {
+          var clonedItem = document.getElementById('item').cloneNode(true);
+
+          clonedItem.id = el.id;
+          selected.push(el.id)
+          const file_path = clonedItem.querySelector('[data-value="file-path"]')
+          file_path.textContent = el.path;
+          clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
+          clonedFieldset2.appendChild(clonedItem)
+          clonedItem.onclick = (e) => { e.target.closest('li').remove(); selected.filter(el => el !== el.id) }
+        }
+      }
+
       loadFileList1(parentId)
     }
   }
@@ -2276,7 +2295,7 @@ document.addEventListener('DOMContentLoaded', function() {
     parent.insertBefore(clonedElement, originalElement);
   }
   const executeCommand = async (command, path, visual) => {
-    const { withParent, move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
+    const { noComp, time, withParent, move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
     let treeElement
     let componentElement
     console.log('command is ' + JSON.stringify(command))
@@ -2782,7 +2801,9 @@ document.addEventListener('DOMContentLoaded', function() {
           button.addEventListener('mouseout', mouseOutTree);
 
           newEl2.id = path + inserted_component.id + '-tree'
-
+          if (noComp) {
+            newEl2.setAttribute('hidden', '')
+          }
           treeElement.parentNode.insertBefore(newEl2, treeElement)
           components.push(path + inserted_component.id)
           console.log(inserted_component.componentId)
@@ -2912,9 +2933,30 @@ document.addEventListener('DOMContentLoaded', function() {
         break;
       case 'Replace_Component':
         // Handle the 'innerHtml' action
-        const targetElement1 = document.getElementById(removeLastOccurrence(target_element, '-tree'));
-        targetElement1.innerHTML = insertedCode;
+        const toReplace = target_element[0]
+        target_element.shift()
+        const dontReplaceIndex = target_element.findIndex(e => e.componentId === toReplace)
 
+        let l = target_element.filter(e => e.componentId !== toReplace);
+
+        for (const el of l) {
+          await executeCommand({
+            time,
+            action: 'InsertBefore',
+            target_element: toReplace,
+            inserted_component: el,
+            noComp: true
+          }, path, visual)
+        }
+        if (dontReplaceIndex === -1) {
+          const elementsToRemove = document.querySelectorAll(`[id^="${removeLastOccurrence(toReplace, '-tree') + ';'}"]`);
+          elementsToRemove.forEach(element => element.remove());
+        }
+        const el = document.getElementById(toReplace)
+        el.setAttribute('replaced', JSON.stringify(target_element))
+        const el2 = el.querySelector('[data-element="optional-script"]')
+        el2.removeAttribute('hidden')
+        el2.innerHTML = `🔄${target_element.length}`;
         break;
 
 
@@ -3171,6 +3213,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Assign a unique id to the cloned fieldset
         clonedFieldset.id = 'code-tree-click-component;' + parentId;
         clonedFieldset.setAttribute('path', button.getAttribute('path'))
+        clonedFieldset.setAttribute('replaced', button.parentNode.getAttribute('replaced'))
         // Find the position to insert the cloned fieldset
         const insertAfterElement = textContentButton || button;
 
