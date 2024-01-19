@@ -2371,7 +2371,7 @@ document.addEventListener('DOMContentLoaded', function() {
           // Find all elements based on the selected ID and its replacement
           var selectedElements = []
           var selectedElements2 = []
-          document.querySelectorAll('[id^="' + selectedId + '"]').forEach(el => {
+          document.getElementById(targetElementId.replace('-tree','')).closest('component').querySelectorAll('[id^="' + selectedId + '"]').forEach(el => {
             el.id.endsWith('-tree') ? selectedElements.push(el) : selectedElements2.push(el)
           });
           selectedElements = selectedElements.filter(el => el.id.split(';').length === l)
@@ -3469,6 +3469,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
       }
+    }
+    else{
+      console.log('iiignored')
     }
 
 
