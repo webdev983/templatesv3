@@ -2306,7 +2306,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Insert the cloned element before the original element
     parent.insertBefore(clonedElement, originalElement);
   }
-  const executeCommand = async (command, path, visual, replaceActions) => {
+  const executeCommand = async (command, path, visual, replaceActions,containerId) => {
     const { noComp, time, withParent, move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
     let treeElement
     let componentElement
@@ -2372,16 +2372,10 @@ document.addEventListener('DOMContentLoaded', function() {
           // Find all elements based on the selected ID and its replacement
           var selectedElements = []
           var selectedElements2 = []
-          function closestAncestorWithTag(element, tagName) {
-            tagName = tagName.toUpperCase(); // Convert tag name to uppercase for case-insensitive comparison
-
-            while (element && element.tagName !== tagName) {
-              element = element.parentElement;
-            }
-
-            return element;
+          function getContainer() {
+            return containerId ? document.getElementById(containerId) : document
           }
-          closestAncestorWithTag(document.getElementById(targetElementId.replace('-tree', '')),'COMPONENT').querySelectorAll('[id^="' + selectedId + '"]').forEach(el => {
+          getContainer().querySelectorAll('[id^="' + selectedId + '"]').forEach(el => {
             selectedElements.push(document.getElementById(el.id + '-tree')); selectedElements2.push(el)
           });
           selectedElements = selectedElements.filter(el => el.id.split(';').length === l)
@@ -3469,7 +3463,7 @@ document.addEventListener('DOMContentLoaded', function() {
               toAdd = path + newId + ';'
             }
             insertDataIntoCodeLog(item.sk, item.action)
-            await executeCommand({ ...item, time: item.sk }, toAdd, false, replaceActions)
+            await executeCommand({ ...item, time: item.sk }, toAdd, false, replaceActions,newId)
 
             continue
           }
