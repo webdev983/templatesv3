@@ -200,7 +200,7 @@
             onclick="openAttributeContent(event)">🔑</button>
           <button class="b-3" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
           <button hidden class="b-3" data-element="optional-script">🎥</button>
-          <button hidden class="b-3" data-element="optional-script">🔄</button>
+          <button hidden class="b-3" data-element="optional-script" >🔄</button>
 
         </fieldset>
       </div>
@@ -230,7 +230,7 @@
           <button class="b-3" data-element="code-tree-attributes-button"
             onclick="openAttributeContent(event)">🔑</button>
           <button class="b-3" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
-          <button hidden class="b-3" data-element="optional-script">🔄 10</button>
+          <button hidden class="b-3" data-element="optional-script" onclick="replaceComponent(event,true)">🔄 10</button>
 
         </fieldset>
         <fieldset id="tree-element" data-element="code-tree-tag">
@@ -915,7 +915,7 @@ document.addEventListener('DOMContentLoaded', function() {
     location.reload()
   }
   //file list scripts
-  var replaceComponent = (e) => {
+  var replaceComponent = (e,flag) => {
     let selected = []
     let path1 = ''
     var addSelected = (id, itemId, path) => {
@@ -1179,7 +1179,7 @@ document.addEventListener('DOMContentLoaded', function() {
       clonedFieldset2.setAttribute('action', 'Replace')
       e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
       e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset2);
-      e.target.parentNode.remove()
+      !flag && e.target.parentNode.remove()
       if (!replaced) {
         var clonedItem = document.getElementById('item').cloneNode(true);
         clonedItem.setAttribute('alreadyReplaced', true)
@@ -2247,8 +2247,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const time = element.time
     console.log('time' + time)
     actionLog.push(element)
-    !firstLoad && pushActionToDb(element)
-    !element.inserted_component && insertDataIntoCodeLog(time, element.action)
+    !firstLoad && await  pushActionToDb(element)
+    !element.inserted_component &&await insertDataIntoCodeLog(time, element.action)
 
     await executeCommand(element, '', visual, replaceActions)
   }
@@ -2482,7 +2482,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(path)
         console.log('found replace Actions' + JSON.stringify(replaceActions))
         console.log('id152 ' + inserted_component.id)
-        const replaceAction = replaceActions.findLast(e => e.target_element[0] === inserted_component.id + '-tree')
+        const replaceAction = replaceActions?.findLast(e => e.target_element[0] === inserted_component.id + '-tree')
         //replace
         console.log('selected Actions' + JSON.stringify(replaceAction))
         treeElement = document.getElementById(target_element);
@@ -3357,7 +3357,7 @@ document.addEventListener('DOMContentLoaded', function() {
       //change component 
       const splited = items[items.length - 1].lsi1.split(';')[0].split('/')
       const name = splited[splited.length - 1]
-      const el = document.getElementById(path + newId + '-tree').querySelector("[data-element='code-tree-tag-name-button']")
+      const el = document.getElementById(newId + '-tree').querySelector("[data-element='code-tree-tag-name-button']")
       el.textContent = '🧩' + name
       el.setAttribute('path', items[items.length - 1].lsi1)
       insertDataIntoCodeLog(timestamp, idFromLink, { name })
@@ -3408,37 +3408,45 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log(item.target_element)
             console.log(components)
 
-
+            const replaceWithNewId= (s,id)=>{
+              if(s.endsWith('-tree')){
+                
+                return s.replace('-tree','') + ':' + id + '-tree'
+              }
+              return s+ ':' + id
+            }
             if (item.target_element === id + '-tree') {
               console.log('case1')
               console.log(path)
-              item.target_element = path + newId + '-tree'
-              item.inserted_element?.id && (item.inserted_element.id = path + newId + ';' + item.inserted_element.id)
-              item.inserted_element?.originalId && (item.inserted_element.originalId = path + newId + ';' + item.inserted_element.originalId)
+              item.target_element = newId + '-tree'
+              if(item.inserted_element?.id ) {
+                item.inserted_element.id.split(':').length===1 && (item.inserted_element.id =replaceWithNewId(item.inserted_element.id,newId))
+              }
+              item.inserted_element?.originalId && item.inserted_element?.originalId.split(':').length===1 && (item.inserted_element.originalId = replaceWithNewId(item.inserted_element.originalId,newId))
             }
             else if (components.includes(removeLastOccurrence(item.target_element, '-tree'))) {
-              item.target_element = path + item.target_element
-              console.log('case2')
-              console.log('in')
+              
             }
             else if (Array.isArray(item.target_element)) {
               console.log('case3')
               item.target_element = item.target_element.map(i => {
                 if (id.id === id + '-tree') {
-                  return { ...i, id: path + newId + '-tree' }
+                  return { ...i, id: newId + '-tree' }
                 }
-                return { ...i, id: path + newId + ';' + i.id }
+                if(i.id.split(':').length ===1){
+                  return { ...i, id: replaceWithNewId(i.id,newId)}
+                }
+                return { ...i, id: i.id }
               })
 
               console.log('arr' + item.target_element)
             }
             else {
               console.log('case4')
-              const splited = item.target_element.split(';')
 
-              item.target_element = path + newId + ';' + item.target_element
-              item.inserted_element?.id && (item.inserted_element.id = path + newId + ';' + item.inserted_element.id)
-              item.inserted_element?.originalId && (item.inserted_element.originalId = path + newId + ';' + item.inserted_element.originalId)
+              item.target_element.split(':').length===1 && (item.target_element = replaceWithNewId(item.target_element,newId))
+              item.inserted_element?.id && item.inserted_element?.id.split(':').length===1 && (item.inserted_element.id = replaceWithNewId(item.inserted_element.id,newId))
+              item.inserted_element?.originalId && item.inserted_element?.originalId.split(':').length===1 && (item.inserted_element.originalId = replaceWithNewId(item.inserted_element.originalId,newId))
               console.log('notArr' + item.target_element)
 
 
