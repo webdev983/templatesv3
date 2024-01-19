@@ -896,11 +896,19 @@ document.addEventListener('DOMContentLoaded', function() {
   var approveReplace = (e) => {
     const ids = Array.from(e.target.parentNode.children).map(child => child.id).filter(i => i)
     const parentId = e.target.parentNode.id.replace('file-path-list;', '')
+    const parentEl = document.getElementById(parentId)
+    const replacedString = parentEl.getAttribute('replaced')
+    const replaced = replacedString ? JSON.parse(replacedString) : []
     const el = {
       time: (new Date()).getTime(),
       action: 'Replace_Component',
-      target_element: [parentId.replace('selectedFilePathList;', ''), ...ids.map(el => { return { componentId: el, id: generateUUID(), path: document.getElementById(el).querySelector('[data-value="file-path"]').textContent } })],
+      target_element: [parentId.replace('selectedFilePathList;', ''), ...ids.map(el => {
+        const element = document.getElementById(el); 
+         return {
+        
+        componentId: el, id: generateUUID(), path: element.querySelector('[data-value="file-path"]').textContent,already:element.getAttribute('alreadyReplaced') } })],
     };
+    
     pushAction(el)
   }
   //file list scripts
@@ -1171,7 +1179,7 @@ document.addEventListener('DOMContentLoaded', function() {
       e.target.parentNode.remove()
       if (!replaced) {
         var clonedItem = document.getElementById('item').cloneNode(true);
-
+        clonedItem.setAttribute('alreadyReplaced',true)
         clonedItem.id = parentId;
         selected.push(parentId)
         const file_path = clonedItem.querySelector('[data-value="file-path"]')
@@ -1183,7 +1191,7 @@ document.addEventListener('DOMContentLoaded', function() {
       else {
         for (const el of replaced) {
           var clonedItem = document.getElementById('item').cloneNode(true);
-
+          clonedItem.setAttribute('alreadyReplaced',true)
           clonedItem.id = el.id;
           selected.push(el.id)
           const file_path = clonedItem.querySelector('[data-value="file-path"]')
@@ -2940,13 +2948,16 @@ document.addEventListener('DOMContentLoaded', function() {
         let l = target_element.filter(e => e.componentId !== toReplace);
 
         for (const el of l) {
-          await executeCommand({
+          if(!el.already){  
+            await executeCommand({
             time,
             action: 'InsertBefore',
             target_element: toReplace,
             inserted_component: el,
             noComp: true
           }, path, visual)
+          }
+          
         }
         if (dontReplaceIndex === -1) {
           const elementsToRemove = document.querySelectorAll(`[id^="${removeLastOccurrence(toReplace, '-tree') + ';'}"]`);
