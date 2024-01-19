@@ -2372,7 +2372,7 @@ document.addEventListener('DOMContentLoaded', function() {
           var selectedElements = []
           var selectedElements2 = []
           document.getElementById(targetElementId.replace('-tree','')).closest('component').querySelectorAll('[id^="' + selectedId + '"]').forEach(el => {
-            el.id.endsWith('-tree') ? selectedElements.push(el) : selectedElements2.push(el)
+            selectedElements.push(document.getElementById(el.id+'-tree')) ; selectedElements2.push(el)
           });
           selectedElements = selectedElements.filter(el => el.id.split(';').length === l)
           selectedElements2 = selectedElements2.filter(el => el.id.split(';').length === l)
