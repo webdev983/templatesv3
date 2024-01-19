@@ -893,7 +893,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 </script>
 <script>
-  var approveReplace = (e) => {
+  var approveReplace = async(e) => {
     const ids = Array.from(e.target.parentNode.children).map(child => child.id).filter(i => i)
     const parentId = e.target.parentNode.id.replace('file-path-list;', '')
     const parentEl = document.getElementById(parentId)
@@ -903,13 +903,16 @@ document.addEventListener('DOMContentLoaded', function() {
       time: (new Date()).getTime(),
       action: 'Replace_Component',
       target_element: [parentId.replace('selectedFilePathList;', ''), ...ids.map(el => {
-        const element = document.getElementById(el); 
-         return {
-        
-        componentId: el, id: generateUUID(), path: element.querySelector('[data-value="file-path"]').textContent,already:element.getAttribute('alreadyReplaced') } })],
+        const element = document.getElementById(el);
+        return {
+
+          componentId: el, id: generateUUID(), path: element.querySelector('[data-value="file-path"]').textContent, already: element.getAttribute('alreadyReplaced')
+        }
+      })],
     };
-    
-    pushAction(el)
+
+    await pushAction(el)
+    location.reload()
   }
   //file list scripts
   var replaceComponent = (e) => {
@@ -1179,7 +1182,7 @@ document.addEventListener('DOMContentLoaded', function() {
       e.target.parentNode.remove()
       if (!replaced) {
         var clonedItem = document.getElementById('item').cloneNode(true);
-        clonedItem.setAttribute('alreadyReplaced',true)
+        clonedItem.setAttribute('alreadyReplaced', true)
         clonedItem.id = parentId;
         selected.push(parentId)
         const file_path = clonedItem.querySelector('[data-value="file-path"]')
@@ -1191,7 +1194,7 @@ document.addEventListener('DOMContentLoaded', function() {
       else {
         for (const el of replaced) {
           var clonedItem = document.getElementById('item').cloneNode(true);
-          clonedItem.setAttribute('alreadyReplaced',true)
+          clonedItem.setAttribute('alreadyReplaced', true)
           clonedItem.id = el.id;
           selected.push(el.id)
           const file_path = clonedItem.querySelector('[data-value="file-path"]')
@@ -2239,7 +2242,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   }
-  const pushAction = async (element, firstLoad, visual) => {
+  const pushAction = async (element, firstLoad, visual, replaceActions) => {
     console.log('pushed' + JSON.stringify(element))
     const time = element.time
     console.log('time' + time)
@@ -2247,7 +2250,7 @@ document.addEventListener('DOMContentLoaded', function() {
     !firstLoad && pushActionToDb(element)
     !element.inserted_component && insertDataIntoCodeLog(time, element.action)
 
-    await executeCommand(element, '', visual)
+    await executeCommand(element, '', visual, replaceActions)
   }
   const pushActionToDb = async (action) => {
     const urlSearchParams = new URLSearchParams(window.location.search);
@@ -2302,7 +2305,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Insert the cloned element before the original element
     parent.insertBefore(clonedElement, originalElement);
   }
-  const executeCommand = async (command, path, visual) => {
+  const executeCommand = async (command, path, visual, replaceActions) => {
     const { noComp, time, withParent, move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
     let treeElement
     let componentElement
@@ -2477,7 +2480,11 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(inserted_component.componentId)
         console.log('inb')
         console.log(path)
-
+        console.log('found replace Actions' + JSON.stringify(replaceActions))
+        console.log('id152 ' + inserted_component.id)
+        const replaceAction = replaceActions.findLast(e => e.target_element[0] === inserted_component.id + '-tree')
+        //replace
+        console.log('selected Actions' + JSON.stringify(replaceAction))
         treeElement = document.getElementById(target_element);
         //component
         componentElement = document.getElementById('generated-page');
@@ -2509,7 +2516,40 @@ document.addEventListener('DOMContentLoaded', function() {
         treeElement.parentNode.insertBefore(newEl2, treeElement.parentNode.firstChild);
         console.log('prob' + inserted_component.componentId)
         components.push(path + inserted_component.id)
-        await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk)
+        if (replaceAction) {
+          console.log('replace action in')
+          const toReplace = replaceAction.target_element[0]
+          replaceAction.target_element.shift()
+          const dontReplaceIndex = replaceAction.target_element.findIndex(e => e.componentId === toReplace)
+
+          let l = replaceAction.target_element.filter(e => e.componentId !== toReplace);
+
+          for (const el of l) {
+
+            await executeCommand({
+              time,
+              action: 'InsertBefore',
+              target_element: toReplace,
+              inserted_component: el,
+              noComp: true
+            }, path, visual)
+
+
+          }
+          if (dontReplaceIndex === -1) {
+            const elementsToRemove = document.querySelectorAll(`[id^="${removeLastOccurrence(toReplace, '-tree') + ';'}"]`);
+            elementsToRemove.forEach(element => element.remove());
+          }
+          const el = document.getElementById(toReplace)
+          el.setAttribute('replaced', JSON.stringify(replaceAction.target_element))
+          const el2 = el.querySelector('[data-element="optional-script"]')
+          el2.removeAttribute('hidden')
+          el2.innerHTML = `🔄${replaceAction.target_element.length}`;
+        }
+        
+        await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk,replaceActions,replaceAction)
+        
+
         break;
       case 'Insert_First':
         treeElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
@@ -2941,6 +2981,9 @@ document.addEventListener('DOMContentLoaded', function() {
         break;
       case 'Replace_Component':
         // Handle the 'innerHtml' action
+        //location.reload();
+        break;
+        /*
         const toReplace = target_element[0]
         target_element.shift()
         const dontReplaceIndex = target_element.findIndex(e => e.componentId === toReplace)
@@ -2948,16 +2991,16 @@ document.addEventListener('DOMContentLoaded', function() {
         let l = target_element.filter(e => e.componentId !== toReplace);
 
         for (const el of l) {
-          if(!el.already){  
+          if (!el.already) {
             await executeCommand({
-            time,
-            action: 'InsertBefore',
-            target_element: toReplace,
-            inserted_component: el,
-            noComp: true
-          }, path, visual)
+              time,
+              action: 'InsertBefore',
+              target_element: toReplace,
+              inserted_component: el,
+              noComp: true
+            }, path, visual)
           }
-          
+
         }
         if (dontReplaceIndex === -1) {
           const elementsToRemove = document.querySelectorAll(`[id^="${removeLastOccurrence(toReplace, '-tree') + ';'}"]`);
@@ -2969,6 +3012,7 @@ document.addEventListener('DOMContentLoaded', function() {
         el2.removeAttribute('hidden')
         el2.innerHTML = `🔄${target_element.length}`;
         break;
+        */
 
 
       case 'ChangeTag':
@@ -3296,7 +3340,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function removeDuplicates(arr) {
     return Array.from(new Set(arr));
   }
-  const loadFromDb = async (id, newId, p, timestamp) => {
+  const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore) => {
     console.log('load from db' + id)
     console.log('err2 ' + p)
     let path = ""
@@ -3304,10 +3348,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const urlSearchParams = new URLSearchParams(window.location.search);
     let idFromLink = urlSearchParams.get('id');
     let responseData
+
     if (id) {
       responseData = await getRes(id)
 
       const { items } = responseData
+
       //change component 
       const splited = items[items.length - 1].lsi1.split(';')[0].split('/')
       const name = splited[splited.length - 1]
@@ -3320,6 +3366,7 @@ document.addEventListener('DOMContentLoaded', function() {
       components.push(idFromLink)
       responseData = await getRes(idFromLink)
       const { items } = responseData
+
       const splited = items[items.length - 1].lsi1.split(';')[0].split('/')
       const name = splited[splited.length - 1]
       const el = document.getElementById(idFromLink + '-tree').querySelector("[data-element='code-tree-tag-name-button']")
@@ -3333,84 +3380,87 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Make a GET request to the API with the 'id' query parameter
 
+    if (!ignore) {
+      const upper = upperReplaceActions ? upperReplaceActions : []
 
+      const replaceActions = [...upper, ...responseData.items.filter(el => el.action === 'Replace_Component')]
+      console.log('replace actions : ' + JSON.stringify(replaceActions))
+      for (const item of responseData.items) {
+        console.log('item' + JSON.stringify(item))
+        if (!id && item.sk === 'path') {
+          console.log('eeeeeer')
+          const el = document.getElementById('page-path')
 
+          el.textContent = item.lsi1.replace(';publish:published', '')
 
+          if (item.lsi1.includes('publish:published')) {
+            const el2 = document.getElementById("path-icon")
+            el2.classList.add('b-green');
+            el2.classList.add('b-selected');
 
-    for (const item of responseData.items) {
-      console.log('item' + JSON.stringify(item))
-      if (!id && item.sk === 'path') {
-        console.log('eeeeeer')
-        const el = document.getElementById('page-path')
-
-        el.textContent = item.lsi1.replace(';publish:published', '')
-
-        if (item.lsi1.includes('publish:published')) {
-          const el2 = document.getElementById("path-icon")
-          el2.classList.add('b-green');
-          el2.classList.add('b-selected');
-
+          }
         }
-      }
-      if (item.action) {
-        if (id) {
-          console.log(JSON.stringify(item))
-          console.log('id1 ' + id)
-          console.log('id2 ' + newId)
-          console.log(item.target_element)
-          console.log(components)
+        if (item.action) {
+          if (id) {
+            console.log(JSON.stringify(item))
+            console.log('id1 ' + id)
+            console.log('id2 ' + newId)
+            console.log(item.target_element)
+            console.log(components)
 
 
-          if (item.target_element === id + '-tree') {
-            console.log('case1')
-            console.log(path)
-            item.target_element = path + newId + '-tree'
-            item.inserted_element?.id && (item.inserted_element.id = path + newId + ';' + item.inserted_element.id)
-            item.inserted_element?.originalId && (item.inserted_element.originalId = path + newId + ';' + item.inserted_element.originalId)
+            if (item.target_element === id + '-tree') {
+              console.log('case1')
+              console.log(path)
+              item.target_element = path + newId + '-tree'
+              item.inserted_element?.id && (item.inserted_element.id = path + newId + ';' + item.inserted_element.id)
+              item.inserted_element?.originalId && (item.inserted_element.originalId = path + newId + ';' + item.inserted_element.originalId)
+            }
+            else if (components.includes(removeLastOccurrence(item.target_element, '-tree'))) {
+              item.target_element = path + item.target_element
+              console.log('case2')
+              console.log('in')
+            }
+            else if (Array.isArray(item.target_element)) {
+              console.log('case3')
+              item.target_element = item.target_element.map(i => {
+                if (id.id === id + '-tree') {
+                  return { ...i, id: path + newId + '-tree' }
+                }
+                return { ...i, id: path + newId + ';' + i.id }
+              })
+
+              console.log('arr' + item.target_element)
+            }
+            else {
+              console.log('case4')
+              const splited = item.target_element.split(';')
+
+              item.target_element = path + newId + ';' + item.target_element
+              item.inserted_element?.id && (item.inserted_element.id = path + newId + ';' + item.inserted_element.id)
+              item.inserted_element?.originalId && (item.inserted_element.originalId = path + newId + ';' + item.inserted_element.originalId)
+              console.log('notArr' + item.target_element)
+
+
+
+            }
+            let toAdd = newId + ';'
+            if (path) {
+              toAdd = path + newId + ';'
+            }
+            insertDataIntoCodeLog(item.sk, item.action)
+            await executeCommand({ ...item, time: item.sk }, toAdd, false, replaceActions)
+
+            continue
           }
-          else if (components.includes(removeLastOccurrence(item.target_element, '-tree'))) {
-            item.target_element = path + item.target_element
-            console.log('case2')
-            console.log('in')
-          }
-          else if (Array.isArray(item.target_element)) {
-            console.log('case3')
-            item.target_element = item.target_element.map(i => {
-              if (id.id === id + '-tree') {
-                return { ...i, id: path + newId + '-tree' }
-              }
-              return { ...i, id: path + newId + ';' + i.id }
-            })
-
-            console.log('arr' + item.target_element)
-          }
-          else {
-            console.log('case4')
-            const splited = item.target_element.split(';')
-
-            item.target_element = path + newId + ';' + item.target_element
-            item.inserted_element?.id && (item.inserted_element.id = path + newId + ';' + item.inserted_element.id)
-            item.inserted_element?.originalId && (item.inserted_element.originalId = path + newId + ';' + item.inserted_element.originalId)
-            console.log('notArr' + item.target_element)
 
 
-
-          }
-          let toAdd = newId + ';'
-          if (path) {
-            toAdd = path + newId + ';'
-          }
-          insertDataIntoCodeLog(item.sk, item.action)
-          await executeCommand({ ...item, time: item.sk }, toAdd)
-
-          continue
+          await pushAction({ ...item, time: item.sk }, true, false, replaceActions)
         }
 
-
-        await pushAction({ ...item, time: item.sk }, true)
       }
-
     }
+
 
   }
   const publish = async (e) => {
