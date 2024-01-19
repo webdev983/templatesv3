@@ -2491,7 +2491,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         const newEl = document.createElement("component");
-        newEl.id = path + inserted_component.id;
+        newEl.id = inserted_component.id;
         console.log('comp idddd' + newEl.id);
 
         // Check if componentElement and its parent node are valid
@@ -2511,11 +2511,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         button.addEventListener('mouseout', mouseOutTree);
 
-        newEl2.id = path + inserted_component.id + '-tree'
+        newEl2.id = inserted_component.id + '-tree'
 
         treeElement.parentNode.insertBefore(newEl2, treeElement.parentNode.firstChild);
         console.log('prob' + inserted_component.componentId)
-        components.push(path + inserted_component.id)
+        components.push(inserted_component.id)
         if (replaceAction) {
           console.log('replace action in')
           const toReplace = replaceAction.target_element[0]
@@ -2637,7 +2637,7 @@ document.addEventListener('DOMContentLoaded', function() {
           //component
           componentElement = document.getElementById(removeLastOccurrence(target_element, '-tree'));
           const newEl = document.createElement("div")
-          newEl.id = path + inserted_component.id
+          newEl.id = inserted_component.id
           console.log(newEl.id)
           componentElement.appendChild(newEl)
           const component_el = document.getElementById('component-element')
@@ -2649,11 +2649,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
           button.addEventListener('mouseout', mouseOutTree);
 
-          newEl2.id = path + inserted_component.id + '-tree'
+          newEl2.id = inserted_component.id + '-tree'
 
           treeElement.appendChild(newEl2)
           console.log('prob' + inserted_component.componentId)
-          components.push(path + inserted_component.id)
+          components.push(inserted_component.id)
           console.log('err ' + path)
           await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk)
           break;
@@ -2836,7 +2836,7 @@ document.addEventListener('DOMContentLoaded', function() {
           //component
           componentElement = document.getElementById(removeLastOccurrence(target_element, '-tree'));
           const newEl = document.createElement("div")
-          newEl.id = path + inserted_component.id
+          newEl.id = inserted_component.id
           console.log(newEl.id)
           componentElement.appendChild(newEl)
           const component_el = document.getElementById('component-element')
@@ -2848,12 +2848,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
           button.addEventListener('mouseout', mouseOutTree);
 
-          newEl2.id = path + inserted_component.id + '-tree'
+          newEl2.id = inserted_component.id + '-tree'
           if (noComp) {
             newEl2.setAttribute('hidden', '')
           }
           treeElement.parentNode.insertBefore(newEl2, treeElement)
-          components.push(path + inserted_component.id)
+          components.push(inserted_component.id)
           console.log(inserted_component.componentId)
 
           await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name)
@@ -3357,6 +3357,8 @@ document.addEventListener('DOMContentLoaded', function() {
       //change component 
       const splited = items[items.length - 1].lsi1.split(';')[0].split('/')
       const name = splited[splited.length - 1]
+      console.log('nn2 '+id)
+      console.log('nn1'+newId)
       const el = document.getElementById(newId + '-tree').querySelector("[data-element='code-tree-tag-name-button']")
       el.textContent = '🧩' + name
       el.setAttribute('path', items[items.length - 1].lsi1)
