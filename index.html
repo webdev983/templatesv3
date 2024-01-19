@@ -3383,7 +3383,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!ignore) {
       const upper = upperReplaceActions ? upperReplaceActions : []
 
-      const replaceActions = [...upper, ...responseData.items.filter(el => el.action === 'Replace_Component')]
+      const replaceActions = responseData.items.filter(el => el.action === 'Replace_Component').push(...upper)
       console.log('replace actions : ' + JSON.stringify(replaceActions))
       for (const item of responseData.items) {
         console.log('item' + JSON.stringify(item))
