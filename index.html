@@ -2365,7 +2365,8 @@ document.addEventListener('DOMContentLoaded', function() {
       // Iterate through the selected array (skipping the first element, which is the target)
       for (var i = 1; i < selectedArray.length; i++) {
         var selectedId = selectedArray[i].id;
-        var originalId = selectedArray[i].original
+        var originalId = selectedArray[i].originalId
+        console.log(JSON.stringify(selectedArray[i]))
         if (!move) {
 
           const originalEl = document.getElementById(originalId)
@@ -2379,8 +2380,9 @@ document.addEventListener('DOMContentLoaded', function() {
             return containerId ? document.getElementById(containerId) : document
           }
           getContainer().querySelectorAll('[id^="' + selectedId + '"]').forEach(el => {
-            if(!attr || attr ===el.getAttribute('data-replaceID')){
-              selectedElements.push(document.getElementById(el.id + '-tree')); selectedElements2.push(el)
+            if((!attr || attr ===el.getAttribute('data-replaceID')) && !el.id.endsWith('-tree')){
+              selectedElements.push(document.getElementById(el.id + '-tree'));
+              selectedElements2.push(el)
             }
             
           });
