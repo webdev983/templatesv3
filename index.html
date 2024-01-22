@@ -2392,10 +2392,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         }
         else {
+          selectedId= selectedArray[i]
           const treeEl = document.getElementById(selectedId)
           const pageEl = document.getElementById(removeLastOccurrence(selectedId, '-tree'))
           var clonedFieldset = cloneWithDescendants(treeEl);
-          var arrowButton = clonedFieldset.querySelect.or('[data-element="code-tree-show-hide-button"]');
+          var arrowButton = clonedFieldset.querySelector('[data-element="code-tree-show-hide-button"]');
 
           arrowButton.textContent = '→';
           if (action === 'Append') {
