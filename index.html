@@ -2567,7 +2567,7 @@ document.addEventListener('DOMContentLoaded', function() {
           el2.innerHTML = `🔄${replaceAction.target_element.length}`;
         }
 
-        await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction)
+        await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction,noComp1 || noComp)
 
 
         break;
@@ -2678,7 +2678,7 @@ document.addEventListener('DOMContentLoaded', function() {
           console.log('prob' + inserted_component.componentId)
           components.push(inserted_component.id)
           console.log('err ' + path)
-          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk)
+          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk,false,noComp1 || noComp)
           break;
         }
         //case duplicate append
@@ -3133,6 +3133,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         // component
+        if(key ==='style' ||key==='class'){
+          const selector = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
+          document.querySelectorAll(selector).forEach(element=>element.setAttribute(key, value))
+          break;
+        }
+
         const element22 = document.getElementById(removeLastOccurrence(target_element, '-tree'));
         key && element22.setAttribute(key, value);
 
