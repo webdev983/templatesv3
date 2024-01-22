@@ -2581,9 +2581,10 @@ document.addEventListener('DOMContentLoaded', function() {
           document.getElementById('generated-page')
           :document.getElementById(removeLastOccurrence(target_element, '-tree'));
         const newEle = document.createElement(inserted_element.tagName)
-        if(noComp1){
+        console.log('eee1 ' + noComp)
+        console.log('eee2 ' + noComp1)
           newEle.setAttribute('data-replaceID',containerId)
-        }
+        
         newEle.id = inserted_element.id
         console.log(newEle.id)
         componentElement.insertBefore(newEle, componentElement.firstChild);
@@ -2781,7 +2782,7 @@ document.addEventListener('DOMContentLoaded', function() {
           if(attr){
             newEl.setAttribute('data-replaceID',attr)
           }
-          if(noComp1){
+          if(noComp1 || noComp){
             newEl.setAttribute('data-replaceID',containerId)
           }
           
@@ -2887,13 +2888,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
           newEl2.id = inserted_component.id + '-tree'
           if (noComp || noComp1) {
+            console.log('no comp true')
             newEl2.setAttribute('hidden', '')
           }
           treeElement.parentNode.insertBefore(newEl2, treeElement)
           components.push(inserted_component.id)
           console.log(inserted_component.componentId)
 
-          await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name,undefined,false,noComp)
+          await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name,undefined,false,noComp )
           break;
         }
         //case duplicate insert before
@@ -2995,7 +2997,7 @@ document.addEventListener('DOMContentLoaded', function() {
           if(attr1){
             newEl.setAttribute('data-replaceID',attr1)
           }
-          if(noComp){
+          if(noComp || noComp1){
             newEl.setAttribute('data-replaceID',containerId)
           }
           newEl.id = inserted_element.id
@@ -3507,6 +3509,9 @@ document.addEventListener('DOMContentLoaded', function() {
               toAdd = path + newId + ';'
             }
             insertDataIntoCodeLog(item.sk, item.action)
+            if(replaceActions){
+              console.log('vaaalue'+ noComp)
+            }
             await executeCommand({ ...item, time: item.sk }, toAdd, false, replaceActions,newId,noComp)
 
             continue
