@@ -2581,10 +2581,7 @@ document.addEventListener('DOMContentLoaded', function() {
           document.getElementById('generated-page')
           :document.getElementById(removeLastOccurrence(target_element, '-tree'));
         const newEle = document.createElement(inserted_element.tagName)
-        console.log('eee1 ' + noComp)
-        console.log('eee2 ' + noComp1)
-          newEle.setAttribute('data-replaceID',containerId)
-        
+        containerId &&  newEle.setAttribute('data-replaceID',containerId)
         newEle.id = inserted_element.id
         console.log(newEle.id)
         componentElement.insertBefore(newEle, componentElement.firstChild);
@@ -2895,7 +2892,7 @@ document.addEventListener('DOMContentLoaded', function() {
           components.push(inserted_component.id)
           console.log(inserted_component.componentId)
 
-          await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name,undefined,false,noComp )
+          await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name,undefined,false,noComp || noComp1 )
           break;
         }
         //case duplicate insert before
@@ -3509,9 +3506,6 @@ document.addEventListener('DOMContentLoaded', function() {
               toAdd = path + newId + ';'
             }
             insertDataIntoCodeLog(item.sk, item.action)
-            if(replaceActions){
-              console.log('vaaalue'+ noComp)
-            }
             await executeCommand({ ...item, time: item.sk }, toAdd, false, replaceActions,newId,noComp)
 
             continue
