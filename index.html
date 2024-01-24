@@ -650,7 +650,7 @@
       <hr hidden id="generated-page-menu-hr" class="on-page-menu-hr">
       <div id="generated-page-menu" class="on-page-menu">
         <label class="l-1" style="margin-right: 10px; user-select: none;">👁️</label>
-        <button class="b-1" onclick="transformToVisual(event)">✍️</button>
+        <button  id='transform' class="b-1" onclick="transformToVisual(event)">✍️</button>
       </div>
 
       <div id="generated-page" style="margin-bottom: 200px;">
@@ -1451,9 +1451,11 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function transformToVisual(event) {
-
-
+    
+    localStorage.setItem('visualOn','true')
     if (visualOn) {
+      localStorage.removeItem('visualOn')
+      location.reload()
       return;
     }
     event.target.classList.add('b-selected');
@@ -3638,10 +3640,11 @@ document.addEventListener('DOMContentLoaded', function() {
       //change component 
       const splited = items[items.length - 1].lsi1.split(';')[0].split('/')
       const name = splited[splited.length - 1]
-      const {testPage} = items[items.length - 1]
+      const {testPage,optionalScript} = items[items.length - 1]
       const el1 = document.getElementById(newId + '-tree')
       console.log('leeeeevel' + lvl)
-      if(testPage && lvl>2){
+      console.log('viiiisual')
+      if((testPage && lvl>2) ||(optionalScript && localStorage.getItem('visualOn'))){
         el1.remove()
         return
       }
@@ -3833,7 +3836,11 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
     await loadFromDb()
-
+    if(localStorage.getItem('visualOn')){
+      
+      document.getElementById('transform').click()
+    }
+    
     //first menu
     let buttons = document.querySelectorAll('button[data-element="code-tree-tag-name-button"]');
     /*
