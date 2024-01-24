@@ -181,10 +181,10 @@
         <label class="l-1" style="margin-right: 10px; user-select: none;">🧩</label>
         <button class="b-1" style="margin-right: 5px;" onclick="addComponent(event)">➕</button>
 
-        <button class="b-1" style="margin-right: 5px;" id="test-component">🧪</button>
+        <button class="b-1" style="margin-right: 5px;" id="test-component" onclick="switchTest(event)">🧪</button>
 
-        <button class="b-1" style="margin-right: 5px;" id="optional-script">🚦</button>
-        <button class="b-1 b-selected" style="margin-right: 5px;" id="link-by-path">*📁</button>
+        <button class="b-1" style="margin-right: 5px;" id="optional-script" onclick="switchOptionalScript(event)">🚦</button>
+        <button class="b-1" style="margin-right: 5px;" id="link-by-path" onclick="switchLinkBP(event)">*📁</button>
 
         <button hidden class="b-1 b-selected" style="margin-right: 5px;" id="index-max-elements">🏋️<label
             id="index-max-elements-amount" contenteditable>53</label></button>
@@ -743,6 +743,67 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
   const urlSearchParams = new URLSearchParams(window.location.search);
   const page_id = urlSearchParams.get('id');
+  var pathItem 
+  var updatePathItem = ()=>
+    fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(pathItem),
+    });
+  
+  const switchOptionalScript =(updateDb)=>{
+    const el = document.getElementById('optional-script')
+    if(!updateDb){
+      el.classList.add('b-selected');
+      return
+    }
+    if(pathItem.optionalScript){
+      pathItem.optionalScript = false
+      el.classList.remove('b-selected');
+    }
+    else{
+      pathItem.optionalScript = true
+      el.classList.add('b-selected');
+    }
+    updatePathItem()
+
+    
+  }
+  const switchLinkBP =(updateDb)=>{
+    const el = document.getElementById('link-by-path')
+    if(!updateDb){
+      el.classList.add('b-selected');
+      return
+    }
+    if(pathItem.LinkBP){
+      pathItem.LinkBP = false
+      el.classList.remove('b-selected');
+    }
+    else{
+      pathItem.LinkBP = true
+      el.classList.add('b-selected');
+    }
+    updatePathItem()
+  }
+  const switchTest =(updateDb)=>{
+    const el = document.getElementById('test-component')
+    if(!updateDb){
+      el.classList.add('b-selected');
+      return
+    }
+    if(pathItem.testPage){
+      pathItem.testPage = false
+      el.classList.remove('b-selected');
+      
+    }
+    else{
+      pathItem.testPage = true
+      el.classList.add('b-selected');
+    }
+    updatePathItem()
+  }
   const addComponent1 = (id) => {
     const actionObject = {
       time: (new Date()).getTime(),
@@ -3550,6 +3611,12 @@ document.addEventListener('DOMContentLoaded', function() {
   function removeDuplicates(arr) {
     return Array.from(new Set(arr));
   }
+  const setOptions = (item)=>{
+    const {testPage,optionalScript,LinkBP} = item
+    testPage && switchTest(false)
+    optionalScript && switchOptionalScript(false)
+    LinkBP && switchLinkBP(false)
+  }
   const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11,noSubComp) => {
     console.log('load from db' + id)
     console.log('err2 ' + p)
@@ -3591,7 +3658,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Make a GET request to the API with the 'id' query parameter
-
+    
     if (!ignore) {
       const upper = upperReplaceActions ? upperReplaceActions : []
 
@@ -3600,6 +3667,8 @@ document.addEventListener('DOMContentLoaded', function() {
       for (const item of responseData.items) {
         console.log('item' + JSON.stringify(item))
         if (!id && item.sk === 'path') {
+          pathItem = item
+          setOptions(item)
           console.log('eeeeeer')
           const el = document.getElementById('page-path')
 
@@ -5274,19 +5343,19 @@ document.addEventListener('DOMContentLoaded', function() {
     var testcomponent = document.getElementById('test-component');
 
     testcomponent.addEventListener('click', function () {
-      this.classList.toggle('b-selected');
+      //this.classList.toggle('b-selected');
     });
   });
 </script>
 
-</script>
+
 
 
 <script>document.addEventListener('DOMContentLoaded', function () {
     var postscript = document.getElementById('optional-script');
 
     postscript.addEventListener('click', function () {
-      this.classList.toggle('b-selected');
+      //this.classList.toggle('b-selected');
     });
   });
 </script>
