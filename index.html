@@ -2414,7 +2414,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   }
-  const pushAction = async (element, firstLoad, visual, replaceActions) => {
+  const pushAction = async (element, firstLoad, visual, replaceActions, containerId, noComp1,noSubComp1,lvl) => {
     console.log('pushed' + JSON.stringify(element))
     const time = element.time
     console.log('time' + time)
@@ -2422,7 +2422,7 @@ document.addEventListener('DOMContentLoaded', function() {
     !firstLoad && await pushActionToDb(element)
     !element.inserted_component && await insertDataIntoCodeLog(time, element.action)
 
-    await executeCommand(element, '', visual, replaceActions)
+    await executeCommand(element, '', visual, replaceActions, containerId, noComp1,noSubComp1,lvl)
   }
   const pushActionToDb = async (action) => {
     const urlSearchParams = new URLSearchParams(window.location.search);
@@ -2477,7 +2477,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Insert the cloned element before the original element
     parent.insertBefore(clonedElement, originalElement);
   }
-  const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1,noSubComp1) => {
+  const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1,noSubComp1,lvl) => {
     const {noSubComp, noComp, time, withParent, move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
     let treeElement
     let componentElement
@@ -2735,6 +2735,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         console.log('prob' + inserted_component.componentId)
         components.push(inserted_component.id)
+        const level = lvl ? lvl+1 : 2;
+        console.log('foundlvl ' + lvl)
         if (replaceAction) {
           console.log('replace action in')
           const toReplace = replaceAction.target_element[0]
@@ -2743,6 +2745,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
           let l = replaceAction.target_element.filter(e => e.componentId !== toReplace);
           let i = false;
+          
+         
           for (const el of l) {
 
             await executeCommand({
@@ -2752,7 +2756,7 @@ document.addEventListener('DOMContentLoaded', function() {
               inserted_component: el,
               noComp: true,
               noSubComp:i
-            }, path, visual, replaceActions)
+            }, path, visual, replaceActions,undefined,noComp1,noSubComp1,level)
             i = true
 
           }
@@ -2767,7 +2771,7 @@ document.addEventListener('DOMContentLoaded', function() {
           el2.innerHTML = `🔄${replaceAction.target_element.length}`;
         }
 
-        await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp,noSubComp1)
+        await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp,noSubComp1,level)
 
 
         break;
@@ -3093,7 +3097,7 @@ document.addEventListener('DOMContentLoaded', function() {
           components.push(inserted_component.id)
           console.log(inserted_component.componentId)
 
-          await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1,noSubComp)
+          await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1,noSubComp,lvl)
           break;
         }
         //case duplicate insert before
@@ -3617,7 +3621,7 @@ document.addEventListener('DOMContentLoaded', function() {
     optionalScript && switchOptionalScript(false)
     LinkBP && switchLinkBP(false)
   }
-  const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11,noSubComp) => {
+  const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11,noSubComp,lvl) => {
     console.log('load from db' + id)
     console.log('err2 ' + p)
     let path = ""
@@ -3634,9 +3638,17 @@ document.addEventListener('DOMContentLoaded', function() {
       //change component 
       const splited = items[items.length - 1].lsi1.split(';')[0].split('/')
       const name = splited[splited.length - 1]
+      const {testPage} = items[items.length - 1]
+      const el1 = document.getElementById(newId + '-tree')
+      console.log('leeeeevel' + lvl)
+      if(testPage && lvl>2){
+        el1.remove()
+        return
+      }
+      
       console.log('nn2 ' + id)
       console.log('nn1' + newId)
-      const el = document.getElementById(newId + '-tree').querySelector("[data-element='code-tree-tag-name-button']")
+      const el = el1.querySelector("[data-element='code-tree-tag-name-button']")
       el.textContent = '🧩' + name
       el.setAttribute('path', items[items.length - 1].lsi1)
       insertDataIntoCodeLog(timestamp, idFromLink, { name })
@@ -3647,6 +3659,8 @@ document.addEventListener('DOMContentLoaded', function() {
       const { items } = responseData
 
       const splited = items[items.length - 1].lsi1.split(';')[0].split('/')
+      pathItem = items[items.length - 1]
+      setOptions(pathItem)
       const name = splited[splited.length - 1]
       const el = document.getElementById(idFromLink + '-tree').querySelector("[data-element='code-tree-tag-name-button']")
       el.textContent = '🧩' + name
@@ -3667,8 +3681,7 @@ document.addEventListener('DOMContentLoaded', function() {
       for (const item of responseData.items) {
         console.log('item' + JSON.stringify(item))
         if (!id && item.sk === 'path') {
-          pathItem = item
-          setOptions(item)
+          
           console.log('eeeeeer')
           const el = document.getElementById('page-path')
 
@@ -3736,13 +3749,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             insertDataIntoCodeLog(item.sk, item.action)
-            await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11,noSubComp)
+            await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11,noSubComp,lvl)
 
             continue
           }
 
 
-          await pushAction({ ...item, time: item.sk }, true, false, replaceActions)
+          await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11,noSubComp,lvl)
         }
 
       }
