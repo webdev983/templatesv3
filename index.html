@@ -2523,7 +2523,7 @@ document.addEventListener('DOMContentLoaded', function() {
           Array.from(elementB.parentElement.children).indexOf(elementB);
       }
       console.log(JSON.stringify(restOfElements))
-      //restOfElements.sort(sortByPlace);
+      restOfElements.sort(sortByPlace);
       if (!move) {
         restOfElements = restOfElements.map(el => removeLastOccurrence(el, '-tree')).map(el =>
           getWithoutCopyId1(el)
@@ -3011,6 +3011,7 @@ document.addEventListener('DOMContentLoaded', function() {
             getElementById('generated-page')
             :
             document.getElementById(removeLastOccurrence(target_element, '-tree'));
+          
           const newEl = document.createElement(inserted_element.tagName)
           const attr = componentElement.getAttribute('data-replaceID')
           if (attr) {
@@ -3021,7 +3022,7 @@ document.addEventListener('DOMContentLoaded', function() {
           }
 
 
-          newEl.id = inserted_element.id
+          
           console.log(newEl.id)
           componentElement.appendChild(newEl)
           const component_el = document.getElementById('tree-element')
@@ -3033,7 +3034,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
           button.addEventListener('mouseout', mouseOutTree);
 
+
+          newEl.id = inserted_element.id
           newEl2.id = inserted_element.id + '-tree'
+          const splited = componentElement.id.split(';')
+          console.log('com1' + componentElement.hasAttribute('data-parentid') + componentElement.id)
+          if(componentElement.hasAttribute('data-parentid')){
+            console.log('in12')
+            newEl.id =  componentElement.id+';'+inserted_element.id
+            newEl2.id =  componentElement.id+';'+inserted_element.id + '-tree'
+          }
+          
+          else if(splited.length>1){
+            newEl.id =  splited[0]+';'+inserted_element.id
+            newEl2.id =  splited[0] +';'+inserted_element.id + '-tree'
+          }
+          componentElement.appendChild(newEl)
           treeElement.appendChild(newEl2)
           break;
         }
@@ -3227,9 +3243,18 @@ document.addEventListener('DOMContentLoaded', function() {
             if (noComp || noComp1) {
               newEl.setAttribute('data-replaceID', containerId)
             }
+
+            const splited = componentElement.id.split(';')
+            
+            
+            
+            
+            
+
             newEl.id = replaceCopyId ? inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') : inserted_element.id
+            
             console.log(newEl.id)
-            componentElement.parentNode.insertBefore(newEl, componentElement)
+            
             const component_el = document.getElementById('tree-element')
             const newEl2 = component_el.cloneNode(true)
             const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
@@ -3239,6 +3264,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             button.addEventListener('mouseout', mouseOutTree);
             newEl2.id = replaceCopyId ? inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') + '-tree' : inserted_element.id + '-tree'
+            if(splited.length>1){
+              newEl.id =  splited[0]+';'+newEl.id
+              newEl2.id =  splited[0] +';'+newEl2.id 
+            }
+            componentElement.parentNode.insertBefore(newEl, componentElement)
             treeElement.parentNode.insertBefore(newEl2, treeElement)
           }
           treeElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
@@ -3410,7 +3440,6 @@ document.addEventListener('DOMContentLoaded', function() {
           document.querySelectorAll(selector).forEach(element => !element.id.endsWith('-tree') && element.setAttribute(key, value))
           break;
         }
-
         const element22 = document.getElementById(removeLastOccurrence(target_element, '-tree'));
         key && element22.setAttribute(key, value);
 
