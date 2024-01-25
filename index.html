@@ -388,7 +388,7 @@
             child</button>
           <button class="b-2" id="code-tree-click-tag-insert-before" onclick="insertB(event)">&#x2190; insert
             before</button>
-          <button class="b-2" id="code-tree-click-tag-remove-tag" onclick="removeTag(event)">🗑 remove
+          <button class="b-2" id="code-tree-click-tag-remove-tag" onclick="removeComponent(event)">🗑 remove
             component</button>
         </fieldset>
 
@@ -2416,7 +2416,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   }
-  const pushAction = async (element, firstLoad, visual, replaceActions, containerId, noComp1,noSubComp1,lvl) => {
+  const pushAction = async (element, firstLoad, visual, replaceActions, containerId, noComp1,noSubComp1,lvl,removeActions) => {
     console.log('pushed' + JSON.stringify(element))
     const time = element.time
     console.log('time' + time)
@@ -2424,7 +2424,7 @@ document.addEventListener('DOMContentLoaded', function() {
     !firstLoad && await pushActionToDb(element)
     !element.inserted_component && await insertDataIntoCodeLog(time, element.action)
 
-    await executeCommand(element, '', visual, replaceActions, containerId, noComp1,noSubComp1,lvl)
+    await executeCommand(element, '', visual, replaceActions, containerId, noComp1,noSubComp1,lvl,removeActions)
   }
   const pushActionToDb = async (action) => {
     const urlSearchParams = new URLSearchParams(window.location.search);
@@ -2479,7 +2479,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Insert the cloned element before the original element
     parent.insertBefore(clonedElement, originalElement);
   }
-  const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1,noSubComp1,lvl) => {
+  const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1,noSubComp1,lvl,removeActions) => {
     const {noSubComp, noComp, time, withParent, move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
     let treeElement
     let componentElement
@@ -2700,7 +2700,14 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(path)
         console.log('found replace Actions' + JSON.stringify(replaceActions))
         console.log('id152 ' + inserted_component.id)
+        console.log('remove actions '+ JSON.stringify(removeActions))
+        const removeAction = removeActions?.find(e => e.target_element === inserted_component.id + '-tree')
+        if(removeAction){
+          console.log('found 115')
+          return
+        }
         const replaceAction = replaceActions?.findLast(e => e.target_element[0] === inserted_component.id + '-tree')
+        
         //replace
         console.log('selected Actions' + JSON.stringify(replaceAction))
         treeElement = document.getElementById(target_element);
@@ -3333,7 +3340,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // component
         const elementToRemove2 = document.getElementById(removeLastOccurrence(target_element, '-tree'));
-        elementToRemove2.parentNode.removeChild(elementToRemove2);
+        elementToRemove2 && elementToRemove2.parentNode.removeChild(elementToRemove2);
+
+
+        break;
+      case 'removeComponent':
+        // Handle the 'removeTag' action
+        // tree
+        
 
 
         break;
@@ -3360,7 +3374,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // component
         if (key === 'style' || key === 'class') {
           const selector = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
-          document.querySelectorAll(selector).forEach(element => element.setAttribute(key, value))
+          document.querySelectorAll(selector).forEach(element =>!element.id.endsWith('-tree') && element.setAttribute(key, value))
           break;
         }
 
@@ -3623,7 +3637,7 @@ document.addEventListener('DOMContentLoaded', function() {
     optionalScript && switchOptionalScript(false)
     LinkBP && switchLinkBP(false)
   }
-  const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11,noSubComp,lvl) => {
+  const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11,noSubComp,lvl,upperRemoveActions) => {
     console.log('load from db' + id)
     console.log('err2 ' + p)
     let path = ""
@@ -3678,8 +3692,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (!ignore) {
       const upper = upperReplaceActions ? upperReplaceActions : []
-
+      const upper1 = upperRemoveActions ? upperRemoveActions : []
       const replaceActions = [...responseData.items.filter(el => el.action === 'Replace_Component'), ...upper]
+      const removeActions = [...responseData.items.filter(el => el.action === 'removeComponent'), ...upper1]
       console.log('replace actions : ' + JSON.stringify(replaceActions))
       for (const item of responseData.items) {
         console.log('item' + JSON.stringify(item))
@@ -3752,13 +3767,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             insertDataIntoCodeLog(item.sk, item.action)
-            await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11,noSubComp,lvl)
+            await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11,noSubComp,lvl,removeActions)
 
             continue
           }
 
 
-          await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11,noSubComp,lvl)
+          await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11,noSubComp,lvl,removeActions)
         }
 
       }
@@ -4109,6 +4124,22 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     pushAction(el)
     e.target.parentNode.remove()
+  }
+  const removeComponent = async(e) => {
+    const splited = e.target.parentNode.id.split(';')
+    const [toRemove, ...rest] = splited
+    const parentId = rest.join(';');
+    const el =
+    {
+      time: (new Date()).getTime(),
+      action: 'removeComponent',
+      target_element: parentId,
+
+    }
+    await pushAction(el)
+    location.reload()
+
+
   }
   const approve = async (event) => {
     var checkbox = event.target;
