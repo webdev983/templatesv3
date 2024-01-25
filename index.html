@@ -408,6 +408,8 @@
             element</button>
           <button class="b-2" id="code-tree-click-tag-remove-tag" onclick="removeTag(event)">🗑 remove
             element</button>
+        <button class="b-2" id="code-tree-click-tag-remove-tag" onclick="removeTagAndCopies(event)">🗑 remove
+            tag and copies</button>
         </fieldset>
 
         <!--menu enter comment-->
@@ -2794,7 +2796,7 @@ document.addEventListener('DOMContentLoaded', function() {
           el2.innerHTML = `🔄${replaceAction.target_element.length}`;
         }
 
-        await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level,removeActions)
+        await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions)
 
 
         break;
@@ -3357,6 +3359,16 @@ document.addEventListener('DOMContentLoaded', function() {
         // component
         const elementToRemove2 = document.getElementById(removeLastOccurrence(target_element, '-tree'));
         elementToRemove2 && elementToRemove2.parentNode.removeChild(elementToRemove2);
+
+
+        break;
+      case 'removeTagAndCopies':
+        // Handle the 'removeTag' action
+        
+        // component
+        const selector = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
+        document.querySelectorAll(selector).forEach(e=>e.remove());
+       
 
 
         break;
@@ -4135,6 +4147,20 @@ document.addEventListener('DOMContentLoaded', function() {
     {
       time: (new Date()).getTime(),
       action: 'removeTag',
+      target_element: parentId,
+
+    }
+    pushAction(el)
+    e.target.parentNode.remove()
+  }
+  const removeTagAndCopies = (e) => {
+    const splited = e.target.parentNode.id.split(';')
+    const [toRemove, ...rest] = splited
+    const parentId = rest.join(';');
+    const el =
+    {
+      time: (new Date()).getTime(),
+      action: 'removeTagAndCopies',
       target_element: parentId,
 
     }
