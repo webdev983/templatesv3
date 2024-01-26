@@ -117,10 +117,17 @@
 
 
   <div style="margin-top: 30px;">
-    <button class="b-1  b-selected" id="toggle-component-tree">🧩</button>
-    <button class="b-1  b-selected" id="toggle-code-tree">🏷️</button>
-    <button class="b-1  b-selected" id="toggle-head">🗿</button>
-    <button class="b-1  b-selected" id="toggle-visual">👁️</button>
+    <button class="b-1 " id="toggle-generated-page" onclick="toggleGeneratedPage()">👁️</button>
+
+
+<button class="b-1 " id="toggle-head" onclick="toggleHead()">🗿</button>
+
+
+<button class="b-1 " id="toggle-code-tree" onclick="toggleCodeTree()">🏷️</button>
+
+
+<button class="b-1 " id="toggle-component-tree" onclick="toggleComponentTree()">🧩</button>
+
 
 
     <div hidden>
@@ -761,7 +768,110 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 */
 </script>
+<script>
+  //toggle menu button scripts
+  const toggleGeneratedPage = ()=>{
+    const s = localStorage.getItem('generatedPageToggle')
+    if(!s){
+      
+      document.getElementById('generated-page').removeAttribute('hidden')
+      document.getElementById('generated-page-menu').removeAttribute('hidden')
+      document.getElementById('toggle-generated-page').classList.add('b-selected')
+      localStorage.setItem('generatedPageToggle','true')
+    }
+    else{
+      document.getElementById('generated-page').setAttribute('hidden','')
+      document.getElementById('generated-page-menu').setAttribute('hidden','')
+      document.getElementById('toggle-generated-page').classList.remove('b-selected')
+      localStorage.removeItem('generatedPageToggle')
+    }
+  }
+  const toggleHead = ()=>{
+    const s = localStorage.getItem('headToggle')
+    if(!s){
+      
+      document.getElementById('head').removeAttribute('hidden')
+      document.getElementById('head-menu').removeAttribute('hidden','')
+      document.getElementById('toggle-head').classList.add('b-selected')
+      localStorage.setItem('headToggle','true')
+    }
+    else{
+      document.getElementById('head').setAttribute('hidden','')
+      document.getElementById('head-menu').setAttribute('hidden','')
+      document.getElementById('toggle-head').classList.remove('b-selected')
+      localStorage.removeItem('headToggle')
+    }
+  }
+  const toggleCodeTree = ()=>{
+    const s = localStorage.getItem('codeTreeToggle')
+    if(!s){
+      
+      document.getElementById('code-tree').removeAttribute('hidden')
+      document.getElementById('code-tree-menu').removeAttribute('hidden','')
+      document.getElementById('toggle-code-tree').classList.add('b-selected')
+      localStorage.setItem('codeTreeToggle','true')
+    }
+    else{
+      document.getElementById('code-tree').setAttribute('hidden','')
+      document.getElementById('code-tree-menu').setAttribute('hidden','')
+      document.getElementById('toggle-code-tree').classList.remove('b-selected')
+      localStorage.removeItem('codeTreeToggle')
+    }
+  }
+  const toggleComponentTree = ()=>{
+    const s = localStorage.getItem('componentTreeToggle')
+    if(!s){
+      
+      document.getElementById('components-tree').removeAttribute('hidden')
+      document.getElementById('components-tree-menu').removeAttribute('hidden','')
+      document.getElementById('toggle-component-tree').classList.add('b-selected')
+      
+      localStorage.setItem('componentTreeToggle','true')
+    }
+    else{
+      document.getElementById('components-tree').setAttribute('hidden','')
+      document.getElementById('components-tree-menu').setAttribute('hidden','')
+      document.getElementById('toggle-component-tree').classList.remove('b-selected')
+      localStorage.removeItem('componentTreeToggle')
+    }
+  }
+  document.addEventListener('DOMContentLoaded', function() {
+    const s1 = localStorage.getItem('codeTreeToggle')
+    if(s1){
+      document.getElementById('toggle-code-tree').classList.add('b-selected')
+    }
+    else{
+      document.getElementById('code-tree-menu').setAttribute('hidden','')
+      document.getElementById('code-tree').setAttribute('hidden','')
+    }
+    const s2 = localStorage.getItem('componentTreeToggle')
+    if(s2){
+      document.getElementById('toggle-component-tree').classList.add('b-selected')
+    }
+    else{
+      document.getElementById('components-tree').setAttribute('hidden','')
+      document.getElementById('components-tree-menu').setAttribute('hidden','')
+    }
+    const s3 = localStorage.getItem('headToggle')
+    if(s3){
+      document.getElementById('toggle-head').classList.add('b-selected')
+    }
+    else{
+      document.getElementById('head-menu').setAttribute('hidden','')
+      document.getElementById('head').setAttribute('hidden','')
+    }
+    const s4 = localStorage.getItem('generatedPageToggle')
+    if(s4){
+      document.getElementById('toggle-generated-page').classList.add('b-selected')
+    }
+    else{
+      document.getElementById('generated-page-menu').setAttribute('hidden','')
+      document.getElementById('generated-page').setAttribute('hidden','')
+    }
 
+  })
+  
+</script>
 <script>
   const urlSearchParams = new URLSearchParams(window.location.search);
   const page_id = urlSearchParams.get('id');
