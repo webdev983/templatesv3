@@ -909,8 +909,22 @@ document.addEventListener('DOMContentLoaded', function() {
             const item_path = clonedItem.querySelector('[data-value="file-path"]')
             item_path.textContent = item.name;
             clonedItem.onclick = function (event) {
-              addComponent1(item.id)
-              filePathList.remove()
+              event.stopPropagation()
+              fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/' + item.id + ':' + item.sk)
+                .then(response => response.json())
+                .then(data => {
+                  if (data.LinkBP) {
+                    const p = data.lsi1.split('/')
+                    p.shift()
+                    addComponent1("*/" + p.join('/'))
+                  }
+                  else {
+                    addComponent1(item.id)
+                  }
+
+                  filePathList.remove()
+                })
+
             };
             let icon = '🧩';
             if (item.lsi1.startsWith('css')) {
@@ -1014,8 +1028,21 @@ document.addEventListener('DOMContentLoaded', function() {
             item_path.textContent = item.name;
             clonedItem.onclick = function (event) {
               event.stopPropagation()
-              addComponent1(item.id)
-              filePathList.remove()
+              fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/' + item.id + ':' + item.sk)
+                .then(response => response.json())
+                .then(data => {
+                  if (data.LinkBP) {
+                    const p = data.lsi1.split('/')
+                    p.shift()
+                    addComponent1("*/" + p.join('/'))
+                  }
+                  else {
+                    addComponent1(item.id)
+                  }
+
+                  filePathList.remove()
+                })
+
             };
             let icon = '🧩';
             if (item.lsi1.startsWith('css')) {
@@ -2722,6 +2749,15 @@ document.addEventListener('DOMContentLoaded', function() {
     switch (action) {
 
       case 'Add_Component':
+        if (inserted_component.componentId.startsWith('*')) {
+          const site = pathItem.lsi1.split('/')[0]
+          const modId = inserted_component.componentId.replace('*', '')
+          const lsi = site + modId
+          const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + lsi)
+            .then(response => response.json())
+          const item1 = items.find(i => i.lsi1 === lsi)
+          inserted_component.componentId = item1.id
+        }
         console.log(inserted_component.componentId)
         console.log('inb')
         console.log(path)
@@ -3124,6 +3160,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         if (inserted_component) {
           //fieldset
+          if (inserted_component.componentId.startsWith('*')) {
+            const site = pathItem.lsi1.split('/')[0]
+            const modId = inserted_component.componentId.replace('*', '')
+            const lsi = site + modId
+            const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + lsi)
+              .then(response => response.json())
+            const item1 = items.find(i => i.lsi1 === lsi)
+            inserted_component.componentId = item1.id
+          }
           console.log('in')
           console.log(target_element)
           treeElement = document.getElementById(target_element);
@@ -3450,25 +3495,25 @@ document.addEventListener('DOMContentLoaded', function() {
         const element22 = document.getElementById(removeLastOccurrence(target_element, '-tree'));
         const element33 = document.getElementById(target_element);
         key && element22.setAttribute(key, value);
-        function recursivelyChangeIDs(element, newID,flag,treeType) {
+        function recursivelyChangeIDs(element, newID, flag, treeType) {
           if (!element) return; // Base case: stop if element is null
-          if(treeType){
-            !flag && element.tagName.toLowerCase() ==="fieldset" && (element.id = newID+';'+ element.id);
+          if (treeType) {
+            !flag && element.tagName.toLowerCase() === "fieldset" && (element.id = newID + ';' + element.id);
           }
           // Change ID of the current element
-          else{
-            !flag && (element.id = newID+';'+ element.id);
+          else {
+            !flag && (element.id = newID + ';' + element.id);
           }
-          
+
 
           // Recursively change IDs of child elements
           Array.from(element.children).forEach(child => {
-            recursivelyChangeIDs(child, newID,false,treeType);
+            recursivelyChangeIDs(child, newID, false, treeType);
           });
         }
         if (key === 'data-parentid') {
-          recursivelyChangeIDs(element22, removeLastOccurrence(target_element, '-tree'),true);
-          recursivelyChangeIDs(element33, removeLastOccurrence(target_element, '-tree'),true,true);
+          recursivelyChangeIDs(element22, removeLastOccurrence(target_element, '-tree'), true);
+          recursivelyChangeIDs(element33, removeLastOccurrence(target_element, '-tree'), true, true);
         }
         break;
       case 'removeAttribute':
@@ -3478,6 +3523,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // component
         const elementToRemoveAttribute = document.getElementById(removeLastOccurrence(target_element, '-tree'));
         key && elementToRemoveAttribute.removeAttribute(key);
+        if (key === 'data-parentid') {
+          document.querySelectorAll('[id^="' + removeLastOccurrence(target_element, '-tree') + ';"]').forEach(el => {
+            el.id = el.id.replace(removeLastOccurrence(target_element, '-tree') + ';', '')
+          });
+        }
 
         break;
 
@@ -3736,6 +3786,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let responseData
 
     if (id) {
+
       responseData = await getRes(id)
 
       const { items } = responseData
