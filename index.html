@@ -201,21 +201,7 @@
 
       </div>
       <div id="components-tree" style="position: relative; margin-left: 10px;">
-        <fieldset id="41412421-412412412-41241212-412412" data-element="code-tree-tag">
-          <legend>💬</legend>
-          <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
-          <button class="b-3 arrow-hover" style="margin: 5px;" data-element="code-tree-show-hide-button"
-            onclick="toggleSubFields(event)">&#8594;</button>
-          <button class="b-3" data-element="code-tree-tag-name-button"
-            onclick="loader(event, handleComponentClick)">🏷️component</button>
-          <button class="b-3" data-element="code-tree-inner-html-button"> ▶️</button>
-          <button class="b-3" data-element="code-tree-attributes-button"
-            onclick="openAttributeContent(event)">🔑</button>
-          <button class="b-3" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
-          <button hidden class="b-3" data-element="optional-script">🎥</button>
-          <button hidden class="b-3" data-element="optional-script">🔄</button>
-
-        </fieldset>
+        
       </div>
 
 
@@ -4161,10 +4147,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (idFromQuery) {
       // Change the id of the element with id "component-element"
-      const componentElement = document.getElementById('41412421-412412412-41241212-412412');
-      if (componentElement) {
-        componentElement.id = idFromQuery + '-tree';
-      }
+      const compTree = document.getElementById('components-tree')
+      const component_el = document.getElementById('component-element')
+      const newEl2 = component_el.cloneNode(true)
+      newEl2.id = idFromQuery + '-tree'
+      compTree.append(newEl2)
 
       const builderElement = document.getElementById('63ae5927-390f-4391-993d-b25ab09c8ada');
       if (builderElement) {
