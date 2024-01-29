@@ -2234,7 +2234,8 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("Fieldset Action:", fieldsetAction);
     const actionObject = {
       time: (new Date()).getTime(),
-      action: fieldsetAction,
+      action:'Add_Component',
+      subAction: fieldsetAction,
       target_element: fieldsetId.split(';')[1],
       inserted_component: { componentId: fileId, id: generateUUID() },
     };
@@ -2622,7 +2623,7 @@ document.addEventListener('DOMContentLoaded', function() {
     parent.insertBefore(clonedElement, originalElement);
   }
   const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions) => {
-    const { noSubComp, noComp, time, withParent, move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
+    const { subAction,noSubComp, noComp, time, withParent, move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
     let treeElement
     let componentElement
     console.log('command is ' + JSON.stringify(command))
@@ -2851,12 +2852,7 @@ document.addEventListener('DOMContentLoaded', function() {
           const item1 = items.find(i => i.lsi1 === lsi)
           inserted_component.componentId = item1.id
         }
-        console.log(inserted_component.componentId)
-        console.log('inb')
-        console.log(path)
-        console.log('found replace Actions' + JSON.stringify(replaceActions))
-        console.log('id152 ' + inserted_component.id)
-        console.log('remove actions ' + JSON.stringify(removeActions))
+        
         const removeAction = removeActions?.find(e => e.target_element === inserted_component.id + '-tree')
         if (removeAction) {
           console.log('found 115')
@@ -2896,7 +2892,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (noSubComp1) {
           newEl2.setAttribute('hidden', '')
         }
-        treeElement.parentNode.insertBefore(newEl2, treeElement.parentNode.firstChild);
+        if(subAction ==='Append'){
+          treeElement.append(newEl2);
+        }else if(subAction ==='InsertBefore'){
+          treeElement.parentNode.insertBefore(newEl2, treeElement)
+        }else{
+          treeElement.parentNode.insertBefore(newEl2, treeElement.parentNode.firstChild);
+        }
+        
 
         console.log('prob' + inserted_component.componentId)
         components.push(inserted_component.id)
@@ -3069,7 +3072,7 @@ document.addEventListener('DOMContentLoaded', function() {
               const found = items.find(item=>!already.find(i=>i===item))
               console.log(found)
               already.push(found)
-              handleWithParent(element.id+'-tree', [found])
+              handleWithParent(element.id+'-tree', items)
             }
           }
           break;
@@ -3080,11 +3083,7 @@ document.addEventListener('DOMContentLoaded', function() {
           console.log(target_element)
           treeElement = document.getElementById(target_element);
           //component
-          componentElement = document.getElementById(removeLastOccurrence(target_element, '-tree'));
-          const newEl = document.createElement("div")
-          newEl.id = inserted_component.id
-          console.log(newEl.id)
-          componentElement.appendChild(newEl)
+          
           const component_el = document.getElementById('component-element')
           const newEl2 = component_el.cloneNode(true)
           const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
