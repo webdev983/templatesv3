@@ -245,6 +245,8 @@
           <button class="b-3" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
           <button hidden class="b-3" data-element="optional-script" onclick="replaceComponent(event,true)">🔄
             10</button>
+            <button hidden class="b-3" data-element="code-tree-test-button"
+            >🧪</button>
 
         </fieldset>
         <fieldset id="tree-element" data-element="code-tree-tag">
@@ -2577,7 +2579,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('time' + time)
     actionLog.push(element)
     !firstLoad && await pushActionToDb(element)
-    !element.inserted_component && await insertDataIntoCodeLog(time, element.action)
+    await insertDataIntoCodeLog(time, element.action)
 
     await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions)
   }
@@ -3907,6 +3909,12 @@ document.addEventListener('DOMContentLoaded', function() {
       if ((testPage && lvl > 2) || (optionalScript && localStorage.getItem('visualOn'))) {
         el1.remove()
         return
+      }
+      else if(testPage){
+        console.log('p11 '+newId)
+        el1.querySelector('[data-element="code-tree-test-button"]').removeAttribute('hidden')
+        el1.querySelector('[data-element="code-tree-text-content-button"]').remove()
+        el1.querySelector('[data-element="code-tree-inner-html-button"]').remove()
       }
 
       console.log('nn2 ' + id)
