@@ -1481,7 +1481,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const replacedString = e.target.parentNode.getAttribute('replaced')
     const replaced = replacedString ? JSON.parse(replacedString) : undefined
     const [toRemove, ...rest] = splited
-    const parentId =  e.target.parentNode.id//rest.join(';');
+    const parentId = splited.length === 1 ? e.target.parentNode.id : rest.join(';') 
     const fieldset = document.getElementById('filePathList');
     const fieldset2 = document.getElementById('selectedFilePathList');
     if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('filePathList')) {
