@@ -1208,7 +1208,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <script>
   var approveReplace = async (e) => {
-    const ids = Array.from(e.target.parentNode.children).map(child => child.id).filter(i => i)
+    const m1 =Array.from(e.target.parentNode.children).filter(i => i.id)
     const parentId = e.target.parentNode.id.replace('file-path-list;', '')
     const parentEl = document.getElementById(parentId)
     const replacedString = parentEl.getAttribute('replaced')
@@ -1216,11 +1216,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const el = {
       time: (new Date()).getTime(),
       action: 'Replace_Component',
-      target_element: [parentId.replace('selectedFilePathList;', ''), ...ids.map(el => {
-        const element = document.getElementById(el);
+      target_element: [parentId.replace('selectedFilePathList;', ''), ...m1.map(el => {
+        const element = document.getElementById(el.id);
         return {
 
-          componentId: el, id: generateUUID(), path: element.querySelector('[data-value="file-path"]').textContent, already: element.getAttribute('alreadyReplaced')
+          componentId: el.id, id: el.newId || generateUUID(), path: element.querySelector('[data-value="file-path"]').textContent, already: element.getAttribute('alreadyReplaced')
         }
       })],
     };
@@ -1509,7 +1509,8 @@ document.addEventListener('DOMContentLoaded', function() {
         for (const el of replaced) {
           var clonedItem = document.getElementById('item').cloneNode(true);
           clonedItem.setAttribute('alreadyReplaced', true)
-          clonedItem.id = el.id;
+          clonedItem.id = el.componentId;
+          clonedItem.setAttribute('newId',el.id)
           selected.push(el.id)
           const file_path = clonedItem.querySelector('[data-value="file-path"]')
           file_path.textContent = el.path;
