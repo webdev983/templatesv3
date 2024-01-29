@@ -1481,7 +1481,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const replacedString = e.target.parentNode.getAttribute('replaced')
     const replaced = replacedString ? JSON.parse(replacedString) : undefined
     const [toRemove, ...rest] = splited
-    const parentId = rest.join(';');
+    const parentId =  e.target.parentNode.id//rest.join(';');
     const fieldset = document.getElementById('filePathList');
     const fieldset2 = document.getElementById('selectedFilePathList');
     if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('filePathList')) {
@@ -2234,7 +2234,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("Fieldset Action:", fieldsetAction);
     const actionObject = {
       time: (new Date()).getTime(),
-      action:'Add_Component',
+      action: 'Add_Component',
       subAction: fieldsetAction,
       target_element: fieldsetId.split(';')[1],
       inserted_component: { componentId: fileId, id: generateUUID() },
@@ -2623,7 +2623,7 @@ document.addEventListener('DOMContentLoaded', function() {
     parent.insertBefore(clonedElement, originalElement);
   }
   const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions) => {
-    const { subAction,noSubComp, noComp, time, withParent, move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
+    const { subAction, noSubComp, noComp, time, withParent, move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
     let treeElement
     let componentElement
     console.log('command is ' + JSON.stringify(command))
@@ -2633,20 +2633,20 @@ document.addEventListener('DOMContentLoaded', function() {
       console.log('start')
       var firstElementId = selectedArrayNotSorted[0];
       var restOfElements = selectedArrayNotSorted.slice(1);
-      if(components.includes(firstElementId.replace('-tree',''))){
+      if (components.includes(firstElementId.replace('-tree', ''))) {
         console.log('in555')
         const target = document.getElementById(firstElementId)
-        for(const el of restOfElements){
+        for (const el of restOfElements) {
           const toM = document.getElementById(el)
-          if(action ==='Append'){
+          if (action === 'Append') {
             target.append(toM)
           }
-          else{
-            target.parentNode.insertBefore(toM,target)
+          else {
+            target.parentNode.insertBefore(toM, target)
           }
         }
         return
-        
+
       }
       // Sort the rest of the elements by their order in the DOM
       function sortByPlace(a, b) {
@@ -2687,7 +2687,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Get the parent fieldset of the target
         var parentFieldset = targetFieldset.parentNode;
         var parentFieldset2 = targetFieldset2?.parentNode
-        
+
         const data_replaceid = targetFieldset2.getAttribute('data-replaceID')
         // Get the index of the target fieldset within its parent
         var index = Array.from(parentFieldset.children).indexOf(targetFieldset);
@@ -2867,7 +2867,7 @@ document.addEventListener('DOMContentLoaded', function() {
           const item1 = items.find(i => i.lsi1 === lsi)
           inserted_component.componentId = item1.id
         }
-        
+
         const removeAction = removeActions?.find(e => e.target_element === inserted_component.id + '-tree')
         if (removeAction) {
           console.log('found 115')
@@ -2907,14 +2907,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (noSubComp1) {
           newEl2.setAttribute('hidden', '')
         }
-        if(subAction ==='Append'){
+        if (subAction === 'Append') {
           treeElement.append(newEl2);
-        }else if(subAction ==='InsertBefore'){
+        } else if (subAction === 'InsertBefore') {
           treeElement.parentNode.insertBefore(newEl2, treeElement)
-        }else{
+        } else {
           treeElement.parentNode.insertBefore(newEl2, treeElement.parentNode.firstChild);
         }
-        
+
 
         console.log('prob' + inserted_component.componentId)
         components.push(inserted_component.id)
@@ -2992,7 +2992,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (withParent) {
           // get all copies 
           const handleWithParent = async (id, items) => {
-            console.log('input 6'+ JSON.stringify(items))
+            console.log('input 6' + JSON.stringify(items))
             const [firstId, ...restIds] = items
             for (const el of restIds) {
 
@@ -3070,24 +3070,24 @@ document.addEventListener('DOMContentLoaded', function() {
             let copies = document.querySelectorAll('[id^="' + mId + '"]')
             const already = []
             for (const element of copies) {
-              if(element.id.endsWith('-tree')){
+              if (element.id.endsWith('-tree')) {
                 continue
               }
               const replaceId = element.getAttribute('data-replaceid')
-              console.log('replace id + ' +replaceId)
+              console.log('replace id + ' + replaceId)
               const items = []
-              
+
               for (const element of restOfElements) {
                 const l = element.split(';').length
                 document.querySelectorAll('[id^="' + element + '"]').forEach(el => {
-                  !el.id.endsWith('-tree') && el.id.split(';').length === l && el.getAttribute('data-replaceid') === replaceId && items.push(el.id+'-tree')
+                  !el.id.endsWith('-tree') && el.id.split(';').length === l && el.getAttribute('data-replaceid') === replaceId && items.push(el.id + '-tree')
                 });
               }
-              console.log('prob items 1 '+ JSON.stringify(items))
-              const found = items.find(item=>!already.find(i=>i===item))
+              console.log('prob items 1 ' + JSON.stringify(items))
+              const found = items.find(item => !already.find(i => i === item))
               console.log(found)
               already.push(found)
-              handleWithParent(element.id+'-tree', items)
+              handleWithParent(element.id + '-tree', items)
             }
           }
           break;
@@ -3098,7 +3098,7 @@ document.addEventListener('DOMContentLoaded', function() {
           console.log(target_element)
           treeElement = document.getElementById(target_element);
           //component
-          
+
           const component_el = document.getElementById('component-element')
           const newEl2 = component_el.cloneNode(true)
           const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
@@ -3264,7 +3264,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (withParent) {
           // get all copies 
           const handleWithParent = async (id, items) => {
-            console.log('input 6'+ JSON.stringify(items))
+            console.log('input 6' + JSON.stringify(items))
             const [firstId, ...restIds] = items
             for (const el of restIds) {
 
@@ -3342,24 +3342,24 @@ document.addEventListener('DOMContentLoaded', function() {
             let copies = document.querySelectorAll('[id^="' + mId + '"]')
             const already = []
             for (const element of copies) {
-              if(element.id.endsWith('-tree')){
+              if (element.id.endsWith('-tree')) {
                 continue
               }
               const replaceId = element.getAttribute('data-replaceid')
-              console.log('replace id + ' +replaceId)
+              console.log('replace id + ' + replaceId)
               const items = []
-              
+
               for (const element of restOfElements) {
                 const l = element.split(';').length
                 document.querySelectorAll('[id^="' + element + '"]').forEach(el => {
-                  !el.id.endsWith('-tree') && el.id.split(';').length === l && el.getAttribute('data-replaceid') === replaceId && items.push(el.id+'-tree')
+                  !el.id.endsWith('-tree') && el.id.split(';').length === l && el.getAttribute('data-replaceid') === replaceId && items.push(el.id + '-tree')
                 });
               }
-              console.log('prob items 1 '+ JSON.stringify(items))
-              const found = items.find(item=>!already.find(i=>i===item))
+              console.log('prob items 1 ' + JSON.stringify(items))
+              const found = items.find(item => !already.find(i => i === item))
               console.log(found)
               already.push(found)
-              handleWithParent(element.id+'-tree', [found])
+              handleWithParent(element.id + '-tree', [found])
             }
           }
           break;
