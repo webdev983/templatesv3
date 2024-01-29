@@ -2633,7 +2633,21 @@ document.addEventListener('DOMContentLoaded', function() {
       console.log('start')
       var firstElementId = selectedArrayNotSorted[0];
       var restOfElements = selectedArrayNotSorted.slice(1);
-
+      if(components.includes(firstElementId.replace('-tree',''))){
+        console.log('in555')
+        const target = document.getElementById(firstElementId)
+        for(const el of restOfElements){
+          const toM = document.getElementById(el)
+          if(action ==='Append'){
+            target.append(toM)
+          }
+          else{
+            target.parentNode.insertBefore(toM,target)
+          }
+        }
+        return
+        
+      }
       // Sort the rest of the elements by their order in the DOM
       function sortByPlace(a, b) {
         var elementA = document.getElementById(a);
@@ -2672,7 +2686,8 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('handling')
         // Get the parent fieldset of the target
         var parentFieldset = targetFieldset.parentNode;
-        var parentFieldset2 = targetFieldset2.parentNode
+        var parentFieldset2 = targetFieldset2?.parentNode
+        
         const data_replaceid = targetFieldset2.getAttribute('data-replaceID')
         // Get the index of the target fieldset within its parent
         var index = Array.from(parentFieldset.children).indexOf(targetFieldset);
