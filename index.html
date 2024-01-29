@@ -2974,6 +2974,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (withParent) {
           // get all copies 
           const handleWithParent = async (id, items) => {
+            console.log('input 6'+ JSON.stringify(items))
             const [firstId, ...restIds] = items
             for (const el of restIds) {
 
@@ -3048,17 +3049,27 @@ document.addEventListener('DOMContentLoaded', function() {
           else {
             console.log('prob555')
             const mId = getWithoutCopyId(id)
-            const copies = document.querySelectorAll('[id^="' + mId + '"]')
+            let copies = document.querySelectorAll('[id^="' + mId + '"]')
+            const already = []
             for (const element of copies) {
+              if(element.id.endsWith('-tree')){
+                continue
+              }
               const replaceId = element.getAttribute('data-replaceid')
+              console.log('replace id + ' +replaceId)
               const items = []
+              
               for (const element of restOfElements) {
                 const l = element.split(';').length
                 document.querySelectorAll('[id^="' + element + '"]').forEach(el => {
-                  el.id.endsWith('-tree') && el.id.split(';').length === l && el.getAttribute('data-replaceid') === replaceId && items.push(el.id)
+                  !el.id.endsWith('-tree') && el.id.split(';').length === l && el.getAttribute('data-replaceid') === replaceId && items.push(el.id+'-tree')
                 });
               }
-              handleWithParent(element.id, items)
+              console.log('prob items 1 '+ JSON.stringify(items))
+              const found = items.find(item=>!already.find(i=>i===item))
+              console.log(found)
+              already.push(found)
+              handleWithParent(element.id+'-tree', [found])
             }
           }
           break;
