@@ -1842,9 +1842,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function onDoubleClick(e) {
       // Get the element that was double-clicked
       var target = e.target;
-
+      console.log('target ' + target.id)
       // Check if the element has the 'data-visual-contenteditable' attribute
-      if (target.getAttribute('data-visual-contenteditable') !== null) {
+      
+      if (target.hasAttribute('data-visual-contenteditable')) {
+
+
+        console.log('has attr')
         // Prevent the default double-click behavior
         e.preventDefault();
 
@@ -1991,8 +1995,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add entries for fieldset siblings
         fieldsetSiblings.forEach(fieldsetSibling => {
           let name = `➕ ${fieldsetSibling.children[0].textContent.toLowerCase()}`
-          if (sibling.hasAttribute('data-visual-title')) {
-            name = `➕ ${sibling.getAttribute('data-visual-title')}`
+          if (fieldsetSibling.hasAttribute('data-visual-title')) {
+            name = `➕ ${fieldsetSibling.getAttribute('data-visual-title')}`
           }
           addMenuEntry(menu, name, () => {
             handleMenuEntryClick(e.target.id, fieldsetSibling.children[1].id, siblingWithInsertBefore, parentWithAppendChild, true);
@@ -3079,7 +3083,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('prob555')
             const mId = getWithoutCopyId(id)
             let copies = document.querySelectorAll('[id^="' + mId + '"]')
-            
+
             const already = []
             for (const element of copies) {
               if (element.id.endsWith('-tree')) {
@@ -3102,7 +3106,7 @@ document.addEventListener('DOMContentLoaded', function() {
               handleWithParent(element.id + '-tree', items)
             }
           }
-          
+
           break;
         }
         if (inserted_component) {
@@ -3353,7 +3357,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('prob555')
             const mId = getWithoutCopyId(id)
             let copies = document.querySelectorAll('[id^="' + mId + '"]')
-            
+
             const already = []
             for (const element of copies) {
               if (element.id.endsWith('-tree')) {
@@ -3557,16 +3561,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const compEls = []
             const existing = []
             const elementsWithIdAndAttribute = document.querySelectorAll('[id^="' + mId + '"][data-replaceid]')
-            .forEach(
-              el => { 
-                
-                if(!existing.includes(el.getAttribute('data-replaceid')) ){
-                  existing.push(el.getAttribute('data-replaceid'))
-                  treeEls.push(document.getElementById(el.id + '-tree')); compEls.push(el) 
+              .forEach(
+                el => {
+
+                  if (!existing.includes(el.getAttribute('data-replaceid'))) {
+                    existing.push(el.getAttribute('data-replaceid'))
+                    treeEls.push(document.getElementById(el.id + '-tree')); compEls.push(el)
+                  }
+
                 }
-                
-              }
-            );
+              );
 
             for (let i = 0; i < treeEls.length; i++) {
               handleInsert(treeEls[i], compEls[i], true)
@@ -3634,6 +3638,7 @@ document.addEventListener('DOMContentLoaded', function() {
       case 'ChangeTag':
         // Handle the 'ChangeTag' action
         // tree el
+
         const elementToChange = document.getElementById(target_element);
         elementToChange.querySelector("[data-element='code-tree-tag-name-button']").textContent = '🏷️' + tag_change;
         // builder el
@@ -3647,12 +3652,17 @@ document.addEventListener('DOMContentLoaded', function() {
             var attribute = elementToChange2.attributes[i];
             newElement.setAttribute(attribute.name, attribute.value);
           }
-
+          newElement.id = elementToChange2.id
           // Copy content from the div to the p element
           newElement.innerHTML = elementToChange2.innerHTML;
 
           // Replace the div element with the new p element
+
           elementToChange2.parentNode.replaceChild(newElement, elementToChange2);
+          // Add an event listener to the entire document to track double-clicks
+         
+          
+
         }
         break;
 
@@ -4229,10 +4239,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
     await loadFromDb()
-    if (localStorage.getItem('visualOn')) {
 
-      document.getElementById('transform').click()
-    }
 
     //first menu
     let buttons = document.querySelectorAll('button[data-element="code-tree-tag-name-button"]');
@@ -4242,7 +4249,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });*/
     clearInterval(interval);
     console.log(timerElement.textContent)
+    if (localStorage.getItem('visualOn')) {
 
+      document.getElementById('transform').click()
+    }
     lastActionTime.textContent = timerElement.textContent;
     loadingScreen.style.display = 'none';
 
