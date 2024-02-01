@@ -224,10 +224,10 @@
             onclick="toggleSubFields(event)">&#8594;</button>
           <button class="b-3" data-element="code-tree-tag-name-button"
             onclick="loader(event, handleComponentClick)">🏷️component</button>
-         
+
           <button class="b-3" data-element="code-tree-attributes-button"
             onclick="openAttributeContent(event)">🔑</button>
-         
+
           <button hidden class="b-3" data-element="optional-script" onclick="replaceComponent(event,true)">🔄
             10</button>
           <button hidden class="b-3" data-element="code-tree-test-button">🧪</button>
@@ -598,16 +598,20 @@
               <button class="b-3" style="margin-right: 5px;" onclick="addComponent(event)">➕</button>
             </div>
             <div>
-            <fieldset class="menu" id="4141241-4141241-41241241241" data-visual-element="" data-visual-title="delivery-country-time" data-visual-dublicate="" data-visual-insertbefore>
-              <legend>Returns</legend>
-              <div>
-                <label class="l-3 b-dark-blue">Return Days:</label><span class="l-3" data-visual-contenteditable="">30</span>
-              </div>
-              <div data-visual-appendchild="" data-visual-element="">
-                <label class="l-3 b-dark-blue">Return Country: </label><span class="l-3" data-visual-contenteditable="" data-visual-element="" data-visual-title="delivery-country" data-visual-dublicate="" data-visual-insertbefore="">US</span>
-              </div>
-            </fieldset>
-          </div>
+              <fieldset class="menu" id="4141241-4141241-41241241241" data-visual-element=""
+                data-visual-title="delivery-country-time" data-visual-dublicate="" data-visual-insertbefore>
+                <legend>Returns</legend>
+                <div>
+                  <label class="l-3 b-dark-blue">Return Days:</label><span class="l-3"
+                    data-visual-contenteditable="">30</span>
+                </div>
+                <div data-visual-appendchild="" data-visual-element="">
+                  <label class="l-3 b-dark-blue">Return Country: </label><span class="l-3"
+                    data-visual-contenteditable="" data-visual-element="" data-visual-title="delivery-country"
+                    data-visual-dublicate="" data-visual-insertbefore="">US</span>
+                </div>
+              </fieldset>
+            </div>
 
             <div>
               <label class="l-3 b-dark-blue">Shipping: </label>
@@ -686,8 +690,8 @@
 </div>
 
 <script>
-  document.getElementById('remove-loading').addEventListener('click', function() {
-      document.getElementById('loading').remove();
+  document.getElementById('remove-loading').addEventListener('click', function () {
+    document.getElementById('loading').remove();
   });
 </script>
 <!--files menus-->
@@ -1214,7 +1218,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <script>
   var approveReplace = async (e) => {
-    const m1 =Array.from(e.target.parentNode.children).filter(i => i.id)
+    const m1 = Array.from(e.target.parentNode.children).filter(i => i.id)
     const parentId = e.target.parentNode.id.replace('file-path-list;', '')
     const parentEl = document.getElementById(parentId)
     const replacedString = parentEl.getAttribute('replaced')
@@ -1487,7 +1491,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const replacedString = e.target.parentNode.getAttribute('replaced')
     const replaced = replacedString ? JSON.parse(replacedString) : undefined
     const [toRemove, ...rest] = splited
-    const parentId = splited.length === 1 ? e.target.parentNode.id : rest.join(';') 
+    const parentId = splited.length === 1 ? e.target.parentNode.id : rest.join(';')
     const fieldset = document.getElementById('filePathList');
     const fieldset2 = document.getElementById('selectedFilePathList');
     if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('filePathList')) {
@@ -1516,7 +1520,7 @@ document.addEventListener('DOMContentLoaded', function() {
           var clonedItem = document.getElementById('item').cloneNode(true);
           clonedItem.setAttribute('alreadyReplaced', true)
           clonedItem.id = el.componentId;
-          clonedItem.setAttribute('newId',el.id)
+          clonedItem.setAttribute('newId', el.id)
           selected.push(el.id)
           const file_path = clonedItem.querySelector('[data-value="file-path"]')
           file_path.textContent = el.path;
@@ -3075,28 +3079,18 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('prob555')
             const mId = getWithoutCopyId(id)
             let copies = document.querySelectorAll('[id^="' + mId + '"]')
-            const already = []
-            for (const element of copies) {
-              if (element.id.endsWith('-tree')) {
-                continue
-              }
-              const replaceId = element.getAttribute('data-replaceid')
-              console.log('replace id + ' + replaceId)
-              const items = []
+            const items = []
+            const copy = copies[0]
 
-              for (const element of restOfElements) {
-                const l = element.split(';').length
-                document.querySelectorAll('[id^="' + element + '"]').forEach(el => {
-                  !el.id.endsWith('-tree') && el.id.split(';').length === l && el.getAttribute('data-replaceid') === replaceId && items.push(el.id + '-tree')
-                });
-              }
-              console.log('prob items 1 ' + JSON.stringify(items))
-              const found = items.find(item => !already.find(i => i === item))
-              console.log(found)
-              already.push(found)
-              handleWithParent(element.id + '-tree', items)
+            for (const element of restOfElements) {
+              const l = element.split(';').length
+              document.querySelectorAll('[id^="' + element + '"]').forEach(el => {
+                !el.id.endsWith('-tree') && el.id.split(';').length === l && items.push(el.id + '-tree')
+              });
             }
+            handleWithParent(copies[0].id, items)
           }
+          
           break;
         }
         if (inserted_component) {
@@ -3347,27 +3341,16 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('prob555')
             const mId = getWithoutCopyId(id)
             let copies = document.querySelectorAll('[id^="' + mId + '"]')
-            const already = []
-            for (const element of copies) {
-              if (element.id.endsWith('-tree')) {
-                continue
-              }
-              const replaceId = element.getAttribute('data-replaceid')
-              console.log('replace id + ' + replaceId)
-              const items = []
+            const items = []
+            const copy = copies[0]
 
-              for (const element of restOfElements) {
-                const l = element.split(';').length
-                document.querySelectorAll('[id^="' + element + '"]').forEach(el => {
-                  !el.id.endsWith('-tree') && el.id.split(';').length === l && el.getAttribute('data-replaceid') === replaceId && items.push(el.id + '-tree')
-                });
-              }
-              console.log('prob items 1 ' + JSON.stringify(items))
-              const found = items.find(item => !already.find(i => i === item))
-              console.log(found)
-              already.push(found)
-              handleWithParent(element.id + '-tree', [found])
+            for (const element of restOfElements) {
+              const l = element.split(';').length
+              document.querySelectorAll('[id^="' + element + '"]').forEach(el => {
+                !el.id.endsWith('-tree') && el.id.split(';').length === l && items.push(el.id + '-tree')
+              });
             }
+            handleWithParent(copies[0].id, items)
           }
           break;
         }
@@ -3552,7 +3535,7 @@ document.addEventListener('DOMContentLoaded', function() {
               el => { treeEls.push(document.getElementById(el.id + '-tree')); compEls.push(el) }
             );
 
-            for (let i = 0; i < treeEls.length; i++) {
+            for (let i = 0; i < 1; i++) {
               handleInsert(treeEls[i], compEls[i], true)
             }
             break;
@@ -3619,7 +3602,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Handle the 'ChangeTag' action
         // tree el
         const elementToChange = document.getElementById(target_element);
-        elementToChange.querySelector("[data-element='code-tree-tag-name-button']").textContent = tag_change;
+        elementToChange.querySelector("[data-element='code-tree-tag-name-button']").textContent = '🏷️' + tag_change;
         // builder el
         const elementToChange2 = document.getElementById(removeLastOccurrence(target_element, '-tree'));
         if (elementToChange2) {
