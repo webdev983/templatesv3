@@ -1,28 +1,25 @@
 
 
-<div dependancy>
-
+<div data-product="sku">
 <!-------------------------dependants -------------------------------------->
 <h1 
     data-dependee 
     data-dependee-name="heading"
-    data-dependee-value="color:blue"
+    data-product-option="color:blue"
 ></h1>
 <img data-dependee data-dependee-name="main-image"></h1>
-
 <!------------------------------------------------------
 generate button will generate dependants
-input sku will keep sku  
-need action saving editing input to log
+and push data to db
+sku will be file name + product option full list
 --------------------------------------------------------------->
 <button id="dependancy-generate">generate</button>
 <button hidden id="dependancy-generate-caution">generate</button>
-<button hidden id="dependancy-generate-caution-accept">accept</button>
-<button hidden id="dependancy-generate-caution-decline">decline</button>
+<button hidden id="dependancy-generate-accept">accept</button>
+<button hidden id="dependancy-generate-decline">decline</button>
 
-
-<div data-dependant> 
-<span data-dependant-name="">color</span> 
+<div data-product-option> 
+<span data-product-option-legend="">color</span> 
 <!----------------------------------------------------------------------------
     data-dependee-choice  
     checkboxes inserted after data-dependant-name with js after page load
@@ -39,17 +36,13 @@ put  check on first  checkbox ( repeat for every data-dependant container)
 make general action if checkbox within genrated page checked or unchecked save this action in log
 ----------------------------------------------------------------------------------------------->
 <input type="radio" id="option-1" name="color" value="blue" checked>
-<label for="option-1" data-dependant-option="">blue</label>
-
-<input type="radio" id="red" name="color" value="red">
-<label for="red">red</label>
-
-
-<input type="radio" id="option-3" name="color" value="white">
-<label for="option-3">white</label>
-
-<input type="radio" id="option-4" name="color" value="yellow">
-<label for="option-4">yellow</label>
+<label for="option-1" data-product-option-value="">blue</label>
+<input type="radio" id="option-1" name="color" value="blue" checked>
+<label for="option-1" data-product-option-value="">blue</label>
+<input type="radio" id="option-1" name="color" value="blue" checked>
+<label for="option-1" data-product-option-value="">blue</label>
+<input type="radio" id="option-1" name="color" value="blue" checked>
+<label for="option-1" data-product-option-value="">blue</label>
 </div>
 <!-------------------------------------------------------------------------------------------------------->
 
@@ -68,3 +61,24 @@ make general action if checkbox within genrated page checked or unchecked save t
 
 <!--dependancy gonna be only one inside article element-->
 </div>
+
+
+
+
+
+<!-- publish page variant  -->
+
+<div data-product="sku">
+
+    <h1 data-product-option="color:blue">heading</h1>
+    <img data-product-option="color:blue"></img>
+    
+    <fieldset data-product-option> 
+    <legend data-product-option-legend="">color</legend> 
+    
+    <input type="radio" id="sku-blue" name="color" value="blue" checked>
+    <label for="sku-blue" data-product-option-value="">blue</label>
+    
+    <input type="radio" id="sku-red" name="color" value="red">
+    <label data-product-option-value="" for="sku-red">red</label>
+    </fieldset>
