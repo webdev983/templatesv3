@@ -3079,16 +3079,28 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('prob555')
             const mId = getWithoutCopyId(id)
             let copies = document.querySelectorAll('[id^="' + mId + '"]')
-            const items = []
-            const copy = copies[0]
+            
+            const already = []
+            for (const element of copies) {
+              if (element.id.endsWith('-tree')) {
+                continue
+              }
+              const replaceId = element.getAttribute('data-replaceid')
+              console.log('replace id + ' + replaceId)
+              const items = []
 
-            for (const element of restOfElements) {
-              const l = element.split(';').length
-              document.querySelectorAll('[id^="' + element + '"]').forEach(el => {
-                !el.id.endsWith('-tree') && el.id.split(';').length === l && items.push(el.id + '-tree')
-              });
+              for (const element of restOfElements) {
+                const l = element.split(';').length
+                document.querySelectorAll('[id^="' + element + '"]').forEach(el => {
+                  !el.id.endsWith('-tree') && el.id.split(';').length === l && el.getAttribute('data-replaceid') === replaceId && items.push(el.id + '-tree')
+                });
+              }
+              console.log('prob items 1 ' + JSON.stringify(items))
+              const found = items.find(item => !already.find(i => i === item))
+              console.log(found)
+              already.push(found)
+              handleWithParent(element.id + '-tree', items)
             }
-            handleWithParent(copies[0].id, items)
           }
           
           break;
@@ -3531,11 +3543,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const mId = target_element.split(':')[0]
             const treeEls = []
             const compEls = []
-            const elementsWithIdAndAttribute = document.querySelectorAll('[id^="' + mId + '"][data-replaceid]').forEach(
-              el => { treeEls.push(document.getElementById(el.id + '-tree')); compEls.push(el) }
+            const existing = []
+            const elementsWithIdAndAttribute = document.querySelectorAll('[id^="' + mId + '"][data-replaceid]')
+            .forEach(
+              el => { 
+                
+                if(!existing.includes(el.getAttribute('data-replaceid')) ){
+                  existing.push(el.getAttribute('data-replaceid'))
+                  treeEls.push(document.getElementById(el.id + '-tree')); compEls.push(el) 
+                }
+                
+              }
             );
 
-            for (let i = 0; i < 1; i++) {
+            for (let i = 0; i < treeEls.length; i++) {
               handleInsert(treeEls[i], compEls[i], true)
             }
             break;
