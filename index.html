@@ -3353,16 +3353,28 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('prob555')
             const mId = getWithoutCopyId(id)
             let copies = document.querySelectorAll('[id^="' + mId + '"]')
-            const items = []
-            const copy = copies[0]
+            
+            const already = []
+            for (const element of copies) {
+              if (element.id.endsWith('-tree')) {
+                continue
+              }
+              const replaceId = element.getAttribute('data-replaceid')
+              console.log('replace id + ' + replaceId)
+              const items = []
 
-            for (const element of restOfElements) {
-              const l = element.split(';').length
-              document.querySelectorAll('[id^="' + element + '"]').forEach(el => {
-                !el.id.endsWith('-tree') && el.id.split(';').length === l && items.push(el.id + '-tree')
-              });
+              for (const element of restOfElements) {
+                const l = element.split(';').length
+                document.querySelectorAll('[id^="' + element + '"]').forEach(el => {
+                  !el.id.endsWith('-tree') && el.id.split(';').length === l && el.getAttribute('data-replaceid') === replaceId && items.push(el.id + '-tree')
+                });
+              }
+              console.log('prob items 1 ' + JSON.stringify(items))
+              const found = items.find(item => !already.find(i => i === item))
+              console.log(found)
+              already.push(found)
+              handleWithParent(element.id + '-tree', items)
             }
-            handleWithParent(copies[0].id, items)
           }
           break;
         }
