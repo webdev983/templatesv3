@@ -5,80 +5,7 @@
     <link rel="stylesheet" href="css/fieldset.css" media="all">
     <link rel="stylesheet" href="css/right-click-menu.css" media="all">
     <link rel="stylesheet" href="css/buttons-and-menus.css" media="all">
-    <style>
 
-        .label-open:hover {
-          background-color:  #dddddd; /* A darker color on hover */
-          transition: background-color 0.3s; /* Smooth transition for hover effect */
-          cursor: pointer
-        }
-        
-        
-        .table-2 {
-          max-width: 100%;
-          width: auto;
-          border-radius: 10px; /* Rounded corners */
-          border-collapse: collapse;
-        }
-        
-        .space-row th {
-                height: 20px;
-                vertical-align: bottom; /* Выравнивание содержимого по нижнему краю */
-            }
-        
-        .border-right {
-            border-right: 1px solid black; /* Для создания раздельной границы справа */
-        }
-        
-        .border-left {
-            border-left: 1px solid black; /* Для создания раздельной границы справа */
-        }
-        
-        
-        .border-bottom td {
-            border-bottom: 1px solid black; /* Черная горизонтальная линия под ячейками */
-        }
-        
-        .table-2 th, td {
-          text-align: center;
-        
-        }
-        
-        .table-2 tbody tr:nth-child(odd) {
-          background-color:  #ffffff; 
-        }
-        
-        .table-2 tbody tr:nth-child(even) {
-          background-color: #f0f0f0;
-        }
-        
-        .table-2 tbody tr:hover {
-          background-color:  #dddddd; /* A darker color on hover */
-          transition: background-color 0.3s; /* Smooth transition for hover effect */
-        }
-        
-        .table-2 tbody {
-        counter-reset: rowNumber; /* Инициализация счетчика */
-        }
-        
-        .table-2 tbody tr {
-        counter-increment: rowNumber; /* Увеличение счетчика для каждой строки */
-        }
-        
-        .table-2 tbody tr td:first-child {
-        position: relative; /* Делаем первую ячейку каждой строки относительно позиционированной */
-        }
-        
-        .table-2 tbody tr td:first-child::before {
-        content: counter(rowNumber) "."; /* Добавление номера строки */
-        position: absolute; /* Абсолютное позиционирование */
-        left: -20px; /* Сдвигаем влево от начала ячейки */
-        top: 50%; /* Выравнивание по центру ячейки */
-        transform: translateY(-50%); /* Центрирование относительно высоты ячейки */
-        font-size: 18px; /* Размер шрифта номера */
-        }
-        
-        </style>
         
     </head>
   
@@ -88,6 +15,7 @@
     and after adding new data-product-option, or changing some data related to this checkboxes
     1 checkbox added for 1 data-dependee-name
 ------------------------------------------------------------------------------------->
+
 <table class="table-1">
 <tr>
     <td>
@@ -116,33 +44,33 @@
 </tr>
 </table>
 
+<button  class="b-2" style="margin-top: 10px; margin-bottom: 10px;" id="dependancy-generate">Generate dependancy</button>
 
-<table class="table-2" style="margin-left:20px;">
-    <thead>
-    <tr>
-      <th colspan="1" class="l-3 label-open" style="text-align: left; vertical-align: bottom;">SKU</th>
-      <th colspan="2" style="text-align: center; vertical-align: bottom;">Main</th>
-      <th colspan="2" style="text-align: center; vertical-align: bottom;">Current site</th>
 
-    </tr>
-  </thead>
-    <tbody >
+
+<table class="table-1" style="margin-left:20px;">
     <tr class="bottom-border">
       <td><span class="l-4">color:red;size:xl</span></td>
-      <td class="merge-border"><label class="l-4" style="user-select: none">💰</label><span contenteditable="true" class="l-4 label-open">8</span></td>
       <td ><label class="l-4" style="user-select: none">📦</label><span contenteditable="true" class="l-4 label-open">8</span></td>
-      <td style="user-select: none;"  class="border-left" >
-        <label class="l-4" style="user-select: none">💰</label>
-        <span class="l-4 label-open" contenteditable="true" style="user-select: none">8</span>
-       </td>
-       <td class="border-right">
-        <label class="l-4" style="user-select: none">📦</label>
-        <span class="l-4 label-open" style="user-select: none" contenteditable="true">8</span></td>
-        </td>
+    </tr>
+    <tr class="bottom-border">
+        <td><span class="l-4">color:red;size:xl</span></td>
+        <td ><label class="l-4" style="user-select: none">📦</label><span contenteditable="true" class="l-4 label-open">8</span></td>
       </tr>
-      </tbody>
+      <tr class="bottom-border">
+        <td><span class="l-4">color:red;size:xl</span></td>
+        <td ><label class="l-4" style="user-select: none">📦</label><span contenteditable="true" class="l-4 label-open">8</span></td>
+      </tr>
+      <tr class="bottom-border">
+        <td><span class="l-4">color:red;size:xl</span></td>
+        <td ><label class="l-4" style="user-select: none">📦</label><span contenteditable="true" class="l-4 label-open">8</span></td>
+      </tr>
+      
   </table>
 
+
+  <button  class="b-2" style="margin-top: 10px; margin-bottom: 10px;" id="dependancy-generate">Generate stock</button>
+  <button  class="b-2" style="margin-top: 10px; margin-bottom: 10px;" id="dependancy-generate">Add to stock</button>
 
 <!-- 
 
@@ -161,7 +89,6 @@ generate button will generate dependants
 and push data to db
 sku will be file name + product option full list
 --------------------------------------------------------------->
-<button id="dependancy-generate">re-generate/generate</button>
 <button hidden id="dependancy-generate-caution">generate</button>
 <button hidden id="dependancy-generate-accept">accept</button>
 <button hidden id="dependancy-generate-decline">decline</button>
