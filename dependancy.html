@@ -1,5 +1,9 @@
 
 
+<!-- 
+
+    general update: put to log if checkbox checked/unchecked
+-->
 <div data-product="sku">
 <!-------------------------dependants -------------------------------------->
 <h1 
@@ -22,18 +26,17 @@ sku will be file name + product option full list
 <span data-product-option-legend="">color</span> 
 <!----------------------------------------------------------------------------
     data-dependee-choice  
-    checkboxes inserted after data-dependant-name with js after page load
-    each checkbox added for each data-dependee-name, in each data-dependant element childs
+    checkboxes inserted after data-product-option-legend with js after page load
+    1 checkbox added for 1 data-dependee-name
 ------------------------------------------------------------------------------------->
 <input id="main image"  data-dependant-choice type="checkbox"><label for="main image">main image</label>
 <input id="heading"    data-dependant-choice  type="checkbox"><label for="heading">main image</label> 
 <br>
 
 <!----------------------------------------------------------------------------------------------
-each radio button inserted by js, after page load, before data-dependant-option element
-take value from it label value
-put  check on first  checkbox ( repeat for every data-dependant container)
-make general action if checkbox within genrated page checked or unchecked save this action in log
+each radio button inserted by js, after page load, before "data-product-option-value" element
+take value from  text content of "data-product-option-value" element
+put  checked on first  checkbox in "data-product-option"
 ----------------------------------------------------------------------------------------------->
 <input type="radio" id="option-1" name="color" value="blue" checked>
 <label for="option-1" data-product-option-value="">blue</label>
@@ -51,34 +54,34 @@ make general action if checkbox within genrated page checked or unchecked save t
     click generate
     show caution
     click confirm
-    generate outcome list for dependancy
+    generate outcome list
     generate outcome list for every dependee
-    clear all dependee copies, leaving 1 copy of each dependee, push to log these actions 
+    clear all dependee copies, leaving 1 copy of each dependee
     remove content from each dependee (it should be similar code as when dublicating)
     dublicate each dependee as many times (-1) as many items in outcome list for every dependee
-    put to each dependee value from it dependee outcome list
+    put to each dependee "data-product-option" from it dependee outcome list
 -->
 
-<!--dependancy gonna be only one inside article element-->
+<!--dependancy gonna be only one inside "data-product" element-->
 </div>
 
 
 
 
 
-<!-- publish page variant  -->
+<!-- PUBLISHED  page variant, has no extra marks, and enough to work for buy options, and change product options -->
 
 <div data-product="sku">
-
     <h1 data-product-option="color:blue">heading</h1>
     <img data-product-option="color:blue"></img>
-    
+
     <fieldset data-product-option> 
     <legend data-product-option-legend="">color</legend> 
-    
+
     <input type="radio" id="sku-blue" name="color" value="blue" checked>
     <label for="sku-blue" data-product-option-value="">blue</label>
-    
+
     <input type="radio" id="sku-red" name="color" value="red">
     <label data-product-option-value="" for="sku-red">red</label>
+    
     </fieldset>
