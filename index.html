@@ -2887,10 +2887,13 @@ document.addEventListener('DOMContentLoaded', function() {
         let compEls = []
         const mId = targetElementId.replace('-tree', '').split(':')[0]
         console.log('miiid' + mId)
+        const already = []
         document.querySelectorAll('[id^="' + mId + '"]').forEach(
           el => {
-            if (!el.id.endsWith('-tree') && !el.id.endsWith('-fieldset')) {
-              treeEls.push(document.getElementById(el.id + '-tree')); compEls.push(el)
+            if (!el.id.endsWith('-tree') && !el.id.endsWith('-fieldset') && !already.includes(el.getAttribute('data-replaceid'))) {
+              treeEls.push(document.getElementById(el.id + '-tree'));
+               compEls.push(el)
+               already.push(el.getAttribute('data-replaceid'))
             }
           }
         );
