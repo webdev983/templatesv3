@@ -2652,7 +2652,7 @@ document.addEventListener('DOMContentLoaded', function() {
         for (const el of arr) {
           console.log('1- ' + el)
           const treeEl = document.getElementById(el)
-          const box = treeEl.querySelector('#selectedCheckbox')
+          const box = treeEl?.querySelector('#selectedCheckbox')
           if (box) {
             console.log('d55')
             box.checked = false
@@ -2826,8 +2826,8 @@ document.addEventListener('DOMContentLoaded', function() {
           else {
             const s = []
             const s1 = []
-            console.log('sss'+selectedArrayNotSorted[1])
-            document.querySelectorAll('[id^="' + selectedArrayNotSorted[1].replace('-tree','').split(':')[0] + '"]').forEach(el => {
+            console.log('sss' + selectedArrayNotSorted[1])
+            document.querySelectorAll('[id^="' + selectedArrayNotSorted[1].replace('-tree', '').split(':')[0] + '"]').forEach(el => {
               console.log('eel' + el.id)
               if (!el.id.endsWith('-tree') && !el.id.endsWith('-fieldset')) {
                 s.push(document.getElementById(el.id + '-tree'));
@@ -2892,8 +2892,8 @@ document.addEventListener('DOMContentLoaded', function() {
           el => {
             if (!el.id.endsWith('-tree') && !el.id.endsWith('-fieldset') && !already.includes(el.getAttribute('data-replaceid'))) {
               treeEls.push(document.getElementById(el.id + '-tree'));
-               compEls.push(el)
-               already.push(el.getAttribute('data-replaceid'))
+              compEls.push(el)
+              already.push(el.getAttribute('data-replaceid'))
             }
           }
         );
@@ -3415,8 +3415,18 @@ document.addEventListener('DOMContentLoaded', function() {
             for (const element of restOfElements) {
               const l = element.split(';').length
               document.querySelectorAll('[id^="' + element + '"]').forEach(el => {
-                el.id.endsWith('-fieldset') && el.id.endsWith('-tree') && el.id.split(';').length === l && items.push(el.id)
+                el.id.endsWith('-tree') && el.id.split(';').length === l && items.push(el.id)
               });
+            }
+            if (!items.length) {
+              for (const element of restOfElements) {
+                const mId = getWithoutCopyId(element)
+                console.log('miiid ' + mId)
+                document.querySelectorAll('[id^="' + mId + '"]').forEach(el => {
+                  console.log('dddd '+ el.id)
+                  el.id.endsWith('-tree') && el.id.split(';').length === l && items.push(el.id)
+                });
+              }
             }
             console.log('iteeems' + JSON.stringify(items))
 
