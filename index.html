@@ -235,7 +235,7 @@
         </fieldset>
         <fieldset id="tree-element" data-element="code-tree-tag">
           <legend>💬</legend>
-          <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
+          <input id="selectedCheckbox" hidden type="checkbox" onchange="handleCheckboxChange(event)">
           <button class="b-3 arrow-hover" data-element="code-tree-show-hide-button"
             onclick="toggleSubFields(event)">&#8594;</button>
           <button class="b-3" data-element="code-tree-tag-name-button"
@@ -2648,6 +2648,18 @@ document.addEventListener('DOMContentLoaded', function() {
       console.log('start')
       var firstElementId = selectedArrayNotSorted[0];
       var restOfElements = selectedArrayNotSorted.slice(1);
+      const removeSelected = (arr)=>{
+        for(const el of arr){
+          console.log('1- ' + el)
+          const treeEl = document.getElementById(el)
+          const box = treeEl.querySelector('#selectedCheckbox')
+          if( box){
+            console.log('d55')
+            box.checked = false
+          }
+        }
+      }
+      removeSelected(restOfElements)
       if (components.includes(firstElementId.replace('-tree', ''))) {
         console.log('in555')
         const target = document.getElementById(firstElementId)
