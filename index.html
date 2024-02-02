@@ -2726,12 +2726,15 @@ document.addEventListener('DOMContentLoaded', function() {
               return containerId ? document.getElementById(containerId) : document
             }
             getContainer().querySelectorAll('[id^="' + selectedId.split(':')[0] + '"]').forEach(el => {
-              if ((!attr || attr === el.getAttribute('data-replaceID')) && !el.id.endsWith('-tree')) {
+              if ((!attr || attr === el.getAttribute('data-replaceID')) && !el.id.endsWith('-tree') && !el.id.endsWith('-fieldset')) {
                 selectedElements.push(document.getElementById(el.id + '-tree'));
                 selectedElements2.push(el)
               }
 
             });
+            console.log('ppp '+Array.from(selectedElements).map(e=>e?.id))
+            console.log('ppp '+Array.from(selectedElements2).map(e=>e?.id))
+
             selectedElements = selectedElements.filter(el => el.id.split(';').length === l)
             selectedElements2 = selectedElements2.filter(el => el.id.split(';').length === l)
             treeEls.push(...selectedElements)
@@ -2823,13 +2826,13 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('miiid' + mId)
         document.querySelectorAll('[id^="' + mId + '"]').forEach(
           el => {
-            if (!el.id.endsWith('-tree')) {
+            if (!el.id.endsWith('-tree') && !el.id.endsWith('-fieldset')) {
               treeEls.push(document.getElementById(el.id + '-tree')); compEls.push(el)
             }
           }
         );
         for (let i = 0; i < treeEls.length; i++) {
-          console.log('el pushed ' + treeEls[i].id)
+          console.log('el pushed 1' + treeEls[i].id)
           handle(treeEls[i], compEls[i], true)
         }
       }
@@ -3086,7 +3089,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const already = []
             for (const element of copies) {
-              if (element.id.endsWith('-tree')) {
+              if (element.id.endsWith('-tree') || element.id.endsWith('-fieldset')) {
                 continue
               }
               const replaceId = element.getAttribute('data-replaceid')
@@ -3096,7 +3099,7 @@ document.addEventListener('DOMContentLoaded', function() {
               for (const element of restOfElements) {
                 const l = element.split(';').length
                 document.querySelectorAll('[id^="' + element + '"]').forEach(el => {
-                  !el.id.endsWith('-tree') && el.id.split(';').length === l && el.getAttribute('data-replaceid') === replaceId && items.push(el.id + '-tree')
+                  !el.id.endsWith('-fieldset') && !el.id.endsWith('-tree') && el.id.split(';').length === l && el.getAttribute('data-replaceid') === replaceId && items.push(el.id + '-tree')
                 });
               }
               console.log('prob items 1 ' + JSON.stringify(items))
@@ -3346,7 +3349,7 @@ document.addEventListener('DOMContentLoaded', function() {
             for (const element of restOfElements) {
               const l = element.split(';').length
               document.querySelectorAll('[id^="' + element + '"]').forEach(el => {
-                el.id.endsWith('-tree') && el.id.split(';').length === l && items.push(el.id)
+                el.id.endsWith('-fieldset') && el.id.endsWith('-tree') && el.id.split(';').length === l && items.push(el.id)
               });
             }
             console.log('iteeems' + JSON.stringify(items))
@@ -3360,7 +3363,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const already = []
             for (const element of copies) {
-              if (element.id.endsWith('-tree')) {
+              if (element.id.endsWith('-tree') || element.id.endsWith('-fieldset')) {
                 continue
               }
               const replaceId = element.getAttribute('data-replaceid')
@@ -3370,7 +3373,7 @@ document.addEventListener('DOMContentLoaded', function() {
               for (const element of restOfElements) {
                 const l = element.split(';').length
                 document.querySelectorAll('[id^="' + element + '"]').forEach(el => {
-                  !el.id.endsWith('-tree') && el.id.split(';').length === l && el.getAttribute('data-replaceid') === replaceId && items.push(el.id + '-tree')
+                  !el.id.endsWith('-fieldset') && !el.id.endsWith('-tree') && el.id.split(';').length === l && el.getAttribute('data-replaceid') === replaceId && items.push(el.id + '-tree')
                 });
               }
               console.log('prob items 1 ' + JSON.stringify(items))
@@ -3732,7 +3735,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // component
         if (key === 'style' || key === 'class') {
           const selector = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
-          document.querySelectorAll(selector).forEach(element => !element.id.endsWith('-tree') && element.setAttribute(key, value))
+          document.querySelectorAll(selector).forEach(element => !element.id.endsWith('-fieldset') && !element.id.endsWith('-tree') && element.setAttribute(key, value))
           break;
         }
 
