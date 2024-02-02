@@ -1755,7 +1755,8 @@ document.addEventListener('DOMContentLoaded', function() {
       const actionObject = {
         time: (new Date()).getTime(),
         action: action,
-        target_element: [{ id: parentId + '-tree' }, { id: selectedElementId + '-tree' }],
+        target_element: [{ id: parentId.replace('-fieldset','') + '-tree' }, { id: selectedElementId + '-tree' }],
+        move:true,
       }
       pushAction(actionObject);
       // Get a NodeList of all elements with the class 'receive-target'
@@ -2717,6 +2718,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       const handle = (targetFieldset, targetFieldset2, flag) => {
         console.log('handling')
+        console.log('handling move'+move)
         // Get the parent fieldset of the target
         var parentFieldset = targetFieldset.parentNode;
         var parentFieldset2 = targetFieldset2?.parentNode
@@ -2761,29 +2763,50 @@ document.addEventListener('DOMContentLoaded', function() {
 
           }
           else {
+            console.log('moving')
             selectedId = selectedArray[i]
             const treeEl = document.getElementById(selectedId)
-            const pageEl = document.getElementById(removeLastOccurrence(selectedId, '-tree'))
+            let pageEl = document.getElementById(removeLastOccurrence(selectedId, '-tree')+ '-fieldset')
+            if(!pageEl){
+              console.log('true11')
+              pageEl = document.getElementById(removeLastOccurrence(selectedId, '-tree'))
+            }
+            
+           
+            
             var clonedFieldset = cloneWithDescendants(treeEl);
             var arrowButton = clonedFieldset.querySelector('[data-element="code-tree-show-hide-button"]');
 
             arrowButton.textContent = '→';
+            var clonedFieldset2 = cloneWithDescendants(pageEl);
             if (action === 'Append') {
               targetFieldset.appendChild(clonedFieldset);
+              if(targetFieldset2.parentNode.id.startsWith(targetFieldset2.id)){
+                targetFieldset2.parentNode.appendChild(clonedFieldset2);
+              }
+              else{
+                targetFieldset2.appendChild(clonedFieldset2);
+              }
+              
             } else if (action === 'InsertBefore') {
 
               parentFieldset.insertBefore(clonedFieldset, parentFieldset.children[index]);
               index++; // Increment the index to maintain the correct order
-            }
-            var clonedFieldset2 = cloneWithDescendants(pageEl);
-            if (action === 'Append') {
-              targetFieldset2.appendChild(clonedFieldset2);
-            } else if (action === 'InsertBefore') {
-
-
-              parentFieldset2.insertBefore(clonedFieldset2, parentFieldset2.children[index2]);
+              if(targetFieldset2.parentNode.id.startsWith(targetFieldset2.id)){
+                console.log('5655')
+                parentFieldset2.parentNode.insertBefore(clonedFieldset2, parentFieldset2);
+              }
+              else{
+                console.log('5777')
+                console.log(targetFieldset2.parentNode.id)
+                console.log(targetFieldset2.id)
+                parentFieldset2.insertBefore(clonedFieldset2, parentFieldset2.children[index2]);
+              }
+              
               index2++; // Increment the index to maintain the correct order
             }
+            
+            
             treeEl.remove();
             pageEl.remove()
           }
@@ -3345,6 +3368,7 @@ document.addEventListener('DOMContentLoaded', function() {
           break;
         }
         if (target_element.length) {
+          console.log('movestat '+ move)
           handleAppendOrInsert('Append', target_element.map(i => i.id), move)
         }
         break;
