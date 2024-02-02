@@ -428,9 +428,9 @@
           <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
           <span></span><span id="code-tree-amount-selected-for-append-or-insert" style="font-size: 24px;">0</span>
           <button class="b-2" id="code-tree-click-tag-approve" onclick="approve(event)"> ✅ APPROVE</button>
-          <label label for="code-tree-menu-dublicate-with-parent-option">⚠️</label><input
+          <label label for="code-tree-menu-dublicate-with-parent-option" id="code-tree-menu-dublicate-with-parent-option-1">⚠️</label><input
             id="code-tree-menu-dublicate-with-parent-option" type="checkbox"><label
-            for="code-tree-menu-dublicate-with-parent-option">Duplicate with Parent</label>
+            for="code-tree-menu-dublicate-with-parent-option" id="code-tree-menu-dublicate-with-parent-option-2">Duplicate with Parent</label>
         </fieldset>
 
 
@@ -2381,7 +2381,8 @@ document.addEventListener('DOMContentLoaded', function() {
       const clonedFieldset = fieldset.cloneNode(true);
 
       clonedFieldset.id = clonedFieldset.id + ';' + parentId;
-      clonedFieldset.setAttribute('action', e.target.parentNode.getAttribute('action'))
+      const action =  e.target.parentNode.getAttribute('action')
+      clonedFieldset.setAttribute('action',action)
       e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
       e.target.parentNode.remove()
       // Get all fieldsets with data-element="code-tree-tag"
@@ -2389,9 +2390,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
       // Iterate through each fieldset and make their checkboxes visible
       codeTreeTagFieldsets.forEach(function (fieldset) {
-        var checkbox = fieldset.querySelector('input[type="checkbox"]');
-        if (checkbox) {
-          checkbox.removeAttribute('hidden');
+        var checkbox = fieldset.querySelector('#code-tree-menu-dublicate-with-parent-option');
+        if (checkbox && action ==='InsertBefore') {
+          fieldset.querySelector('#code-tree-menu-dublicate-with-parent-option-1').setAttribute('hidden' ,"");
+          fieldset.querySelector('#code-tree-menu-dublicate-with-parent-option-2').setAttribute('hidden' ,"");
+          checkbox.setAttribute('hidden' ,"");
         }
       });
     }
