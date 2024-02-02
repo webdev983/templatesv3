@@ -1844,7 +1844,7 @@ document.addEventListener('DOMContentLoaded', function() {
       var target = e.target;
       console.log('target ' + target.id)
       // Check if the element has the 'data-visual-contenteditable' attribute
-      
+
       if (target.hasAttribute('data-visual-contenteditable')) {
 
 
@@ -2648,12 +2648,12 @@ document.addEventListener('DOMContentLoaded', function() {
       console.log('start')
       var firstElementId = selectedArrayNotSorted[0];
       var restOfElements = selectedArrayNotSorted.slice(1);
-      const removeSelected = (arr)=>{
-        for(const el of arr){
+      const removeSelected = (arr) => {
+        for (const el of arr) {
           console.log('1- ' + el)
           const treeEl = document.getElementById(el)
           const box = treeEl.querySelector('#selectedCheckbox')
-          if( box){
+          if (box) {
             console.log('d55')
             box.checked = false
           }
@@ -2744,8 +2744,8 @@ document.addEventListener('DOMContentLoaded', function() {
               }
 
             });
-            console.log('ppp '+Array.from(selectedElements).map(e=>e?.id))
-            console.log('ppp '+Array.from(selectedElements2).map(e=>e?.id))
+            console.log('ppp ' + Array.from(selectedElements).map(e => e?.id))
+            console.log('ppp ' + Array.from(selectedElements2).map(e => e?.id))
 
             selectedElements = selectedElements.filter(el => el.id.split(';').length === l)
             selectedElements2 = selectedElements2.filter(el => el.id.split(';').length === l)
@@ -2784,44 +2784,95 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         console.log('eels12' + JSON.stringify(treeEls.map(e => e.id)))
         if (!move) {
+          if (treeEls.length) {
+            treeEls.sort(sortByPlace1)
+            compEls.sort(sortByPlace1)
+            for (const selectedFieldset of treeEls) {
+              console.log('found 11' + selectedFieldset.id)
+              var clonedFieldset = cloneWithDescendants(selectedFieldset);
+              var arrowButton = clonedFieldset.querySelector('[data-element="code-tree-show-hide-button"]');
 
-          treeEls.sort(sortByPlace1)
-          compEls.sort(sortByPlace1)
-          for (const selectedFieldset of treeEls) {
-            console.log('found 11' + selectedFieldset.id)
+              arrowButton.textContent = '→';
+              // Insert the cloned fieldset based on the action
+              if (action === 'Append') {
+                targetFieldset.appendChild(clonedFieldset);
+              } else if (action === 'InsertBefore') {
+
+                parentFieldset.insertBefore(clonedFieldset, parentFieldset.children[index]);
+                index++; // Increment the index to maintain the correct order
+              }
+
+              // Remove the original fieldset
+              selectedFieldset.remove();
+            }
+            for (const selectedFieldset2 of compEls) {
+              // Clone the selected fieldset and its descendants
+              var clonedFieldset2 = cloneWithDescendants(selectedFieldset2);
+
+              // Insert the cloned fieldset based on the action
+              if (action === 'Append') {
+                targetFieldset2.appendChild(clonedFieldset2);
+              } else if (action === 'InsertBefore') {
+
+
+                parentFieldset2.insertBefore(clonedFieldset2, parentFieldset2.children[index2]);
+                index2++; // Increment the index to maintain the correct order
+              }
+
+              // Remove the original fieldset
+              selectedFieldset2.remove();
+            }
+          }
+          else {
+            const s = []
+            const s1 = []
+            console.log('sss'+selectedArrayNotSorted[1])
+            document.querySelectorAll('[id^="' + selectedArrayNotSorted[1].replace('-tree','').split(':')[0] + '"]').forEach(el => {
+              console.log('eel' + el.id)
+              if (!el.id.endsWith('-tree') && !el.id.endsWith('-fieldset')) {
+                s.push(document.getElementById(el.id + '-tree'));
+                s1.push(el)
+              }
+
+            });
+            console.log('sss' + JSON.stringify(s))
+            console.log('sss' + JSON.stringify(s1))
+            const selectedFieldset = s[0]
+            const selectedFieldset2 = s1[0]
+
             var clonedFieldset = cloneWithDescendants(selectedFieldset);
             var arrowButton = clonedFieldset.querySelector('[data-element="code-tree-show-hide-button"]');
 
             arrowButton.textContent = '→';
             // Insert the cloned fieldset based on the action
-            if (action === 'Append') {
-              targetFieldset.appendChild(clonedFieldset);
-            } else if (action === 'InsertBefore') {
 
-              parentFieldset.insertBefore(clonedFieldset, parentFieldset.children[index]);
-              index++; // Increment the index to maintain the correct order
-            }
-
-            // Remove the original fieldset
-            selectedFieldset.remove();
-          }
-          for (const selectedFieldset2 of compEls) {
-            // Clone the selected fieldset and its descendants
             var clonedFieldset2 = cloneWithDescendants(selectedFieldset2);
-
+            if (!flag) {
+              const splited = clonedFieldset2.id.split(':')
+              splited.pop()
+              const newId = [...splited, generateUUID()].join(':')
+              clonedFieldset2.id = newId
+              clonedFieldset.id = newId + '-tree'
+            }
             // Insert the cloned fieldset based on the action
             if (action === 'Append') {
               targetFieldset2.appendChild(clonedFieldset2);
+              targetFieldset.appendChild(clonedFieldset);
             } else if (action === 'InsertBefore') {
 
 
               parentFieldset2.insertBefore(clonedFieldset2, parentFieldset2.children[index2]);
               index2++; // Increment the index to maintain the correct order
+              parentFieldset.insertBefore(clonedFieldset, parentFieldset.children[index]);
+              index++; // Increment the index to maintain the correct order
             }
 
             // Remove the original fieldset
-            selectedFieldset2.remove();
+            flag && selectedFieldset2.remove();
+            // Remove the original fieldset
+            flag && selectedFieldset.remove();
           }
+
         }
       }
       if (document.getElementById(targetElementId)) {
@@ -2843,9 +2894,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
           }
         );
-        for (let i = 0; i < treeEls.length; i++) {
+        for (let i = treeEls.length - 1; i >= 0; i--) {
           console.log('el pushed 1' + treeEls[i].id)
-          handle(treeEls[i], compEls[i], true)
+          handle(treeEls[i], compEls[i], i === 0)
         }
       }
 
@@ -3675,8 +3726,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
           elementToChange2.parentNode.replaceChild(newElement, elementToChange2);
           // Add an event listener to the entire document to track double-clicks
-         
-          
+
+
 
         }
         break;
