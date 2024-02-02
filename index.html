@@ -2387,14 +2387,17 @@ document.addEventListener('DOMContentLoaded', function() {
       e.target.parentNode.remove()
       // Get all fieldsets with data-element="code-tree-tag"
       var codeTreeTagFieldsets = document.querySelectorAll('fieldset[data-element="code-tree-tag"]');
-
-      // Iterate through each fieldset and make their checkboxes visible
-      codeTreeTagFieldsets.forEach(function (fieldset) {
-        var checkbox = fieldset.querySelector('#code-tree-menu-dublicate-with-parent-option');
+      var checkbox = fieldset.querySelector('#code-tree-menu-dublicate-with-parent-option');
         if (checkbox && action ==='InsertBefore') {
           fieldset.querySelector('#code-tree-menu-dublicate-with-parent-option-1').setAttribute('hidden' ,"");
           fieldset.querySelector('#code-tree-menu-dublicate-with-parent-option-2').setAttribute('hidden' ,"");
           checkbox.setAttribute('hidden' ,"");
+        }
+      // Iterate through each fieldset and make their checkboxes visible
+      codeTreeTagFieldsets.forEach(function (fieldset) {
+        var checkbox = fieldset.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+          checkbox.removeAttribute('hidden');
         }
       });
     }
