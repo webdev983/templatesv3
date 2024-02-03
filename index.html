@@ -1874,6 +1874,26 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Utility function to add menu entry
+    function findRelatedElements(inputId) {
+      // Step 1: Remove the -tree suffix
+
+      // Step 2: If it ends with -copy-x, remove that part
+      let modifiedId = removeLastOccurrence(inputId, '-tree');
+      const splited = modifiedId.split(';')
+      const last = splited[splited.length - 1]
+      const lastId = last.split(':')[0]
+      splited.pop()
+      modifiedId = [...splited, lastId].join(';')
+      console.log('modfi '+modifiedId)
+      // Step 3: Query for elements starting with the modified ID
+      const selector = '[id^="' + modifiedId + '"]';
+      const matchingElements = document.querySelectorAll(selector);
+
+      // Step 4: Filter to get only elements that end with -tree
+      const filteredElements = Array.from(matchingElements).filter(element => element.id.endsWith('-tree'));
+
+      return Array.from(filteredElements).length
+    }
     function addMenuEntry(menu, text, clickHandler) {
       const entry = document.createElement('div');
       entry.className = 'menu-option';
@@ -1894,26 +1914,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return textareaValue
       }
       if (!textareaValue) {
-        function findRelatedElements(inputId) {
-          // Step 1: Remove the -tree suffix
 
-          // Step 2: If it ends with -copy-x, remove that part
-          let modifiedId = removeLastOccurrence(inputId, '-tree');
-          const splited = modifiedId.split(';')
-          const last = splited[splited.length - 1]
-          const lastId = last.split(':')[0]
-          splited.pop()
-          modifiedId = [...splited, lastId].join(';')
-
-          // Step 3: Query for elements starting with the modified ID
-          const selector = '[id^="' + modifiedId + '"]';
-          const matchingElements = document.querySelectorAll(selector);
-
-          // Step 4: Filter to get only elements that end with -tree
-          const filteredElements = Array.from(matchingElements).filter(element => element.id.endsWith('-tree'));
-
-          return Array.from(filteredElements).length
-        }
         if (findRelatedElements(event.target.id) > 1) {
           pushAction({
             time: (new Date()).getTime(),
@@ -1927,7 +1928,10 @@ document.addEventListener('DOMContentLoaded', function() {
           }
         }
         else {
-          alert('last element')
+          console.log('iiid '+ event.target.id)
+          const attr = event.target.getAttribute('data-visual-defaultTextNode')
+          console.log('attr' + attr)
+          event.target.textContent = attr
         }
         return
       }
@@ -2145,18 +2149,33 @@ document.addEventListener('DOMContentLoaded', function() {
           menu.style.display = 'none';
         });
         addMenuEntry(menu, `remove tag`, async () => {
-          await pushAction({
-            time: (new Date()).getTime(),
-            action: 'removeTag',
-            target_element: e.target.id + '-tree',
+          if (findRelatedElements(e.target.id) > 1) {
+            await pushAction({
+              time: (new Date()).getTime(),
+              action: 'removeTag',
+              target_element: e.target.id + '-tree',
 
-          })
-          const el = document.getElementById(e.target.id + '-fieldset')
-          if (el) {
-            el.remove()
+            })
+            const el = document.getElementById(e.target.id + '-fieldset')
+            if (el) {
+              el.remove()
+            }
+          }
+          else {
+            console.log('iiid '+ e.target.id)
+            const attr = e.target.getAttribute('data-visual-defaultTextNode')
+            console.log('attr' + attr)
+            await pushAction({
+              time: (new Date()).getTime(),
+              action: 'textContent',
+              target_element: e.target.id + '-tree',
+              value:attr
+
+            })
           }
 
-        });
+        }
+        );
       }
     });
 
