@@ -2109,11 +2109,11 @@ document.addEventListener('DOMContentLoaded', function() {
         window.addEventListener('click', function () {
           menu.style.display = 'none';
         });
-        addMenuEntry(menu, `remove tag`,async () => {
+        addMenuEntry(menu, `remove tag`, async () => {
           await pushAction({
             time: (new Date()).getTime(),
             action: 'removeTag',
-            target_element: e.target.id+'-tree',
+            target_element: e.target.id + '-tree',
 
           })
           const el = document.getElementById(e.target.id + '-fieldset')
@@ -2140,6 +2140,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const originalRect = original.getBoundingClientRect();
         let siblingWithInsertBefore
         let parentWithAppendChild
+
         if (
           e.target.parentElement.id === e.target.id + '-fieldset') {
           // Check sibling for data-visual-insertBefore
@@ -2154,7 +2155,7 @@ document.addEventListener('DOMContentLoaded', function() {
         else {
           // Check sibling for data-visual-insertBefore
           siblingWithInsertBefore = e.target.parentElement && Array.from(e.target.parentElement.children).filter(
-            child => child !== e.target && child.hasAttribute('data-visual-insertbefore')
+            child => child.hasAttribute('data-visual-insertbefore')
           );
 
           // Check if the parent has data-visual-appendchild
@@ -2162,6 +2163,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         siblingWithInsertBefore.forEach(sibling => {
           // Create the "+" button element with data attributes
+          const previousSibling = sibling.previousElementSibling;
+          if (previousSibling && previousSibling.id.replace('-fieldset', '') === original.id) {
+            return;
+          }
+          if (sibling.id.replace('-fieldset', '') === original.id) {
+            return
+          }
           const plusButton = createButton('InsertBefore', sibling.id);
           sibling.parentNode.insertBefore(plusButton, sibling);
           addHoverListeners(plusButton);
