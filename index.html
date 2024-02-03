@@ -1824,32 +1824,44 @@ document.addEventListener('DOMContentLoaded', function() {
       // Perform additional actions if needed
 
 
-      const children = document.getElementById(parentId).children;
 
       let lastFieldsetTreeId = null;
+      let actionObject
+      if (action === 'InsertAfter') {
+        const children = document.getElementById(parentId).children;
 
-      for (let i = children.length - 1; i >= 0; i--) {
-        const child = children[i];
-        console.log(child.id)
-        if (child.tagName === 'FIELDSET' && child.id.endsWith('-fieldset')) {
-          lastFieldsetTreeId = child.id;
-          break; // Found the last matching element, exit the loop
+        for (let i = children.length - 1; i >= 0; i--) {
+          const child = children[i];
+          console.log(child.id)
+          if (child.tagName === 'FIELDSET' && child.id.endsWith('-fieldset')) {
+            lastFieldsetTreeId = child.id;
+            break; // Found the last matching element, exit the loop
+          }
+        }
+
+        if (lastFieldsetTreeId !== null) {
+          console.log('Last fieldset with id ending in -tree:', lastFieldsetTreeId);
+        } else {
+          console.log('No matching fieldset with id ending in -tree found.');
+        }
+
+
+        actionObject = {
+          time: (new Date()).getTime(),
+          action: action,
+          target_element: [{ id: lastFieldsetTreeId.replace('-fieldset', '') + '-tree' }, { id: selectedElementId + '-tree' }],
+          move: true,
+        }
+      }
+      else {
+        actionObject = {
+          time: (new Date()).getTime(),
+          action: action,
+          target_element: [{ id: parentId.replace('-fieldset', '') + '-tree' }, { id: selectedElementId + '-tree' }],
+          move: true,
         }
       }
 
-      if (lastFieldsetTreeId !== null) {
-        console.log('Last fieldset with id ending in -tree:', lastFieldsetTreeId);
-      } else {
-        console.log('No matching fieldset with id ending in -tree found.');
-      }
-
-
-      const actionObject = {
-        time: (new Date()).getTime(),
-        action: action,
-        target_element: [{ id: lastFieldsetTreeId.replace('-fieldset', '') + '-tree' }, { id: selectedElementId + '-tree' }],
-        move: true,
-      }
       pushAction(actionObject);
       // Get a NodeList of all elements with the class 'receive-target'
       const buttonsToRemove = document.querySelectorAll('.receive-target');
