@@ -7,37 +7,48 @@
   <style>
 
   </style>
-<style>
+  <style>
+    div[data-visual-head] {
+      position: relative;
+      /* Для позиционирования псевдоэлемента */
+      border-top: 1px dashed #4A90E2;
+      /* Верхняя граница для div */
+      border-bottom: 1px dashed #4A90E2;
+      /* Верхняя граница для div */
 
-div[data-visual-head] {
-  position: relative; /* Для позиционирования псевдоэлемента */
-  border-top: 1px dashed #4A90E2; /* Верхняя граница для div */
-  border-bottom: 1px dashed #4A90E2; /* Верхняя граница для div */
+      text-align: center;
+      /* Если вам нужно выровнять текст внутри div по центру */
+      margin-top: 30px;
+      /* Отступ, чтобы было место для текста над границей */
+    }
 
-  text-align: center; /* Если вам нужно выровнять текст внутри div по центру */
-  margin-top: 30px; /* Отступ, чтобы было место для текста над границей */
-}
-
-div[data-visual-head]::before {
-  content: "Head"; /* Текст, который будет отображаться */
-  font-size: 24px; /* Размер текста */
-  color: #4A90E2; /* Цвет текста */
-  position: absolute;
-  top: -18px; /* Позиционирование над div */
-  left: 50%; /* Центрирование текста */
-  transform: translateX(-50%); /* Точное центрирование текста */
-  background-color: white; /* Фон, соответствующий цвету страницы; может потребоваться настройка */
-  padding: 0 5px; /* Небольшой отступ вокруг текста */
-}
-
-</style>
+    div[data-visual-head]::before {
+      content: "Head";
+      /* Текст, который будет отображаться */
+      font-size: 24px;
+      /* Размер текста */
+      color: #4A90E2;
+      /* Цвет текста */
+      position: absolute;
+      top: -18px;
+      /* Позиционирование над div */
+      left: 50%;
+      /* Центрирование текста */
+      transform: translateX(-50%);
+      /* Точное центрирование текста */
+      background-color: white;
+      /* Фон, соответствующий цвету страницы; может потребоваться настройка */
+      padding: 0 5px;
+      /* Небольшой отступ вокруг текста */
+    }
+  </style>
 
 
   <style>
 
 
 
-</style>
+  </style>
   <style>
     button[data-element="code-tree-attributes-button"],
     button[data-element="code-tree-text-content-button"],
@@ -453,9 +464,11 @@ div[data-visual-head]::before {
           <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
           <span></span><span id="code-tree-amount-selected-for-append-or-insert" style="font-size: 24px;">0</span>
           <button class="b-2" id="code-tree-click-tag-approve" onclick="approve(event)"> ✅ APPROVE</button>
-          <label label for="code-tree-menu-dublicate-with-parent-option" id="code-tree-menu-dublicate-with-parent-option-1">⚠️</label><input
+          <label label for="code-tree-menu-dublicate-with-parent-option"
+            id="code-tree-menu-dublicate-with-parent-option-1">⚠️</label><input
             id="code-tree-menu-dublicate-with-parent-option" type="checkbox"><label
-            for="code-tree-menu-dublicate-with-parent-option" id="code-tree-menu-dublicate-with-parent-option-2">Duplicate with Parent</label>
+            for="code-tree-menu-dublicate-with-parent-option"
+            id="code-tree-menu-dublicate-with-parent-option-2">Duplicate with Parent</label>
         </fieldset>
 
 
@@ -1710,7 +1723,27 @@ document.addEventListener('DOMContentLoaded', function() {
         addButton.className = 'receive-target';
         addButton.innerHTML = '➕';
         addButton.onclick = function () {
-          append(parentWithAppendChild.id, targetId, flag);
+          const children = document.getElementById(parentWithAppendChild.id).children;
+
+          let lastFieldsetTreeId = null;
+
+          for (let i = children.length - 1; i >= 0; i--) {
+            const child = children[i];
+            console.log(child.id)
+            if (child.tagName === 'FIELDSET' && child.id.endsWith('-fieldset')) {
+              lastFieldsetTreeId = child.id;
+              break; // Found the last matching element, exit the loop
+            }
+          }
+
+          if (lastFieldsetTreeId !== null) {
+            console.log('Last fieldset with id ending in -tree:', lastFieldsetTreeId);
+          } else {
+            console.log('No matching fieldset with id ending in -tree found.');
+          }
+          console.log(lastFieldsetTreeId)
+
+          insertAfter(lastFieldsetTreeId, targetId, flag);
           document.removeEventListener('click', clickRemoveButton);
           document.addEventListener('mouseover', handleMouseOver);
         };
@@ -1752,6 +1785,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Example function, adjust as needed
+    async function insertAfter(nextElementId, selectedElementId, flag) {
+      const actionObject = {
+        time: (new Date()).getTime(),
+        action: 'InsertAfter',
+        target_element: nextElementId.replace('-fieldset', '') + '-tree',
+        inserted_element: { originalId: selectedElementId + '-tree', id: duplicateId(selectedElementId).id },
+      };
+      await pushAction(actionObject, false, flag);
+      removeReceiveButtons();
+    }
+
+    // Example function, adjust as needed
     async function append(parentId, selectedElementId, flag) {
       // Perform additional actions if needed
       const actionObject = {
@@ -1780,8 +1825,8 @@ document.addEventListener('DOMContentLoaded', function() {
       const actionObject = {
         time: (new Date()).getTime(),
         action: action,
-        target_element: [{ id: parentId.replace('-fieldset','') + '-tree' }, { id: selectedElementId + '-tree' }],
-        move:true,
+        target_element: [{ id: parentId.replace('-fieldset', '') + '-tree' }, { id: selectedElementId + '-tree' }],
+        move: true,
       }
       pushAction(actionObject);
       // Get a NodeList of all elements with the class 'receive-target'
@@ -1891,6 +1936,11 @@ document.addEventListener('DOMContentLoaded', function() {
         target.addEventListener('blur', function (blurEvent) {
           // Call the saveT function when the element loses focus
           textContent = saveT(blurEvent, textContent)
+        });
+        target.addEventListener('keypress', function (keyPressEvent) {
+          if (keyPressEvent.keyCode === 13) {
+            textContent = saveT(keyPressEvent, textContent);
+          }
         });
       }
     }
@@ -2007,15 +2057,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         // Add entries for data-visual-duplicate siblings
+        const existingIds = []
         siblingsWithDuplicate.forEach(sibling => {
           console.log('taag' + sibling.tagName)
           let name = `➕ ${sibling.tagName.toLowerCase()}`
           if (sibling.hasAttribute('data-visual-title')) {
             name = `➕ ${sibling.getAttribute('data-visual-title')}`
           }
-          addMenuEntry(menu, name, () => {
-            handleMenuEntryClick(e.target.id, sibling.id, siblingWithInsertBefore, parentWithAppendChild);
-          });
+          const splited = fieldsetSibling.id.split(':')
+          splited.length > 1 && splited.pop()
+
+          if (!existingIds.includes(splited.join(':'))) {
+            existingIds.push(splited.join(':'))
+            addMenuEntry(menu, name, () => {
+
+              handleMenuEntryClick(e.target.id, sibling.id, siblingWithInsertBefore, parentWithAppendChild);
+
+
+            });
+          }
         });
 
         // Add entries for fieldset siblings
@@ -2024,9 +2084,17 @@ document.addEventListener('DOMContentLoaded', function() {
           if (fieldsetSibling.hasAttribute('data-visual-title')) {
             name = `➕ ${fieldsetSibling.getAttribute('data-visual-title')}`
           }
-          addMenuEntry(menu, name, () => {
-            handleMenuEntryClick(e.target.id, fieldsetSibling.children[1].id, siblingWithInsertBefore, parentWithAppendChild, true);
-          });
+          const splited = fieldsetSibling.id.split(':')
+          splited.length > 1 && splited.pop()
+
+          if (!existingIds.includes(splited.join(':'))) {
+            existingIds.push(splited.join(':').replace('-fieldset', ''))
+            addMenuEntry(menu, name, () => {
+
+              handleMenuEntryClick(e.target.id, fieldsetSibling.children[1].id, siblingWithInsertBefore, parentWithAppendChild, true);
+            });
+          }
+
         });
 
         // Adjust the position relative to the viewport
@@ -2040,6 +2108,19 @@ document.addEventListener('DOMContentLoaded', function() {
         // Hide the menu when clicking the left mouse button
         window.addEventListener('click', function () {
           menu.style.display = 'none';
+        });
+        addMenuEntry(menu, `remove tag`,async () => {
+          await pushAction({
+            time: (new Date()).getTime(),
+            action: 'removeTag',
+            target_element: e.target.id+'-tree',
+
+          })
+          const el = document.getElementById(e.target.id + '-fieldset')
+          if (el) {
+            el.remove()
+          }
+
         });
       }
     });
@@ -2407,18 +2488,18 @@ document.addEventListener('DOMContentLoaded', function() {
       const clonedFieldset = fieldset.cloneNode(true);
 
       clonedFieldset.id = clonedFieldset.id + ';' + parentId;
-      const action =  e.target.parentNode.getAttribute('action')
-      clonedFieldset.setAttribute('action',action)
+      const action = e.target.parentNode.getAttribute('action')
+      clonedFieldset.setAttribute('action', action)
       e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
       e.target.parentNode.remove()
       // Get all fieldsets with data-element="code-tree-tag"
       var codeTreeTagFieldsets = document.querySelectorAll('fieldset[data-element="code-tree-tag"]');
       var checkbox1 = clonedFieldset.querySelector('#code-tree-menu-dublicate-with-parent-option');
-        if (checkbox1 && action ==='InsertBefore') {
-          clonedFieldset.querySelector('#code-tree-menu-dublicate-with-parent-option-1').setAttribute('hidden' ,"");
-          clonedFieldset.querySelector('#code-tree-menu-dublicate-with-parent-option-2').setAttribute('hidden' ,"");
-          checkbox1.setAttribute('hidden' ,"");
-        }
+      if (checkbox1 && action === 'InsertBefore') {
+        clonedFieldset.querySelector('#code-tree-menu-dublicate-with-parent-option-1').setAttribute('hidden', "");
+        clonedFieldset.querySelector('#code-tree-menu-dublicate-with-parent-option-2').setAttribute('hidden', "");
+        checkbox1.setAttribute('hidden', "");
+      }
       // Iterate through each fieldset and make their checkboxes visible
       codeTreeTagFieldsets.forEach(function (fieldset) {
         var checkbox = fieldset.querySelector('input[type="checkbox"]');
@@ -2743,7 +2824,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       const handle = (targetFieldset, targetFieldset2, flag) => {
         console.log('handling')
-        console.log('handling move'+move)
+        console.log('handling move' + move)
         // Get the parent fieldset of the target
         var parentFieldset = targetFieldset.parentNode;
         var parentFieldset2 = targetFieldset2?.parentNode
@@ -2791,14 +2872,14 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('moving')
             selectedId = selectedArray[i]
             const treeEl = document.getElementById(selectedId)
-            let pageEl = document.getElementById(removeLastOccurrence(selectedId, '-tree')+ '-fieldset')
-            if(!pageEl){
+            let pageEl = document.getElementById(removeLastOccurrence(selectedId, '-tree') + '-fieldset')
+            if (!pageEl) {
               console.log('true11')
               pageEl = document.getElementById(removeLastOccurrence(selectedId, '-tree'))
             }
-            
-           
-            
+
+
+
             var clonedFieldset = cloneWithDescendants(treeEl);
             var arrowButton = clonedFieldset.querySelector('[data-element="code-tree-show-hide-button"]');
 
@@ -2806,32 +2887,32 @@ document.addEventListener('DOMContentLoaded', function() {
             var clonedFieldset2 = cloneWithDescendants(pageEl);
             if (action === 'Append') {
               targetFieldset.appendChild(clonedFieldset);
-              if(targetFieldset2.parentNode.id.startsWith(targetFieldset2.id)){
+              if (targetFieldset2.parentNode.id.startsWith(targetFieldset2.id)) {
                 targetFieldset2.parentNode.appendChild(clonedFieldset2);
               }
-              else{
+              else {
                 targetFieldset2.appendChild(clonedFieldset2);
               }
-              
+
             } else if (action === 'InsertBefore') {
 
               parentFieldset.insertBefore(clonedFieldset, parentFieldset.children[index]);
               index++; // Increment the index to maintain the correct order
-              if(targetFieldset2.parentNode.id.startsWith(targetFieldset2.id)){
+              if (targetFieldset2.parentNode.id.startsWith(targetFieldset2.id)) {
                 console.log('5655')
                 parentFieldset2.parentNode.insertBefore(clonedFieldset2, parentFieldset2);
               }
-              else{
+              else {
                 console.log('5777')
                 console.log(targetFieldset2.parentNode.id)
                 console.log(targetFieldset2.id)
                 parentFieldset2.insertBefore(clonedFieldset2, parentFieldset2.children[index2]);
               }
-              
+
               index2++; // Increment the index to maintain the correct order
             }
-            
-            
+
+
             treeEl.remove();
             pageEl.remove()
           }
@@ -3124,6 +3205,102 @@ document.addEventListener('DOMContentLoaded', function() {
         treeElement.insertBefore(newEle2, treeElement.firstChild);
         break;
 
+      case 'InsertAfter':
+
+        function insertAfter(newNode, referenceNode) {
+          if (referenceNode.nextSibling) {
+            referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+          } else {
+            referenceNode.parentNode.appendChild(newNode);
+          }
+        }
+
+        //case duplicate insert before  
+        if (inserted_element?.originalId) {
+          console.log('insert1' + JSON.stringify(command));
+          // fieldset
+          treeElement = document.getElementById(inserted_element?.originalId);
+          // component
+          componentElement = document.getElementById(removeLastOccurrence(inserted_element.originalId, '-tree'));
+
+          // Duplicate the element
+          const newEl = componentElement.cloneNode(true);
+          //newEl.textContent = newEl.tagName.toLowerCase();
+          // Set the id of the duplicated element to inserted_element.id
+          newEl.id = removeLastOccurrence(inserted_element.id, '-tree');
+          if (newEl.hasAttribute('data-visual-defaultTextNode') && newEl.hasAttribute('data-visual-element')) {
+            // Set child's text content to its content
+            newEl.innerText = newEl.getAttribute('data-visual-defaultTextNode')
+          }
+          console.log(newEl.id);
+
+          // Append the duplicated element to the componentElement
+          const compEl = document.getElementById(removeLastOccurrence(target_element, '-tree'))
+          if (visual) {
+            insertAfter(newEl, compEl.parentNode);
+            processElement(newEl);
+          } else {
+            insertAfter(newEl, compEl);
+          }
+
+          // Duplicate the treeElement content
+          const newEl2 = treeElement.cloneNode(true);
+
+          // Set the id of the duplicated treeElement to inserted_element.id + '-tree'
+          newEl2.id = inserted_element.id;
+
+          // Update the button text in the duplicated treeElement
+          const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']");
+
+          // Attach event listeners to the buttons in the duplicated treeElement
+          const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']");
+          button.addEventListener('mouseover', mouseOverTree);
+          button.addEventListener('mouseout', mouseOutTree);
+          const trEl = document.getElementById(target_element)
+          // Append the duplicated treeElement to the treeElement's parent
+          insertAfter(newEl2, trEl);
+
+
+          const newId1 = newEl.id.split(':')[newEl.id.split(':').length - 1]
+
+          function updateChildIdsRecursive(element, newId1, tree) {
+            const processed = []
+            element.querySelectorAll('[id]').forEach(child => {
+              const splited = child.id.split(';');
+              const splited2 = splited[splited.length - 1].replace('-tree', '').split(':')
+              let newSubId = splited2[0] + ':' + newId1
+              tree && (newSubId = newSubId + '-tree')
+              splited.pop()
+              const processed1 = [...splited, splited2[0]].join(';')
+              if (processed.find(el => el.startsWith(processed1))) {
+                console.log('status' + processed1)
+                console.log('status2' + JSON.stringify(processed))
+                child.remove()
+              }
+              else {
+                processed.push(processed1)
+                console.log('proce' + processed1)
+                child.id = [...splited, newSubId].join(';')
+                if (child.hasAttribute('data-visual-defaultTextNode') && child.hasAttribute('data-visual-element')) {
+                  // Set child's text content to its content
+                  child.innerText = child.getAttribute('data-visual-defaultTextNode')
+                }
+                // Recursively update ids for child's children
+                updateChildIdsRecursive(child, newId1, tree);
+              }
+
+            });
+          }
+
+          // Update ids of child elements within the duplicated elements recursively
+          updateChildIdsRecursive(newEl, newId1);
+          updateChildIdsRecursive(newEl2, newId1, true);
+
+          break;
+        }
+
+
+        break;
 
       case 'Append':
         // Handle the 'Append' action
@@ -3393,7 +3570,7 @@ document.addEventListener('DOMContentLoaded', function() {
           break;
         }
         if (target_element.length) {
-          console.log('movestat '+ move)
+          console.log('movestat ' + move)
           handleAppendOrInsert('Append', target_element.map(i => i.id), move)
         }
         break;
@@ -3478,7 +3655,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const mId = getWithoutCopyId(element)
                 console.log('miiid ' + mId)
                 document.querySelectorAll('[id^="' + mId + '"]').forEach(el => {
-                  console.log('dddd '+ el.id)
+                  console.log('dddd ' + el.id)
                   el.id.endsWith('-tree') && el.id.split(';').length === l && items.push(el.id)
                 });
               }
@@ -3585,7 +3762,7 @@ document.addEventListener('DOMContentLoaded', function() {
           else {
             compEl.parentNode.insertBefore(newEl, compEl);
           }
-          
+
           // Duplicate the treeElement content
           const newEl2 = treeElement.cloneNode(true);
 
