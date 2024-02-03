@@ -1876,9 +1876,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Utility function to add menu entry
     function findRelatedElements(inputId) {
       // Step 1: Remove the -tree suffix
-
+      
       // Step 2: If it ends with -copy-x, remove that part
       let modifiedId = removeLastOccurrence(inputId, '-tree');
+      const el = document.getElementById(inputId)
+      console.log('iiie ' +el.id)
+      const tag = el.tagName.toLowerCase()
       const splited = modifiedId.split(';')
       const last = splited[splited.length - 1]
       const lastId = last.split(':')[0]
@@ -1887,10 +1890,10 @@ document.addEventListener('DOMContentLoaded', function() {
       console.log('modfi '+modifiedId)
       // Step 3: Query for elements starting with the modified ID
       const selector = '[id^="' + modifiedId + '"]';
-      const matchingElements = document.querySelectorAll(selector);
+      const matchingElements = el.parentNode.querySelectorAll(selector);
 
       // Step 4: Filter to get only elements that end with -tree
-      const filteredElements = Array.from(matchingElements).filter(element => element.id.endsWith('-tree'));
+      const filteredElements = Array.from(matchingElements)
 
       return Array.from(filteredElements).length
     }
