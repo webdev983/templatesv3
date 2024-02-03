@@ -2080,7 +2080,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Add entries for data-visual-duplicate siblings
         const existingIds = []
-        siblingsWithDuplicate.forEach(sibling => {
+        for (const sibling of siblingsWithDuplicate) {
           console.log('taag' + sibling.tagName)
           let name = `➕ ${sibling.tagName.toLowerCase()}`
           if (sibling.hasAttribute('data-visual-title')) {
@@ -2098,10 +2098,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
             });
           }
-        });
+        }
 
         // Add entries for fieldset siblings
-        fieldsetSiblings.forEach(fieldsetSibling => {
+        for (const fieldsetSibling of fieldsetSiblings) {
           let name = `➕ ${fieldsetSibling.children[0].textContent.toLowerCase()}`
           if (fieldsetSibling.hasAttribute('data-visual-title')) {
             name = `➕ ${fieldsetSibling.getAttribute('data-visual-title')}`
@@ -2109,7 +2109,7 @@ document.addEventListener('DOMContentLoaded', function() {
           const splited = fieldsetSibling.id.split(':')
           splited.length > 1 && splited.pop()
 
-          if (!existingIds.includes(splited.join(':'))) {
+          if (!existingIds.includes(splited.join(':').replace('-fieldset', ''))) {
             existingIds.push(splited.join(':').replace('-fieldset', ''))
             addMenuEntry(menu, name, () => {
 
@@ -2117,7 +2117,8 @@ document.addEventListener('DOMContentLoaded', function() {
             });
           }
 
-        });
+        }
+        console.log('existing ' + JSON.stringify(existingIds))
 
         // Adjust the position relative to the viewport
         const offsetX = e.pageX;
@@ -3244,7 +3245,7 @@ document.addEventListener('DOMContentLoaded', function() {
             referenceNode.parentNode.appendChild(newNode);
           }
         }
-        
+
         //case duplicate insert before  
         if (inserted_element?.originalId) {
           console.log('insert1' + JSON.stringify(command));
