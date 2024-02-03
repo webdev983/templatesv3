@@ -2226,7 +2226,8 @@ document.addEventListener('DOMContentLoaded', function() {
           sibling.parentNode.insertBefore(plusButton, sibling);
           addHoverListeners(plusButton);
         });
-        if (parentWithAppendChild) {
+        
+        if (parentWithAppendChild && !parentWithAppendChild.lastElementChild.id.startsWith( e.target.id)) {
           // Create the "+" button element with data attributes
           const plusButton = createButton('InsertAfter', parentWithAppendChild.id);
           parentWithAppendChild.appendChild(plusButton);
