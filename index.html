@@ -1822,10 +1822,32 @@ document.addEventListener('DOMContentLoaded', function() {
       // Create a new element (adjust this part based on your requirements)
 
       // Perform additional actions if needed
+
+
+      const children = document.getElementById(parentId).children;
+
+      let lastFieldsetTreeId = null;
+
+      for (let i = children.length - 1; i >= 0; i--) {
+        const child = children[i];
+        console.log(child.id)
+        if (child.tagName === 'FIELDSET' && child.id.endsWith('-fieldset')) {
+          lastFieldsetTreeId = child.id;
+          break; // Found the last matching element, exit the loop
+        }
+      }
+
+      if (lastFieldsetTreeId !== null) {
+        console.log('Last fieldset with id ending in -tree:', lastFieldsetTreeId);
+      } else {
+        console.log('No matching fieldset with id ending in -tree found.');
+      }
+
+
       const actionObject = {
         time: (new Date()).getTime(),
         action: action,
-        target_element: [{ id: parentId.replace('-fieldset', '') + '-tree' }, { id: selectedElementId + '-tree' }],
+        target_element: [{ id: lastFieldsetTreeId.replace('-fieldset', '') + '-tree' }, { id: selectedElementId + '-tree' }],
         move: true,
       }
       pushAction(actionObject);
@@ -2176,7 +2198,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         if (parentWithAppendChild) {
           // Create the "+" button element with data attributes
-          const plusButton = createButton('Append', parentWithAppendChild.id);
+          const plusButton = createButton('InsertAfter', parentWithAppendChild.id);
           parentWithAppendChild.appendChild(plusButton);
           addHoverListeners(plusButton);
         }
@@ -3222,7 +3244,7 @@ document.addEventListener('DOMContentLoaded', function() {
             referenceNode.parentNode.appendChild(newNode);
           }
         }
-
+        
         //case duplicate insert before  
         if (inserted_element?.originalId) {
           console.log('insert1' + JSON.stringify(command));
@@ -3306,7 +3328,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
           break;
         }
+        if (target_element?.length) {
+          const afterId = target_element[0].id;
+          const id = target_element[1].id;
+          console.log(id)
+          console.log(afterId)
+          const aftertreeElement = document.getElementById(afterId);
+          let aftercomponentElement = document.getElementById(removeLastOccurrence(afterId, '-tree') + '-fieldset') ||
+            document.getElementById(removeLastOccurrence(afterId, '-tree'));
 
+          const treeElement = document.getElementById(id);
+          let componentElement = document.getElementById(removeLastOccurrence(id, '-tree') + '-fieldset') ||
+            document.getElementById(removeLastOccurrence(id, '-tree'));
+
+          if (aftertreeElement && treeElement) {
+            // Move treeElement after aftertreeElement
+            insertAfter(treeElement, aftertreeElement);
+          }
+
+          if (aftercomponentElement && componentElement) {
+            // Move componentElement after aftercomponentElement
+            insertAfter(componentElement, aftercomponentElement);
+          }
+        }
 
         break;
 
@@ -4057,9 +4101,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const element22 = document.getElementById(removeLastOccurrence(target_element, '-tree'));
         const element33 = document.getElementById(target_element);
-        if(key){
+        if (key) {
           element22.setAttribute(key, value);
-          if(!element22.textContent && key ==='data-visual-defaultTextNode'){
+          if (!element22.textContent && key === 'data-visual-defaultTextNode') {
             element22.textContent = value
           }
         }
