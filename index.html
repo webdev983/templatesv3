@@ -4057,7 +4057,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const element22 = document.getElementById(removeLastOccurrence(target_element, '-tree'));
         const element33 = document.getElementById(target_element);
-        key && element22.setAttribute(key, value);
+        if(key){
+          element22.setAttribute(key, value);
+          if(!element22.textContent && key ==='data-visual-defaultTextNode'){
+            element22.textContent = value
+          }
+        }
         function recursivelyChangeIDs(element, newID, flag, treeType) {
           if (!element) return; // Base case: stop if element is null
           if (treeType) {
