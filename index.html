@@ -2168,13 +2168,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('iiid '+ e.target.id)
             const attr = e.target.getAttribute('data-visual-defaultTextNode')
             console.log('attr' + attr)
-            await pushAction({
-              time: (new Date()).getTime(),
-              action: 'textContent',
-              target_element: e.target.id + '-tree',
-              value:attr
-
-            })
+            event.target.textContent = attr
           }
 
         }
@@ -4082,7 +4076,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Handle the 'removeTag' action
         // tree
         const elementToRemove = document.getElementById(target_element);
-        elementToRemove.parentNode.removeChild(elementToRemove);
+        elementToRemove && elementToRemove.parentNode.removeChild(elementToRemove);
 
         // component
         const elementToRemove2 = document.getElementById(removeLastOccurrence(target_element, '-tree'));
