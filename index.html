@@ -11,11 +11,29 @@
   div[data-visual-head]::after {
 content: ""; 
 display: block;
-height: 5px; 
-background-color: #1d00a0; 
-margin-top: 10px; 
+height: 3px; 
+background-color: #4A90E2;
+margin-top: 10px;
 margin-bottom: 10px;
 }
+
+div[data-visual-head] {
+  position: relative; /* Для позиционирования псевдоэлемента */
+  border-top: 2px solid #4A90E2; /* Верхняя граница для div */
+  text-align: center; /* Если вам нужно выровнять текст внутри div по центру */
+  margin-top: 20px; /* Отступ, чтобы было место для текста над границей */
+}
+
+div[data-visual-head]::before {
+  content: "head"; /* Текст, который будет отображаться */
+  position: absolute;
+  top: -15px; /* Позиционирование над div */
+  left: 50%; /* Центрирование текста */
+  transform: translateX(-50%); /* Точное центрирование текста */
+  background-color: white; /* Фон, соответствующий цвету страницы; может потребоваться настройка */
+  padding: 0 5px; /* Небольшой отступ вокруг текста */
+}
+
 </style>
 
 
