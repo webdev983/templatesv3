@@ -691,13 +691,24 @@ document.addEventListener('DOMContentLoaded', function() {
     if (event.target.hasAttribute('data-visual-checkbox')) {
       // Log the id of the target element and the new value of the checkbox
       console.log('ID:', event.target.id, 'Value:', event.target.checked);
-      const el = {
-        time: (new Date()).getTime(),
-        action: 'setAttribute',
-        target_element: event.target.id,
-        key: "checked",
-        value: event.target.checked,
+      let el
+      if (event.target.checked) {
+        el = {
+          time: (new Date()).getTime(),
+          action: 'setAttribute',
+          target_element: event.target.id,
+          key: "checked",
+          value: 'true',
 
+        }
+      }
+      else {
+        el = {
+          time: (new Date()).getTime(),
+          action: 'removeAttribute',
+          target_element: event.target.id,
+          key:"checked"
+        }
       }
       await pushAction(el)
     }
