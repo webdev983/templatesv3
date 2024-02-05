@@ -686,6 +686,22 @@ document.addEventListener('DOMContentLoaded', function() {
 */
 </script>
 <script>
+  document.addEventListener('change', async function (event) {
+    // Check if the target element has the data-visual-checkbox attribute
+    if (event.target.hasAttribute('data-visual-checkbox')) {
+      // Log the id of the target element and the new value of the checkbox
+      console.log('ID:', event.target.id, 'Value:', event.target.checked);
+      const el = {
+        time: (new Date()).getTime(),
+        action: 'setAttribute',
+        target_element: event.target.id,
+        key: "checked",
+        value: event.target.checked,
+
+      }
+      await pushAction(el)
+    }
+  });
   //toggle menu button scripts
   const toggleGeneratedPage = () => {
     const s = localStorage.getItem('generatedPageToggle')
@@ -1762,18 +1778,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // Utility function to add menu entry
     function findRelatedElements(inputId) {
       // Step 1: Remove the -tree suffix
-      
+
       // Step 2: If it ends with -copy-x, remove that part
       let modifiedId = removeLastOccurrence(inputId, '-tree');
-      const el = document.getElementById(modifiedId+ '-tree')
-      console.log('iiie ' +el.id)
+      const el = document.getElementById(modifiedId + '-tree')
+      console.log('iiie ' + el.id)
       const tag = el.tagName.toLowerCase()
       const splited = modifiedId.split(';')
       const last = splited[splited.length - 1]
       const lastId = last.split(':')[0]
       splited.pop()
       modifiedId = [...splited, lastId].join(';')
-      console.log('modfi '+modifiedId)
+      console.log('modfi ' + modifiedId)
       // Step 3: Query for elements starting with the modified ID
       const selector = '[id^="' + modifiedId + '"]';
       const matchingElements = el.parentNode.querySelectorAll(selector);
@@ -1817,7 +1833,7 @@ document.addEventListener('DOMContentLoaded', function() {
           }
         }
         else {
-          console.log('iiid '+ event.target.id)
+          console.log('iiid ' + event.target.id)
           const attr = event.target.getAttribute('data-visual-defaultTextNode')
           console.log('attr' + attr)
           event.target.textContent = attr
@@ -2052,7 +2068,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
           }
           else {
-            console.log('iiid '+ e.target.id)
+            console.log('iiid ' + e.target.id)
             const attr = e.target.getAttribute('data-visual-defaultTextNode')
             console.log('attr' + attr)
             e.target.textContent = attr
@@ -2112,8 +2128,8 @@ document.addEventListener('DOMContentLoaded', function() {
           sibling.parentNode.insertBefore(plusButton, sibling);
           addHoverListeners(plusButton);
         });
-        
-        if (parentWithAppendChild && parentWithAppendChild.lastElementChild.id !== e.target.id+'-fieldset') {
+
+        if (parentWithAppendChild && parentWithAppendChild.lastElementChild.id !== e.target.id + '-fieldset') {
           // Create the "+" button element with data attributes
           const plusButton = createButton('InsertAfter', parentWithAppendChild.id);
           parentWithAppendChild.appendChild(plusButton);
@@ -3994,11 +4010,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // tree
         console.log('pr' + target_element)
         const element1 = document.getElementById(target_element);
-        if(element1){
+        if (element1) {
           const textContentButton = element1.querySelector('[data-element="code-tree-text-content-button"]');
-           textContentButton.textContent = `📄${value.length}`;
+          textContentButton.textContent = `📄${value.length}`;
         }
-       
+
 
         // component
         const element2 = document.getElementById(removeLastOccurrence(target_element, '-tree'));
