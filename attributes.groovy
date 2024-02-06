@@ -22,7 +22,7 @@ data-builder-cart="heading"
 data-builder-cart="description-short"
 data-builder-cart="main-picture"
 data-builder-cart="price"
-data-builder-dependant="price"
+data-builder-dependee="price"
 
 
 attribut = solo
