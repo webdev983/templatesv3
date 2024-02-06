@@ -4088,6 +4088,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const element22 = document.getElementById(removeLastOccurrence(target_element, '-tree'));
         const element33 = document.getElementById(target_element);
         if (key) {
+          console.log('key '+ key)
+          console.log('value '+ value)
           element22.setAttribute(key, value);
           if (!element22.textContent && key === 'data-visual-defaultTextNode') {
             element22.textContent = value
@@ -4728,7 +4730,7 @@ document.addEventListener('DOMContentLoaded', function() {
           result.push({ key, value })
         }
         else {
-          result.push({ key: line, value: "" })
+          result.push({ key: line.trim(), value: "" })
         }
       });
 
@@ -4736,6 +4738,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     const list = parseText(text)
     for (const element of list) {
+      
       const el = {
         time: (new Date()).getTime(),
         action,
