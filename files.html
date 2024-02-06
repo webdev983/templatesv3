@@ -172,11 +172,11 @@
         console.log(JSON.stringify(responseData))
         for (const entry of responseData.items) {
           entry.id = newId
-          console.log('entry '+ JSON.stringify(entry))
+          console.log('entry ' + JSON.stringify(entry))
           if (entry.sk === 'path') {
             entry.lsi1 = entry.lsi1 + '-copy-' + newId
           }
-          if(entry.target_element === id+'-tree'){
+          if (entry.target_element === id + '-tree') {
             console.log('err1')
             entry.target_element = newId + '-tree'
           }
@@ -398,8 +398,28 @@
         .then(data => {
           // Step 2: Iterate through the items and send a DELETE request for each
           data.items.forEach(item => {
-            const { id, sk } = item;
+            const { id, sk, sku } = item;
+            if (sku) {
+              fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=qty;&startsWith=true`)
+                .then(response => {
+                  if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                  }
+                  return response.json(); // Parse the response JSON
+                })
+                .then(data => {
+                  data.items.forEach(item => {
+                    fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id}:${item.sk}`, {
+                      method: 'DELETE',
+                      headers: {
+                        'Content-Type': 'application/json',
+                        // Add any additional headers if needed
+                      },
+                    })
 
+                  })
+                })
+            }
             fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:${sk}`, {
               method: 'DELETE',
               headers: {
