@@ -3234,25 +3234,29 @@ document.addEventListener('DOMContentLoaded', function() {
             insertAfter(newEl, compEl);
           }
 
-          // Duplicate the treeElement content
-          const newEl2 = treeElement.cloneNode(true);
-
-          // Set the id of the duplicated treeElement to inserted_element.id + '-tree'
-          newEl2.id = inserted_element.id;
-
-          // Update the button text in the duplicated treeElement
-          const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']");
-
-          // Attach event listeners to the buttons in the duplicated treeElement
-          const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']");
-          button.addEventListener('mouseover', mouseOverTree);
-          button.addEventListener('mouseout', mouseOutTree);
-          const trEl = document.getElementById(target_element)
-          // Append the duplicated treeElement to the treeElement's parent
-          insertAfter(newEl2, trEl);
-
 
           const newId1 = newEl.id.split(':')[newEl.id.split(':').length - 1]
+
+          if (treeElement) {
+            // Duplicate the treeElement content
+            const newEl2 = treeElement.cloneNode(true);
+
+            // Set the id of the duplicated treeElement to inserted_element.id + '-tree'
+            newEl2.id = inserted_element.id;
+
+            // Update the button text in the duplicated treeElement
+            const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']");
+
+            // Attach event listeners to the buttons in the duplicated treeElement
+            const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']");
+            button.addEventListener('mouseover', mouseOverTree);
+            button.addEventListener('mouseout', mouseOutTree);
+            const trEl = document.getElementById(target_element)
+            // Append the duplicated treeElement to the treeElement's parent
+            insertAfter(newEl2, trEl);
+            updateChildIdsRecursive(newEl2, newId1, true);
+          }
+
 
           function updateChildIdsRecursive(element, newId1, tree) {
             const processed = []
@@ -3285,7 +3289,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
           // Update ids of child elements within the duplicated elements recursively
           updateChildIdsRecursive(newEl, newId1);
-          updateChildIdsRecursive(newEl2, newId1, true);
+
 
           break;
         }
@@ -4192,7 +4196,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const keyElement = clonedTr.querySelector('#code-tree-tag-attribute-key');
             const valueElement = clonedTr.querySelector('#code-tree-tag-attribute-value');
 
-            keyElement.textContent = '🔑' + attribute.name;
+            keyElement.textContent =  attribute.name;
             valueElement.textContent = '📄' + attribute.value;
 
             // Append the modified tr to the list
