@@ -1,6 +1,6 @@
 data-visual-title
 data-visual-border
-data-visual-pinkhover
+data-visual-element
 data-visual-draggable
 data-visual-insertBefore
 data-visual-appendChild
@@ -22,8 +22,10 @@ data-builder-cart="heading"
 data-builder-cart="description-short"
 data-builder-cart="main-picture"
 data-builder-cart="price"
-
 data-builder-dependant="price"
+
+
+attribut = solo
 
 aria-live="polite"
 
