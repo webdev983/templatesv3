@@ -1,6 +1,6 @@
 data-visual-title
 data-visual-border
-data-visual-element
+data-visual-pinkhover
 data-visual-draggable
 data-visual-insertBefore
 data-visual-appendChild
