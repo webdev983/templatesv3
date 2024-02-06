@@ -1,4 +1,4 @@
-data-visual-title
+data-visual-title="title"
 data-visual-border
 data-visual-element
 data-visual-draggable
