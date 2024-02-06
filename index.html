@@ -593,7 +593,7 @@
             <div id="sku-list" hidden>
               <div id=sku-item-1>
                 <label class="l-2 b-dark-blue">SKU:</label><label class="l-2" id="sku-value"></label><button class="b-2"
-                  id="remove-sku">🗑</button>
+                  id="remove-sku" onclick="removeSku(event)">🗑</button>
                 <ul class="list-1" id="sku-attribute-list">
                   <div id='sku-item'>
                     <li id="sku-attribute"><span class="l-4" id="sku-attribute-value">Solo</span></li>
@@ -4401,17 +4401,25 @@ document.addEventListener('DOMContentLoaded', function() {
       cloned1.querySelector("#remove-sku").remove()
       const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku}&sk=qty;&startsWith=true`)
         .then(response => response.json())
+      const el = cloned1.querySelectorAll('#sku-item')
+      const parent = cloned1.querySelector('#sku-attribute-list')
       if (items.length > 1) {
-        const el = cloned1.querySelector('#sku-item')
-        const parent = cloned1.querySelector('#sku-attribute-list')
+
         for (const item of items) {
-          const cloned = el.cloneNode(true)
+          const cloned = el[0].cloneNode(true)
           cloned.querySelector('#sku-attribute-value').textContent = item.sk.replace('qty;', '')
           parent.appendChild(cloned)
         }
-        el.remove()
-        document.getElementById("sku-list").appendChild(cloned1)
+
+
       }
+      else {
+        const cloned = el[0].cloneNode(true)
+        cloned.querySelector('#sku-attribute-value').textContent = 'Solo'
+        parent.appendChild(cloned)
+      }
+      document.getElementById("sku-list").appendChild(cloned1)
+      el.forEach(e => e.remove())
     }
     if (id) {
 
@@ -4483,9 +4491,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
             }
           }
-          else if (item.sku) {
-            showSku(item.sku)
-          }
+
+        }
+        else if (item.sku) {
+          showSku(item.sku)
         }
         if (item.action) {
           if (id) {
@@ -4673,8 +4682,41 @@ document.addEventListener('DOMContentLoaded', function() {
 
     return result;
   }
+  const removeSku = async (event) => {
+    const sku = event.target.parentNode.querySelector('#sku-value').textContent
+    pathItem.sku = undefined
+    await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(pathItem),
+    });
+    const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku}&sk=qty;&startsWith=true`)
+      .then(response => response.json())
+    const res = await Promise.all(items.map(async item=>{
+      const deleteUrl = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id}:${item.sk}`;
+      const response = await fetch(deleteUrl, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            // Add any additional headers if needed
+          },
+         
+        });
+    }))
+    //to complete
+    event.target.parentNode.remove()
+  }
   const addSku = async (event) => {
     const value = document.getElementById('input-sku').value
+   
+    const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${value}&sk=qty;&startsWith=true`)
+      .then(response => response.json())
+    if(items.length){
+      document.getElementById('input-sku').value = ''
+      return 
+    }
     const resultList = getProductAttributes()
     const combinations = generateCombinations(resultList)
     pathItem.sku = value
@@ -4751,6 +4793,9 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('sku-menu').removeAttribute('hidden')
       if (pathItem.sku) {
         showSku(pathItem.sku, true)
+      }
+      else{
+        document.getElementById('sku-item-1').remove()
       }
 
     }
