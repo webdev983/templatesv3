@@ -507,11 +507,11 @@
           <legend><button onclick="cancel1(event)" style="font-size: 0.9em;" class="b-6">❌</button></legend>
           <div style="margin-bottom: 10px;">
 
-          <textarea class="text1" placeholder=" 🔑 Add Attributes"></textarea>
-          <button class="b-1">➕</button>
-        </div>
+            <textarea id="code-tree-tag-attribute-input-text" class="text1" placeholder=" 🔑 Add Attributes"></textarea>
+            <button class="b-1" onclick="saveAttribute(event)">➕</button>
+          </div>
 
-          <div  hidden style="margin-bottom: 10px;">
+          <div hidden style="margin-bottom: 10px;">
             <input id="code-tree-tag-attribute-input-key" type="text" placeholder="attribute 🔑"></td>
             <input id="code-tree-tag-attribute-input-key-value" type="text" placeholder="value 📄">
             <button id="code-tree-tag-attribute-add" class="b-3" onclick="saveAttribute(event)">➕</button>
@@ -591,15 +591,16 @@
             <input type="text" class="b-2" id="input-sku" placeholder="enter sku">
             <button class="b-2" id="create-sku">▶️</button>
             <button class="b-2" id="create-sku">▶️</button>
-        
+
             <div>
-            <label class="l-2 b-dark-blue">SKU:</label><label class="l-2" id="sku"></label><button class="b-2" id="remove-sku">🗑</button>
-           
+              <label class="l-2 b-dark-blue">SKU:</label><label class="l-2" id="sku"></label><button class="b-2"
+                id="remove-sku">🗑</button>
+
             </div>
             <ul class="list-1" id="sku-attribute-list">
-                  <li id="sku-attribute"><span class="l-4" id="sku-attribute-value">Solo</span></li>
+              <li id="sku-attribute"><span class="l-4" id="sku-attribute-value">Solo</span></li>
             </ul>
-        </div>
+          </div>
         </div>
 
       </div>
@@ -4196,7 +4197,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const keyElement = clonedTr.querySelector('#code-tree-tag-attribute-key');
             const valueElement = clonedTr.querySelector('#code-tree-tag-attribute-value');
 
-            keyElement.textContent =  attribute.name;
+            keyElement.textContent = attribute.name;
             valueElement.textContent = '📄' + attribute.value;
 
             // Append the modified tr to the list
@@ -4694,24 +4695,47 @@ document.addEventListener('DOMContentLoaded', function() {
     const fieldset = saveButton.closest('fieldset');
 
 
-    const textareaValue = fieldset.querySelector('#code-tree-tag-attribute-input-key').value;
-    const textareaValue2 = fieldset.querySelector('#code-tree-tag-attribute-input-key-value').value;
+    //const textareaValue = fieldset.querySelector('#code-tree-tag-attribute-input-key').value;
+    //const textareaValue2 = fieldset.querySelector('#code-tree-tag-attribute-input-key-value').value;
+    const text = fieldset.querySelector('#code-tree-tag-attribute-input-text').value;
     const splited = id.split(';')
     const [toRemove, ...rest] = splited
+    function parseText(text) {
+      const lines = text.split('\n');
+      const result = [];
 
-    const el = {
-      time: (new Date()).getTime(),
-      action,
-      target_element: rest.join(';'),
-      key: textareaValue,
-      value: textareaValue2,
+      lines.forEach(line => {
+        const keyValue = line.split('=');
+        if (keyValue.length === 2) {
+          const key = keyValue[0].trim();
+          const value = keyValue[1].replaceAll('"', '').trim();
+          result.push({ key, value })
+        }
+        else {
+          result.push({ key: line, value: "" })
+        }
+      });
+
+      return result;
+    }
+    const list = parseText(text)
+    for (const element of list) {
+      const el = {
+        time: (new Date()).getTime(),
+        action,
+        target_element: rest.join(';'),
+        key: element.key,
+        value: element.value,
+
+      }
+      await pushAction(el)
 
     }
-    fieldset.querySelector('#code-tree-tag-attribute-input-key').value = ''
-    fieldset.querySelector('#code-tree-tag-attribute-input-key-value').value = ''
-    console.log(JSON.stringify(el))
-    await pushAction(el)
-
+    fieldset.querySelector('#code-tree-tag-attribute-input-text').value =""
+    //fieldset.querySelector('#code-tree-tag-attribute-input-key').value = ''
+    //fieldset.querySelector('#code-tree-tag-attribute-input-key-value').value = ''
+    //console.log(JSON.stringify(el))
+    
     parentMenu.remove()
     console.log(JSON.stringify(actionLog))
 
