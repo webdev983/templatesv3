@@ -587,34 +587,37 @@
       </div>
       <div id="head">
         <div style="margin-left: 15px;">
-          <div id="sku-menu">
+          <div id="sku-menu" hidden>
             <input type="text" class="b-2" id="input-sku" placeholder="enter sku">
-            <button class="b-2" id="create-sku">▶️</button>
-
-            <div>
-              <label class="l-2 b-dark-blue">SKU:</label><label class="l-2" id="sku-value"></label><button class="b-2"
-                id="remove-sku">🗑</button>
+            <button class="b-2" id="create-sku" onclick="addSku(event)">▶️</button>
+            <div id="sku-list" hidden>
+              <div id=sku-item-1>
+                <label class="l-2 b-dark-blue">SKU:</label><label class="l-2" id="sku-value"></label><button class="b-2"
+                  id="remove-sku">🗑</button>
+                <ul class="list-1" id="sku-attribute-list">
+                  <div id='sku-item'>
+                    <li id="sku-attribute"><span class="l-4" id="sku-attribute-value">Solo</span></li>
+                  </div>
+                </ul>
+              </div>
 
             </div>
-            <ul class="list-1" id="sku-attribute-list">
-              <li id="sku-attribute"><span class="l-4" id="sku-attribute-value">Solo</span></li>
-            </ul>
           </div>
         </div>
 
-        <div id="dependee-menu">
+        <div hidden id="dependee-menu">
           <fieldset>
-              <legend>
-                  <label class="l-2">🎚️</label>
-                  <label id="dependee" class="l-2 b-dark-blue">Price</label>
-              </legend>
-              <input id="dsad141241212" type="checkbox">
-              <label id="dependant" for="dsad141241212" class="l-3" for="~1">Color</label>
-          <div>
+            <legend>
+              <label class="l-2">🎚️</label>
+              <label id="dependee" class="l-2 b-dark-blue">Price</label>
+            </legend>
+            <input id="dsad141241212" type="checkbox">
+            <label id="dependant" for="dsad141241212" class="l-3" for="~1">Color</label>
+            <div>
               <button class="b-3" id="generate-dependees">Generate</button>
-          </div>
-           </fieldset>
-          </div>
+            </div>
+          </fieldset>
+        </div>
 
 
 
@@ -854,6 +857,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const urlSearchParams = new URLSearchParams(window.location.search);
   const page_id = urlSearchParams.get('id');
   var pathItem
+  var dependencyItem
   var updatePathItem = () =>
     fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
       method: 'POST',
@@ -1677,8 +1681,8 @@ document.addEventListener('DOMContentLoaded', function() {
           for (let i = children.length - 1; i >= 0; i--) {
             const child = children[i];
             console.log(child.id)
-            
-            if(!child.classList.contains('receive-target')){
+
+            if (!child.classList.contains('receive-target')) {
               lastFieldsetTreeId = child.id;
               break; // Found the last matching element, exit the loop
             }
@@ -4089,9 +4093,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const element22 = document.getElementById(removeLastOccurrence(target_element, '-tree'));
         const element33 = document.getElementById(target_element);
         if (key) {
-          console.log('key11 '+ key)
-          console.log('value '+ value)
-          
+          console.log('key11 ' + key)
+          console.log('value ' + value)
+
           element22.setAttribute(key, value);
           if (!element22.textContent && key.toLowerCase() === 'data-visual-defaultTextNode'.toLowerCase()) {
             console.log('not found 111')
@@ -4387,7 +4391,28 @@ document.addEventListener('DOMContentLoaded', function() {
     const urlSearchParams = new URLSearchParams(window.location.search);
     let idFromLink = urlSearchParams.get('id');
     let responseData
-
+    const showSku = async (sku) => {
+      const item1 = document.getElementById("sku-item-1")
+      const cloned1 = item1.cloneNode(true)
+      document.getElementById("input-sku").setAttribute('hidden', '')
+      document.getElementById("create-sku").setAttribute('hidden', '')
+      document.getElementById("sku-list").removeAttribute('hidden')
+      cloned1.querySelector("#sku-value").textContent = sku
+      cloned1.querySelector("#remove-sku").remove()
+      const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku}&sk=qty;&startsWith=true`)
+        .then(response => response.json())
+      if (items.length > 1) {
+        const el = cloned1.querySelector('#sku-item')
+        const parent = cloned1.querySelector('#sku-attribute-list')
+        for (const item of items) {
+          const cloned = el.cloneNode(true)
+          cloned.querySelector('#sku-attribute-value').textContent = item.sk.replace('qty;', '')
+          parent.appendChild(cloned)
+        }
+        el.remove()
+        document.getElementById("sku-list").appendChild(cloned1)
+      }
+    }
     if (id) {
 
       responseData = await getRes(id)
@@ -4444,18 +4469,22 @@ document.addEventListener('DOMContentLoaded', function() {
       console.log('replace actions : ' + JSON.stringify(replaceActions))
       for (const item of responseData.items) {
         console.log('item' + JSON.stringify(item))
-        if (!id && item.sk === 'path') {
+        if (!id) {
+          if (item.sk === 'path') {
+            console.log('eeeeeer')
+            const el = document.getElementById('page-path')
 
-          console.log('eeeeeer')
-          const el = document.getElementById('page-path')
+            el.textContent = item.lsi1.replace(';publish:published', '')
 
-          el.textContent = item.lsi1.replace(';publish:published', '')
+            if (item.lsi1.includes('publish:published')) {
+              const el2 = document.getElementById("path-icon")
+              el2.classList.add('b-green');
+              el2.classList.add('b-selected');
 
-          if (item.lsi1.includes('publish:published')) {
-            const el2 = document.getElementById("path-icon")
-            el2.classList.add('b-green');
-            el2.classList.add('b-selected');
-
+            }
+          }
+          else if (item.sku) {
+            showSku(item.sku)
           }
         }
         if (item.action) {
@@ -4599,7 +4628,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     await loadFromDb()
 
-
+    handleHead()
     //first menu
     let buttons = document.querySelectorAll('button[data-element="code-tree-tag-name-button"]');
     /*
@@ -4614,6 +4643,120 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     lastActionTime.textContent = timerElement.textContent;
     loadingScreen.style.display = 'none';
+
+  }
+  function generateCombinations(data) {
+    const combinations = [];
+
+    data.forEach(item => {
+      item.items.forEach(attribute => {
+        const combination = {
+          legend: item.legend,
+          attribute: attribute
+        };
+        combinations.push(combination);
+      });
+    });
+
+    const result = [];
+    const combine = (arr, idx, current) => {
+      if (idx === arr.length) {
+        result.push(current);
+        return;
+      }
+      arr[idx].items.forEach(item => {
+        combine(arr, idx + 1, current + `${arr[idx].legend}:${item};`);
+      });
+    };
+
+    combine(data, 0, '');
+
+    return result;
+  }
+  const addSku = async (event) => {
+    const value = document.getElementById('input-sku').value
+    const resultList = getProductAttributes()
+    const combinations = generateCombinations(resultList)
+    pathItem.sku = value
+    //update path item
+    await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(pathItem),
+    });
+    //create sku
+    for (const combination of combinations) {
+      const item = {
+        id: value,
+        sk: 'qty;' + combination
+      }
+      const existing = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/' + value + ':' + item.sk)
+        .then(response => response.json())
+      if (!existing) {
+        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(item),
+        });
+      }
+    }
+    showSku(value, true)
+  }
+  const getProductAttributes = () => {
+    const resultList = [];
+    const forms = document.querySelectorAll('[data-product-attribute-form]');
+
+    forms.forEach(form => {
+      const legendElement = form.querySelector('[data-product-attribute-legend]');
+      const legend = legendElement && legendElement.textContent;
+
+      const attributeElements = form.querySelectorAll('[data-product-attribute]');
+      const attributes = Array.from(attributeElements).map(element => element.textContent);
+
+      resultList.push({
+
+        legend: legend,
+        items: attributes
+      });
+    });
+    return resultList
+  }
+  const showSku = async (sku) => {
+    document.getElementById("input-sku").setAttribute('hidden', '')
+    document.getElementById("create-sku").setAttribute('hidden', 'create-sku')
+    document.getElementById("sku-list").removeAttribute('hidden')
+    document.getElementById("sku-value").textContent = sku
+    const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku}&sk=qty;&startsWith=true`)
+      .then(response => response.json())
+    if (items.length > 1) {
+      const el = document.getElementById('sku-item')
+      const parent = document.getElementById('sku-attribute-list')
+      for (const item of items) {
+        const cloned = el.cloneNode(true)
+        cloned.querySelector('#sku-attribute-value').textContent = item.sk.replace('qty;', '')
+        parent.appendChild(cloned)
+      }
+      el.remove()
+    }
+  }
+  const handleHead = () => {
+
+    const resultList = getProductAttributes()
+
+    if (resultList.length) {
+      document.getElementById('sku-menu').removeAttribute('hidden')
+      if (pathItem.sku) {
+        showSku(pathItem.sku, true)
+      }
+
+    }
+
+
+
 
   }
   const save = async (event) => {
@@ -4741,7 +4884,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     const list = parseText(text)
     for (const element of list) {
-      
+
       const el = {
         time: (new Date()).getTime(),
         action,
@@ -4753,11 +4896,11 @@ document.addEventListener('DOMContentLoaded', function() {
       await pushAction(el)
 
     }
-    fieldset.querySelector('#code-tree-tag-attribute-input-text').value =""
+    fieldset.querySelector('#code-tree-tag-attribute-input-text').value = ""
     //fieldset.querySelector('#code-tree-tag-attribute-input-key').value = ''
     //fieldset.querySelector('#code-tree-tag-attribute-input-key-value').value = ''
     //console.log(JSON.stringify(el))
-    
+
     parentMenu.remove()
     console.log(JSON.stringify(actionLog))
 
