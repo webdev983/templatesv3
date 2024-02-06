@@ -600,7 +600,7 @@
             <input type="text" class="b-2" id="input-sku" placeholder="enter sku">
             <button class="b-2" id="create-sku" onclick="addSku(event)">▶️</button>
             <div id="sku-list" hidden>
-              
+
 
             </div>
           </div>
@@ -4394,12 +4394,14 @@ document.addEventListener('DOMContentLoaded', function() {
     let responseData
     const showSku = async (sku) => {
       console.log('iin2' + sku)
+      document.getElementById("input-sku").setAttribute('hidden', '')
+      document.getElementById("create-sku").setAttribute('hidden', '')
       const item1 = document.getElementById("sku-item-1")
       const cloned1 = item1.cloneNode(true)
       cloned1.removeAttribute('hidden')
       document.getElementById("sku-list").removeAttribute('hidden')
       cloned1.querySelector("#sku-value").textContent = sku
-      cloned1.querySelector("#remove-sku").setAttribute('hidden','')
+      cloned1.querySelector("#remove-sku").setAttribute('hidden', '')
       const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku}&sk=qty;&startsWith=true`)
         .then(response => response.json())
       const el = cloned1.querySelectorAll('#sku-item')
@@ -4773,8 +4775,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   const showSku = async (sku) => {
     const item1 = document.getElementById("sku-item-1")
-    document.getElementById("input-sku").setAttribute('hidden','')
-    document.getElementById("create-sku").setAttribute('hidden','')
+    document.getElementById("input-sku").setAttribute('hidden', '')
+    document.getElementById("create-sku").setAttribute('hidden', '')
     const cloned1 = item1.cloneNode(true)
     cloned1.removeAttribute('hidden')
     document.getElementById("sku-list").removeAttribute('hidden')
@@ -4811,7 +4813,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (pathItem.sku) {
         showSku(pathItem.sku, true)
       }
-     
+
 
     }
 
