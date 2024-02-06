@@ -585,21 +585,22 @@
         <button class="b-1" title="article schema.org">📝</button>
         <button class="b-1" title="faq schema.org">❓</button>
       </div>
+      <div hidden id=sku-item-1>
+        <label class="l-2 b-dark-blue">SKU:</label><label class="l-2" id="sku-value"></label><button class="b-2"
+          id="remove-sku" onclick="removeSku(event)">🗑</button>
+        <ul class="list-1" id="sku-attribute-list">
+          <div id='sku-item'>
+            <li id="sku-attribute"><span class="l-4" id="sku-attribute-value">Solo</span></li>
+          </div>
+        </ul>
+      </div>
       <div id="head">
         <div style="margin-left: 15px;">
           <div id="sku-menu" hidden>
             <input type="text" class="b-2" id="input-sku" placeholder="enter sku">
             <button class="b-2" id="create-sku" onclick="addSku(event)">▶️</button>
             <div id="sku-list" hidden>
-              <div id=sku-item-1>
-                <label class="l-2 b-dark-blue">SKU:</label><label class="l-2" id="sku-value"></label><button class="b-2"
-                  id="remove-sku" onclick="removeSku(event)">🗑</button>
-                <ul class="list-1" id="sku-attribute-list">
-                  <div id='sku-item'>
-                    <li id="sku-attribute"><span class="l-4" id="sku-attribute-value">Solo</span></li>
-                  </div>
-                </ul>
-              </div>
+              
 
             </div>
           </div>
@@ -4392,13 +4393,13 @@ document.addEventListener('DOMContentLoaded', function() {
     let idFromLink = urlSearchParams.get('id');
     let responseData
     const showSku = async (sku) => {
+      console.log('iin2' + sku)
       const item1 = document.getElementById("sku-item-1")
       const cloned1 = item1.cloneNode(true)
-      document.getElementById("input-sku").setAttribute('hidden', '')
-      document.getElementById("create-sku").setAttribute('hidden', '')
+      cloned1.removeAttribute('hidden')
       document.getElementById("sku-list").removeAttribute('hidden')
       cloned1.querySelector("#sku-value").textContent = sku
-      cloned1.querySelector("#remove-sku").remove()
+      cloned1.querySelector("#remove-sku").setAttribute('hidden','')
       const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku}&sk=qty;&startsWith=true`)
         .then(response => response.json())
       const el = cloned1.querySelectorAll('#sku-item')
@@ -4683,6 +4684,7 @@ document.addEventListener('DOMContentLoaded', function() {
     return result;
   }
   const removeSku = async (event) => {
+
     const sku = event.target.parentNode.querySelector('#sku-value').textContent
     pathItem.sku = undefined
     await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -4694,28 +4696,30 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku}&sk=qty;&startsWith=true`)
       .then(response => response.json())
-    const res = await Promise.all(items.map(async item=>{
+    const res = await Promise.all(items.map(async item => {
       const deleteUrl = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id}:${item.sk}`;
       const response = await fetch(deleteUrl, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            // Add any additional headers if needed
-          },
-         
-        });
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          // Add any additional headers if needed
+        },
+
+      });
     }))
     //to complete
     event.target.parentNode.remove()
+    document.getElementById("input-sku").removeAttribute('hidden')
+    document.getElementById("create-sku").removeAttribute('hidden')
   }
   const addSku = async (event) => {
     const value = document.getElementById('input-sku').value
-   
+
     const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${value}&sk=qty;&startsWith=true`)
       .then(response => response.json())
-    if(items.length){
+    if (items.length) {
       document.getElementById('input-sku').value = ''
-      return 
+      return
     }
     const resultList = getProductAttributes()
     const combinations = generateCombinations(resultList)
@@ -4768,22 +4772,35 @@ document.addEventListener('DOMContentLoaded', function() {
     return resultList
   }
   const showSku = async (sku) => {
-    document.getElementById("input-sku").setAttribute('hidden', '')
-    document.getElementById("create-sku").setAttribute('hidden', 'create-sku')
+    const item1 = document.getElementById("sku-item-1")
+    document.getElementById("input-sku").setAttribute('hidden','')
+    document.getElementById("create-sku").setAttribute('hidden','')
+    const cloned1 = item1.cloneNode(true)
+    cloned1.removeAttribute('hidden')
     document.getElementById("sku-list").removeAttribute('hidden')
-    document.getElementById("sku-value").textContent = sku
+    cloned1.querySelector("#sku-value").textContent = sku
+    cloned1.querySelector("#remove-sku").removeAttribute('hidden')
     const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku}&sk=qty;&startsWith=true`)
       .then(response => response.json())
+    const el = cloned1.querySelectorAll('#sku-item')
+    const parent = cloned1.querySelector('#sku-attribute-list')
     if (items.length > 1) {
-      const el = document.getElementById('sku-item')
-      const parent = document.getElementById('sku-attribute-list')
+
       for (const item of items) {
-        const cloned = el.cloneNode(true)
+        const cloned = el[0].cloneNode(true)
         cloned.querySelector('#sku-attribute-value').textContent = item.sk.replace('qty;', '')
         parent.appendChild(cloned)
       }
-      el.remove()
+
+
     }
+    else {
+      const cloned = el[0].cloneNode(true)
+      cloned.querySelector('#sku-attribute-value').textContent = 'Solo'
+      parent.appendChild(cloned)
+    }
+    document.getElementById("sku-list").appendChild(cloned1)
+    el.forEach(e => e.remove())
   }
   const handleHead = () => {
 
@@ -4794,7 +4811,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (pathItem.sku) {
         showSku(pathItem.sku, true)
       }
-      else{
+      else {
         document.getElementById('sku-item-1').remove()
       }
 
