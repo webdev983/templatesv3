@@ -767,13 +767,15 @@ document.addEventListener('DOMContentLoaded', function() {
   const toggleGeneratedPage = () => {
     const s = localStorage.getItem('generatedPageToggle')
     if (!s) {
-
+      
+      document.getElementById("sku-list").removeAttribute('hidden')
       document.getElementById('generated-page').removeAttribute('hidden')
       document.getElementById('generated-page-menu').removeAttribute('hidden')
       document.getElementById('toggle-generated-page').classList.add('b-selected')
       localStorage.setItem('generatedPageToggle', 'true')
     }
     else {
+      document.getElementById("sku-list").setAttribute('hidden','')
       document.getElementById('generated-page').setAttribute('hidden', '')
       document.getElementById('generated-page-menu').setAttribute('hidden', '')
       document.getElementById('toggle-generated-page').classList.remove('b-selected')
@@ -1613,6 +1615,7 @@ document.addEventListener('DOMContentLoaded', function() {
       location.reload()
       return;
     }
+    
     event.target.classList.add('b-selected');
     visualOn = true
     console.log('transforming');
@@ -4653,6 +4656,7 @@ document.addEventListener('DOMContentLoaded', function() {
     await loadFromDb()
 
     handleHead()
+   
     //first menu
     let buttons = document.querySelectorAll('button[data-element="code-tree-tag-name-button"]');
     /*
@@ -4875,7 +4879,7 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(response => response.json())
     const el = cloned1.querySelectorAll('#sku-item')
     const parent = cloned1.querySelector('#sku-attribute-list')
-    if (items.length > 1) {
+    if (items.length > 1 ) {
 
       for (const item of items) {
         const cloned = el[0].cloneNode(true)
