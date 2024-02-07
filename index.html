@@ -4845,7 +4845,16 @@ document.addEventListener('DOMContentLoaded', function() {
             value: compositeId,
 
           }
-          await pushAction(el)
+          //set for in label
+          const el1 = {
+            time: (new Date()).getTime(),
+            action: 'setAttribute',
+            target_element: label.id + '-tree',
+            key: 'name',
+            value: item.legend,
+
+          }
+          await pushAction(el1)
 
           if (i === 0) {
             const el = {
