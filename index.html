@@ -269,7 +269,7 @@
           <button hidden class="b-3" data-element="code-tree-test-button">🧪</button>
           <button class="b-3 " data-element="sku-button">📦</button>
 
-          
+
         </fieldset>
         <fieldset id="tree-element" data-element="code-tree-tag">
           <legend>💬</legend>
@@ -585,46 +585,46 @@
         <button hidden class="b-1">ℹ️</button>
         <button hidden class="b-1" title="product">📦</button>
         <button hidden class="b-1" title="article schema.org">📝</button>
-        <button  hidden class="b-1" title="faq schema.org">❓</button>
+        <button hidden class="b-1" title="faq schema.org">❓</button>
       </div>
       <div id="head">
         <div style="margin-left: 15px;">
 
-      <div hidden id=sku-item-1>
-        <label class="l-2 b-dark-blue">SKU:</label><label class="l-2" id="sku-value"></label>
-        <button class="b-2" id="toggleSkuAttributeList">👀</button>
-        <button class="b-2" id="toggleDependencyMenu">🛠️</button>
+          <div hidden id=sku-item-1>
+            <label class="l-2 b-dark-blue">SKU:</label><label class="l-2" id="sku-value"></label>
+            <button class="b-2" id="toggleSkuAttributeList">👀</button>
+            <button class="b-2" id="toggleDependencyMenu">🛠️</button>
 
-        
-        <button class="b-2" id="remove-sku" onclick="removeSku(event)">🗑</button>
-          
-          <fieldset  class="menu">
-          <legend><button class="b-6" onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
-          <label class="l-2">Are you sure want to remove this SKU?</label>
-          <br>
-          <button class="b-2">🗑 Remove</button>
-        </fieldset>
-          
-        <ul class="list-1" id="sku-attribute-list">
-          <div id='sku-item'>
-            <li id="sku-attribute"><span class="l-4" id="sku-attribute-value">Solo</span></li>
-          </div>
-        </ul>
 
-        <div  id="dependee-menu">
-          <fieldset id="dependee">
-            <legend>
-              <label class="l-2">🎚️</label>
-              <label id="dependee-value" class="l-2 b-dark-blue">Price</label>
-            </legend>
-            <input id="dsad141241212" type="checkbox">
-            <label id="dependant" for="dsad141241212" class="l-3" for="~1">Color</label>
-            <div>
-              <button class="b-3" id="generate-dependees">Generate</button>
+            <button class="b-2" id="remove-sku" onclick="removeSku(event)">🗑</button>
+
+            <fieldset class="menu">
+              <legend><button class="b-6" onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
+              <label class="l-2">Are you sure want to remove this SKU?</label>
+              <br>
+              <button class="b-2">🗑 Remove</button>
+            </fieldset>
+
+            <ul class="list-1" id="sku-attribute-list">
+              <div id='sku-item'>
+                <li id="sku-attribute"><span class="l-4" id="sku-attribute-value">Solo</span></li>
+              </div>
+            </ul>
+
+            <div id="dependee-menu">
+              <fieldset id="dependee">
+                <legend>
+                  <label class="l-2">🎚️</label>
+                  <label id="dependee-value" class="l-2 b-dark-blue">Price</label>
+                </legend>
+                <input id="dsad141241212" type="checkbox">
+                <label id="dependant" for="dsad141241212" class="l-3" for="~1">Color</label>
+                <div>
+                  <button class="b-3" id="generate-dependees">Generate</button>
+                </div>
+              </fieldset>
             </div>
-          </fieldset>
-        </div>
-      </div>
+          </div>
           <div id="sku-menu" hidden>
             <input type="text" class="b-2" id="input-sku" placeholder="enter sku">
             <button class="b-2" id="create-sku" onclick="addSku(event)">▶️</button>
@@ -632,7 +632,7 @@
 
 
             </div>
-    
+
           </div>
         </div>
       </div>
@@ -4765,6 +4765,79 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
     showSku(value, true)
+    setDataProduct(value, resultList)
+  }
+  const setDataProduct = async (sku, items) => {
+    const dataProductEl = document.querySelector('[data-product]')
+    const splited = pathItem.lsi1.split(';')[0].split('/')
+    const name = splited[splited.length - 1]
+    const el = {
+      time: (new Date()).getTime(),
+      action: 'setAttribute',
+      target_element: dataProductEl.id + '-tree',
+      key: 'data-product',
+      value: `${sku};${name}`,
+
+    }
+    await pushAction(el)
+    if (items.length > 1) {
+
+      for (const item of items) {
+        const form = item.form
+        var labels = form.querySelectorAll('label[data-product-attribute]');
+        const defaultCheckbox = form.querySelector('input[type="radio"]')
+        // Loop through each label
+        for (let i = 0; i < labels.length; i++) {
+          const label = labels[i]
+          // Find the corresponding input element
+          const compositeId = item.legend + '-' + label.textContent
+          //duplicate checkbox and insert before label
+          const actionObject = {
+            time: (new Date()).getTime(),
+            action: 'InsertBefore',
+            target_element: label.id + '-tree',
+            inserted_element: { originalId: defaultCheckbox.id + '-tree', id: compositeId + '-tree' },
+          };
+          await pushAction(actionObject);
+
+          //set for in label
+          const el = {
+            time: (new Date()).getTime(),
+            action: 'setAttribute',
+            target_element: label.id + '-tree',
+            key: 'for',
+            value: compositeId,
+
+          }
+          await pushAction(el)
+
+          if (i === 0) {
+            const el = {
+              time: (new Date()).getTime(),
+              action: 'setAttribute',
+              target_element: compositeId + '-tree',
+              key: 'checked',
+              value: 'true',
+
+            }
+            await pushAction(el)
+          }
+
+        };
+      }
+
+    }
+    else {
+      const element = items[0].form
+      const el =
+      {
+        time: (new Date()).getTime(),
+        action: 'removeTag',
+        target_element: element.id + '-tree',
+
+      }
+      await pushAction(el)
+    }
   }
   const getProductAttributes = () => {
     const resultList = [];
@@ -4778,7 +4851,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const attributes = Array.from(attributeElements).map(element => element.textContent);
 
       resultList.push({
-
+        form,
         legend: legend,
         items: attributes
       });
