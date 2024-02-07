@@ -593,7 +593,7 @@
           <div hidden id=sku-item-1>
             <label class="l-2 b-dark-blue">SKU:</label><label class="l-2" id="sku-value"></label>
             <button class="b-2" id="toggleSkuAttributeList">👀</button>
-            <button class="b-2" id="toggleDependencyMenu">🛠️</button>
+            <button class="b-2" id="toggleDependencyMenu1" onclick='toggleDependencyMenu1(event)'>🛠️</button>
 
 
             <button class="b-2" id="remove-sku" onclick="openRemoveSku(event)">🗑</button>
@@ -611,7 +611,7 @@
               </div>
             </ul>
 
-            <div id="dependee-menu">
+            <div id="dependee-menu" hidden>
               <fieldset id="dependee">
                 <legend>
                   <label class="l-2">🎚️</label>
@@ -767,7 +767,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const toggleGeneratedPage = () => {
     const s = localStorage.getItem('generatedPageToggle')
     if (!s) {
-      
+
       document.getElementById("sku-list").removeAttribute('hidden')
       document.getElementById('generated-page').removeAttribute('hidden')
       document.getElementById('generated-page-menu').removeAttribute('hidden')
@@ -775,11 +775,38 @@ document.addEventListener('DOMContentLoaded', function() {
       localStorage.setItem('generatedPageToggle', 'true')
     }
     else {
-      document.getElementById("sku-list").setAttribute('hidden','')
+      document.getElementById("sku-list").setAttribute('hidden', '')
       document.getElementById('generated-page').setAttribute('hidden', '')
       document.getElementById('generated-page-menu').setAttribute('hidden', '')
       document.getElementById('toggle-generated-page').classList.remove('b-selected')
       localStorage.removeItem('generatedPageToggle')
+    }
+  }
+  const toggleDependencyMenu1 = (event) => {
+    const menus =event.target.parentNode.querySelectorAll('#dependee-menu')
+    const button = event.target
+    if (!button.classList.contains('b-selected')) {
+      console.log('setting');
+
+      // Set the item in local storage
+      
+
+      // Remove the 'hidden' attribute to show the menu
+      menus.forEach(menu=>menu.removeAttribute('hidden'))
+
+      // Add the class 'b-selected' to the toggle button
+      button.classList.add('b-selected');
+    } else {
+      // If the item is set in local storage
+
+      // Remove the item from local storage
+      
+
+      // Remove the class 'b-selected' from the toggle button
+      button.classList.remove('b-selected');
+
+      // Set the 'hidden' attribute to hide the menu
+      menus.forEach(menu=>menu.setAttribute('hidden',''))
     }
   }
   const toggleHead = () => {
@@ -864,6 +891,7 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('generated-page-menu').setAttribute('hidden', '')
       document.getElementById('generated-page').setAttribute('hidden', '')
     }
+    
 
   })
 
@@ -1615,7 +1643,7 @@ document.addEventListener('DOMContentLoaded', function() {
       location.reload()
       return;
     }
-    
+
     event.target.classList.add('b-selected');
     visualOn = true
     console.log('transforming');
@@ -4656,7 +4684,7 @@ document.addEventListener('DOMContentLoaded', function() {
     await loadFromDb()
 
     handleHead()
-   
+
     //first menu
     let buttons = document.querySelectorAll('button[data-element="code-tree-tag-name-button"]');
     /*
@@ -4701,9 +4729,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     return result;
   }
-  const openRemoveSku =(event)=>{
+  const openRemoveSku = (event) => {
     const menu = event.target.parentNode.querySelector('#remove-sku-menu')
-    menu.style.display ='block'
+    menu.style.display = 'block'
   }
   const removeSku = async (event) => {
 
@@ -4879,7 +4907,7 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(response => response.json())
     const el = cloned1.querySelectorAll('#sku-item')
     const parent = cloned1.querySelector('#sku-attribute-list')
-    if (items.length > 1 ) {
+    if (items.length > 1) {
 
       for (const item of items) {
         const cloned = el[0].cloneNode(true)
