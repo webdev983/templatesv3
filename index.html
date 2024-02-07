@@ -596,13 +596,13 @@
             <button class="b-2" id="toggleDependencyMenu">🛠️</button>
 
 
-            <button class="b-2" id="remove-sku" onclick="removeSku(event)">🗑</button>
+            <button class="b-2" id="remove-sku" onclick="openRemoveSku(event)">🗑</button>
 
-            <fieldset class="menu">
+            <fieldset style="display: none;" id="remove-sku-menu" class="menu">
               <legend><button class="b-6" onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
               <label class="l-2">Are you sure want to remove this SKU?</label>
               <br>
-              <button class="b-2">🗑 Remove</button>
+              <button onclick="removeSku(event)" class="b-2">🗑 Remove</button>
             </fieldset>
 
             <ul class="list-1" id="sku-attribute-list">
@@ -4697,9 +4697,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     return result;
   }
+  const openRemoveSku =(event)=>{
+    const menu = event.target.parentNode.querySelector('#remove-sku-menu')
+    menu.style.display ='block'
+  }
   const removeSku = async (event) => {
 
-    const sku = event.target.parentNode.querySelector('#sku-value').textContent
+    const sku = event.target.parentNode.parentNode.querySelector('#sku-value').textContent
     pathItem.sku = undefined
     await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
       method: 'POST',
@@ -4722,7 +4726,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }))
     //to complete
-    event.target.parentNode.remove()
+    event.target.parentNode.parentNode.remove()
     document.getElementById("input-sku").removeAttribute('hidden')
     document.getElementById("create-sku").removeAttribute('hidden')
   }
