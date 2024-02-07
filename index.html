@@ -783,16 +783,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   const toggleDependencyMenu1 = (event) => {
-    const menus =event.target.parentNode.querySelectorAll('#dependee-menu')
+    const menus = event.target.parentNode.querySelectorAll('#dependee-menu')
     const button = event.target
     if (!button.classList.contains('b-selected')) {
       console.log('setting');
 
       // Set the item in local storage
-      
+
 
       // Remove the 'hidden' attribute to show the menu
-      menus.forEach(menu=>menu.removeAttribute('hidden'))
+      menus.forEach(menu => menu.removeAttribute('hidden'))
 
       // Add the class 'b-selected' to the toggle button
       button.classList.add('b-selected');
@@ -800,13 +800,13 @@ document.addEventListener('DOMContentLoaded', function() {
       // If the item is set in local storage
 
       // Remove the item from local storage
-      
+
 
       // Remove the class 'b-selected' from the toggle button
       button.classList.remove('b-selected');
 
       // Set the 'hidden' attribute to hide the menu
-      menus.forEach(menu=>menu.setAttribute('hidden',''))
+      menus.forEach(menu => menu.setAttribute('hidden', ''))
     }
   }
   const toggleHead = () => {
@@ -891,7 +891,7 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('generated-page-menu').setAttribute('hidden', '')
       document.getElementById('generated-page').setAttribute('hidden', '')
     }
-    
+
 
   })
 
@@ -901,6 +901,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const page_id = urlSearchParams.get('id');
   var pathItem
   var dependencyItem
+  var skuCreated
   var updatePathItem = () =>
     fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
       method: 'POST',
@@ -4540,7 +4541,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         }
         else if (item.sku) {
-          showSku(item.sku)
+          if (lvl < 2) {
+            showSku(item.sku)
+          }
+          else {
+            document.getElementById("input-sku").setAttribute('hidden', '')
+            document.getElementById("create-sku").setAttribute('hidden', '')
+          }
+
         }
         if (item.action) {
           if (id) {
@@ -4904,7 +4912,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     return resultList
   }
+
   const showSku = async (sku) => {
+
     const item1 = document.getElementById("sku-item-1")
     document.getElementById("input-sku").setAttribute('hidden', '')
     document.getElementById("create-sku").setAttribute('hidden', '')
@@ -4927,7 +4937,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     }
-    else  {
+    else {
       console.log('showing sku')
       const cloned = el[0].cloneNode(true)
       cloned.querySelector('#sku-attribute-value').textContent = 'Solo'
@@ -4937,7 +4947,7 @@ document.addEventListener('DOMContentLoaded', function() {
     el.forEach(e => e.remove())
   }
   const handleHead = () => {
-    
+
     const resultList = getProductAttributes()
 
     if (resultList.length) {
@@ -4951,11 +4961,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const splited = pathItem.lsi1.split(';')[0].split('/')
     const name = splited[splited.length - 1]
     document.querySelectorAll('[data-product]').forEach(
-      element=>{
+      element => {
         const prev = element.getAttribute('data-product')
-        if(prev){
-          const [first,last] = prev.split(';')
-          element.setAttribute('data-product',[first,name].join(';'))
+        if (prev) {
+          const [first, last] = prev.split(';')
+          element.setAttribute('data-product', [first, name].join(';'))
         }
       }
     )
