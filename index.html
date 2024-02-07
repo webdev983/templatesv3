@@ -4937,8 +4937,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     }
-
-
+    const splited = pathItem.lsi1.split(';')[0].split('/')
+    const name = splited[splited.length - 1]
+    document.querySelectorAll('[data-product]').forEach(
+      element=>{
+        const prev = element.getAttribute('data-product')
+        if(prev){
+          const [first,last] = prev.split(';')
+          element.setAttribute('data-product',[first,name].join(';'))
+        }
+      }
+    )
 
 
   }
