@@ -217,17 +217,23 @@
           saveButton.onclick = async function (e) {
             e.stopPropagation()
             const new_value = cloned.querySelector('[data-input="create-new-file-path-input"]').value
+            const res1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/'+id+':path', {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              }
+            }).then(re=>re.json())
+            
+            
             await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify({
-                id,
-                sk: 'path',
-                lsi1: new_value,
-                ownerUUID: 'path'
-              }),
+              body: JSON.stringify(
+                {...res1,
+                lsi1: new_value,}
+              ),
             })
             loadUsingPath()
             cloned.remove();
