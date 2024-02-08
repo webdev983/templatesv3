@@ -593,7 +593,7 @@
 
           <div hidden id=sku-item-1>
             <label class="l-2 b-dark-blue">SKU:</label><label class="l-2" id="sku-value"></label>
-            <button class="b-2" id="toggleSkuAttributeList">👀</button>
+            <button class="b-2" id="toggleSkuAttributeList" onclick='toggleSkuAttributeList(event)'>👀</button>
             <button class="b-2" id="toggleDependencyMenu1" onclick='toggleDependencyMenu1(event)'>🛠️</button>
 
 
@@ -606,7 +606,7 @@
               <button onclick="removeSku(event)" class="b-2">🗑 Remove</button>
             </fieldset>
 
-            <ul class="list-1" id="sku-attribute-list">
+            <ul class="list-1" hidden id="sku-attribute-list">
               <div id='sku-item'>
                 <li id="sku-attribute"><span class="l-4" id="sku-attribute-value">Solo</span></li>
               </div>
@@ -808,6 +808,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
       // Set the 'hidden' attribute to hide the menu
       menus.forEach(menu => menu.setAttribute('hidden', ''))
+    }
+  }
+  const toggleSkuAttributeList = (event) => {
+    const el = event.target
+    const list = el.parentNode.querySelector('#sku-attribute-list')
+    if(el.classList.contains('b-selected')){
+      el.classList.remove('b-selected')
+      list.setAttribute('hidden','true')
+    }
+    else{
+      el.classList.add('b-selected')
+      
+      list.removeAttribute('hidden')
     }
   }
   const toggleHead = () => {
