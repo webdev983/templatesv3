@@ -266,8 +266,8 @@
 
           <button hidden class="b-3" data-element="optional-script" onclick="replaceComponent(event,true)">🔄
             10</button>
-          <label hidden class="b-3" style="margin-left:5px;"  data-element="code-tree-test-button">🧪</label>
-          <label class="l-3 " style="margin-left:5px;"  data-element="sku-creator">🚛</label>
+          <label hidden class="b-3" style="margin-left:5px;" data-element="code-tree-test-button">🧪</label>
+          <label class="l-3 " style="margin-left:5px;" data-element="sku-creator">🚛</label>
           <label class="l-3" style="margin-left:5px;" data-element="sku-user">📦</label>
 
 
@@ -4813,19 +4813,22 @@ document.addEventListener('DOMContentLoaded', function() {
     setDataProduct(value, resultList)
   }
   const setDataProduct = async (sku, items) => {
-    const dataProductEl = document.querySelector('[data-product]')
+    const dataProductEls = document.querySelectorAll('[data-product=""]')
     const splited = pathItem.lsi1.split(';')[0].split('/')
     const name = splited[splited.length - 1]
-    const el = {
-      time: (new Date()).getTime(),
-      action: 'setAttribute',
-      target_element: dataProductEl.id + '-tree',
-      key: 'data-product',
-      value: `${sku};${name}`,
+    dataProductEls.forEach(async dataProductEl => {
+      const el = {
+        time: (new Date()).getTime(),
+        action: 'setAttribute',
+        target_element: dataProductEl.id + '-tree',
+        key: 'data-product',
+        value: `${sku};${name}`,
 
-    }
-    await pushAction(el)
-    if (items.length > 1) {
+      }
+      await pushAction(el)
+    })
+    console.log(JSON.stringify(items))
+    if (items.length > 1 || items[0]?.items.length > 1) {
 
       for (const item of items) {
         const form = item.form
@@ -4953,9 +4956,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (resultList.length || pathItem.sku) {
       document.getElementById('sku-menu').removeAttribute('hidden')
-     
+
       pathItem.sku && showSku(pathItem.sku, true)
-      
+
 
 
     }
