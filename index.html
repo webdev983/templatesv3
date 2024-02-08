@@ -4857,6 +4857,7 @@ document.addEventListener('DOMContentLoaded', function() {
             value: compositeId,
 
           }
+          await pushAction(el)
           //set for in label
           const el1 = {
             time: (new Date()).getTime(),
@@ -4881,7 +4882,14 @@ document.addEventListener('DOMContentLoaded', function() {
           }
 
         };
-        defaultCheckbox.remove()
+        const el =
+        {
+          time: (new Date()).getTime(),
+          action: 'removeTag',
+          target_element: defaultCheckbox.id + '-tree',
+
+        }
+        await pushAction(el)
       }
 
     }
