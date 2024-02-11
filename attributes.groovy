@@ -13,9 +13,10 @@ data-builder-idParent
 data-builder-head
 
 data-product
-data-product-attribute-form
+data-product-attribute-form="1"
 data-product-attribute-legend
 data-product-attribute
+data-product-attribute-value
 data-product-info="color:blue;"
 
 data-builder-cart="heading"
