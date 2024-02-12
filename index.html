@@ -828,7 +828,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const generateDependees = async (event) => {
     const parentFieldSet = event.target.closest('fieldset')
     const checkboxes = parentFieldSet.querySelectorAll('[data-type="dependant"')
-    const skuValue = parentFieldSet.parentNode.parentNode.querySelector('#sku-item-1').textContent
+    const skuValue = parentFieldSet.parentNode.parentNode.querySelector('#sku-value').textContent
     const resultList = []
     for (const item of checkboxes) {
       const checkbox = item.firstChild
@@ -869,7 +869,7 @@ document.addEventListener('DOMContentLoaded', function() {
       await pushAction({
         time: (new Date()).getTime(),
         action: 'removeTag',
-        target_element: id,
+        target_element: id+'-tree',
       })
     }
     for (const id of ids) {
