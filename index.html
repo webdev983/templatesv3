@@ -4859,7 +4859,7 @@ document.addEventListener('DOMContentLoaded', function() {
             target_element: label.id + '-tree',
             inserted_element: { originalId: defaultCheckbox.id + '-tree', id: compositeId + '-tree' },
           };
-          await pushAction(actionObject);
+          //await pushAction(actionObject);
 
           
 
@@ -4872,12 +4872,13 @@ document.addEventListener('DOMContentLoaded', function() {
             value: compositeId,
 
           }
-          await pushAction(el)
+          //await pushAction(el)
           //set for in label
+          const input = label.querySelector('input[type="radio"]')
           const el1 = {
             time: (new Date()).getTime(),
             action: 'setAttribute',
-            target_element: compositeId + '-tree',
+            target_element: input.id + '-tree',
             key: 'name',
             value:sku+';'+ item.legend,
 
@@ -4888,7 +4889,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const el = {
               time: (new Date()).getTime(),
               action: 'setAttribute',
-              target_element: compositeId + '-tree',
+              target_element: input.id + '-tree',
               key: 'checked',
               value: 'true',
 
@@ -4904,7 +4905,7 @@ document.addEventListener('DOMContentLoaded', function() {
           target_element: defaultCheckbox.id + '-tree',
 
         }
-        await pushAction(el)
+        //await pushAction(el)
       }
 
     }
