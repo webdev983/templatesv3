@@ -828,6 +828,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const generateDependees = async (event) => {
     const parentFieldSet = event.target.closest('fieldset')
     const checkboxes = parentFieldSet.querySelectorAll('[data-type="dependant"')
+    const skuValue = parentFieldSet.parentNode.parentNode.querySelector('#sku-item-1').textContent
     const resultList = []
     for (const item of checkboxes) {
       const checkbox = item.firstChild
@@ -893,7 +894,7 @@ document.addEventListener('DOMContentLoaded', function() {
           action: 'setAttribute',
           target_element: currentId + '-tree',
           key: 'data-product-info',
-          value: `${combinations[i]}`,
+          value: `${skuValue};${combinations[i]}`,
 
         }
         await pushAction(el)
