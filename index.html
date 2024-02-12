@@ -4793,7 +4793,7 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('input-sku').value = ''
       return
     }
-    const resultList = getProductAttributes()
+    const resultList = getProductAttributes(true)
     const combinations = generateCombinations(resultList)
     pathItem.sku = value
     //update path item
@@ -4835,7 +4835,7 @@ document.addEventListener('DOMContentLoaded', function() {
         action: 'setAttribute',
         target_element: dataProductEl.id + '-tree',
         key: 'data-product',
-        value: `${sku};${name}`,
+        value: `${sku}`,
 
       }
       await pushAction(el)
@@ -4879,7 +4879,7 @@ document.addEventListener('DOMContentLoaded', function() {
             action: 'setAttribute',
             target_element: compositeId + '-tree',
             key: 'name',
-            value: item.legend,
+            value:sku+';'+ item.legend,
 
           }
           await pushAction(el1)
@@ -4920,11 +4920,13 @@ document.addEventListener('DOMContentLoaded', function() {
       await pushAction(el)
     }
   }
-  const getProductAttributes = () => {
+  const getProductAttributes = (setNumbers) => {
     const resultList = [];
     const forms = document.querySelectorAll('[data-product-attribute-form]');
-
-    forms.forEach(form => {
+    
+    for(let i =0;i<forms.length;i++){
+      const form = forms[i]
+      setNumbers && forms[i].setAttribute('data-product-attribute-form',i+1)
       const legendElement = form.querySelector('[data-product-attribute-legend]');
       const legend = legendElement && legendElement.textContent;
 
@@ -4936,7 +4938,7 @@ document.addEventListener('DOMContentLoaded', function() {
         legend: legend,
         items: attributes
       });
-    });
+    };
     return resultList
   }
 
@@ -4987,6 +4989,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     const splited = pathItem.lsi1.split(';')[0].split('/')
     const name = splited[splited.length - 1]
+    /*
     document.querySelectorAll('[data-product]').forEach(
       element => {
         const prev = element.getAttribute('data-product')
@@ -4996,6 +4999,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }
     )
+    */
 
 
   }
