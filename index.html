@@ -594,9 +594,9 @@
           <label class="l-2">🎚️</label>
           <label data-type="dependee-value" class="l-2 b-dark-blue">Price</label>
         </legend>
-        
+
         <div>
-          <button class="b-3" id="generate-dependees">Generate</button>
+          <button class="b-3" id="generate-dependees" onclick="generateDependees(event)">Generate</button>
         </div>
       </fieldset>
       <div id="head">
@@ -622,7 +622,7 @@
                 <li id="sku-attribute"><span class="l-4" id="sku-attribute-value">Solo</span></li>
               </div>
             </ul>
-            
+
             <div id="dependee-menu" hidden>
               <fieldset data-type="dependee">
                 <legend>
@@ -793,7 +793,7 @@ document.addEventListener('DOMContentLoaded', function() {
       localStorage.removeItem('generatedPageToggle')
     }
   }
-  const generateDependeeMenu = (node)=>{
+  const generateDependeeMenu = (node) => {
     const sku = node.querySelector('#sku-value').textContent
     console.log(sku)
     const item = document.getElementById('dependee-menu-item')
@@ -801,39 +801,117 @@ document.addEventListener('DOMContentLoaded', function() {
     const forms = document.querySelectorAll('[data-product-attribute-form]');
     const dependees = document.querySelectorAll('[data-builder-dependee]');
     const selects = []
-    for(let i =0;i<forms.length;i++){
+    for (let i = 0; i < forms.length; i++) {
       const form = forms[i]
-      selects.push(form.querySelector('[data-product-attribute-legend]').textContent)
+      selects.push(form.querySelector('[data-product-attribute-legend]'))
     }
-    const dependees1 = removeDuplicates(Array.from(dependees).map(el=>el.getAttribute('data-builder-dependee')))
-    dependeeMenu.innerHTML =''
+    const dependees1 = removeDuplicates(Array.from(dependees).map(el => el.getAttribute('data-builder-dependee')))
+    dependeeMenu.innerHTML = ''
     const checkbox = document.getElementById('checkbox-label')
-    for(const dependee of dependees1){
+    for (const dependee of dependees1) {
       console.log('in')
       const cloned = item.cloneNode(true)
       cloned.removeAttribute('hidden')
       cloned.querySelector('[data-type="dependee-value"]').textContent = dependee
-      
-      for(const select of selects){
+
+      for (const select of selects) {
         const clonedCheckbox = checkbox.cloneNode(true)
         clonedCheckbox.removeAttribute('hidden')
-        clonedCheckbox.innerHTML = clonedCheckbox.innerHTML.replace('Color',select)
-        cloned.insertBefore(clonedCheckbox,cloned.lastChild)
+        clonedCheckbox.setAttribute('formId', select.parentNode.id)
+        clonedCheckbox.innerHTML = clonedCheckbox.innerHTML.replace('Color', select.textContent)
+        cloned.insertBefore(clonedCheckbox, cloned.children[cloned.children.length - 1])
       }
       dependeeMenu.appendChild(cloned)
-      
+
     }
+  }
+  const generateDependees = async (event) => {
+    const parentFieldSet = event.target.closest('fieldset')
+    const checkboxes = parentFieldSet.querySelectorAll('[data-type="dependant"')
+    const resultList = []
+    for (const item of checkboxes) {
+      const checkbox = item.firstChild
+      if (checkbox.checked) {
+        console.log('checkbox ' + checkbox.id)
+        const formId = item.getAttribute('formId')
+        const form = document.getElementById(formId)
+        const legendElement = form.querySelector('[data-product-attribute-legend]');
+        const legend = legendElement && legendElement.textContent;
+
+        const attributeElements = form.querySelectorAll('[data-product-attribute]');
+        const attributes = Array.from(attributeElements).map(element => element.textContent);
+
+        resultList.push({
+          form,
+          legend: legend,
+          items: attributes
+        });
+      }
+
+    }
+    const combinations = generateCombinations(resultList)
+    console.log(JSON.stringify(combinations))
+    const dependeeItems = document.querySelectorAll(`[data-builder-dependee="${parentFieldSet.querySelector('[data-type="dependee-value"]').textContent}"]`)
+    const allIds = Array.from(dependeeItems).map(e => e.id)
+    const ids = []
+    const toRemove = []
+    allIds.forEach(id => {
+      const splited = id.split(':')
+      if (!ids.includes(splited[0])) {
+        ids.push(id)
+      }
+      else {
+        ids.push(id)
+      }
+    })
+    for (const id of toRemove) {
+      await pushAction({
+        time: (new Date()).getTime(),
+        action: 'removeTag',
+        target_element: id,
+      })
+    }
+    for (const id of ids) {
+      for (let i = 0; i < combinations.length; i++) {
+        let currentId = id
+        if (i === 0) {
+
+        }
+        else {
+          const res = duplicateId(id)
+          let actionObject = {
+            time: (new Date()).getTime(),
+            action: 'InsertBefore',
+            target_element: id + '-tree',
+            inserted_element: { originalId: id + '-tree', id: res.id + '-tree' },
+          };
+          await pushAction(actionObject)
+          currentId = res.id
+        }
+        const el = {
+          time: (new Date()).getTime(),
+          action: 'setAttribute',
+          target_element: currentId + '-tree',
+          key: 'data-product-info',
+          value: `${combinations[i]}`,
+
+        }
+        await pushAction(el)
+
+      }
+    }
+
   }
   const toggleDependencyMenu1 = (event) => {
     const menus = event.target.parentNode.querySelectorAll('#dependee-menu')
-   
+
     const button = event.target
     if (!button.classList.contains('b-selected')) {
       console.log('setting');
 
       // Set the item in local storage
 
-      
+
       // Remove the 'hidden' attribute to show the menu
       menus.forEach(menu => menu.removeAttribute('hidden'))
 
@@ -856,13 +934,13 @@ document.addEventListener('DOMContentLoaded', function() {
   const toggleSkuAttributeList = (event) => {
     const el = event.target
     const list = el.parentNode.querySelector('#sku-attribute-list')
-    if(el.classList.contains('b-selected')){
+    if (el.classList.contains('b-selected')) {
       el.classList.remove('b-selected')
-      list.setAttribute('hidden','true')
+      list.setAttribute('hidden', 'true')
     }
-    else{
+    else {
       el.classList.add('b-selected')
-      
+
       list.removeAttribute('hidden')
     }
   }
@@ -1079,7 +1157,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Set up onclick for file-open button
             function setPath() {
               path1 = path1 + item + '/'
-              loadUsingPath2(path1,filePathList)
+              loadUsingPath2(path1, filePathList)
             };
 
             // Append the cloned item to the filePathList
@@ -1195,7 +1273,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Set up onclick for file-open button
             function setPath() {
               const path1 = item + '/'
-              
+
 
               loadUsingPath2(path1, filePathList)
             };
@@ -4904,7 +4982,7 @@ document.addEventListener('DOMContentLoaded', function() {
           };
           //await pushAction(actionObject);
 
-          
+
 
           //set for in label
           const el = {
@@ -4923,7 +5001,7 @@ document.addEventListener('DOMContentLoaded', function() {
             action: 'setAttribute',
             target_element: input.id + '-tree',
             key: 'name',
-            value:sku+';'+ item.legend,
+            value: sku + ';' + item.legend,
 
           }
           await pushAction(el1)
@@ -4964,22 +5042,22 @@ document.addEventListener('DOMContentLoaded', function() {
       await pushAction(el)
     }
   }
-  const getProductAttributes =async (setNumbers) => {
+  const getProductAttributes = async (setNumbers) => {
     const resultList = [];
     const forms = document.querySelectorAll('[data-product-attribute-form]');
-    
-    for(let i =0;i<forms.length;i++){
-      const form = forms[i]
-      if(setNumbers) {
-        const el = {
-            time: (new Date()).getTime(),
-            action: 'setAttribute',
-            target_element: forms[i].id + '-tree',
-            key: 'data-product-attribute-form',
-            value: i+1,
 
-          }
-          await pushAction(el)
+    for (let i = 0; i < forms.length; i++) {
+      const form = forms[i]
+      if (setNumbers) {
+        const el = {
+          time: (new Date()).getTime(),
+          action: 'setAttribute',
+          target_element: forms[i].id + '-tree',
+          key: 'data-product-attribute-form',
+          value: i + 1,
+
+        }
+        await pushAction(el)
       }
       const legendElement = form.querySelector('[data-product-attribute-legend]');
       const legend = legendElement && legendElement.textContent;
@@ -5029,7 +5107,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById("sku-list").appendChild(cloned1)
     el.forEach(e => e.remove())
   }
-  const handleHead =async () => {
+  const handleHead = async () => {
 
     const resultList = await getProductAttributes()
 
