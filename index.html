@@ -4705,7 +4705,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     await loadFromDb()
 
-    handleHead()
+    await handleHead()
 
     //first menu
     let buttons = document.querySelectorAll('button[data-element="code-tree-tag-name-button"]');
@@ -4793,7 +4793,7 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('input-sku').value = ''
       return
     }
-    const resultList = getProductAttributes(true)
+    const resultList = await getProductAttributes(true)
     const combinations = generateCombinations(resultList)
     pathItem.sku = value
     //update path item
@@ -4921,13 +4921,23 @@ document.addEventListener('DOMContentLoaded', function() {
       await pushAction(el)
     }
   }
-  const getProductAttributes = (setNumbers) => {
+  const getProductAttributes =async (setNumbers) => {
     const resultList = [];
     const forms = document.querySelectorAll('[data-product-attribute-form]');
     
     for(let i =0;i<forms.length;i++){
       const form = forms[i]
-      setNumbers && forms[i].setAttribute('data-product-attribute-form',i+1)
+      if(setNumbers) {
+        const el = {
+            time: (new Date()).getTime(),
+            action: 'setAttribute',
+            target_element: forms[i].id + '-tree',
+            key: 'data-product-attribute-form',
+            value: i+1,
+
+          }
+          await pushAction(el)
+      }
       const legendElement = form.querySelector('[data-product-attribute-legend]');
       const legend = legendElement && legendElement.textContent;
 
@@ -4976,9 +4986,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById("sku-list").appendChild(cloned1)
     el.forEach(e => e.remove())
   }
-  const handleHead = () => {
+  const handleHead =async () => {
 
-    const resultList = getProductAttributes()
+    const resultList = await getProductAttributes()
 
     if (resultList.length || pathItem.sku) {
       document.getElementById('sku-menu').removeAttribute('hidden')
