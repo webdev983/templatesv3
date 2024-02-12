@@ -856,15 +856,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const allIds = Array.from(dependeeItems).map(e => e.id)
     const ids = []
     const toRemove = []
-    allIds.forEach(id => {
+    for(const id of allIds){
+      if(id.endsWith('-tree')){
+        continue
+      }
       const splited = id.split(':')
-      if (!ids.includes(splited[0])) {
+      if (!ids.find(el=>el.startsWith(splited[0]+':'))) {
         ids.push(id)
+        
       }
       else {
-        ids.push(id)
+        toRemove.push(id)
       }
-    })
+    }
+    console.log('tr555 ' +JSON.stringify(toRemove))
+    console.log('tr555 ' +JSON.stringify(ids))
     for (const id of toRemove) {
       await pushAction({
         time: (new Date()).getTime(),
@@ -884,7 +890,7 @@ document.addEventListener('DOMContentLoaded', function() {
             time: (new Date()).getTime(),
             action: 'InsertBefore',
             target_element: id + '-tree',
-            inserted_element: { originalId: id + '-tree', id: res.id + '-tree' },
+            inserted_element: { originalId: id + '-tree', id: res.id },
           };
           await pushAction(actionObject)
           currentId = res.id
