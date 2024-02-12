@@ -588,6 +588,17 @@
         <button hidden class="b-1" title="article schema.org">📝</button>
         <button hidden class="b-1" title="faq schema.org">❓</button>
       </div>
+      <label id="checkbox-label" hidden data-type="dependant" class="l-3"><input type="checkbox">Color</label>
+      <fieldset hidden id="dependee-menu-item" data-type="dependee">
+        <legend>
+          <label class="l-2">🎚️</label>
+          <label data-type="dependee-value" class="l-2 b-dark-blue">Price</label>
+        </legend>
+        
+        <div>
+          <button class="b-3" id="generate-dependees">Generate</button>
+        </div>
+      </fieldset>
       <div id="head">
         <div style="margin-left: 15px;">
 
@@ -611,15 +622,14 @@
                 <li id="sku-attribute"><span class="l-4" id="sku-attribute-value">Solo</span></li>
               </div>
             </ul>
-
+            
             <div id="dependee-menu" hidden>
-              <fieldset id="dependee">
+              <fieldset data-type="dependee">
                 <legend>
                   <label class="l-2">🎚️</label>
-                  <label id="dependee-value" class="l-2 b-dark-blue">Price</label>
+                  <label data-type="dependee-value" class="l-2 b-dark-blue">Price</label>
                 </legend>
-                <input id="dsad141241212" type="checkbox">
-                <label id="dependant" for="dsad141241212" class="l-3" for="~1">Color</label>
+                <label data-type="dependant" class="l-3"><input type="checkbox">Color</label>
                 <div>
                   <button class="b-3" id="generate-dependees">Generate</button>
                 </div>
@@ -786,23 +796,50 @@ document.addEventListener('DOMContentLoaded', function() {
   const generateDependeeMenu = (node)=>{
     const sku = node.querySelector('#sku-value').textContent
     console.log(sku)
-
+    const item = document.getElementById('dependee-menu-item')
+    const dependeeMenu = node.querySelector('#dependee-menu')
+    const forms = document.querySelectorAll('[data-product-attribute-form]');
+    const dependees = document.querySelectorAll('[data-builder-dependee]');
+    const selects = []
+    for(let i =0;i<forms.length;i++){
+      const form = forms[i]
+      selects.push(form.querySelector('[data-product-attribute-legend]').textContent)
+    }
+    const dependees1 = removeDuplicates(Array.from(dependees).map(el=>el.getAttribute('data-builder-dependee')))
+    dependeeMenu.innerHTML =''
+    const checkbox = document.getElementById('checkbox-label')
+    for(const dependee of dependees1){
+      console.log('in')
+      const cloned = item.cloneNode(true)
+      cloned.removeAttribute('hidden')
+      cloned.querySelector('[data-type="dependee-value"]').textContent = dependee
+      
+      for(const select of selects){
+        const clonedCheckbox = checkbox.cloneNode(true)
+        clonedCheckbox.removeAttribute('hidden')
+        clonedCheckbox.innerHTML = clonedCheckbox.innerHTML.replace('Color',select)
+        cloned.insertBefore(clonedCheckbox,cloned.lastChild)
+      }
+      dependeeMenu.appendChild(cloned)
+      
+    }
   }
   const toggleDependencyMenu1 = (event) => {
     const menus = event.target.parentNode.querySelectorAll('#dependee-menu')
-    generateDependeeMenu(event.target.parentNode)
+   
     const button = event.target
     if (!button.classList.contains('b-selected')) {
       console.log('setting');
 
       // Set the item in local storage
 
-
+      
       // Remove the 'hidden' attribute to show the menu
       menus.forEach(menu => menu.removeAttribute('hidden'))
 
       // Add the class 'b-selected' to the toggle button
       button.classList.add('b-selected');
+      generateDependeeMenu(event.target.parentNode)
     } else {
       // If the item is set in local storage
 
