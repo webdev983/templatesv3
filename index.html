@@ -676,7 +676,7 @@
 
 <script>
   var getElementById1 = (id) => {
-    const el = document.getElementById(id)
+    const el = getElementById1(id)
     if (el) {
       return el
     }
@@ -853,7 +853,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (checkbox.checked) {
         console.log('checkbox ' + checkbox.id)
         const formId = item.getAttribute('formId')
-        const form = document.getElementById(formId)
+        const form = getElementById1(formId)
         const legendElement = form.querySelector('[data-product-attribute-legend]');
         const legend = legendElement && legendElement.textContent;
 
@@ -1413,14 +1413,14 @@ document.addEventListener('DOMContentLoaded', function() {
   var approveReplace = async (e) => {
     const m1 = Array.from(e.target.parentNode.children).filter(i => i.id)
     const parentId = e.target.parentNode.id.replace('file-path-list;', '')
-    const parentEl = document.getElementById(parentId)
+    const parentEl = getElementById1(parentId)
     const replacedString = parentEl.getAttribute('replaced')
     const replaced = replacedString ? JSON.parse(replacedString) : []
     const el = {
       time: (new Date()).getTime(),
       action: 'Replace_Component',
       target_element: [parentId.replace('selectedFilePathList;', ''), ...m1.map(el => {
-        const element = document.getElementById(el.id);
+        const element = getElementById1(el.id);
         return {
 
           componentId: el.id, id: el.newId || generateUUID(), path: element.querySelector('[data-value="file-path"]').textContent, already: element.getAttribute('alreadyReplaced')
@@ -1852,7 +1852,7 @@ document.addEventListener('DOMContentLoaded', function() {
       console.log(parentWithAppendChild);
       console.log(siblingWithInsertBefore);
       removeButtons()
-      const original = document.getElementById(sourceId);
+      const original = getElementById1(sourceId);
       const originalRect = original.getBoundingClientRect();
       // Check if siblingWithInsertBefore is present
       if (siblingWithInsertBefore.length > 0) {
@@ -1879,7 +1879,7 @@ document.addEventListener('DOMContentLoaded', function() {
         addButton.className = 'receive-target';
         addButton.innerHTML = '➕';
         addButton.onclick = function () {
-          const children = document.getElementById(parentWithAppendChild.id).children;
+          const children = getElementById1(parentWithAppendChild.id).children;
 
           let lastFieldsetTreeId = null;
 
@@ -1910,7 +1910,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       document.removeEventListener('mouseover', handleMouseOver);
       document.addEventListener('click', clickRemoveButton);
-      const newElement = document.getElementById(sourceId);
+      const newElement = getElementById1(sourceId);
       const newRect = newElement.getBoundingClientRect();
       window.scrollTo({
         top: newRect.top - originalRect.top + window.scrollY,
@@ -1985,7 +1985,7 @@ document.addEventListener('DOMContentLoaded', function() {
       let lastFieldsetTreeId = null;
       let actionObject
       if (action === 'InsertAfter') {
-        const children = document.getElementById(parentId).children;
+        const children = getElementById1(parentId).children;
 
         for (let i = children.length - 1; i >= 0; i--) {
           const child = children[i];
@@ -2036,7 +2036,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       // Step 2: If it ends with -copy-x, remove that part
       let modifiedId = removeLastOccurrence(inputId, '-tree');
-      const el = document.getElementById(modifiedId + '-tree')
+      const el = getElementById1(modifiedId + '-tree')
       console.log('iiie ' + el.id)
       const tag = el.tagName.toLowerCase()
       const splited = modifiedId.split(';')
@@ -2082,7 +2082,7 @@ document.addEventListener('DOMContentLoaded', function() {
             target_element: id,
 
           })
-          const el = document.getElementById(event.target.id + '-fieldset')
+          const el = getElementById1(event.target.id + '-fieldset')
           if (el) {
             el.remove()
           }
@@ -2317,7 +2317,7 @@ document.addEventListener('DOMContentLoaded', function() {
               target_element: e.target.id + '-tree',
 
             })
-            const el = document.getElementById(e.target.id + '-fieldset')
+            const el = getElementById1(e.target.id + '-fieldset')
             if (el) {
               el.remove()
             }
@@ -2345,7 +2345,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('draggable');
         removeButtons()
         e.dataTransfer.setData('text/plain', e.target.id);
-        const original = document.getElementById(e.target.id);
+        const original = getElementById1(e.target.id);
         const originalRect = original.getBoundingClientRect();
         let siblingWithInsertBefore
         let parentWithAppendChild
@@ -2390,7 +2390,7 @@ document.addEventListener('DOMContentLoaded', function() {
           parentWithAppendChild.appendChild(plusButton);
           addHoverListeners(plusButton);
         }
-        const newElement = document.getElementById(e.target.id);
+        const newElement = getElementById1(e.target.id);
         const newRect = newElement.getBoundingClientRect();
         console.log(window.scrollY)
         console.log(newRect.top)
@@ -2982,7 +2982,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const removeSelected = (arr) => {
         for (const el of arr) {
           console.log('1- ' + el)
-          const treeEl = document.getElementById(el)
+          const treeEl = getElementById1(el)
           const box = treeEl?.querySelector('#selectedCheckbox')
           if (box) {
             console.log('d55')
@@ -2993,9 +2993,9 @@ document.addEventListener('DOMContentLoaded', function() {
       removeSelected(restOfElements)
       if (components.includes(firstElementId.replace('-tree', ''))) {
         console.log('in555')
-        const target = document.getElementById(firstElementId)
+        const target = getElementById1(firstElementId)
         for (const el of restOfElements) {
-          const toM = document.getElementById(el)
+          const toM = getElementById1(el)
           if (action === 'Append') {
             target.append(toM)
           }
@@ -3008,8 +3008,8 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       // Sort the rest of the elements by their order in the DOM
       function sortByPlace(a, b) {
-        var elementA = document.getElementById(a);
-        var elementB = document.getElementById(b);
+        var elementA = getElementById1(a);
+        var elementB = getElementById1(b);
         console.log('prob66 ' + a)
         return Array.from(elementA.parentElement.children).indexOf(elementA) -
           Array.from(elementB.parentElement.children).indexOf(elementB);
@@ -3067,11 +3067,11 @@ document.addEventListener('DOMContentLoaded', function() {
             var selectedElements2 = []
             function getContainer() {
               return document
-              return containerId ? document.getElementById(containerId) : document
+              return containerId ? getElementById1(containerId) : document
             }
             getContainer().querySelectorAll('[id^="' + selectedId.split(':')[0] + '"]').forEach(el => {
               if ((!attr || attr === el.getAttribute('data-replaceID')) && !el.id.endsWith('-tree') && !el.id.endsWith('-fieldset')) {
-                selectedElements.push(document.getElementById(el.id + '-tree'));
+                selectedElements.push(getElementById1(el.id + '-tree'));
                 selectedElements2.push(el)
               }
 
@@ -3089,11 +3089,11 @@ document.addEventListener('DOMContentLoaded', function() {
           else {
             console.log('moving')
             selectedId = selectedArray[i]
-            const treeEl = document.getElementById(selectedId)
-            let pageEl = document.getElementById(removeLastOccurrence(selectedId, '-tree') + '-fieldset')
+            const treeEl = getElementById1(selectedId)
+            let pageEl = getElementById1(removeLastOccurrence(selectedId, '-tree') + '-fieldset')
             if (!pageEl) {
               console.log('true11')
-              pageEl = document.getElementById(removeLastOccurrence(selectedId, '-tree'))
+              pageEl = getElementById1(removeLastOccurrence(selectedId, '-tree'))
             }
 
 
@@ -3183,7 +3183,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('[id^="' + selectedArrayNotSorted[1].replace('-tree', '').split(':')[0] + '"]').forEach(el => {
               console.log('eel' + el.id)
               if (!el.id.endsWith('-tree') && !el.id.endsWith('-fieldset')) {
-                s.push(document.getElementById(el.id + '-tree'));
+                s.push(getElementById1(el.id + '-tree'));
                 s1.push(el)
               }
 
@@ -3228,10 +3228,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         }
       }
-      if (document.getElementById(targetElementId)) {
-        var targetFieldset = document.getElementById(targetElementId);
+      if (getElementById1(targetElementId)) {
+        var targetFieldset = getElementById1(targetElementId);
 
-        var targetFieldset2 = document.getElementById(removeLastOccurrence(targetElementId, '-tree'));
+        var targetFieldset2 = getElementById1(removeLastOccurrence(targetElementId, '-tree'));
         handle(targetFieldset, targetFieldset2)
       }
       else {
@@ -3244,7 +3244,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('[id^="' + mId + '"]').forEach(
           el => {
             if (!el.id.endsWith('-tree') && !el.id.endsWith('-fieldset') && !already.includes(el.getAttribute('data-replaceid'))) {
-              treeEls.push(document.getElementById(el.id + '-tree'));
+              treeEls.push(getElementById1(el.id + '-tree'));
               compEls.push(el)
               already.push(el.getAttribute('data-replaceid'))
             }
@@ -3314,7 +3314,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         //replace
         console.log('selected Actions' + JSON.stringify(replaceAction))
-        treeElement = document.getElementById(target_element);
+        treeElement = getElementById1(target_element);
         //component
         componentElement = getElementById1('generated-page');
 
@@ -3384,7 +3384,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const elementsToRemove = document.querySelectorAll(`[id^="${removeLastOccurrence(toReplace, '-tree') + ';'}"]`);
             elementsToRemove.forEach(element => element.remove());
           }
-          const el = document.getElementById(toReplace)
+          const el = getElementById1(toReplace)
           el.setAttribute('replaced', JSON.stringify(replaceAction.target_element))
           const el2 = el.querySelector('[data-element="optional-script"]')
           el2.removeAttribute('hidden')
@@ -3398,12 +3398,12 @@ document.addEventListener('DOMContentLoaded', function() {
       case 'Insert_First':
         treeElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
           getElementById1('code-tree')
-          : document.getElementById(target_element)
+          : getElementById1(target_element)
         //component
 
         componentElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
           getElementById1('generated-page')
-          : document.getElementById(removeLastOccurrence(target_element, '-tree'));
+          : getElementById1(removeLastOccurrence(target_element, '-tree'));
         const newEle = document.createElement(inserted_element.tagName)
         console.log('no comp val' + noComp1)
         noComp1 && newEle.setAttribute('data-replaceID', containerId)
@@ -3437,9 +3437,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (inserted_element?.originalId) {
           console.log('insert1' + JSON.stringify(command));
           // fieldset
-          treeElement = document.getElementById(inserted_element?.originalId);
+          treeElement = getElementById1(inserted_element?.originalId);
           // component
-          componentElement = document.getElementById(removeLastOccurrence(inserted_element.originalId, '-tree'));
+          componentElement = getElementById1(removeLastOccurrence(inserted_element.originalId, '-tree'));
 
           // Duplicate the element
           const newEl = componentElement.cloneNode(true);
@@ -3453,7 +3453,7 @@ document.addEventListener('DOMContentLoaded', function() {
           console.log(newEl.id);
 
           // Append the duplicated element to the componentElement
-          const compEl = document.getElementById(removeLastOccurrence(target_element, '-tree'))
+          const compEl = getElementById1(removeLastOccurrence(target_element, '-tree'))
           if (visual) {
             insertAfter(newEl, compEl.parentNode);
             processElement(newEl);
@@ -3478,7 +3478,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']");
             button.addEventListener('mouseover', mouseOverTree);
             button.addEventListener('mouseout', mouseOutTree);
-            const trEl = document.getElementById(target_element)
+            const trEl = getElementById1(target_element)
             // Append the duplicated treeElement to the treeElement's parent
             insertAfter(newEl2, trEl);
             updateChildIdsRecursive(newEl2, newId1, true);
@@ -3525,13 +3525,13 @@ document.addEventListener('DOMContentLoaded', function() {
           const id = target_element[1].id;
           console.log(id)
           console.log(afterId)
-          const aftertreeElement = document.getElementById(afterId);
-          let aftercomponentElement = document.getElementById(removeLastOccurrence(afterId, '-tree') + '-fieldset') ||
-            document.getElementById(removeLastOccurrence(afterId, '-tree'));
+          const aftertreeElement = getElementById1(afterId);
+          let aftercomponentElement = getElementById1(removeLastOccurrence(afterId, '-tree') + '-fieldset') ||
+            getElementById1(removeLastOccurrence(afterId, '-tree'));
 
-          const treeElement = document.getElementById(id);
-          let componentElement = document.getElementById(removeLastOccurrence(id, '-tree') + '-fieldset') ||
-            document.getElementById(removeLastOccurrence(id, '-tree'));
+          const treeElement = getElementById1(id);
+          let componentElement = getElementById1(removeLastOccurrence(id, '-tree') + '-fieldset') ||
+            getElementById1(removeLastOccurrence(id, '-tree'));
 
           if (aftertreeElement && treeElement) {
             // Move treeElement after aftertreeElement
@@ -3562,11 +3562,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 const { id, copyId } = duplicateId(selectedElementId)
                 // Perform additional actions if needed
                 let actionObject
-                if (document.getElementById(selectedElementId + '-tree').nextElementSibling) {
+                if (getElementById1(selectedElementId + '-tree').nextElementSibling) {
                   actionObject = {
                     time: (new Date()).getTime(),
                     action: 'InsertBefore',
-                    target_element: document.getElementById(selectedElementId + '-tree').nextElementSibling.id,
+                    target_element: getElementById1(selectedElementId + '-tree').nextElementSibling.id,
                     inserted_element: { originalId: selectedElementId + '-tree', id },
                   };
                 }
@@ -3574,7 +3574,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   actionObject = {
                     time: (new Date()).getTime(),
                     action: 'Append',
-                    target_element: document.getElementById(selectedElementId + '-tree').parentNode.id,
+                    target_element: getElementById1(selectedElementId + '-tree').parentNode.id,
                     inserted_element: { originalId: selectedElementId + '-tree', id },
                   };
                 }
@@ -3583,7 +3583,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return { t: actionObject.inserted_element.id, copyId }
               }
 
-              const { t, copyId } = await append(removeLastOccurrence(document.getElementById(id).parentNode.id, '-tree'), removeLastOccurrence(id, '-tree'))
+              const { t, copyId } = await append(removeLastOccurrence(getElementById1(id).parentNode.id, '-tree'), removeLastOccurrence(id, '-tree'))
 
               await executeCommand({
                 time: (new Date()).getTime(),
@@ -3606,7 +3606,7 @@ document.addEventListener('DOMContentLoaded', function() {
           let restOfElements = target_element.map(el => removeLastOccurrence(el.id, '-tree')).map(el =>
             getWithoutCopyId(el))
           restOfElements = removeDuplicates(restOfElements)
-          if (document.getElementById(id)) {
+          if (getElementById1(id)) {
 
 
 
@@ -3657,7 +3657,7 @@ document.addEventListener('DOMContentLoaded', function() {
           //fieldset
           console.log('in')
           console.log(target_element)
-          treeElement = document.getElementById(target_element);
+          treeElement = getElementById1(target_element);
           //component
 
           const component_el = getElementById1('component-element')
@@ -3682,9 +3682,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (inserted_element?.originalId) {
           console.log('insert2' + JSON.stringify(command));
           // fieldset
-          treeElement = document.getElementById(inserted_element?.originalId);
+          treeElement = getElementById1(inserted_element?.originalId);
           // component
-          componentElement = document.getElementById(removeLastOccurrence(inserted_element.originalId, '-tree'));
+          componentElement = getElementById1(removeLastOccurrence(inserted_element.originalId, '-tree'));
 
           // Duplicate the element
           let newEl = componentElement.cloneNode(true);
@@ -3698,11 +3698,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
           // Append the duplicated element to the componentElement
           if (visual) {
-            document.getElementById(removeLastOccurrence(target_element, '-tree')).parentNode.appendChild(newEl);
+            getElementById1(removeLastOccurrence(target_element, '-tree')).parentNode.appendChild(newEl);
             processElement(newEl)
           }
           else {
-            document.getElementById(removeLastOccurrence(target_element, '-tree')).appendChild(newEl);
+            getElementById1(removeLastOccurrence(target_element, '-tree')).appendChild(newEl);
           }
           //processElement(newEl)
           // Duplicate the treeElement content
@@ -3721,7 +3721,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
           // Append the duplicated treeElement to the treeElement's parent
 
-          document.getElementById(target_element).appendChild(newEl2);
+          getElementById1(target_element).appendChild(newEl2);
 
           const newId1 = newEl.id.split(':')[newEl.id.split(':').length - 1]
           function updateChildIdsRecursive(element, newId1, tree) {
@@ -3764,13 +3764,13 @@ document.addEventListener('DOMContentLoaded', function() {
           //fieldset
           treeElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
             getElementById1('code-tree')
-            : document.getElementById(target_element)
+            : getElementById1(target_element)
           //component
 
           componentElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
             getElementById('generated-page')
             :
-            document.getElementById(removeLastOccurrence(target_element, '-tree'));
+            getElementById1(removeLastOccurrence(target_element, '-tree'));
 
           const newEl = document.createElement(inserted_element.tagName)
           const attr = componentElement.getAttribute('data-replaceID')
@@ -3837,11 +3837,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 const { id, copyId } = duplicateId(selectedElementId)
                 // Perform additional actions if needed
                 let actionObject
-                if (document.getElementById(selectedElementId + '-tree').nextElementSibling) {
+                if (getElementById1(selectedElementId + '-tree').nextElementSibling) {
                   actionObject = {
                     time: (new Date()).getTime(),
                     action: 'InsertBefore',
-                    target_element: document.getElementById(selectedElementId + '-tree').nextElementSibling.id,
+                    target_element: getElementById1(selectedElementId + '-tree').nextElementSibling.id,
                     inserted_element: { originalId: selectedElementId + '-tree', id },
                   };
                 }
@@ -3849,7 +3849,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   actionObject = {
                     time: (new Date()).getTime(),
                     action: 'Append',
-                    target_element: document.getElementById(selectedElementId + '-tree').parentNode.id,
+                    target_element: getElementById1(selectedElementId + '-tree').parentNode.id,
                     inserted_element: { originalId: selectedElementId + '-tree', id },
                   };
                 }
@@ -3858,7 +3858,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return { t: actionObject.inserted_element.id, copyId }
               }
 
-              const { t, copyId } = await append(removeLastOccurrence(document.getElementById(id).parentNode.id, '-tree'), removeLastOccurrence(id, '-tree'))
+              const { t, copyId } = await append(removeLastOccurrence(getElementById1(id).parentNode.id, '-tree'), removeLastOccurrence(id, '-tree'))
 
               await executeCommand({
                 time: (new Date()).getTime(),
@@ -3881,7 +3881,7 @@ document.addEventListener('DOMContentLoaded', function() {
           let restOfElements = target_element.map(el => removeLastOccurrence(el.id, '-tree')).map(el =>
             getWithoutCopyId(el))
           restOfElements = removeDuplicates(restOfElements)
-          if (document.getElementById(id)) {
+          if (getElementById1(id)) {
 
 
 
@@ -3950,9 +3950,9 @@ document.addEventListener('DOMContentLoaded', function() {
           }
           console.log('in')
           console.log(target_element)
-          treeElement = document.getElementById(target_element);
+          treeElement = getElementById1(target_element);
           //component
-          //componentElement = document.getElementById(removeLastOccurrence(target_element, '-tree'));
+          //componentElement = getElementById1(removeLastOccurrence(target_element, '-tree'));
           //const newEl = document.createElement("div")
           //newEl.id = inserted_component.id
           //console.log(newEl.id)
@@ -3982,9 +3982,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (inserted_element?.originalId) {
           console.log('insert1' + JSON.stringify(command));
           // fieldset
-          treeElement = document.getElementById(inserted_element?.originalId);
+          treeElement = getElementById1(inserted_element?.originalId);
           // component
-          componentElement = document.getElementById(removeLastOccurrence(inserted_element.originalId, '-tree'));
+          componentElement = getElementById1(removeLastOccurrence(inserted_element.originalId, '-tree'));
 
           // Duplicate the element
           const newEl = componentElement.cloneNode(true);
@@ -3998,7 +3998,7 @@ document.addEventListener('DOMContentLoaded', function() {
           console.log(newEl.id);
 
           // Append the duplicated element to the componentElement
-          const compEl = document.getElementById(removeLastOccurrence(target_element, '-tree'))
+          const compEl = getElementById1(removeLastOccurrence(target_element, '-tree'))
           if (visual) {
             compEl.parentNode.parentNode.insertBefore(newEl, compEl.parentNode);
             processElement(newEl)
@@ -4021,7 +4021,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']");
             button.addEventListener('mouseover', mouseOverTree);
             button.addEventListener('mouseout', mouseOutTree);
-            const trEl = document.getElementById(target_element)
+            const trEl = getElementById1(target_element)
             // Append the duplicated treeElement to the treeElement's parent
             treeElement.parentNode.insertBefore(newEl2, trEl)
 
@@ -4105,12 +4105,12 @@ document.addEventListener('DOMContentLoaded', function() {
           }
           treeElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
             getElementById1('code-tree')
-            : document.getElementById(target_element)
+            : getElementById1(target_element)
           //component
           componentElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
             getElementById('generated-page')
             :
-            document.getElementById(removeLastOccurrence(target_element, '-tree'));
+            getElementById1(removeLastOccurrence(target_element, '-tree'));
           if (!componentElement) {
             const mId = target_element.split(':')[0]
             const treeEls = []
@@ -4122,7 +4122,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                   if (!existing.includes(el.getAttribute('data-replaceid'))) {
                     existing.push(el.getAttribute('data-replaceid'))
-                    treeEls.push(document.getElementById(el.id + '-tree')); compEls.push(el)
+                    treeEls.push(getElementById1(el.id + '-tree')); compEls.push(el)
                   }
 
                 }
@@ -4151,7 +4151,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       case 'innerHtml':
         // Handle the 'innerHtml' action
-        const targetElement = document.getElementById(removeLastOccurrence(target_element, '-tree'));
+        const targetElement = getElementById1(removeLastOccurrence(target_element, '-tree'));
         targetElement.innerHTML = insertedCode;
 
         break;
@@ -4182,7 +4182,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const elementsToRemove = document.querySelectorAll(`[id^="${removeLastOccurrence(toReplace, '-tree') + ';'}"]`);
         elementsToRemove.forEach(element => element.remove());
       }
-      const el = document.getElementById(toReplace)
+      const el = getElementById1(toReplace)
       el.setAttribute('replaced', JSON.stringify(target_element))
       const el2 = el.querySelector('[data-element="optional-script"]')
       el2.removeAttribute('hidden')
@@ -4195,10 +4195,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Handle the 'ChangeTag' action
         // tree el
 
-        const elementToChange = document.getElementById(target_element);
+        const elementToChange = getElementById1(target_element);
         elementToChange.querySelector("[data-element='code-tree-tag-name-button']").textContent = '🏷️' + tag_change;
         // builder el
-        const elementToChange2 = document.getElementById(removeLastOccurrence(target_element, '-tree'));
+        const elementToChange2 = getElementById1(removeLastOccurrence(target_element, '-tree'));
         if (elementToChange2) {
           // Create a new p element
           var newElement = document.createElement(tag_change);
@@ -4224,8 +4224,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
       case 'dublicateTag':
         // Handle the 'dublicateTag' action
-        const originalElement = document.getElementById(target_element);
-        const originalElement2 = document.getElementById(removeLastOccurrence(target_element, '-tree'));
+        const originalElement = getElementById1(target_element);
+        const originalElement2 = getElementById1(removeLastOccurrence(target_element, '-tree'));
         const duplicatedElement = originalElement.cloneNode(true);
         const duplicatedElement2 = originalElement2.cloneNode(true);
         //to do
@@ -4239,11 +4239,11 @@ document.addEventListener('DOMContentLoaded', function() {
       case 'removeTag':
         // Handle the 'removeTag' action
         // tree
-        const elementToRemove = document.getElementById(target_element);
+        const elementToRemove = getElementById1(target_element);
         elementToRemove && elementToRemove.parentNode.removeChild(elementToRemove);
 
         // component
-        const elementToRemove2 = document.getElementById(removeLastOccurrence(target_element, '-tree'));
+        const elementToRemove2 = getElementById1(removeLastOccurrence(target_element, '-tree'));
         elementToRemove2 && elementToRemove2.parentNode.removeChild(elementToRemove2);
 
 
@@ -4269,7 +4269,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Handle the 'removeTag' action
         // tree
         console.log('pr' + target_element)
-        const element1 = document.getElementById(target_element);
+        const element1 = getElementById1(target_element);
         if (element1) {
           const textContentButton = element1.querySelector('[data-element="code-tree-text-content-button"]');
           textContentButton.textContent = `📄${value.length}`;
@@ -4277,7 +4277,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         // component
-        const element2 = document.getElementById(removeLastOccurrence(target_element, '-tree'));
+        const element2 = getElementById1(removeLastOccurrence(target_element, '-tree'));
         element2.textContent = value;
 
 
@@ -4295,8 +4295,8 @@ document.addEventListener('DOMContentLoaded', function() {
           break;
         }
 
-        const element22 = document.getElementById(removeLastOccurrence(target_element, '-tree'));
-        const element33 = document.getElementById(target_element);
+        const element22 = getElementById1(removeLastOccurrence(target_element, '-tree'));
+        const element33 = getElementById1(target_element);
         if (key) {
           console.log('key11 ' + key)
           console.log('value ' + value)
@@ -4333,7 +4333,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         // component
-        const elementToRemoveAttribute = document.getElementById(removeLastOccurrence(target_element, '-tree'));
+        const elementToRemoveAttribute = getElementById1(removeLastOccurrence(target_element, '-tree'));
         key && elementToRemoveAttribute.removeAttribute(key);
         if (key === 'data-parentid') {
           document.querySelectorAll('[id^="' + removeLastOccurrence(target_element, '-tree') + ';"]').forEach(el => {
@@ -4412,7 +4412,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Insert the cloned fieldset after the specified element
         insertAfterElement.parentNode.insertBefore(clonedFieldset, insertAfterElement.nextElementSibling);
-        const elementWithAttributes = document.getElementById(generatedId);
+        const elementWithAttributes = getElementById1(generatedId);
         if (elementWithAttributes) {
           const attributesList = clonedFieldset.querySelector('#code-tree-tag-attributes-list');
 
@@ -4638,7 +4638,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const splited = items[items.length - 1].lsi1.split(';')[0].split('/')
       const name = splited[splited.length - 1]
       const { testPage, optionalScript } = items[items.length - 1]
-      const el1 = document.getElementById(newId + '-tree')
+      const el1 = getElementById1(newId + '-tree')
       console.log('leeeeevel' + lvl)
       console.log('viiiisual')
       if ((testPage && lvl > 2) || (optionalScript && localStorage.getItem('visualOn'))) {
@@ -4665,7 +4665,7 @@ document.addEventListener('DOMContentLoaded', function() {
       pathItem = items[items.length - 1]
       setOptions(pathItem)
       const name = splited[splited.length - 1]
-      const el = document.getElementById(idFromLink + '-tree').querySelector("[data-element='code-tree-tag-name-button']")
+      const el = getElementById1(idFromLink + '-tree').querySelector("[data-element='code-tree-tag-name-button']")
       el.textContent = '🧩' + name
       el.setAttribute('path', items[items.length - 1].lsi1)
       //insertDataIntoCodeLog('root', idFromLink, { name })
@@ -4813,7 +4813,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   document.addEventListener('DOMContentLoaded', loadFirst);
   async function loadFirst() {
-    var iframe = document.getElementById("generated-page-iframe");
+    var iframe = getElementById1("generated-page-iframe");
 
     // Wait for the iframe to load completely
     await new Promise(resolve => {
