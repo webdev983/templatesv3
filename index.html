@@ -2104,41 +2104,7 @@ document.addEventListener('DOMContentLoaded', function() {
       event.target.removeAttribute('contenteditable')
       return textareaValue
     }
-    function onDoubleClick(e) {
-      // Get the element that was double-clicked
-      var target = e.target;
-      console.log('target ' + target.id)
-      // Check if the element has the 'data-visual-contenteditable' attribute
-
-      if (target.hasAttribute('data-visual-contenteditable')) {
-
-
-        console.log('has attr')
-        // Prevent the default double-click behavior
-        e.preventDefault();
-
-        // Set the 'contenteditable' attribute to 'true', making the element editable
-        target.setAttribute('contenteditable', 'true');
-
-        // Reset the background color of the element
-        target.style.backgroundColor = '';
-
-        // Set focus on the editable element
-        target.focus();
-
-        let textContent = target.textContent
-        target.addEventListener('blur', function (blurEvent) {
-          // Call the saveT function when the element loses focus
-          textContent = saveT(blurEvent, textContent)
-        });
-        target.addEventListener('keypress', function (keyPressEvent) {
-          if (keyPressEvent.keyCode === 13) {
-            keyPressEvent.preventDefault()
-            textContent = saveT(keyPressEvent, textContent);
-          }
-        });
-      }
-    }
+    
 
     // Add an event listener to the entire document to track double-clicks
     
@@ -4814,6 +4780,41 @@ document.addEventListener('DOMContentLoaded', function() {
 
     }
   }
+  function onDoubleClick(e) {
+      // Get the element that was double-clicked
+      var target = e.target;
+      console.log('target ' + target.id)
+      // Check if the element has the 'data-visual-contenteditable' attribute
+
+      if (target.hasAttribute('data-visual-contenteditable')) {
+
+
+        console.log('has attr')
+        // Prevent the default double-click behavior
+        e.preventDefault();
+
+        // Set the 'contenteditable' attribute to 'true', making the element editable
+        target.setAttribute('contenteditable', 'true');
+
+        // Reset the background color of the element
+        target.style.backgroundColor = '';
+
+        // Set focus on the editable element
+        target.focus();
+
+        let textContent = target.textContent
+        target.addEventListener('blur', function (blurEvent) {
+          // Call the saveT function when the element loses focus
+          textContent = saveT(blurEvent, textContent)
+        });
+        target.addEventListener('keypress', function (keyPressEvent) {
+          if (keyPressEvent.keyCode === 13) {
+            keyPressEvent.preventDefault()
+            textContent = saveT(keyPressEvent, textContent);
+          }
+        });
+      }
+    }
   document.addEventListener('DOMContentLoaded', loadFirst);
   async function loadFirst() {
     var iframe = getElementById1("generated-page-iframe");
