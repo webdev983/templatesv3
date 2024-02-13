@@ -915,6 +915,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
       }
     }
+    //get selected combination
+    const checked1 = []
+    for (const el of resultList){
+      const selected = el.form.querySelectorAll('[type="radio"]').forEach(el=>{
+        if(el.checked){
+          const selectedValue = el.parentNode.querySelector('[data-product-attribute-value]').textContent
+          checked1.push({legend,selectedValue})
+        }
+      })
+      
+
+    }
+    console.log(JSON.stringify(checked1))
 
   }
   const toggleDependencyMenu1 = (event) => {
