@@ -680,7 +680,7 @@
     if (el) {
       return el
     }
-    var iframe =  document.getElementById("generated-page-iframe");
+    var iframe = document.getElementById("generated-page-iframe");
 
     // Access the content of the iframe
     var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
@@ -694,28 +694,28 @@
     return undefined
   }
   var querySelectorAll1 = (selector) => {
-    
+
     const els1 = document.querySelectorAll(selector)
-    
-    var iframe =  document.getElementById("generated-page-iframe");
+
+    var iframe = document.getElementById("generated-page-iframe");
 
     // Access the content of the iframe
     var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
 
-    
+
     var els2 = iframeDocument.querySelectorAll(selector);
-    
+
     console.log('not found all' + selector)
-    const res = [...els1,...els2]
-    console.log("r11"+ JSON.stringify(Array.from(els1).map(e=>e.id)) + selector)
-    console.log("r12"+ JSON.stringify(Array.from(els2).map(e=>e.id)) + selector)
-    console.log("r13"+ JSON.stringify(Array.from(res).map(e=>e.id))+ selector)
+    const res = [...els1, ...els2]
+    console.log("r11" + JSON.stringify(Array.from(els1).map(e => e.id)) + selector)
+    console.log("r12" + JSON.stringify(Array.from(els2).map(e => e.id)) + selector)
+    console.log("r13" + JSON.stringify(Array.from(res).map(e => e.id)) + selector)
     return res
   }
   getElementById1('remove-loading').addEventListener('click', function () {
     getElementById1('loading').remove();
   });
-  
+
 </script>
 <!--files menus-->
 <div hidden>
@@ -785,7 +785,7 @@ document.addEventListener('DOMContentLoaded', function() {
 */
 </script>
 <script>
-  
+
   //toggle menu button scripts
   const toggleGeneratedPage = () => {
     const s = localStorage.getItem('generatedPageToggle')
@@ -1725,7 +1725,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
   let path = ''
   let lvls = []
-  var  removeLastOccurrence = (inputString, substringToRemove)=> {
+  var removeLastOccurrence = (inputString, substringToRemove) => {
     const lastIndexOfSubstring = inputString.lastIndexOf(substringToRemove);
 
     if (lastIndexOfSubstring !== -1) {
@@ -1819,10 +1819,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add the event listener
     var iframe = getElementById1("generated-page-iframe");
-    iframe.addEventListener('mouseover', handleMouseOver);
+    var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+    iframeDocument.addEventListener('mouseover', handleMouseOver);
 
 
-    iframe.addEventListener('mouseout', function (event) {
+    iframeDocument.addEventListener('mouseout', function (event) {
       if (event.target.hasAttribute('data-visual-element')) {
         event.target.style.backgroundColor = '';
       }
@@ -1850,6 +1851,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const original = getElementById1(sourceId);
       const originalRect = original.getBoundingClientRect();
       var iframe = getElementById1("generated-page-iframe");
+      var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
       // Check if siblingWithInsertBefore is present
       if (siblingWithInsertBefore.length > 0) {
         // Insert <button class="receive-target">➕</button> before each siblingWithInsertBefore
@@ -1859,11 +1861,11 @@ document.addEventListener('DOMContentLoaded', function() {
           addButton.innerHTML = '➕';
           addButton.onclick = function () {
             insertBefore(sibling.id, targetId, flag);
-            iframe.removeEventListener('click', clickRemoveButton);
-            iframe.addEventListener('mouseover', handleMouseOver);
+            iframeDocument.removeEventListener('click', clickRemoveButton);
+            iframeDocument.addEventListener('mouseover', handleMouseOver);
           };
-          iframe.addEventListener('mouseover', handleMouseOver1);
-          iframe.addEventListener('mouseout', handleMouseOut1);
+          iframeDocument.addEventListener('mouseover', handleMouseOver1);
+          iframeDocument.addEventListener('mouseout', handleMouseOut1);
           sibling.parentNode.insertBefore(addButton, sibling);
         });
       }
@@ -1897,15 +1899,15 @@ document.addEventListener('DOMContentLoaded', function() {
           console.log(lastFieldsetTreeId)
 
           insertAfter(lastFieldsetTreeId, targetId, flag);
-          iframe.removeEventListener('click', clickRemoveButton);
-          iframe.addEventListener('mouseover', handleMouseOver);
+          iframeDocument.removeEventListener('click', clickRemoveButton);
+          iframeDocument.addEventListener('mouseover', handleMouseOver);
         };
         addButton.addEventListener('mouseover', handleMouseOver1);
         addButton.addEventListener('mouseout', handleMouseOut1);
         parentWithAppendChild.appendChild(addButton);
       }
-      iframe.removeEventListener('mouseover', handleMouseOver);
-      iframe.addEventListener('click', clickRemoveButton);
+      iframeDocument.removeEventListener('mouseover', handleMouseOver);
+      iframeDocument.addEventListener('click', clickRemoveButton);
       const newElement = getElementById1(sourceId);
       const newRect = newElement.getBoundingClientRect();
       window.scrollTo({
@@ -2139,197 +2141,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       }
     }
-    iframe.addEventListener('dblclick', onDoubleClick);
+    iframeDocument.addEventListener('dblclick', onDoubleClick);
     // Add an event listener to the entire document to track double-clicks
-    
-
-    function handleContextMenu (e) {
-      if (e.target.hasAttribute('data-visual-element')) {
-        e.preventDefault(); // Prevent the default context menu from opening
-        console.log('in11');
-        const menu = document.querySelector('#right-click-menu'); // Use # for ID selector
-        menu.innerHTML = '';
-        let siblingsWithDuplicate
-        let fieldsetSiblings
-        let parentWithAppendChild
-        let siblingWithInsertBefore
-        console.log('tag ' + e.target.tagName)
-        const redirectToImgPage = (imgId, src) => {
-          const urlSearchParams = new URLSearchParams(window.location.search);
-          const id = urlSearchParams.get('id');
-          console.log('in1')
-          window.location.href = `gallery.html?id=${id}&imgId=${imgId}&src=${src}`;
-        }
-        if (e.target.tagName.toLowerCase() === 'img') {
-          addMenuEntry(menu, `➕ edit image`, () => {
-            redirectToImgPage(e.target.id, e.target.getAttribute('src'))
-          });
-        }
-        if (
-          e.target.parentElement.id === e.target.id + '-fieldset') {
-          // Check for data-visual-duplicate siblings
-          console.log('case1')
-          siblingsWithDuplicate = Array.from(e.target.parentElement.parentElement.children).filter(
-            sibling => sibling.hasAttribute('data-visual-dublicate')
-          );
-
-          // Check for fieldset siblings containing data-visual-duplicate elements
-          fieldsetSiblings = Array.from(e.target.parentElement.parentElement.children).filter(
-            sibling => sibling.tagName === 'FIELDSET' &&
-              Array.from(sibling.querySelectorAll('[data-visual-dublicate]')).length > 0
-          );
-          // Check if parent has data-visual-appendChild
-          parentWithAppendChild = e.target.parentElement.parentElement.hasAttribute('data-visual-appendchild') && e.target.parentElement.parentElement;
-
-          // Check sibling for data-visual-insertBefore
-          siblingWithInsertBefore = e.target.parentElement.parentElement && Array.from(e.target.parentElement.parentElement.children).filter(
-            child => child.hasAttribute('data-visual-insertbefore') || (child.id.endsWith('-fieldset') && child.children[1].hasAttribute('data-visual-insertbefore'))
-          );
-        }
-        else {
-          console.log('case2')
-          // Check for data-visual-duplicate siblings
-          let ids = []
-          siblingsWithDuplicate = Array.from(e.target.parentElement.children).filter(
-
-            sibling => {
-
-              if (sibling.hasAttribute('data-visual-dublicate')) {
-
-                const id = sibling.id
-                const splited = id.split(';')
-                const last = splited[splited.length - 1]
-                const splited2 = last.replace('-tree', '').split(':')
-                const lastId = splited2[0]
-                splited.pop()
-                const toCheck = [...splited, lastId].join(';')
-                if (ids.includes(toCheck)) {
-                  return false
-                }
-                ids.push(toCheck)
-                return true
-              }
-              return false
-            }
-          );
-
-          // Check for fieldset siblings containing data-visual-duplicate elements
-          ids = []
-          fieldsetSiblings = Array.from(e.target.parentElement.children).filter(
-            sibling => {
-              if (sibling.tagName === 'FIELDSET' &&
-                Array.from(sibling.querySelectorAll('[data-visual-dublicate]')).length > 0) {
-                const id = sibling.id
-                const splited = id.split(';')
-                const last = splited[splited.length - 1]
-                const splited2 = last.replace('-tree', '').split(':')
-                const lastId = splited2[0]
-                splited.pop()
-                const toCheck = [...splited, lastId].join(';')
-                if (ids.includes(toCheck)) {
-                  return false
-                }
-                ids.push(toCheck)
-                return true
-              }
-              return false
-            }
-          );
-          // Check if parent has data-visual-appendChild
-          parentWithAppendChild = e.target.parentElement.hasAttribute('data-visual-appendchild') && e.target.parentElement;
-
-          // Check sibling for data-visual-insertBefore
-          siblingWithInsertBefore = e.target.parentElement && Array.from(e.target.parentElement.children).filter(
-            child => child.hasAttribute('data-visual-insertbefore')
-          );
-
-        }
 
 
-
-        console.log(JSON.stringify([...fieldsetSiblings, ...siblingsWithDuplicate]));
-
-
-
-        // Add entries for data-visual-duplicate siblings
-        const existingIds = []
-        for (const sibling of siblingsWithDuplicate) {
-          console.log('taag' + sibling.tagName)
-          let name = `➕ ${sibling.tagName.toLowerCase()}`
-          if (sibling.hasAttribute('data-visual-title')) {
-            name = `➕ ${sibling.getAttribute('data-visual-title')}`
-          }
-          const splited = sibling.id.split(':')
-          splited.length > 1 && splited.pop()
-
-          if (!existingIds.includes(splited.join(':'))) {
-            existingIds.push(splited.join(':'))
-            addMenuEntry(menu, name, () => {
-
-              handleMenuEntryClick(e.target.id, sibling.id, siblingWithInsertBefore, parentWithAppendChild);
-
-
-            });
-          }
-        }
-
-        // Add entries for fieldset siblings
-        for (const fieldsetSibling of fieldsetSiblings) {
-          let name = `➕ ${fieldsetSibling.children[0].textContent.toLowerCase()}`
-          if (fieldsetSibling.hasAttribute('data-visual-title')) {
-            name = `➕ ${fieldsetSibling.getAttribute('data-visual-title')}`
-          }
-          const splited = fieldsetSibling.id.split(':')
-          splited.length > 1 && splited.pop()
-
-          if (!existingIds.includes(splited.join(':').replace('-fieldset', ''))) {
-            existingIds.push(splited.join(':').replace('-fieldset', ''))
-            addMenuEntry(menu, name, () => {
-
-              handleMenuEntryClick(e.target.id, fieldsetSibling.children[1].id, siblingWithInsertBefore, parentWithAppendChild, true);
-            });
-          }
-
-        }
-        console.log('existing ' + JSON.stringify(existingIds))
-
-        // Adjust the position relative to the viewport
-        const offsetX = e.pageX;
-        const offsetY = e.pageY;
-
-        menu.style.display = 'block';
-        menu.style.left = `${offsetX}px`;
-        menu.style.top = `${offsetY}px`;
-
-        // Hide the menu when clicking the left mouse button
-        window.addEventListener('click', function () {
-          menu.style.display = 'none';
-        });
-        addMenuEntry(menu, `remove tag`, async () => {
-          if (findRelatedElements(e.target.id) > 1) {
-            await pushAction({
-              time: (new Date()).getTime(),
-              action: 'removeTag',
-              target_element: e.target.id + '-tree',
-
-            })
-            const el = getElementById1(e.target.id + '-fieldset')
-            if (el) {
-              el.remove()
-            }
-          }
-          else {
-            console.log('iiid ' + e.target.id)
-            const attr = e.target.getAttribute('data-visual-defaultTextNode')
-            console.log('attr' + attr)
-            e.target.textContent = attr
-          }
-
-        }
-        );
-      }
-    }
-
+ 
     // Function to check if an element has the 'data-visual-draggable' attribute
     function isDraggable(element) {
       return element.hasAttribute('data-visual-draggable');
@@ -2397,8 +2213,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         // Update the dragover and drop event listeners
         var iframe = getElementById1("generated-page-iframe");
-        iframe.addEventListener('dragover', handleDragOver);
-        iframe.addEventListener('drop', handleDrop);
+        var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+        iframeDocument.addEventListener('dragover', handleDragOver);
+        iframeDocument.addEventListener('drop', handleDrop);
       }
     }
 
@@ -2473,7 +2290,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
 
-    iframe.addEventListener('dragstart', handleDragStart);
+    iframeDocument.addEventListener('dragstart', handleDragStart);
     visualOn = true
   }
 
@@ -2902,7 +2719,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   }
-  const pushAction = async (element, firstLoad, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions,replaceId) => {
+  const pushAction = async (element, firstLoad, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId) => {
     console.log('pushed' + JSON.stringify(element))
     const time = element.time
     console.log('time' + time)
@@ -2910,7 +2727,7 @@ document.addEventListener('DOMContentLoaded', function() {
     !firstLoad && await pushActionToDb(element)
     await insertDataIntoCodeLog(time, element.action)
 
-    await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions,replaceId)
+    await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId)
   }
   const pushActionToDb = async (action) => {
     const urlSearchParams = new URLSearchParams(window.location.search);
@@ -2965,12 +2782,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Insert the cloned element before the original element
     parent.insertBefore(clonedElement, originalElement);
   }
-  const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions,replaceId) => {
+  const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId) => {
     const { subAction, noSubComp, noComp, time, withParent, move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
     let treeElement
     let componentElement
 
-    console.log('command is ' + JSON.stringify(command) + ' replace id '+ replaceId)
+    console.log('command is ' + JSON.stringify(command) + ' replace id ' + replaceId)
     function handleAppendOrInsert(action, selectedArrayNotSorted, move) {
       // Sort
 
@@ -3374,7 +3191,7 @@ document.addEventListener('DOMContentLoaded', function() {
               inserted_component: el,
               noComp: true,
               noSubComp: i
-            }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level,removeActions,el.id)
+            }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions, el.id)
             i = true
 
           }
@@ -3389,7 +3206,7 @@ document.addEventListener('DOMContentLoaded', function() {
           el2.innerHTML = `🔄${replaceAction.target_element.length}`;
         }
 
-        await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions,replaceId)
+        await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions, replaceId)
 
 
         break;
@@ -3404,7 +3221,7 @@ document.addEventListener('DOMContentLoaded', function() {
           : getElementById1(removeLastOccurrence(target_element, '-tree'));
         const newEle = document.createElement(inserted_element.tagName)
         console.log('no comp val' + noComp1)
-        console.log('replaceid1 '+ replaceId)
+        console.log('replaceid1 ' + replaceId)
         noComp1 && newEle.setAttribute('data-replaceID', replaceId)
         newEle.id = inserted_element.id
         console.log(newEle.id)
@@ -3974,7 +3791,7 @@ document.addEventListener('DOMContentLoaded', function() {
           components.push(inserted_component.id)
           console.log(inserted_component.componentId)
 
-          await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl,removeActions,replaceId)
+          await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId)
           break;
         }
         //case duplicate insert before
@@ -4112,14 +3929,14 @@ document.addEventListener('DOMContentLoaded', function() {
             getElementById1(removeLastOccurrence(target_element, '-tree'));
           if (!componentElement) {
             console.log('comp not found')
-            const mId = target_element.replace('-tree','').split(':')[0]
+            const mId = target_element.replace('-tree', '').split(':')[0]
             const treeEls = []
             const compEls = []
             const existing = []
             const elementsWithIdAndAttribute = querySelectorAll1('[id^="' + mId + '"][data-replaceid]')
               .forEach(
                 el => {
-                  console.log('ffooound152 '+ el.id)
+                  console.log('ffooound152 ' + el.id)
                   if (!existing.includes(el.getAttribute('data-replaceid'))) {
                     existing.push(el.getAttribute('data-replaceid'))
                     treeEls.push(getElementById1(el.id + '-tree'));
@@ -4589,7 +4406,7 @@ document.addEventListener('DOMContentLoaded', function() {
     optionalScript && switchOptionalScript(false)
     LinkBP && switchLinkBP(false)
   }
-  const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions,replaceId) => {
+  const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId) => {
     console.log('load from db' + id)
     console.log('err2 ' + p)
     let path = ""
@@ -4720,7 +4537,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log(components)
 
             const replaceWithNewId = (s) => {
-              if(!replaceId)return s
+              if (!replaceId) return s
               let id = replaceId
               console.log('iddd1 ' + id)
               if (s.endsWith('-tree')) {
@@ -4768,13 +4585,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             //insertDataIntoCodeLog(item.sk, item.action)
-            await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions,replaceId)
+            await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId)
 
             continue
           }
 
 
-          await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions,replaceId)
+          await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId)
         }
 
       }
@@ -4815,43 +4632,230 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   document.addEventListener('DOMContentLoaded', loadFirst);
+  function handleContextMenu(e) {
+      if (e.target.hasAttribute('data-visual-element')) {
+        e.preventDefault(); // Prevent the default context menu from opening
+        console.log('in11');
+        const menu = document.querySelector('#right-click-menu'); // Use # for ID selector
+        menu.innerHTML = '';
+        let siblingsWithDuplicate
+        let fieldsetSiblings
+        let parentWithAppendChild
+        let siblingWithInsertBefore
+        console.log('tag ' + e.target.tagName)
+        const redirectToImgPage = (imgId, src) => {
+          const urlSearchParams = new URLSearchParams(window.location.search);
+          const id = urlSearchParams.get('id');
+          console.log('in1')
+          window.location.href = `gallery.html?id=${id}&imgId=${imgId}&src=${src}`;
+        }
+        if (e.target.tagName.toLowerCase() === 'img') {
+          addMenuEntry(menu, `➕ edit image`, () => {
+            redirectToImgPage(e.target.id, e.target.getAttribute('src'))
+          });
+        }
+        if (
+          e.target.parentElement.id === e.target.id + '-fieldset') {
+          // Check for data-visual-duplicate siblings
+          console.log('case1')
+          siblingsWithDuplicate = Array.from(e.target.parentElement.parentElement.children).filter(
+            sibling => sibling.hasAttribute('data-visual-dublicate')
+          );
+
+          // Check for fieldset siblings containing data-visual-duplicate elements
+          fieldsetSiblings = Array.from(e.target.parentElement.parentElement.children).filter(
+            sibling => sibling.tagName === 'FIELDSET' &&
+              Array.from(sibling.querySelectorAll('[data-visual-dublicate]')).length > 0
+          );
+          // Check if parent has data-visual-appendChild
+          parentWithAppendChild = e.target.parentElement.parentElement.hasAttribute('data-visual-appendchild') && e.target.parentElement.parentElement;
+
+          // Check sibling for data-visual-insertBefore
+          siblingWithInsertBefore = e.target.parentElement.parentElement && Array.from(e.target.parentElement.parentElement.children).filter(
+            child => child.hasAttribute('data-visual-insertbefore') || (child.id.endsWith('-fieldset') && child.children[1].hasAttribute('data-visual-insertbefore'))
+          );
+        }
+        else {
+          console.log('case2')
+          // Check for data-visual-duplicate siblings
+          let ids = []
+          siblingsWithDuplicate = Array.from(e.target.parentElement.children).filter(
+
+            sibling => {
+
+              if (sibling.hasAttribute('data-visual-dublicate')) {
+
+                const id = sibling.id
+                const splited = id.split(';')
+                const last = splited[splited.length - 1]
+                const splited2 = last.replace('-tree', '').split(':')
+                const lastId = splited2[0]
+                splited.pop()
+                const toCheck = [...splited, lastId].join(';')
+                if (ids.includes(toCheck)) {
+                  return false
+                }
+                ids.push(toCheck)
+                return true
+              }
+              return false
+            }
+          );
+
+          // Check for fieldset siblings containing data-visual-duplicate elements
+          ids = []
+          fieldsetSiblings = Array.from(e.target.parentElement.children).filter(
+            sibling => {
+              if (sibling.tagName === 'FIELDSET' &&
+                Array.from(sibling.querySelectorAll('[data-visual-dublicate]')).length > 0) {
+                const id = sibling.id
+                const splited = id.split(';')
+                const last = splited[splited.length - 1]
+                const splited2 = last.replace('-tree', '').split(':')
+                const lastId = splited2[0]
+                splited.pop()
+                const toCheck = [...splited, lastId].join(';')
+                if (ids.includes(toCheck)) {
+                  return false
+                }
+                ids.push(toCheck)
+                return true
+              }
+              return false
+            }
+          );
+          // Check if parent has data-visual-appendChild
+          parentWithAppendChild = e.target.parentElement.hasAttribute('data-visual-appendchild') && e.target.parentElement;
+
+          // Check sibling for data-visual-insertBefore
+          siblingWithInsertBefore = e.target.parentElement && Array.from(e.target.parentElement.children).filter(
+            child => child.hasAttribute('data-visual-insertbefore')
+          );
+
+        }
+
+
+
+        console.log(JSON.stringify([...fieldsetSiblings, ...siblingsWithDuplicate]));
+
+
+
+        // Add entries for data-visual-duplicate siblings
+        const existingIds = []
+        for (const sibling of siblingsWithDuplicate) {
+          console.log('taag' + sibling.tagName)
+          let name = `➕ ${sibling.tagName.toLowerCase()}`
+          if (sibling.hasAttribute('data-visual-title')) {
+            name = `➕ ${sibling.getAttribute('data-visual-title')}`
+          }
+          const splited = sibling.id.split(':')
+          splited.length > 1 && splited.pop()
+
+          if (!existingIds.includes(splited.join(':'))) {
+            existingIds.push(splited.join(':'))
+            addMenuEntry(menu, name, () => {
+
+              handleMenuEntryClick(e.target.id, sibling.id, siblingWithInsertBefore, parentWithAppendChild);
+
+
+            });
+          }
+        }
+
+        // Add entries for fieldset siblings
+        for (const fieldsetSibling of fieldsetSiblings) {
+          let name = `➕ ${fieldsetSibling.children[0].textContent.toLowerCase()}`
+          if (fieldsetSibling.hasAttribute('data-visual-title')) {
+            name = `➕ ${fieldsetSibling.getAttribute('data-visual-title')}`
+          }
+          const splited = fieldsetSibling.id.split(':')
+          splited.length > 1 && splited.pop()
+
+          if (!existingIds.includes(splited.join(':').replace('-fieldset', ''))) {
+            existingIds.push(splited.join(':').replace('-fieldset', ''))
+            addMenuEntry(menu, name, () => {
+
+              handleMenuEntryClick(e.target.id, fieldsetSibling.children[1].id, siblingWithInsertBefore, parentWithAppendChild, true);
+            });
+          }
+
+        }
+        console.log('existing ' + JSON.stringify(existingIds))
+
+        // Adjust the position relative to the viewport
+        const offsetX = e.pageX;
+        const offsetY = e.pageY;
+
+        menu.style.display = 'block';
+        menu.style.left = `${offsetX}px`;
+        menu.style.top = `${offsetY}px`;
+
+        // Hide the menu when clicking the left mouse button
+        window.addEventListener('click', function () {
+          menu.style.display = 'none';
+        });
+        addMenuEntry(menu, `remove tag`, async () => {
+          if (findRelatedElements(e.target.id) > 1) {
+            await pushAction({
+              time: (new Date()).getTime(),
+              action: 'removeTag',
+              target_element: e.target.id + '-tree',
+
+            })
+            const el = getElementById1(e.target.id + '-fieldset')
+            if (el) {
+              el.remove()
+            }
+          }
+          else {
+            console.log('iiid ' + e.target.id)
+            const attr = e.target.getAttribute('data-visual-defaultTextNode')
+            console.log('attr' + attr)
+            e.target.textContent = attr
+          }
+
+        }
+        );
+      }
+    }
+
   async function loadFirst() {
     var iframe = getElementById1("generated-page-iframe");
-
+    var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
     // Wait for the iframe to load completely
     await new Promise(resolve => {
       iframe.addEventListener("load", resolve);
-      
-    });
-    
-    iframe.addEventListener('change', async function (event) {
-      iframe.addEventListener('contextmenu', handleContextMenu)
-    // Check if the target element has the data-visual-checkbox attribute
-    if (event.target.hasAttribute('data-visual-checkbox')) {
-      // Log the id of the target element and the new value of the checkbox
-      console.log('ID:', event.target.id, 'Value:', event.target.checked);
-      let el
-      if (event.target.checked) {
-        el = {
-          time: (new Date()).getTime(),
-          action: 'setAttribute',
-          target_element: event.target.id,
-          key: "checked",
-          value: 'true',
 
+    });
+    iframeDocument.addEventListener('contextmenu', handleContextMenu)
+    iframeDocument.addEventListener('change', async function (event) {
+
+      // Check if the target element has the data-visual-checkbox attribute
+      if (event.target.hasAttribute('data-visual-checkbox')) {
+        // Log the id of the target element and the new value of the checkbox
+        console.log('ID:', event.target.id, 'Value:', event.target.checked);
+        let el
+        if (event.target.checked) {
+          el = {
+            time: (new Date()).getTime(),
+            action: 'setAttribute',
+            target_element: event.target.id,
+            key: "checked",
+            value: 'true',
+
+          }
         }
-      }
-      else {
-        el = {
-          time: (new Date()).getTime(),
-          action: 'removeAttribute',
-          target_element: event.target.id,
-          key: "checked"
+        else {
+          el = {
+            time: (new Date()).getTime(),
+            action: 'removeAttribute',
+            target_element: event.target.id,
+            key: "checked"
+          }
         }
+        await pushAction(el)
       }
-      await pushAction(el)
-    }
-  });
+    });
     const lastActionTime = getElementById1('last-action-time');
     lastActionTime.addEventListener('dblclick', function () {
       // Handle double-click event here
