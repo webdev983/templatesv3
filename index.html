@@ -2099,12 +2099,12 @@ document.addEventListener('DOMContentLoaded', function() {
       // You can perform additional actions here if needed
     }
 
-    function handleMouseOver1() {
-      this.classList.add('drag-over'); // Add a class to apply hover effect
+    function handleMouseOver1(e) {
+      e.target.classList.add('drag-over'); // Add a class to apply hover effect
     }
 
-    function handleMouseOut1() {
-      this.classList.remove('drag-over'); // Remove the class to stop hover effect
+    function handleMouseOut1(e) {
+      e.target.classList.remove('drag-over'); // Remove the class to stop hover effect
     }
 
 
@@ -6504,9 +6504,9 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 </style>
 <script>
-  function mouseOverTree() {
+  function mouseOverTree(e) {
     // Highlight this button in red
-    this.classList.add('highlight-red');
+    e.target.classList.add('highlight-red');
 
     let parentFieldset = this.closest('[data-element="code-tree-tag"]');
 
@@ -6539,11 +6539,11 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
-  function mouseOutTree() {
+  function mouseOutTree(e) {
     let parentFieldset = this.closest('[data-element="code-tree-tag"]');
 
     // Remove the red and blue highlights
-    this.classList.remove('highlight-red');
+    e.target.classList.remove('highlight-red');
     if (parentFieldset) {
       parentFieldset.classList.remove('highlight-left-border-red');
     }
@@ -6576,9 +6576,9 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <!-- dublicate for components-->
 <script>
-  function mouseOver() {
+  function mouseOver(e) {
     // Highlight this button in red
-    this.classList.add('highlight-red');
+    e.target.classList.add('highlight-red');
 
     let parentFieldset = this.closest('[data-element="component-tree-tag"]');
 
@@ -6611,11 +6611,11 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
-  function mouseOut() {
+  function mouseOut(e) {
     let parentFieldset = this.closest('[data-element="component-tree-tag"]');
 
     // Remove the red and blue highlights
-    this.classList.remove('highlight-red');
+    e.target.classList.remove('highlight-red');
     if (parentFieldset) {
       parentFieldset.classList.remove('highlight-left-border-red');
     }
