@@ -4821,12 +4821,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
   async function loadFirst() {
     var iframe = getElementById1("generated-page-iframe");
-    var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+    
     // Wait for the iframe to load completely
     await new Promise(resolve => {
       iframe.addEventListener("load", resolve);
 
     });
+    var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
     iframeDocument.addEventListener('contextmenu', handleContextMenu)
     iframeDocument.addEventListener('change', async function (event) {
 
