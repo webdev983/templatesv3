@@ -4813,6 +4813,12 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   document.addEventListener('DOMContentLoaded', loadFirst);
   async function loadFirst() {
+    var iframe = document.getElementById("generated-page-iframe");
+
+    // Wait for the iframe to load completely
+    await new Promise(resolve => {
+      iframe.addEventListener("load", resolve);
+    });
     const lastActionTime = getElementById1('last-action-time');
     lastActionTime.addEventListener('dblclick', function () {
       // Handle double-click event here
