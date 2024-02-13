@@ -693,9 +693,24 @@
     console.log('not found id1' + id)
     return undefined
   }
+  var querySelectorAll1 = (selector) => {
+    const els1 = querySelectorAll1(selector)
+    
+    var iframe =  document.getElementById("generated-page-iframe");
+
+    // Access the content of the iframe
+    var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+
+    
+    var els2 = iframeDocument.querySelectorAll(selector);
+    
+    console.log('not found all' + selector)
+    return [...els1,...els2]
+  }
   getElementById1('remove-loading').addEventListener('click', function () {
     getElementById1('loading').remove();
   });
+  
 </script>
 <!--files menus-->
 <div hidden>
@@ -738,7 +753,7 @@
 <script>
   /*
 document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('button').forEach(function(button) {
+    querySelectorAll1('button').forEach(function(button) {
         button.addEventListener('click', function() {
           const loadingScreen = getElementById1('loading');
             loadingScreen.style.display = 'flex';
@@ -816,8 +831,8 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log(sku)
     const item = getElementById1('dependee-menu-item')
     const dependeeMenu = node.querySelector('#dependee-menu')
-    const forms = document.querySelectorAll('[data-product-attribute-form]');
-    const dependees = document.querySelectorAll('[data-builder-dependee]');
+    const forms = querySelectorAll1('[data-product-attribute-form]');
+    const dependees = querySelectorAll1('[data-builder-dependee]');
     const selects = []
     for (let i = 0; i < forms.length; i++) {
       const form = forms[i]
@@ -870,7 +885,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     const combinations = generateCombinations(resultList)
     console.log(JSON.stringify(combinations))
-    const dependeeItems = document.querySelectorAll(`[data-builder-dependee="${parentFieldSet.querySelector('[data-type="dependee-value"]').textContent}"]`)
+    const dependeeItems = querySelectorAll1(`[data-builder-dependee="${parentFieldSet.querySelector('[data-type="dependee-value"]').textContent}"]`)
     const allIds = Array.from(dependeeItems).map(e => e.id)
     const ids = []
     const toRemove = []
@@ -1366,7 +1381,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         // Show the cloned fieldsets
-        document.querySelectorAll('#filePathList fieldset').forEach(fieldset => {
+        querySelectorAll1('#filePathList fieldset').forEach(fieldset => {
           fieldset.id !== 'cancelation' && fieldset.removeAttribute('hidden');
         });
 
@@ -1663,7 +1678,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
           // Show the cloned fieldsets
-          document.querySelectorAll('#filePathList fieldset').forEach(fieldset => {
+          querySelectorAll1('#filePathList fieldset').forEach(fieldset => {
             fieldset.id !== 'cancelation' && fieldset.removeAttribute('hidden');
           });
 
@@ -1969,7 +1984,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to remove all elements with the class 'receive-target'
     function removeReceiveButtons() {
-      const buttonsToRemove = document.querySelectorAll('.receive-target');
+      const buttonsToRemove = querySelectorAll1('.receive-target');
       buttonsToRemove.forEach(button => {
         button.parentNode.removeChild(button);
       });
@@ -2021,7 +2036,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       pushAction(actionObject);
       // Get a NodeList of all elements with the class 'receive-target'
-      const buttonsToRemove = document.querySelectorAll('.receive-target');
+      const buttonsToRemove = querySelectorAll1('.receive-target');
 
       // Iterate through the NodeList and remove each button
       buttonsToRemove.forEach(button => {
@@ -2447,7 +2462,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function removeButtons() {
       // Remove the "+" button after logging the information
-      const plusButtons = document.querySelectorAll('.receive-target');
+      const plusButtons = querySelectorAll1('.receive-target');
       plusButtons.forEach(button => button.parentNode.removeChild(button));
     }
 
@@ -2612,7 +2627,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Show the cloned fieldsets
-        document.querySelectorAll('#filePathList fieldset').forEach(fieldset => {
+        querySelectorAll1('#filePathList fieldset').forEach(fieldset => {
           fieldset.id !== 'cancelation' && fieldset.removeAttribute('hidden');
         });
 
@@ -2655,7 +2670,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Show the cloned fieldsets
-        document.querySelectorAll('#filePathList fieldset').forEach(fieldset => {
+        querySelectorAll1('#filePathList fieldset').forEach(fieldset => {
           fieldset.id !== 'cancelation' && fieldset.removeAttribute('hidden');
         });
 
@@ -2711,7 +2726,7 @@ document.addEventListener('DOMContentLoaded', function() {
       e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
       e.target.parentNode.remove()
       // Get all fieldsets with data-element="code-tree-tag"
-      var codeTreeTagFieldsets = document.querySelectorAll('fieldset[data-element="code-tree-tag"]');
+      var codeTreeTagFieldsets = querySelectorAll1('fieldset[data-element="code-tree-tag"]');
       var checkbox1 = clonedFieldset.querySelector('#code-tree-menu-dublicate-with-parent-option');
       if (checkbox1 && action === 'InsertBefore') {
         clonedFieldset.querySelector('#code-tree-menu-dublicate-with-parent-option-1').setAttribute('hidden', "");
@@ -3180,7 +3195,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const s = []
             const s1 = []
             console.log('sss' + selectedArrayNotSorted[1])
-            document.querySelectorAll('[id^="' + selectedArrayNotSorted[1].replace('-tree', '').split(':')[0] + '"]').forEach(el => {
+            querySelectorAll1('[id^="' + selectedArrayNotSorted[1].replace('-tree', '').split(':')[0] + '"]').forEach(el => {
               console.log('eel' + el.id)
               if (!el.id.endsWith('-tree') && !el.id.endsWith('-fieldset')) {
                 s.push(getElementById1(el.id + '-tree'));
@@ -3241,7 +3256,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const mId = targetElementId.replace('-tree', '').split(':')[0]
         console.log('miiid' + mId)
         const already = []
-        document.querySelectorAll('[id^="' + mId + '"]').forEach(
+        querySelectorAll1('[id^="' + mId + '"]').forEach(
           el => {
             if (!el.id.endsWith('-tree') && !el.id.endsWith('-fieldset') && !already.includes(el.getAttribute('data-replaceid'))) {
               treeEls.push(getElementById1(el.id + '-tree'));
@@ -3381,7 +3396,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
           }
           if (dontReplaceIndex === -1) {
-            const elementsToRemove = document.querySelectorAll(`[id^="${removeLastOccurrence(toReplace, '-tree') + ';'}"]`);
+            const elementsToRemove = querySelectorAll1(`[id^="${removeLastOccurrence(toReplace, '-tree') + ';'}"]`);
             elementsToRemove.forEach(element => element.remove());
           }
           const el = getElementById1(toReplace)
@@ -3615,7 +3630,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const items = []
             for (const element of restOfElements) {
               const l = element.split(';').length
-              document.querySelectorAll('[id^="' + element + '"]').forEach(el => {
+              querySelectorAll1('[id^="' + element + '"]').forEach(el => {
                 el.id.endsWith('-tree') && el.id.split(';').length === l && items.push(el.id)
               });
             }
@@ -3626,7 +3641,7 @@ document.addEventListener('DOMContentLoaded', function() {
           else {
             console.log('prob555')
             const mId = getWithoutCopyId(id)
-            let copies = document.querySelectorAll('[id^="' + mId + '"]')
+            let copies = querySelectorAll1('[id^="' + mId + '"]')
 
             const already = []
             for (const element of copies) {
@@ -3639,7 +3654,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
               for (const element of restOfElements) {
                 const l = element.split(';').length
-                document.querySelectorAll('[id^="' + element + '"]').forEach(el => {
+                querySelectorAll1('[id^="' + element + '"]').forEach(el => {
                   !el.id.endsWith('-fieldset') && !el.id.endsWith('-tree') && el.id.split(';').length === l && el.getAttribute('data-replaceid') === replaceId && items.push(el.id + '-tree')
                 });
               }
@@ -3890,7 +3905,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const items = []
             for (const element of restOfElements) {
               const l = element.split(';').length
-              document.querySelectorAll('[id^="' + element + '"]').forEach(el => {
+              querySelectorAll1('[id^="' + element + '"]').forEach(el => {
                 el.id.endsWith('-tree') && el.id.split(';').length === l && items.push(el.id)
               });
             }
@@ -3898,7 +3913,7 @@ document.addEventListener('DOMContentLoaded', function() {
               for (const element of restOfElements) {
                 const mId = getWithoutCopyId(element)
                 console.log('miiid ' + mId)
-                document.querySelectorAll('[id^="' + mId + '"]').forEach(el => {
+                querySelectorAll1('[id^="' + mId + '"]').forEach(el => {
                   console.log('dddd ' + el.id)
                   el.id.endsWith('-tree') && el.id.split(';').length === l && items.push(el.id)
                 });
@@ -3911,7 +3926,7 @@ document.addEventListener('DOMContentLoaded', function() {
           else {
             console.log('prob555')
             const mId = getWithoutCopyId(id)
-            let copies = document.querySelectorAll('[id^="' + mId + '"]')
+            let copies = querySelectorAll1('[id^="' + mId + '"]')
 
             const already = []
             for (const element of copies) {
@@ -3924,7 +3939,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
               for (const element of restOfElements) {
                 const l = element.split(';').length
-                document.querySelectorAll('[id^="' + element + '"]').forEach(el => {
+                querySelectorAll1('[id^="' + element + '"]').forEach(el => {
                   !el.id.endsWith('-fieldset') && !el.id.endsWith('-tree') && el.id.split(';').length === l && el.getAttribute('data-replaceid') === replaceId && items.push(el.id + '-tree')
                 });
               }
@@ -4116,7 +4131,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const treeEls = []
             const compEls = []
             const existing = []
-            const elementsWithIdAndAttribute = document.querySelectorAll('[id^="' + mId + '"][data-replaceid]')
+            const elementsWithIdAndAttribute = querySelectorAll1('[id^="' + mId + '"][data-replaceid]')
               .forEach(
                 el => {
 
@@ -4179,7 +4194,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       }
       if (dontReplaceIndex === -1) {
-        const elementsToRemove = document.querySelectorAll(`[id^="${removeLastOccurrence(toReplace, '-tree') + ';'}"]`);
+        const elementsToRemove = querySelectorAll1(`[id^="${removeLastOccurrence(toReplace, '-tree') + ';'}"]`);
         elementsToRemove.forEach(element => element.remove());
       }
       const el = getElementById1(toReplace)
@@ -4253,7 +4268,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // component
         const selector = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
-        document.querySelectorAll(selector).forEach(e => e.remove());
+        querySelectorAll1(selector).forEach(e => e.remove());
 
 
 
@@ -4291,7 +4306,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // component
         if (key === 'style' || key === 'class') {
           const selector = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
-          document.querySelectorAll(selector).forEach(element => !element.id.endsWith('-fieldset') && !element.id.endsWith('-tree') && element.setAttribute(key, value))
+          querySelectorAll1(selector).forEach(element => !element.id.endsWith('-fieldset') && !element.id.endsWith('-tree') && element.setAttribute(key, value))
           break;
         }
 
@@ -4336,7 +4351,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const elementToRemoveAttribute = getElementById1(removeLastOccurrence(target_element, '-tree'));
         key && elementToRemoveAttribute.removeAttribute(key);
         if (key === 'data-parentid') {
-          document.querySelectorAll('[id^="' + removeLastOccurrence(target_element, '-tree') + ';"]').forEach(el => {
+          querySelectorAll1('[id^="' + removeLastOccurrence(target_element, '-tree') + ';"]').forEach(el => {
             el.id = el.id.replace(removeLastOccurrence(target_element, '-tree') + ';', '')
           });
         }
@@ -4860,7 +4875,7 @@ document.addEventListener('DOMContentLoaded', function() {
     await handleHead()
 
     //first menu
-    let buttons = document.querySelectorAll('button[data-element="code-tree-tag-name-button"]');
+    let buttons = querySelectorAll1('button[data-element="code-tree-tag-name-button"]');
     /*
     buttons.forEach(function (button) {
       button.addEventListener('click', e => loader(e, handleComponentClick));
@@ -4978,7 +4993,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setDataProduct(value, resultList)
   }
   const setDataProduct = async (sku, items) => {
-    const dataProductEls = document.querySelectorAll('[data-product=""]')
+    const dataProductEls = querySelectorAll1('[data-product=""]')
     const splited = pathItem.lsi1.split(';')[0].split('/')
     const name = splited[splited.length - 1]
     dataProductEls.forEach(async dataProductEl => {
@@ -5075,7 +5090,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   const getProductAttributes = async (setNumbers) => {
     const resultList = [];
-    const forms = document.querySelectorAll('[data-product-attribute-form]');
+    const forms = querySelectorAll1('[data-product-attribute-form]');
 
     for (let i = 0; i < forms.length; i++) {
       const form = forms[i]
@@ -5153,7 +5168,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const splited = pathItem.lsi1.split(';')[0].split('/')
     const name = splited[splited.length - 1]
     /*
-    document.querySelectorAll('[data-product]').forEach(
+    querySelectorAll1('[data-product]').forEach(
       element => {
         const prev = element.getAttribute('data-product')
         if (prev) {
@@ -5492,7 +5507,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var fieldsetAction = fieldset.getAttribute('action');
 
     // Get all fieldsets with data-element="code-tree-tag"
-    var codeTreeTagFieldsets = document.querySelectorAll('fieldset[data-element="code-tree-tag"]');
+    var codeTreeTagFieldsets = querySelectorAll1('fieldset[data-element="code-tree-tag"]');
 
     // Iterate through each fieldset and hide them
     codeTreeTagFieldsets.forEach(function (fieldset) {
@@ -6534,7 +6549,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
-  document.querySelectorAll('button[data-element="code-tree-show-hide-button"]').forEach(button => {
+  querySelectorAll1('button[data-element="code-tree-show-hide-button"]').forEach(button => {
     button.addEventListener('mouseover', mouseOverTree);
 
     button.addEventListener('mouseout', mouseOutTree);
@@ -6607,7 +6622,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
   }
-  document.querySelectorAll('button[data-element="component-tree-show-hide-button"]').forEach(button => {
+  querySelectorAll1('button[data-element="component-tree-show-hide-button"]').forEach(button => {
     button.addEventListener('mouseover', mouseOver);
 
     button.addEventListener('mouseout', mouseOut);
