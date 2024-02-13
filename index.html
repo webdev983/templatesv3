@@ -2983,7 +2983,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Insert the cloned element before the original element
     parent.insertBefore(clonedElement, originalElement);
   }
-  const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions) => {
+  const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions,replaceId) => {
     const { subAction, noSubComp, noComp, time, withParent, move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
     let treeElement
     let componentElement
@@ -3391,7 +3391,7 @@ document.addEventListener('DOMContentLoaded', function() {
               inserted_component: el,
               noComp: true,
               noSubComp: i
-            }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level)
+            }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level,undefined,el)
             i = true
 
           }
@@ -3421,7 +3421,8 @@ document.addEventListener('DOMContentLoaded', function() {
           : getElementById1(removeLastOccurrence(target_element, '-tree'));
         const newEle = document.createElement(inserted_element.tagName)
         console.log('no comp val' + noComp1)
-        noComp1 && newEle.setAttribute('data-replaceID', containerId)
+        console.log('replaceid1 '+ replaceId)
+        noComp1 && newEle.setAttribute('data-replaceID', replaceId)
         newEle.id = inserted_element.id
         console.log(newEle.id)
         componentElement.insertBefore(newEle, componentElement.firstChild);
@@ -3793,7 +3794,7 @@ document.addEventListener('DOMContentLoaded', function() {
             newEl.setAttribute('data-replaceID', attr)
           }
           if (noComp1 || noComp) {
-            newEl.setAttribute('data-replaceID', containerId)
+            newEl.setAttribute('data-replaceID', replaceId)
           }
 
 
@@ -4088,7 +4089,7 @@ document.addEventListener('DOMContentLoaded', function() {
               newEl.setAttribute('data-replaceID', attr1)
             }
             if (noComp || noComp1) {
-              newEl.setAttribute('data-replaceID', containerId)
+              newEl.setAttribute('data-replaceID', replaceId)
             }
 
             const splited = componentElement.id.split(';')
