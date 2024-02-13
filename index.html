@@ -6508,7 +6508,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Highlight this button in red
     e.target.classList.add('highlight-red');
 
-    let parentFieldset = this.closest('[data-element="code-tree-tag"]');
+    let parentFieldset = e.target.closest('[data-element="code-tree-tag"]');
 
     // Highlight the left border of the parent fieldset in red
     if (parentFieldset) {
@@ -6540,7 +6540,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   function mouseOutTree(e) {
-    let parentFieldset = this.closest('[data-element="code-tree-tag"]');
+    let parentFieldset = e.target.closest('[data-element="code-tree-tag"]');
 
     // Remove the red and blue highlights
     e.target.classList.remove('highlight-red');
@@ -6580,7 +6580,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Highlight this button in red
     e.target.classList.add('highlight-red');
 
-    let parentFieldset = this.closest('[data-element="component-tree-tag"]');
+    let parentFieldset = e.target.closest('[data-element="component-tree-tag"]');
 
     // Highlight the left border of the parent fieldset in red
     if (parentFieldset) {
@@ -6612,7 +6612,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   function mouseOut(e) {
-    let parentFieldset = this.closest('[data-element="component-tree-tag"]');
+    let parentFieldset = e.target.closest('[data-element="component-tree-tag"]');
 
     // Remove the red and blue highlights
     e.target.classList.remove('highlight-red');
@@ -6655,10 +6655,10 @@ document.addEventListener('DOMContentLoaded', function() {
   document.addEventListener('DOMContentLoaded', function () {
     var textarea = getElementById1('code-tree-inner-html-receive-textarea');
 
-    textarea.addEventListener('input', function () {
+    textarea.addEventListener('input', function (e) {
       // Expand height
-      this.style.height = 'auto';
-      this.style.height = (this.scrollHeight) + 'px';
+      e.target.style.height = 'auto';
+      e.target.style.height = (e.target.scrollHeight) + 'px';
 
       // Expand width
       var mirrorDiv = getElementById1('mirror-div');
@@ -6669,8 +6669,8 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 
       mirrorDiv.style.display = 'inline-block';
-      mirrorDiv.textContent = this.value.replace(/\n/g, '<br/>');
-      this.style.width = Math.min(this.parentElement.offsetWidth, mirrorDiv.offsetWidth + 10) + 'px'; // 10px for some padding
+      mirrorDiv.textContent = e.target.value.replace(/\n/g, '<br/>');
+      e.target.style.width = Math.min(e.target.parentElement.offsetWidth, mirrorDiv.offsetWidth + 10) + 'px'; // 10px for some padding
       mirrorDiv.style.display = 'none';
     });
   });
@@ -6721,9 +6721,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script>
   //RESIZE TEXST AREAS BY TEXT
-  function autoResizeTextarea() {
-    this.style.height = 'auto'; // Сброс текущей высоты
-    this.style.height = (this.scrollHeight) + 'px'; // Установка новой высоты
+  function autoResizeTextarea(e) {
+    e.target.style.height = 'auto'; // Сброс текущей высоты
+    e.target.style.height = (e.target.scrollHeight) + 'px'; // Установка новой высоты
   }
 
   // Получение элементов textarea по ID
