@@ -680,7 +680,7 @@
     if (el) {
       return el
     }
-    var iframe = document.getElementById("generated-page-iframe");
+    var iframe = getElementById1("generated-page-iframe");
 
     // Access the content of the iframe
     var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
@@ -797,14 +797,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const s = localStorage.getItem('generatedPageToggle')
     if (!s) {
 
-      document.getElementById("sku-list").removeAttribute('hidden')
+      getElementById1("sku-list").removeAttribute('hidden')
       getElementById1('generated-page').removeAttribute('hidden')
       getElementById1('generated-page-menu').removeAttribute('hidden')
       getElementById1('toggle-generated-page').classList.add('b-selected')
       localStorage.setItem('generatedPageToggle', 'true')
     }
     else {
-      document.getElementById("sku-list").setAttribute('hidden', '')
+      getElementById1("sku-list").setAttribute('hidden', '')
       getElementById1('generated-page').setAttribute('hidden', '')
       getElementById1('generated-page-menu').setAttribute('hidden', '')
       getElementById1('toggle-generated-page').classList.remove('b-selected')
@@ -1808,7 +1808,7 @@ document.addEventListener('DOMContentLoaded', function() {
     event.target.classList.add('b-selected');
     visualOn = true
     console.log('transforming');
-    var generatedPage = document.getElementById("generated-page");
+    var generatedPage = getElementById1("generated-page");
 
     // Process each child element
     var children = generatedPage.children;
@@ -2942,7 +2942,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const responseData = await response.json();
   }
   function insertDataIntoCodeLog(actionTime, actionName, inserted_component) {
-    const originalElement = document.getElementById("code-log-element");
+    const originalElement = getElementById1("code-log-element");
     const clonedElement = originalElement.cloneNode(true);
     clonedElement.removeAttribute('hidden')
     // Remove the unwanted button from the cloned element
@@ -4369,7 +4369,7 @@ document.addEventListener('DOMContentLoaded', function() {
     ];
 
     prefixesToRemove.forEach(prefix => {
-      const p = document.getElementById("code-tree")
+      const p = getElementById1("code-tree")
       const elementsToRemove = p.querySelectorAll(`fieldset[id^="${prefix}"]`);
       elementsToRemove.forEach(element => element.remove());
     });
@@ -4598,12 +4598,12 @@ document.addEventListener('DOMContentLoaded', function() {
     let responseData
     const showSku = async (sku) => {
       console.log('iin2' + sku)
-      document.getElementById("input-sku").setAttribute('hidden', '')
-      document.getElementById("create-sku").setAttribute('hidden', '')
-      const item1 = document.getElementById("sku-item-1")
+      getElementById1("input-sku").setAttribute('hidden', '')
+      getElementById1("create-sku").setAttribute('hidden', '')
+      const item1 = getElementById1("sku-item-1")
       const cloned1 = item1.cloneNode(true)
       cloned1.removeAttribute('hidden')
-      document.getElementById("sku-list").removeAttribute('hidden')
+      getElementById1("sku-list").removeAttribute('hidden')
       cloned1.querySelector("#sku-value").textContent = sku
       cloned1.querySelector("#remove-sku").setAttribute('hidden', '')
       const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku}&sk=qty;&startsWith=true`)
@@ -4625,7 +4625,7 @@ document.addEventListener('DOMContentLoaded', function() {
         cloned.querySelector('#sku-attribute-value').textContent = 'Solo'
         parent.appendChild(cloned)
       }
-      document.getElementById("sku-list").appendChild(cloned1)
+      getElementById1("sku-list").appendChild(cloned1)
       el.forEach(e => e.remove())
     }
     if (id) {
@@ -4692,7 +4692,7 @@ document.addEventListener('DOMContentLoaded', function() {
             el.textContent = item.lsi1.replace(';publish:published', '')
 
             if (item.lsi1.includes('publish:published')) {
-              const el2 = document.getElementById("path-icon")
+              const el2 = getElementById1("path-icon")
               el2.classList.add('b-green');
               el2.classList.add('b-selected');
 
@@ -4705,8 +4705,8 @@ document.addEventListener('DOMContentLoaded', function() {
             showSku(item.sku)
           }
           else {
-            document.getElementById("input-sku").setAttribute('hidden', '')
-            document.getElementById("create-sku").setAttribute('hidden', '')
+            getElementById1("input-sku").setAttribute('hidden', '')
+            getElementById1("create-sku").setAttribute('hidden', '')
           }
 
         }
@@ -4804,7 +4804,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (!pagePathContent.includes(':publish:published')) {
       getElementById1('page-path').textContent = pagePathContent
-      const el2 = document.getElementById("path-icon")
+      const el2 = getElementById1("path-icon")
       el2.classList.add('b-green');
       el2.classList.add('b-selected');
 
@@ -4927,8 +4927,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }))
     //to complete
     event.target.parentNode.parentNode.remove()
-    document.getElementById("input-sku").removeAttribute('hidden')
-    document.getElementById("create-sku").removeAttribute('hidden')
+    getElementById1("input-sku").removeAttribute('hidden')
+    getElementById1("create-sku").removeAttribute('hidden')
   }
   const addSku = async (event) => {
     const value = getElementById1('input-sku').value
@@ -5101,12 +5101,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const showSku = async (sku) => {
 
-    const item1 = document.getElementById("sku-item-1")
-    document.getElementById("input-sku").setAttribute('hidden', '')
-    document.getElementById("create-sku").setAttribute('hidden', '')
+    const item1 = getElementById1("sku-item-1")
+    getElementById1("input-sku").setAttribute('hidden', '')
+    getElementById1("create-sku").setAttribute('hidden', '')
     const cloned1 = item1.cloneNode(true)
     cloned1.removeAttribute('hidden')
-    document.getElementById("sku-list").removeAttribute('hidden')
+    getElementById1("sku-list").removeAttribute('hidden')
     cloned1.querySelector("#sku-value").textContent = sku
     cloned1.querySelector("#remove-sku").removeAttribute('hidden')
     const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku}&sk=qty;&startsWith=true`)
@@ -5129,7 +5129,7 @@ document.addEventListener('DOMContentLoaded', function() {
       cloned.querySelector('#sku-attribute-value').textContent = 'Solo'
       parent.appendChild(cloned)
     }
-    document.getElementById("sku-list").appendChild(cloned1)
+    getElementById1("sku-list").appendChild(cloned1)
     el.forEach(e => e.remove())
   }
   const handleHead = async () => {
@@ -6383,9 +6383,9 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   function filterTable(column) {
     let input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("tagsTable").getElementsByTagName("thead")[0].getElementsByTagName("input")[column];
+    input = getElementById1("tagsTable").getElementsByTagName("thead")[0].getElementsByTagName("input")[column];
     filter = input.value.toUpperCase();
-    table = document.getElementById("tagsTable");
+    table = getElementById1("tagsTable");
     tr = table.getElementsByTagName("tr");
 
     for (i = 2; i < tr.length; i++) {
