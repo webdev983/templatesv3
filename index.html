@@ -785,33 +785,7 @@ document.addEventListener('DOMContentLoaded', function() {
 */
 </script>
 <script>
-  document.addEventListener('change', async function (event) {
-    // Check if the target element has the data-visual-checkbox attribute
-    if (event.target.hasAttribute('data-visual-checkbox')) {
-      // Log the id of the target element and the new value of the checkbox
-      console.log('ID:', event.target.id, 'Value:', event.target.checked);
-      let el
-      if (event.target.checked) {
-        el = {
-          time: (new Date()).getTime(),
-          action: 'setAttribute',
-          target_element: event.target.id,
-          key: "checked",
-          value: 'true',
-
-        }
-      }
-      else {
-        el = {
-          time: (new Date()).getTime(),
-          action: 'removeAttribute',
-          target_element: event.target.id,
-          key: "checked"
-        }
-      }
-      await pushAction(el)
-    }
-  });
+  
   //toggle menu button scripts
   const toggleGeneratedPage = () => {
     const s = localStorage.getItem('generatedPageToggle')
@@ -1844,10 +1818,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Add the event listener
-    document.addEventListener('mouseover', handleMouseOver);
+    var iframe = getElementById1("generated-page-iframe");
+    iframe.addEventListener('mouseover', handleMouseOver);
 
 
-    document.addEventListener('mouseout', function (event) {
+    iframe.addEventListener('mouseout', function (event) {
       if (event.target.hasAttribute('data-visual-element')) {
         event.target.style.backgroundColor = '';
       }
@@ -1874,6 +1849,7 @@ document.addEventListener('DOMContentLoaded', function() {
       removeButtons()
       const original = getElementById1(sourceId);
       const originalRect = original.getBoundingClientRect();
+      var iframe = getElementById1("generated-page-iframe");
       // Check if siblingWithInsertBefore is present
       if (siblingWithInsertBefore.length > 0) {
         // Insert <button class="receive-target">➕</button> before each siblingWithInsertBefore
@@ -1883,11 +1859,11 @@ document.addEventListener('DOMContentLoaded', function() {
           addButton.innerHTML = '➕';
           addButton.onclick = function () {
             insertBefore(sibling.id, targetId, flag);
-            document.removeEventListener('click', clickRemoveButton);
-            document.addEventListener('mouseover', handleMouseOver);
+            iframe.removeEventListener('click', clickRemoveButton);
+            iframe.addEventListener('mouseover', handleMouseOver);
           };
-          addButton.addEventListener('mouseover', handleMouseOver1);
-          addButton.addEventListener('mouseout', handleMouseOut1);
+          iframe.addEventListener('mouseover', handleMouseOver1);
+          iframe.addEventListener('mouseout', handleMouseOut1);
           sibling.parentNode.insertBefore(addButton, sibling);
         });
       }
@@ -1921,15 +1897,15 @@ document.addEventListener('DOMContentLoaded', function() {
           console.log(lastFieldsetTreeId)
 
           insertAfter(lastFieldsetTreeId, targetId, flag);
-          document.removeEventListener('click', clickRemoveButton);
-          document.addEventListener('mouseover', handleMouseOver);
+          iframe.removeEventListener('click', clickRemoveButton);
+          iframe.addEventListener('mouseover', handleMouseOver);
         };
         addButton.addEventListener('mouseover', handleMouseOver1);
         addButton.addEventListener('mouseout', handleMouseOut1);
         parentWithAppendChild.appendChild(addButton);
       }
-      document.removeEventListener('mouseover', handleMouseOver);
-      document.addEventListener('click', clickRemoveButton);
+      iframe.removeEventListener('mouseover', handleMouseOver);
+      iframe.addEventListener('click', clickRemoveButton);
       const newElement = getElementById1(sourceId);
       const newRect = newElement.getBoundingClientRect();
       window.scrollTo({
@@ -2165,9 +2141,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Add an event listener to the entire document to track double-clicks
-    document.addEventListener('dblclick', onDoubleClick);
+    
 
-    document.addEventListener('contextmenu', function (e) {
+    function handleContextMenu (e) {
       if (e.target.hasAttribute('data-visual-element')) {
         e.preventDefault(); // Prevent the default context menu from opening
         console.log('in11');
@@ -2420,8 +2396,9 @@ document.addEventListener('DOMContentLoaded', function() {
           behavior: 'auto' // You can use 'auto' or 'smooth' for smooth scrolling
         });
         // Update the dragover and drop event listeners
-        document.addEventListener('dragover', handleDragOver);
-        document.addEventListener('drop', handleDrop);
+        var iframe = getElementById1("generated-page-iframe");
+        iframe.addEventListener('dragover', handleDragOver);
+        iframe.addEventListener('drop', handleDrop);
       }
     }
 
@@ -2496,7 +2473,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
 
-    document.addEventListener('dragstart', handleDragStart);
+    iframe.addEventListener('dragstart', handleDragStart);
     visualOn = true
   }
 
@@ -4135,11 +4112,11 @@ document.addEventListener('DOMContentLoaded', function() {
             getElementById1(removeLastOccurrence(target_element, '-tree'));
           if (!componentElement) {
             console.log('comp not found')
-            const mId = target_element.split(':')[0]
+            const mId = target_element.replace('-tree','').split(':')[0]
             const treeEls = []
             const compEls = []
             const existing = []
-            const elementsWithIdAndAttribute = querySelectorAll1('[id^="' + mId.replace('-tree','') + '"][data-replaceid]')
+            const elementsWithIdAndAttribute = querySelectorAll1('[id^="' + mId + '"][data-replaceid]')
               .forEach(
                 el => {
                   console.log('ffooound152 '+ el.id)
@@ -4844,7 +4821,37 @@ document.addEventListener('DOMContentLoaded', function() {
     // Wait for the iframe to load completely
     await new Promise(resolve => {
       iframe.addEventListener("load", resolve);
+      
     });
+    iframe.addEventListener('dblclick', onDoubleClick);
+    iframe.addEventListener('change', async function (event) {
+      iframe.addEventListener('contextmenu', handleContextMenu)
+    // Check if the target element has the data-visual-checkbox attribute
+    if (event.target.hasAttribute('data-visual-checkbox')) {
+      // Log the id of the target element and the new value of the checkbox
+      console.log('ID:', event.target.id, 'Value:', event.target.checked);
+      let el
+      if (event.target.checked) {
+        el = {
+          time: (new Date()).getTime(),
+          action: 'setAttribute',
+          target_element: event.target.id,
+          key: "checked",
+          value: 'true',
+
+        }
+      }
+      else {
+        el = {
+          time: (new Date()).getTime(),
+          action: 'removeAttribute',
+          target_element: event.target.id,
+          key: "checked"
+        }
+      }
+      await pushAction(el)
+    }
+  });
     const lastActionTime = getElementById1('last-action-time');
     lastActionTime.addEventListener('dblclick', function () {
       // Handle double-click event here
