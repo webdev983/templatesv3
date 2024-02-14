@@ -4992,20 +4992,21 @@ document.addEventListener('DOMContentLoaded', function() {
             // Update the value of the array in the JSON object
             json[key] = arrayOfObjects;
           }
-          // If the current value is an object or an array, recursively traverse it
-          else if (typeof json[key] === 'object' && json[key] !== null) {
-            traverseJSONAndUpdate(json[key], currentPath, sender);
-          } else {
-            // If the current value is a string, check for the data-transfer-sender attribute
-            const senderPath = sender ? `${sender}.${currentPath}` : currentPath;
-            const senderAttribute = document.querySelector(`[data-transfer-sender="${senderPath}"]`);
-              console.log(key)
-              json[key] = senderAttribute.textContent || "";
-            
-          }
-
+        }
+        // If the current value is an object or an array, recursively traverse it
+        else if (typeof json[key] === 'object' && json[key] !== null) {
+          traverseJSONAndUpdate(json[key], currentPath, sender);
+        } else {
+          // If the current value is a string, check for the data-transfer-sender attribute
+          const senderPath = sender ? `${sender}.${currentPath}` : currentPath;
+          const senderAttribute = document.querySelector(`[data-transfer-sender="${senderPath}"]`);
+          console.log(key)
+          json[key] = senderAttribute.textContent || "";
 
         }
+
+
+
       }
     }
   }
