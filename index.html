@@ -4993,6 +4993,7 @@ document.addEventListener('DOMContentLoaded', function() {
             json[key] = arrayOfObjects;
           }
         }
+        
         // If the current value is an object or an array, recursively traverse it
         else if (typeof json[key] === 'object' && json[key] !== null) {
           traverseJSONAndUpdate(json[key], currentPath, sender);
@@ -5060,6 +5061,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const dependeeItems = querySelectorAll1(`[data-builder-dependee]`)
     for (const item of dependeeItems) {
       const attr = item.getAttribute('data-product-info')
+      if(!attr){
+        continue
+      }
       const splited = attr.split(';')
       splited.shift()
       const f = splited.find(el => !checked1.includes(el))
