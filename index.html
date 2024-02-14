@@ -833,6 +833,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     }
   }
+  var getChecked = (resultList) => {
+    const checked1 = []
+    for (const el1 of resultList) {
+      const selected = el1.form.querySelectorAll('[type="radio"]').forEach(el => {
+        if (el.checked) {
+          const selectedValue = el.parentNode.querySelector('[data-product-attribute-value]').textContent
+          checked1.push(el1.legend + ':' + selectedValue)
+        }
+      })
+
+
+    }
+    return checked1
+  }
   const generateDependees = async (event) => {
     const parentFieldSet = event.target.closest('fieldset')
     const checkboxes = parentFieldSet.querySelectorAll('[data-type="dependant"')
@@ -890,8 +904,8 @@ document.addEventListener('DOMContentLoaded', function() {
     for (const id of ids) {
       for (let i = 0; i < combinations.length; i++) {
         let currentId = id + '-tree'
-        
-        if(i!==0) {
+
+        if (i !== 0) {
           const res = duplicateId(id)
           let actionObject = {
             time: (new Date()).getTime(),
@@ -905,7 +919,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const el = {
           time: (new Date()).getTime(),
           action: 'setAttribute',
-          target_element: currentId ,
+          target_element: currentId,
           key: 'data-product-info',
           value: `${skuValue};${combinations[i]}`,
 
@@ -915,32 +929,22 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
     //get selected combination
-    const checked1 = []
-    for (const el1 of resultList){
-      const selected = el1.form.querySelectorAll('[type="radio"]').forEach(el=>{
-        if(el.checked){
-          const selectedValue = el.parentNode.querySelector('[data-product-attribute-value]').textContent
-          checked1.push(el1.legend+':'+selectedValue)
-        }
-      })
-      
-
-    }
+    const checked1 = getChecked(resultList)
     console.log(JSON.stringify(checked1))
     dependeeItems = querySelectorAll1(`[data-builder-dependee="${dependencyName}"]`)
-    for (const item of dependeeItems){
+    for (const item of dependeeItems) {
       const attr = item.getAttribute('data-product-info')
       const splited = attr.split(';')
       splited.shift()
-      const f = splited.find(el=>!checked1.includes(el))
-      if(f){
+      const f = splited.find(el => !checked1.includes(el))
+      if (f) {
         item.style.display = 'none'
       }
-      else{
-        item.style.display ='block'
+      else {
+        item.style.display = 'block'
       }
     }
-    
+
 
   }
   const toggleDependencyMenu1 = (event) => {
@@ -2050,7 +2054,7 @@ document.addEventListener('DOMContentLoaded', function() {
         );
       }
     }
-    
+
     function handleMenuEntryClick(sourceId, targetId, siblingWithInsertBefore, parentWithAppendChild, flag) {
       console.log('t');
       console.log(parentWithAppendChild);
@@ -2264,7 +2268,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const entry = document.createElement('div');
       entry.className = 'menu-option';
       entry.innerHTML = text;
-      entry.onclick = async(e)=>{await clickHandler(e);menu.style.display ='none'};
+      entry.onclick = async (e) => { await clickHandler(e); menu.style.display = 'none' };
       menu.appendChild(entry);
     }
     function saveT(event, previousValue) {
@@ -2342,7 +2346,7 @@ document.addEventListener('DOMContentLoaded', function() {
           textContent = saveT(blurEvent, textContent)
         });
         target.addEventListener('keypress', function (keyPressEvent) {
-          if (keyPressEvent.key === 'Enter')  {
+          if (keyPressEvent.key === 'Enter') {
             keyPressEvent.preventDefault()
             textContent = saveT(keyPressEvent, textContent);
           }
@@ -2380,9 +2384,9 @@ document.addEventListener('DOMContentLoaded', function() {
         await pushAction(el)
       }
     });
-    
 
- 
+
+
     // Function to check if an element has the 'data-visual-draggable' attribute
     function isDraggable(element) {
       return element.hasAttribute('data-visual-draggable');
@@ -4868,18 +4872,60 @@ document.addEventListener('DOMContentLoaded', function() {
 
     }
   }
+  const handleSelectedDependeeChange = async (e) => {
+    const resultList = await getProductAttributes()
+    const checked1 = getChecked(resultList)
+    const dependeeItems = querySelectorAll1(`[data-builder-dependee]`)
+    for (const item of dependeeItems) {
+      const attr = item.getAttribute('data-product-info')
+      const splited = attr.split(';')
+      splited.shift()
+      const f = splited.find(el => !checked1.includes(el))
+      if (f) {
+        item.style.display = 'none'
+      }
+      else {
+        item.style.display = 'block'
+      }
+    }
+  }
+  const handleDependency = async () => {
+    const items = querySelectorAll1('[data-product-info]')
+    if (items) {
+      const resultList = await getProductAttributes()
+      for (const element of resultList) {
+        const form = element.form
+        if (form && form.children) {
+          // Iterate through the child elements of the form
+          for (const child of form.children) {
+            // Check if the child element is a label
+            if (child.tagName === 'LABEL') {
+              // Find the input within the label
+              const input = child.querySelector('input[type="radio"]');
+
+              // Add change event listener if input exists
+              if (input) {
+                input.addEventListener('change', handleSelectedDependeeChange);
+              }
+            }
+          }
+        }
+
+      }
+    }
+  }
   document.addEventListener('DOMContentLoaded', loadFirst);
-  
+
   async function loadFirst() {
     var iframe = getElementById1("generated-page-iframe");
-    
+
     // Wait for the iframe to load completely
     await new Promise(resolve => {
       iframe.addEventListener("load", resolve);
 
     });
     var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-   const lastActionTime = getElementById1('last-action-time');
+    const lastActionTime = getElementById1('last-action-time');
     lastActionTime.addEventListener('dblclick', function () {
       // Handle double-click event here
       console.log('Double-clicked on the button');
@@ -4918,6 +4964,8 @@ document.addEventListener('DOMContentLoaded', function() {
     await loadFromDb()
 
     await handleHead()
+
+    await handleDependency()
 
     //first menu
     let buttons = querySelectorAll1('button[data-element="code-tree-tag-name-button"]');
