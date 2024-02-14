@@ -4999,9 +4999,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // If the current value is a string, check for the data-transfer-sender attribute
             const senderPath = sender ? `${sender}.${currentPath}` : currentPath;
             const senderAttribute = document.querySelector(`[data-transfer-sender="${senderPath}"]`);
-            if (senderAttribute) {
-              json[key] = senderAttribute.textContent;
-            }
+            
+              json[key] = senderAttribute.textContent || "";
+            
           }
 
 
