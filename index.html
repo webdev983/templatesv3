@@ -889,11 +889,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     for (const id of ids) {
       for (let i = 0; i < combinations.length; i++) {
-        let currentId = id
-        if (i === 0) {
-
-        }
-        else {
+        let currentId = id + '-tree'
+        
+        if(i!==0) {
           const res = duplicateId(id)
           let actionObject = {
             time: (new Date()).getTime(),
@@ -907,7 +905,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const el = {
           time: (new Date()).getTime(),
           action: 'setAttribute',
-          target_element: currentId + '-tree',
+          target_element: currentId ,
           key: 'data-product-info',
           value: `${skuValue};${combinations[i]}`,
 
