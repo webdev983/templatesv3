@@ -3817,6 +3817,98 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         //case insert tag
         if (inserted_element?.tagName) {
+
+
+
+
+          const handleInsert = (treeElement, componentElement, replaceCopyId) => {
+            console.log('handling' + treeElement + ' ' + componentElement + ' ' + replaceCopyId)
+            const newEl = document.createElement(inserted_element.tagName)
+            const attr1 = componentElement.getAttribute('data-replaceID')
+            if (attr1) {
+              newEl.setAttribute('data-replaceID', attr1)
+            }
+            if (noComp || noComp1) {
+              newEl.setAttribute('data-replaceID', replaceId)
+            }
+
+            const splited = componentElement.id.split(';')
+
+
+
+
+
+
+            newEl.id = replaceCopyId ? inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') : inserted_element.id
+
+            console.log(newEl.id)
+
+            const component_el = getElementById1('tree-element')
+            const newEl2 = component_el.cloneNode(true)
+            const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
+            button2.textContent = '🏷️' + inserted_element.tagName;
+            const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
+            button.addEventListener('mouseover', mouseOverTree);
+
+            button.addEventListener('mouseout', mouseOutTree);
+            newEl2.id = replaceCopyId ? inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') + '-tree' : inserted_element.id + '-tree'
+            if (componentElement.hasAttribute('data-parentid')) {
+              console.log('in12')
+              newEl.id = componentElement.id + ';' + inserted_element.id
+              newEl2.id = componentElement.id + ';' + inserted_element.id + '-tree'
+            }
+
+            else if (splited.length > 1) {
+              newEl.id = splited[0] + ';' + inserted_element.id
+              newEl2.id = splited[0] + ';' + inserted_element.id + '-tree'
+            }
+            componentElement.parentNode.appendChild(newEl)
+            treeElement.parentNode.appendChild(newEl2)
+          }
+          treeElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
+            getElementById1('code-tree')
+            : getElementById1(target_element)
+          //component
+          componentElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
+            getElementById1('generated-page')
+            :
+            getElementById1(removeLastOccurrence(target_element, '-tree'));
+          if (!componentElement) {
+            console.log('comp not found')
+            const mId = target_element.replace('-tree', '').split(':')[0]
+            const treeEls = []
+            const compEls = []
+            const existing = []
+            const elementsWithIdAndAttribute = querySelectorAll1('[id^="' + mId + '"][data-replaceid]')
+              .forEach(
+                el => {
+                  console.log('ffooound152 ' + el.id)
+                  if (!existing.includes(el.getAttribute('data-replaceid'))) {
+                    existing.push(el.getAttribute('data-replaceid'))
+                    treeEls.push(getElementById1(el.id + '-tree'));
+                    compEls.push(el)
+                  }
+
+                }
+              );
+
+            for (let i = 0; i < treeEls.length; i++) {
+              handleInsert(treeEls[i], compEls[i], true)
+            }
+            break;
+          }
+          console.log('handling insert')
+          handleInsert(treeElement, componentElement)
+
+
+          break;
+
+
+
+
+
+
+          /*
           console.log(command)
           //fieldset
           treeElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
@@ -3868,7 +3960,7 @@ document.addEventListener('DOMContentLoaded', function() {
           }
           componentElement.appendChild(newEl)
           treeElement.appendChild(newEl2)
-          break;
+          break;*/
         }
         if (target_element.length) {
           console.log('movestat ' + move)
