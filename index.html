@@ -217,7 +217,7 @@
         <button class="b-1" style="margin-right: 5px;" id="link-by-path" onclick="switchLinkBP(event)">*📁</button>
         <button class="b-1" style="margin-right: 5px;" id="link-by-path" onclick="switchLinkBP(event)">*🛖</button>
 
-        
+
 
         <button hidden class="b-1 b-selected" style="margin-right: 5px;" id="index-max-elements">🏋️<label
             id="index-max-elements-amount" contenteditable>53</label></button>
@@ -241,24 +241,30 @@
         <fieldset id="head-tree" data-element="code-tree-tag" class="">
           <legend>💬</legend>
           <input id="selectedCheckbox" hidden="" type="checkbox" onchange="handleCheckboxChange(event)">
-          <button class="b-3 arrow-hover" data-element="code-tree-show-hide-button" onclick="toggleSubFields(event)">→</button>
-          <button class="b-3" data-element="code-tree-tag-name-button" onclick="loader(event, handleTreeClick)">🏷️head</button>
+          <button class="b-3 arrow-hover" data-element="code-tree-show-hide-button"
+            onclick="toggleSubFields(event)">→</button>
+          <button class="b-3" data-element="code-tree-tag-name-button"
+            onclick="loader(event, handleTreeClick)">🏷️head</button>
           <button class="b-3" data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)">
             ▶️</button>
-          <button class="b-3" data-element="code-tree-attributes-button" onclick="openAttributeContent(event)">🔑</button>
+          <button class="b-3" data-element="code-tree-attributes-button"
+            onclick="openAttributeContent(event)">🔑</button>
           <button class="b-3" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
         </fieldset>
         <fieldset id="body-tree" data-element="code-tree-tag" class="">
           <legend>💬</legend>
           <input id="selectedCheckbox" hidden="" type="checkbox" onchange="handleCheckboxChange(event)">
-          <button class="b-3 arrow-hover" data-element="code-tree-show-hide-button" onclick="toggleSubFields(event)">→</button>
-          <button class="b-3" data-element="code-tree-tag-name-button" onclick="loader(event, handleTreeClick)">🏷️body</button>
+          <button class="b-3 arrow-hover" data-element="code-tree-show-hide-button"
+            onclick="toggleSubFields(event)">→</button>
+          <button class="b-3" data-element="code-tree-tag-name-button"
+            onclick="loader(event, handleTreeClick)">🏷️body</button>
           <button class="b-3" data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)">
             ▶️</button>
-          <button class="b-3" data-element="code-tree-attributes-button" onclick="openAttributeContent(event)">🔑</button>
+          <button class="b-3" data-element="code-tree-attributes-button"
+            onclick="openAttributeContent(event)">🔑</button>
           <button class="b-3" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
         </fieldset>
-        
+
 
       </div>
       <!--menus-->
@@ -3888,7 +3894,7 @@ document.addEventListener('DOMContentLoaded', function() {
             componentElement.appendChild(newEl)
             treeElement.appendChild(newEl2)
           }
-          
+
           treeElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
             getElementById1('code-tree')
             : getElementById1(target_element)
@@ -3926,14 +3932,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
           break;
-          
 
 
 
 
 
 
-          
+
+
           console.log(command)
           //fieldset
           treeElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
@@ -5002,21 +5008,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }
     }
+  }
 
-    const generateSchema = () => {
-      const generatedPage = getElementById1('generated-page')
-      const schemas = querySelectorAll1('script[data-transfer-receiver]')
-      for (const schema of schemas) {
-        const receiverName = schema.getAttribute('data-transfer-receiver')
-        const json = JSON.parse(schema.textContent)
-        // Start traversing the JSON object
-        traverseJSONAndUpdate(json, '', receiverName);
+  const generateSchema = () => {
+    const generatedPage = getElementById1('generated-page')
+    const schemas = querySelectorAll1('script[data-transfer-receiver]')
+    for (const schema of schemas) {
+      const receiverName = schema.getAttribute('data-transfer-receiver')
+      const json = JSON.parse(schema.textContent)
+      // Start traversing the JSON object
+      traverseJSONAndUpdate(json, '', receiverName);
 
-        // After updating, stringify the JSON object and assign it back to the text content of the schema element
-        schema.textContent = JSON.stringify(json, null, 2);
-        console.log(JSON.stringify(json))
-      }
+      // After updating, stringify the JSON object and assign it back to the text content of the schema element
+      schema.textContent = JSON.stringify(json, null, 2);
+      console.log(JSON.stringify(json))
     }
+  }
   const publish = async (e) => {
     console.log('eeer')
     const pagePathContent = getElementById1('page-path').textContent;
@@ -5558,7 +5565,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const result = [];
 
       lines.forEach(line => {
-        if(line===""){
+        if (line === "") {
           return
         }
         const keyValue = line.split('=');
@@ -5826,8 +5833,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- tag style-->
 <style>
-
-
   [data-element="code-tree-tag"] legend,
   [data-element="component-tree-tag"] legend {
     margin-bottom: -6px;
