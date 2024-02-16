@@ -223,22 +223,24 @@
           saveButton.onclick = async function (e) {
             e.stopPropagation()
             const new_value = cloned.querySelector('[data-input="create-new-file-path-input"]').value
-            const res1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/'+id+':path', {
+            const res1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/' + id + ':path', {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
               }
-            }).then(re=>re.json())
-            
-            
+            }).then(re => re.json())
+
+
             await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify(
-                {...res1,
-                lsi1: new_value,id}
+                {
+                  ...res1,
+                  lsi1: new_value, id
+                }
               ),
             })
             loadUsingPath()
@@ -281,6 +283,47 @@
       addMenuEntry(menu, '✏️ Edit', (e) => edit(id))
       addMenuEntry(menu, '🗑️ Delete', (e) => openRemove1(id))
       addMenuEntry(menu, 'copy', (e) => copy(id))
+      // Adjust the position relative to the viewport
+      const offsetX = e.pageX;
+      const offsetY = e.pageY;
+
+      menu.style.display = 'block';
+      menu.style.left = `${offsetX}px`;
+      menu.style.top = `${offsetY}px`;
+
+      // Hide the menu when clicking the left mouse button
+      window.addEventListener('click', function () {
+        menu.style.display = 'none';
+      });
+
+    }
+    function addDirectoryMenu(e, path, id) {
+      e.preventDefault(); // Prevent the default context menu from opening
+      console.log('in11');
+      const menu = document.querySelector('#right-click-menu'); // Use # for ID selector
+      menu.innerHTML = '';
+
+      function addMenuEntry(menu, text, clickHandler) {
+        const entry = document.createElement('div');
+        entry.className = 'menu-option';
+        entry.innerHTML = text;
+        entry.onclick = clickHandler;
+        menu.appendChild(entry);
+      }
+      const openRemove1 = (id, path) => {
+        var fieldset = document.getElementById(id);
+
+        // Get the file ID element within the fieldset
+
+
+        // Toggle the visibility of the "cancelation" fieldset
+        var cancelationFieldset = fieldset.querySelector('#cancelation');
+        cancelationFieldset.hidden = !cancelationFieldset.hidden;
+
+      }
+      addMenuEntry(menu, '✏️ Edit', (e) => edit(id, path))
+      addMenuEntry(menu, '🗑️ Delete', (e) => openRemove1(id, path))
+      addMenuEntry(menu, 'copy', (e) => copy(id, path))
       // Adjust the position relative to the viewport
       const offsetX = e.pageX;
       const offsetY = e.pageY;
@@ -393,6 +436,53 @@
     }
     let path = ''
     let lvls = []
+    const removeDirectory = async (event, id, path) => {
+      event.preventDefault();
+
+      // Get the closest list item (li) element
+      var listItem = document.getElementById(id);
+
+      try {
+        const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${path}`);
+        //list of sub paths
+        const data = await response.json();
+
+        for (const item of data.items) {
+          const { id, sk, sku } = item;
+
+          if (sku) {
+            const skuResponse = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku}&sk=qty;&startsWith=true`);
+            const skuData = await skuResponse.json();
+
+            for (const skuItem of skuData.items) {
+              await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${skuItem.id}:${skuItem.sk}`, {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  // Add any additional headers if needed
+                },
+              });
+            }
+          }
+          const itemResponse = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`);
+          const {items} = await itemResponse.json();
+          for (const item of items){
+            await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id}:${item.sk}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              // Add any additional headers if needed
+            },
+          });
+          console.log(`Successfully deleted item with id:${item.id} and sk:${item.sk}`);
+          }
+          
+        }
+        listItem.remove();
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
     const remove = async (event, id) => {
       event.preventDefault();
 
@@ -517,7 +607,11 @@
                 labelElement.textContent = `${path}`;
                 openPath();
               };
-
+              clonedItem.addEventListener('contextmenu', (e) => addDirectoryMenu(e, item + '/', item))
+              clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
+                event.stopPropagation()
+                removeDirectory(event, item, item + '/');
+              };
               // Append the cloned item to the filePathList
               filePathList.appendChild(clonedItem);
             }
@@ -756,7 +850,11 @@
                 labelElement.textContent = `${path}`;
                 openPath();
               };
-
+              clonedItem.addEventListener('contextmenu', (e) => addDirectoryMenu(e, path + item + '/', item))
+              clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
+                event.stopPropagation()
+                removeDirectory(event, item, path + item + '/');
+              };
               // Append the cloned item to the filePathList
               filePathList.appendChild(clonedItem);
             }
