@@ -321,7 +321,7 @@
         cancelationFieldset.hidden = !cancelationFieldset.hidden;
 
       }
-      const edit = (id,path) => {
+      const edit = (id, path) => {
         const editArea = document.querySelector('[data-element="create-new-file-path"]');
         const fieldset = document.getElementById(id);
 
@@ -337,33 +337,32 @@
           const input = cloned.querySelector('[data-input="create-new-file-path-input"]');
           const name = fieldset.querySelector('[data-value="file-path"]').textContent;
 
-          input.value = path + name;
+          input.value = path;
           input.onclick = (event) => {
             event.stopPropagation()
           }
           saveButton.onclick = async function (e) {
             e.stopPropagation()
             const new_value = cloned.querySelector('[data-input="create-new-file-path-input"]').value
-            const res1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/' + id + ':path', {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              }
-            }).then(re => re.json())
+            const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${path}`);
+            //list of sub paths
+            const data = await response.json();
 
-
-            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            for(const item of data.items){
+              await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify(
                 {
-                  ...res1,
-                  lsi1: new_value, id
+                  ...item,
+                  lsi1: item.lsi1.replace(path,new_value)
                 }
               ),
             })
+            }
+            
             loadUsingPath()
             cloned.remove();
           };
@@ -516,18 +515,18 @@
             }
           }
           const itemResponse = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`);
-          const {items} = await itemResponse.json();
-          for (const item of items){
+          const { items } = await itemResponse.json();
+          for (const item of items) {
             await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id}:${item.sk}`, {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-              // Add any additional headers if needed
-            },
-          });
-          console.log(`Successfully deleted item with id:${item.id} and sk:${item.sk}`);
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+                // Add any additional headers if needed
+              },
+            });
+            console.log(`Successfully deleted item with id:${item.id} and sk:${item.sk}`);
           }
-          
+
         }
         listItem.remove();
       } catch (error) {
