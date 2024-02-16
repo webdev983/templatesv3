@@ -646,11 +646,11 @@
         //list of sub paths
         const data = await response.json();
 
-        await Promise.all(data.items.map(async item => {
+        const all = await Promise.all(data.items.map(async item => {
           const { id, sk, sku, protected } = item;
           if (protected) {
             console.log('protected el')
-            return
+            return true
           }
 
           if (sku) {
@@ -680,11 +680,14 @@
 
 
           ))
+          return false
 
         }))
 
 
-
+        if(all.find(el=>el)){
+          return
+        }
         event.target.parentNode.parentNode.remove()
         listItem.remove();
       } catch (error) {
