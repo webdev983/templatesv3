@@ -255,7 +255,7 @@
       const openRemove1 = (id) => {
 
         var fieldset = document.getElementById(id);
-
+        
         // Get the file ID element within the fieldset
 
 
@@ -289,10 +289,14 @@
         var fieldset = document.getElementById(id);
 
         // Get the file ID element within the fieldset
-        var fileIdElement = fieldset.querySelector('[data-element="file-id"]');
+        var fileIdElement = document.querySelector('[data-element="file-id"]');
+        const cloned = fileIdElement.cloneNode(true)
+        cloned.querySelector('[data-element="file-id"]').textContent = id
+        cloned.removeAttribute('hidden')
+        
 
         // Toggle the visibility of the file ID element
-        fileIdElement.hidden = !fileIdElement.hidden;
+        fieldset.insertAdjacentElement('afterend', cloned);
       }
       addMenuEntry(menu, 'ℹ️ Info', (e) => showId1(id))
       addMenuEntry(menu, '✏️ Edit', (e) => edit(id))
