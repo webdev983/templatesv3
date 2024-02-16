@@ -323,7 +323,8 @@
           },
           body: JSON.stringify({ ...response.items[0], protected }),
         });
-        alert('protection set')
+        loadUsingPath()
+        alert('protection set '+protected)
       }
       // Adjust the position relative to the viewport
       const offsetX = e.pageX;
@@ -647,9 +648,12 @@
         const data = await response.json();
 
         const all = await Promise.all(data.items.map(async item => {
-          const { id, sk, sku, protected } = item;
+
+          const { id, sk, } = item;
+          const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`).then(e=>e.json())
+          let {sku,protected} = response.find(e=>e.sk === sk )
           if (protected) {
-            console.log('protected el')
+            console.log('protected el '+ e.id)
             return true
           }
 
@@ -667,9 +671,9 @@
               });
             }
           }
-          const itemResponse = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`);
-          const { items } = await itemResponse.json();
-          await Promise.all(items.map(item =>
+         
+        
+          await Promise.all(response.items.map(item =>
             fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id}:${item.sk}`, {
               method: 'DELETE',
               headers: {
