@@ -600,7 +600,7 @@
         //list of sub paths
         const data = await response.json();
 
-        for (const item of data.items) {
+        await Promise.all(data.items.map(async item=>{
           const { id, sk, sku } = item;
 
           if (sku) {
@@ -631,8 +631,10 @@
           
           ))
             
+        }))
+          
 
-        }
+        
         event.target.parentNode.parentNode.remove()
         listItem.remove();
       } catch (error) {
