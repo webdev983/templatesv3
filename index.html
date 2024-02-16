@@ -740,10 +740,8 @@
       class="l-3">universal/blablabla/blablabla/coolcss</label><label data-value="file-emoji"
       style="user-select: none; margin-left: 5px;" class="l-3"> 🧩</label>
     <!-- file info-->
-    <div fieldset data-element="file-id">
-      <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
-      <span style="user-select: none;">🆔</span><span data-value="file-id"
-        style="font-size: 0.9em">1414124-414221412-4124214124-412412</span></fieldset>
+    <div hidden data-element="file-id"><span style="user-select: none;">🆔</span><span data-value="file-id"
+        style="font-size: 0.9em">1414124-414221412-4124214124-412412</span></div>
     <!-- remove file menu-->
     <fieldset hidden id="cancelation">
       <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
@@ -5036,15 +5034,10 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
           // If the current value is a string, check for the data-transfer-sender attribute
           const senderPath = sender ? `${sender}.${currentPath}` : currentPath;
-          const senderAttribute = querySelectorAll1(`[data-transfer-sender="${senderPath}"]`);
+          const senderAttribute = document.querySelector(`[data-transfer-sender="${senderPath}"]`);
           console.log(key)
           console.log(senderPath)
-          if(senderAttribute.length){
-            json[key] = senderAttribute[0].textContent || "";
-          }
-          else{
-            json[key] = ''
-          }
+          json[key] = senderAttribute?.textContent || "";
 
         }
 
