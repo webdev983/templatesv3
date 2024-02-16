@@ -3413,6 +3413,17 @@ document.addEventListener('DOMContentLoaded', function() {
           const item1 = items.find(i => i.lsi1 === lsi)
           inserted_component.componentId = item1.id
         }
+        else if (inserted_component.componentId.startsWith('#')) {
+          const splited = pathItem.lsi1.split('/')
+          splited.pop()
+          const last = inserted_component.componentId.replace('#', '')
+          splited.push(last)
+          const lsi = splited.join('/')
+          const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + lsi)
+            .then(response => response.json())
+          const item1 = items.find(i => i.lsi1 === lsi)
+          inserted_component.componentId = item1.id
+        }
 
         const removeAction = removeActions?.find(e => e.target_element === inserted_component.id + '-tree')
         if (removeAction) {
