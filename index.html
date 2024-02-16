@@ -767,13 +767,14 @@
     <button onclick="cancelReplace(event)">cancel</button>
     <button onclick="approveReplace(event)">approve</button>
   </ol>
+  <div hidden id="file-list-attach-component-options">        
+    <button class="b-1" style="margin-right: 5px;" id="file-list-test-component" onclick="switchSelected(event)">🧪</button>
+    <button class="b-1" style="margin-right: 5px;" id="file-list-optional-script" onclick="switchSelected(event)">🚦</button>
+    <button class="b-1" style="margin-right: 5px;" id="file-list-link-by-path" onclick="switchSelected(event)">*📁</button>
+    <button class="b-1" style="margin-right: 5px;" id="file-list-link-by-path" onclick="switchSelected(event)">*🛖</button>
+  </div>
   <ol data-element="file-path-list" id="filePathList" class="list-1" style="margin-left: -10px;">
-    <div id="file-list-attach-component-options">        
-      <button class="b-1" style="margin-right: 5px;" id="file-list-test-component" onclick="switchSelected(event)">🧪</button>
-      <button class="b-1" style="margin-right: 5px;" id="file-list-optional-script" onclick="switchSelected(event)">🚦</button>
-      <button class="b-1" style="margin-right: 5px;" id="file-list-link-by-path" onclick="switchSelected(event)">*📁</button>
-      <button class="b-1" style="margin-right: 5px;" id="file-list-link-by-path" onclick="switchSelected(event)">*🛖</button>
-    </div>
+    
 
   </ol>
 
@@ -1437,9 +1438,13 @@ document.addEventListener('DOMContentLoaded', function() {
   var addComponent = (e) => {
 
     const fieldset = getElementById1('filePathList');
-    if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('filePathList')) {
+    if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('file-list-attach-component-options')) {
       const clonedFieldset = fieldset.cloneNode(true);
+      const clonedFieldset2 = getElementById1('file-list-attach-component-options').cloneNode(true);
+      clonedFieldset2.removeAttribute('hidden')
+      e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset2);
       e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+     
 
 
       loadFileList2(clonedFieldset)
