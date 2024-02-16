@@ -5018,10 +5018,17 @@ document.addEventListener('DOMContentLoaded', function() {
             clonerAttributes.forEach(clonerAttribute => {
               const objectFromClonedElements = {...json[key][0]};
               // Iterate through each cloned element within the current set
-              clonerAttribute.querySelectorAll('[data-transfer-sender]').forEach(element => {
+              if(clonerAttribute.hasAttribute('data-transfer-sender')){
+                const attributeKey = clonerAttribute.getAttribute('data-transfer-sender').split('.').pop();
+                objectFromClonedElements[attributeKey] = clonerAttribute.textContent;
+              }
+              else{
+                clonerAttribute.querySelectorAll('[data-transfer-sender]').forEach(element => {
                 const attributeKey = element.getAttribute('data-transfer-sender').split('.').pop();
                 objectFromClonedElements[attributeKey] = element.textContent;
               });
+              }
+              
               // Push the created object to the array of objects
               arrayOfObjects.push(objectFromClonedElements);
             });
