@@ -768,6 +768,12 @@
     <button onclick="approveReplace(event)">approve</button>
   </ol>
   <ol data-element="file-path-list" id="filePathList" class="list-1" style="margin-left: -10px;">
+    <div id="file-list-attach-component-options">        
+      <button class="b-1" style="margin-right: 5px;" id="test-component" onclick="switchSelected(event)">🧪</button>
+      <button class="b-1" style="margin-right: 5px;" id="optional-script" onclick="switchSelected(event)">🚦</button>
+      <button class="b-1" style="margin-right: 5px;" id="link-by-path" onclick="switchSelected(event)">*📁</button>
+      <button class="b-1" style="margin-right: 5px;" id="link-by-path" onclick="switchSelected(event)">*🛖</button>
+    </div>
 
   </ol>
 
@@ -804,7 +810,15 @@ document.addEventListener('DOMContentLoaded', function() {
 */
 </script>
 <script>
-
+  const switchSelected = (event)=>{
+    const activated = event.target.classList.contains('b-selected')
+    if(activated){
+      event.target.classList.remove('b-selected')
+    }
+    else{
+      event.target.classList.add('b-selected')
+    }
+  }
   //toggle menu button scripts
   const toggleGeneratedPage = () => {
     const s = localStorage.getItem('generatedPageToggle')
