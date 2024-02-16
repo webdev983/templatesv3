@@ -182,6 +182,7 @@
           console.log('entry ' + JSON.stringify(entry))
           if (entry.sk === 'path') {
             entry.lsi1 = entry.lsi1 + '-copy-' + newId
+            entry.protected = false
           }
           if (entry.target_element === id + '-tree') {
             console.log('err1')
@@ -315,7 +316,7 @@
           headers: {
             'Content-Type': 'application/json',
           },
-        }).then(response=>response.json());
+        }).then(response => response.json());
         await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
           method: 'POST',
           headers: {
@@ -324,7 +325,7 @@
           body: JSON.stringify({ ...response.items[0], protected }),
         });
         loadUsingPath()
-        alert('protection set '+protected)
+        alert('protection set ' + protected)
       }
       // Adjust the position relative to the viewport
       const offsetX = e.pageX;
@@ -400,19 +401,7 @@
 
             await Promise.all(data.items.map(async item => {
               const newId = generateUUID()
-              await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(
-                  {
-                    ...item,
-                    lsi1: item.lsi1.replace(path, new_value),
-                    id: newId
-                  }
-                ),
-              })
+
               const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${item.id}&startsWith=true`, {
                 method: 'GET',
                 headers: {
@@ -422,6 +411,10 @@
               const res2 = await response.json()
               await Promise.all(res2.items.map(async item1 => {
                 if (item1.sk !== 'path') {
+                  if (item1.target_element === item1.id + '-tree') {
+                    console.log('err1')
+                    entry.target_element = newId + '-tree'
+                  }
                   return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                     method: 'POST',
                     headers: {
@@ -431,6 +424,22 @@
                       {
                         ...item1,
                         id: newId
+                      }
+                    ),
+                  })
+                }
+                else {
+                  await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(
+                      {
+                        ...item1,
+                        lsi1: item1.lsi1.replace(path, new_value),
+                        id: newId,
+                        protected: false
                       }
                     ),
                   })
@@ -650,10 +659,10 @@
         const all = await Promise.all(data.items.map(async item => {
 
           const { id, sk, } = item;
-          const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`).then(e=>e.json())
-          let {sku,protected} = response.items.find(e=>e.sk === sk )
+          const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`).then(e => e.json())
+          let { sku, protected } = response.items.find(e => e.sk === sk)
           if (protected) {
-            console.log('protected el '+ id)
+            console.log('protected el ' + id)
             return true
           }
 
@@ -671,8 +680,8 @@
               });
             }
           }
-         
-        
+
+
           await Promise.all(response.items.map(item =>
             fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id}:${item.sk}`, {
               method: 'DELETE',
@@ -692,11 +701,11 @@
         if (all.every(el => el)) {
           alert('all protected')
           return
-        }else if(all.some(e=>e)){
+        } else if (all.some(e => e)) {
           alert('partial delete')
           return
         }
-        
+
         listItem.remove();
       } catch (error) {
         console.error('Error:', error);
