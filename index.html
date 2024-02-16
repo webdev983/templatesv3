@@ -771,7 +771,7 @@
     <button class="b-1" style="margin-right: 5px;" id="file-list-test-component" onclick="switchSelected(event)">🧪</button>
     <button class="b-1" style="margin-right: 5px;" id="file-list-optional-script" onclick="switchSelected(event)">🚦</button>
     <button class="b-1" style="margin-right: 5px;" id="file-list-link-by-path" onclick="switchSelected(event)">*📁</button>
-    <button class="b-1" style="margin-right: 5px;" id="file-list-link-by-path" onclick="switchSelected(event)">*🛖</button>
+    <button class="b-1" style="margin-right: 5px;" id="file-list-link-by-name" onclick="switchSelected(event)">*🛖</button>
   </div>
   <ol data-element="file-path-list" id="filePathList" class="list-1" style="margin-left: -10px;">
     
@@ -1189,7 +1189,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     pushAction(actionObject);
   }
-  var loadUsingPath2 = (path1, filePathList) => {
+  var loadUsingPath2 = (path1, filePathList,optionList) => {
     return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + path1)
       .then(response => response.json())
       .then(data => {
@@ -1267,7 +1267,7 @@ document.addEventListener('DOMContentLoaded', function() {
               fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/' + item.id + ':' + item.sk)
                 .then(response => response.json())
                 .then(data => {
-                  if (data.LinkBP) {
+                  if (data.LinkBP  || optionList.querySelector('#file-list-link-by-path').classList.includes('b-selected')) {
                     const p = data.lsi1.split('/')
                     p.shift()
                     addComponent1("*/" + p.join('/'))
@@ -1306,7 +1306,7 @@ document.addEventListener('DOMContentLoaded', function() {
       })
       .catch(error => console.error('Error:', error));
   }
-  var loadFileList2 = (filePathList) => {
+  var loadFileList2 = (filePathList,optionList) => {
     // Fetch GET request
 
     fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true')
@@ -1358,7 +1358,7 @@ document.addEventListener('DOMContentLoaded', function() {
               const path1 = item + '/'
 
 
-              loadUsingPath2(path1, filePathList)
+              loadUsingPath2(path1, filePathList,optionList)
             };
 
             // Append the cloned item to the filePathList
@@ -1385,7 +1385,7 @@ document.addEventListener('DOMContentLoaded', function() {
               fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/' + item.id + ':' + item.sk)
                 .then(response => response.json())
                 .then(data => {
-                  if (data.LinkBP) {
+                  if (data.LinkBP || optionList.querySelector('#file-list-link-by-path').classList.includes('b-selected')) {
                     const p = data.lsi1.split('/')
                     p.shift()
                     addComponent1("*/" + p.join('/'))
@@ -1448,7 +1448,7 @@ document.addEventListener('DOMContentLoaded', function() {
      
 
 
-      loadFileList2(clonedFieldset)
+      loadFileList2(clonedFieldset,clonedFieldset2)
     }
 
   }
