@@ -129,10 +129,10 @@
     </li>
 
     <fieldset hidden data-element="copy-folder">
-      <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
+      <legend><button data-action="copy-file-path-cancel" style="font-size: 0.9em;">❌</button></legend>
       <span>📂 </span>
-      <input type="text" placeholder="name" style="min-width: 300px;">
-      <button>💾</button>
+      <input data-input="copy-file-path-input" type="text" placeholder="name" style="min-width: 300px;">
+      <button data-action="copy-file-path-save">💾</button>
     </fieldset>
 
 
@@ -321,6 +321,83 @@
         cancelationFieldset.hidden = !cancelationFieldset.hidden;
 
       }
+      const copy = async (id) => {
+        const editArea = document.querySelector('[data-element="copy-folder"]');
+        const fieldset = document.getElementById(id);
+
+        if (editArea && fieldset) {
+          console.log('editing')
+          const cloned = editArea.cloneNode(true);
+          const saveButton = cloned.querySelector('[data-action="copy-file-path-save"]');
+          const cancelButton = cloned.querySelector('[data-action="copy-file-path-cancel"]');
+          cancelButton.onclick = (e) => {
+            e.stopPropagation()
+            e.target.parentNode.parentNode.remove()
+          }
+          const input = cloned.querySelector('[data-input="copy-file-path-input"]');
+          const name = fieldset.querySelector('[data-value="file-path"]').textContent;
+
+          input.value = path;
+          input.onclick = (event) => {
+            event.stopPropagation()
+          }
+          saveButton.onclick = async function (e) {
+            e.stopPropagation()
+            const new_value = cloned.querySelector('[data-input="create-new-file-path-input"]').value
+            const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${path}`);
+            //list of sub paths
+            const data = await response.json();
+
+            for (const item of data.items) {
+              const newId = generateUUID()
+              await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(
+                  {
+                    ...item,
+                    lsi1: item.lsi1.replace(path, new_value),
+                    id: newId
+                  }
+                ),
+              })
+              const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${item.id}&startsWith=true`, {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              });
+              const { items } = response.json()
+              for (const item1 of items) {
+                if (item1.sk !== 'path') {
+                  await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(
+                      {
+                        ...item1,
+                        id: newId
+                      }
+                    ),
+                  })
+                }
+              }
+
+
+            }
+
+            loadUsingPath()
+            cloned.remove();
+          };
+
+          cloned.style.display = 'block';
+          fieldset.insertAdjacentElement('afterend', cloned);
+        }
+      }
       const edit = (id, path) => {
         const editArea = document.querySelector('[data-element="create-new-file-path"]');
         const fieldset = document.getElementById(id);
@@ -348,21 +425,21 @@
             //list of sub paths
             const data = await response.json();
 
-            for(const item of data.items){
+            for (const item of data.items) {
               await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(
-                {
-                  ...item,
-                  lsi1: item.lsi1.replace(path,new_value)
-                }
-              ),
-            })
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(
+                  {
+                    ...item,
+                    lsi1: item.lsi1.replace(path, new_value)
+                  }
+                ),
+              })
             }
-            
+
             loadUsingPath()
             cloned.remove();
           };
