@@ -253,20 +253,34 @@
         }
       };
       const openRemove1 = (id) => {
+
         var fieldset = document.getElementById(id);
 
         // Get the file ID element within the fieldset
-        var fileIdElement = fieldset.querySelector('[data-element="file-id"]');
 
-        // Log the file ID
-        console.log('File ID:', fileIdElement.lastElementChild.textContent);
-
-        // Toggle the visibility of the file ID element
-        fileIdElement.hidden = false;
 
         // Toggle the visibility of the "cancelation" fieldset
-        var cancelationFieldset = fieldset.querySelector('#cancelation');
-        cancelationFieldset.hidden = !cancelationFieldset.hidden;
+        var cancelationFieldset = document.querySelector('#cancelation');
+        const cloned = cancelationFieldset.cloneNode(true)
+        cloned.removeAttribute('hidden');
+        // Toggle the visibility of the "cancelation" fieldset
+
+        cloned.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
+          event.stopPropagation()
+          remove(event, item.id);
+        };
+        fieldset.insertAdjacentElement('afterend', cloned);
+
+
+
+
+
+
+
+
+
+
+
 
       }
       function showId1(id) {
@@ -780,10 +794,7 @@
 
               // Set up onclick for file-open button
 
-              clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
-                event.stopPropagation()
-                remove(event, item.id);
-              };
+
               // Append the cloned item to the filePathList
               filePathList.appendChild(clonedItem);
             }
@@ -982,10 +993,7 @@
                 openPath();
               };
               clonedItem.addEventListener('contextmenu', (e) => addDirectoryMenu(e, path + item + '/', item))
-              clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
-                event.stopPropagation()
-                removeDirectory(event, item, path + item + '/');
-              };
+
               // Append the cloned item to the filePathList
               filePathList.appendChild(clonedItem);
             }
@@ -1019,10 +1027,7 @@
 
 
 
-              clonedItem.querySelector('[data-action="remove-file-confirmation"]').onclick = function (event) {
-                event.stopPropagation()
-                remove(event, item.id);
-              };
+
               // Append the cloned item to the filePathList
               filePathList.appendChild(clonedItem);
             }
