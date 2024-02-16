@@ -619,16 +619,18 @@
           }
           const itemResponse = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`);
           const { items } = await itemResponse.json();
-          for (const item of items) {
-            await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id}:${item.sk}`, {
+          await Promise.all(items.map(item=>
+            fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id}:${item.sk}`, {
               method: 'DELETE',
               headers: {
                 'Content-Type': 'application/json',
                 // Add any additional headers if needed
               },
-            });
-            console.log(`Successfully deleted item with id:${item.id} and sk:${item.sk}`);
-          }
+            })
+            
+          
+          ))
+            
 
         }
         event.target.parentNode.parentNode.remove()
