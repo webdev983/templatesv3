@@ -689,10 +689,14 @@
         }))
 
         event.target.parentNode.parentNode.remove()
-        if (all.find(el => el)) {
+        if (all.every(el => el)) {
+          alert('all protected')
+          return
+        }else if(all.some(e=>e)){
+          alert('partial delete')
           return
         }
-       
+        
         listItem.remove();
       } catch (error) {
         console.error('Error:', error);
