@@ -5003,7 +5003,6 @@ document.addEventListener('DOMContentLoaded', function() {
           // Find the data-transfer-cloner attribute for the current array
           const clonerAttributes = querySelectorAll1(`[data-transfer-cloner="${sender}.${currentPath}"]`);
           if (clonerAttributes.length > 0) {
-            console.log('in')
             const arrayOfObjects = [];
             // Iterate through each set of cloned elements
             clonerAttributes.forEach(clonerAttribute => {
@@ -5035,8 +5034,7 @@ document.addEventListener('DOMContentLoaded', function() {
           // If the current value is a string, check for the data-transfer-sender attribute
           const senderPath = sender ? `${sender}.${currentPath}` : currentPath;
           const senderAttribute = document.querySelector(`[data-transfer-sender="${senderPath}"]`);
-          console.log(key)
-          console.log(senderPath)
+          
           json[key] = senderAttribute?.textContent || "";
 
         }
@@ -5058,7 +5056,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       // After updating, stringify the JSON object and assign it back to the text content of the schema element
       schema.textContent = JSON.stringify(json, null, 2);
-      console.log(JSON.stringify(json))
+      console.log('OUTPUT SCHEMA JSON '+JSON.stringify(json))
     }
   }
   const publish = async (e) => {
