@@ -5013,7 +5013,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Iterate through each set of cloned elements
             clonerAttributes.forEach(clonerAttribute => {
               if (typeof json[key][0] === 'string') {
-                
+
                 arrayOfObjects.push(clonerAttribute.textContent);
               }
               else {
@@ -5074,6 +5074,28 @@ document.addEventListener('DOMContentLoaded', function() {
       // After updating, stringify the JSON object and assign it back to the text content of the schema element
       schema.textContent = JSON.stringify(json, null, 2);
       console.log('OUTPUT SCHEMA JSON ' + JSON.stringify(json))
+    }
+    const tags = querySelectorAll1('[data-transfer-receiver]')
+    for (const tag of tags) {
+      if (tag.tagName.toLowerCase() !== 'script') {
+        const receiver = tag.getAttribute('data-transfer-receiver');
+        const senders = querySelectorAll1(`[data-transfer-sender^="${receiver}."]`);
+
+        if (senders.length) {
+          for (const sender of senders) {
+            const textContent = sender.textContent;
+            const attr=sender.getAttribute('data-transfer-sender').replace(receiver+'.','');
+            if(attr ==='text-content'){
+              tag.textContent = textContent
+            }else{
+              tag.setAttribute(attr, textContent);
+            }
+            
+          }
+
+        }
+      }
+
     }
   }
   const publish = async (e) => {
