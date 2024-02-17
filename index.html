@@ -4160,6 +4160,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const item1 = items.find(i => i.lsi1 === lsi)
             inserted_component.componentId = item1.id
           }
+          else if (inserted_component.componentId.startsWith('#')) {
+            const splited = pathItem.lsi1.split('/')
+            splited.pop()
+            const last = inserted_component.componentId.replace('#', '')
+            splited.push(last)
+            const lsi = splited.join('/')
+            const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + lsi)
+              .then(response => response.json())
+            const item1 = items.find(i => i.lsi1 === lsi)
+            inserted_component.componentId = item1.id
+          }
           console.log('in')
           console.log(target_element)
           treeElement = getElementById1(target_element);
@@ -5084,13 +5095,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (senders.length) {
           for (const sender of senders) {
             const textContent = sender.textContent;
-            const attr=sender.getAttribute('data-transfer-sender').replace(receiver+'.','');
-            if(attr ==='text-content'){
+            const attr = sender.getAttribute('data-transfer-sender').replace(receiver + '.', '');
+            if (attr === 'text-content') {
               tag.textContent = textContent
-            }else{
+            } else {
               tag.setAttribute(attr, textContent);
             }
-            
+
           }
 
         }
@@ -5645,7 +5656,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (line === "") {
           return
         }
-        const keyValue = line.replaceAll('"','').split('=');
+        const keyValue = line.replaceAll('"', '').split('=');
         if (keyValue.length >= 2) {
           const key = keyValue[0].trim();
           keyValue.shift()
