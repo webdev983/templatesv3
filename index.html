@@ -206,14 +206,16 @@
 
 
       </div>
-      <div hidden id="attach-component-options">        
-        <button hidden class="b-1" style="margin-right: 5px;" id="test-component" onclick="switchTest(event)">🧪</button>
-        <button hidden class="b-1" style="margin-right: 5px;" id="optional-script" onclick="switchOptionalScript(event)">🚦</button>
+      <div hidden id="attach-component-options">
+        <button hidden class="b-1" style="margin-right: 5px;" id="test-component"
+          onclick="switchTest(event)">🧪</button>
+        <button hidden class="b-1" style="margin-right: 5px;" id="optional-script"
+          onclick="switchOptionalScript(event)">🚦</button>
         <button class="b-1" style="margin-right: 5px;" id="link-by-path" onclick="switchLinkBP(event)">*📁</button>
         <button class="b-1" style="margin-right: 5px;" id="link-by-path">*🛖</button>
       </div>
 
-      
+
       <div id="components-tree" style="position: relative; margin-left: 10px;">
 
       </div>
@@ -270,7 +272,7 @@
 
           <button hidden class="b-3" data-element="optional-script" onclick="replaceComponent(event,true)">🔄
             10</button>
-          <label hidden  hidden class="b-3" style="margin-left:5px;" data-element="code-tree-test-button">🧪</label>
+          <label hidden hidden class="b-3" style="margin-left:5px;" data-element="code-tree-test-button">🧪</label>
           <label hidden class="l-3 " style="margin-left:5px;" data-element="sku-creator">🚛</label>
           <label hidden class="l-3" style="margin-left:5px;" data-element="sku-user">📦</label>
 
@@ -661,8 +663,8 @@
       </div>
 -->
 
-      <iframe id="generated-page-iframe" src="./iframe.html" style="width:100%; height:100vh; border:none; margin-bottom: 200px;"
-        allowfullscreen="true" allow="
+      <iframe id="generated-page-iframe" src="./iframe.html"
+        style="width:100%; height:100vh; border:none; margin-bottom: 200px;" allowfullscreen="true" allow="
       
       display-capture;
       geolocation; 
@@ -758,14 +760,18 @@
     <button onclick="cancelReplace(event)">cancel</button>
     <button onclick="approveReplace(event)">approve</button>
   </ol>
-  <div hidden id="file-list-attach-component-options">        
-    <button  hidden class="b-1" style="margin-right: 5px;" id="file-list-test-component" onclick="switchSelected(event)">🧪</button>
-    <button hidden class="b-1" style="margin-right: 5px;" id="file-list-optional-script" onclick="switchSelected(event)">🚦</button>
-    <button class="b-1" style="margin-right: 5px;" id="file-list-link-by-path" onclick="switchSelected(event)">*📁</button>
-    <button class="b-1" style="margin-right: 5px;" id="file-list-link-by-name" onclick="switchSelected(event)">*🛖</button>
+  <div hidden id="file-list-attach-component-options">
+    <button hidden class="b-1" style="margin-right: 5px;" id="file-list-test-component"
+      onclick="switchSelected(event)">🧪</button>
+    <button hidden class="b-1" style="margin-right: 5px;" id="file-list-optional-script"
+      onclick="switchSelected(event)">🚦</button>
+    <button class="b-1" style="margin-right: 5px;" id="file-list-link-by-path"
+      onclick="switchSelected(event)">*📁</button>
+    <button class="b-1" style="margin-right: 5px;" id="file-list-link-by-name"
+      onclick="switchSelected(event)">*🛖</button>
   </div>
   <ol data-element="file-path-list" id="filePathList" class="list-1" style="margin-left: -10px;">
-    
+
 
   </ol>
 
@@ -802,12 +808,12 @@ document.addEventListener('DOMContentLoaded', function() {
 */
 </script>
 <script>
-  const switchSelected = (event)=>{
+  const switchSelected = (event) => {
     const activated = event.target.classList.contains('b-selected')
-    if(activated){
+    if (activated) {
       event.target.classList.remove('b-selected')
     }
-    else{
+    else {
       event.target.classList.add('b-selected')
     }
   }
@@ -1180,7 +1186,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     pushAction(actionObject);
   }
-  var loadUsingPath2 = (path1, filePathList,optionList) => {
+  var loadUsingPath2 = (path1, filePathList, optionList) => {
     return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + path1)
       .then(response => response.json())
       .then(data => {
@@ -1231,7 +1237,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Set up onclick for file-open button
             function setPath() {
               path1 = path1 + item + '/'
-              loadUsingPath2(path1, filePathList,optionList)
+              loadUsingPath2(path1, filePathList, optionList)
             };
 
             // Append the cloned item to the filePathList
@@ -1258,14 +1264,14 @@ document.addEventListener('DOMContentLoaded', function() {
               fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/' + item.id + ':' + item.sk)
                 .then(response => response.json())
                 .then(data => {
-                  if (data.LinkBP  || optionList.querySelector('#file-list-link-by-path').classList.contains('b-selected')) {
+                  if (data.LinkBP || optionList.querySelector('#file-list-link-by-path').classList.contains('b-selected')) {
                     const p = data.lsi1.split('/')
                     p.shift()
                     addComponent1("*/" + p.join('/'))
                   }
-                  else if(optionList.querySelector('#file-list-link-by-name').classList.contains('b-selected')){
+                  else if (optionList.querySelector('#file-list-link-by-name').classList.contains('b-selected')) {
                     const p = data.lsi1.split('/')
-                    
+
                     addComponent1("#" + p.pop())
                   }
                   else {
@@ -1302,7 +1308,7 @@ document.addEventListener('DOMContentLoaded', function() {
       })
       .catch(error => console.error('Error:', error));
   }
-  var loadFileList2 = (filePathList,optionList) => {
+  var loadFileList2 = (filePathList, optionList) => {
     // Fetch GET request
 
     fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true')
@@ -1354,7 +1360,7 @@ document.addEventListener('DOMContentLoaded', function() {
               const path1 = item + '/'
 
 
-              loadUsingPath2(path1, filePathList,optionList)
+              loadUsingPath2(path1, filePathList, optionList)
             };
 
             // Append the cloned item to the filePathList
@@ -1386,9 +1392,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     p.shift()
                     addComponent1("*/" + p.join('/'))
                   }
-                  else if(optionList.querySelector('#file-list-link-by-name').classList.contains('b-selected')){
+                  else if (optionList.querySelector('#file-list-link-by-name').classList.contains('b-selected')) {
                     const p = data.lsi1.split('/')
-                    
+
                     addComponent1("#" + p.pop())
                   }
                   else {
@@ -1445,11 +1451,11 @@ document.addEventListener('DOMContentLoaded', function() {
       clonedFieldset2.removeAttribute('hidden')
       e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
       e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset2);
-      
-     
 
 
-      loadFileList2(clonedFieldset,clonedFieldset2)
+
+
+      loadFileList2(clonedFieldset, clonedFieldset2)
     }
 
   }
@@ -5006,27 +5012,35 @@ document.addEventListener('DOMContentLoaded', function() {
             const arrayOfObjects = [];
             // Iterate through each set of cloned elements
             clonerAttributes.forEach(clonerAttribute => {
-              const objectFromClonedElements = {...json[key][0]};
-              // Iterate through each cloned element within the current set
-              if(clonerAttribute.hasAttribute('data-transfer-sender')){
-                const attributeKey = clonerAttribute.getAttribute('data-transfer-sender').split('.').pop();
-                objectFromClonedElements[attributeKey] = clonerAttribute.textContent;
+              if (typeof json[key][0] === 'string') {
+                const s = clonerAttribute.querySelector(`[data-transfer-sender="${sender}.${currentPath}.string"]`).textContent
+                arrayOfObjects.push(s);
               }
-              else{
-                clonerAttribute.querySelectorAll('[data-transfer-sender]').forEach(element => {
-                const attributeKey = element.getAttribute('data-transfer-sender').split('.').pop();
-                objectFromClonedElements[attributeKey] = element.textContent;
-              });
+              else {
+                const objectFromClonedElements = { ...json[key][0] };
+                // Iterate through each cloned element within the current set
+                if (clonerAttribute.hasAttribute('data-transfer-sender')) {
+                  const attributeKey = clonerAttribute.getAttribute('data-transfer-sender').split('.').pop();
+                  objectFromClonedElements[attributeKey] = clonerAttribute.textContent;
+                }
+                else {
+                  clonerAttribute.querySelectorAll('[data-transfer-sender]').forEach(element => {
+                    const attributeKey = element.getAttribute('data-transfer-sender').split('.').pop();
+                    objectFromClonedElements[attributeKey] = element.textContent;
+                  });
+                }
+                // Push the created object to the array of objects
+                arrayOfObjects.push(objectFromClonedElements);
               }
-              
-              // Push the created object to the array of objects
-              arrayOfObjects.push(objectFromClonedElements);
+
+
+
             });
             // Update the value of the array in the JSON object
             json[key] = arrayOfObjects;
           }
         }
-        
+
         // If the current value is an object or an array, recursively traverse it
         else if (typeof json[key] === 'object' && json[key] !== null) {
           traverseJSONAndUpdate(json[key], currentPath, sender);
@@ -5034,11 +5048,11 @@ document.addEventListener('DOMContentLoaded', function() {
           // If the current value is a string, check for the data-transfer-sender attribute
           const senderPath = sender ? `${sender}.${currentPath}` : currentPath;
           const senderAttribute = querySelectorAll1(`[data-transfer-sender="${senderPath}"]`);
-          
-          if(senderAttribute.length){
+
+          if (senderAttribute.length) {
             json[key] = senderAttribute[0].textContent || "";
           }
-          
+
 
         }
 
@@ -5059,7 +5073,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       // After updating, stringify the JSON object and assign it back to the text content of the schema element
       schema.textContent = JSON.stringify(json, null, 2);
-      console.log('OUTPUT SCHEMA JSON '+JSON.stringify(json))
+      console.log('OUTPUT SCHEMA JSON ' + JSON.stringify(json))
     }
   }
   const publish = async (e) => {
@@ -5097,7 +5111,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const dependeeItems = querySelectorAll1(`[data-builder-dependee]`)
     for (const item of dependeeItems) {
       const attr = item.getAttribute('data-product-info')
-      if(!attr){
+      if (!attr) {
         continue
       }
       const splited = attr.split(';')
