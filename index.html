@@ -5646,9 +5646,10 @@ document.addEventListener('DOMContentLoaded', function() {
           return
         }
         const keyValue = line.split('=');
-        if (keyValue.length === 2) {
+        if (keyValue.length >= 2) {
           const key = keyValue[0].trim();
-          const value = keyValue[1].replaceAll('"', '').trim();
+          keyValue.shift()
+          const value = keyValue.join('=').trim();
           result.push({ key, value })
         }
         else {
