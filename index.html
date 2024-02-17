@@ -5351,6 +5351,30 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       }
     }
+    if(combinations.length ===1){
+      querySelectorAll1('[data-builder-schema="aggregate-product"]').forEach(element=>{
+        const el =
+        {
+          time: (new Date()).getTime(),
+          action: 'removeTag',
+          target_element: element.id + '-tree',
+
+        }
+        pushAction(el)
+      })
+    }
+    else{
+      querySelectorAll1('[data-builder-schema="single-product"]').forEach(element=>{
+        const el =
+        {
+          time: (new Date()).getTime(),
+          action: 'removeTag',
+          target_element: element.id + '-tree',
+
+        }
+        pushAction(el)
+      })
+    }
     showSku(value, true)
     setDataProduct(value, resultList)
   }
