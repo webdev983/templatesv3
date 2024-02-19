@@ -5125,6 +5125,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   const publish = async (e) => {
+    const el2 = getElementById1("path-icon")
+    el2.classList.remove('b-green');
+    el2.classList.remove('b-selected');
     const toRemove = {
       ids:[],
       attributesStartWith:["data-visual"],
@@ -5150,14 +5153,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const el = getElementById1('page-path')
 
 
-    if (!pagePathContent.includes(':publish:published')) {
-      getElementById1('page-path').textContent = pagePathContent
-      const el2 = getElementById1("path-icon")
-      el2.classList.add('b-green');
-      el2.classList.add('b-selected');
+    
+    getElementById1('page-path').textContent = pagePathContent
+    
+    el2.classList.add('b-green');
+    el2.classList.add('b-selected');
 
 
-    }
+    
   }
   const handleSelectedDependeeChange = async (e) => {
     const resultList = await getProductAttributes()
