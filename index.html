@@ -194,7 +194,7 @@
     <div class="up-panel">
       <button id="path-icon" class='b-1' onclick="publish(event)" style="user-select: none;">🧩</button><label
         id="page-path" class="l-2" style="cursor: pointer; color:#4A90E2;">~</label>
-        <label class="l-3">🌐</label>
+        <label hidden id="published-label" class="l-3">🌐</label>
     </div>
     <!--🎨💻-->
 
@@ -4945,7 +4945,8 @@ document.addEventListener('DOMContentLoaded', function() {
               const el2 = getElementById1("path-icon")
               el2.classList.add('b-green');
               el2.classList.add('b-selected');
-
+              const el3 = getElementById1("published-label")
+              el3.removeAttribute('hidden')
             }
           }
 
@@ -5128,6 +5129,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const el2 = getElementById1("path-icon")
     el2.classList.remove('b-green');
     el2.classList.remove('b-selected');
+    const el3 = getElementById1("published-label")
+    el3.setAttribute('hidden','')
     const toRemove = {
       ids:[],
       attributesStartWith:["data-visual"],
@@ -5158,7 +5161,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     el2.classList.add('b-green');
     el2.classList.add('b-selected');
-
+    el3.removeAttribute('hidden')
 
     
   }
