@@ -108,7 +108,7 @@
   async function removeImage(event) {
     const imageSrc = event.target.closest('.gallery-image').querySelector('img').src;
     console.log('Removing Image Src:', imageSrc);
-    const sk = imageSrc.replace('http://checkout-admin-panel.s3-website-us-east-1.amazonaws.com/', "")
+    const sk = imageSrc.replace('https://s3.amazonaws.com/checkout-admin-panel/', "")
     setImg('')
     await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/upload?id=' + sk, {
       method: 'DELETE',
@@ -215,7 +215,7 @@ function cancel(event) {
       clonedRow.removeAttribute('hidden'); // Show the cloned row
 
       // Update the image source based on the item's sk
-      const imageSrc = `http://checkout-admin-panel.s3-website-us-east-1.amazonaws.com/${item.sk}`;
+      const imageSrc = `https://s3.amazonaws.com/checkout-admin-panel/${item.sk}`;
       const imgEl = clonedRow.querySelector('.gallery-image img')
       imgEl.src = imageSrc;
 
