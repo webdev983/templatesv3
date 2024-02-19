@@ -1449,7 +1449,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const clonedFieldset = fieldset.cloneNode(true);
       const clonedFieldset2 = getElementById1('file-list-attach-component-options').cloneNode(true);
       clonedFieldset2.removeAttribute('hidden')
-      clonedFieldset2.id ='file-list-attach-component-options;'
+      clonedFieldset2.id = 'file-list-attach-component-options;'
       e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
       e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset2);
 
@@ -1601,7 +1601,7 @@ document.addEventListener('DOMContentLoaded', function() {
               const item_path = clonedItem.querySelector('[data-value="file-path"]')
               item_path.textContent = item.name;
               clonedItem.onclick = function (event) {
-                
+
                 addSelected(id, item.id, item.lsi1);
               };
               let icon = '🧩';
@@ -4774,12 +4774,14 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   }
-  const cache = {};
-
-  const getRes = async (id) => {
+  var cache = {};
+  var updateComponentsMap = false
+  const getRes = async (id,main,firstLoad) => {
     // Check if the response is already in the cache
-
-
+    if (cache[id]) {
+      return cache[id]
+    }
+    !firstLoad && (updateComponentsMap = true)
     try {
       // Make a GET request to the API with the 'id' query parameter
       const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`, {
@@ -4798,7 +4800,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const responseData = await response.json();
 
       // Store the response in the cache for future use
-      cache[id] = responseData;
+      !main && (cache[id] = responseData);
 
       return responseData;
     } catch (error) {
@@ -4885,9 +4887,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     else {
       components.push(idFromLink)
-      responseData = await getRes(idFromLink)
+      responseData = await getRes(idFromLink,true)
       const { items } = responseData
-
+      const map = items.find(e=>e.sk ==='componentsMap')
+      if(map){
+        await Promise.all(map.map(id=>getRes(id,false,true)))
+      }
       const splited = items[items.length - 1].lsi1.split(';')[0].split('/')
       pathItem = items[items.length - 1]
       setOptions(pathItem)
@@ -4946,7 +4951,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log(components)
 
             const replaceWithNewId = (s) => {
-              if (!replaceId || s==='body-tree' || s==='body' || s==='head-tree' | s==='head') return s
+              if (!replaceId || s === 'body-tree' || s === 'body' || s === 'head-tree' | s === 'head') return s
               let id = replaceId
               console.log('iddd1 ' + id)
               if (s.endsWith('-tree')) {
@@ -5233,7 +5238,17 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
     await loadFromDb()
+    if (updateComponentsMap) {
+      const componentsIds = Object.keys(cache)
+      const response1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({id:idFromLink,sk:'componentsMap',items:componentsIds}),
+      });
 
+    }
     await handleHead()
     await handleSelectedDependeeChange()
     await handleDependency()
@@ -5353,8 +5368,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       }
     }
-    if(combinations.length ===1){
-      querySelectorAll1('[data-builder-schema="aggregate-product"]').forEach(element=>{
+    if (combinations.length === 1) {
+      querySelectorAll1('[data-builder-schema="aggregate-product"]').forEach(element => {
         const el =
         {
           time: (new Date()).getTime(),
@@ -5365,8 +5380,8 @@ document.addEventListener('DOMContentLoaded', function() {
         pushAction(el)
       })
     }
-    else{
-      querySelectorAll1('[data-builder-schema="single-product"]').forEach(element=>{
+    else {
+      querySelectorAll1('[data-builder-schema="single-product"]').forEach(element => {
         const el =
         {
           time: (new Date()).getTime(),
