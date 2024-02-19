@@ -7,10 +7,12 @@ document.getElementById('log-open').addEventListener('click', function() {
 
 
   var myButton = document.getElementById('log-open'); // Get the button element
+  var myButton2 = document.getElementById('refresh-page'); // Get the button element
 
   if (leftSidePanel.classList.contains('log-open')) {
     leftSidePanel.classList.remove('log-open');
     codeLog.setAttribute('hidden', '');
+    myButton2.removeAttribute('hidden');
     mainContent.style.marginLeft = '80px';
     myButton.classList.remove('b-selected'); // Remove the 'b-select' class
     bottomButton.removeAttribute('hidden');
@@ -20,6 +22,7 @@ document.getElementById('log-open').addEventListener('click', function() {
     codeLog.removeAttribute('hidden');
     bottomButton.setAttribute('hidden', '');
     mainContent.style.marginLeft = '515px';
+    myButton2.setAttribute('hidden', '');
     myButton.classList.add('b-selected'); // Add the 'b-select' class
   }
 });
