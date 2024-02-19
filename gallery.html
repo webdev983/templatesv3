@@ -275,10 +275,10 @@ function cancel(event) {
         },
         body: JSON.stringify(payload),
       });
+      location.reload()
 
 
     } catch (error) {
-      notify(`Failed`, { type: 'error' });
     }
   }
   const setImg = async (path) => {
@@ -310,7 +310,6 @@ function cancel(event) {
     });
 
     if (!response.ok) {
-      notify(`Failed`, { type: 'error' });
       return
     }
     const { url, fields, path } = await response.json()
@@ -328,7 +327,6 @@ function cancel(event) {
     if (!uploadResponse.ok) {
       const er = await uploadResponse.text()
       console.log('error ' + er)
-      notify(`Failed`, { type: 'error' });
       return
     }
     return path
