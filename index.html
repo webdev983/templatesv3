@@ -4826,7 +4826,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let idFromLink = urlSearchParams.get('id');
     let responseData
     const showSku = async (sku) => {
-      console.log('iin2' + sku)
       getElementById1("input-sku").setAttribute('hidden', '')
       getElementById1("create-sku").setAttribute('hidden', '')
       const item1 = getElementById1("sku-item-1")
@@ -4868,8 +4867,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const name = splited[splited.length - 1]
       const { testPage, optionalScript } = items[items.length - 1]
       const el1 = getElementById1(newId + '-tree')
-      console.log('leeeeevel' + lvl)
-      console.log('viiiisual')
+     
       if ((testPage && lvl > 2) || (optionalScript && localStorage.getItem('visualOn'))) {
         el1.remove()
         return
@@ -4916,12 +4914,9 @@ document.addEventListener('DOMContentLoaded', function() {
       const upper1 = upperRemoveActions ? upperRemoveActions : []
       const replaceActions = [...responseData.items.filter(el => el.action === 'Replace_Component'), ...upper]
       const removeActions = [...responseData.items.filter(el => el.action === 'removeComponent'), ...upper1]
-      console.log('replace actions : ' + JSON.stringify(replaceActions))
       for (const item of responseData.items) {
-        console.log('item' + JSON.stringify(item))
         if (!id) {
           if (item.sk === 'path') {
-            console.log('eeeeeer')
             const el = getElementById1('page-path')
 
             el.textContent = item.lsi1.replace(';publish:published', '')
@@ -4947,16 +4942,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         if (item.action) {
           if (id) {
-            console.log(JSON.stringify(item))
-            console.log('id1 ' + id)
-            console.log('id2 ' + newId)
-            console.log(item.target_element)
-            console.log(components)
+            
 
             const replaceWithNewId = (s) => {
               if (!replaceId || s === 'body-tree' || s === 'body' || s === 'head-tree' | s === 'head') return s
               let id = replaceId
-              console.log('iddd1 ' + id)
               if (s.endsWith('-tree')) {
 
                 return s.replace('-tree', '') + ':' + id + '-tree'
@@ -4964,8 +4954,7 @@ document.addEventListener('DOMContentLoaded', function() {
               return s + ':' + id
             }
             if (item.target_element === id + '-tree') {
-              console.log('case1')
-              console.log(path)
+              
               item.target_element = newId + '-tree'
               if (item.inserted_element?.id) {
                 item.inserted_element.id.split(':').length === 1 && (item.inserted_element.id = replaceWithNewId(item.inserted_element.id, newId))
@@ -4976,7 +4965,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             }
             else if (Array.isArray(item.target_element)) {
-              console.log('case3')
               item.target_element = item.target_element.map(i => {
                 if (id.id === id + '-tree') {
                   return { ...i, id: newId + '-tree' }
@@ -4987,15 +4975,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 return { ...i, id: i.id }
               })
 
-              console.log('arr' + item.target_element)
             }
             else {
-              console.log('case4')
 
               item.target_element.split(':').length === 1 && (item.target_element = replaceWithNewId(item.target_element, newId))
               item.inserted_element?.id && item.inserted_element?.id.split(':').length === 1 && (item.inserted_element.id = replaceWithNewId(item.inserted_element.id, newId))
               item.inserted_element?.originalId && item.inserted_element?.originalId.split(':').length === 1 && (item.inserted_element.originalId = replaceWithNewId(item.inserted_element.originalId, newId))
-              console.log('notArr' + item.target_element)
 
 
 
@@ -5014,7 +4999,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
     else {
-      console.log('iiignored')
+      
     }
 
 
