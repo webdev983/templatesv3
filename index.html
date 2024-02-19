@@ -4776,11 +4776,28 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   var cache = {};
   var updateComponentsMap = false
+  function deepCopy(obj) {
+    if (typeof obj !== 'object' || obj === null) {
+        // Return the input if it's not an object
+        return obj;
+    }
+
+    // Create an empty object or array to hold the copied values
+    const copied = Array.isArray(obj) ? [] : {};
+
+    // Iterate over each key in the original object
+    for (let key in obj) {
+        // Recursively copy nested objects or arrays
+        copied[key] = deepCopy(obj[key]);
+    }
+
+    return copied;
+}
   const getRes = async (id,main,firstLoad) => {
     // Check if the response is already in the cache
     
     if (cache[id]) {
-      return Object.assign({}, cache[id]);
+      return deepCopy(cache[id])
     }
     !firstLoad && (updateComponentsMap = true)
     
