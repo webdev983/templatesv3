@@ -4778,12 +4778,12 @@ document.addEventListener('DOMContentLoaded', function() {
   var updateComponentsMap = false
   const getRes = async (id,main,firstLoad) => {
     // Check if the response is already in the cache
-    /*
+    
     if (cache[id]) {
       return cache[id]
     }
     !firstLoad && (updateComponentsMap = true)
-    */
+    
     try {
       // Make a GET request to the API with the 'id' query parameter
       const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`, {
@@ -4802,7 +4802,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const responseData = await response.json();
 
       // Store the response in the cache for future use
-      //!main && (cache[id] = responseData);
+      !main && (cache[id] = responseData);
 
       return responseData;
     } catch (error) {
@@ -4892,7 +4892,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const map = items.find(e=>e.sk ==='componentsMap')
       let r ;
       if(map){
-        //r = Promise.all(map.items.map(id=>getRes(id,false,true)))
+        r = Promise.all(map.items.map(id=>getRes(id,false,true)))
       }
       const splited = items[items.length - 1].lsi1.split(';')[0].split('/')
       pathItem = items[items.length - 1]
