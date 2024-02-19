@@ -5124,7 +5124,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   const publish = async (e) => {
-    console.log('eeer')
+    const toRemove = {
+      ids:[],
+      attributesStartWith:[],
+      attributesEqual:[]
+    }
     const pagePathContent = getElementById1('page-path').textContent;
 
     // Use the textContent as needed, for example, log it to the console
@@ -5138,7 +5142,7 @@ document.addEventListener('DOMContentLoaded', function() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id: idFromLink, html, path: pagePathContent }),
+      body: JSON.stringify({ id: idFromLink, html, path: pagePathContent,toRemove }),
     });
     const el = getElementById1('page-path')
 
