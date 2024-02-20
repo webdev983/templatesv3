@@ -3415,7 +3415,7 @@ document.addEventListener('DOMContentLoaded', function() {
           const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + lsi)
             .then(response => response.json())
           
-          const item1 = items.find(i => i.lsi1.split(';')[0] === lsi)
+          const item1 = items.find(i => i.lsi1.replace(';publish:published','') === lsi)
           inserted_component.componentId = item1.id
         }
         else if (inserted_component.componentId.startsWith('#')) {
@@ -3429,7 +3429,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('lsi'+lsi)
             console.log(JSON.stringify(items))
           
-          const item1 = items.find(i => i.lsi1.split(';')[0] === lsi)
+          const item1 = items.find(i => i.lsi1.replace(';publish:published','') === lsi)
           console.log(JSON.stringify(item1))
           inserted_component.componentId = item1.id
         }
@@ -4169,7 +4169,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const lsi = site + modId
             const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + lsi)
               .then(response => response.json())
-            const item1 = items.find(i => i.lsi1.split(';')[0] === lsi)
+            const item1 = items.find(i => i.lsi1.replace(';publish:published','') === lsi)
             inserted_component.componentId = item1.id
           }
           else if (inserted_component.componentId.startsWith('#')) {
@@ -4180,7 +4180,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const lsi = splited.join('/')
             const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + lsi)
               .then(response => response.json())
-            const item1 = items.find(i => i.lsi1.split(';')[0] === lsi)
+            const item1 = items.find(i => i.lsi1.replace(';publish:published','') === lsi)
             inserted_component.componentId = item1.id
           }
           console.log('in')
