@@ -195,8 +195,11 @@
     <div  id="web-page-menu"  class="on-page-menu">
       <label class="l-1" style="margin-right: 10px; user-select: none;">🌐</label>
       <button class="b-1" style="margin-right: 5px;">🖼️</button>
-
+      <button class="b-1" style="margin-right: 5px;">🔄</button>
+      <button class="b-1" style="margin-right: 5px;">🗑</button>
+      
     </div>
+
 
 
     <div class="up-panel">
@@ -275,6 +278,13 @@
       </div>
       <!--menus-->
       <div hidden>
+        <fieldset id="update-href-menu" class="menu">
+          <legend><button onclick="cancel(event)" class="b-6">❌</button></legend>
+          <input style="width: 500px" placeholder="🔗 edit href" type="text">
+          <button >💾</button>
+        </fieldset>
+    
+
         <fieldset id="component-element" data-element="code-tree-tag">
           <legend>💬</legend>
           <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
@@ -1954,7 +1964,7 @@ document.addEventListener('DOMContentLoaded', function() {
           window.location.href = `gallery.html?id=${id}&imgId=${imgId}&src=${src}`;
         }
         if (e.target.tagName.toLowerCase() === 'img') {
-          addMenuEntry(menu, `➕ edit image`, () => {
+          addMenuEntry(menu, `🖼️ Edit image`, () => {
             redirectToImgPage(e.target.id, e.target.getAttribute('src'))
           });
         }
