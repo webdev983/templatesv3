@@ -280,8 +280,8 @@
       <div hidden>
         <fieldset id="update-href-menu" class="menu">
           <legend><button onclick="cancel(event)" class="b-6">❌</button></legend>
-          <input style="width: 500px" placeholder="🔗 edit href" type="text">
-          <button >💾</button>
+          <input id= "editHrefInput" style="width: 500px" placeholder="🔗 edit href" type="text">
+          <button id="editHrefButton">💾</button>
         </fieldset>
     
 
@@ -1946,6 +1946,25 @@ document.addEventListener('DOMContentLoaded', function() {
         removeButtons();
       }
     }
+    const showEditHrefMenu = (target) => {
+      const editHref = getElementById1('update-href-menu')
+      const cloned = editHref.cloneNode(true)
+      cloned.id = cloned.id +';'+ target.id
+      cloned.querySelector('#editHrefButton').onclick = (e)=>{
+        const inputValue = e.target.parentNode.querySelector('#editHrefInput').value
+        const el = {
+          time: (new Date()).getTime(),
+          action: 'setAttribute',
+          target_element: target.id + '-tree',
+          key: 'href',
+          value,
+
+        }
+        pushAction(el)
+      }
+      target.appendChild(cloned)
+
+    }
     function handleContextMenu(e) {
       if (e.target.hasAttribute('data-visual-element')) {
         e.preventDefault(); // Prevent the default context menu from opening
@@ -1966,6 +1985,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.target.tagName.toLowerCase() === 'img') {
           addMenuEntry(menu, `🖼️ Edit image`, () => {
             redirectToImgPage(e.target.id, e.target.getAttribute('src'))
+          });
+        }
+        if (e.target.hasAttribute('data-visual-href')) {
+          addMenuEntry(menu, `🔗 Edit href`, () => {
+            showEditHrefMenu(e.target)
           });
         }
         if (
