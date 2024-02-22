@@ -5188,7 +5188,13 @@ document.addEventListener('DOMContentLoaded', function() {
           const senderAttribute = querySelectorAll1(`[data-transfer-sender="${senderPath}"]`);
 
           if (senderAttribute.length) {
-            json[key] = senderAttribute[0].textContent || "";
+            if (json[key] === null) {
+              json[key] = parseInt(senderAttribute[0].textContent) || null;
+            }
+            else {
+              json[key] = senderAttribute[0].textContent || "";
+            }
+
           }
 
 
@@ -5199,16 +5205,44 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   }
-
+  function removeEmptyValues(obj) {
+    for (let prop in obj) {
+      if (obj[prop] === "" || obj[prop] === null) {
+        delete obj[prop];
+      } else if (typeof obj[prop] === "object") {
+        removeEmptyValues(obj[prop]); // Recursively call removeEmptyValues for nested objects
+        if (Object.keys(obj[prop]).length === 0) {
+          delete obj[prop]; // Delete the key if the nested object becomes empty after removing empty values
+        }
+      }
+    }
+    return obj;
+  }
+  function removeSingleAtKey(obj) {
+    for (let prop in obj) {
+      if (typeof obj[prop] === "object") {
+        removeSingleAtKey(obj[prop]); // Recursively call removeSingleAtKey for nested objects
+        if (Object.keys(obj[prop]).length === 1 && Object.keys(obj[prop])[0].startsWith("@")) {
+          delete obj[prop]; // Delete the attribute if it has only one key starting with "@"
+        }
+      }
+    }
+    return obj;
+  }
+  const cleanJson = (json) => {
+    let newJson = removeEmptyValues(json)
+    newJson = removeSingleAtKey(json)
+    return newJson
+  }
   const generateSchema = () => {
     const generatedPage = getElementById1('generated-page')
     const schemas = querySelectorAll1('script[data-transfer-receiver]')
     for (const schema of schemas) {
       const receiverName = schema.getAttribute('data-transfer-receiver')
-      const json = JSON.parse(schema.textContent)
+      let json = JSON.parse(schema.textContent)
       // Start traversing the JSON object
       traverseJSONAndUpdate(json, '', receiverName);
-
+      json = cleanJson(json)
       // After updating, stringify the JSON object and assign it back to the text content of the schema element
       schema.textContent = JSON.stringify(json, null, 2);
       console.log('OUTPUT SCHEMA JSON ' + JSON.stringify(json))
@@ -7011,7 +7045,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (fieldsetAction === 'ChangeTag' || fieldsetAction === 'ChangeTagForCopies') {
         el.tag_change = chosenTag.tagName
       }
-      
+
       else {
         el.inserted_element = { type: 'tag', tagValue: chosenTag.tagValue, tagName: chosenTag.tagName, id: generateUUID() }
       }
