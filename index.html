@@ -5197,7 +5197,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
           }
-          else {
+          else if (!json[key]) {
             let senderAttribute = querySelectorAll1(`[data-transfer-sender-href="${senderPath}"]`);
             if (senderAttribute.length) {
 
@@ -5205,7 +5205,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
             }
-            else {
+            
+          }
+          else if (!json[key]) {
               let senderAttribute = querySelectorAll1(`[data-transfer-sender-src="${senderPath}"]`);
               if (senderAttribute.length) {
 
@@ -5214,7 +5216,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
               }
             }
-          }
 
 
         }
@@ -5310,7 +5311,7 @@ document.addEventListener('DOMContentLoaded', function() {
               tag.setAttribute(attr, textContent);
             }
 
-          } 
+          }
 
         }
       }
