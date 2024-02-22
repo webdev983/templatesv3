@@ -5151,8 +5151,16 @@ document.addEventListener('DOMContentLoaded', function() {
             // Iterate through each set of cloned elements
             clonerAttributes.forEach(clonerAttribute => {
               if (typeof json[key][0] === 'string') {
-
-                arrayOfObjects.push(clonerAttribute.textContent);
+                if(clonerAttribute.hasAttribute('data-transfer-sender')){
+                  arrayOfObjects.push(clonerAttribute.textContent);
+                }
+                else if(clonerAttribute.hasAttribute('data-transfer-sender-href')){
+                  arrayOfObjects.push(clonerAttribute.getAttribute('href'));
+                }
+                else if(clonerAttribute.hasAttribute('data-transfer-sender-href')){
+                  arrayOfObjects.push(clonerAttribute.getAttribute('src'));
+                }
+                
               }
               else {
                 const objectFromClonedElements = { ...json[key][0] };
@@ -5161,10 +5169,28 @@ document.addEventListener('DOMContentLoaded', function() {
                   const attributeKey = clonerAttribute.getAttribute('data-transfer-sender').split('.').pop();
                   objectFromClonedElements[attributeKey] = clonerAttribute.textContent;
                 }
+                else if(clonerAttribute.hasAttribute('data-transfer-sender-href')){
+                  const attributeKey = clonerAttribute.getAttribute('data-transfer-sender-href').split('.').pop();
+                  
+                  objectFromClonedElements[attributeKey] =clonerAttribute.getAttribute('href');
+                }
+                else if(clonerAttribute.hasAttribute('data-transfer-sender-href')){
+                  const attributeKey = clonerAttribute.getAttribute('data-transfer-sender-src').split('.').pop();
+                  
+                  objectFromClonedElements[attributeKey] =clonerAttribute.getAttribute('src');
+                }
                 else {
                   clonerAttribute.querySelectorAll('[data-transfer-sender]').forEach(element => {
                     const attributeKey = element.getAttribute('data-transfer-sender').split('.').pop();
                     objectFromClonedElements[attributeKey] = element.textContent;
+                  });
+                  clonerAttribute.querySelectorAll('[data-transfer-sender-href]').forEach(element => {
+                    const attributeKey = element.getAttribute('data-transfer-sender-href').split('.').pop();
+                    objectFromClonedElements[attributeKey] = clonerAttribute.getAttribute('href');
+                  });
+                  clonerAttribute.querySelectorAll('[data-transfer-sender-src]').forEach(element => {
+                    const attributeKey = element.getAttribute('data-transfer-sender-src').split('.').pop();
+                    objectFromClonedElements[attributeKey] =clonerAttribute.getAttribute('src');
                   });
                 }
                 // Push the created object to the array of objects
@@ -5197,7 +5223,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
           }
-          else  {
+          else {
             let senderAttribute = querySelectorAll1(`[data-transfer-sender-href="${senderPath}"]`);
             console.log('iiin2')
             if (senderAttribute.length) {
@@ -5205,7 +5231,7 @@ document.addEventListener('DOMContentLoaded', function() {
               json[key] = senderAttribute[0].getAttribute('href') || "";
 
 
-            }else {
+            } else {
               let senderAttribute = querySelectorAll1(`[data-transfer-sender-src="${senderPath}"]`);
               console.log('iiin3')
               if (senderAttribute.length) {
@@ -5215,9 +5241,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
               }
             }
-            
+
           }
-          
+
 
 
         }
