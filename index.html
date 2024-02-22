@@ -5151,38 +5151,49 @@ document.addEventListener('DOMContentLoaded', function() {
             // Iterate through each set of cloned elements
             clonerAttributes.forEach(clonerAttribute => {
               if (typeof json[key][0] === 'string') {
-                if(clonerAttribute.hasAttribute('data-transfer-sender')){
+                if (clonerAttribute.hasAttribute('data-transfer-sender')) {
                   arrayOfObjects.push(clonerAttribute.textContent);
                 }
-                else if(clonerAttribute.hasAttribute('data-transfer-sender-href')){
+                else if (clonerAttribute.hasAttribute('data-transfer-sender-href')) {
                   arrayOfObjects.push(clonerAttribute.getAttribute('href'));
                 }
-                else if(clonerAttribute.hasAttribute('data-transfer-sender-href')){
+                else if (clonerAttribute.hasAttribute('data-transfer-sender-href')) {
                   arrayOfObjects.push(clonerAttribute.getAttribute('src'));
                 }
-                
+
               }
               else {
                 const objectFromClonedElements = { ...json[key][0] };
                 // Iterate through each cloned element within the current set
                 if (clonerAttribute.hasAttribute('data-transfer-sender')) {
                   const attributeKey = clonerAttribute.getAttribute('data-transfer-sender').split('.').pop();
-                  objectFromClonedElements[attributeKey] = clonerAttribute.textContent;
+                  if (objectFromClonedElements[attributeKey] === null) {
+                    objectFromClonedElements[attributeKey] = parseInt(clonerAttribute.textContent);
+                  }
+                  else {
+                    objectFromClonedElements[attributeKey] = clonerAttribute.textContent;
+                  }
+
                 }
-                else if(clonerAttribute.hasAttribute('data-transfer-sender-href')){
+                else if (clonerAttribute.hasAttribute('data-transfer-sender-href')) {
                   const attributeKey = clonerAttribute.getAttribute('data-transfer-sender-href').split('.').pop();
-                  
-                  objectFromClonedElements[attributeKey] =clonerAttribute.getAttribute('href');
+
+                  objectFromClonedElements[attributeKey] = clonerAttribute.getAttribute('href');
                 }
-                else if(clonerAttribute.hasAttribute('data-transfer-sender-href')){
+                else if (clonerAttribute.hasAttribute('data-transfer-sender-href')) {
                   const attributeKey = clonerAttribute.getAttribute('data-transfer-sender-src').split('.').pop();
-                  
-                  objectFromClonedElements[attributeKey] =clonerAttribute.getAttribute('src');
+
+                  objectFromClonedElements[attributeKey] = clonerAttribute.getAttribute('src');
                 }
                 else {
                   clonerAttribute.querySelectorAll('[data-transfer-sender]').forEach(element => {
                     const attributeKey = element.getAttribute('data-transfer-sender').split('.').pop();
-                    objectFromClonedElements[attributeKey] = element.textContent;
+                    if (objectFromClonedElements[attributeKey] === null) {
+                      objectFromClonedElements[attributeKey] = parseInt(clonerAttribute.textContent);
+                    }
+                    else {
+                      objectFromClonedElements[attributeKey] = clonerAttribute.textContent;
+                    }
                   });
                   clonerAttribute.querySelectorAll('[data-transfer-sender-href]').forEach(element => {
                     const attributeKey = element.getAttribute('data-transfer-sender-href').split('.').pop();
@@ -5190,7 +5201,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   });
                   clonerAttribute.querySelectorAll('[data-transfer-sender-src]').forEach(element => {
                     const attributeKey = element.getAttribute('data-transfer-sender-src').split('.').pop();
-                    objectFromClonedElements[attributeKey] =clonerAttribute.getAttribute('src');
+                    objectFromClonedElements[attributeKey] = clonerAttribute.getAttribute('src');
                   });
                 }
                 // Push the created object to the array of objects
