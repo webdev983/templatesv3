@@ -5271,10 +5271,37 @@ document.addEventListener('DOMContentLoaded', function() {
       if (tag.tagName.toLowerCase() !== 'script') {
         const receiver = tag.getAttribute('data-transfer-receiver');
         const senders = querySelectorAll1(`[data-transfer-sender^="${receiver}."]`);
-
+        const senders2 = querySelectorAll1(`[data-transfer-sender-href^="${receiver}."]`);
+        const senders3 = querySelectorAll1(`[data-transfer-sender-src^="${receiver}."]`);
         if (senders.length) {
           for (const sender of senders) {
             const textContent = sender.textContent;
+            const attr = sender.getAttribute('data-transfer-sender').replace(receiver + '.', '');
+            if (attr === 'text-content') {
+              tag.textContent = textContent
+            } else {
+              tag.setAttribute(attr, textContent);
+            }
+
+          }
+
+        }
+        if (senders2.length) {
+          for (const sender of senders) {
+            const textContent = sender.getAttribute("href");
+            const attr = sender.getAttribute('data-transfer-sender').replace(receiver + '.', '');
+            if (attr === 'text-content') {
+              tag.textContent = textContent
+            } else {
+              tag.setAttribute(attr, textContent);
+            }
+
+          }
+
+        }
+        if (senders3.length) {
+          for (const sender of senders) {
+            const textContent = sender.getAttribute('src');
             const attr = sender.getAttribute('data-transfer-sender').replace(receiver + '.', '');
             if (attr === 'text-content') {
               tag.textContent = textContent
