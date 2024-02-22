@@ -785,7 +785,7 @@
 
     <button onclick="cancelReplace(event)">cancel</button>
     <button onclick="approveReplace(event)">approve</button>
-    <button id="moveBackFileList">⬅️</button>
+    <button data-action="moveBack">⬅️</button>
   </ol>
   <div hidden id="file-list-attach-component-options">
     <button hidden class="b-1" style="margin-right: 5px;" id="file-list-test-component"
@@ -1794,7 +1794,7 @@ document.addEventListener('DOMContentLoaded', function() {
       clonedFieldset.id = clonedFieldset.id + ';' + parentId;
       clonedFieldset.setAttribute('action', 'Replace')
       clonedFieldset2.setAttribute('action', 'Replace')
-      clonedFieldset2.querySelector('#moveBackFileList').onclick = (e)=>{
+      clonedFieldset2.querySelector('[data-action="moveBack"]').onclick = (e)=>{
         const splited = path1.split('/')
         if(path1 ===''){
           return
