@@ -5185,7 +5185,8 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
           // If the current value is a string, check for the data-transfer-sender attribute
           const senderPath = sender ? `${sender}.${currentPath}` : currentPath;
-          const senderAttribute = querySelectorAll1(`[data-transfer-sender="${senderPath}"]`);
+          let senderAttribute = querySelectorAll1(`[data-transfer-sender="${senderPath}"]`);
+
 
           if (senderAttribute.length) {
             if (json[key] === null) {
@@ -5195,6 +5196,24 @@ document.addEventListener('DOMContentLoaded', function() {
               json[key] = senderAttribute[0].textContent || "";
             }
 
+          }
+          else {
+            let senderAttribute = querySelectorAll1(`[data-transfer-sender-href="${senderPath}"]`);
+            if (senderAttribute.length) {
+
+              json[key] = senderAttribute[0].getAttribute('href') || "";
+
+
+            }
+            else {
+              let senderAttribute = querySelectorAll1(`[data-transfer-sender-src="${senderPath}"]`);
+              if (senderAttribute.length) {
+
+                json[key] = senderAttribute[0].getAttribute('src') || "";
+
+
+              }
+            }
           }
 
 
