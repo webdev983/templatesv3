@@ -1950,7 +1950,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const editHref = getElementById1('update-href-menu')
       const cloned = editHref.cloneNode(true)
       cloned.id = cloned.id +';'+ target.id
-      cloned.querySelector('#editHrefButton').onclick = (e)=>{
+      cloned.querySelector('#editHrefButton').onclick = async(e)=>{
         const inputValue = e.target.parentNode.querySelector('#editHrefInput').value
         const el = {
           time: (new Date()).getTime(),
@@ -1960,7 +1960,9 @@ document.addEventListener('DOMContentLoaded', function() {
           value:inputValue,
 
         }
-        pushAction(el)
+        await pushAction(el)
+        e.target.parentNode.remove()
+
       }
       target.appendChild(cloned)
 
