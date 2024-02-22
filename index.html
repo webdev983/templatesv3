@@ -3070,7 +3070,10 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('time' + time)
     actionLog.push(element)
     !firstLoad && await pushActionToDb(element)
-    await insertDataIntoCodeLog(time, element.action)
+    if(element.action !=='Replace_Component'){
+      await insertDataIntoCodeLog(time, element.action)
+    }
+    
 
     await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId)
   }
