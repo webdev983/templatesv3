@@ -944,8 +944,14 @@ document.addEventListener('DOMContentLoaded', function() {
       newEl.position = i+2
       json.itemListElement.push(newEl)
     }
+    const el = {
+        time: (new Date()).getTime(),
+        action:'innerHtml',
+        target_element: schema.id+'-tree',
+        insertedCode: JSON.stringify(json, null, 2),
 
-    schema.textContent = JSON.stringify(json, null, 2);
+      }
+      await pushAction(el)
   }
   const switchSelected = (event) => {
     const activated = event.target.classList.contains('b-selected')
@@ -5007,7 +5013,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   var cache = {}; 
   var updateComponentsMap = false
-  
+
   function deepCopy(obj) {
     if (typeof obj !== 'object' || obj === null) {
       // Return the input if it's not an object
