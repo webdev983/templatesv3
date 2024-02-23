@@ -884,12 +884,17 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       await pushAction(el)
       const a = querySelectorAll1('#'+removeLastOccurrence(id,'-tree')).querySelector('a')
+      let link = site+'/'
+      for(let j=0;j<i;j++){
+        link = link + arr[j]+'/'
+      }
+      link = link + arr[i]
       const el2 = {
         time: (new Date()).getTime(),
         action: 'setAttribute',
         target_element: a.id + '-tree',
         key: 'href',
-        value: site + '/' + arr[0],
+        value: link,
 
       }
       await pushAction(el2)
