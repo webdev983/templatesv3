@@ -512,32 +512,31 @@
           <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
           <textarea placeholder="📄inner HTML" id="code-tree-inner-html-receive-textarea"
             style="width: 800px; height: 200px; max-width: 90vw;"></textarea>
-           <button id="code-tree-inner-html-receiver-save-" onclick="save(event)">💾 save</button>
-          
+          <button id="code-tree-inner-html-receiver-save-" onclick="save(event)">💾 save</button>
+
 
         </fieldset>
 
 
         <!-- menu to receive text area html -->
         <!-- menu to receive text area html -->
-        <div id="code-tree-tag-text-content-form" >
+        <div id="code-tree-tag-text-content-form">
           <div style="margin-top: 10px; margin-bottom: 10px;">
 
-      </div>
-      <button id="code-tree-tag-attributes-form-action-back" class="b-6" onclick="cancel(event)">❌</button>
-      <button id="code-tree-tag-text-content-action-save" onclick="saveText(event)" class="b-3">💾 save</button>
-<br>
+            <button id="code-tree-tag-attributes-form-action-back" class="b-6" onclick="cancel(event)">❌</button>
+            <button id="code-tree-tag-text-content-action-save" onclick="saveText(event)" class="b-3">💾 save</button>
+          </div>
           <textarea class="text1" placeholder=" 📄 Text content" id="code-tree-tag-text-content"></textarea>
           <br>
           <button id="code-tree-tag-text-content-action-save" onclick="saveText(event)" class="b-3">💾 save</button>
         </div>
         <!-- menu to receive inner html -->
-        <div id="code-tree-tag-html-content-form" >
+        <div id="code-tree-tag-html-content-form">
           <div style="margin-top: 10px; margin-bottom: 10px;">
-        </div>
-        <button id="code-tree-tag-attributes-form-action-back" class="b-6" onclick="cancel(event)">❌</button>
-        <button id="code-tree-tag-text-content-action-save" onclick="saveInnerHtml(event)" class="b-3">💾 Save</button>
-<br>
+            <button id="code-tree-tag-attributes-form-action-back" class="b-6" onclick="cancel(event)">❌</button>
+            <button id="code-tree-tag-text-content-action-save" onclick="saveInnerHtml(event)" class="b-3">💾
+              Save</button>
+          </div>
           <textarea class="text1" placeholder=" ▶️ HTML content" id="code-tree-tag-html-content"></textarea>
           <br>
           <button id="code-tree-tag-text-content-action-save" onclick="saveInnerHtml(event)" class="b-3">💾
@@ -636,11 +635,11 @@
         <div style="margin-left: 15px;">
           <fieldset hidden id="breadCrumb-menu" class="menu">
             <legend><label class="l-2">🥖 BreadCrumb Menu</label></legend>
-            <button class="b-2"> Generate</button>
-            </fieldset>
-            
+            <button class="b-2" onclick="generateBreadCrumb(event)"> Generate</button>
+          </fieldset>
 
-            
+
+
           <div hidden id=sku-item-1>
             <label class="l-2 b-dark-blue">SKU:</label><label class="l-2" id="sku-value"></label>
             <button class="b-2" id="toggleSkuAttributeList" onclick='toggleSkuAttributeList(event)'>👀</button>
@@ -842,6 +841,61 @@ document.addEventListener('DOMContentLoaded', function() {
 */
 </script>
 <script>
+  const generateBreadCrumb = async (event) => {
+    const arr = pathItem.lsi1.split('/')
+    const site = arr[0]
+    arr.shift()
+    arr.pop()
+    const breadC = querySelectorAll1('#[data-builder-breadCrumb]')
+    const breadCA = querySelectorAll1('#[data-builder-breadcrumb-active]')
+    const el = {
+      time: (new Date()).getTime(),
+      action: 'innerHtml',
+      target_element: breadC[0].id + '-tree',
+      insertedCode: arr[i] + breadC[0].innerHTML,
+
+    }
+    await pushAction(el)
+    const a = breadC[0].querySelector('a')
+    const el2 = {
+      time: (new Date()).getTime(),
+      action: 'setAttribute',
+      target_element: a.id + '-tree',
+      key: 'href',
+      value: site + '/' + arr[0],
+
+    }
+    await pushAction(el2)
+    for (let i = 1; i < arr.length; i++) {
+      const id = duplicateId(breadC[0].id).id
+      actionObject = {
+        time: (new Date()).getTime(),
+        action: 'InsertAfter',
+        target_element: breadC[0].id + '-tree',
+        inserted_element: { originalId: breadC[0].id + '-tree', id },
+      };
+      await pushAction(actionObject)
+      const el = {
+        time: (new Date()).getTime(),
+        action: 'innerHtml',
+        target_element: id,
+        insertedCode: arr[i] + breadC[0].innerHTML,
+
+      }
+      await pushAction(el)
+      const a = querySelectorAll1('#'+removeLastOccurrence(id,'-tree')).querySelector('a')
+      const el2 = {
+        time: (new Date()).getTime(),
+        action: 'setAttribute',
+        target_element: a.id + '-tree',
+        key: 'href',
+        value: site + '/' + arr[0],
+
+      }
+      await pushAction(el2)
+
+    }
+  }
   const switchSelected = (event) => {
     const activated = event.target.classList.contains('b-selected')
     if (activated) {
@@ -3159,12 +3213,12 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   function removeTextNodes(element) {
     for (let i = 0; i < element.childNodes.length; i++) {
-        const node = element.childNodes[i];
-        if (node.nodeType === Node.TEXT_NODE) {
-            element.removeChild(node);
-        }
+      const node = element.childNodes[i];
+      if (node.nodeType === Node.TEXT_NODE) {
+        element.removeChild(node);
+      }
     }
-}
+  }
   const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId) => {
     const { subAction, noSubComp, noComp, time, withParent, move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
     let treeElement
@@ -3825,7 +3879,7 @@ document.addEventListener('DOMContentLoaded', function() {
           if (getElementById1(id)) {
 
 
-            
+
 
 
             const items = []
@@ -4058,7 +4112,7 @@ document.addEventListener('DOMContentLoaded', function() {
             break;
           }
           console.log('handling insert')
-          
+
           handleInsert(treeElement, componentElement)
 
 
@@ -4807,7 +4861,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Clone the fieldset node
         const fieldset = getElementById1('code-tree-tag-text-content-form');
         const clonedFieldset = fieldset.cloneNode(true);
-        clonedFieldset.querySelector('textarea').value = getElementById1(parentId.replace('-tree','')).innerHTML
+        clonedFieldset.querySelector('textarea').value = getElementById1(parentId.replace('-tree', '')).innerHTML
         // Assign a unique id to the cloned fieldset
         clonedFieldset.id = 'code-tree-tag-text-content-form;' + parentId;
 
@@ -4832,7 +4886,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Clone the fieldset node
         const fieldset = getElementById1('code-tree-tag-html-content-form');
         const clonedFieldset = fieldset.cloneNode(true);
-        clonedFieldset.querySelector('textarea').value = getElementById1(parentId.replace('-tree','')).textContent
+        clonedFieldset.querySelector('textarea').value = getElementById1(parentId.replace('-tree', '')).textContent
         // Assign a unique id to the cloned fieldset
         clonedFieldset.id = 'code-tree-tag-html-content-form;' + parentId;
 
@@ -5043,7 +5097,7 @@ document.addEventListener('DOMContentLoaded', function() {
       console.log('path item ' + JSON.stringify(pathItem))
       setOptions(pathItem)
       const name = splited[splited.length - 1]
-      if(name.toLowerCase()==='breadcrumb'){
+      if (name.toLowerCase() === 'breadcrumb') {
         document.getElementById('breadCrumb-menu').removeAttribute('hidden')
       }
       const el = getElementById1(idFromLink + '-tree').querySelector("[data-element='code-tree-tag-name-button']")
@@ -5394,11 +5448,11 @@ document.addEventListener('DOMContentLoaded', function() {
       Disallow: /cart/
       `;
     const siteMapPriority = {
-      
-      '/products/': 0.9, 
-      '/blog/': 0.8, 
-      '/': 1, 
-      
+
+      '/products/': 0.9,
+      '/blog/': 0.8,
+      '/': 1,
+
     };
     const siteMapNotDefiniedPriorities = 0.5;
 
@@ -5416,7 +5470,7 @@ document.addEventListener('DOMContentLoaded', function() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id: idFromLink, html, path: pagePathContent, toRemove,robotsTxt,siteMapPriority,siteMapNotDefiniedPriorities }),
+      body: JSON.stringify({ id: idFromLink, html, path: pagePathContent, toRemove, robotsTxt, siteMapPriority, siteMapNotDefiniedPriorities }),
     });
     const r = await response.json()
     console.log('link: ' + r.link)
@@ -6088,7 +6142,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-inner-html-receive-menu')) {
       const clonedFieldset = fieldset.cloneNode(true);
-      clonedFieldset.querySelector('textarea').value = getElementById1(parentId.replace('-tree','')).innerHTML
+      clonedFieldset.querySelector('textarea').value = getElementById1(parentId.replace('-tree', '')).innerHTML
       clonedFieldset.id = clonedFieldset.id + ';' + parentId;
       clonedFieldset.setAttribute('action', 'innerHtml')
       e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
