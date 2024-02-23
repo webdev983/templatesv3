@@ -846,27 +846,55 @@ document.addEventListener('DOMContentLoaded', function() {
     const site = arr[0]
     arr.shift()
     arr.pop()
-    const breadC = querySelectorAll1('[data-builder-breadCrumb]')
+    const active = arr.pop()
+
     const breadCA = querySelectorAll1('[data-builder-breadcrumb-active]')
-   
+    const breadC = querySelectorAll1('[data-builder-breadCrumb]')
     const a = breadC[0].querySelector('a')
-    const el = {
-      time: (new Date()).getTime(),
-      action: 'textContent',
-      target_element: a.id + '-tree',
-      value: arr[0] ,
+    if (arr[0]) {
 
-    }
-    await pushAction(el)
-    const el2 = {
-      time: (new Date()).getTime(),
-      action: 'setAttribute',
-      target_element: a.id + '-tree',
-      key: 'href',
-      value: 'https://'+site + '/' + arr[0],
+      const el = {
+        time: (new Date()).getTime(),
+        action: 'textContent',
+        target_element: a.id + '-tree',
+        value: arr[0],
 
+      }
+      await pushAction(el)
+      const el2 = {
+        time: (new Date()).getTime(),
+        action: 'setAttribute',
+        target_element: a.id + '-tree',
+        key: 'href',
+        value: 'https://' + site + '/' + arr[0],
+
+      }
+      await pushAction(el2)
     }
-    await pushAction(el2)
+    if (active) {
+      const a = breadCA[0].querySelector('a')
+      const el = {
+        time: (new Date()).getTime(),
+        action: 'textContent',
+        target_element: a.id + '-tree',
+        value: arr[0],
+
+      }
+      let link = 'https://' + site + '/' +arr.join('/')+'/'+ active
+     
+      await pushAction(el)
+      const el2 = {
+        time: (new Date()).getTime(),
+        action: 'setAttribute',
+        target_element: a.id + '-tree',
+        key: 'href',
+        value: 'https://' + site + '/' + arr[0],
+
+      }
+      await pushAction(el2)
+    }
+
+
     for (let i = 1; i < arr.length; i++) {
       const id = duplicateId(breadC[0].id).id
       actionObject = {
@@ -876,10 +904,10 @@ document.addEventListener('DOMContentLoaded', function() {
         inserted_element: { originalId: breadC[0].id + '-tree', id },
       };
       await pushAction(actionObject)
-      
-      const a = querySelectorAll1('#'+removeLastOccurrence(id,'-tree')).querySelector('a')
 
-      let link = 'https://'+site+'/'
+      const a = querySelectorAll1('#' + removeLastOccurrence(id, '-tree')).querySelector('a')
+
+      let link = 'https://' + site + '/'
       const el = {
         time: (new Date()).getTime(),
         action: 'textContent',
@@ -888,8 +916,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
       }
       await pushAction(el)
-      for(let j=0;j<i;j++){
-        link = link + arr[j]+'/'
+      for (let j = 0; j < i; j++) {
+        link = link + arr[j] + '/'
       }
       link = link + arr[i]
       const el2 = {
