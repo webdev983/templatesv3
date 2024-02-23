@@ -927,6 +927,23 @@ document.addEventListener('DOMContentLoaded', function() {
       await pushAction(el2)
 
     }
+    const schema = querySelectorAll1('script[data-transfer-receiver="schema-breadcrumb"]')
+    let json = JSON.parse(schema.textContent)
+
+    
+    schema.itemListElement[0].item["@id"] ='https://' + site + '/'
+    let link1 = 'https://' + site + '/'
+    arr.push(active)
+    for (let i = 1; i < arr.length; i++) {
+      const newEl = deepCopy(schema.itemListElement[0])
+      link1 =link1 + arr[i]
+      newEl.item["@id"] =link1
+      newEl.item.name = arr[i]
+      newEl.position = i+1
+      schema.itemListElement.push(newEl)
+    }
+
+    schema.textContent = JSON.stringify(json, null, 2);
   }
   const switchSelected = (event) => {
     const activated = event.target.classList.contains('b-selected')
@@ -5406,6 +5423,7 @@ document.addEventListener('DOMContentLoaded', function() {
       let json = JSON.parse(schema.textContent)
       // Start traversing the JSON object
       traverseJSONAndUpdate(json, '', receiverName);
+     
       json = cleanJson(json)
       // After updating, stringify the JSON object and assign it back to the text content of the schema element
       schema.textContent = JSON.stringify(json, null, 2);
