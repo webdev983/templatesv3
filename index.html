@@ -3150,6 +3150,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Insert the cloned element before the original element
     parent.insertBefore(clonedElement, originalElement);
   }
+  function removeTextNodes(element) {
+    for (let i = 0; i < element.childNodes.length; i++) {
+        const node = element.childNodes[i];
+        if (node.nodeType === Node.TEXT_NODE) {
+            element.removeChild(node);
+        }
+    }
+}
   const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId) => {
     const { subAction, noSubComp, noComp, time, withParent, move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
     let treeElement
@@ -4043,7 +4051,7 @@ document.addEventListener('DOMContentLoaded', function() {
             break;
           }
           console.log('handling insert')
-          
+          removeTextNodes(componentElement);
           handleInsert(treeElement, componentElement)
 
 
