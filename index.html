@@ -5544,6 +5544,12 @@ document.addEventListener('DOMContentLoaded', function() {
           for (const sender of senders3) {
             const textContent = sender.getAttribute('src');
             const attr = sender.getAttribute('data-transfer-sender-src').replace(receiver + '.', '');
+            if(sender.hasAttribute('data-builder-image-name')){
+              const name =  sender.getAttribute('data-builder-image-name') 
+              const e = 'https://'+link.toLowerCase()+ '/'+ name
+              tag.setAttribute(attr, textContent);
+              continue
+            }
             if (attr === 'text-content') {
               tag.textContent = textContent
             } else {
