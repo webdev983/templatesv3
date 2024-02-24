@@ -5449,7 +5449,7 @@ document.addEventListener('DOMContentLoaded', function() {
             nLink = splited.join('/')+'/'
           }
          
-          tag.setAttribute('rel',"https://"+nLink)
+          tag.setAttribute('href',"https://"+nLink)
 
         }
         const senders = querySelectorAll1(`[data-transfer-sender^="${receiver}."]`);
@@ -5497,6 +5497,33 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }
 
+    }
+  }
+  var handleItemLink = async()=>{
+    const currentPath = pathItem.lsi1.replace(';publish:published', '').toLowerCase()
+    if ((currentPath.endsWith("/article") || currentPath.endsWith("/product")) &&
+    (currentPath.includes("/products/") || currentPath.includes("/blog/")) &&
+    !currentPath.includes("/seed-article/") &&
+    !currentPath.includes("/settings-article/") &&
+    !currentPath.includes("/seed-product/") &&
+    !currentPath.includes("/settings/") &&
+    !currentPath.includes("/setting-product/")) {
+    
+      const splited = currentPath.split('/')
+      splited.pop()
+      const href = 'https://'+splited.join('/')+'/'
+      const item = querySelectorAll1('[data-builder-item-link tag]')[0]
+      if(item.getAttribute('href') !==href){
+        const el = {
+        time: (new Date()).getTime(),
+        action: 'setAttribute',
+        target_element: item.id+'-tree',
+        key: 'href',
+        value: href,
+
+      }
+      await pushAction(el)
+      }
     }
   }
   const publish = async (e) => {
@@ -5694,6 +5721,8 @@ document.addEventListener('DOMContentLoaded', function() {
     await handleSelectedDependeeChange()
     await handleDependency()
 
+
+    await handleItemLink()
     //first menu
     let buttons = querySelectorAll1('button[data-element="code-tree-tag-name-button"]');
     /*
