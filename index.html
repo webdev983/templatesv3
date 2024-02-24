@@ -4843,17 +4843,9 @@ document.addEventListener('DOMContentLoaded', function() {
       case 'removeAttributeFromCopies':
         console.log('pr' + target_element);
 
-        const selector = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
-        const els = querySelectorAll1(selector)
-        // component
-        for (const elementToRemoveAttribute of els) {
-          key && elementToRemoveAttribute.removeAttribute(key);
-          if (key === 'data-parentid') {
-            querySelectorAll1('[id^="' + elementToRemoveAttribute.id + ';"]').forEach(el => {
-              el.id = el.id.replace(elementToRemoveAttribute.id + ';', '')
-            });
-          }
-        }
+        const selector1 = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
+        const els = querySelectorAll1(selector1)
+        
         break;
       // Add more cases as needed for other actions
 
