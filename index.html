@@ -5437,6 +5437,21 @@ document.addEventListener('DOMContentLoaded', function() {
     for (const tag of tags) {
       if (tag.tagName.toLowerCase() !== 'script') {
         const receiver = tag.getAttribute('data-transfer-receiver');
+        const link = pathItem.lsi1.replace(';publish:published', '').toLowerCase()
+        if(receiver ==="canonical" && link.endsWith('/hub')){
+          const splited = link.split('/')
+          splited.pop()
+          if(splited[splited.length-1] ==='home'){
+            splited.pop()
+          }
+          let nLink =splited[0]
+          if(splited.length>1){
+            nLink = splited.join('/')+'/'
+          }
+         
+          tag.setAttribute('rel',"https://"+nLink)
+
+        }
         const senders = querySelectorAll1(`[data-transfer-sender^="${receiver}."]`);
         const senders2 = querySelectorAll1(`[data-transfer-sender-href^="${receiver}."]`);
         const senders3 = querySelectorAll1(`[data-transfer-sender-src^="${receiver}."]`);
