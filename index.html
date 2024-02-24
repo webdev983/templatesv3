@@ -4789,7 +4789,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const selector111 = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
         const els111 = querySelectorAll1(selector111); // Corrected the function name to document.querySelectorAll
         // component
-        
+        for (const elementToRemoveAttribute of els111) {
+          if (key) { // Check if key exists
+            elementToRemoveAttribute.removeAttribute(key);
+            if (key === 'data-parentid') {
+              querySelectorAll1('[id^="' + elementToRemoveAttribute.id + ';"]').forEach(el => {
+                el.id = el.id.replace(elementToRemoveAttribute.id + ';', '');
+              });
+            }
+          }
+        }
         break;
       case 'setAttribute':
         console.log('pr' + target_element);
