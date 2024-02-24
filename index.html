@@ -465,7 +465,8 @@
             before</button>
           <button class="b-2" id="code-tree-click-tag-inner-html" onclick="insertHtml(event)">📄 inner HTML</button>
           <button class="b-2" id="code-tree-click-tag-change-tag" onclick="changeTag(event)">✏️ change tag</button>
-          <button class="b-2" id="code-tree-click-tag-change-tag" onclick="changeTagForCopies(event)">✏️🚜 change tag for
+          <button class="b-2" id="code-tree-click-tag-change-tag" onclick="changeTagForCopies(event)">✏️🚜 change tag
+            for
             all copies</button>
           <button class="b-2" id="code-tree-click-tag-dublicate-tag" onclick="duplicateTag(event)"> 📄📄 dublicate
             element</button>
@@ -560,12 +561,12 @@
               <td><span id="code-tree-tag-attribute-value"><span></td>
               <td><button id="code-tree-tag-attribute-remove-button" class="b-4"
                   onclick="removeAttribute1(event)">🗑</button>
-                  
-                  <button class="b-4">🗑🚜</button>
+
+                <button class="b-4">🗑🚜</button>
 
 
-                  
-                </td>
+
+              </td>
             </tr>
           </table>
 
@@ -859,26 +860,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const breadCA = querySelectorAll1('[data-builder-breadcrumb-active]')
     const breadC = querySelectorAll1('[data-builder-breadCrumb]')
     const a = breadC[0].querySelector('[data-builder-breadCrumb-value]')
-    if (arr[0]) {
 
-      const el = {
-        time: (new Date()).getTime(),
-        action: 'textContent',
-        target_element: a.id + '-tree',
-        value: arr[0],
 
-      }
-      await pushAction(el)
-      const el2 = {
-        time: (new Date()).getTime(),
-        action: 'setAttribute',
-        target_element: a.id + '-tree',
-        key: 'href',
-        value: 'https://' + site + '/' + arr[0],
 
-      }
-      await pushAction(el2)
+    const el2 = {
+      time: (new Date()).getTime(),
+      action: 'setAttribute',
+      target_element: a.id + '-tree',
+      key: 'href',
+      value: 'https://' + site,
+
     }
+    await pushAction(el2)
+
     if (active) {
       const a = breadCA[0].querySelector('[data-builder-breadCrumb-value]')
       const el = {
@@ -888,12 +882,12 @@ document.addEventListener('DOMContentLoaded', function() {
         value: active,
 
       }
-      
+
       await pushAction(el)
     }
 
 
-    for (let i = 1; i < arr.length; i++) {
+    for (let i = 0; i < arr.length; i++) {
       const id = duplicateId(breadC[0].id).id
       actionObject = {
         time: (new Date()).getTime(),
@@ -910,7 +904,7 @@ document.addEventListener('DOMContentLoaded', function() {
         time: (new Date()).getTime(),
         action: 'textContent',
         target_element: a.id + '-tree',
-        value: arr[i] ,
+        value: arr[i],
 
       }
       await pushAction(el)
@@ -929,30 +923,30 @@ document.addEventListener('DOMContentLoaded', function() {
       await pushAction(el2)
 
     }
-    const schema = querySelectorAll1('script[data-transfer-receiver="schema-breadcrumb"]')[0] 
+    const schema = querySelectorAll1('script[data-transfer-receiver="schema-breadcrumb"]')[0]
     console.log(schema.textContent)
     let json = JSON.parse(schema.textContent)
 
-    
-    json.itemListElement[0].item["@id"] ='https://' + site + '/'
+
+    json.itemListElement[0].item["@id"] = 'https://' + site + '/'
     let link1 = 'https://' + site.toLowerCase() + '/'
     arr.push(active)
     for (let i = 0; i < arr.length; i++) {
       const newEl = deepCopy(json.itemListElement[0])
-      link1 =link1 + arr[i]
-      newEl.item["@id"] =link1.toLowerCase()
+      link1 = link1 + arr[i]
+      newEl.item["@id"] = link1.toLowerCase()
       newEl.item.name = arr[i].toLowerCase()
-      newEl.position = i+2
+      newEl.position = i + 2
       json.itemListElement.push(newEl)
     }
     const el = {
-        time: (new Date()).getTime(),
-        action:'innerHtml',
-        target_element: schema.id+'-tree',
-        insertedCode: JSON.stringify(json, null, 2),
+      time: (new Date()).getTime(),
+      action: 'innerHtml',
+      target_element: schema.id + '-tree',
+      insertedCode: JSON.stringify(json, null, 2),
 
-      }
-      await pushAction(el)
+    }
+    await pushAction(el)
   }
   const switchSelected = (event) => {
     const activated = event.target.classList.contains('b-selected')
@@ -5012,7 +5006,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   }
-  var cache = {}; 
+  var cache = {};
   var updateComponentsMap = false
 
   function deepCopy(obj) {
@@ -5433,7 +5427,7 @@ document.addEventListener('DOMContentLoaded', function() {
       let json = JSON.parse(schema.textContent)
       // Start traversing the JSON object
       traverseJSONAndUpdate(json, '', receiverName);
-     
+
       json = cleanJson(json)
       // After updating, stringify the JSON object and assign it back to the text content of the schema element
       schema.textContent = JSON.stringify(json, null, 2);
