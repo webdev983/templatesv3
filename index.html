@@ -538,7 +538,7 @@
           <button id="code-tree-tag-attributes-form-action-back" class="b-6" onclick="cancel(event)">❌</button>
           <button id="code-tree-tag-text-content-action-save" onclick="saveInnerHtml(event)" class="b-3">💾
             Save</button>
-<br>
+          <br>
           <textarea class="text1" placeholder=" ▶️ HTML content" id="code-tree-tag-html-content"></textarea>
           <br>
           <button id="code-tree-tag-text-content-action-save" onclick="saveInnerHtml(event)" class="b-3">💾
@@ -911,7 +911,7 @@ document.addEventListener('DOMContentLoaded', function() {
       for (let j = 0; j <= i; j++) {
         link = link + arr[j].toLowerCase() + '/'
       }
-      
+
       const el2 = {
         time: (new Date()).getTime(),
         action: 'setAttribute',
@@ -4782,6 +4782,24 @@ document.addEventListener('DOMContentLoaded', function() {
         break;
 
       // Add more cases as needed for other actions
+
+      case 'removeAttributeFromCopies':
+        console.log('pr' + target_element);
+
+        const selector1 = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
+        const els = querySelectorAll1(selector1); // Corrected the function name to document.querySelectorAll
+        // component
+        for (const elementToRemoveAttribute of els) {
+          if (key) { // Check if key exists
+            elementToRemoveAttribute.removeAttribute(key);
+            if (key === 'data-parentid') {
+              querySelectorAll1('[id^="' + elementToRemoveAttribute.id + ';"]').forEach(el => {
+                el.id = el.id.replace(elementToRemoveAttribute.id + ';', '');
+              });
+            }
+          }
+        }
+        break;
       case 'setAttribute':
         console.log('pr' + target_element);
 
@@ -4840,13 +4858,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         break;
-      case 'removeAttributeFromCopies':
-        console.log('pr' + target_element);
 
-        const selector1 = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
-        const els = querySelectorAll1(selector1)
-        
-        break;
+
       // Add more cases as needed for other actions
 
       default:
@@ -5483,18 +5496,18 @@ document.addEventListener('DOMContentLoaded', function() {
       if (tag.tagName.toLowerCase() !== 'script') {
         const receiver = tag.getAttribute('data-transfer-receiver');
         const link = pathItem.lsi1.replace(';publish:published', '').toLowerCase()
-        if(receiver ==="canonical" && link.endsWith('/hub')){
+        if (receiver === "canonical" && link.endsWith('/hub')) {
           const splited = link.split('/')
           splited.pop()
-          if(splited[splited.length-1] ==='home'){
+          if (splited[splited.length - 1] === 'home') {
             splited.pop()
           }
-          let nLink =splited[0]
-          if(splited.length>1){
-            nLink = splited.join('/')+'/'
+          let nLink = splited[0]
+          if (splited.length > 1) {
+            nLink = splited.join('/') + '/'
           }
-         
-          tag.setAttribute('href',"https://"+nLink)
+
+          tag.setAttribute('href', "https://" + nLink)
 
         }
         const senders = querySelectorAll1(`[data-transfer-sender^="${receiver}."]`);
@@ -5544,30 +5557,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
     }
   }
-  var handleItemLink = async()=>{
+  var handleItemLink = async () => {
     const currentPath = pathItem.lsi1.replace(';publish:published', '').toLowerCase()
     if ((currentPath.endsWith("/article") || currentPath.endsWith("/product")) &&
-    (currentPath.includes("/products/") || currentPath.includes("/blog/")) &&
-    !currentPath.includes("/seed-article/") &&
-    !currentPath.includes("/settings-article/") &&
-    !currentPath.includes("/seed-product/") &&
-    !currentPath.includes("/settings/") &&
-    !currentPath.includes("/setting-product/")) {
-    
+      (currentPath.includes("/products/") || currentPath.includes("/blog/")) &&
+      !currentPath.includes("/seed-article/") &&
+      !currentPath.includes("/settings-article/") &&
+      !currentPath.includes("/seed-product/") &&
+      !currentPath.includes("/settings/") &&
+      !currentPath.includes("/setting-product/")) {
+
       const splited = currentPath.split('/')
       splited.pop()
-      const href = 'https://'+splited.join('/')+'/'
+      const href = 'https://' + splited.join('/') + '/'
       const item = querySelectorAll1('[data-builder-item-link]')[0]
-      if(item.getAttribute('href') !==href){
+      if (item.getAttribute('href') !== href) {
         const el = {
-        time: (new Date()).getTime(),
-        action: 'setAttribute',
-        target_element: item.id+'-tree',
-        key: 'href',
-        value: href,
+          time: (new Date()).getTime(),
+          action: 'setAttribute',
+          target_element: item.id + '-tree',
+          key: 'href',
+          value: href,
 
-      }
-      await pushAction(el)
+        }
+        await pushAction(el)
       }
     }
   }
