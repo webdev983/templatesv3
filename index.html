@@ -886,17 +886,17 @@ document.addEventListener('DOMContentLoaded', function() {
       await pushAction(el)
     }
 
-
+    let last = breadC[0].id + '-tree'
     for (let i = 0; i < arr.length; i++) {
       const id = duplicateId(breadC[0].id).id
       actionObject = {
         time: (new Date()).getTime(),
         action: 'InsertAfter',
-        target_element: breadC[0].id + '-tree',
+        target_element: last,
         inserted_element: { originalId: breadC[0].id + '-tree', id },
       };
       await pushAction(actionObject)
-
+      last = id
       const a = getElementById1(removeLastOccurrence(id, '-tree')).querySelector('[data-builder-breadCrumb-value]')
 
       let link = 'https://' + site + '/'
