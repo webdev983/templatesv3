@@ -562,7 +562,7 @@
               <td><button id="code-tree-tag-attribute-remove-button" class="b-4"
                   onclick="removeAttribute1(event)">🗑</button>
 
-                <button class="b-4">🗑🚜</button>
+                <button onclick="removeAttributeFromCopies(event)" class="b-4">🗑🚜</button>
 
 
 
@@ -1974,6 +1974,45 @@ document.addEventListener('DOMContentLoaded', function() {
       // If the substring is not found, return the original string
       return inputString;
     }
+  }
+  async function removeAttributeFromCopies(event) {
+    const saveButton = event.target;
+    const tr = saveButton.closest('#code-tree-tag-attributes-list-item');
+
+    if (!tr) {
+      console.error('Could not find parent tr element');
+      return;
+    }
+
+    const keyElement = tr.querySelector('#code-tree-tag-attribute-key');
+    const key = keyElement.textContent.replace('🔑', '');
+
+    const parentMenu = event.target.closest('.menu-1');
+
+    if (!parentMenu) {
+      console.error('Could not find parent menu element');
+      return;
+    }
+
+    const { id } = parentMenu;
+    const action = 'removeAttributeFromCopies';
+    console.log('Action: ' + action);
+
+    const splited = id.split(';');
+    const [toRemove, ...rest] = splited;
+
+    const el = {
+      time: (new Date()).getTime(),
+      action,
+      target_element: rest.join(';'),
+      key,
+    };
+
+    tr.remove();
+    console.log(JSON.stringify(el));
+    await pushAction(el);
+
+    console.log(JSON.stringify(actionLog));
   }
   async function removeAttribute1(event) {
     const saveButton = event.target;
