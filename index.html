@@ -868,7 +868,7 @@ document.addEventListener('DOMContentLoaded', function() {
       action: 'setAttribute',
       target_element: a.id + '-tree',
       key: 'href',
-      value: 'https://' + site,
+      value: 'https://' + site.toLowerCase(),
 
     }
     await pushAction(el2)
@@ -899,7 +899,7 @@ document.addEventListener('DOMContentLoaded', function() {
       last = id
       const a = getElementById1(removeLastOccurrence(id, '-tree')).querySelector('[data-builder-breadCrumb-value]')
 
-      let link = 'https://' + site + '/'
+      let link = 'https://' + site.toLowerCase() + '/'
       const el = {
         time: (new Date()).getTime(),
         action: 'textContent',
@@ -908,10 +908,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
       }
       await pushAction(el)
-      for (let j = 0; j < i; j++) {
-        link = link + arr[j] + '/'
+      for (let j = 0; j <= i; j++) {
+        link = link + arr[j].toLowerCase() + '/'
       }
-      link = link + arr[i]
+      
       const el2 = {
         time: (new Date()).getTime(),
         action: 'setAttribute',
