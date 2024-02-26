@@ -292,7 +292,7 @@
           const cancelButton = cloned.querySelector('[data-action="create-new-file-path-cancel"]');
           cancelButton.onclick = (e) => {
             e.stopPropagation()
-            e.target.parentNode.remove()
+            e.target.parentNode.parentNode.remove()
           }
           const input = cloned.querySelector('[data-input="create-new-file-path-input"]');
           const name = fieldset.querySelector('[data-value="file-path"]').textContent;
@@ -650,7 +650,7 @@
     const cancel = (event) => {
       event.stopPropagation()
       console.log("cancelling")
-      //event.target.parentNode.setAttribute('hidden', "")
+      event.target.parentNode.setAttribute('hidden', "")
     }
     const openRemove = (event) => {
       var fieldset = event.currentTarget.closest('li');
