@@ -312,3 +312,53 @@ margin-left: 0;       /* Resets the margin */
   /* Example pressed effect */
 }
 
+
+
+.table-2 {
+  max-width: 100%;
+  width: auto;
+  border-collapse: collapse;
+  border-radius: 10px; /* Rounded corners */
+}
+.table-2 th, td {
+  text-align: left;
+  padding-right: 50px;
+
+}
+
+.table-2  tr:nth-child(odd) {
+  background-color:  #ffffff; 
+}
+
+.table-2 tr:nth-child(even) {
+  background-color: #f0f0f0;
+}
+
+.table-2 tr:hover {
+  background-color:  #dddddd; /* A darker color on hover */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+
+
+.table-row-number2 {
+counter-reset: rowNumber; /* Инициализация счетчика */
+}
+
+.table-row-number2 tr {
+counter-increment: rowNumber; /* Увеличение счетчика для каждой строки */
+}
+
+.table-row-number2 tr td:first-child {
+position: relative; /* Делаем первую ячейку каждой строки относительно позиционированной */
+}
+
+.table-row-number2 tr td:first-child::before {
+content: counter(rowNumber) "."; /* Добавление номера строки */
+position: absolute; /* Абсолютное позиционирование */
+left: -20px; /* Сдвигаем влево от начала ячейки */
+top: 50%; /* Выравнивание по центру ячейки */
+transform: translateY(-50%); /* Центрирование относительно высоты ячейки */
+font-size: 18px; /* Размер шрифта номера */
+}
+
