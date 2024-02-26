@@ -53,6 +53,13 @@
 
 
   <div id="main-content" style="margin-left:80px; margin-top: -60" class="main-content">
+    <div class="up-panel">
+      <button id="path_select" onclick="loadRoot()" class='b-1' title="change mode"
+        style="user-select: none; margin-left: 30px;">👣</button><label class="l-2"
+        style="cursor: pointer; color:#4A90E2;" onclick="labelClick(event)"></label>
+    </div>
+
+
 <!--
     <select hidden id="pathSelector" style="margin-top: 10px; min-width: 200px;" onchange="handlePathSelection()">
       <option value="path0">⬇️ select</option>
@@ -61,38 +68,26 @@
 
     </select>
 -->
-    <div class="up-panel">
-      <button id="path_select" onclick="loadRoot()" class='b-1' title="change mode"
-        style="user-select: none; margin-left: 30px;">👣</button><label class="l-2"
-        style="cursor: pointer; color:#4A90E2;" onclick="labelClick(event)"></label>
-
-    </div>
 
 
 
-
-
-
-
-    <fieldset hidden  class="menu"  data-element="action-message">
-      <legend>
+    <div hidden  class="menu"  data-element="action-message">
           <button 
           onclick="cancel(event)"
           class="b-6">
-          ❌</button></legend>
+          ❌</button>
           <span 
                 data-element="action-message-value" 
                 class="l-4" style="user-select: none;">
               ✅ Enabled Protection</span>
 
-        </fieldset>    
+      </div>    
   
-    </fieldset>
 
 
-    <fieldset hidden class="menu"   data-element="create-new-file-path">
-      <legend><button data-action="create-new-file-path-cancel" onclick="cancel(event)"
-          class="b-5">❌</button></legend>
+    <div hidden class="menu"   data-element="create-new-file-path">
+      <button data-action="create-new-file-path-cancel" onclick="cancel(event)"
+          class="b-5">❌</button>
       <span class="l-3">📂 </span>
       <input type="text" placeholder="path" data-input="create-new-file-path-input"
         oninput="adjustWidthToContent(this)" 
@@ -112,9 +107,11 @@
       <button data-action="create-new-file-path-save" onclick="loader(event,savePath)"
       class="b-4">💾 Save</button>
     </div>
-    </fieldset>
-    <fieldset  class="menu"  data-element="choose-new-file-type" hidden>
-      <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
+  </div>
+
+
+    <div  class="menu"  data-element="choose-new-file-type" hidden>
+      <button onclick="cancel(event)" style="font-size: 0.9em;">❌</button>
       <button data-action="choose-new-file-type-html" style="font-size: 1.2em;" onclick="createNew('HTML')">🧩 HTML
         component</button>
       <button data-action="choose-new-file-type-css" style="font-size: 1.2em;" onclick="createNew('CSS')">🎨 CSS
@@ -122,7 +119,7 @@
       <button data-action="choose-new-file-type-js" style="font-size: 1.2em;"
         onclick="createNew('JavaScript')">💻JavaScript</button>
 
-    </fieldset>
+      </div>
 
 
     <ol data-element="file-path-list" id="filePathList" class="list-1" style="margin-left: -10px;">
@@ -146,8 +143,8 @@
   <div hidden>
     <!-- file info-->
 
-    <fieldset  class="menu"  hidden id="process-confirmation">
-      <legend><button onclick="cancel(event)" class="l-6" >❌</button></legend>
+    <div  class="menu"  hidden id="process-confirmation">
+     <button onclick="cancel(event)" class="l-6" >❌</button>
 
       <span class="l-4">Proceed?</span>
       <div
@@ -156,15 +153,15 @@
       padding: 5px;">
         <button class="b-4" data-action="remove-file-confirmation">✅ Yes</button>
       </div>
-    </fieldset>
+    </div>
 
 
-    <fieldset class="menu"  data-element="file-id">
-      <legend><button  clas="b-6" onclick="cancel(event)">❌</button></legend>
+    <div class="menu"  data-element="file-id">
+      <button  clas="b-6" onclick="cancel(event)">❌</button>
       <span class="l-4" style="user-select: none;">🆔</span><span data-value="file-id"
-        class="l-4">1414124-414221412-4124214124-412412</span></fieldset>    <!-- remove file menu-->
-    <fieldset  class="menu"  hidden id="cancelation">
-      <legend><button onclick="cancel(event)" class="l-6" >❌</button></legend>
+        class="l-4">1414124-414221412-4124214124-412412</span></div>    <!-- remove file menu-->
+    <div  class="menu"  hidden id="cancelation">
+      <button onclick="cancel(event)" class="l-6" >❌</button></legend>
 
       <span class="l-4">are you sure want to remove this file?</span>
       <div
@@ -173,7 +170,7 @@
       padding: 5px;">
         <button class="b-4" data-action="remove-file-confirmation">✅ Delete</button>
       </div>
-    </fieldset>
+    </div>
     <!-- file path-->
     <li data-element="file-path" id="item">
 
@@ -658,7 +655,7 @@
     const cancel = (event) => {
       event.stopPropagation()
       console.log("cancelling")
-      event.target.parentNode.parentNode.setAttribute('hidden', "")
+      event.target.parentNode.setAttribute('hidden', "")
     }
     const openRemove = (event) => {
       var fieldset = event.currentTarget.closest('li');
