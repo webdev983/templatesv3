@@ -5,7 +5,7 @@
 
 <body style="background: #fcfcfc">
 
- <div class="left-top-panel">
+  <div class="left-top-panel">
     <button disabled class="b-1" id="last-action-time"
       style="color: black;z-index:1; position: absolute;top: 50%;left: 50%; transform: translate(-50%, -50%);">0.7</button>
   </div>
@@ -17,10 +17,10 @@
     </div>
 
 
-    
+
     <div class="local-buttons" style="margin-top: 30px;">
       <button class="b-1" onclick="createNew()">➕</button>
-      <button class="b-1" title="select few files" >🔲</button>
+      <button class="b-1" title="select few files">🔲</button>
       <div id="filters" hidden>
       </div>
     </div>
@@ -37,98 +37,95 @@
         style="user-select: none; margin-left: 30px;">👣</button><label class="l-2"
         style="cursor: pointer; color:#4A90E2;" onclick="labelClick(event)"></label>
     </div>
-  
-    <div hidden id="pathSelector"  onchange="handlePathSelection()">
+
+    <div hidden id="pathSelector" onchange="handlePathSelection()">
     </div>
 
 
     <div hidden data-element="create-new-file-path">
       <input type="text" placeholder="📂path" data-input="create-new-file-path-input"
-        oninput="adjustWidthToContent(this)" 
-        style="
+        oninput="adjustWidthToContent(this)" style="
         min-width: 500px;
         padding: 5px;
         border: 1px solid #4A90E2; 
         border-radius: 5px; 
         font-size: 16px; 
-      "  
-        >
-        <br>
+      ">
+      <br>
       <button data-action="create-new-file-path-cancel" onclick="cancel(event)" class="b-4">❌</button>
       <button data-action="create-new-file-path-save" onclick="loader(event,savePath)" class="b-4">💾 Save</button>
     </div>
- 
+
     <ol data-element="file-path-list" id="filePathList" class="list-1" style="margin-left: -10px;">
-  
+
     </ol>
     <li hidden data-element="file-path" id="item">
-      <label data-value="file-path"
-        class="l-3">universal/blablabla/blablabla/coolcss</label><label data-value="file-emoji"
-        style="user-select: none; margin-left: 5px;" class="l-3"> 🧩</label>
-</li>
+      <label data-value="file-path" class="l-3">universal/blablabla/blablabla/coolcss</label><label
+        data-value="file-emoji" style="user-select: none; margin-left: 5px;" class="l-3"> 🧩</label>
+    </li>
 
-</div>
-
-
-    <select id="amount-of-rows"
-      style="margin-top: 10px; min-width: 50px; position: absolute; right: 10px; font-size:20px;">
-      <option value="path0">25</option>
-      <option value="path1">50</option>
-      <option value="path2">100</option>
-      <option value="path3">150</option>
-      <option value="path3">200</option>
-    </select>
   </div>
 
-<div style="display: none;" id="right-click-menu" class="right-click-menu">
-      <div class="menu-option" onclick="alert('Option 0 selected')">🖼️ edit pic</div>
-</div>
+
+  <select id="amount-of-rows"
+    style="margin-top: 10px; min-width: 50px; position: absolute; right: 10px; font-size:20px;">
+    <option value="path0">25</option>
+    <option value="path1">50</option>
+    <option value="path2">100</option>
+    <option value="path3">150</option>
+    <option value="path3">200</option>
+  </select>
+  </div>
+
+  <div style="display: none;" id="right-click-menu" class="right-click-menu">
+    <div class="menu-option" onclick="alert('Option 0 selected')">🖼️ edit pic</div>
+  </div>
 
 
 
-<div hidden data-element="file-id">
-      <button  clas="b-4" onclick="cancel(event)">❌</button>
-      <span class="l-4" style="user-select: none;">🆔</span><span data-value="file-id" class="l-4">1414124-414221412-4124214124-412412</span>
-</div> 
+  <div hidden data-element="file-id">
+    <button clas="b-4" onclick="cancel(event)">❌</button>
+    <span class="l-4" style="user-select: none;">🆔</span><span data-value="file-id"
+      class="l-4">1414124-414221412-4124214124-412412</span>
+  </div>
 
-<div  hidden id="cancelation">
-        <span class="l-4">Are you sure want to remove this file?</span>
-        <br>
-        <button class="b-4" data-action="remove-file-confirmation">✅ Delete</button>
-        <button onclick="cancel(event)" class="b-4" >❌ Cancel</button>
-</div>
-    <!-- file path-->
+  <div hidden id="cancelation">
+    <span class="l-4">Are you sure want to remove this file?</span>
+    <br>
+    <button class="b-4" data-action="remove-file-confirmation">✅ Delete</button>
+    <button onclick="cancel(event)" class="b-4">❌ Cancel</button>
+  </div>
+  <!-- file path-->
 
-<div  hidden data-element="copy-folder">
-      <input data-input="copy-file-path-input" type="text" placeholder="📂name" 
-      style="
+  <div hidden data-element="copy-folder">
+    <input data-input="copy-file-path-input" type="text" placeholder="📂name" style="
       min-width: 700px;
       padding: 5px;
       border: 1px solid #4A90E2; 
       border-radius: 5px; 
       font-size: 16px;
       margin-bottom: 7px;">
-      <br>
-      <button data-action="copy-file-path-cancel" class="b-4">❌</button>
-      <button class="b-4" data-action="copy-file-path-save">✅ Copy</button>
+    <br>
+    <button data-action="copy-file-path-cancel" class="b-4">❌</button>
+    <button class="b-4" data-action="copy-file-path-save">✅ Copy</button>
 
-      <label class="l-3">
-        <input type="radio" checked name="choose_components">
-         All📁
-      </label>
-      <label class="l-3">
-        <input type="radio"  name="choose_components">
-         Hub🗺️
-      </label>
-      <label class="l-3">
-        <input type="radio" name="choose_components">
-         Style🎨
-      </label>
-      <label class="l-3">
-        <input type="checkbox">
-         Replace🔄
-      </label>
-</div>
+    <label class="l-3">
+      <input type="radio" checked name="choose_components">
+      All📁
+    </label>
+    <label class="l-3">
+      <input type="radio" name="choose_components">
+      Hub🗺️
+    </label>
+    <label class="l-3">
+      <input type="radio" name="choose_components">
+      Style🎨
+    </label>
+    <label class="l-3">
+      <input id="replaceCheckbox" type="checkbox">
+      Replace🔄
+    </label>
+  </div>
 
 
   <script>
@@ -174,7 +171,7 @@
           entry.id = newId
           console.log('entry ' + JSON.stringify(entry))
           if (entry.sk === 'path') {
-            entry.lsi1 = entry.lsi1.replace(';publish:published','') + '-copy-' + newId
+            entry.lsi1 = entry.lsi1.replace(';publish:published', '') + '-copy-' + newId
             entry.protected = false
           }
           if (entry.target_element === id + '-tree') {
@@ -388,57 +385,70 @@
           saveButton.onclick = async function (e) {
             e.stopPropagation()
             const new_value = cloned.querySelector('[data-input="copy-file-path-input"]').value
-            const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${path}`);
-            //list of sub paths
-            const data = await response.json();
+            const backupCheck = cloned.querySelector('#replaceCheckbox').checked
+            //backup target
+            if (backupCheck) {
+              const backupPath = new_value+'backup/'+(new Date()).toString()+':replace/'
+              await copyToTarget(new_value,backupPath)
 
-            await Promise.all(data.items.map(async item => {
-              const newId = generateUUID()
 
-              const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${item.id}&startsWith=true`, {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              });
-              const res2 = await response.json()
-              await Promise.all(res2.items.map(async item1 => {
-                if (item1.sk !== 'path') {
-                  if (item1.target_element === item1.id + '-tree') {
-                    console.log('err1')
-                    item1.target_element = newId + '-tree'
+            }
+            //copy to target
+            await copyToTarget(path,new_value)
+            const copyToTarget = async(path,new_value) => {
+              const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${path}`);
+              //list of sub paths
+              const data = await response.json();
+
+              await Promise.all(data.items.map(async item => {
+                const newId = generateUUID()
+
+                const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${item.id}&startsWith=true`, {
+                  method: 'GET',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                });
+                const res2 = await response.json()
+                await Promise.all(res2.items.map(async item1 => {
+                  if (item1.sk !== 'path') {
+                    if (item1.target_element === item1.id + '-tree') {
+                      console.log('err1')
+                      item1.target_element = newId + '-tree'
+                    }
+                    return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify(
+                        {
+                          ...item1,
+                          id: newId
+                        }
+                      ),
+                    })
                   }
-                  return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(
-                      {
-                        ...item1,
-                        id: newId
-                      }
-                    ),
-                  })
-                }
-                else {
-                  await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(
-                      {
-                        ...item1,
-                        lsi1: item1.lsi1.replace(path, new_value),
-                        id: newId,
-                        protected: false
-                      }
-                    ),
-                  })
-                }
+                  else {
+                    await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify(
+                        {
+                          ...item1,
+                          lsi1: item1.lsi1.replace(path, new_value),
+                          id: newId,
+                          protected: false
+                        }
+                      ),
+                    })
+                  }
+                }))
               }))
-            }))
+            }
+
 
 
 
@@ -509,7 +519,7 @@
       addMenuEntry(menu, '✅ Enable Protection', (e) => setProtected(id, path, true))
       addMenuEntry(menu, '❌ Disable Protection', (e) => setProtected(id, path, false))
 
-     
+
 
       const setProtected = async (id, path, protected) => {
         const response1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${path}`);
