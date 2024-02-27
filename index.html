@@ -244,168 +244,229 @@
 <!-- MENUS-->
   <div hidden>
 
-    <fieldset id="update-href-menu" class="menu">
-          <legend><button onclick="cancel(event)" class="b-6">❌</button></legend>
-          <input id="editHrefInput" style="width: 500px" placeholder="🔗 edit href" type="text">
-          <button id="editHrefButton">💾</button>
-    </fieldset>
+<fieldset id="update-href-menu" class="menu">
+      <legend><button onclick="cancel(event)" class="b-6">❌</button></legend>
+      <input id="editHrefInput" style="width: 500px" placeholder="🔗 edit href" type="text">
+      <button id="editHrefButton">💾</button>
+</fieldset>
+
+    
+<fieldset id="component-element" data-element="code-tree-tag" class="tree-element">
+      <legend>💬</legend>
+      <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
+      <button class="b-3 arrow" data-element="code-tree-show-hide-button"
+        onclick="toggleSubFields(event)">&#8594;</button>
+      <button class="b-3 t" data-element="code-tree-tag-name-button"
+        onclick="loader(event, handleComponentClick)">🏷️component</button>
+      <button class="b-3 t" data-element="code-tree-attributes-button"
+        onclick="openAttributeContent(event)">🔑</button>
+      <button hidden class="b-3 t" data-element="optional-script" onclick="replaceComponent(event,true)">🔄10</button>
+      <span id="open-menu"></button>
+</fieldset>
+
+<fieldset id="tree-element" data-element="code-tree-tag" class="tree-element">
+      <legend>💬</legend>
+      <input id="selectedCheckbox" hidden type="checkbox" onchange="handleCheckboxChange(event)">
+      <button class="b-3 arrow" data-element="code-tree-show-hide-button"
+        onclick="toggleSubFields(event)">&#8594;</button>
+      <button class="b-3 t" data-element="code-tree-tag-name-button"
+        onclick="loader(event, handleTreeClick)">🏷️component</button>
+      <button class="b-3 t" data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)">
+        ▶️</button>
+      <button class="b-3 t" data-element="code-tree-attributes-button"
+        onclick="openAttributeContent(event)">🔑</button>
+      <button class="b-3 t" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
+      <span id="open-menu"></button>
+</fieldset>
     
     
-    <fieldset id="component-element" data-element="code-tree-tag" class="tree-element">
-          <legend>💬</legend>
-          <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
-          <button class="b-3 arrow" data-element="code-tree-show-hide-button"
-            onclick="toggleSubFields(event)">&#8594;</button>
-          <button class="b-3 t" data-element="code-tree-tag-name-button"
-            onclick="loader(event, handleComponentClick)">🏷️component</button>
-          <button class="b-3 t" data-element="code-tree-attributes-button"
-            onclick="openAttributeContent(event)">🔑</button>
-          <button hidden class="b-3 t" data-element="optional-script" onclick="replaceComponent(event,true)">🔄10</button>
-          <span id="open-menu"></button>
-    </fieldset>
-    
-    <fieldset id="tree-element" data-element="code-tree-tag" class="tree-element">
-          <legend>💬</legend>
-          <input id="selectedCheckbox" hidden type="checkbox" onchange="handleCheckboxChange(event)">
-          <button class="b-3 arrow" data-element="code-tree-show-hide-button"
-            onclick="toggleSubFields(event)">&#8594;</button>
-          <button class="b-3 t" data-element="code-tree-tag-name-button"
-            onclick="loader(event, handleTreeClick)">🏷️component</button>
-          <button class="b-3 t" data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)">
-            ▶️</button>
-          <button class="b-3 t" data-element="code-tree-attributes-button"
-            onclick="openAttributeContent(event)">🔑</button>
-          <button class="b-3 t" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
-          <span id="open-menu"></button>
-    </fieldset>
     
     
     
+<!--menu click component-->
+<div id="code-tree-click-component">
+      <button class="b-3" onclick="cancel(event)">❌</button>
+      <button style="margin-right: 5px; margin-top: 5px;" class="b-3" onclick="replaceComponent(event)">🔄 Replace</button>
+      <!-- <button style="margin-right: 5px; margin-top: 5px;" class="b-2" id="code-tree-click-tag-append-child" onclick="append(event)">👶 Append</button>
+      <button style="margin-right: 5px; margin-top: 5px;" class="b-2" id="code-tree-click-tag-insert-before" onclick="insertB(event)">⬅️ InsertBefore</button>
+        <button hidden class="b-2" id="code-tree-click-tag-remove-tag" onclick="removeComponent(event)">🗑 remove
+          component</button> -->
+</div>
     
     
-    <!--menu click component-->
-    <div id="code-tree-click-component">
-          <button class="b-3" onclick="cancel(event)">❌</button>
-          <button style="margin-right: 5px; margin-top: 5px;" class="b-3" onclick="replaceComponent(event)">🔄 Replace</button>
-          <!-- <button style="margin-right: 5px; margin-top: 5px;" class="b-2" id="code-tree-click-tag-append-child" onclick="append(event)">👶 Append</button>
-          <button style="margin-right: 5px; margin-top: 5px;" class="b-2" id="code-tree-click-tag-insert-before" onclick="insertB(event)">⬅️ InsertBefore</button>
-            <button hidden class="b-2" id="code-tree-click-tag-remove-tag" onclick="removeComponent(event)">🗑 remove
-              component</button> -->
-    </div>
+<!--menu click tag-->
+<div id="code-tree-click-tag">
+      <button  style="margin-right:5px; margin-top: 5px;" class="b-3" onclick="cancel(event)">❌</button>
+      <br>
+      <button style="margin-right:5px; margin-top: 5px;" class="b-3" id="code-tree-click-tag-append-child" onclick="append(event)">👶 Append</button>
+      <button style="margin-right:5px; margin-top: 5px;" class="b-3" id="code-tree-click-tag-insert-before" onclick="insertB(event)">⬅️ InsertBefore</button>
+      <br>
+      <button style="margin-right:5px; margin-top: 5px;" class="b-3" id="code-tree-click-tag-change-tag" onclick="changeTagForCopies(event)">✏️ Change
+      <button style="margin-right:5px; margin-top: 5px;" class="b-3" id="code-tree-click-tag-remove-tag" onclick="removeTagAndCopies(event)">🗑 Remove</button>
+      <!--
+      <button class="b-2" id="code-tree-click-tag-change-tag" onclick="changeTag(event)">✏️ Change tag</button>
+          Copies</button>
+        <button class="b-2" id="code-tree-click-tag-remove-tag" onclick="removeTag(event)">🗑 Remove
+          element</button>
+          <button  class="b-2" id="code-tree-click-tag-inner-html" onclick="insertHtml(event)">📄 inner HTML</button>
+        <button class="b-2" id="code-tree-click-tag-dublicate-tag" onclick="duplicateTag(event)"> ⧉ Duplicate Element</button>
+        -->
+  </div>
+    
+        <!--menu add element-->
+        <fieldset id="code-tree-add-tag-step-1" class="menu">
+          <legend><button class="b-6" onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
+          <button class="b-2" id="code-tree-add-tag-choose-new" onclick="addNew(event)"> ➕ choose new</button>
+          <button class="b-2" id="code-tree-add-tag-choose-existed" onclick="addExisting(event)"> ✔️ choose
+            existed</button>
+          <button class="b-2" id="code-tree-add-tag-choose-component" onclick="choseComponent(event)"> 🧩
+            component</button>
+        </fieldset>
+
+   
     
     
-    <!--menu click tag-->
-    <div id="code-tree-click-tag">
-          <button  style="margin-right:5px; margin-top: 5px;" class="b-3" onclick="cancel(event)">❌</button>
+        <!-- menu confirm selected append/insert tags-->
+<div id="code-tree-append-or-insert-approv-menu" style="user-select: none;" class="menu">
+      <button onclick="cancel(event)" class="b-3" style="margin-bottom: 5px; margin-top: 5px;">❌</button>
+      <span id="code-tree-amount-selected-for-append-or-insert" style="font-size: 24px;">0</span>
+      <button class="b-3" id="code-tree-click-tag-approve" onclick="approve(event)"> ✅ APPROVE</button>
+      <label label for="code-tree-menu-dublicate-with-parent-option"
+        id="code-tree-menu-dublicate-with-parent-option-1">⚠️</label><input
+        id="code-tree-menu-dublicate-with-parent-option" type="checkbox"><label
+        for="code-tree-menu-dublicate-with-parent-option"
+        id="code-tree-menu-dublicate-with-parent-option-2">Duplicate with Parent</label>
+</div>
+
+    
+    
+    
+<!-- menu to receive text area html -->
+<div id="code-tree-tag-text-content-form">
+      <button id="code-tree-tag-attributes-form-action-back" class="b-3" onclick="cancel(event)" style="margin-bottom:7px; margin-right: 5px;">❌</button>
+      <button id="code-tree-tag-text-content-action-save" onclick="saveText(event)" class="b-3" style="margin-bottom:7px; margin-right: 5px;">💾 Save</button>
+      <br>
+      <textarea class="text1" placeholder=" 📄 Text content" id="code-tree-tag-text-content"></textarea>
+      <br>
+      <button id="code-tree-tag-text-content-action-save" onclick="saveText(event)" class="b-3" style="margin-top: 5px;">💾 save</button>
+</div>
+  <!-- menu to receive inner html -->
+<div id="code-tree-tag-html-content-form">
           <br>
-          <button style="margin-right:5px; margin-top: 5px;" class="b-3" id="code-tree-click-tag-append-child" onclick="append(event)">👶 Append</button>
-          <button style="margin-right:5px; margin-top: 5px;" class="b-3" id="code-tree-click-tag-insert-before" onclick="insertB(event)">⬅️ InsertBefore</button>
-          <br>
-          <button style="margin-right:5px; margin-top: 5px;" class="b-3" id="code-tree-click-tag-change-tag" onclick="changeTagForCopies(event)">✏️ Change
-          <button style="margin-right:5px; margin-top: 5px;" class="b-3" id="code-tree-click-tag-remove-tag" onclick="removeTagAndCopies(event)">🗑 Remove</button>
-          <!--
-          <button class="b-2" id="code-tree-click-tag-change-tag" onclick="changeTag(event)">✏️ Change tag</button>
-              Copies</button>
-            <button class="b-2" id="code-tree-click-tag-remove-tag" onclick="removeTag(event)">🗑 Remove
-              element</button>
-              <button  class="b-2" id="code-tree-click-tag-inner-html" onclick="insertHtml(event)">📄 inner HTML</button>
-            <button class="b-2" id="code-tree-click-tag-dublicate-tag" onclick="duplicateTag(event)"> ⧉ Duplicate Element</button>
-            -->
-      </div>
-    
-    
-    
-    
-            <!-- menu confirm selected append/insert tags-->
-    <div id="code-tree-append-or-insert-approv-menu" style="user-select: none;" class="menu">
-          <button onclick="cancel(event)" class="b-3" style="margin-bottom: 5px; margin-top: 5px;">❌</button>
-          <span id="code-tree-amount-selected-for-append-or-insert" style="font-size: 24px;">0</span>
-          <button class="b-3" id="code-tree-click-tag-approve" onclick="approve(event)"> ✅ APPROVE</button>
-          <label label for="code-tree-menu-dublicate-with-parent-option"
-            id="code-tree-menu-dublicate-with-parent-option-1">⚠️</label><input
-            id="code-tree-menu-dublicate-with-parent-option" type="checkbox"><label
-            for="code-tree-menu-dublicate-with-parent-option"
-            id="code-tree-menu-dublicate-with-parent-option-2">Duplicate with Parent</label>
-    </div>
-    
-    
-    
-    
-    <!-- menu to receive text area html -->
-    <div id="code-tree-tag-text-content-form">
           <button id="code-tree-tag-attributes-form-action-back" class="b-3" onclick="cancel(event)" style="margin-bottom:7px; margin-right: 5px;">❌</button>
-          <button id="code-tree-tag-text-content-action-save" onclick="saveText(event)" class="b-3" style="margin-bottom:7px; margin-right: 5px;">💾 Save</button>
+          <button id="code-tree-tag-text-content-action-save" onclick="saveInnerHtml(event)" class="b-3" style="margin-bottom:7px; margin-right: 5px;">💾
+            Save</button>
           <br>
-          <textarea class="text1" placeholder=" 📄 Text content" id="code-tree-tag-text-content"></textarea>
+          <textarea class="text1" placeholder=" ▶️ HTML content" id="code-tree-tag-html-content"></textarea>
           <br>
-          <button id="code-tree-tag-text-content-action-save" onclick="saveText(event)" class="b-3" style="margin-top: 5px;">💾 save</button>
+          <button id="code-tree-tag-text-content-action-save" onclick="saveInnerHtml(event)" class="b-3"style="margin-top:5px;">💾
+            save</button>
+</div>
+
+    
+    
+<!--menu to view and edit attributes-->
+<div class="menu-1" id="code-tree-tag-attributes-form-1">
+          <button id="code-tree-tag-attributes-form-action-back" class="b-3" onclick="cancel(event)" style="margin-top: 10px; margin-bottom: 5px;">❌</button>
+          <table class="table-2 table-row-number-2" id="code-tree-tag-attributes-list">
+            <tbody>
+            <tr id="code-tree-tag-attributes-list-item">
+              <td><span class="l-4" style="user-select: none;">🔑</span><span class="l-4" id="code-tree-tag-attribute-key"></span></td>
+              <td><span class="l-4" style="user-select: none;">📄</span><span class="l-4" id="code-tree-tag-attribute-value"><span></td>
+              <td><button onclick="removeAttributeFromCopies(event)" class="b-4">🗑</button>               
+              <!-- <button id="code-tree-tag-attribute-remove-button" class="b-4"  onclick="removeAttribute1(event)">🗑</button> -->
+              </td>
+            </tr>
+          </tbody>
+          </table>
+          <div style="margin-bottom: 10px;">
+            <button class="b-3" onclick="saveAttribute(event)" style="margin-bottom: 5px; margin-top: 5px;">💾 Save</button>
+            <br>
+            <textarea id="code-tree-tag-attribute-input-text" class="text1" placeholder=" 🔑 Add Attributes"></textarea>
+            <br>
+            <button class="b-3" onclick="saveAttribute(event)" style="margin-bottom: 5px; margin-top: 5px;">💾 Save</button>
+          </div>
+
+</div>
+    
+<fieldset id="tag-table" style="border-width: 0px;">
+          <button onclick="cancel(event)" class="b-3" style="margin-top: 5px; margin-bottom: 5px;">❌</button></legend>
+          <table id="tagsTable" class="tagsTable-style">
+            <thead>
+              <tr>
+                <th><input type="text" id="searchTagName" placeholder="Search by Tag Name" onkeyup="filterTable(0)">
+                </th>
+                <th><input type="text" id="searchTagValue" placeholder="Search by Tag Value" onkeyup="filterTable(1)">
+                </th>
+                <th><input type="text" id="searchTagType" placeholder="Search by Tag Type" onkeyup="filterTable(2)">
+                </th>
+                <th><input type="text" id="searchTagComment" placeholder="Search by Tag Comment"
+                    onkeyup="filterTable(3)"></th>
+              </tr>
+              <tr>
+                <th>Tag Name</th>
+                <th>Tag Value</th>
+                <th>Tag Type</th>
+                <th>Tag Comment</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+</fieldset>
     </div>
-     <!-- menu to receive inner html -->
-    <div id="code-tree-tag-html-content-form">
-              <br>
-              <button id="code-tree-tag-attributes-form-action-back" class="b-3" onclick="cancel(event)" style="margin-bottom:7px; margin-right: 5px;">❌</button>
-              <button id="code-tree-tag-text-content-action-save" onclick="saveInnerHtml(event)" class="b-3" style="margin-bottom:7px; margin-right: 5px;">💾
-                Save</button>
-              <br>
-              <textarea class="text1" placeholder=" ▶️ HTML content" id="code-tree-tag-html-content"></textarea>
-              <br>
-              <button id="code-tree-tag-text-content-action-save" onclick="saveInnerHtml(event)" class="b-3"style="margin-top:5px;">💾
-                save</button>
-    </div>
-    
-    
-    
-    <!--menu to view and edit attributes-->
-    <div class="menu-1" id="code-tree-tag-attributes-form-1">
-              <button id="code-tree-tag-attributes-form-action-back" class="b-3" onclick="cancel(event)" style="margin-top: 10px; margin-bottom: 5px;">❌</button>
-              <table class="table-2 table-row-number-2" id="code-tree-tag-attributes-list">
-                <tbody>
-                <tr id="code-tree-tag-attributes-list-item">
-                  <td><span class="l-4" style="user-select: none;">🔑</span><span class="l-4" id="code-tree-tag-attribute-key"></span></td>
-                  <td><span class="l-4" style="user-select: none;">📄</span><span class="l-4" id="code-tree-tag-attribute-value"><span></td>
-                  <td><button onclick="removeAttributeFromCopies(event)" class="b-4">🗑</button>               
-                  <!-- <button id="code-tree-tag-attribute-remove-button" class="b-4"  onclick="removeAttribute1(event)">🗑</button> -->
-                  </td>
-                </tr>
-              </tbody>
-              </table>
-              <div style="margin-bottom: 10px;">
-                <button class="b-3" onclick="saveAttribute(event)" style="margin-bottom: 5px; margin-top: 5px;">💾 Save</button>
-                <br>
-                <textarea id="code-tree-tag-attribute-input-text" class="text1" placeholder=" 🔑 Add Attributes"></textarea>
-                <br>
-                <button class="b-3" onclick="saveAttribute(event)" style="margin-bottom: 5px; margin-top: 5px;">💾 Save</button>
-              </div>
-    
-    </div>
-    
-    <fieldset id="tag-table" style="border-width: 0px;">
-              <button onclick="cancel(event)" class="b-3" style="margin-top: 5px; margin-bottom: 5px;">❌</button></legend>
-              <table id="tagsTable" class="tagsTable-style">
-                <thead>
-                  <tr>
-                    <th><input type="text" id="searchTagName" placeholder="Search by Tag Name" onkeyup="filterTable(0)">
-                    </th>
-                    <th><input type="text" id="searchTagValue" placeholder="Search by Tag Value" onkeyup="filterTable(1)">
-                    </th>
-                    <th><input type="text" id="searchTagType" placeholder="Search by Tag Type" onkeyup="filterTable(2)">
-                    </th>
-                    <th><input type="text" id="searchTagComment" placeholder="Search by Tag Comment"
-                        onkeyup="filterTable(3)"></th>
-                  </tr>
-                  <tr>
-                    <th>Tag Name</th>
-                    <th>Tag Value</th>
-                    <th>Tag Type</th>
-                    <th>Tag Comment</th>
-                  </tr>
-                </thead>
-                <tbody>
-                </tbody>
-              </table>
+ <!--files menus-->
+<div hidden>
+  <!-- file path-->
+  <li data-element="file-path" id="item">
+
+    <label hidden class="l-3" style="margin-right: 3px;" id="Pushpin">📌</label><button hidden
+      class="b-4">☑️</button><label data-value="file-path"
+      class="l-3">universal/blablabla/blablabla/coolcss</label><label data-value="file-emoji"
+      style="user-select: none; margin-left: 5px;" class="l-3"> 🧩</label>
+    <!-- file info-->
+    <div hidden data-element="file-id"><span style="user-select: none;">🆔</span><span data-value="file-id"
+        style="font-size: 0.9em">1414124-414221412-4124214124-412412</span></div>
+    <!-- remove file menu-->
+    <fieldset hidden id="cancelation">
+      <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
+
+      <span>are you sure want to remove this file?</span>
+      <div>
+        <button data-action="remove-file-confirmation">✅ Delete</button>
+      </div>
     </fieldset>
-    </div>
-    
+
+  </li>
+  <ol data-element="file-path-list" id="selectedFilePathList" class="list-1" style="margin-left: -10px;">
+    <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" onclick="cancelReplace(event)">❌</button>
+    <br>
+    <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" onclick="approveReplace(event)">✅ Approve</button>
+    <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" data-action="moveBack">⤴️ Up</button>
+  </ol>
+  
+  <div hidden id="file-list-attach-component-options" style="padding: 5px; margin-left: 10px;">
+    <button style="margin-top: 5px;" class="b-4" onclick="cancelReplace(event)">❌</button>
+<br>
+    <button class="b-3"  id="file-list-link-by-path"
+    style="margin-top: 5px;"
+      onclick="switchSelected(event)">*📁 By Path</button>
+    <button class="b-3"  id="file-list-link-by-name"
+    style="margin-top: 5px;"
+      onclick="switchSelected(event)">*🛖 By Name</button>
+    <br>
+    <button  style="margin-top: 5px;" class="b-4" onclick="approveReplace(event)">✅ Approve</button>
+    <button style="margin-top: 5px;" class="b-4" data-action="moveBack">⤴️ Up</button>
+
+  </div>
+  <ol data-element="file-path-list" id="filePathList" class="list-1" style="margin-left: -10px;">
+
+
+  </ol>
+
+</div>
+
+   
 
 <div id="loading"
   style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 2;">
@@ -457,87 +518,6 @@
     getElementById1('loading').remove();
   });
 
-</script>
-<!--files menus-->
-<div hidden>
-  <!-- file path-->
-  <li data-element="file-path" id="item">
-
-    <label hidden class="l-3" style="margin-right: 3px;" id="Pushpin">📌</label><button hidden
-      class="b-4">☑️</button><label data-value="file-path"
-      class="l-3">universal/blablabla/blablabla/coolcss</label><label data-value="file-emoji"
-      style="user-select: none; margin-left: 5px;" class="l-3"> 🧩</label>
-    <!-- file info-->
-    <div hidden data-element="file-id"><span style="user-select: none;">🆔</span><span data-value="file-id"
-        style="font-size: 0.9em">1414124-414221412-4124214124-412412</span></div>
-    <!-- remove file menu-->
-    <fieldset hidden id="cancelation">
-      <legend><button onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
-
-      <span>are you sure want to remove this file?</span>
-      <div>
-        <button data-action="remove-file-confirmation">✅ Delete</button>
-      </div>
-    </fieldset>
-
-  </li>
-  <ol data-element="file-path-list" id="selectedFilePathList" class="list-1" style="margin-left: -10px;">
-    <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" onclick="cancelReplace(event)">❌</button>
-    <br>
-    <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" onclick="approveReplace(event)">✅ Approve</button>
-    <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" data-action="moveBack">⤴️ Up</button>
-  </ol>
-  
-  <div hidden id="file-list-attach-component-options" style="padding: 5px; margin-left: 10px;">
-    <button style="margin-top: 5px;" class="b-4" onclick="cancelReplace(event)">❌</button>
-<br>
-    <button class="b-3"  id="file-list-link-by-path"
-    style="margin-top: 5px;"
-      onclick="switchSelected(event)">*📁 By Path</button>
-    <button class="b-3"  id="file-list-link-by-name"
-    style="margin-top: 5px;"
-      onclick="switchSelected(event)">*🛖 By Name</button>
-    <br>
-    <button  style="margin-top: 5px;" class="b-4" onclick="approveReplace(event)">✅ Approve</button>
-    <button style="margin-top: 5px;" class="b-4" data-action="moveBack">⤴️ Up</button>
-
-  </div>
-  <ol data-element="file-path-list" id="filePathList" class="list-1" style="margin-left: -10px;">
-
-
-  </ol>
-
-</div>
-
-<!--loading script-->
-<script>
-  /*
-document.addEventListener('DOMContentLoaded', function() {
-    querySelectorAll1('button').forEach(function(button) {
-        button.addEventListener('click', function() {
-          const loadingScreen = getElementById1('loading');
-            loadingScreen.style.display = 'flex';
-
-            const timerElement = getElementById1('timer');
-            let tenthsOfSeconds = 0;
-            const interval = setInterval(function() {
-                tenthsOfSeconds++;
-                timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
-            }, 100);
-
-            const randomTime = Math.random() * 1000 + 100; 
-
-            setTimeout(function() {
-                loadingScreen.style.display = 'none';
-                clearInterval(interval);
-
-                const lastActionTime = getElementById1('last-action-time');
-                lastActionTime.textContent = timerElement.textContent;
-            }, randomTime);
-        });
-    });
-});
-*/
 </script>
 <script>
   const generateBreadCrumb = async (event) => {
