@@ -197,7 +197,7 @@
         const entry = document.createElement('div');
         entry.className = 'menu-option';
         entry.innerHTML = text;
-        entry.onclick = clickHandler;
+        entry.onclick =(e)=>{removeMenus(); clickHandler(e)};
         menu.appendChild(entry);
       }
       const copy = async (id) => {
@@ -254,7 +254,7 @@
           const cancelButton = cloned.querySelector('[data-action="create-new-file-path-cancel"]');
           cancelButton.onclick = (e) => {
             e.stopPropagation()
-            e.target.parentNode.parentNode.remove()
+            removeMenus()
           }
           const input = cloned.querySelector('[data-input="create-new-file-path-input"]');
           const name = fieldset.querySelector('[data-value="file-path"]').textContent;
@@ -392,7 +392,7 @@
         const entry = document.createElement('div');
         entry.className = 'menu-option';
         entry.innerHTML = text;
-        entry.onclick = clickHandler;
+        entry.onclick = (e)=>{removeMenus(); clickHandler(e) };
         menu.appendChild(entry);
       }
       const openRemove1 = (id, path) => {
@@ -424,7 +424,7 @@
           const cancelButton = cloned.querySelector('[data-action="copy-file-path-cancel"]');
           cancelButton.onclick = (e) => {
             e.stopPropagation()
-            e.target.parentNode.parentNode.remove()
+            removeMenus()
           }
           const input = cloned.querySelector('[data-input="copy-file-path-input"]');
           const name = fieldset.querySelector('[data-value="file-path"]').textContent;
@@ -590,7 +590,7 @@
           const cancelButton = cloned.querySelector('[data-action="create-new-file-path-cancel"]');
           cancelButton.onclick = (e) => {
             e.stopPropagation()
-            e.target.parentNode.parentNode.remove()
+            removeMenus()
           }
           const input = cloned.querySelector('[data-input="create-new-file-path-input"]');
           const name = fieldset.querySelector('[data-value="file-path"]').textContent;
@@ -818,7 +818,7 @@
 
         }))
 
-        event.target.parentNode.parentNode.remove()
+        removeMenus()
         if (all.every(el => el)) {
           alert('all protected')
           return
@@ -894,7 +894,7 @@
       
       listItem.remove();
     }
-    const removeMenus =()=> document.querySelectorAll('[data-menu]').forEach(menu=>menu.remove())
+    const removeMenus =()=> document.querySelector("#filePathList").querySelectorAll('[data-menu]').forEach(menu=>menu.remove())
     function removeDuplicates(arr) {
       return Array.from(new Set(arr));
     }
