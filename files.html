@@ -110,12 +110,12 @@
     <button class="b-4" data-action="copy-file-path-save">✅ Copy</button>
 
     <label class="l-3">
-      <input id="all-files" type="radio" checked name="choose_components">
+      <input id="all-files" onchange="showSiteCheckboxes(event)" type="radio" checked name="choose_components">
       All📁
     </label>
 
     <label class="l-3">
-      <input id="all-files" type="radio"  name="choose_components">
+      <input id="site-files" onchange="showSiteCheckboxes(event)" type="radio" name="choose_components">
       Site📁
     </label>
 
@@ -125,26 +125,26 @@
     </label>
 
 
-    <div>
+    <div id="site-checkboxes">
       <label>
         <input type="checkbox">
         Hub🗺️
-    </label>
+      </label>
 
-    <label>
-      <input type="checkbox">
+      <label>
+        <input type="checkbox">
 
-      Style🎨
-    </label>
+        Style🎨
+      </label>
 
-    <label>
-      <input type="checkbox">
-      Content
-    </label>
+      <label>
+        <input type="checkbox">
+        Content
+      </label>
     </div>
 
 
-<!--
+    <!--
     <label class="l-3">
       <label class="l-3">
         <input id="hub-files" type="radio" name="choose_components">
@@ -170,6 +170,16 @@
 
 
   <script>
+    const showSiteCheckboxes = (event, flag) => {
+      const siteCheckboxes = document.getElementById('site-checkboxes')
+      const siteRadio = document.getElementById('site-files');
+      if (siteRadio.checked) {
+        siteCheckboxes.removeAttribute('hidden');
+      } else {
+        siteCheckboxes.setAttribute('hidden', 'true');
+      }
+
+    }
     function generateUUID() {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         const r = Math.random() * 16 | 0,
@@ -431,7 +441,7 @@
             const inputs = cloned.querySelectorAll('input[name="choose_components"]');
 
             // Iterate over each input
-            let type 
+            let type
             inputs.forEach(function (input) {
               // Check if the input is checked
               if (input.checked) {
@@ -439,21 +449,21 @@
                 type = input.id
               }
             });
-            console.log('type'+type)
-            const copyToTarget = async (path, new_value, backupCheck,type) => {
+            console.log('type' + type)
+            const copyToTarget = async (path, new_value, backupCheck, type) => {
               const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${path}`);
               //list of sub paths
               const data = await response.json();
               const d = new Date()
               let items = data.items
-              if(type ==='hub-files'){
-                items = items.filter(element=>element.lsi1.endsWith('/Hub'))
+              if (type === 'hub-files') {
+                items = items.filter(element => element.lsi1.endsWith('/Hub'))
               }
-              else if(type ==='style-files'){
-                items = items.filter(element=>element.lsi1.endsWith('style'))
+              else if (type === 'style-files') {
+                items = items.filter(element => element.lsi1.endsWith('style'))
               }
-              else if(type ==="content-files"){
-                items = items.filter(element=>!element.lsi1.endsWith('style') && !element.lsi1.endsWith('/Hub') && element.lsi1.split('/')[element.lsi1.split('/').length-2]!=='Components' )
+              else if (type === "content-files") {
+                items = items.filter(element => !element.lsi1.endsWith('style') && !element.lsi1.endsWith('/Hub') && element.lsi1.split('/')[element.lsi1.split('/').length - 2] !== 'Components')
               }
               await Promise.all(items.map(async item => {
                 const newId = generateUUID()
@@ -543,7 +553,7 @@
             }
 
             //copy to target
-            await copyToTarget(path, new_value, backupCheck,type)
+            await copyToTarget(path, new_value, backupCheck, type)
 
 
 
