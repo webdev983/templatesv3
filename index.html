@@ -1217,7 +1217,7 @@
       let selected = []
       let path1 = ''
       var addSelected = (itemId, path) => {
-        const clonedFieldset2 = getElementById1('selectedFilePathList;' )
+        const clonedFieldset2 = getElementById1('selectedFilePathList;')
         if (Array.from(clonedFieldset2.children).find(el => el.id === itemId)) {
           return
         }
@@ -1236,12 +1236,12 @@
 
 
 
-      var loadUsingPath1 = ( path) => {
+      var loadUsingPath1 = (path) => {
         return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + path1)
           .then(response => response.json())
           .then(data => {
             // Replace existing file paths with dynamic content
-            var filePathList = getElementById1('filePathList;' );
+            var filePathList = getElementById1('filePathList;');
             filePathList.innerHTML = '';
             lvls = []
             let i = 0
@@ -1288,7 +1288,7 @@
                 // Set up onclick for file-open button
                 function setPath() {
                   path1 = path1 + item + '/'
-                  loadUsingPath1( path1)
+                  loadUsingPath1(path1)
                 };
 
                 // Append the cloned item to the filePathList
@@ -1417,7 +1417,7 @@
                 item_path.textContent = item.name;
                 clonedItem.onclick = function (event) {
                   event.stopPropagation()
-                  addSelected( item.id, item.lsi1);
+                  addSelected(item.id, item.lsi1);
                 };
                 let icon = '🧩';
                 if (item.lsi1.startsWith('css')) {
@@ -1461,14 +1461,18 @@
           .catch(error => console.error('Error:', error));
 
       }
-      
+
       const fieldset = getElementById1('filePathList');
       const fieldset2 = getElementById1('selectedFilePathList');
       if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('filePathList')) {
         const clonedFieldset = fieldset.cloneNode(true);
         const clonedFieldset2 = fieldset2.cloneNode(true);
-        clonedFieldset2.id = clonedFieldset2.id + ';' ;
-        clonedFieldset.id = clonedFieldset.id + ';' ;
+        const clonedFieldset3 = getElementById1('file-list-attach-component-options').cloneNode(true);
+        clonedFieldset3.removeAttribute('hidden')
+        clonedFieldset3.id = 'file-list-attach-component-options;'
+        e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+        clonedFieldset2.id = clonedFieldset2.id + ';';
+        clonedFieldset.id = clonedFieldset.id + ';';
         clonedFieldset.setAttribute('action', 'Add_Component')
         clonedFieldset2.setAttribute('action', 'Add_Component')
         clonedFieldset2.querySelector('[data-action="moveBack"]').onclick = (e) => {
@@ -1485,18 +1489,18 @@
             splited.pop()
             splited.pop()
             path1 = splited.join('/') + '/'
-            loadUsingPath1( path1)
+            loadUsingPath1(path1)
 
           }
         }
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset2);
-        
-        loadFileList1()
-      
-    }
 
-  }
+        loadFileList1()
+
+      }
+
+    }
     var addTreeElement = (e) => {
       const fieldset = getElementById1('tag-table');
       console.log('clicked')
