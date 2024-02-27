@@ -387,12 +387,12 @@
             const new_value = cloned.querySelector('[data-input="copy-file-path-input"]').value
             const backupCheck = cloned.querySelector('#replaceCheckbox').checked
             //backup target
-            
-            const copyToTarget = async(path,new_value) => {
+
+            const copyToTarget = async (path, new_value, backupCheck) => {
               const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${path}`);
               //list of sub paths
               const data = await response.json();
-
+              const d = new Date()
               await Promise.all(data.items.map(async item => {
                 const newId = generateUUID()
 
@@ -403,7 +403,9 @@
                   },
                 });
                 const res2 = await response.json()
+
                 await Promise.all(res2.items.map(async item1 => {
+
                   if (item1.sk !== 'path') {
                     if (item1.target_element === item1.id + '-tree') {
                       console.log('err1')
@@ -423,6 +425,42 @@
                     })
                   }
                   else {
+                    if (backupCheck) {
+                      const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${item1.lsi1.replace(path, new_value)}`);
+                      //list of sub paths
+                      const data = await response.json();
+                      if (data.items.length) {
+                        //move to trash
+                        const id = data.items[0].id
+                        const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`, {
+                          method: 'GET',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                        });
+                        const res2 = await response.json()
+                        await Promise.all(res2.items.map(async item1 => {
+
+                          if (item1.sk === 'path') {
+                            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                              method: 'POST',
+                              headers: {
+                                'Content-Type': 'application/json',
+                              },
+                              body: JSON.stringify(
+                                {
+                                  ...item1,
+                                  lsi1: 'trash/' + d.toString() + '-replace/' + item1.lsi1,
+
+                                }
+                              ),
+                            })
+
+                          }
+                          
+                        }))
+                      }
+                    }
                     await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                       method: 'POST',
                       headers: {
@@ -441,14 +479,9 @@
                 }))
               }))
             }
-            if (backupCheck) {
-              const backupPath = new_value+'trash/'+(new Date()).toString()+':replace/'
-              await copyToTarget(new_value,backupPath)
 
-
-            }
             //copy to target
-            await copyToTarget(path,new_value)
+            await copyToTarget(path, new_value, backupCheck)
 
 
 
