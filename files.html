@@ -387,14 +387,7 @@
             const new_value = cloned.querySelector('[data-input="copy-file-path-input"]').value
             const backupCheck = cloned.querySelector('#replaceCheckbox').checked
             //backup target
-            if (backupCheck) {
-              const backupPath = new_value+'backup/'+(new Date()).toString()+':replace/'
-              await copyToTarget(new_value,backupPath)
-
-
-            }
-            //copy to target
-            await copyToTarget(path,new_value)
+            
             const copyToTarget = async(path,new_value) => {
               const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${path}`);
               //list of sub paths
@@ -448,6 +441,14 @@
                 }))
               }))
             }
+            if (backupCheck) {
+              const backupPath = new_value+'backup/'+(new Date()).toString()+':replace/'
+              await copyToTarget(new_value,backupPath)
+
+
+            }
+            //copy to target
+            await copyToTarget(path,new_value)
 
 
 
