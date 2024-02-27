@@ -417,6 +417,12 @@
               if(type ==='hub-files'){
                 items = items.filter(element=>element.lsi1.endsWith('/Hub'))
               }
+              else if(type ==='style-files'){
+                items = items.filter(element=>element.lsi1.endsWith('style'))
+              }
+              else if(type ==="content-files"){
+                items = items.filter(element=>!element.lsi1.endsWith('style') && !element.lsi1.endsWith('/Hub') && element.lsi1.split('/')[element.lsi1.split('/').length-2]!=='Components' )
+              }
               await Promise.all(items.map(async item => {
                 const newId = generateUUID()
 
