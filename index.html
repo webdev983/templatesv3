@@ -1554,6 +1554,10 @@
     var approveReplace = async (e) => {
       const m1 = Array.from(e.target.parentNode.children).filter(i => i.id)
       const parentId = e.target.parentNode.id.replace('file-path-list;', '')
+      if(!parentId){
+        alert('no target id')
+        return
+      }
       const parentEl = getElementById1(parentId)
       const replacedString = parentEl.getAttribute('replaced')
       const replaced = replacedString ? JSON.parse(replacedString) : []
