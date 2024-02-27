@@ -108,6 +108,11 @@
     <br>
     <button data-action="copy-file-path-cancel" class="b-4">❌</button>
     <button class="b-4" data-action="copy-file-path-save">✅ Copy</button>
+    <label class="l-3">
+      <input id="replaceCheckbox" type="checkbox">
+      Replace🔄
+    </label>
+
     <div>
     <label class="l-3">
       <input id="all-files" onchange="showSiteCheckboxes(event)" type="radio" checked name="choose_components">
@@ -117,11 +122,6 @@
     <label class="l-3">
       <input id="site-files" onchange="showSiteCheckboxes(event)" type="radio" name="choose_components">
       Site📁
-    </label>
-
-    <label class="l-3">
-      <input id="replaceCheckbox" type="checkbox">
-      Replace🔄
     </label>
   </div>
 
@@ -141,7 +141,7 @@
       <label class="l-3">
 
         <input id="content-files" type="checkbox">
-        Content
+        Content📄
       </label>
     </div>
 
@@ -468,10 +468,10 @@
                   items.push(...data.items.filter(element => element.lsi1.endsWith('/Hub')))
                 }
                 if (ids.includes('style-files')) {
-                  items.push(...data.items.filter(element => element.lsi1.endsWith('Style')))
+                  items.push(...data.items.filter(element => element.lsi1.endsWith('style')))
                 }
                 if (ids.includes("content-files")) {
-                  items.push(...data.items.filter(element => !element.lsi1.endsWith('Style') && !element.lsi1.endsWith('/Hub') && element.lsi1.split('/')[element.lsi1.split('/').length - 2] !== 'Components'))
+                  items.push(...data.items.filter(element => !element.lsi1.endsWith('style') && !element.lsi1.endsWith('/Hub') && element.lsi1.split('/')[element.lsi1.split('/').length - 2] !== 'Components'))
                 }
               }
               else{
