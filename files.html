@@ -472,15 +472,16 @@
               const data = await response.json();
               const d = new Date()
               let items = []
+              console.log(JSON.stringify(ids))
               if (filtered) {
                 if (ids.includes('hub-files')) {
                   items.push(...data.items.filter(element => element.lsi1.endsWith('/Hub')))
                 }
                 if (ids.includes('style-files')) {
-                  items.push(...data.items.filter(element => element.lsi1.endsWith('style')))
+                  items.push(...data.items.filter(element => element.lsi1.endsWith('/Style')))
                 }
                 if (ids.includes("content-files")) {
-                  items.push(...data.items.filter(element => !element.lsi1.endsWith('style') && !element.lsi1.endsWith('/Hub') && element.lsi1.split('/')[element.lsi1.split('/').length - 2] !== 'Components'))
+                  items.push(...data.items.filter(element => !element.lsi1.endsWith('/Style') && !element.lsi1.endsWith('/Hub') && element.lsi1.split('/')[element.lsi1.split('/').length - 2] !== 'Components'))
                 }
               }
               else{
