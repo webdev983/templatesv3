@@ -127,18 +127,18 @@
 
     <div id="site-checkboxes">
       <label>
-        <input type="checkbox">
+        <input id="hub-files" type="checkbox">
         Hub🗺️
       </label>
 
       <label>
-        <input type="checkbox">
+        <input id="style-files" type="checkbox">
 
         Style🎨
       </label>
 
       <label>
-        <input type="checkbox">
+        <input id="content-files" type="checkbox">
         Content
       </label>
     </div>
@@ -441,30 +441,41 @@
             const inputs = cloned.querySelectorAll('input[name="choose_components"]');
 
             // Iterate over each input
-            let type
-            inputs.forEach(function (input) {
-              // Check if the input is checked
-              if (input.checked) {
-                // Get the label text associated with the input
-                type = input.id
+            let filtered = cloned.querySelector('#site-files').checked
+            if (filtered) {
+              const siteC = cloned.querySelector("#site-checkboxes")
+              let ids = []
+              const inputs = siteC.querySelectorAll('input')
+              for (const input of inputs) {
+                if (input.checked) {
+                  ids.push(input.id)
+                }
               }
-            });
+            }
+
+
             console.log('type' + type)
             const copyToTarget = async (path, new_value, backupCheck, type) => {
               const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${path}`);
               //list of sub paths
               const data = await response.json();
               const d = new Date()
-              let items = data.items
-              if (type === 'hub-files') {
-                items = items.filter(element => element.lsi1.endsWith('/Hub'))
+              let items = []
+              if (filtered) {
+                if (ids.includes('hub-files')) {
+                  items.push(...data.items.filter(element => element.lsi1.endsWith('/Hub')))
+                }
+                if (ids.includes('style-files')) {
+                  items.push(...data.items.filter(element => element.lsi1.endsWith('style')))
+                }
+                if (ids.includes("content-files")) {
+                  items.push(...data.items.filter(element => !element.lsi1.endsWith('style') && !element.lsi1.endsWith('/Hub') && element.lsi1.split('/')[element.lsi1.split('/').length - 2] !== 'Components'))
+                }
               }
-              else if (type === 'style-files') {
-                items = items.filter(element => element.lsi1.endsWith('style'))
+              else{
+                items = data.items
               }
-              else if (type === "content-files") {
-                items = items.filter(element => !element.lsi1.endsWith('style') && !element.lsi1.endsWith('/Hub') && element.lsi1.split('/')[element.lsi1.split('/').length - 2] !== 'Components')
-              }
+
               await Promise.all(items.map(async item => {
                 const newId = generateUUID()
 
@@ -879,10 +890,11 @@
         console.error('Error:', error);
       }
 
-
-      event.target.parentNode.parentNode.remove()
+      removeMenus()
+      
       listItem.remove();
     }
+    const removeMenus =()=> document.querySelectorAll('[data-menu]').forEach(menu=>menu.remove())
     function removeDuplicates(arr) {
       return Array.from(new Set(arr));
     }
