@@ -419,7 +419,7 @@
       <button class="b-3" id="file-list-link-by-name" style="margin-top: 5px;" onclick="switchSelected(event)">*🛖 By
         Name</button>
       <br>
-      <button style="margin-top: 5px;" class="b-4" onclick="approveReplace(event)">✅ Approve</button>
+      <button style="margin-top: 5px;" class="b-4" onclick="approveAddComponent(event)">✅ Approve</button>
       <button style="margin-top: 5px;" class="b-4" data-action="moveBack">⤴️ Up</button>
     </div>
   </div>
@@ -435,6 +435,8 @@
   </div>
 
   <script>
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    var page_id = urlSearchParams.get('id');
     var getElementById1 = (id) => {
       const el = document.getElementById(id)
       if (el) {
@@ -880,8 +882,7 @@
 
   </script>
   <script>
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const page_id = urlSearchParams.get('id');
+
     var pathItem
     var dependencyItem
     var skuCreated
@@ -945,6 +946,7 @@
       }
       updatePathItem()
     }
+    //not used
     const addComponent1 = (id) => {
       getElementById1('file-list-attach-component-options;').remove()
       const actionObject = {
@@ -1212,6 +1214,7 @@
         .catch(error => console.error('Error:', error));
 
     }
+    //end not used
     var addComponent = (e) => {
 
       let selected = []
@@ -1452,7 +1455,7 @@
 
 
             // Update select options
-            
+
           })
           .catch(error => console.error('Error:', error));
 
@@ -1466,7 +1469,7 @@
         const clonedFieldset3 = getElementById1('file-list-attach-component-options').cloneNode(true);
         clonedFieldset3.removeAttribute('hidden')
         clonedFieldset3.id = 'file-list-attach-component-options;'
-        
+
         clonedFieldset.id = clonedFieldset.id + ';';
         clonedFieldset.setAttribute('action', 'Add_Component')
         clonedFieldset3.querySelector('[data-action="moveBack"]').onclick = (e) => {
@@ -1516,6 +1519,34 @@
     }
   </script>
   <script>
+    var approveAddComponent = async (e) => {
+      const m1 = Array.from(e.target.parentNode.children).filter(i => i.id)
+
+      
+      const ids = m1.map(e => e.id)
+      const optionList = getElementById1('file-list-attach-component-options;')
+      for (const id of ids) {
+        const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/' + id + ':path')
+          .then(response => response.json())
+
+        if (data.LinkBP || optionList.querySelector('#file-list-link-by-path').classList.contains('b-selected')) {
+          const p = data.lsi1.split('/')
+          p.shift()
+          addComponent1("*/" + p.join('/'))
+        }
+        else if (optionList.querySelector('#file-list-link-by-name').classList.contains('b-selected')) {
+          const p = data.lsi1.split('/')
+
+          addComponent1("#" + p.pop())
+        }
+        else {
+          addComponent1(item.id)
+        }
+      }
+
+      getElementById1('file-list-attach-component-options;').remove()
+      getElementById1('filePathList;').remove()
+    }
     var approveReplace = async (e) => {
       const m1 = Array.from(e.target.parentNode.children).filter(i => i.id)
       const parentId = e.target.parentNode.id.replace('file-path-list;', '')
@@ -1777,7 +1808,7 @@
 
 
             // Update select options
-            
+
           })
           .catch(error => console.error('Error:', error));
 
@@ -2840,7 +2871,7 @@
 
 
           // Update select options
-          
+
         })
         .catch(error => console.error('Error:', error));
 
@@ -2879,7 +2910,7 @@
 
 
           // Update select options
-          
+
         })
         .catch(error => console.error('Error:', error));
     }
