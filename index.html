@@ -5411,7 +5411,7 @@
       
       const combinations =pathItem.combinations
       const priceItems = querySelectorAll1('[data-builder-cart="price"]')
-      const prices = Array.from(priceItems[0].children).map(e=>parseInt(e.textContent))
+      
       for (const schema of schemas) {
         const receiverName = schema.getAttribute('data-transfer-receiver')
         let json = JSON.parse(schema.textContent)
@@ -5424,7 +5424,7 @@
           delete json['offers-single']
         }
         else {
-          const prices = []
+          let prices = []
           for (const el of priceItems){
             prices.push(...Array.from(el.children).map(e=>parseInt(e.textContent)))
           }
