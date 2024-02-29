@@ -5420,9 +5420,8 @@
         if (combinations === 1) {
           const prices = Array.from(priceItems[0].children).map(e=>parseInt(e.textContent))
           delete json['offers-aggregate']
-          json.offers = {...json['offers-single']}
+          json.offers = {...json['offers-single'],price:Math.min(...prices)}
           delete json['offers-single']
-          //json.offers.price = Math.min(...prices)
         }
         else {
           const prices = []
@@ -5430,13 +5429,10 @@
             prices.push(...Array.from(e).map(e=>parseInt(e.textContent)))
           }
           delete json['offers-single']
-          json.offers = {...json['offers-aggregate']}
+          json.offers = {...json['offers-aggregate'],lowPrice:Math.min(...prices),highPrice:Math.max(...prices),offerCount:combinations}
           delete json['offers-aggregate']
 
-          json.offers.lowPrice = Math.min(...prices)
-          json.offers.highPrice = Math.max(...prices)
-          json.offerCount = combinations
-        }
+          
         traverseJSONAndUpdate(json, '', receiverName);
 
         json = cleanJson(json)
