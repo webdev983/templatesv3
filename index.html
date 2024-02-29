@@ -5418,13 +5418,17 @@
         // Start traversing the JSON object
 
         if (combinations === 1) {
+          const prices = Array.from(priceItems[0].children).map(e=>parseInt(e.textContent))
           delete json['offers-aggregate']
           json.offers = {...json['offers-single']}
           delete json['offers-single']
-          json.offers.price = Math.min(...prices)
+          //json.offers.price = Math.min(...prices)
         }
         else {
-          
+          const prices = []
+          for (const el of priceItems){
+            prices.push(...Array.from(e).map(e=>parseInt(e.textContent)))
+          }
           delete json['offers-single']
           json.offers = {...json['offers-aggregate']}
           delete json['offers-aggregate']
