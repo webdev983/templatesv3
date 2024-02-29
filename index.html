@@ -5410,8 +5410,8 @@
       //sku 
       
       const combinations =pathItem.combinations
-
-
+      const priceItems = querySelectorAll1('[data-builder-cart="price"]')
+      const prices = Array.from(priceItems.children).map(e=>parseInt(e.textContent))
       for (const schema of schemas) {
         const receiverName = schema.getAttribute('data-transfer-receiver')
         let json = JSON.parse(schema.textContent)
@@ -5421,12 +5421,17 @@
           delete json['offers-aggregate']
           json.offers = {...json['offers-single']}
           delete json['offers-single']
+          json.offers.price = Math.min(...prices)
         }
         else {
           
           delete json['offers-single']
           json.offers = {...json['offers-aggregate']}
           delete json['offers-aggregate']
+
+          json.offers.lowPrice = Math.min(...prices)
+          json.offers.highPrice = Math.max(...prices)
+          json.offerCount = combinations
         }
         traverseJSONAndUpdate(json, '', receiverName);
 
