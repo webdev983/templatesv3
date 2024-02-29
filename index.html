@@ -5408,9 +5408,8 @@
       const schemas = querySelectorAll1('script[data-transfer-receiver]')
 
       //sku 
-      const resultList = getProductAttributes()
-      console.log('rese'+JSON.stringify(resultList))
-      const combinations = generateCombinations(resultList)
+      
+      const combinations =pathItem.combinations
 
 
       for (const schema of schemas) {
@@ -5822,6 +5821,7 @@
       const resultList = await getProductAttributes(true)
       const combinations = generateCombinations(resultList)
       pathItem.sku = value
+      pathItem.combinations = combinations.length
       //update path item
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
