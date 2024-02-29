@@ -118,7 +118,7 @@
 
 
       <!--menus-->
-    
+
       <div id="head-menu" class="on-page-menu">
         <label class="l-1" style="margin-right: 10px; user-select: none;">🗿</label>
       </div>
@@ -212,7 +212,7 @@
   <!-- MENUS-->
   <div hidden>
 
-          
+
     <fieldset id="update-href-menu" class="menu" data-menu>
       <button class="b-3" onclick="cancel(event)">❌Cancel</button>
       <input id="editHrefInput" style="width: 500px" placeholder="🔗 edit href" type="text">
@@ -302,8 +302,8 @@
       <label label for="code-tree-menu-dublicate-with-parent-option"
         id="code-tree-menu-dublicate-with-parent-option-1">⚠️</label><input
         id="code-tree-menu-dublicate-with-parent-option" type="checkbox"><label
-        for="code-tree-menu-dublicate-with-parent-option"
-        id="code-tree-menu-dublicate-with-parent-option-2">Duplicate with Parent</label>
+        for="code-tree-menu-dublicate-with-parent-option" id="code-tree-menu-dublicate-with-parent-option-2">Duplicate
+        with Parent</label>
     </fieldset>
 
 
@@ -404,7 +404,8 @@
 
 
     <ol data-element="file-path-list" id="selectedFilePathList" class="list-1" style="margin-left: -10px;" data-menu>
-      <button style="margin-bottom: 8px; margin-left: -10px;" class="b-4" onclick="cancelReplace(event)">❌Cancel</button>
+      <button style="margin-bottom: 8px; margin-left: -10px;" class="b-4"
+        onclick="cancelReplace(event)">❌Cancel</button>
       <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" onclick="approveReplace(event)">✅
         Approve</button>
       <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" data-action="moveBack">⤴️ Up</button>
@@ -1526,7 +1527,7 @@
     var approveAddComponent = async (e) => {
       const m1 = e.target.parentNode.querySelectorAll('[data-element="file-path"]')
 
-      
+
       const ids = Array.from(m1).map(e => e.id)
       const optionList = getElementById1('file-list-attach-component-options;')
       for (const id of ids) {
@@ -1554,7 +1555,7 @@
     var approveReplace = async (e) => {
       const m1 = Array.from(e.target.parentNode.children).filter(i => i.id)
       const parentId = e.target.parentNode.id.replace('file-path-list;', '')
-      if(!parentId){
+      if (!parentId) {
         alert('no target id')
         return
       }
@@ -3305,7 +3306,7 @@
 
 
         const handle = (targetFieldset, targetFieldset2, flag) => {
-          console.log('target id' +targetFieldset?.id + targetFieldset2?.id)
+          console.log('target id' + targetFieldset?.id + targetFieldset2?.id)
           console.log('handling')
           console.log('handling move' + move)
           // Get the parent fieldset of the target
@@ -3567,7 +3568,7 @@
             const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + lsi)
               .then(response => response.json())
             console.log(lsi)
-            console.log(items.map(i=>i.lsi1))
+            console.log(items.map(i => i.lsi1))
             const item1 = items.find(i => i.lsi1.replace(';publish:published', '') === lsi)
             inserted_component.componentId = item1.id
           }
@@ -5204,9 +5205,9 @@
 
               }
               else if (Array.isArray(item.target_element)) {
-                console.log('array of targter '+ JSON.stringify(item.target_element))
-                item.target_element = item.target_element.filter(e=>e).map(i => {
-                  console.log('prob666'+ JSON.stringify(i))
+                console.log('array of targter ' + JSON.stringify(item.target_element))
+                item.target_element = item.target_element.filter(e => e).map(i => {
+                  console.log('prob666' + JSON.stringify(i))
                   if (i.id === id + '-tree') {
                     return { ...i, id: newId + '-tree' }
                   }
@@ -5405,10 +5406,28 @@
     const generateSchema = () => {
       const generatedPage = getElementById1('generated-page')
       const schemas = querySelectorAll1('script[data-transfer-receiver]')
+
+      //sku 
+      const resultList = await getProductAttributes(true)
+      const combinations = generateCombinations(resultList)
+
+
       for (const schema of schemas) {
         const receiverName = schema.getAttribute('data-transfer-receiver')
         let json = JSON.parse(schema.textContent)
         // Start traversing the JSON object
+
+        if (combinations.length === 1) {
+          delete json.offers-aggregate
+          json.offers = {...json.offers-single}
+          delete json.offers-single
+        }
+        else {
+          
+          delete json.offers-single
+          json.offers = {...json.offers-aggregate}
+          delete json.offers-aggregate
+        }
         traverseJSONAndUpdate(json, '', receiverName);
 
         json = cleanJson(json)
@@ -5948,7 +5967,7 @@
           target_element: element.id + '-tree',
 
         }
-        await pushAction(el)
+        //await pushAction(el)
       }
     }
     const getProductAttributes = async (setNumbers) => {
@@ -7135,7 +7154,7 @@
           "tagValue": "<text></text>",
           "TagComment": "svg",
           "TagType": "svg"
-        }      
+        }
       ];
 
 
