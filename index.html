@@ -5426,8 +5426,9 @@
         else {
           const prices = []
           for (const el of priceItems){
-            prices.push(...Array.from(el).map(e=>parseInt(e.textContent)))
+            prices.push(...Array.from(el.children).map(e=>parseInt(e.textContent)))
           }
+          console.log('prices'+ JSON.stringify(prices))
           delete json['offers-single']
           json.offers = {...json['offers-aggregate'],lowPrice:Math.min(...prices),highPrice:Math.max(...prices),offerCount:combinations}
           delete json['offers-aggregate']
