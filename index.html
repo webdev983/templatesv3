@@ -3165,6 +3165,18 @@
       actionLog.push(element)
       !firstLoad && await pushActionToDb(element)
       if (element.action !== 'Replace_Component') {
+        let ac = element.action
+        if(ac ==="Add_Component"){
+          if(element.inserted_component.componentId.startsWith('*')){
+            ac = "Add_Component_Path"
+          }
+          else if(element.inserted_component.componentId.startsWith('#')){
+            ac = "Add_Component_Name"
+          }
+          else{
+            ac = "Add_Component_Id"
+          }
+        }
         await insertDataIntoCodeLog(time, element.action)
       }
 
