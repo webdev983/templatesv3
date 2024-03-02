@@ -143,7 +143,7 @@
     </label>
     <br>
     <div hidden id="choose_link_type">
-      <label class="l-3"></label> <input  id="all-files" type="radio" checked
+      <label class="l-3"></label> <input onchange="togglePathLinkType(event,true)" id="all-files" type="radio" checked
         name="choose_link_type">ID</label>
       <br>
       <label class="l-3"> <input id="all-files" onchange="togglePathLinkType(event)" type="radio" checked name="choose_link_type">Path</label>
@@ -214,10 +214,12 @@
       }
     }
 
-    function togglePathLinkType(event) {
+    function togglePathLinkType(event,flag) {
       const choosePathLinkTypeDiv = document.getElementById('choose_path_link_type');
       const linkTypePathRadio = event.target
-      if (linkTypePathRadio.checked) {
+      const cond = linkTypePathRadio.checked
+      flag && (cond = !cond)
+      if (cond) {
         choosePathLinkTypeDiv.removeAttribute('hidden');
       } else {
         choosePathLinkTypeDiv.setAttribute('hidden', '');
