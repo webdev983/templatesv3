@@ -77,7 +77,7 @@
   </select>
   </div>
 
-  <div style="display: none;" id="right-click-menu" class="right-click-menu" >
+  <div style="display: none;" id="right-click-menu" class="right-click-menu">
     <div class="menu-option" onclick="alert('Option 0 selected')">🖼️ edit pic</div>
   </div>
 
@@ -87,7 +87,7 @@
     <button class="b-5" onclick="cancel(event)" style="user-select: none;">❌Close</button>
     <span class="l-4" style="user-select: none;">🆔</span><span data-value="file-id"
       class="l-4">1414124-414221412-4124214124-412412</span>
-    </div>
+  </div>
   </div>
 
   <div hidden id="cancelation" data-menu>
@@ -101,26 +101,42 @@
 
   <div hidden data-element="copy-folder" data-menu>
 
-    <input data-input="copy-file-path-input" type="text" placeholder="📂name" style=" min-width: 700px; padding: 5px; border: 1px solid #4A90E2;   border-radius: 5px;   font-size: 16px; margin-bottom: 7px;">
-      <br>
-    <label class="l-3"> 
+    <input data-input="copy-file-path-input" type="text" placeholder="📂name"
+      style=" min-width: 700px; padding: 5px; border: 1px solid #4A90E2;   border-radius: 5px;   font-size: 16px; margin-bottom: 7px;">
+    <br>
+    <label class="l-3">
       <input id="all-files" onchange="showSiteCheckboxes(event)" type="radio" checked name="choose_components">
       📁All
     </label>
-<br>
+    <br>
     <label class="l-3">
       <input id="site-files" onchange="showSiteCheckboxes(event)" type="radio" name="choose_components">
       🌐
-     Site
+      Site
     </label>
     <div id="site-checkboxes" hidden>
       <ul>
-      <li><label class="l-3"><input id="hub-files" type="checkbox">🗺️Hub</label></li>
-      <li><label class="l-3"><input id="style-files" type="checkbox">🎨Style</label></li>
-      <li><label class="l-3"><input id="content-files" type="checkbox">📄Content</label></li>
+        <li><label class="l-3"><input id="hub-files" type="checkbox">🗺️Hub</label></li>
+        <li><label class="l-3"><input id="style-files" type="checkbox">🎨Style</label></li>
+        <li><label class="l-3"><input id="content-files" type="checkbox">📄Content</label></li>
       </ul>
     </div>
-   <br>
+    
+
+    <br>
+
+    <button data-action="copy-file-path-cancel" class="b-4">❌Cancel</button>
+    <button class="b-4" data-action="copy-file-path-save">✅ Copy</button>
+
+
+  </div>
+  <div hidden data-element="copy-file" data-menu>
+
+    <input data-input="copy-file-path-input" type="text" placeholder="📂name"
+      style=" min-width: 700px; padding: 5px; border: 1px solid #4A90E2;   border-radius: 5px;   font-size: 16px; margin-bottom: 7px;">
+    <br>
+    
+    <br>
       <label class="l-3"> 
         <input type="checkbox">
         🔗 Linked Clone
@@ -143,18 +159,17 @@
       <input id="replaceCheckbox" type="checkbox">
       🔄Replace
   </label>
-
-  <br>
+    <br>
 
     <button data-action="copy-file-path-cancel" class="b-4">❌Cancel</button>
     <button class="b-4" data-action="copy-file-path-save">✅ Copy</button>
-   
-
-</div>
 
 
+  </div>
 
-    <!--
+
+
+  <!--
     <label class="l-3">
       <label class="l-3">
         <input id="hub-files" type="radio" name="choose_components">
@@ -207,7 +222,7 @@
         const entry = document.createElement('div');
         entry.className = 'menu-option';
         entry.innerHTML = text;
-        entry.onclick =(e)=>{removeMenus(); clickHandler(e)};
+        entry.onclick = (e) => { removeMenus(); clickHandler(e) };
         menu.appendChild(entry);
       }
       const copy = async (id) => {
@@ -402,7 +417,7 @@
         const entry = document.createElement('div');
         entry.className = 'menu-option';
         entry.innerHTML = text;
-        entry.onclick = (e)=>{removeMenus(); clickHandler(e) };
+        entry.onclick = (e) => { removeMenus(); clickHandler(e) };
         menu.appendChild(entry);
       }
       const openRemove1 = (id, path) => {
@@ -455,7 +470,7 @@
             let ids = []
             if (filtered) {
               const siteC = cloned.querySelector("#site-checkboxes")
-              
+
               const inputs = siteC.querySelectorAll('input')
               for (const input of inputs) {
                 if (input.checked) {
@@ -483,7 +498,7 @@
                   items.push(...data.items.filter(element => !element.lsi1.endsWith('/Style') && !element.lsi1.endsWith('/Hub') && element.lsi1.split('/')[element.lsi1.split('/').length - 2] !== 'Components'))
                 }
               }
-              else{
+              else {
                 items = data.items
               }
 
@@ -902,10 +917,10 @@
       }
 
       removeMenus()
-      
+
       listItem.remove();
     }
-    const removeMenus =()=> document.querySelector("#filePathList").querySelectorAll('[data-menu]').forEach(menu=>menu.remove())
+    const removeMenus = () => document.querySelector("#filePathList").querySelectorAll('[data-menu]').forEach(menu => menu.remove())
     function removeDuplicates(arr) {
       return Array.from(new Set(arr));
     }
