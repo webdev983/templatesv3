@@ -138,12 +138,12 @@
 
     <br>
     <label class="l-3">
-      <input type="checkbox" onchange="toggleLinkType()">
+      <input type="checkbox" onchange="toggleLinkType(event)">
       🔗 Linked Clone
     </label>
     <br>
     <div hidden id="choose_link_type">
-      <label class="l-3"></label> <input onchange="togglePathLinkType()" id="all-files" type="radio" checked
+      <label class="l-3"></label> <input onchange="togglePathLinkType(event)" id="all-files" type="radio" checked
         name="choose_link_type">ID</label>
       <br>
       <label class="l-3"> <input id="all-files" type="radio" checked name="choose_link_type">Path</label>
@@ -196,9 +196,9 @@
 
 
   <script>
-    function toggleLinkType() {
+    function toggleLinkType(event) {
       const chooseLinkTypeDiv = document.getElementById('choose_link_type');
-      const linkedCloneCheckbox = document.getElementById('linked-clone-checkbox');
+      const linkedCloneCheckbox = event.target
 
       if (linkedCloneCheckbox.checked) {
         chooseLinkTypeDiv.removeAttribute('hidden');
@@ -214,10 +214,9 @@
       }
     }
 
-    function togglePathLinkType() {
+    function togglePathLinkType(event) {
       const choosePathLinkTypeDiv = document.getElementById('choose_path_link_type');
-      const linkTypePathRadio = document.getElementById('link-type-path');
-
+      const linkTypePathRadio = event.target
       if (linkTypePathRadio.checked) {
         choosePathLinkTypeDiv.removeAttribute('hidden');
       } else {
