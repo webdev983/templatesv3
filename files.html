@@ -143,10 +143,11 @@
     </label>
     <br>
     <div hidden id="choose_link_type">
-      <label class="l-3"></label> <input onchange="togglePathLinkType(event,true)" checked id="all-files" type="radio" checked
-        name="choose_link_type">ID</label>
+      <label class="l-3"></label> <input onchange="togglePathLinkType(event,true)" checked id="all-files" type="radio"
+        checked name="choose_link_type">ID</label>
       <br>
-      <label class="l-3"> <input id="all-files" onchange="togglePathLinkType(event)" type="radio"  name="choose_link_type">Path</label>
+      <label class="l-3"> <input id="all-files" onchange="togglePathLinkType(event)" type="radio"
+          name="choose_link_type">Path</label>
     </div>
 
     <div hidden id="choose_path_link_type">
@@ -214,7 +215,7 @@
       }
     }
 
-    function togglePathLinkType(event,flag) {
+    function togglePathLinkType(event, flag) {
       const choosePathLinkTypeDiv = event.target.closest('[data-element="copy-file"]').querySelector('#choose_path_link_type');
       const linkTypePathRadio = event.target
       let cond = linkTypePathRadio.checked
@@ -322,137 +323,45 @@
           saveButton.onclick = async function (e) {
             e.stopPropagation()
             const new_value = cloned.querySelector('[data-input="copy-file-path-input"]').value
-            const backupCheck = cloned.querySelector('#replaceCheckbox').checked
-            //backup target
-            const inputs = cloned.querySelectorAll('input[name="choose_components"]');
 
-            // Iterate over each input
-            let filtered = cloned.querySelector('#site-files').checked
-            let ids = []
-            if (filtered) {
-              const siteC = cloned.querySelector("#site-checkboxes")
-
-              const inputs = siteC.querySelectorAll('input')
-              for (const input of inputs) {
-                if (input.checked) {
-                  ids.push(input.id)
-                }
-              }
+            const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
+            const newVal = cloned.querySelector('[data-input="copy-file-path-input"]');
+            // Ensure the request was successful (status code 2xx)
+            if (!response.ok) {
+              throw new Error(`Failed to load data from the database. Status: ${response.status}`);
             }
 
-
-            const copyToTarget = async (path, new_value, backupCheck) => {
-              const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${path}`);
-              //list of sub paths
-              const data = await response.json();
-              const d = new Date()
-              let items = []
-              console.log(JSON.stringify(ids))
-              if (filtered) {
-                if (ids.includes('hub-files')) {
-                  items.push(...data.items.filter(element => element.lsi1.endsWith('/Hub')))
-                }
-                if (ids.includes('style-files')) {
-                  items.push(...data.items.filter(element => element.lsi1.endsWith('/Style')))
-                }
-                if (ids.includes("content-files")) {
-                  items.push(...data.items.filter(element => !element.lsi1.endsWith('/Style') && !element.lsi1.endsWith('/Hub') && element.lsi1.split('/')[element.lsi1.split('/').length - 2] !== 'Components'))
-                }
+            // Parse and log the response or handle it as needed
+            const responseData = await response.json();
+            const newId = generateUUID()
+            console.log(JSON.stringify(responseData))
+            for (const entry of responseData.items) {
+              entry.id = newId
+              console.log('entry ' + JSON.stringify(entry))
+              if (entry.sk === 'path') {
+                entry.lsi1 = newVal
+                entry.protected = false
               }
-              else {
-                items = data.items
+              if (entry.target_element === id + '-tree') {
+                console.log('err1')
+                entry.target_element = newId + '-tree'
               }
-
-              await Promise.all(items.map(async item => {
-                const newId = generateUUID()
-
-                const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${item.id}&startsWith=true`, {
-                  method: 'GET',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                });
-                const res2 = await response.json()
-
-                await Promise.all(res2.items.map(async item1 => {
-
-                  if (item1.sk !== 'path') {
-                    if (item1.target_element === item1.id + '-tree') {
-                      console.log('err1')
-                      item1.target_element = newId + '-tree'
-                    }
-                    return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify(
-                        {
-                          ...item1,
-                          id: newId
-                        }
-                      ),
-                    })
-                  }
-                  else {
-                    if (backupCheck) {
-                      const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${item1.lsi1.replace(path, new_value)}`);
-                      //list of sub paths
-                      const data = await response.json();
-                      if (data.items.length) {
-                        //move to trash
-                        const id = data.items[0].id
-                        const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`, {
-                          method: 'GET',
-                          headers: {
-                            'Content-Type': 'application/json',
-                          },
-                        });
-                        const res2 = await response.json()
-                        await Promise.all(res2.items.map(async item1 => {
-
-                          if (item1.sk === 'path') {
-                            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                              method: 'POST',
-                              headers: {
-                                'Content-Type': 'application/json',
-                              },
-                              body: JSON.stringify(
-                                {
-                                  ...item1,
-                                  lsi1: 'trash/' + d.toISOString() + '-replace/' + item1.lsi1,
-
-                                }
-                              ),
-                            })
-
-                          }
-
-                        }))
-                      }
-                    }
-                    await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify(
-                        {
-                          ...item1,
-                          lsi1: item1.lsi1.replace(path, new_value),
-                          id: newId,
-                          protected: false
-                        }
-                      ),
-                    })
-                  }
-                }))
-              }))
+              const response1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(entry),
+              });
+              if (!response1.ok) {
+                throw new Error(`Failed to load data from the database. Status: ${response.status}`);
+              }
             }
-
-            //copy to target
-            await copyToTarget(path, new_value, backupCheck)
-
 
 
 
