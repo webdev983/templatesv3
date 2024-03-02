@@ -3166,7 +3166,7 @@
         }
       }
     }
-    const pushAction = async (element, firstLoad, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId) => {
+    const pushAction = async (element, firstLoad, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId,componentPath) => {
       console.log('pushed' + JSON.stringify(element))
       const time = element.time
       console.log('time' + time)
@@ -3189,7 +3189,7 @@
       }
 
 
-      await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId)
+      await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId,componentPath)
     }
     const pushActionToDb = async (action) => {
       const urlSearchParams = new URLSearchParams(window.location.search);
@@ -3252,7 +3252,7 @@
         }
       }
     }
-    const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId) => {
+    const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId,componentPath) => {
       const { subAction, noSubComp, noComp, time, withParent, move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
       let treeElement
       let componentElement
@@ -3593,7 +3593,7 @@
             inserted_component.componentId = item1.id
           }
           else if (inserted_component.componentId.startsWith('#')) {
-            const splited = pathItem.lsi1.split('/')
+            const splited = componentPath.split('/')
             splited.pop()
             const last = inserted_component.componentId.replace('#', '')
             splited.push(last)
@@ -5174,6 +5174,7 @@
         const upper1 = upperRemoveActions ? upperRemoveActions : []
         const replaceActions = [...responseData.items.filter(el => el.action === 'Replace_Component'), ...upper]
         const removeActions = [...responseData.items.filter(el => el.action === 'removeComponent'), ...upper1]
+        const componentPath = responseData.items.find(e=>e.sk==='path')?.lsi1.replace('').replace(';publish:published', '')
         for (const item of responseData.items) {
           if (!id) {
             if (item.sk === 'path') {
@@ -5251,13 +5252,13 @@
               }
 
               //insertDataIntoCodeLog(item.sk, item.action)
-              await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId)
+              await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId,componentPath)
 
               continue
             }
 
 
-            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId)
+            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId,componentPath)
           }
 
         }
