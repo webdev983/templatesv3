@@ -418,9 +418,11 @@
 
     <div hidden id="file-list-attach-component-options" style="padding: 5px; margin-left: 10px;" data-menu>
 
-      <button class="b-3" id="file-list-link-by-path" style="margin-top: 5px;" onclick="switchSelected(event)">./📁Absolute</button>
-      <button class="b-3" id="file-list-link-by-name" style="margin-top: 5px;" onclick="switchSelected(event)">*./📁 Relative</button>
-<br>
+      <button class="b-3" id="file-list-link-by-path" style="margin-top: 5px;" onclick="switchSelected(event)">*📁 By
+        Path</button>
+      <button class="b-3" id="file-list-link-by-name" style="margin-top: 5px;" onclick="switchSelected(event)">*🛖 By
+        Name</button>
+      <br>
       <button style="margin-top: 5px;" class="b-4" onclick="cancelReplace(event)">❌Cancel</button>
       <button style="margin-top: 5px;" class="b-4" onclick="approveAddComponent(event)">✅ Approve</button>
       <button style="margin-top: 5px;" class="b-4" data-action="moveBack">⤴️ Up</button>
@@ -3593,7 +3595,7 @@
             inserted_component.componentId = item1.id
           }
           else if (inserted_component.componentId.startsWith('#')) {
-            const splited = componentPath.split('/')
+            const splited = componentPath?.split('/') || pathItem.lsi1.split('/')
             splited.pop()
             const last = inserted_component.componentId.replace('#', '')
             splited.push(last)
