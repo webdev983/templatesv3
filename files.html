@@ -197,25 +197,25 @@
 
   <script>
     function toggleLinkType(event) {
-      const chooseLinkTypeDiv = document.getElementById('choose_link_type');
+      const chooseLinkTypeDiv = event.target.parentNode.querySelector('#choose_link_type');
       const linkedCloneCheckbox = event.target
 
       if (linkedCloneCheckbox.checked) {
         chooseLinkTypeDiv.removeAttribute('hidden');
       } else {
         chooseLinkTypeDiv.setAttribute('hidden', '');
-        document.getElementById('choose_path_link_type').setAttribute('hidden', '');
+        event.target.parentNode.querySelector('#choose_path_link_type').setAttribute('hidden', '');
 
         // Uncheck all radio buttons when linked clone is unchecked
-        document.getElementById('link-type-id').checked = false;
-        document.getElementById('link-type-path').checked = false;
-        document.getElementById('path-type-relative').checked = false;
-        document.getElementById('path-type-absolute').checked = false;
+        event.target.parentNode.querySelector('#link-type-id').checked = true;
+        event.target.parentNode.querySelector('#link-type-path').checked = false;
+        event.target.parentNode.querySelector('#path-type-relative').checked = true;
+        event.target.parentNode.querySelector('#path-type-absolute').checked = false;
       }
     }
 
     function togglePathLinkType(event,flag) {
-      const choosePathLinkTypeDiv = document.getElementById('choose_path_link_type');
+      const choosePathLinkTypeDiv = event.target.parentNode.querySelector('#choose_path_link_type');
       const linkTypePathRadio = event.target
       const cond = linkTypePathRadio.checked
       flag && (cond = !cond)
