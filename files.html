@@ -138,22 +138,22 @@
 
     <br>
     <label class="l-3">
-      <input type="checkbox" onchange="toggleLinkType(event)">
+      <input id="linked-clone" type="checkbox" onchange="toggleLinkType(event)">
       🔗 Linked Clone
     </label>
     <br>
     <div hidden id="choose_link_type">
-      <label class="l-3"></label> <input onchange="togglePathLinkType(event,true)" checked id="all-files" type="radio"
+      <label class="l-3"></label> <input onchange="togglePathLinkType(event,true)" checked id="byId" type="radio"
         checked name="choose_link_type">ID</label>
       <br>
-      <label class="l-3"> <input id="all-files" onchange="togglePathLinkType(event)" type="radio"
+      <label class="l-3"> <input id="all-files" onchange="togglePathLinkType(event)" type="radio" id="byPath"
           name="choose_link_type">Path</label>
     </div>
 
     <div hidden id="choose_path_link_type">
-      <label class="l-3"><input type="radio" checked name="choose_path_link_type">Relative</label>
+      <label class="l-3"><input type="radio" id="relative" checked name="choose_path_link_type">Relative</label>
       <br>
-      <label class="l-3"><input type="radio" checked name="choose_path_link_type">Absolute</label>
+      <label class="l-3"><input type="radio" id="absolute" checked name="choose_path_link_type">Absolute</label>
     </div>
     <br>
 
@@ -322,7 +322,53 @@
           }
           saveButton.onclick = async function (e) {
             e.stopPropagation()
+
             const new_value = cloned.querySelector('[data-input="copy-file-path-input"]').value
+            const linked = cloned.querySelector('#linked-clone')
+            if (linked.checked) {
+              const byId = cloned.querySelector('#byId').checked
+              const byPath = cloned.querySelector('#byPath').checked
+              const uuid = generateUUID()
+              const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  id: uuid,
+                  sk: 'path',
+                  lsi1: new_value,
+                  ownerUUID: 'path'
+                }),
+              })
+              if (byId) {
+                await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    id: uuid,
+                    sk: (new Date()).getTime(),
+                    action: 'Add_Component',
+                    target_element: uuid + '-tree',
+                    inserted_component: { componentId: id, id: generateUUID() },
+                  }),
+                })
+              }
+              else if (byPath) {
+                const relative = cloned.querySelector('#relative').checked
+                const absolute = cloned.querySelector('#absolute').checked
+                if (relative) {
+
+                }
+                else if (absolute) {
+
+                }
+              }
+              return
+            }
+
 
             const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`, {
               method: 'GET',
@@ -330,7 +376,7 @@
                 'Content-Type': 'application/json',
               },
             });
-            
+
             console.log
             // Ensure the request was successful (status code 2xx)
             if (!response.ok) {
