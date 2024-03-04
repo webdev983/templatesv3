@@ -1558,15 +1558,15 @@
         relativePath += lsi3Parts.slice(divergeIndex).join('/');
       }
       // Append the filename to the relative path
-      if(relativePath.endsWith('/')){
-        relativePath +=  lsi3Filename;
+      if (relativePath.endsWith('/')) {
+        relativePath += lsi3Filename;
       }
-      
-      
-      else{
+
+
+      else {
         relativePath += '/' + lsi3Filename;
       }
-      
+
 
       return relativePath;
     }
@@ -3618,12 +3618,12 @@
         return { id: processed1, originalId: id }
       }
       function getAbsolutePath(currentPath, relativePath) {
-        // Split the current path and relative path into arrays of directories and filenames
+        // Split current path and relative path into arrays of directories and filename
         const currentPathParts = currentPath.split('/');
         const relativePathParts = relativePath.split('/');
 
-        // Remove the filename from the current path if it exists
-        const currentPathWithoutFile = currentPathParts[currentPathParts.length - 1] === '' ? currentPathParts : currentPathParts.slice(0, -1);
+        // Extract filename from the relative path
+        const relativeFilename = relativePathParts.pop();
 
         // Handle "./" in relative path
         if (relativePathParts[0] === '.') {
@@ -3632,15 +3632,17 @@
 
         // Handle "../" in relative path
         while (relativePathParts[0] === '..') {
-          currentPathWithoutFile.pop(); // Go one level up
+          currentPathParts.pop(); // Remove the last element from the current path
           relativePathParts.shift(); // Remove the first element ("..")
         }
 
-        // Combine the current path without the filename and the relative path
-        const combinedPath = currentPathWithoutFile.concat(relativePathParts).join('/');
+        // Combine current path and relative path parts
+        const combinedPath = currentPathParts.concat(relativePathParts).join('/');
 
-        // If combined path is empty, return "./" representing the current directory
-        return combinedPath || './';
+        // Append the relative filename
+        const absolutePath = combinedPath + '/' + relativeFilename;
+
+        return absolutePath;
       }
       !path && (path = '')
       switch (action) {
