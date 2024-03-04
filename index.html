@@ -25,7 +25,7 @@
     <button class="b-1 b-select" id="log-open">🪵</button>
   </div>
   <table id="code-log" class="table-1" hidden style="margin-bottom: 100px;">
-    <button  hidden id="refresh-page" class="b-1">🔄</button>
+    <button hidden id="refresh-page" class="b-1">🔄</button>
     <thead>
       <tr>
         <th style="text-align: left;">🕓time</th>
@@ -418,9 +418,11 @@
 
     <div hidden id="file-list-attach-component-options" style="padding: 5px; margin-left: 10px;" data-menu>
 
-      <button class="b-3" id="file-list-link-by-path" style="margin-top: 5px;" onclick="switchSelected(event)">📂Absolute</button>
-      <button class="b-3" id="file-list-link-by-name" style="margin-top: 5px;" onclick="switchSelected(event)">🗂️Relative</button>
-<br>
+      <button class="b-3" id="file-list-link-by-path" style="margin-top: 5px;"
+        onclick="switchSelected(event)">📂Absolute</button>
+      <button class="b-3" id="file-list-link-by-name" style="margin-top: 5px;"
+        onclick="switchSelected(event)">🗂️Relative</button>
+      <br>
       <button style="margin-top: 5px;" class="b-4" onclick="cancelReplace(event)">❌Cancel</button>
       <button style="margin-top: 5px;" class="b-4" onclick="approveAddComponent(event)">✅ Approve</button>
       <button style="margin-top: 5px;" class="b-4" data-action="moveBack">⤴️ Up</button>
@@ -483,7 +485,7 @@
 
   </script>
   <script>
-    const invalidate =async(e)=>{
+    const invalidate = async (e) => {
       const site = pathItem.lsi1.split('/')[0]
       const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/invalidate', {
         method: 'POST',
@@ -1532,6 +1534,24 @@
     }
   </script>
   <script>
+    function getRelativePath(currentLsi, lsi3) {
+      // Split paths into arrays of directories and filenames
+      const currentLsiParts = currentLsi.split('/');
+      const lsi3Parts = lsi3.split('/');
+
+      // Find the index at which paths diverge
+      let divergeIndex = 0;
+      while (divergeIndex < Math.min(currentLsiParts.length, lsi3Parts.length) && currentLsiParts[divergeIndex] === lsi3Parts[divergeIndex]) {
+        divergeIndex++;
+      }
+
+      // Calculate the number of levels to go up from currentLsi to the common directory
+      const levelsUp = currentLsiParts.length - divergeIndex;
+
+      // Build the relative path to lsi3
+      const relativePath = Array(levelsUp).fill('..').join('/') + '/' + lsi3Parts.slice(divergeIndex).join('/');
+      return relativePath;
+    }
     var approveAddComponent = async (e) => {
       const m1 = e.target.parentNode.querySelectorAll('[data-element="file-path"]')
 
@@ -1543,14 +1563,14 @@
           .then(response => response.json())
 
         if (data.LinkBP || optionList.querySelector('#file-list-link-by-path').classList.contains('b-selected')) {
-          
+
           const p = data.lsi1.split('/')
           p.shift()
           addComponent1("*/" + p.join('/'))
         }
         else if (optionList.querySelector('#file-list-link-by-name').classList.contains('b-selected')) {
-          const currentLsi = pathItem.lsi1.replace(';publish:published',"")
-          const relativePath = getRelativePath(data.lsi1.replace(';publish:published',""),currentLsi );
+          const currentLsi = pathItem.lsi1.replace(';publish:published', "")
+          const relativePath = getRelativePath(data.lsi1.replace(';publish:published', ""), currentLsi);
 
           addComponent1("#" + relativePath)
         }
@@ -3168,7 +3188,7 @@
         }
       }
     }
-    const pushAction = async (element, firstLoad, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId,componentPath) => {
+    const pushAction = async (element, firstLoad, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath) => {
       console.log('pushed' + JSON.stringify(element))
       const time = element.time
       console.log('time' + time)
@@ -3176,14 +3196,14 @@
       !firstLoad && await pushActionToDb(element)
       if (element.action !== 'Replace_Component') {
         let ac = element.action
-        if(ac ==="Add_Component"){
-          if(element.inserted_component.componentId.startsWith('*')){
+        if (ac === "Add_Component") {
+          if (element.inserted_component.componentId.startsWith('*')) {
             ac = "Add_Component_Path"
           }
-          else if(element.inserted_component.componentId.startsWith('#')){
+          else if (element.inserted_component.componentId.startsWith('#')) {
             ac = "Add_Component_Name"
           }
-          else{
+          else {
             ac = "Add_Component_Id"
           }
         }
@@ -3191,7 +3211,7 @@
       }
 
 
-      await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId,componentPath)
+      await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath)
     }
     const pushActionToDb = async (action) => {
       const urlSearchParams = new URLSearchParams(window.location.search);
@@ -3254,7 +3274,7 @@
         }
       }
     }
-    const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId,componentPath) => {
+    const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath) => {
       const { subAction, noSubComp, noComp, time, withParent, move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
       let treeElement
       let componentElement
@@ -3596,8 +3616,8 @@
           }
           else if (inserted_component.componentId.startsWith('#')) {
             const splited = componentPath?.split('/') || pathItem.lsi1.split('/')
-            console.log('comp path'+componentPath)
-            console.log('comp path1'+pathItem.lsi1)
+            console.log('comp path' + componentPath)
+            console.log('comp path1' + pathItem.lsi1)
             splited.pop()
             const last = inserted_component.componentId.replace('#', '')
             splited.push(last)
@@ -4106,10 +4126,10 @@
               newEl2.id = replaceCopyId ? inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') + '-tree' : inserted_element.id + '-tree'
               if (componentElement.hasAttribute('data-parentid')) {
                 console.log('in12')
-                
-                
+
+
                 newEl.id = componentElement.id.split(';')[0] + ';' + inserted_element.id
-                newEl2.id = componentElement.id.split(';')[0]  + ';' + inserted_element.id + '-tree'
+                newEl2.id = componentElement.id.split(';')[0] + ';' + inserted_element.id + '-tree'
               }
 
               else if (splited.length > 1) {
@@ -5178,7 +5198,7 @@
         const upper1 = upperRemoveActions ? upperRemoveActions : []
         const replaceActions = [...responseData.items.filter(el => el.action === 'Replace_Component'), ...upper]
         const removeActions = [...responseData.items.filter(el => el.action === 'removeComponent'), ...upper1]
-        const componentPath = responseData.items.find(e=>e.sk==='path')?.lsi1.replace(';publish:published', '')
+        const componentPath = responseData.items.find(e => e.sk === 'path')?.lsi1.replace(';publish:published', '')
         for (const item of responseData.items) {
           if (!id) {
             if (item.sk === 'path') {
@@ -5256,13 +5276,13 @@
               }
 
               //insertDataIntoCodeLog(item.sk, item.action)
-              await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId,componentPath)
+              await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath)
 
               continue
             }
 
 
-            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId,componentPath)
+            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath)
           }
 
         }
@@ -5435,30 +5455,30 @@
       const schemas = querySelectorAll1('script[data-transfer-receiver]')
 
       //sku 
-      
-      const combinations =pathItem.combinations
+
+      const combinations = pathItem.combinations
       const priceItems = querySelectorAll1('[data-builder-cart="price"]')
-      
+
       for (const schema of schemas) {
         const receiverName = schema.getAttribute('data-transfer-receiver')
         let json = JSON.parse(schema.textContent)
         // Start traversing the JSON object
 
         if (combinations === 1) {
-          const prices = Array.from(priceItems[0].children).map(e=>parseInt(e.textContent))
+          const prices = Array.from(priceItems[0].children).map(e => parseInt(e.textContent))
           delete json['offers-aggregate']
-          json.offers = {...json['offers-single'],price:Math.min(...prices)}
+          json.offers = { ...json['offers-single'], price: Math.min(...prices) }
           delete json['offers-single']
         }
         else {
           let prices = []
-          for (const el of priceItems){
-            prices.push(...Array.from(el.children).map(e=>parseInt(e.textContent)))
+          for (const el of priceItems) {
+            prices.push(...Array.from(el.children).map(e => parseInt(e.textContent)))
           }
-          prices = prices.filter(e=>e)
-          console.log('prices'+ JSON.stringify(prices))
+          prices = prices.filter(e => e)
+          console.log('prices' + JSON.stringify(prices))
           delete json['offers-single']
-          json.offers = {...json['offers-aggregate'],lowPrice:Math.min(...prices),highPrice:Math.max(...prices),offerCount:combinations}
+          json.offers = { ...json['offers-aggregate'], lowPrice: Math.min(...prices), highPrice: Math.max(...prices), offerCount: combinations }
           delete json['offers-aggregate']
 
         }
