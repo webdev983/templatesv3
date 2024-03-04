@@ -1535,23 +1535,23 @@
   </script>
   <script>
     function getRelativePath(currentLsi, lsi3) {
-      // Split paths into arrays of directories and filenames
-      const currentLsiParts = currentLsi.split('/');
-      const lsi3Parts = lsi3.split('/');
+    // Split paths into arrays of directories and filenames
+    const currentLsiParts = currentLsi.split('/');
+    const lsi3Parts = lsi3.split('/');
 
-      // Find the index at which paths diverge
-      let divergeIndex = 0;
-      while (divergeIndex < Math.min(currentLsiParts.length, lsi3Parts.length) && currentLsiParts[divergeIndex] === lsi3Parts[divergeIndex]) {
+    // Find the index at which paths diverge
+    let divergeIndex = 0;
+    while (divergeIndex < Math.min(currentLsiParts.length, lsi3Parts.length) && currentLsiParts[divergeIndex] === lsi3Parts[divergeIndex]) {
         divergeIndex++;
-      }
-
-      // Calculate the number of levels to go up from currentLsi to the common directory
-      const levelsUp = currentLsiParts.length - divergeIndex;
-
-      // Build the relative path to lsi3
-      const relativePath = Array(levelsUp).fill('..').join('/') + '/' + lsi3Parts.slice(divergeIndex).join('/');
-      return relativePath;
     }
+
+    // Calculate the number of levels to go up from currentLsi to the common directory
+    const levelsUp = currentLsiParts.length - divergeIndex;
+
+    // Build the relative path to lsi3
+    const relativePath = (levelsUp === 0 ? './' : Array(levelsUp).fill('..').join('/') + '/') + lsi3Parts.slice(divergeIndex).join('/');
+    return relativePath;
+}
     var approveAddComponent = async (e) => {
       const m1 = e.target.parentNode.querySelectorAll('[data-element="file-path"]')
 
