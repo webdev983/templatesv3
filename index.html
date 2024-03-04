@@ -1535,23 +1535,23 @@
   </script>
   <script>
     function getRelativePath(currentLsi, lsi3) {
-    // Split paths into arrays of directories and filenames
-    const currentLsiParts = currentLsi.split('/');
-    const lsi3Parts = lsi3.split('/');
+      // Split paths into arrays of directories and filenames
+      const currentLsiParts = currentLsi.split('/');
+      const lsi3Parts = lsi3.split('/');
 
-    // Find the index at which paths diverge
-    let divergeIndex = 0;
-    while (divergeIndex < Math.min(currentLsiParts.length, lsi3Parts.length) && currentLsiParts[divergeIndex] === lsi3Parts[divergeIndex]) {
+      // Find the index at which paths diverge
+      let divergeIndex = 0;
+      while (divergeIndex < Math.min(currentLsiParts.length, lsi3Parts.length) && currentLsiParts[divergeIndex] === lsi3Parts[divergeIndex]) {
         divergeIndex++;
+      }
+
+      // Calculate the number of levels to go up from currentLsi to the common directory
+      const levelsUp = currentLsiParts.length - divergeIndex;
+
+      // Build the relative path to lsi3
+      const relativePath = (levelsUp === 0 ? './' : Array(levelsUp).fill('..').join('/') + '/') + lsi3Parts.slice(divergeIndex).join('/');
+      return relativePath;
     }
-
-    // Calculate the number of levels to go up from currentLsi to the common directory
-    const levelsUp = currentLsiParts.length - divergeIndex;
-
-    // Build the relative path to lsi3
-    const relativePath = (levelsUp === 0 ? './' : Array(levelsUp).fill('..').join('/') + '/') + lsi3Parts.slice(divergeIndex).join('/');
-    return relativePath;
-}
     var approveAddComponent = async (e) => {
       const m1 = e.target.parentNode.querySelectorAll('[data-element="file-path"]')
 
@@ -3599,6 +3599,29 @@
         const processed1 = [...splited, splited2[0]].join(';')
         return { id: processed1, originalId: id }
       }
+      function getAbsolutePath(currentPath, relativePath) {
+        // Split the current path and relative path into arrays of directories and filenames
+        const currentPathParts = currentPath.split('/');
+        const relativePathParts = relativePath.split('/');
+
+        // Remove the filename from the current path if it exists
+        const currentPathWithoutFile = currentPathParts.slice(0, -1);
+
+        // Handle "./" in relative path
+        if (relativePathParts[0] === '.') {
+          relativePathParts.shift(); // Remove the first element (".")
+        }
+
+        // Handle "../" in relative path
+        while (relativePathParts[0] === '..') {
+          currentPathWithoutFile.pop(); // Go one level up
+          relativePathParts.shift(); // Remove the first element ("..")
+        }
+
+        // Combine the current path without the filename and the relative path
+        const combinedPath = currentPathWithoutFile.concat(relativePathParts).join('/');
+        return combinedPath;
+      }
       !path && (path = '')
       switch (action) {
 
@@ -3615,14 +3638,16 @@
             inserted_component.componentId = item1.id
           }
           else if (inserted_component.componentId.startsWith('#')) {
-            const splited = componentPath?.split('/') || pathItem.lsi1.split('/')
-            console.log('comp path' + componentPath)
-            console.log('comp path1' + pathItem.lsi1)
-            splited.pop()
-            const last = inserted_component.componentId.replace('#', '')
-            splited.push(last)
-            const lsi = splited.join('/')
-            const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + lsi)
+            let cPath = componentPath || pathItem.lsi1
+            cPath = cPath.replace(';publish:published',"")
+
+            
+            
+            const relative = inserted_component.componentId.replace('#', '')
+            const absolutePath = getAbsolutePath(cPath, relative);
+           
+           
+            const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + absolutePath)
               .then(response => response.json())
             console.log('lsi' + lsi)
             console.log(JSON.stringify(items))
