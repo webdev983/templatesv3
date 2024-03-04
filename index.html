@@ -3206,7 +3206,7 @@
         }
       }
     }
-    const pushAction = async (element, firstLoad, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath,pathForRelative) => {
+    const pushAction = async (element, firstLoad, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative) => {
       console.log('pushed' + JSON.stringify(element))
       const time = element.time
       console.log('time' + time)
@@ -3229,7 +3229,7 @@
       }
 
 
-      await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath,pathForRelative)
+      await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative)
     }
     const pushActionToDb = async (action) => {
       const urlSearchParams = new URLSearchParams(window.location.search);
@@ -3292,7 +3292,7 @@
         }
       }
     }
-    const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath,pathForRelative) => {
+    const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative) => {
       const { subAction, noSubComp, noComp, time, withParent, move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
       let treeElement
       let componentElement
@@ -3648,7 +3648,7 @@
       switch (action) {
 
         case 'Add_Component':
-          
+
           if (inserted_component.componentId.startsWith('*')) {
             const site = pathItem.lsi1.split('/')[0]
             const modId = inserted_component.componentId.replace('*', '')
@@ -5145,7 +5145,7 @@
       optionalScript && switchOptionalScript(false)
       LinkBP && switchLinkBP(false)
     }
-    const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId,pathForRelative) => {
+    const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative) => {
       console.log('load from db' + id)
       console.log('err2 ' + p)
       let newPathForRelative = pathForRelative
@@ -5248,12 +5248,15 @@
         const replaceActions = [...responseData.items.filter(el => el.action === 'Replace_Component'), ...upper]
         const removeActions = [...responseData.items.filter(el => el.action === 'removeComponent'), ...upper1]
         const componentPath = responseData.items.find(e => e.sk === 'path')?.lsi1.replace(';publish:published', '')
-        const componentFileName = componentPath.split('/')[componentPath.split('/').length-1]
-        const relativecomponentFileName = pathForRelative.split('/')[pathForRelative.split('/').length-1]
-        if(componentFileName !== relativecomponentFileName){
-          newPathForRelative = componentPath
+        const componentFileName = componentPath.split('/')[componentPath.split('/').length - 1]
+        if (id) {
+          const relativecomponentFileName = pathForRelative.split('/')[pathForRelative.split('/').length - 1]
+          if (componentFileName !== relativecomponentFileName) {
+            newPathForRelative = componentPath
+          }
         }
-        
+
+
         for (const item of responseData.items) {
           if (!id) {
             if (item.sk === 'path') {
@@ -5331,13 +5334,13 @@
               }
 
               //insertDataIntoCodeLog(item.sk, item.action)
-              await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath,newPathForRelative)
+              await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, newPathForRelative)
 
               continue
             }
 
 
-            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath,componentPath)
+            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, componentPath)
           }
 
         }
