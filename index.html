@@ -1539,6 +1539,10 @@
       const currentLsiParts = currentLsi.split('/');
       const lsi3Parts = lsi3.split('/');
 
+      // Extract filenames from paths
+      const currentFilename = currentLsiParts.pop();
+      const lsi3Filename = lsi3Parts.pop();
+
       // Find the index at which paths diverge
       let divergeIndex = 0;
       while (divergeIndex < Math.min(currentLsiParts.length, lsi3Parts.length) && currentLsiParts[divergeIndex] === lsi3Parts[divergeIndex]) {
@@ -1549,7 +1553,13 @@
       const levelsUp = currentLsiParts.length - divergeIndex;
 
       // Build the relative path to lsi3
-      const relativePath = (levelsUp === 0 ? './' : Array(levelsUp).fill('..').join('/') + '/') + lsi3Parts.slice(divergeIndex).join('/');
+      let relativePath = (levelsUp === 0 ? './' : Array(levelsUp).fill('..').join('/') + '/');
+      if (lsi3Parts.length > 0) {
+        relativePath += lsi3Parts.slice(divergeIndex).join('/');
+      }
+      // Append the filename to the relative path
+      relativePath += '/' + lsi3Filename;
+
       return relativePath;
     }
     var approveAddComponent = async (e) => {
