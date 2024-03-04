@@ -3620,7 +3620,9 @@
 
         // Combine the current path without the filename and the relative path
         const combinedPath = currentPathWithoutFile.concat(relativePathParts).join('/');
-        return combinedPath;
+
+        // If combined path is empty, return "./" representing the current directory
+        return combinedPath || './';
       }
       !path && (path = '')
       switch (action) {
@@ -3639,14 +3641,14 @@
           }
           else if (inserted_component.componentId.startsWith('#')) {
             let cPath = componentPath || pathItem.lsi1
-            cPath = cPath.replace(';publish:published',"")
-            console.log('cpath ' +cPath)
-            
-            
+            cPath = cPath.replace(';publish:published', "")
+            console.log('cpath ' + cPath)
+
+
             const relative = inserted_component.componentId.replace('#', '')
             const absolutePath = getAbsolutePath(cPath, relative);
-           
-           
+
+
             const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + absolutePath)
               .then(response => response.json())
             console.log('lsi' + absolutePath)
