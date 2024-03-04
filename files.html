@@ -103,9 +103,9 @@
       <summary class="summary-L-3"><span class="l-3 b-dark-blue"> 🔗 Link Type (Optional)</span></summary>
       <select class="select-1" style="display: block; margin-bottom: 7px; margin-left: 18px;" id="choose_link_type">
         <option value=""> ⬇️ Select</option>
-        <option value=""> 🆔 Id</option>
-        <option value=""> 📂 Absolute</option>
-        <option value=""> 🗂️ Relative</option>
+        <option value="" id="byId"> 🆔 Id</option>
+        <option value="" id="absolute"> 📂 Absolute</option>
+        <option value="" id="relative"> 🗂️ Relative</option>
       </select>
     </details>
 
@@ -113,11 +113,11 @@
     <details style="margin-bottom: 7px;">
       <summary class="summary-L-3"><span class="l-3 b-dark-blue"> 🌐 File Type (Optional)</span></summary>
       <select class="select-1" id="site-checkboxes" style="display: block; margin-bottom: 7px; margin-left: 18px;"
-        multiple>
-        <option value=""> ✔️ All</option>
-        <option value=""> 🗺️ Hub</option>
-        <option value=""> 🎨 Style</option>
-        <option value=""> 📄 Content</option>
+        multiple> 
+        <option value="" id="All"> ✔️ All</option>
+        <option value="" id="Hub"> 🗺️ Hub</option>
+        <option value="" id="Style"> 🎨 Style</option>
+        <option value="" id="Content"> 📄 Content</option>
       </select>
     </details>
     <button data-action="copy-file-path-cancel" class="b-4">❌ Cancel</button>
@@ -658,23 +658,15 @@
           saveButton.onclick = async function (e) {
             e.stopPropagation()
             const new_value = cloned.querySelector('[data-input="copy-file-path-input"]').value
-            const backupCheck = cloned.querySelector('#replaceCheckbox').checked
+            const backupCheck = true
             //backup target
             const inputs = cloned.querySelectorAll('input[name="choose_components"]');
 
             // Iterate over each input
-            let filtered = cloned.querySelector('#site-files').checked
-            let ids = []
-            if (filtered) {
-              const siteC = cloned.querySelector("#site-checkboxes")
-
-              const inputs = siteC.querySelectorAll('input')
-              for (const input of inputs) {
-                if (input.checked) {
-                  ids.push(input.id)
-                }
-              }
-            }
+            const hub = cloned.querySelector('#Hub').selected
+            const style = cloned.querySelector('#Style').selected
+            const content = cloned.querySelector('Content').selected
+            
 
 
             const copyToTarget = async (path, new_value, backupCheck) => {
@@ -684,15 +676,15 @@
               const d = new Date()
               let items = []
               console.log(JSON.stringify(ids))
-              if (filtered) {
-                if (ids.includes('hub-files')) {
+              if (hub || style || content) {
+                if (hub) {
                   items.push(...data.items.filter(element => element.lsi1.endsWith('/Hub')))
                 }
-                if (ids.includes('style-files')) {
+                if (style) {
                   items.push(...data.items.filter(element => element.lsi1.endsWith('-Style') && element.lsi1.endsWith('-Structure')))
                 }
 
-                if (ids.includes("content-files")) {
+                if (content) {
                   items.push(...data.items.filter(element => element.lsi1.endsWith('-Content')))
                 }
               
