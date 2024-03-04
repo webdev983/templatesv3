@@ -245,47 +245,47 @@
 
     }
     function getRelativePath(currentLsi, lsi3) {
-    // Split paths into arrays of directories and filenames
-    const currentLsiParts = currentLsi.split('/');
-    const lsi3Parts = lsi3.split('/');
+      // Split paths into arrays of directories and filenames
+      const currentLsiParts = currentLsi.split('/');
+      const lsi3Parts = lsi3.split('/');
 
-    // Extract filenames from paths
-    const currentFilename = currentLsiParts.pop();
-    const lsi3Filename = lsi3Parts.pop();
+      // Extract filenames from paths
+      const currentFilename = currentLsiParts.pop();
+      const lsi3Filename = lsi3Parts.pop();
 
-    // Find the index at which paths diverge
-    let divergeIndex = 0;
-    while (divergeIndex < Math.min(currentLsiParts.length, lsi3Parts.length) && currentLsiParts[divergeIndex] === lsi3Parts[divergeIndex]) {
+      // Find the index at which paths diverge
+      let divergeIndex = 0;
+      while (divergeIndex < Math.min(currentLsiParts.length, lsi3Parts.length) && currentLsiParts[divergeIndex] === lsi3Parts[divergeIndex]) {
         divergeIndex++;
-    }
+      }
 
-    // If there's no common root directory, return `../../`
-    if (divergeIndex === 0) {
-        return '../../';
-    }
+      // If there's no common root directory, return `../../`
+      if (divergeIndex === 0) {
+        return '../../'+lsi3;
+      }
 
-    // Calculate the number of levels to go up from currentLsi to the common directory
-    const levelsUp = currentLsiParts.length - divergeIndex;
+      // Calculate the number of levels to go up from currentLsi to the common directory
+      const levelsUp = currentLsiParts.length - divergeIndex;
 
-    // Build the relative path to lsi3
-    let relativePath = '';
+      // Build the relative path to lsi3
+      let relativePath = '';
 
-    // Prepend "../" until reaching the root
-    relativePath = Array(levelsUp + 1).fill('..').join('/') + '/';
+      // Prepend "../" until reaching the root
+      relativePath = Array(levelsUp + 1).fill('..').join('/') + '/';
 
-    // Append the remaining path after the common directory
-    if (lsi3Parts.length > 0) {
+      // Append the remaining path after the common directory
+      if (lsi3Parts.length > 0) {
         relativePath += lsi3Parts.slice(divergeIndex).join('/');
-    }
+      }
 
-    // Append the filename to the relative path
-    if (!relativePath.endsWith('/')) {
+      // Append the filename to the relative path
+      if (!relativePath.endsWith('/')) {
         relativePath += '/';
-    }
-    relativePath += lsi3Filename;
+      }
+      relativePath += lsi3Filename;
 
-    return relativePath;
-}
+      return relativePath;
+    }
 
     function generateUUID() {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
