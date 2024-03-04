@@ -113,7 +113,7 @@
     <details style="margin-bottom: 7px;">
       <summary class="summary-L-3"><span class="l-3 b-dark-blue"> 🌐 File Type (Optional)</span></summary>
       <select class="select-1" id="site-checkboxes" style="display: block; margin-bottom: 7px; margin-left: 18px;"
-        multiple> 
+        multiple>
         <option value="" id="All"> ✔️ All</option>
         <option value="" id="Hub"> 🗺️ Hub</option>
         <option value="" id="Style"> 🎨 Style</option>
@@ -247,6 +247,42 @@
       }
 
     }
+    function getRelativePath(currentLsi, lsi3) {
+      // Split paths into arrays of directories and filenames
+      const currentLsiParts = currentLsi.split('/');
+      const lsi3Parts = lsi3.split('/');
+
+      // Extract filenames from paths
+      const currentFilename = currentLsiParts.pop();
+      const lsi3Filename = lsi3Parts.pop();
+
+      // Find the index at which paths diverge
+      let divergeIndex = 0;
+      while (divergeIndex < Math.min(currentLsiParts.length, lsi3Parts.length) && currentLsiParts[divergeIndex] === lsi3Parts[divergeIndex]) {
+        divergeIndex++;
+      }
+
+      // Calculate the number of levels to go up from currentLsi to the common directory
+      const levelsUp = currentLsiParts.length - divergeIndex;
+
+      // Build the relative path to lsi3
+      let relativePath = (levelsUp === 0 ? './' : Array(levelsUp).fill('..').join('/') + '/');
+      if (lsi3Parts.length > 0) {
+        relativePath += lsi3Parts.slice(divergeIndex).join('/');
+      }
+      // Append the filename to the relative path
+      if (relativePath.endsWith('/')) {
+        relativePath += lsi3Filename;
+      }
+
+
+      else {
+        relativePath += '/' + lsi3Filename;
+      }
+
+
+      return relativePath;
+    }
     function generateUUID() {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         const r = Math.random() * 16 | 0,
@@ -369,7 +405,7 @@
                   }),
                 })
               }
-              else if (relative) {
+              else if (absolute) {
                 const p = itemLsi1.split('/')
                 p.shift()
                 await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -386,8 +422,8 @@
                   }),
                 })
               }
-              else if (absolute) {
-                const p = itemLsi1.split('/')
+              else if (relative) {
+                const relativePath = getRelativePath(new_value, itemLsi1)
                 await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                   method: 'POST',
                   headers: {
@@ -398,7 +434,7 @@
                     sk: (new Date()).getTime().toString(),
                     action: 'Add_Component',
                     target_element: uuid + '-tree',
-                    inserted_component: { componentId: "#" + p.pop(), id: generateUUID() },
+                    inserted_component: { componentId: "#" + relativePath, id: generateUUID() },
                   }),
                 })
               }
@@ -661,7 +697,9 @@
             const hub = cloned.querySelector('#Hub').selected
             const style = cloned.querySelector('#Style').selected
             const content = cloned.querySelector('#Content').selected
-            
+            const byId = cloned.querySelector('#byId').selected
+            const absolute = cloned.querySelector('#absolute').selected
+            const relative = cloned.querySelector('#relative').selected
 
 
             const copyToTarget = async (path, new_value, backupCheck) => {
@@ -681,7 +719,7 @@
                 if (content) {
                   items.push(...data.items.filter(element => element.lsi1.endsWith('-Content')))
                 }
-              
+
                 //if (ids.includes("content-files")) {
                 //  items.push(...data.items.filter(element => !element.lsi1.endsWith('/Style') && !element.lsi1.endsWith('/Hub') && element.lsi1.split('/')[element.lsi1.split('/').length - 2] !== 'Components'))
                 //}
@@ -700,80 +738,141 @@
                   },
                 });
                 const res2 = await response.json()
-
-                await Promise.all(res2.items.map(async item1 => {
-
-                  if (item1.sk !== 'path') {
-                    if (item1.target_element === item1.id + '-tree') {
-                      console.log('err1')
-                      item1.target_element = newId + '-tree'
-                    }
-                    return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                      method: 'POST',
+                const pathI = res2.items.find(e => e.sk === 'path')
+                //create new file
+                const newLSI = pathI.lsi1.replace(path, new_value)
+                const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    id: newId,
+                    sk: 'path',
+                    lsi1: newLSI,
+                    ownerUUID: 'path',
+                    protected: false
+                  }),
+                })
+                if (backupCheck) {
+                  const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${pathI.lsi1.replace(path, new_value)}`);
+                  //list of sub paths
+                  const data = await response.json();
+                  if (data.items.length) {
+                    //move to trash
+                    const id = data.items[0].id
+                    const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`, {
+                      method: 'GET',
                       headers: {
                         'Content-Type': 'application/json',
                       },
-                      body: JSON.stringify(
-                        {
-                          ...item1,
-                          id: newId
-                        }
-                      ),
-                    })
-                  }
-                  else {
-                    if (backupCheck) {
-                      const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${item1.lsi1.replace(path, new_value)}`);
-                      //list of sub paths
-                      const data = await response.json();
-                      if (data.items.length) {
-                        //move to trash
-                        const id = data.items[0].id
-                        const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`, {
-                          method: 'GET',
+                    });
+                    const res2 = await response.json()
+                    await Promise.all(res2.items.map(async item1 => {
+
+                      if (item1.sk === 'path') {
+                        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                          method: 'POST',
                           headers: {
                             'Content-Type': 'application/json',
                           },
-                        });
-                        const res2 = await response.json()
-                        await Promise.all(res2.items.map(async item1 => {
+                          body: JSON.stringify(
+                            {
+                              ...item1,
+                              lsi1: 'trash/' + d.toISOString() + '-replace/' + item1.lsi1,
 
-                          if (item1.sk === 'path') {
-                            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                              method: 'POST',
-                              headers: {
-                                'Content-Type': 'application/json',
-                              },
-                              body: JSON.stringify(
-                                {
-                                  ...item1,
-                                  lsi1: 'trash/' + d.toISOString() + '-replace/' + item1.lsi1,
+                            }
+                          ),
+                        })
 
-                                }
-                              ),
-                            })
-
-                          }
-
-                        }))
                       }
-                    }
+
+                    }))
+                  }
+                }
+                if (byId || absolute || relative) {
+
+                  if (byId) {
                     await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                       method: 'POST',
                       headers: {
                         'Content-Type': 'application/json',
                       },
-                      body: JSON.stringify(
-                        {
-                          ...item1,
-                          lsi1: item1.lsi1.replace(path, new_value),
-                          id: newId,
-                          protected: false
-                        }
-                      ),
+                      body: JSON.stringify({
+                        id: newId,
+                        sk: (new Date()).getTime().toString(),
+                        action: 'Add_Component',
+                        target_element: newId + '-tree',
+                        inserted_component: { componentId: pathI.id, id: generateUUID() },
+                      }),
                     })
                   }
-                }))
+                  else if (absolute) {
+                    const p = pathI.lsi1.replace(';publish:published').split('/')
+                    p.shift()
+                    await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                        id: uuid,
+                        sk: (new Date()).getTime().toString(),
+                        action: 'Add_Component',
+                        target_element: uuid + '-tree',
+                        inserted_component: { componentId: "*/" + p.join('/'), id: generateUUID() },
+                      }),
+                    })
+                  }
+                  else {
+                    const relativePath = getRelativePath(newLSI, pathI.lsi1)
+                    await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                        id: uuid,
+                        sk: (new Date()).getTime().toString(),
+                        action: 'Add_Component',
+                        target_element: uuid + '-tree',
+                        inserted_component: { componentId: "#" + relativePath, id: generateUUID() },
+                      }),
+                    })
+                  }
+                }
+                else {
+                  await Promise.all(res2.items.map(async item1 => {
+
+
+
+                    //create new file actions
+                    if (item1.sk !== 'path') {
+                      //copy data
+
+                      if (item1.target_element === item1.id + '-tree') {
+                        console.log('err1')
+                        item1.target_element = newId + '-tree'
+                      }
+                      return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(
+                          {
+                            ...item1,
+                            id: newId
+                          }
+                        ),
+                      })
+
+
+
+                    }
+
+                  }))
+                }
               }))
             }
 
