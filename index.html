@@ -3766,8 +3766,8 @@
             el2.removeAttribute('hidden')
             el2.innerHTML = `🔄${replaceAction.target_element.length}`;
           }
-          console.log('calling path for relative '+ pathForRelative)
-          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions, replaceId,pathForRelative)
+          console.log('calling path for relative ' + pathForRelative)
+          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions, replaceId, pathForRelative)
 
 
           break;
@@ -4423,14 +4423,22 @@
               inserted_component.componentId = item1.id
             }
             else if (inserted_component.componentId.startsWith('#')) {
-              const splited = pathItem.lsi1.split('/')
-              splited.pop()
-              const last = inserted_component.componentId.replace('#', '')
-              splited.push(last)
-              const lsi = splited.join('/')
-              const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + lsi)
+              let cPath = pathForRelative || pathItem.lsi1
+              cPath = cPath.replace(';publish:published', "")
+              console.log('cpath ' + cPath)
+
+
+              const relative = inserted_component.componentId.replace('#', '')
+              const absolutePath = getAbsolutePath(cPath, relative);
+
+
+              const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + absolutePath)
                 .then(response => response.json())
-              const item1 = items.find(i => i.lsi1.replace(';publish:published', '') === lsi)
+              console.log('lsi' + absolutePath)
+              console.log(JSON.stringify(items))
+
+              const item1 = items.find(i => i.lsi1.replace(';publish:published', '') === absolutePath)
+              console.log(JSON.stringify(item1))
               inserted_component.componentId = item1.id
             }
             console.log('in')
@@ -4460,7 +4468,7 @@
             components.push(inserted_component.id)
             console.log(inserted_component.componentId)
 
-            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId)
+            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId,componentPath)
             break;
           }
           //case duplicate insert before
@@ -5148,7 +5156,7 @@
     const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative) => {
       console.log('load from db' + id)
       console.log('err2 ' + p)
-      console.log('path for relative '+pathForRelative)
+      console.log('path for relative ' + pathForRelative)
       let newPathForRelative = pathForRelative
       let path = ""
       p && (path = p)
