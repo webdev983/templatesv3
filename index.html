@@ -1535,44 +1535,44 @@
   </script>
   <script>
     function getRelativePath(currentLsi, lsi3) {
-      // Split paths into arrays of directories and filenames
-      const currentLsiParts = currentLsi.split('/');
-      const lsi3Parts = lsi3.split('/');
+    // Split paths into arrays of directories and filenames
+    const currentLsiParts = currentLsi.split('/');
+    const lsi3Parts = lsi3.split('/');
 
-      // Extract filenames from paths
-      const currentFilename = currentLsiParts.pop();
-      const lsi3Filename = lsi3Parts.pop();
+    // Extract filenames from paths
+    const currentFilename = currentLsiParts.pop();
+    const lsi3Filename = lsi3Parts.pop();
 
-      // Find the index at which paths diverge
-      let divergeIndex = 0;
-      while (divergeIndex < Math.min(currentLsiParts.length, lsi3Parts.length) && currentLsiParts[divergeIndex] === lsi3Parts[divergeIndex]) {
+    // Find the index at which paths diverge
+    let divergeIndex = 0;
+    while (divergeIndex < Math.min(currentLsiParts.length, lsi3Parts.length) && currentLsiParts[divergeIndex] === lsi3Parts[divergeIndex]) {
         divergeIndex++;
-      }
-
-      // Calculate the number of levels to go up from currentLsi to the root directory
-      const levelsUp = currentLsiParts.length;
-
-      // Build the relative path to lsi3
-      let relativePath = '';
-
-      // Prepend "../" until reaching the root
-      if (levelsUp > 0) {
-        relativePath = Array(levelsUp).fill('..').join('/') + '/';
-      }
-
-      // Append the absolute path
-      if (lsi3Parts.length > 0) {
-        relativePath += lsi3Parts.join('/');
-      }
-
-      // Append the filename to the relative path
-      if (!relativePath.endsWith('/')) {
-        relativePath += '/';
-      }
-      relativePath += lsi3Filename;
-
-      return relativePath;
     }
+
+    // Calculate the number of levels to go up from currentLsi to the root directory
+    const levelsUp = divergeIndex === 0 ? currentLsiParts.length : 0;
+
+    // Build the relative path to lsi3
+    let relativePath = '';
+
+    // Prepend "../" until reaching the root (only if no common root directory)
+    if (levelsUp > 0) {
+        relativePath = Array(levelsUp).fill('..').join('/') + '/';
+    }
+
+    // Append the absolute path
+    if (lsi3Parts.length > 0) {
+        relativePath += lsi3Parts.join('/');
+    }
+
+    // Append the filename to the relative path
+    if (!relativePath.endsWith('/')) {
+        relativePath += '/';
+    }
+    relativePath += lsi3Filename;
+
+    return relativePath;
+}
     var approveAddComponent = async (e) => {
       const m1 = e.target.parentNode.querySelectorAll('[data-element="file-path"]')
 
