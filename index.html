@@ -1543,14 +1543,16 @@
           .then(response => response.json())
 
         if (data.LinkBP || optionList.querySelector('#file-list-link-by-path').classList.contains('b-selected')) {
+          
           const p = data.lsi1.split('/')
           p.shift()
           addComponent1("*/" + p.join('/'))
         }
         else if (optionList.querySelector('#file-list-link-by-name').classList.contains('b-selected')) {
-          const p = data.lsi1.split('/')
+          const currentLsi = pathItem.lsi1.replace(';publish:published',"")
+          const relativePath = getRelativePath(data.lsi1.replace(';publish:published',""),currentLsi );
 
-          addComponent1("#" + p.pop())
+          addComponent1("#" + relativePath)
         }
         else {
           addComponent1(id)
