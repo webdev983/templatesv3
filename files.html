@@ -263,23 +263,29 @@
       const levelsUp = currentLsiParts.length - divergeIndex;
 
       // Build the relative path to lsi3
-      let relativePath = (levelsUp === 0 ? './' : Array(levelsUp).fill('..').join('/') + '/');
+      let relativePath = '';
+
+      // If there's no common root directory, prepend "../" until reaching the root
+      if (levelsUp === currentLsiParts.length) {
+        relativePath = Array(levelsUp + 1).fill('..').join('/');
+      } else {
+        relativePath = (levelsUp === 0 ? './' : Array(levelsUp).fill('..').join('/') + '/');
+      }
+
+      // Append the remaining path after the common directory
       if (lsi3Parts.length > 0) {
         relativePath += lsi3Parts.slice(divergeIndex).join('/');
       }
+
       // Append the filename to the relative path
-      if (relativePath.endsWith('/')) {
-        relativePath += lsi3Filename;
+      if (!relativePath.endsWith('/')) {
+        relativePath += '/';
       }
-
-
-      else {
-        relativePath += '/' + lsi3Filename;
-      }
-
+      relativePath += lsi3Filename;
 
       return relativePath;
     }
+
     function generateUUID() {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         const r = Math.random() * 16 | 0,
