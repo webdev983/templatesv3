@@ -3605,7 +3605,7 @@
         const relativePathParts = relativePath.split('/');
 
         // Remove the filename from the current path if it exists
-        const currentPathWithoutFile = currentPathParts.slice(0, -1);
+        const currentPathWithoutFile = currentPathParts[currentPathParts.length - 1] === '' ? currentPathParts : currentPathParts.slice(0, -1);
 
         // Handle "./" in relative path
         if (relativePathParts[0] === '.') {
