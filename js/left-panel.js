@@ -3,17 +3,23 @@ document.getElementById('log-open').addEventListener('click', function() {
   var asideElement = document.querySelector('.aside');
   var leftElement = document.querySelector('.left');
 
-  asideElement.style.width = '525px';
-  leftElement.style.width = '515px';
-
-  var bottomButton = document.getElementById('bottom-buttons'); // Get the button element
-  var myButton = document.getElementById('log-open'); 
-  var myButton2 = document.getElementById('refresh-page'); 
-  var codeLog = document.getElementById('code-log');
-  codeLog.removeAttribute('hidden');
-  bottomButton.setAttribute('hidden', '');
-  myButton.classList.add('b-selected'); 
-  myButton2.removeAttribute('hidden');
+  if (asideElement) {
+    // Устанавливаем ширину элемента в 80px
+    asideElement.style.width = '80px';
+    asideElement.style.width = '525px';
+    leftElement.style.width = '515px';
+  
+    var bottomButton = document.getElementById('bottom-buttons'); // Get the button element
+    var myButton = document.getElementById('log-open'); 
+    var myButton2 = document.getElementById('refresh-page'); 
+    var codeLog = document.getElementById('code-log');
+    codeLog.removeAttribute('hidden');
+    bottomButton.setAttribute('hidden', '');
+    myButton.classList.add('b-selected'); 
+    myButton2.removeAttribute('hidden');
+  
+  
+}
 
 
   /*
