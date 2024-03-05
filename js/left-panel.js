@@ -3,7 +3,6 @@ document.getElementById('log-open').addEventListener('click', function() {
   var asideElement = document.querySelector('.aside');
   var leftElement = document.querySelector('.left');
 
-  
 
   asideElement.style.width = '525px';
   leftElement.style.width = '515px';
