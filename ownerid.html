@@ -1,3 +1,29 @@
 <body style="background: black;">
-<input type="text" style="width: 500px; background-color:aqua;">
+    <input type="text" style="width: 500px; background-color:aqua;" id="inputField">
+    <script>
+        // Функция для сохранения значения поля ввода в Local Storage, если оно не пустое
+        function saveToLocalStorage() {
+            var inputValue = document.getElementById('inputField').value;
+            if(inputValue.trim() !== "") { // Проверка, что значение не пустое
+                localStorage.setItem('ownerid', inputValue);
+            } else {
+                // Если значение пустое и было что-то сохранено ранее, очистим Local Storage
+                localStorage.removeItem('ownerid');
+            }
+        }
+
+        // Функция для извлечения значения из Local Storage и установки его в поле ввода
+        function loadFromLocalStorage() {
+            var storedValue = localStorage.getItem('ownerid');
+            if(storedValue) { // Проверка, что значение существует
+                document.getElementById('inputField').value = storedValue;
+            }
+        }
+
+        // Устанавливаем обработчик события blur для поля ввода
+        document.getElementById('inputField').addEventListener('blur', saveToLocalStorage);
+
+        // Загружаем значение из Local Storage при загрузке страницы
+        document.addEventListener('DOMContentLoaded', loadFromLocalStorage);
+    </script>
 </body>
