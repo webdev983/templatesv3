@@ -6,17 +6,24 @@ document.getElementById('log-open').addEventListener('click', function() {
   asideElement.style.width = '525px';
   leftElement.style.width = '515px';
 
+  var bottomButton = document.getElementById('bottom-buttons'); // Get the button element
+  var myButton = document.getElementById('log-open'); 
+  var myButton2 = document.getElementById('refresh-page'); 
+  var codeLog = document.getElementById('code-log');
+  codeLog.removeAttribute('hidden');
+  bottomButton.setAttribute('hidden', '');
+  myButton.classList.add('b-selected'); 
+  myButton2.removeAttribute('hidden');
+
 
   /*
   var leftSidePanel = document.querySelector('.left-side-panel');
-  var codeLog = document.getElementById('code-log');
   var mainContent = document.getElementById('main-content');
   var myButton = document.getElementById('log-open'); // Get the button element
   var bottomButton = document.getElementById('bottom-buttons'); // Get the button element
 
 
-  var myButton = document.getElementById('log-open'); // Get the button element
-  var myButton2 = document.getElementById('refresh-page'); // Get the button element
+
 
 
   if (leftSidePanel.classList.contains('log-open')) {
@@ -30,11 +37,6 @@ document.getElementById('log-open').addEventListener('click', function() {
 
   } else {
     leftSidePanel.classList.add('log-open');
-    codeLog.removeAttribute('hidden');
-    bottomButton.setAttribute('hidden', '');
-    mainContent.style.marginLeft = '515px';
-    myButton.classList.add('b-selected'); // Add the 'b-select' class
-    myButton2.removeAttribute('hidden');
 
   }
   */
