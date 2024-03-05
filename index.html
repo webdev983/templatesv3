@@ -51,18 +51,20 @@
 </aside>
 <main class="main" style="position: relative;">
 
-    <div id="web-page-menu" class="panel horizontal-menu">
+    <div hidden id="web-page-menu" class="panel horizontal-menu">
       <label class="l-1" style="margin-right: 10px; user-select: none;">🌐</label>
       <button class="b-1" style="margin-right: 5px;">🖼️</button>
-      <button class="b-1" onclick="invalidate(event)" style="margin-right: 5px;">🔄</button>
       <button class="b-1" style="margin-right: 5px;">🗑️️</button>
     </div>
 
     <div class="panel horizontal-menu">
       <button id="path-icon" class='b-1' onclick="publish(event)" style="user-select: none;">🧩</button><label
-        id="page-path" class="l-2" style="cursor: pointer; color:#4A90E2; margin-left: 10px;">~</label>
+        id="page-path" class="l-2" style="cursor: pointer;  font:700;">~</label>
+        <div id="published">
       <a href="" target="_blank" style="text-decoration: none; color: #000000;" hidden id="published-label"
         class="l-3">🌐</a>
+        <button class="b-1" onclick="invalidate(event)" style="margin-right: 5px;">🔄</button>
+       </div>
     </div>
 
       <div id="components-tree-menu" class="panel horizontal-menu">
@@ -5267,7 +5269,10 @@
                 el2.classList.add('b-green');
                 el2.classList.add('b-selected');
                 const el3 = getElementById1("published-label")
+                const el4 = getElementById1("published")
                 el3.removeAttribute('hidden')
+                el4.removeAttribute('hidden')
+
                 el3.setAttribute('href', item.href)
               }
             }
@@ -5650,7 +5655,11 @@
       el2.classList.remove('b-green');
       el2.classList.remove('b-selected');
       const el3 = getElementById1("published-label")
+      const el4 = getElementById1("published")
+
       el3.setAttribute('hidden', '')
+      el4.setAttribute('hidden', '')
+
       //to remove list
       const toRemove = {
         attributesStartWith: ["data-remove"],
