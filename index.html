@@ -53,9 +53,8 @@
 
     <div  id="web-page-menu" class="panel horizontal-menu">
       <button id="path-icon" class='b-1' onclick="publish(event)" style="user-select: none; margin-right: 7px;">📰</button>
-      <div id="published" hidden>
-      <button class="b-1" onclick="invalidate(event)" style="margin-right: 5px;">🔄</button>
-      <button class="b-1" style="margin-right: 5px;">🗑️️</button>
+      <button hidden class="b-1" id="published-invalidate" onclick="invalidate(event)" style="margin-right: 5px;">🔄</button>
+      <button hidden id="published-remove" class="b-1" style="margin-right: 5px;">🗑️️</button>
     </div>
 
     </div>
@@ -5272,10 +5271,12 @@
                 el2.classList.add('b-green');
                 el2.classList.add('b-selected');
                 const el3 = getElementById1("published-label")
-                const el4 = getElementById1("published")
+                const el4 = getElementById1("published-invalidate")
+                const el5 = getElementById1("published-remove")
+
                 el3.removeAttribute('hidden')
                 el4.removeAttribute('hidden')
-                el4.style.display = 'inline-block';
+                el5.removeAttribute('hidden')
 
                 el3.setAttribute('href', item.href)
               }
@@ -5659,11 +5660,12 @@
       el2.classList.remove('b-green');
       el2.classList.remove('b-selected');
       const el3 = getElementById1("published-label")
-      const el4 = getElementById1("published")
+      const el4 = getElementById1("published-invalidate")
+      const el5 = getElementById1("published-remove")
 
       el3.setAttribute('hidden', '')
       el4.setAttribute('hidden', '')
-      el4.style.display = 'inline-block';
+      el5.setAttribute('hidden', '')
 
       //to remove list
       const toRemove = {
