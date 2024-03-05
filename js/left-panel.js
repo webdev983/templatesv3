@@ -3,9 +3,7 @@ document.getElementById('log-open').addEventListener('click', function() {
   var asideElement = document.querySelector('.aside');
   var leftElement = document.querySelector('.left');
 
-  if (asideElement) {
-    // Устанавливаем ширину элемента в 80px
-    asideElement.style.width = '80px';
+  if (asideElement.offsetWidth === 80) {
     asideElement.style.width = '525px';
     leftElement.style.width = '515px';
   
