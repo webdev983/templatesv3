@@ -2,34 +2,56 @@ document.getElementById('log-open').addEventListener('click', function() {
 
   var asideElement = document.querySelector('.aside');
   var leftElement = document.querySelector('.left');
+
+  
+
+  asideElement.style.width = '525px';
+  leftElement.style.width = '515px';
+
   var bottomButton = document.getElementById('bottom-buttons'); // Get the button element
   var myButton = document.getElementById('log-open'); 
   var myButton2 = document.getElementById('refresh-page'); 
   var codeLog = document.getElementById('code-log');
+  codeLog.removeAttribute('hidden');
+  bottomButton.setAttribute('hidden', '');
+  myButton.classList.add('b-selected'); 
+  myButton2.removeAttribute('hidden');
 
 
-  if (asideElement.offsetWidth === 80) {
-    asideElement.style.width = '525px';
-    leftElement.style.width = '515px';
-    codeLog.removeAttribute('hidden');
-    bottomButton.setAttribute('hidden', '');
-    myButton.classList.add('b-selected'); 
-    myButton2.removeAttribute('hidden');
+/*
+  document.getElementById('log-open').addEventListener('click', function() {
+
+    var asideElement = document.querySelector('.aside');
+    var leftElement = document.querySelector('.left');
+    var bottomButton = document.getElementById('bottom-buttons'); 
+    var myButton = document.getElementById('log-open'); 
+    var myButton2 = document.getElementById('refresh-page'); 
+    var codeLog = document.getElementById('code-log');
   
   
-}
-
-if (asideElement.offsetWidth === 525) {
-  asideElement.style.width = '80px';
-  leftElement.style.width = '60px';
-  codeLog.setAttribute('hidden');
-  bottomButton.removeAttribute('hidden');
-  myButton.classList.remove('b-selected'); 
-  myButton2.setAttribute('hidden');
-
-
-}
-
+    if (asideElement.offsetWidth === 80) {
+      asideElement.style.width = '525px';
+      leftElement.style.width = '515px';
+      codeLog.removeAttribute('hidden');
+      bottomButton.setAttribute('hidden', '');
+      myButton.classList.add('b-selected'); 
+      myButton2.removeAttribute('hidden');
+    
+    
+  }
+  
+  if (asideElement.offsetWidth === 525) {
+    asideElement.style.width = '80px';
+    leftElement.style.width = '60px';
+    codeLog.setAttribute('hidden');
+    bottomButton.removeAttribute('hidden');
+    myButton.classList.remove('b-selected'); 
+    myButton2.setAttribute('hidden');
+  
+  
+  }
+  
+  
 
   /*
   var leftSidePanel = document.querySelector('.left-side-panel');
