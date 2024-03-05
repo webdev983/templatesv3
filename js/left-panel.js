@@ -1,36 +1,16 @@
-// Определение функции updateWidths вне обработчика событий
-function updateWidths() {
-  // Получаем элементы по их классам
+document.getElementById('log-open').addEventListener('click', function() {
+
   var asideElement = document.querySelector('.aside');
   var mainElement = document.querySelector('.main');
-
-  // Устанавливаем новые значения ширины
   asideElement.style.width = '30%';
   mainElement.style.width = '70%';
-}
-
-// Добавление обработчика события click к элементу с id 'log-open'
-document.getElementById('log-open').addEventListener('click', function() {
-  // Вызов функции updateWidths при клике
-  updateWidths();
-});
 
   /*
-  var leftSidePanel = document.querySelector('.aside');
-  var mainContent = document.querySelector('.main');
-
+  var leftSidePanel = document.querySelector('.left-side-panel');
   var codeLog = document.getElementById('code-log');
+  var mainContent = document.getElementById('main-content');
   var myButton = document.getElementById('log-open'); // Get the button element
   var bottomButton = document.getElementById('bottom-buttons'); // Get the button element
-
-
-
-
-
-
-
-
-
 
 
   var myButton = document.getElementById('log-open'); // Get the button element
@@ -55,4 +35,5 @@ document.getElementById('log-open').addEventListener('click', function() {
     myButton2.removeAttribute('hidden');
 
   }
+  */
 });
