@@ -1,9 +1,11 @@
 document.getElementById('log-open').addEventListener('click', function() {
 
   var asideElement = document.querySelector('.aside');
-  var mainElement = document.querySelector('.main');
-  asideElement.style.width = '30%';
-  mainElement.style.width = '70%';
+  var leftElement = document.querySelector('.left');
+
+  asideElement.style.width = '525px';
+  leftElement.style.width = '515px';
+
 
   /*
   var leftSidePanel = document.querySelector('.left-side-panel');
