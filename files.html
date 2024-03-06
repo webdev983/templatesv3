@@ -742,7 +742,7 @@
                       targetDirectories.push(splited[index])
                     }
                   }
-                  targetPaths = targetDirectories.map(t => startsWith + t)
+                  targetPaths = targetDirectories.map(t => startsWith + t +'/')
                 }
                 else if (el1) {
                   const index = splited.indexOf(el1)
@@ -759,9 +759,9 @@
                       targetDirectories.push(splited[index])
                     }
                   }
-                  targetPaths = targetDirectories.map(t => startsWith + t)
+                  targetPaths = targetDirectories.map(t => startsWith + t +'/')
                 }
-                for (const new_value of targetPaths) {
+                await Promise.all(targetPaths.map(async new_value => {
                   const d = new Date()
                   const newId = generateUUID()
 
@@ -845,7 +845,10 @@
                       inserted_component: { componentId: pathI.id, id: generateUUID() },
                     }),
                   })
-                }
+                }))
+
+
+
 
 
 
@@ -857,6 +860,7 @@
                 const el = splited.find(e => e === 'Seed-Home')
 
                 const el1 = splited.find(e => e.startsWith('Seed-'))
+                console.log('newVal'+new_value)
                 let targetPaths = [new_value]
                 if (el) {
                   const index = splited.indexOf(el)
@@ -873,7 +877,7 @@
                       targetDirectories.push(splited[index])
                     }
                   }
-                  targetPaths = targetDirectories.map(t => startsWith + t)
+                  targetPaths = targetDirectories.map(t => startsWith + t +'/')
                 }
                 else if (el1) {
                   const index = splited.indexOf(el1)
@@ -890,8 +894,9 @@
                       targetDirectories.push(splited[index])
                     }
                   }
-                  targetPaths = targetDirectories.map(t => startsWith + t)
+                  targetPaths = targetDirectories.map(t => startsWith + t +'/')
                 }
+                console.log('target'+JSON.stringify(targetPaths))
                 for (const new_value of targetPaths) {
                   const newId = generateUUID()
 
