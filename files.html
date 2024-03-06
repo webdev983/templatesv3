@@ -742,7 +742,7 @@
                       targetDirectories.push(splited[index])
                     }
                   }
-                  targetPaths = targetDirectories.map(t => startsWith + t +'/')
+                  targetPaths = targetDirectories.map(t => startsWith + t)
                 }
                 else if (el1) {
                   const index = splited.indexOf(el1)
@@ -759,9 +759,10 @@
                       targetDirectories.push(splited[index])
                     }
                   }
-                  targetPaths = targetDirectories.map(t => startsWith + t +'/')
+                  targetPaths = targetDirectories.map(t => startsWith + t)
                 }
-                targetPaths =removeDuplicates(targetPaths)
+                targetPaths = removeDuplicates(targetPaths)
+                const flag = targetPaths[0] === new_value
                 await Promise.all(targetPaths.map(async new_value => {
                   const d = new Date()
                   const newId = generateUUID()
@@ -775,11 +776,20 @@
                   const res2 = await response.json()
                   const pathI = res2.items.find(e => e.sk === 'path')
                   //create new file
-                  const newLSI = pathI.lsi1.replace(path, new_value)
+                  let newLSI = pathI.lsi1.replace(path, new_value)
+                  if (!flag) {
+                    const s1 = pathI.lsi1.split('/')
+                    const s2 = new_value.split('/')
+                    const remainingS1 = s1.slice(s2.length);
+
+                    // Concatenate s2 with the remaining elements of s1
+                    const result = s2.concat(remainingS1);
+                    newLSI = result.join('/')
+                  }
 
                   //backup
                   {
-                    const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${pathI.lsi1.replace(path, new_value)}`);
+                    const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${newLSI}`);
                     //list of sub paths
                     const data = await response.json();
                     if (data.items.length) {
@@ -861,7 +871,7 @@
                 const el = splited.find(e => e === 'Seed-Home')
 
                 const el1 = splited.find(e => e.startsWith('Seed-'))
-                console.log('newVal'+new_value)
+                console.log('newVal' + new_value)
                 let targetPaths = [new_value]
                 if (el) {
                   const index = splited.indexOf(el)
@@ -878,7 +888,7 @@
                       targetDirectories.push(splited[index])
                     }
                   }
-                  targetPaths = targetDirectories.map(t => startsWith + t +'/')
+                  targetPaths = targetDirectories.map(t => startsWith + t)
                 }
                 else if (el1) {
                   const index = splited.indexOf(el1)
@@ -895,10 +905,20 @@
                       targetDirectories.push(splited[index])
                     }
                   }
-                  targetPaths = targetDirectories.map(t => startsWith + t +'/')
+                  targetPaths = targetDirectories.map(t => startsWith + t)
                 }
-                console.log('target'+JSON.stringify(targetPaths))
-                targetPaths =removeDuplicates(targetPaths)
+                console.log('target' + JSON.stringify(targetPaths))
+                targetPaths = removeDuplicates(targetPaths)
+                const flag = targetPaths[0] === new_value
+                if (!flag) {
+                  const s1 = pathI.lsi1.split('/')
+                  const s2 = new_value.split('/')
+                  const remainingS1 = s1.slice(s2.length);
+
+                  // Concatenate s2 with the remaining elements of s1
+                  const result = s2.concat(remainingS1);
+                  newLSI = result.join('/')
+                }
                 for (const new_value of targetPaths) {
                   const newId = generateUUID()
 
@@ -915,7 +935,7 @@
                   const newLSI = pathI.lsi1.replace(path, new_value)
 
                   {
-                    const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${pathI.lsi1.replace(path, new_value)}`);
+                    const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${newLSI}`);
                     //list of sub paths
                     const data = await response.json();
                     if (data.items.length) {
