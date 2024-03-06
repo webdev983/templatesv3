@@ -761,6 +761,7 @@
                   }
                   targetPaths = targetDirectories.map(t => startsWith + t +'/')
                 }
+                targetPaths =removeDuplicates(targetPaths)
                 await Promise.all(targetPaths.map(async new_value => {
                   const d = new Date()
                   const newId = generateUUID()
@@ -897,6 +898,7 @@
                   targetPaths = targetDirectories.map(t => startsWith + t +'/')
                 }
                 console.log('target'+JSON.stringify(targetPaths))
+                targetPaths =removeDuplicates(targetPaths)
                 for (const new_value of targetPaths) {
                   const newId = generateUUID()
 
