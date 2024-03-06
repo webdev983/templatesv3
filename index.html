@@ -7602,9 +7602,13 @@
 
   <script>
       document.addEventListener('DOMContentLoaded', function() {
-        getElementById1('generated-page').removeAttribute('hidden')
         var userType = localStorage.getItem('usertype');
         var visualOn = localStorage.getItem('visualOn');
+
+        if (userType === null) {
+          getElementById1('generated-page').removeAttribute('hidden')
+        };
+
 
         if (userType === null && visualOn === null) {
           localStorage.setItem('visualOn', 'true');
