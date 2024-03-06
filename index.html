@@ -2104,9 +2104,14 @@
 
       iframeDocument.addEventListener('mouseout', function (event) {
         if (event.target.hasAttribute('data-visual-element')) {
-          event.target.style.backgroundColor = '';
-        }
-      });
+           event.target.style.backgroundColor = ''; 
+
+          if (!event.target.getAttribute('style')) {
+            event.target.removeAttribute('style'); 
+          }
+  }
+});
+      
 
 
       function clickRemoveButton(clickEvent) {
