@@ -4,33 +4,34 @@
   <link rel="stylesheet" href="css/panels.css" media="all">
 
 </head>
-<body class="body">
-<aside class="aside">
-  <div class="panel top">
-    <button disabled class="b-1" id="last-action-time"
-      style="color: black;z-index:1; position: absolute;top: 50%;left: 50%; transform: translate(-50%, -50%);">0.7</button>
-  </div>
 
-  <div class="panel left">
-    <div id="nav-buttons">
-      <a href="https://webdev983.github.io/templatesv3/summary"><button class="b-1">🧠</button></a>
-      <a href="https://webdev983.github.io/templatesv3/files"><button class="b-1 b-selected">📂</button></a>
+<body class="body">
+  <aside class="aside">
+    <div class="panel top">
+      <button disabled class="b-1" id="last-action-time"
+        style="color: black;z-index:1; position: absolute;top: 50%;left: 50%; transform: translate(-50%, -50%);">0.7</button>
     </div>
 
+    <div class="panel left">
+      <div id="nav-buttons">
+        <a href="https://webdev983.github.io/templatesv3/summary"><button class="b-1">🧠</button></a>
+        <a href="https://webdev983.github.io/templatesv3/files"><button class="b-1 b-selected">📂</button></a>
+      </div>
 
 
-    <div class="local-buttons" style="margin-top: 30px;">
-      <button class="b-1" onclick="createNew()">➕</button>
-      <button class="b-1" title="select few files">🔲</button>
-      <div id="filters" hidden>
+
+      <div class="local-buttons" style="margin-top: 30px;">
+        <button class="b-1" onclick="createNew()">➕</button>
+        <button class="b-1" title="select few files">🔲</button>
+        <div id="filters" hidden>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="panel bottom">
-    <button class="b-1">📴</button>
-  </div>
-</aside>
+    <div class="panel bottom">
+      <button class="b-1">📴</button>
+    </div>
+  </aside>
 
 
   <main class="main">
@@ -105,10 +106,10 @@
       <summary class="summary-L-3"><span class="l-3 b-dark-blue"> 🔗 Link Type (Optional)</span></summary>
       <select class="select-1" style="display: block; margin-bottom: 7px; margin-left: 18px;" id="choose_link_type">
         <option> ⬇️ Select</option>
-        <option> 🌐 Update</option>
+        <option id="update"> 🌐 Update</option>
         <option id="byId"> 🆔 Id</option>
-        <option  id="absolute"> 📂 Absolute</option>
-        <option  id="relative"> 🗂️ Relative</option>
+        <option id="absolute"> 📂 Absolute</option>
+        <option id="relative"> 🗂️ Relative</option>
       </select>
     </details>
 
@@ -117,10 +118,10 @@
       <summary class="summary-L-3"><span class="l-3 b-dark-blue"> 🌐 File Type (Optional)</span></summary>
       <select class="select-1" id="site-checkboxes" style="display: block; margin-bottom: 7px; margin-left: 18px;"
         multiple>
-        <option  id="All"> ✔️ All</option>
-        <option  id="Hub"> 🗺️ Hub</option>
-        <option  id="Style"> 🎨 Style</option>
-        <option  id="Content"> 📄 Content</option>
+        <option id="All"> ✔️ All</option>
+        <option id="Hub"> 🗺️ Hub</option>
+        <option id="Style"> 🎨 Style</option>
+        <option id="Content"> 📄 Content</option>
       </select>
     </details>
     <button data-action="copy-file-path-cancel" class="b-4">❌ Cancel</button>
@@ -694,14 +695,282 @@
             const backupCheck = true
             //backup target
             const inputs = cloned.querySelectorAll('input[name="choose_components"]');
-
+            const update = cloned.querySelector('#update').selected
             const hub = cloned.querySelector('#Hub').selected
             const style = cloned.querySelector('#Style').selected
             const content = cloned.querySelector('#Content').selected
             const byId = cloned.querySelector('#byId').selected
             const absolute = cloned.querySelector('#absolute').selected
             const relative = cloned.querySelector('#relative').selected
+            if (update) {
+              const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${path}`);
+              //list of sub paths
+              const data = await response.json();
+              let replaceByIditems = []
+              let doNotReplaceItems = []
+              let restItems = []
+              for (const item of data.items) {
+                item.lsi1 = item.lsi1.replace(';publish:published', '')
+                if (item.lsi1.endsWith('Script') || item.lsi1.endsWith('Style') || item.lsi1.endsWith('Structure')) {
+                  replaceByIditems.push(item)
+                }
+                else if (item.lsi1.endsWith('-Content')) {
+                  doNotReplaceItems.push(item)
+                }
+                else {
+                  restItems.push(item)
+                }
+              }
+              await Promise.all(replaceByIditems.map(async item => {
+                const splited = item.lsi1.split('/')
+                const el = splited.find(e => e === 'Seed-Home')
 
+                const el1 = splited.find(e => e.startsWith('Seed-'))
+                let targetPaths = [new_value]
+                if (el) {
+                  const index = splited.indexOf(el)
+                  const splited2 = item.lsi1.replace(path, new_value).split('/')
+                  splited2.splice(index)
+                  const startsWith = splited2.join('/') + '/'
+                  const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${startsWith}`);
+                  //list of sub paths
+                  const data = await response.json();
+                  const targetDirectories = []
+                  for (const item of data.items) {
+                    const splited = item.lsi1.split('/')
+                    if (splited[index].startsWith('Home')) {
+                      targetDirectories.push(splited[index])
+                    }
+                  }
+                  targetPaths = targetDirectories.map(t => startsWith + t)
+                }
+                else if (el1) {
+                  const index = splited.indexOf(el1)
+                  const splited2 = item.lsi1.replace(path, new_value).split('/')
+                  splited2.splice(index)
+                  const startsWith = splited2.join('/') + '/'
+                  const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${startsWith}`);
+                  //list of sub paths
+                  const data = await response.json();
+                  const targetDirectories = []
+                  for (const item of data.items) {
+                    const splited = item.lsi1.split('/')
+                    if (!splited[index].startsWith('Home')) {
+                      targetDirectories.push(splited[index])
+                    }
+                  }
+                  targetPaths = targetDirectories.map(t => startsWith + t)
+                }
+                for (const new_value of targetPaths) {
+                  const newId = generateUUID()
+
+                  const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${item.id}&startsWith=true`, {
+                    method: 'GET',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                  });
+                  const res2 = await response.json()
+                  const pathI = res2.items.find(e => e.sk === 'path')
+                  //create new file
+                  const newLSI = pathI.lsi1.replace(path, new_value)
+
+                  //backup
+                  {
+                    const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${pathI.lsi1.replace(path, new_value)}`);
+                    //list of sub paths
+                    const data = await response.json();
+                    if (data.items.length) {
+                      //move to trash
+                      const id = data.items[0].id
+                      const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`, {
+                        method: 'GET',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                      });
+                      const res2 = await response.json()
+                      await Promise.all(res2.items.map(async item1 => {
+
+                        if (item1.sk === 'path') {
+                          await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(
+                              {
+                                ...item1,
+                                lsi1: 'trash/' + d.toISOString() + '-replace/' + item1.lsi1,
+
+                              }
+                            ),
+                          })
+
+                        }
+
+                      }))
+                    }
+                  }
+                  const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      ...pathI,
+                      id: newId,
+                      sk: 'path',
+                      lsi1: newLSI,
+                      ownerUUID: 'path',
+                      protected: false
+                    }),
+                  })
+                  console.log('putting ' + newId)
+                  console.log('res ' + JSON.stringify(data))
+
+
+
+                  await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      id: newId,
+                      sk: (new Date()).getTime().toString(),
+                      action: 'Add_Component',
+                      target_element: newId + '-tree',
+                      inserted_component: { componentId: pathI.id, id: generateUUID() },
+                    }),
+                  })
+                }
+
+
+
+
+
+              }))
+              await Promise.all(doNotReplaceItems.map(async item => {
+                const splited = item.lsi1.split('/')
+                const el = splited.find(e => e === 'Seed-Home')
+
+                const el1 = splited.find(e => e.startsWith('Seed-'))
+                let targetPaths = [new_value]
+                if (el) {
+                  const index = splited.indexOf(el)
+                  const splited2 = item.lsi1.replace(path, new_value).split('/')
+                  splited2.splice(index)
+                  const startsWith = splited2.join('/') + '/'
+                  const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${startsWith}`);
+                  //list of sub paths
+                  const data = await response.json();
+                  const targetDirectories = []
+                  for (const item of data.items) {
+                    const splited = item.lsi1.split('/')
+                    if (splited[index].startsWith('Home')) {
+                      targetDirectories.push(splited[index])
+                    }
+                  }
+                  targetPaths = targetDirectories.map(t => startsWith + t)
+                }
+                else if (el1) {
+                  const index = splited.indexOf(el1)
+                  const splited2 = item.lsi1.replace(path, new_value).split('/')
+                  splited2.splice(index)
+                  const startsWith = splited2.join('/') + '/'
+                  const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${startsWith}`);
+                  //list of sub paths
+                  const data = await response.json();
+                  const targetDirectories = []
+                  for (const item of data.items) {
+                    const splited = item.lsi1.split('/')
+                    if (!splited[index].startsWith('Home')) {
+                      targetDirectories.push(splited[index])
+                    }
+                  }
+                  targetPaths = targetDirectories.map(t => startsWith + t)
+                }
+                for (const new_value of targetPaths) {
+                  const newId = generateUUID()
+
+                  const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${item.id}&startsWith=true`, {
+                    method: 'GET',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                  });
+
+                  const res2 = await response.json()
+                  const pathI = res2.items.find(e => e.sk === 'path')
+                  //create new file
+                  const newLSI = pathI.lsi1.replace(path, new_value)
+
+                  {
+                    const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${pathI.lsi1.replace(path, new_value)}`);
+                    //list of sub paths
+                    const data = await response.json();
+                    if (data.items.length) {
+                      //move to trash
+                      return
+
+                    }
+                  }
+                  const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      ...pathI,
+                      id: newId,
+                      sk: 'path',
+                      lsi1: newLSI,
+                      ownerUUID: 'path',
+                      protected: false
+                    }),
+                  })
+                  await Promise.all(res2.items.map(async item1 => {
+
+
+
+                    //create new file actions
+                    if (item1.sk !== 'path') {
+                      //copy data
+
+                      if (item1.target_element === item1.id + '-tree') {
+                        console.log('err1')
+                        item1.target_element = newId + '-tree'
+                      }
+                      return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(
+                          {
+                            ...item1,
+                            id: newId
+                          }
+                        ),
+                      })
+
+
+
+                    }
+
+                  }))
+                }
+
+
+
+
+
+              }))
+
+
+
+            }
 
             const copyToTarget = async (path, new_value, backupCheck) => {
               const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${path}`);
@@ -880,6 +1149,7 @@
                   }))
                 }
               }))
+
             }
 
             //copy to target
