@@ -3,6 +3,43 @@
   <link rel="stylesheet" href="css/buttons-and-menus.css" media="all">
   <link rel="stylesheet" href="css/panels.css" media="all">
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var userType = localStorage.getItem('usertype');
+      var visualOn = localStorage.getItem('visualOn');
+
+      if (userType === null) {
+        getElementById1('generated-page').removeAttribute('hidden')
+      };
+
+
+      if (userType === null && visualOn === null) {
+        localStorage.setItem('visualOn', 'true');
+        location.reload();
+      };
+
+        
+    if (userType !== null) {
+      if (userType.trim() === 'su777') {
+        // Select all elements with the 'data-user' attribute
+        var dataUserElements = document.querySelectorAll('[data-user]');
+        dataUserElements.forEach(function(el) {
+          // Remove the 'hidden' attribute
+          el.removeAttribute('hidden');
+        });
+      } else if (userType.trim() === 'style') {
+        // Select all elements with the 'data-style' attribute
+        var dataStyleElements = document.querySelectorAll('[data-style]');
+        dataStyleElements.forEach(function(el) {
+          // Remove the 'hidden' attribute
+          el.removeAttribute('hidden');
+        });
+      }
+    }
+  });
+    </script>
+
+
 </head>
 
 <body class="body">
@@ -7615,24 +7652,6 @@
           location.reload();
         };
  
-          
-      if (userType !== null) {
-        if (userType.trim() === 'su777') {
-          // Select all elements with the 'data-user' attribute
-          var dataUserElements = document.querySelectorAll('[data-user]');
-          dataUserElements.forEach(function(el) {
-            // Remove the 'hidden' attribute
-            el.removeAttribute('hidden');
-          });
-        } else if (userType.trim() === 'style') {
-          // Select all elements with the 'data-style' attribute
-          var dataStyleElements = document.querySelectorAll('[data-style]');
-          dataStyleElements.forEach(function(el) {
-            // Remove the 'hidden' attribute
-            el.removeAttribute('hidden');
-          });
-        }
-      }
     });
       </script>
 
