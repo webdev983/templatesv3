@@ -196,8 +196,8 @@
         </div>
       </div>
 
-      <div id="generated-page-menu" class="panel horizontal-menu">
-        <label class="l-1" style="margin-right: 10px; user-select: none;">👁️</label>
+      <div id="generated-page-menu" class="panel horizontal-menu" hidden data-user data-style>
+        <label  class="l-1" style="margin-right: 10px; user-select: none;">👁️</label>
         <button id='transform' class="b-1" onclick="transformToVisual(event)">✍️</button>
       </div>
       <iframe id="generated-page-iframe" src="./iframe.html"
@@ -7602,13 +7602,11 @@
 
   <script>
       document.addEventListener('DOMContentLoaded', function() {
-        // Read the 'usertype' and 'visualOn' from local storage
+        getElementById1('generated-page').removeAttribute('hidden')
         var userType = localStorage.getItem('usertype');
         var visualOn = localStorage.getItem('visualOn');
 
-        // Check if 'userType' is null and 'visualOn' is not already set to 'true'
         if (userType === null && visualOn === null) {
-          // Set 'visualOn' to 'true' and reload the page only once
           localStorage.setItem('visualOn', 'true');
           location.reload();
         };
