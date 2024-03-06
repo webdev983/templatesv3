@@ -867,6 +867,7 @@
 
               }))
               await Promise.all(doNotReplaceItems.map(async item => {
+                console.log('donotreplaceitem '+item.lsi1)
                 const splited = item.lsi1.split('/')
                 const el = splited.find(e => e === 'Seed-Home')
 
@@ -935,11 +936,13 @@
                     newLSI = result.join('/')
                   }
                   {
+                    console.log('geeeting '+ newLSI)
                     const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${newLSI}`);
                     //list of sub paths
                     const data = await response.json();
                     if (data.items.length) {
                       //move to trash
+                      console.log('foud new '+ newLSI)
                       return
 
                     }
@@ -958,6 +961,7 @@
                       protected: false
                     }),
                   })
+                  console.log('created '+newLSI)
                   await Promise.all(res2.items.map(async item1 => {
 
 
