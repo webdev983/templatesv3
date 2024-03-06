@@ -726,6 +726,7 @@
                 const el = splited.find(e => e === 'Seed-Home')
 
                 const el1 = splited.find(e => e.startsWith('Seed-'))
+                let flag
                 let targetPaths = [new_value]
                 if (el) {
                   const index = splited.indexOf(el)
@@ -743,6 +744,7 @@
                     }
                   }
                   targetPaths = targetDirectories.map(t => startsWith + t)
+                  flag = 1
                 }
                 else if (el1) {
                   const index = splited.indexOf(el1)
@@ -760,9 +762,9 @@
                     }
                   }
                   targetPaths = targetDirectories.map(t => startsWith + t)
+                  flag = 1
                 }
                 targetPaths = removeDuplicates(targetPaths)
-                const flag = targetPaths[0] === new_value
                 await Promise.all(targetPaths.map(async new_value => {
                   const d = new Date()
                   const newId = generateUUID()
@@ -783,7 +785,7 @@
                     const remainingS1 = s1.slice(s2.length);
 
                     // Concatenate s2 with the remaining elements of s1
-                    const result = s2.concat(remainingS1);
+                    const result = [...s2,...remainingS1];
                     newLSI = result.join('/')
                   }
 
@@ -874,6 +876,7 @@
                 const el1 = splited.find(e => e.startsWith('Seed-'))
                 console.log('newVal' + new_value)
                 let targetPaths = [new_value]
+                let flag
                 if (el) {
                   const index = splited.indexOf(el)
                   const splited2 = item.lsi1.replace(path, new_value).split('/')
@@ -890,6 +893,7 @@
                     }
                   }
                   targetPaths = targetDirectories.map(t => startsWith + t)
+                  flag= 1
                 }
                 else if (el1) {
                   const index = splited.indexOf(el1)
@@ -907,11 +911,12 @@
                     }
                   }
                   targetPaths = targetDirectories.map(t => startsWith + t)
+                  flag= 1
                 }
                 
                 targetPaths = removeDuplicates(targetPaths)
                 console.log('target0' + JSON.stringify(targetPaths))
-                const flag = targetPaths[0] === new_value
+                
 
                 for (const new_value of targetPaths) {
                   const newId = generateUUID()
@@ -933,8 +938,9 @@
                     const remainingS1 = s1.slice(s2.length);
 
                     // Concatenate s2 with the remaining elements of s1
-                    const result = s2.concat(remainingS1);
+                    const result = [...s2,...remainingS1];
                     newLSI = result.join('/')
+                    console.log('got new lsi '+ newLSI)
                   }
                   {
                     console.log('geeeting '+ newLSI)
