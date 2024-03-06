@@ -780,7 +780,7 @@
                   const res2 = await response.json()
                   const pathI = res2.items.find(e => e.sk === 'path')
                   //create new file
-                  let newLSI = pathI.lsi1.replace(path, new_value1)
+                  let newLSI = pathI.lsi1.replace(path, new_value1).replace(';publish:published','')
                   if (new_value !==new_value1) {
                     console.log('newval'+new_value1)
                     const s1 = pathI.lsi1.split('/')
@@ -789,7 +789,7 @@
 
                     // Concatenate s2 with the remaining elements of s1
                     const result = [...s2,...remainingS1];
-                    newLSI = result.join('/')
+                    newLSI = result.join('/').replace(';publish:published','')
                     console.log('res11'+JSON.stringify(result))
                     console.log('res11'+JSON.stringify(s2))
                     console.log('res11'+JSON.stringify(remainingS1))
@@ -939,7 +939,7 @@
                   const res2 = await response.json()
                   const pathI = res2.items.find(e => e.sk === 'path')
                   //create new file
-                  let newLSI = pathI.lsi1.replace(path, new_value1)
+                  let newLSI = pathI.lsi1.replace(path, new_value1).replace(';publish:published','')
                   if (new_value !==new_value1) {
                     const s1 = pathI.lsi1.split('/')
                     const s2 = new_value1.split('/')
@@ -947,7 +947,7 @@
 
                     // Concatenate s2 with the remaining elements of s1
                     const result = [...s2,...remainingS1];
-                    newLSI = result.join('/')
+                    newLSI = result.join('/').replace(';publish:published','')
                     console.log('got new lsi '+ newLSI)
                   }
                   {
