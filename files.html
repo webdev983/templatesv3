@@ -767,7 +767,7 @@
                 }
                 targetPaths = removeDuplicates(targetPaths)
                 console.log('targets '+ JSON.stringify(targetPaths))
-                await Promise.all(targetPaths.map(async new_value => {
+                await Promise.all(targetPaths.map(async new_value1 => {
                   const d = new Date()
                   const newId = generateUUID()
 
@@ -780,10 +780,10 @@
                   const res2 = await response.json()
                   const pathI = res2.items.find(e => e.sk === 'path')
                   //create new file
-                  let newLSI = pathI.lsi1.replace(path, new_value)
+                  let newLSI = pathI.lsi1.replace(path, new_value1)
                   if (!flag) {
                     const s1 = pathI.lsi1.split('/')
-                    const s2 = new_value.split('/')
+                    const s2 = new_value1.split('/')
                     const remainingS1 = s1.slice(s2.length);
 
                     // Concatenate s2 with the remaining elements of s1
@@ -874,7 +874,7 @@
 
 
               }))
-              return
+              
               await Promise.all(doNotReplaceItems.map(async item => {
                 console.log('donotreplaceitem '+item.lsi1)
                 const splited = item.lsi1.split('/')
@@ -925,7 +925,7 @@
                 console.log('target0' + JSON.stringify(targetPaths))
                 
 
-                for (const new_value of targetPaths) {
+                for (const new_value1 of targetPaths) {
                   const newId = generateUUID()
 
                   const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${item.id}&startsWith=true`, {
@@ -938,10 +938,10 @@
                   const res2 = await response.json()
                   const pathI = res2.items.find(e => e.sk === 'path')
                   //create new file
-                  let newLSI = pathI.lsi1.replace(path, new_value)
+                  let newLSI = pathI.lsi1.replace(path, new_value1)
                   if (!flag) {
                     const s1 = pathI.lsi1.split('/')
-                    const s2 = new_value.split('/')
+                    const s2 = new_value1.split('/')
                     const remainingS1 = s1.slice(s2.length);
 
                     // Concatenate s2 with the remaining elements of s1
