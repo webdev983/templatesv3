@@ -9,6 +9,12 @@ document.addEventListener('DOMContentLoaded', function() {
   var userType = localStorage.getItem('usertype');
 
   // Check the value of 'usertype' and perform actions accordingly
+
+
+  if (userType === null) {
+    localStorage.setItem('visualOn', 'true')
+    };
+
   if (userType !== null) {
     if (userType.trim() === 'su777') {
       // Select all elements with the 'data-user' attribute
@@ -223,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       <div id="generated-page-menu" class="panel horizontal-menu">
         <label class="l-1" style="margin-right: 10px; user-select: none;">👁️</label>
-        <button id='transform' class="b-1 b-selected" onclick="transformToVisual(event)">✍️</button>
+        <button id='transform' class="b-1" onclick="transformToVisual(event)">✍️</button>
       </div>
       <iframe id="generated-page-iframe" src="./iframe.html"
         style="width:100%; height:20000px; border:none; margin-bottom: 200px;" allowfullscreen="true" allow="
