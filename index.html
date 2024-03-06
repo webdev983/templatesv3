@@ -2,6 +2,29 @@
   <link rel="stylesheet" href="css/right-click-menu.css" media="all">
   <link rel="stylesheet" href="css/buttons-and-menus.css" media="all">
   <link rel="stylesheet" href="css/panels.css" media="all">
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+  // Check if 'ownerid' in local storage is not empty
+  var ownerId = localStorage.getItem('ownerid');
+  if (ownerId !== null && ownerId.trim() !== '') {
+    // Select all elements with the 'data-user' attribute
+    var dataUserElements = document.querySelectorAll('[data-user]');
+    dataUserElements.forEach(function(el) {
+      // Remove the 'data-user' attribute
+      el.removeAttribute('data-user');
+    });
+
+    // Select all elements with the 'hidden' attribute
+    var hiddenElements = document.querySelectorAll('[hidden]');
+    hiddenElements.forEach(function(el) {
+      // Remove the 'hidden' attribute
+      el.removeAttribute('hidden');
+    });
+  }
+});
+
+  </script>
 </head>
 
 <body class="body">
@@ -12,14 +35,14 @@
 </div>
 
 <div class="panel left">
-  <div id="nav-buttons">
+  <div id="nav-buttons" data-user hidden>
     <a href="https://webdev983.github.io/templatesv3/summary"><button class="b-1">🧠</button></a>
     <a href="https://webdev983.github.io/templatesv3/files"><button class="b-1">📂</button></a>
   </div>
   <div style="margin-top: 30px;">
-    <button class="b-1 " id="toggle-component-tree" onclick="toggleComponentTree()">🧩</button>
-    <button class="b-1 " id="toggle-code-tree" onclick="toggleCodeTree()">🏷️</button>
-    <button class="b-1 " id="toggle-head" onclick="toggleHead()">🗿</button>
+    <button class="b-1 " id="toggle-component-tree" onclick="toggleComponentTree()" data-user hidden>🧩</button>
+    <button class="b-1 " id="toggle-code-tree" onclick="toggleCodeTree()" >🏷️</button>
+    <button class="b-1 " id="toggle-head" onclick="toggleHead()" data-user hidden>🗿</button>
     <button class="b-1 " id="toggle-generated-page" onclick="toggleGeneratedPage()">👁️</button>
   </div>
   <div id="logs-menu">
@@ -64,7 +87,7 @@
 
 
 
-    <div  id="web-page-menu" class="panel-2 horizontal-menu">
+    <div  id="web-page-menu" class="panel-2 horizontal-menu" data-user hidden>
       <button id="path-icon" class='b-1' onclick="publish(event)" style="user-select: none; margin-right: 7px;">📰</button>
       <button hidden class="b-1" id="published-invalidate" onclick="invalidate(event)" style="margin-right: 5px;">🔄</button>
       <button hidden id="published-remove" class="b-1" style="margin-right: 5px;">🗑️️</button>
