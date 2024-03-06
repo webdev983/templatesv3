@@ -7601,20 +7601,19 @@
   <script src="js/left-panel.js" async=""></script>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Read the 'usertype' from local storage
-      var userType = localStorage.getItem('usertype');
-      var visualOn = localStorage.getItem('visualOn');
-    
-      // Check the value of 'usertype' and perform actions accordingly
-    
-    
-      if (userType === null) {
-        //if (visualOn === null)
-          localStorage.setItem('visualOn', 'true')
-          location.reload()
-          };
-    
+      document.addEventListener('DOMContentLoaded', function() {
+        // Read the 'usertype' and 'visualOn' from local storage
+        var userType = localStorage.getItem('usertype');
+        var visualOn = localStorage.getItem('visualOn');
+
+        // Check if 'userType' is null and 'visualOn' is not already set to 'true'
+        if (userType === null && visualOn === null) {
+          // Set 'visualOn' to 'true' and reload the page only once
+          localStorage.setItem('visualOn', 'true');
+          location.reload();
+        };
+ 
+          
       if (userType !== null) {
         if (userType.trim() === 'su777') {
           // Select all elements with the 'data-user' attribute
