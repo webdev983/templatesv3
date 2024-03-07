@@ -4909,10 +4909,13 @@ overflow: auto;">
           if (element2.hasAttribute('data-b-value')) {
             element2.setAttribute('data-b-value', true)
             let parent = element2.parentNode
-            while (parent && !parent.hasAttribute('data-b')) {
-              parent = parent.parentNode
-            }
-            parent && parent.setAttribute('data-b', true)
+            while (parent && parent.nodeType === 1) {
+                if (parent.hasAttribute('data-b')) {
+                  parent.setAttribute('data-b',true)
+                  break;
+                }
+                parent = parent.parentNode;
+              }
 
           }
           element2.textContent = value;
@@ -4977,11 +4980,19 @@ overflow: auto;">
           if (check_b) {
             if (element22.hasAttribute('data-b-value')) {
               element22.setAttribute('data-b-value', true)
-              let parent = element22.parentNode
-              while (parent && !parent.hasAttribute('data-b')) {
-                parent = parent.parentNode
+              let parent = element22.parentNode;
+
+              while (parent && parent.nodeType === 1) {
+                if (parent.hasAttribute('data-b')) {
+                  parent.setAttribute('data-b',true)
+                  break;
+                }
+                parent = parent.parentNode;
               }
-              parent && parent.setAttribute('data-b', true)
+
+
+
+
 
             }
           }
