@@ -596,7 +596,12 @@ overflow: auto;">
       const arr = pathItem.lsi1.split('/')
       const site = arr[0]
       arr.shift()
-      arr.pop()
+
+
+      const index = arr.indexOf('Content');
+      if (index !== -1) {
+        arr.splice(index);
+      }
       const active = arr.pop()
 
       const breadCA = querySelectorAll1('[data-builder-breadcrumb-active]')
@@ -4910,12 +4915,12 @@ overflow: auto;">
             element2.setAttribute('data-b-value', true)
             let parent = element2.parentNode
             while (parent && parent.nodeType === 1) {
-                if (parent.hasAttribute('data-b')) {
-                  parent.setAttribute('data-b',true)
-                  break;
-                }
-                parent = parent.parentNode;
+              if (parent.hasAttribute('data-b')) {
+                parent.setAttribute('data-b', true)
+                break;
               }
+              parent = parent.parentNode;
+            }
 
           }
           element2.textContent = value;
@@ -4984,7 +4989,7 @@ overflow: auto;">
 
               while (parent && parent.nodeType === 1) {
                 if (parent.hasAttribute('data-b')) {
-                  parent.setAttribute('data-b',true)
+                  parent.setAttribute('data-b', true)
                   break;
                 }
                 parent = parent.parentNode;
