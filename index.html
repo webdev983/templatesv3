@@ -5128,6 +5128,8 @@ overflow: auto;">
 
       if (button) {
         const parentId = button.parentNode.id;
+        const splited = parentId.split(';')
+        splited.shift()
         const textContentButton = button.parentNode.querySelector('[data-element="code-tree-comment-button"]');
 
         const existingClonedFieldset = button.parentNode.querySelector('[id^="code-tree-comment-form"]');
@@ -5138,7 +5140,7 @@ overflow: auto;">
           const clonedFieldset = fieldset.cloneNode(true);
           //clonedFieldset.querySelector('textarea').value = getElementById1(parentId.replace('-tree', '')).textContent
           // Assign a unique id to the cloned fieldset
-          clonedFieldset.id = 'code-tree-comment-form";' + parentId;
+          clonedFieldset.id = 'code-tree-comment-form";' + splited.join(';');
 
           // Find the position to insert the cloned fieldset
           const insertAfterElement = textContentButton || button;
