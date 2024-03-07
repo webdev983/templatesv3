@@ -265,13 +265,13 @@ overflow: auto;">
           </div>
 
 
-    <div data-menu style="margin-bottom: 30px; ">
+    <div id="code-tree-comment-form" data-menu style="margin-bottom: 30px; ">
       <button  onclick="cancel(event)" class="b-4">❌</button>
       <br>
       <button class="b-4">🗑️️ Rem</button>
-      <button class="b-4">💾 Save</button>
-      <input type="text" placeholder="💬 Comment" class="input-1"
-        style="margin-top: 7px;">
+      <button class="b-4" onclick="saveComment(event)">💾 Save</button>
+      <input id="comment-content" type="text" placeholder="💬 Comment" class="input-1"
+        style="margin-top: 7px;" >
     </div>
   
 
@@ -335,7 +335,7 @@ overflow: auto;">
       <br>
       <button class="b-3 t" data-element="code-tree-attributes-button"onclick="openAttributeContent(event)">🔑 Attributes</button>
 
-      <button style="margin-right:5px; margin-top: 5px;" class="b-3">💬 Comment</button>
+      <button style="margin-right:5px; margin-top: 5px;" data-element="code-tree-comment-button" class="b-3" onclick="openComment(event)">💬 Comment</button>
       <button class="b-3 t" data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)"> ▶️ InnerHtml</button>
       <button class="b-3 t" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄 TextContent</button>
         <br>
@@ -520,6 +520,7 @@ overflow: auto;">
   <script>
     const urlSearchParams = new URLSearchParams(window.location.search);
     var page_id = urlSearchParams.get('id');
+    var removeMenus = () => document.querySelector("#filePathList").querySelectorAll('[data-menu]').forEach(menu => menu.remove())
     var getElementById1 = (id) => {
       const el = document.getElementById(id)
       if (el) {
@@ -5118,6 +5119,59 @@ overflow: auto;">
           insertAfterElement.parentNode.querySelector('[data-open-menu]').append(clonedFieldset)
         }
       }
+    }
+    function openComment(event) {
+      removeMenus()
+      const button = event.target.closest('button[data-element="code-tree-comment-button"]');
+
+      if (button) {
+        const parentId = button.parentNode.id;
+        const textContentButton = button.parentNode.querySelector('[data-element="code-tree-comment-button"]');
+
+        const existingClonedFieldset = button.parentNode.querySelector('[id^="code-tree-comment-form"]');
+
+        if (!existingClonedFieldset) {
+          // Clone the fieldset node
+          const fieldset = getElementById1('code-tree-comment-form');
+          const clonedFieldset = fieldset.cloneNode(true);
+          //clonedFieldset.querySelector('textarea').value = getElementById1(parentId.replace('-tree', '')).textContent
+          // Assign a unique id to the cloned fieldset
+          clonedFieldset.id = 'code-tree-comment-form";' + parentId;
+
+          // Find the position to insert the cloned fieldset
+          const insertAfterElement = textContentButton || button;
+
+          // Insert the cloned fieldset after the specified element
+          insertAfterElement.parentNode.querySelector('[data-open-menu]').append(clonedFieldset)
+        }
+      }
+    }
+    const saveComment = async (event) => {
+      
+      const action = 'Add_Comment'
+      console.log('ac' + action)
+
+      const saveButton = event.target;
+      const fieldset = saveButton.parentNode
+
+
+      const textareaValue = fieldset.querySelector('#comment-content').value;
+      const splited = fieldset.id.split(';')
+      const [toRemove, ...rest] = splited
+
+      const el = {
+        time: (new Date()).getTime(),
+        action,
+        target_element: rest.join(';'),
+        insertedCode: textareaValue,
+
+      }
+      console.log(JSON.stringify(el))
+      await pushAction(el)
+
+      fieldset.remove()
+      console.log(JSON.stringify(actionLog))
+
     }
 
     function handleComponentClick(event) {
