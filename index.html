@@ -5167,6 +5167,7 @@ overflow: auto;">
         if (!existingClonedFieldset) {
           // Clone the fieldset node
           const fieldset = getElementById1('code-tree-comment-form');
+          const insertAfterElement = textContentButton || button;
           const toAppend = insertAfterElement.parentNode.closest('[data-open-menu]')
           removeMenus()
           const clonedFieldset = fieldset.cloneNode(true);
@@ -5176,7 +5177,7 @@ overflow: auto;">
           clonedFieldset.querySelector('#comment-content').value = getElementById1(splited.join(';')).querySelector('[data-element="comment"]').textContent.replace('💬','')
 
           // Find the position to insert the cloned fieldset
-          const insertAfterElement = textContentButton || button;
+          
           
           // Insert the cloned fieldset after the specified element
           toAppend.append(clonedFieldset)
