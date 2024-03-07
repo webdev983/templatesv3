@@ -4909,10 +4909,10 @@ overflow: auto;">
           if (element2.hasAttribute('data-b-value')) {
             element2.setAttribute('data-b-value', true)
             let parent = element2.parentNode
-            while (!parent.hasAttribute('data-b')) {
+            while (parent && !parent.hasAttribute('data-b')) {
               parent = parent.parentNode
             }
-            parent.setAttribute('data-b', true)
+            parent && parent.setAttribute('data-b', true)
 
           }
           element2.textContent = value;
@@ -4965,7 +4965,7 @@ overflow: auto;">
 
 
           // component
-          
+
           if (key === 'style' || key === 'class') {
             const selector = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
             querySelectorAll1(selector).forEach(element => !element.id.endsWith('-fieldset') && !element.id.endsWith('-tree') && element.setAttribute(key, value))
