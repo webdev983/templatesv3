@@ -137,7 +137,7 @@ overflow: auto;">
             onclick="openAttributeContent(event)">🔑</button>
           <button class="b-3 t" data-element="code-tree-text-content-button"
             onclick="openTextContent(event)">📄</button>
-            <span  hidden class="l-3 t b-dark-blue">💬</span>
+            <span data-element ="comment"  hidden class="l-3 t b-dark-blue">💬</span>
             <div data-open-menu></div>
           </fieldset>
 
@@ -154,7 +154,7 @@ overflow: auto;">
             onclick="openAttributeContent(event)">🔑</button>
           <button class="b-3 t b-dark-blue" data-element="code-tree-text-content-button"
             onclick="openTextContent(event)">📄</button>
-            <span hidden  class="l-3 t b-dark-blue">💬</span>
+            <span data-element ="comment" hidden  class="l-3 t b-dark-blue">💬</span>
 
           <div data-open-menu></div>
           </fieldset>
@@ -297,7 +297,7 @@ overflow: auto;">
         ▶️</button>
       <button  class="b-3 t" data-element="code-tree-attributes-button" onclick="openAttributeContent(event)">🔑</button>
       <button  class="b-3 t" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
-      <span hidden class="l-3 t b-dark-blue">💬</span>
+      <span data-element ="comment" hidden class="l-3 t b-dark-blue">💬</span>
       
       
       <span data-open-menu></button>
@@ -4880,6 +4880,17 @@ overflow: auto;">
           // component
           const element2 = getElementById1(removeLastOccurrence(target_element, '-tree'));
           element2.textContent = value;
+
+
+          break;
+        case 'Add_Comment':
+          // Handle the 'removeTag' action
+          // tree
+          const comment = insertedCode
+          const target = getElementById1(target_element)
+          const commentField = target.querySelector('[data-element="comment"]')
+          commentField.removeAttribute('hidden')
+          commentField.textContent = '💬'+comment
 
 
           break;
