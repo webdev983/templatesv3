@@ -258,7 +258,7 @@ overflow: auto;">
     <div id="code-tree-comment-form" data-menu style="margin-bottom: 30px; ">
       <button  onclick="cancel(event)" class="b-4">❌</button>
       <br>
-      <button class="b-4">🗑️️ Remove</button>
+      <button class="b-4" onclick="removeComment(event)">🗑️️ Remove</button>
       <button class="b-4" onclick="saveComment(event)">💾 Save</button>
       <br>
       <input id="comment-content" type="text" placeholder="💬 Comment" class="input-1"
@@ -4896,6 +4896,16 @@ overflow: auto;">
 
 
           break;
+        case 'Remove_Comment':
+          // Handle the 'removeTag' action
+          // tree
+          const target1 = getElementById1(target_element)
+          const commentField1 = target1.querySelector('[data-element="comment"]')
+          commentField1.setAttribute('hidden',"")
+          commentField.textContent = '💬'
+
+
+          break;
 
         // Add more cases as needed for other actions
 
@@ -5171,6 +5181,33 @@ overflow: auto;">
         action,
         target_element: rest.join(';'),
         insertedCode: textareaValue,
+
+      }
+      console.log(JSON.stringify(el))
+      await pushAction(el)
+
+      removeMenus()
+      console.log(JSON.stringify(actionLog))
+
+    }
+    const removeComment = async (event) => {
+      
+      const action = 'Remove_Comment'
+      console.log('ac' + action)
+
+      const saveButton = event.target;
+      const fieldset = saveButton.parentNode
+
+
+      
+      const splited = fieldset.id.split(';')
+      const [toRemove, ...rest] = splited
+      console.log('fid' +fieldset.id)
+
+      const el = {
+        time: (new Date()).getTime(),
+        action,
+        target_element: rest.join(';'),
 
       }
       console.log(JSON.stringify(el))
