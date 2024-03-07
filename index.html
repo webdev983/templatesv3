@@ -4,7 +4,7 @@
   <link rel="stylesheet" href="css/panels.css" media="all">
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       var userType = localStorage.getItem('usertype');
       var visualOn = localStorage.getItem('visualOn');
 
@@ -18,233 +18,233 @@
         location.reload();
       };
 
-        
-    if (userType !== null) {
-      if (userType.trim() === 'su777') {
-        // Select all elements with the 'data-user' attribute
-        var dataUserElements = document.querySelectorAll('[data-user]');
-        dataUserElements.forEach(function(el) {
-          // Remove the 'hidden' attribute
-          el.removeAttribute('hidden');
-        });
-      } else if (userType.trim() === 'style') {
-        // Select all elements with the 'data-style' attribute
-        var dataStyleElements = document.querySelectorAll('[data-style]');
-        dataStyleElements.forEach(function(el) {
-          // Remove the 'hidden' attribute
-          el.removeAttribute('hidden');
-        });
+
+      if (userType !== null) {
+        if (userType.trim() === 'su777') {
+          // Select all elements with the 'data-user' attribute
+          var dataUserElements = document.querySelectorAll('[data-user]');
+          dataUserElements.forEach(function (el) {
+            // Remove the 'hidden' attribute
+            el.removeAttribute('hidden');
+          });
+        } else if (userType.trim() === 'style') {
+          // Select all elements with the 'data-style' attribute
+          var dataStyleElements = document.querySelectorAll('[data-style]');
+          dataStyleElements.forEach(function (el) {
+            // Remove the 'hidden' attribute
+            el.removeAttribute('hidden');
+          });
+        }
       }
-    }
-  });
-    </script>
+    });
+  </script>
 
 
 </head>
 
 <body class="body">
-<aside class="aside" data-user  data-style hidden>
-<div class="panel top">
-  <button disabled class="b-1" id="last-action-time"
-    style="color: black;z-index:1; position: absolute;top: 50%;left: 50%; transform: translate(-50%, -50%);">⏳</button>
-</div>
+  <aside class="aside" data-user data-style hidden>
+    <div class="panel top">
+      <button disabled class="b-1" id="last-action-time"
+        style="color: black;z-index:1; position: absolute;top: 50%;left: 50%; transform: translate(-50%, -50%);">⏳</button>
+    </div>
 
-<div class="panel left" style="overflow-y: auto;     height: 100%;
+    <div class="panel left" style="overflow-y: auto;     height: 100%;
 overflow: auto;">
-  <div id="nav-buttons" data-user hidden>
-    <a href="https://webdev983.github.io/templatesv3/summary"><button class="b-1">🧠</button></a>
-    <a href="https://webdev983.github.io/templatesv3/files"><button class="b-1">📂</button></a>
-  </div>
-  <div style="margin-top: 30px;">
-    <button class="b-1 " id="toggle-component-tree" onclick="toggleComponentTree()" data-user hidden>🧩</button>
-    <button class="b-1 " id="toggle-code-tree" onclick="toggleCodeTree()">🏷️</button>
-    <button class="b-1 " id="toggle-head" onclick="toggleHead()" data-user hidden>🗿</button>
-    <button class="b-1 " id="toggle-generated-page" onclick="toggleGeneratedPage()">👁️</button>
-  </div>
-  <div id="logs-menu">
-    <button class="b-1 b-select" id="log-open">🪵</button>
-  </div>
-  <table id="code-log" class="table-1" hidden style="margin-bottom: 100px;">
-    <button hidden id="refresh-page" class="b-1" onclick="reloadPage(event)">🔄</button>
-    <thead>
-      <tr>
-        <th style="text-align: left;">🕓time</th>
-        <th style="text-align: left;">✔️action</th>
-      </tr>
-    </thead>
-    <tbody id="code-log-body">
-      <tr hidden id="code-log-element">
-        <td data-type-code-log="action-time"><span id="code-log-action-time">1703707728031</span></td>
-        <td data-type-code-log="action-name"><span id="code-log-action">append child</span></td>
-        <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-  
-</div>
-<div id="bottom-buttons" class="panel bottom" data-user hidden>
-  <button class="b-1">📴</button>
-</div>
+      <div id="nav-buttons" data-user hidden>
+        <a href="https://webdev983.github.io/templatesv3/summary"><button class="b-1">🧠</button></a>
+        <a href="https://webdev983.github.io/templatesv3/files"><button class="b-1">📂</button></a>
+      </div>
+      <div style="margin-top: 30px;">
+        <button class="b-1 " id="toggle-component-tree" onclick="toggleComponentTree()" data-user hidden>🧩</button>
+        <button class="b-1 " id="toggle-code-tree" onclick="toggleCodeTree()">🏷️</button>
+        <button class="b-1 " id="toggle-head" onclick="toggleHead()" data-user hidden>🗿</button>
+        <button class="b-1 " id="toggle-generated-page" onclick="toggleGeneratedPage()">👁️</button>
+      </div>
+      <div id="logs-menu">
+        <button class="b-1 b-select" id="log-open">🪵</button>
+      </div>
+      <table id="code-log" class="table-1" hidden style="margin-bottom: 100px;">
+        <button hidden id="refresh-page" class="b-1" onclick="reloadPage(event)">🔄</button>
+        <thead>
+          <tr>
+            <th style="text-align: left;">🕓time</th>
+            <th style="text-align: left;">✔️action</th>
+          </tr>
+        </thead>
+        <tbody id="code-log-body">
+          <tr hidden id="code-log-element">
+            <td data-type-code-log="action-time"><span id="code-log-action-time">1703707728031</span></td>
+            <td data-type-code-log="action-name"><span id="code-log-action">append child</span></td>
+            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-</aside>
-<main class="main" style="position: relative;">
+    </div>
+    <div id="bottom-buttons" class="panel bottom" data-user hidden>
+      <button class="b-1">📴</button>
+    </div>
 
-  <div class="panel horizontal-menu" data-user data-style hidden>
-    <button  id="path_select" onclick="loadRoot()" class='b-1' title="change mode"
-      style="user-select: none; margin-right: 7px;">👣</button>
+  </aside>
+  <main class="main" style="position: relative;">
 
-   <label   id="page-path" class="l-2 b-dark-blue" style="cursor: pointer;  font:700;">~</label>
+    <div class="panel horizontal-menu" data-user data-style hidden>
+      <button id="path_select" onclick="loadRoot()" class='b-1' title="change mode"
+        style="user-select: none; margin-right: 7px;">👣</button>
 
-    <a href="" target="_blank" style="text-decoration: none; color: #000000;" hidden id="published-label"
-      class="l-3">🌐</a>
-  </div>
+      <label id="page-path" class="l-2 b-dark-blue" style="cursor: pointer;  font:700;">~</label>
+
+      <a href="" target="_blank" style="text-decoration: none; color: #000000;" hidden id="published-label"
+        class="l-3">🌐</a>
+    </div>
 
 
 
 
-    <div  id="web-page-menu" class="panel-2 horizontal-menu" hidden data-user data-style>
-      <button id="path-icon" class='b-1' onclick="publish(event)" style="user-select: none; margin-right: 7px;">📰</button>
-      <button hidden class="b-1" id="published-invalidate" onclick="invalidate(event)" style="margin-right: 5px;" >🔄</button>
+    <div id="web-page-menu" class="panel-2 horizontal-menu" hidden data-user data-style>
+      <button id="path-icon" class='b-1' onclick="publish(event)"
+        style="user-select: none; margin-right: 7px;">📰</button>
+      <button hidden class="b-1" id="published-invalidate" onclick="invalidate(event)"
+        style="margin-right: 5px;">🔄</button>
       <button hidden id="published-remove" class="b-1" style="margin-right: 5px;">🗑️️</button>
     </div>
 
     </div>
 
-      <div id="components-tree-menu" class="panel horizontal-menu" data-user hidden>
-        <label class="l-1" style="margin-right: 10px; user-select: none;">🧩</label>
-        <button class="b-1" style="margin-right: 5px;" onclick="addComponent(event)">➕</button>
-      </div>
+    <div id="components-tree-menu" class="panel horizontal-menu" data-user hidden>
+      <label class="l-1" style="margin-right: 10px; user-select: none;">🧩</label>
+      <button class="b-1" style="margin-right: 5px;" onclick="addComponent(event)">➕</button>
+    </div>
 
-      <div id="components-tree"  data-user hidden class="horizontal-area" style="position: relative;">
-      </div>
+    <div id="components-tree" data-user hidden class="horizontal-area" style="position: relative;">
+    </div>
 
-      <div id="code-tree-menu" class="panel horizontal-menu" data-user  data-style hidden>
-        <label class="l-1" style="margin-right: 10px; user-select: none;">🏷️</label>
-        <button data-user hidden class="b-1" onclick="addTreeElement(event)">➕</button>
-      </div>
-      <div id="code-tree" class="horizontal-area" style="position: relative;" data-user  data-style hidden>
-        <fieldset id="head-tree" data-element="code-tree-tag" class="tree-element">
-          <legend class="l-p b-dark-blue"></legend>
-          <input id="selectedCheckbox" hidden="" type="checkbox" onchange="handleCheckboxChange(event)">
-          <button class="b-3 arrow" data-element="code-tree-show-hide-button"
-            onclick="toggleSubFields(event)">→</button>
-          <button class="b-3 t" data-element="code-tree-tag-name-button"
-            onclick="loader(event, handleTreeClick)">🏷️head</button>
-          <button class="b-3 t" data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)">
-            ▶️</button>
-          <button class="b-3 t" data-element="code-tree-attributes-button"
-            onclick="openAttributeContent(event)">🔑</button>
-          <button class="b-3 t" data-element="code-tree-text-content-button"
-            onclick="openTextContent(event)">📄</button>
-            <span data-element ="comment"  hidden class="l-3 t b-dark-blue">💬</span>
-            <div data-open-menu></div>
-          </fieldset>
+    <div id="code-tree-menu" class="panel horizontal-menu" data-user data-style hidden>
+      <label class="l-1" style="margin-right: 10px; user-select: none;">🏷️</label>
+      <button data-user hidden class="b-1" onclick="addTreeElement(event)">➕</button>
+    </div>
+    <div id="code-tree" class="horizontal-area" style="position: relative;" data-user data-style hidden>
+      <fieldset id="head-tree" data-element="code-tree-tag" class="tree-element">
+        <legend class="l-p b-dark-blue"></legend>
+        <input id="selectedCheckbox" hidden="" type="checkbox" onchange="handleCheckboxChange(event)">
+        <button class="b-3 arrow" data-element="code-tree-show-hide-button" onclick="toggleSubFields(event)">→</button>
+        <button class="b-3 t" data-element="code-tree-tag-name-button"
+          onclick="loader(event, handleTreeClick)">🏷️head</button>
+        <button class="b-3 t" data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)">
+          ▶️</button>
+        <button class="b-3 t" data-element="code-tree-attributes-button"
+          onclick="openAttributeContent(event)">🔑</button>
+        <button class="b-3 t" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
+        <span data-element="comment" hidden class="l-3 t b-dark-blue">💬</span>
+        <div data-open-menu></div>
+      </fieldset>
 
-        <fieldset id="body-tree" data-element="code-tree-tag" class="tree-element">
-          <legend class="l-p b-dark-blue" ></legend>
-          <input id="selectedCheckbox" hidden="" type="checkbox" onchange="handleCheckboxChange(event)">
-          <button class="b-3 arrow" data-element="code-tree-show-hide-button"
-            onclick="toggleSubFields(event)">→</button>
-          <button class="b-3 t" data-element="code-tree-tag-name-button"
-            onclick="loader(event, handleTreeClick)">🏷️body</button>
-          <button class="b-3 t " data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)">
-            ▶️</button>
-          <button class="b-3 t" data-element="code-tree-attributes-button"
-            onclick="openAttributeContent(event)">🔑</button>
-          <button class="b-3 t b-dark-blue" data-element="code-tree-text-content-button"
-            onclick="openTextContent(event)">📄</button>
-            <span data-element ="comment" hidden  class="l-3 t b-dark-blue">💬</span>
+      <fieldset id="body-tree" data-element="code-tree-tag" class="tree-element">
+        <legend class="l-p b-dark-blue"></legend>
+        <input id="selectedCheckbox" hidden="" type="checkbox" onchange="handleCheckboxChange(event)">
+        <button class="b-3 arrow" data-element="code-tree-show-hide-button" onclick="toggleSubFields(event)">→</button>
+        <button class="b-3 t" data-element="code-tree-tag-name-button"
+          onclick="loader(event, handleTreeClick)">🏷️body</button>
+        <button class="b-3 t " data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)">
+          ▶️</button>
+        <button class="b-3 t" data-element="code-tree-attributes-button"
+          onclick="openAttributeContent(event)">🔑</button>
+        <button class="b-3 t b-dark-blue" data-element="code-tree-text-content-button"
+          onclick="openTextContent(event)">📄</button>
+        <span data-element="comment" hidden class="l-3 t b-dark-blue">💬</span>
 
-          <div data-open-menu></div>
-          </fieldset>
+        <div data-open-menu></div>
+      </fieldset>
 
 
-      </div>
+    </div>
 
 
-      <div id="head-menu" class="panel horizontal-menu" data-user hidden>
-        <label class="l-1" style="margin-right: 10px; user-select: none;">🗿</label>
-      </div>
-      <div id="head-1" class="horizontal-area" data-user hidden>
-        <label id="checkbox-label" hidden data-type="dependant" class="l-3"><input type="checkbox">Color</label>
-        <fieldset hidden id="dependee-menu-item" data-type="dependee">
-          <legend>
-            <label class="l-2">🎚️</label>
-            <label data-type="dependee-value" class="l-2 b-dark-blue">Price</label>
-          </legend>
-  
-          <div>
-            <button class="b-3" id="generate-dependees" onclick="generateDependees(event)">Generate</button>
-          </div>
+    <div id="head-menu" class="panel horizontal-menu" data-user hidden>
+      <label class="l-1" style="margin-right: 10px; user-select: none;">🗿</label>
+    </div>
+    <div id="head-1" class="horizontal-area" data-user hidden>
+      <label id="checkbox-label" hidden data-type="dependant" class="l-3"><input type="checkbox">Color</label>
+      <fieldset hidden id="dependee-menu-item" data-type="dependee">
+        <legend>
+          <label class="l-2">🎚️</label>
+          <label data-type="dependee-value" class="l-2 b-dark-blue">Price</label>
+        </legend>
+
+        <div>
+          <button class="b-3" id="generate-dependees" onclick="generateDependees(event)">Generate</button>
+        </div>
+      </fieldset>
+      <div style="margin-left: 15px;">
+
+        <fieldset hidden id="breadCrumb-menu" class="menu">
+          <legend><label class="l-2">🥖 BreadCrumb Menu</label></legend>
+          <button class="b-3" onclick="generateBreadCrumb(event)"> Generate</button>
         </fieldset>
-        <div style="margin-left: 15px;">
 
-          <fieldset hidden id="breadCrumb-menu" class="menu">
-            <legend><label class="l-2">🥖 BreadCrumb Menu</label></legend>
-            <button class="b-3" onclick="generateBreadCrumb(event)"> Generate</button>
+
+
+        <div hidden id=sku-item-1>
+          <label class="l-3 b-dark-blue">SKU:</label><label class="l-2" id="sku-value"></label>
+          <button class="b-3" id="toggleSkuAttributeList" onclick='toggleSkuAttributeList(event)'>👀</button>
+          <button class="b-3" id="toggleDependencyMenu1" onclick='toggleDependencyMenu1(event)'>🛠️</button>
+
+
+          <button class="b-3" id="remove-sku" onclick="openRemoveSku(event)">🗑️️</button>
+
+          <fieldset style="display: none;" id="remove-sku-menu" class="menu">
+            <legend><button class="b-6" onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
+            <label class="l-3">Are you sure want to remove this SKU?</label>
+            <br>
+            <button onclick="removeSku(event)" class="b-3">🗑️️ Remove</button>
           </fieldset>
 
+          <ul class="list-1" hidden id="sku-attribute-list">
+            <div id='sku-item'>
+              <li id="sku-attribute"><span class="l-4" id="sku-attribute-value">Solo</span></li>
+            </div>
+          </ul>
 
-
-          <div hidden id=sku-item-1>
-            <label class="l-3 b-dark-blue">SKU:</label><label class="l-2" id="sku-value"></label>
-            <button class="b-3" id="toggleSkuAttributeList" onclick='toggleSkuAttributeList(event)'>👀</button>
-            <button class="b-3" id="toggleDependencyMenu1" onclick='toggleDependencyMenu1(event)'>🛠️</button>
-
-
-            <button class="b-3" id="remove-sku" onclick="openRemoveSku(event)">🗑️️</button>
-
-            <fieldset style="display: none;" id="remove-sku-menu" class="menu">
-              <legend><button class="b-6" onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
-              <label class="l-3">Are you sure want to remove this SKU?</label>
-              <br>
-              <button onclick="removeSku(event)" class="b-3">🗑️️ Remove</button>
-            </fieldset>
-
-            <ul class="list-1" hidden id="sku-attribute-list">
-              <div id='sku-item'>
-                <li id="sku-attribute"><span class="l-4" id="sku-attribute-value">Solo</span></li>
+          <div id="dependee-menu" hidden>
+            <fieldset data-type="dependee">
+              <legend>
+                <label class="l-2">🎚️</label>
+                <label data-type="dependee-value" class="l-2 b-dark-blue">Price</label>
+              </legend>
+              <label data-type="dependant" class="l-3"><input type="checkbox">Color</label>
+              <div>
+                <button class="b-3" id="generate-dependees">Generate</button>
               </div>
-            </ul>
-
-            <div id="dependee-menu" hidden>
-              <fieldset data-type="dependee">
-                <legend>
-                  <label class="l-2">🎚️</label>
-                  <label data-type="dependee-value" class="l-2 b-dark-blue">Price</label>
-                </legend>
-                <label data-type="dependant" class="l-3"><input type="checkbox">Color</label>
-                <div>
-                  <button class="b-3" id="generate-dependees">Generate</button>
-                </div>
-              </fieldset>
-            </div>
-          </div>
-          <div id="sku-menu" hidden>
-            <input type="text" class="b-3" id="input-sku" placeholder="enter sku">
-            <button class="b-3" id="create-sku" onclick="addSku(event)">▶️</button>
-            <div id="sku-list" hidden>
-
-
-            </div>
-
+            </fieldset>
           </div>
         </div>
-      </div>
+        <div id="sku-menu" hidden>
+          <input type="text" class="b-3" id="input-sku" placeholder="enter sku">
+          <button class="b-3" id="create-sku" onclick="addSku(event)">▶️</button>
+          <div id="sku-list" hidden>
 
-      <div id="generated-page-menu" class="panel horizontal-menu" hidden data-user data-style>
-        <label  class="l-1" style="margin-right: 10px; user-select: none;">👁️</label>
-        <button id='transform' class="b-1" onclick="transformToVisual(event)">✍️</button>
+
+          </div>
+
+        </div>
       </div>
-      <iframe id="generated-page-iframe" src="./iframe.html"
-        style="width:100%; height:20000px; border:none; margin-bottom: 200px;" allowfullscreen="true" allow="
+    </div>
+
+    <div id="generated-page-menu" class="panel horizontal-menu" hidden data-user data-style>
+      <label class="l-1" style="margin-right: 10px; user-select: none;">👁️</label>
+      <button id='transform' class="b-1" onclick="transformToVisual(event)">✍️</button>
+    </div>
+    <iframe id="generated-page-iframe" src="./iframe.html"
+      style="width:100%; height:20000px; border:none; margin-bottom: 200px;" allowfullscreen="true" allow="
       
       display-capture;
       geolocation; 
       microphone; 
       web-share" class="horizontal-area">
-      </iframe>
+    </iframe>
   </main>
 
   <!-- MENUS-->
@@ -256,7 +256,7 @@ overflow: auto;">
 
 
     <div id="code-tree-comment-form" data-menu style="margin-bottom: 30px; ">
-      <button  onclick="cancel(event)" class="b-4" style="margin-top:5px; margin-bottom: 5px;">❌</button>
+      <button onclick="cancel(event)" class="b-4" style="margin-top:5px; margin-bottom: 5px;">❌</button>
       <br>
       <label><input type="checkbox"><span class="l-3" style="margin-bottom: 5px;">⧉ Apply to Copies</span></label>
       <br>
@@ -264,10 +264,9 @@ overflow: auto;">
       <button class="b-4" onclick="removeComment(event)">🗑️️ Remove</button>
       <button class="b-4" onclick="saveComment(event)">💾 Save</button>
       <br>
-      <input id="comment-content" type="text" placeholder="💬 Comment" class="input-1"
-        style="margin-top: 7px;" >
+      <input id="comment-content" type="text" placeholder="💬 Comment" class="input-1" style="margin-top: 7px;">
     </div>
-  
+
 
 
     <fieldset id="update-href-menu" class="menu" data-menu>
@@ -284,10 +283,11 @@ overflow: auto;">
         onclick="toggleSubFields(event)"></button>
       <button class="b-3 t" data-element="code-tree-tag-name-button"
         onclick="loader(event, handleComponentClick)">🏷️component</button>
-      <button hidden class="b-3 t" data-element="code-tree-attributes-button" onclick="openAttributeContent(event)">🔑</button>
+      <button hidden class="b-3 t" data-element="code-tree-attributes-button"
+        onclick="openAttributeContent(event)">🔑</button>
       <button hidden class="b-3 t" data-element="optional-script" onclick="replaceComponent(event,true)">🔄10</button>
       <span data-open-menu></button>
-      </fieldset>
+    </fieldset>
 
     <fieldset id="tree-element" data-element="code-tree-tag" class="tree-element" style="margin-left: 50px;">
       <legend></legend>
@@ -296,17 +296,17 @@ overflow: auto;">
         onclick="toggleSubFields(event)">&#8594;</button>
       <button class="b-3 t" data-element="code-tree-tag-name-button"
         onclick="loader(event, handleTreeClick)">🏷️component</button>
-      <button  class="b-3 t" data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)">
+      <button class="b-3 t" data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)">
         ▶️</button>
-      <button  class="b-3 t" data-element="code-tree-attributes-button" onclick="openAttributeContent(event)">🔑</button>
-      <button  class="b-3 t" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
-      <span data-element ="comment" hidden class="l-3 t b-dark-blue">💬</span>
-      
-      
-      <span data-open-menu></button>
-      </fieldset>
+      <button class="b-3 t" data-element="code-tree-attributes-button" onclick="openAttributeContent(event)">🔑</button>
+      <button class="b-3 t" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
+      <span data-element="comment" hidden class="l-3 t b-dark-blue">💬</span>
 
-    
+
+      <span data-open-menu></button>
+    </fieldset>
+
+
 
 
 
@@ -329,27 +329,31 @@ overflow: auto;">
       <br>
       <label><input type="checkbox"><span class="l-3">⧉ Apply to Copies</span></label>
       <br>
-      <button class="b-3 t" data-element="code-tree-attributes-button"onclick="openAttributeContent(event)">🔑 Attributes</button>
+      <button class="b-3 t" data-element="code-tree-attributes-button" onclick="openAttributeContent(event)">🔑
+        Attributes</button>
 
-      <button style="margin-right:5px; margin-top: 5px;" data-element="code-tree-comment-button" class="b-3" onclick="openComment(event)">💬 Comment</button>
-      <button class="b-3 t" data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)"> ▶️ InnerHtml</button>
-      <button class="b-3 t" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄 TextContent</button>
-        <br>
-      <button style="margin-right:5px; margin-top: 5px; background-color: #f0f0f0;" class="b-3" id="code-tree-click-tag-append-child"
-        onclick="append(event)">👶 Append</button>
-        <button style="margin-right:5px; margin-top: 5px;" class="b-3">👨‍👦️ Add Parent</button>
-        <button style="margin-right:5px; margin-top: 5px; background-color: #f0f0f0;" class="b-3">insertAfter ➡️</button>
+      <button style="margin-right:5px; margin-top: 5px;" data-element="code-tree-comment-button" class="b-3"
+        onclick="openComment(event)">💬 Comment</button>
+      <button class="b-3 t" data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)"> ▶️
+        InnerHtml</button>
+      <button class="b-3 t" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄
+        TextContent</button>
+      <br>
+      <button style="margin-right:5px; margin-top: 5px; background-color: #f0f0f0;" class="b-3"
+        id="code-tree-click-tag-append-child" onclick="append(event)">👶 Append</button>
+      <button style="margin-right:5px; margin-top: 5px;" class="b-3">👨‍👦️ Add Parent</button>
+      <button style="margin-right:5px; margin-top: 5px; background-color: #f0f0f0;" class="b-3">insertAfter ➡️</button>
 
-      <button style="margin-right:5px; margin-top: 5px; background-color: #f0f0f0;" class="b-3" id="code-tree-click-tag-insert-before"
-        onclick="insertB(event)">⬅️ insertBefore</button>
-        <br>
+      <button style="margin-right:5px; margin-top: 5px; background-color: #f0f0f0;" class="b-3"
+        id="code-tree-click-tag-insert-before" onclick="insertB(event)">⬅️ insertBefore</button>
+      <br>
       <button style="margin-right:5px; margin-top: 5px;" class="b-3" id="code-tree-click-tag-change-tag"
         onclick="changeTagForCopies(event)">✏️ Change
         <button style="margin-right:5px; margin-top: 5px;" class="b-3" id="code-tree-click-tag-remove-tag"
           onclick="removeTagAndCopies(event)">🗑️️ Remove</button>
 
-      
-      
+
+
         <!--
       <button class="b-2" id="code-tree-click-tag-change-tag" onclick="changeTag(event)">✏️ Change tag</button>
           Copies</button>
@@ -370,8 +374,9 @@ overflow: auto;">
 
 
     <!-- menu confirm selected append/insert tags-->
-    <fieldset id="code-tree-append-or-insert-approv-menu" data-menu class="menu" style="border: 0; padding: 0; margin-bottom: 30px; user-select: none; display: block; width: 100%;">
-        <button onclick="cancel(event)" class="b-4" style="margin-top: 5px; margin-bottom: 5px;">❌</button>
+    <fieldset id="code-tree-append-or-insert-approv-menu" data-menu class="menu"
+      style="border: 0; padding: 0; margin-bottom: 30px; user-select: none; display: block; width: 100%;">
+      <button onclick="cancel(event)" class="b-4" style="margin-top: 5px; margin-bottom: 5px;">❌</button>
       <br>
       <span id="code-tree-amount-selected-for-append-or-insert" style="font-size: 24px;">0</span>
       <button class="b-4" id="code-tree-click-tag-approve" onclick="approve(event)"> ✅ Approve</button>
@@ -389,9 +394,9 @@ overflow: auto;">
     <div id="code-tree-tag-text-content-form" data-menu style="margin-bottom: 30px; ">
       <button id="code-tree-tag-attributes-form-action-back" class="b-3" onclick="cancel(event)"
         style="margin-bottom:7px; margin-right: 5px;">❌</button>
-        <br>
-        <label><input type="checkbox"><span class="l-3">⧉ Apply to Copies</span></label>
-        <br>
+      <br>
+      <label><input type="checkbox"><span class="l-3">⧉ Apply to Copies</span></label>
+      <br>
 
       <button id="code-tree-tag-text-content-action-save" onclick="saveText(event)" class="b-3"
         style="margin-bottom:7px; margin-top: 7px; margin-right: 5px;">💾 Save</button>
@@ -406,9 +411,9 @@ overflow: auto;">
       <br>
       <button id="code-tree-tag-attributes-form-action-back" class="b-3" onclick="cancel(event)"
         style="margin-bottom:7px; margin-right: 5px;">❌</button>
-        <br>
-        <label><input type="checkbox"><span class="l-3">⧉ Apply to Copies</span></label>
-        <br>
+      <br>
+      <label><input type="checkbox"><span class="l-3">⧉ Apply to Copies</span></label>
+      <br>
 
       <button id="code-tree-tag-text-content-action-save" onclick="saveInnerHtml(event)" class="b-3"
         style="margin-bottom:7px; margin-right: 5px;">💾
@@ -445,7 +450,7 @@ overflow: auto;">
         <br>
         <label><input type="checkbox"><span class="l-3">⧉ Apply to Copies</span></label>
         <br>
-  
+
         <button class="b-3" onclick="saveAttribute(event)" style="margin-bottom: 5px; margin-top: 5px;">💾 Save</button>
         <br>
         <textarea id="code-tree-tag-attribute-input-text" class="text1" placeholder=" 🔑 Add Attributes"></textarea>
@@ -492,7 +497,8 @@ overflow: auto;">
     </li>
 
 
-    <ol data-element="file-path-list" id="selectedFilePathList" class="list-1" style="margin-left: -10px; margin-bottom: 30px; " data-menu>
+    <ol data-element="file-path-list" id="selectedFilePathList" class="list-1"
+      style="margin-left: -10px; margin-bottom: 30px; " data-menu>
       <button style="margin-bottom: 8px; margin-left: -10px;" class="b-4"
         onclick="cancelReplace(event)">❌Cancel</button>
       <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" onclick="approveReplace(event)">✅
@@ -505,7 +511,8 @@ overflow: auto;">
     </ol>
 
 
-    <div hidden id="file-list-attach-component-options" style="padding: 5px; margin-left: 10px; margin-bottom: 30px; " data-menu>
+    <div hidden id="file-list-attach-component-options" style="padding: 5px; margin-left: 10px; margin-bottom: 30px; "
+      data-menu>
 
       <button class="b-3" id="file-list-link-by-path" style="margin-top: 5px;"
         onclick="switchSelected(event)">📂Absolute</button>
@@ -2171,14 +2178,14 @@ overflow: auto;">
 
       iframeDocument.addEventListener('mouseout', function (event) {
         if (event.target.hasAttribute('data-visual-element')) {
-           event.target.style.backgroundColor = ''; 
+          event.target.style.backgroundColor = '';
 
           if (!event.target.getAttribute('style')) {
-            event.target.removeAttribute('style'); 
+            event.target.removeAttribute('style');
           }
-  }
-});
-      
+        }
+      });
+
 
 
       function clickRemoveButton(clickEvent) {
@@ -3390,7 +3397,7 @@ overflow: auto;">
       }
     }
     const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative) => {
-      const { subAction, noSubComp, noComp, time, withParent, move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component } = command;
+      const { subAction, noSubComp, noComp, time, withParent, move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component, check_b } = command;
       let treeElement
       let componentElement
 
@@ -4565,7 +4572,7 @@ overflow: auto;">
             components.push(inserted_component.id)
             console.log(inserted_component.componentId)
 
-            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId,componentPath)
+            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, componentPath)
             break;
           }
           //case duplicate insert before
@@ -4899,13 +4906,13 @@ overflow: auto;">
 
           // component
           const element2 = getElementById1(removeLastOccurrence(target_element, '-tree'));
-          if(element2.hasAttribute('data-b-value')){
-            element2.setAttribute('data-b-value',true)
+          if (element2.hasAttribute('data-b-value')) {
+            element2.setAttribute('data-b-value', true)
             let parent = element2.parentNode
-            while(!parent.hasAttribute('data-b')){
+            while (!parent.hasAttribute('data-b')) {
               parent = parent.parentNode
             }
-            parent.setAttribute('data-b',true)
+            parent.setAttribute('data-b', true)
 
           }
           element2.textContent = value;
@@ -4919,7 +4926,7 @@ overflow: auto;">
           const target = getElementById1(target_element)
           const commentField = target.querySelector('[data-element="comment"]')
           commentField.removeAttribute('hidden')
-          commentField.textContent = '💬'+comment
+          commentField.textContent = '💬' + comment
 
 
           break;
@@ -4928,7 +4935,7 @@ overflow: auto;">
           // tree
           const target1 = getElementById1(target_element)
           const commentField1 = target1.querySelector('[data-element="comment"]')
-          commentField1.setAttribute('hidden',"")
+          commentField1.setAttribute('hidden', "")
           commentField1.textContent = '💬'
 
 
@@ -4958,6 +4965,7 @@ overflow: auto;">
 
 
           // component
+          
           if (key === 'style' || key === 'class') {
             const selector = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
             querySelectorAll1(selector).forEach(element => !element.id.endsWith('-fieldset') && !element.id.endsWith('-tree') && element.setAttribute(key, value))
@@ -4966,6 +4974,17 @@ overflow: auto;">
 
           const element22 = getElementById1(removeLastOccurrence(target_element, '-tree'));
           const element33 = getElementById1(target_element);
+          if (check_b) {
+            if (element22.hasAttribute('data-b-value')) {
+              element22.setAttribute('data-b-value', true)
+              let parent = element22.parentNode
+              while (!parent.hasAttribute('data-b')) {
+                parent = parent.parentNode
+              }
+              parent.setAttribute('data-b', true)
+
+            }
+          }
           if (key) {
             console.log('key11 ' + key)
             console.log('value ' + value)
@@ -5162,7 +5181,7 @@ overflow: auto;">
       }
     }
     function openComment(event) {
-      
+
       const button = event.target.closest('button[data-element="code-tree-comment-button"]');
 
       if (button) {
@@ -5183,18 +5202,18 @@ overflow: auto;">
           //clonedFieldset.querySelector('textarea').value = getElementById1(parentId.replace('-tree', '')).textContent
           // Assign a unique id to the cloned fieldset
           clonedFieldset.id = 'code-tree-comment-form";' + splited.join(';');
-          clonedFieldset.querySelector('#comment-content').value = getElementById1(splited.join(';')).querySelector('[data-element="comment"]').textContent.replace('💬','')
+          clonedFieldset.querySelector('#comment-content').value = getElementById1(splited.join(';')).querySelector('[data-element="comment"]').textContent.replace('💬', '')
 
           // Find the position to insert the cloned fieldset
-          
-          
+
+
           // Insert the cloned fieldset after the specified element
           toAppend.append(clonedFieldset)
         }
       }
     }
     const saveComment = async (event) => {
-      
+
       const action = 'Add_Comment'
       console.log('ac' + action)
 
@@ -5205,7 +5224,7 @@ overflow: auto;">
       const textareaValue = fieldset.querySelector('#comment-content').value;
       const splited = fieldset.id.split(';')
       const [toRemove, ...rest] = splited
-      console.log('fid' +fieldset.id)
+      console.log('fid' + fieldset.id)
 
       const el = {
         time: (new Date()).getTime(),
@@ -5222,7 +5241,7 @@ overflow: auto;">
 
     }
     const removeComment = async (event) => {
-      
+
       const action = 'Remove_Comment'
       console.log('ac' + action)
 
@@ -5230,10 +5249,10 @@ overflow: auto;">
       const fieldset = saveButton.parentNode
 
 
-      
+
       const splited = fieldset.id.split(';')
       const [toRemove, ...rest] = splited
-      console.log('fid' +fieldset.id)
+      console.log('fid' + fieldset.id)
 
       const el = {
         time: (new Date()).getTime(),
@@ -7784,27 +7803,27 @@ overflow: auto;">
   <script src="js/left-panel.js" async=""></script>
 
   <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        var userType = localStorage.getItem('usertype');
-        var visualOn = localStorage.getItem('visualOn');
+    document.addEventListener('DOMContentLoaded', function () {
+      var userType = localStorage.getItem('usertype');
+      var visualOn = localStorage.getItem('visualOn');
 
-        if (userType === null) {
-          getElementById1('generated-page').removeAttribute('hidden')
-        };
+      if (userType === null) {
+        getElementById1('generated-page').removeAttribute('hidden')
+      };
 
 
-        if (userType === null && visualOn === null) {
-          localStorage.setItem('visualOn', 'true');
-          location.reload();
-        };
- 
+      if (userType === null && visualOn === null) {
+        localStorage.setItem('visualOn', 'true');
+        location.reload();
+      };
+
     });
-      </script>
+  </script>
 
-<script>
-   function reloadPage(e) {
-    location.reload();
+  <script>
+    function reloadPage(e) {
+      location.reload();
 
-   }
-</script>
+    }
+  </script>
 </body>
