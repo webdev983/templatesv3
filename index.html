@@ -4899,6 +4899,15 @@ overflow: auto;">
 
           // component
           const element2 = getElementById1(removeLastOccurrence(target_element, '-tree'));
+          if(element2.hasAttribute('data-b-value')){
+            element2.setAttribute('data-b-value',true)
+            let parent = element2.parentNode
+            while(!parent.hasAttribute('data-b')){
+              parent = parent.parentNode
+            }
+            parent.setAttribute('data-b',true)
+
+          }
           element2.textContent = value;
 
 
