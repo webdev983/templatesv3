@@ -453,7 +453,7 @@
               },
             });
 
-            console.log
+           
             // Ensure the request was successful (status code 2xx)
             if (!response.ok) {
               throw new Error(`Failed to load data from the database. Status: ${response.status}`);
@@ -469,6 +469,7 @@
               if (entry.sk === 'path') {
                 entry.lsi1 = new_value
                 entry.protected = false
+                delete entry.href 
               }
               if (entry.target_element === id + '-tree') {
                 console.log('err1')
@@ -839,12 +840,12 @@
                       'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                      ...pathI,
+                      
                       id: newId,
                       sk: 'path',
                       lsi1: newLSI,
                       ownerUUID: 'path',
-                      protected: false
+                      protected: false,
                     }),
                   })
                   console.log('putting ' + newId)
@@ -973,7 +974,8 @@
                       sk: 'path',
                       lsi1: newLSI,
                       ownerUUID: 'path',
-                      protected: false
+                      protected: false,
+                      href:undefined
                     }),
                   })
                   console.log('created '+newLSI)
