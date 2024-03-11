@@ -340,14 +340,14 @@ overflow: auto;">
               <img style="width: 800px; height: auto;" src="https://via.placeholder.com/500/0000FF/FFFFFF?text=image">
               <label class="attached">📎</label>
               <div class="picture-actions" style="z-index: -10;">
-                <button class="b-3" data-select-image >✅</button>
-                <button hidden class="b-3" data-show-menu >🔍</button>
-                <button class="b-3" data-remove-image >🗑️️</button>
+                <button class="b-3" data-select-image>✅</button>
+                <button hidden class="b-3" data-show-menu>🔍</button>
+                <button class="b-3" data-remove-image>🗑️️</button>
               </div>
             </div>
           </td>
           <td>
-            
+
           </td>
         </tr>
         <tbody id="gallery-body">
@@ -871,16 +871,16 @@ overflow: auto;">
       const body = {
         site,
         width,
-        name:randomString + '_' + name,
+        name: randomString + '_' + name,
         imageSrc,
         defaultRes,
-        pagePath:splited.join('/')
+        pagePath: splited.join('/')
       }
       const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/upload', {
         method: 'POST',
         body: JSON.stringify(body),
       });
-      const { src,data_src } =await response.json()
+      const { src, data_src } = await response.json()
       selectedLabels.forEach(label => label.remove());
       const payload = {
 
@@ -891,7 +891,7 @@ overflow: auto;">
         value: imageUUID,
 
       }
-      await pushAction(payload2)
+      await pushAction(payload)
       const payload2 = {
 
         time: (new Date()).getTime().toString(),
@@ -902,6 +902,26 @@ overflow: auto;">
 
       }
       await pushAction(payload2)
+      const payload3 = {
+
+        time: (new Date()).getTime().toString(),
+        action: 'setAttribute',
+        target_element: imgId,
+        key: 'src',
+        value: src,
+
+      }
+      await pushAction(payload3)
+      const payload4 = {
+
+        time: (new Date()).getTime().toString(),
+        action: 'setAttribute',
+        target_element: imgId,
+        key: 'data-src',
+        value: data_src,
+
+      }
+      await pushAction(payload4)
       // Add your logic for selecting the image here
       setImg(imageSrc, imgId);
 
@@ -911,8 +931,8 @@ overflow: auto;">
       if (attachedLabel) {
         attachedLabel.insertAdjacentHTML('afterend', '<label class="attached">📎</label>');
       }
-      
-      
+
+
     }
 
 
