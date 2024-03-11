@@ -2367,16 +2367,52 @@ overflow: auto;">
                 clonedFieldset.id = 'gallery-menu-wrapper;' + imgId;
 
 
+                // image input change 
+                clonedFieldset.querySelector('#image-input').addEventListener('change', async function (event) {
+                  var fileNameSpan = document.getElementById('file-name');
+
+                  var uploadButton = document.getElementById('upload-button');
+
+                  // Check if a file is selected
+                  if (this.files && this.files.length > 0) {
+                    // If a file is chosen, show the file name and make the upload button visible
+                    var fileName = this.files[0].name; // Get the name of the file
+                    fileNameSpan.textContent = fileName; // Set the text content to the file name
+                    fileNameSpan.hidden = false; // Make the file name span visible
+
+                    uploadButton.hidden = false; // Make the upload button visible
+
+                    file = event.target.files[0]
+                  } else {
+                    // If no file is chosen, hide the file name span and the upload button
+                    fileNameSpan.hidden = true;
+                    uploadButton.hidden = true;
+                  }
+                })
+                const images = clonedFieldset.querySelectorAll('.gallery-image');
+
+                images.forEach(image => {
+                  const actions = image.querySelector('.picture-actions');
+
+                  // When you hover over an image
+                  image.addEventListener('mouseenter', () => {
+                    // Set the z-index of the picture actions to 10
+                    actions.style.zIndex = '10';
+                  });
+
+                  // When the mouse leaves the image
+                  image.addEventListener('mouseleave', () => {
+                    // Reset the z-index of the picture actions to -10
+                    actions.style.zIndex = '-10';
+                  });
+                });
+
 
                 // Insert the cloned fieldset after the specified element
                 treeElement.querySelector('[data-open-menu]').append(clonedFieldset)
+
               }
-              /*
-              const urlSearchParams = new URLSearchParams(window.location.search);
-              const id = urlSearchParams.get('id');
-              console.log('in1')
-              window.location.href = `gallery.html?id=${id}&imgId=${imgId}&src=${src}`;
-              */
+
             }
           }
           if (e.target.tagName.toLowerCase() === 'img') {
