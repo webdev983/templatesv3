@@ -659,7 +659,9 @@ overflow: auto;">
       event.target.closest('#menu-1').style.display = 'none';
     }
     var loadImages = async (clonedFieldset, src) => {
-      clonedFieldset.querySelector('#remove-galeryMenu').onclick = removeMenus
+      clonedFieldset.querySelector('#remove-galeryMenu').onclick = (e)=>{
+        e.target.parentNode.remove()
+      }
       clonedFieldset.querySelector('#upload-button').onclick = handleUpload1
       const id = pathItem.id
       const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=pics&startsWith=true`, {
@@ -735,7 +737,7 @@ overflow: auto;">
       const imageSrc = event.target.closest('.gallery-image').querySelector('img').src;
       console.log('Removing Image Src:', imageSrc);
       const sk = imageSrc.replace('https://s3.amazonaws.com/checkout-admin-panel/', "")
-      const imgId = event.target.closest('fieldset[data-menu]').id.replace('gallery-menu-wrapper;', '')
+      const imgId = event.target.closest('[data-menu]').id.replace('gallery-menu-wrapper;', '')
 
       await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:${sk}`, {
         method: 'DELETE',
@@ -748,7 +750,7 @@ overflow: auto;">
         method: 'DELETE',
       });
       setImg('https://via.placeholder.com/300/0000FF/FFFFFF?text=Article-Image', imgId)
-      loadImages(event.target.closest('fieldset[data-menu]', 'https://via.placeholder.com/300/0000FF/FFFFFF?text=Article-Image'))
+      loadImages(event.target.closest('[data-menu]', 'https://via.placeholder.com/300/0000FF/FFFFFF?text=Article-Image'))
 
     }
     const setImg = async (path, imgId) => {
@@ -819,7 +821,7 @@ overflow: auto;">
           },
           body: JSON.stringify(payload),
         });
-        loadImages(event.target.closest('fieldset[data-menu]', 'https://s3.amazonaws.com/checkout-admin-panel/' + path))
+        loadImages(event.target.closest('[data-menu]', 'https://s3.amazonaws.com/checkout-admin-panel/' + path))
 
 
       } catch (error) {
@@ -828,7 +830,7 @@ overflow: auto;">
 
 
     function selectImage(event) {
-      const imgId = event.target.closest('fieldset[data-menu]').id.replace('gallery-menu-wrapper;', '')
+      const imgId = event.target.closest('[data-menu]').id.replace('gallery-menu-wrapper;', '')
       const imageSrc = event.target.closest('.gallery-image').querySelector('img').src;
 
       const galleryImage = event.target.closest('.gallery-image');
