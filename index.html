@@ -330,7 +330,7 @@ overflow: auto;">
         <input type="file" id="image-input" accept="image/*" hidden />
         <label style="font-size: 50px;" for="image-input" id="select-file-button" class="file-upload-button">📂</label>
         <button style="font-size: 50px; border-radius: 10px;" id="upload-button" class="upload-button"
-          onclick="handleUpload1()" hidden>📤</button>
+          onclick="handleUpload1(event)" hidden>📤</button>
         <span id="file-name" hidden>No file chosen</span>
       </div>
       <table>
@@ -741,9 +741,9 @@ overflow: auto;">
       }
       return path
     }
-    async function handleUpload1() {
+    async function handleUpload1(event) {
 
-
+      const id = event.target.closest('#gallery-menu-wrapper').id.replace('gallery-menu-wrapper;','')
       const fileContent = await file
       const fileName = fileContent.name
 
