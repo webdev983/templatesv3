@@ -867,6 +867,10 @@ overflow: auto;">
       const splited = pathItem.lsi1.split('/')
       splited.pop()
       splited.shift()
+      const index = splited.indexOf('Content');
+      if (index !== -1) {
+        splited.splice(index);
+      }
       // resize
       const body = {
         site,
@@ -888,7 +892,7 @@ overflow: auto;">
       if (attachedLabel) {
         attachedLabel.insertAdjacentHTML('afterend', '<label class="attached">📎</label>');
       }
-      
+
       const payload = {
 
         time: (new Date()).getTime().toString(),
@@ -899,7 +903,7 @@ overflow: auto;">
 
       }
       await pushAction(payload)
-      
+
       const payload3 = {
 
         time: (new Date()).getTime().toString(),
@@ -907,7 +911,7 @@ overflow: auto;">
         target_element: imgId,
         key: 'src',
         value: src,
-        check_b:true
+        check_b: true
 
       }
       await pushAction(payload3)
@@ -922,11 +926,11 @@ overflow: auto;">
       }
       await pushAction(payload4)
       // Add your logic for selecting the image here
-      
+
 
 
       // Add a "selected" label to the selected image
-      
+
 
 
     }
