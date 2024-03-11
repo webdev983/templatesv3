@@ -659,6 +659,62 @@ overflow: auto;">
     var cancelGalleryMenu = (event) => {
       event.target.closest('#menu-1').style.display = 'none';
     }
+    var loadImages = async (clonedFieldset) => {
+      const id = pathItem.id
+      const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=pics&startsWith=true`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const { items } = await res.json()
+      console.log('items' + JSON.stringify(items))
+      const table = clonedFieldset.querySelector('#gallery-body');
+      const templateRow = clonedFieldset.querySelector('#gallery-item');
+
+      // Loop through each image item
+      items.forEach((item) => {
+        // Clone the template row
+        const clonedRow = templateRow.cloneNode(true);
+        clonedRow.removeAttribute('hidden'); // Show the cloned row
+
+        // Update the image source based on the item's sk
+        const imageSrc = `https://s3.amazonaws.com/checkout-admin-panel/${item.sk}`;
+        const imgEl = clonedRow.querySelector('.gallery-image img')
+        imgEl.src = imageSrc;
+
+        if (src !== imageSrc) {
+          const attachedLabel = clonedRow.querySelector('.gallery-image .attached');
+          if (attachedLabel) {
+            attachedLabel.parentNode.removeChild(attachedLabel);
+          }
+        }
+
+        // Set a unique id for the cloned row (assuming you have a property named id in the item)
+        clonedRow.id = `image-body-${item.sk}`;
+
+        // Append the cloned row to the table
+        table.appendChild(clonedRow);
+      });
+      // Select all gallery images
+      const images = clonedFieldset.querySelectorAll('.gallery-image');
+
+      images.forEach(image => {
+        const actions = image.querySelector('.picture-actions');
+
+        // When you hover over an image
+        image.addEventListener('mouseenter', () => {
+          // Set the z-index of the picture actions to 10
+          actions.style.zIndex = '10';
+        });
+
+        // When the mouse leaves the image
+        image.addEventListener('mouseleave', () => {
+          // Reset the z-index of the picture actions to -10
+          actions.style.zIndex = '-10';
+        });
+      });
+    }
     function showMenu(event) {
       const galleryImage = event.target.closest('.gallery-image');
       const imageSrc = galleryImage.querySelector('img').src;
@@ -676,8 +732,8 @@ overflow: auto;">
       const imageSrc = event.target.closest('.gallery-image').querySelector('img').src;
       console.log('Removing Image Src:', imageSrc);
       const sk = imageSrc.replace('https://s3.amazonaws.com/checkout-admin-panel/', "")
-      const imgId =  event.target.closest('fieldset[data-menu]').id.replace('gallery-menu-wrapper;', '')
-      setImg('https://via.placeholder.com/300/0000FF/FFFFFF?text=Article-Image', imgId)
+      const imgId = event.target.closest('fieldset[data-menu]').id.replace('gallery-menu-wrapper;', '')
+
       await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:${sk}`, {
         method: 'DELETE',
         headers: {
@@ -688,14 +744,14 @@ overflow: auto;">
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/upload?id=' + sk, {
         method: 'DELETE',
       });
-      location.reload()
+      setImg('https://via.placeholder.com/300/0000FF/FFFFFF?text=Article-Image', imgId)
 
 
     }
     const setImg = async (path, imgId) => {
 
       const payload2 = {
-        
+
         time: (new Date()).getTime().toString(),
         action: 'setAttribute',
         target_element: imgId,
@@ -760,6 +816,7 @@ overflow: auto;">
           },
           body: JSON.stringify(payload),
         });
+        loadImages(event.target.closest('fieldset[data-menu]'))
 
 
       } catch (error) {
@@ -2511,62 +2568,7 @@ overflow: auto;">
 
                 // Assign a unique id to the cloned fieldset
                 clonedFieldset.id = 'gallery-menu-wrapper;' + imgId + '-tree';
-                const loadImages = async () => {
-                  const id = pathItem.id
-                  const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=pics&startsWith=true`, {
-                    method: 'GET',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                  });
-                  const { items } = await res.json()
-                  console.log('items' + JSON.stringify(items))
-                  const table = clonedFieldset.querySelector('#gallery-body');
-                  const templateRow = clonedFieldset.querySelector('#gallery-item');
 
-                  // Loop through each image item
-                  items.forEach((item) => {
-                    // Clone the template row
-                    const clonedRow = templateRow.cloneNode(true);
-                    clonedRow.removeAttribute('hidden'); // Show the cloned row
-
-                    // Update the image source based on the item's sk
-                    const imageSrc = `https://s3.amazonaws.com/checkout-admin-panel/${item.sk}`;
-                    const imgEl = clonedRow.querySelector('.gallery-image img')
-                    imgEl.src = imageSrc;
-
-                    if (src !== imageSrc) {
-                      const attachedLabel = clonedRow.querySelector('.gallery-image .attached');
-                      if (attachedLabel) {
-                        attachedLabel.parentNode.removeChild(attachedLabel);
-                      }
-                    }
-
-                    // Set a unique id for the cloned row (assuming you have a property named id in the item)
-                    clonedRow.id = `image-body-${item.sk}`;
-
-                    // Append the cloned row to the table
-                    table.appendChild(clonedRow);
-                  });
-                  // Select all gallery images
-                  const images = clonedFieldset.querySelectorAll('.gallery-image');
-
-                  images.forEach(image => {
-                    const actions = image.querySelector('.picture-actions');
-
-                    // When you hover over an image
-                    image.addEventListener('mouseenter', () => {
-                      // Set the z-index of the picture actions to 10
-                      actions.style.zIndex = '10';
-                    });
-
-                    // When the mouse leaves the image
-                    image.addEventListener('mouseleave', () => {
-                      // Reset the z-index of the picture actions to -10
-                      actions.style.zIndex = '-10';
-                    });
-                  });
-                }
 
                 // image input change 
                 clonedFieldset.querySelector('#image-input').addEventListener('change', async function (event) {
@@ -2590,14 +2592,14 @@ overflow: auto;">
                     uploadButton.hidden = true;
                   }
                 })
-               
 
-                
 
-                loadImages()
+
+
+                loadImages(clonedFieldset)
                 // Insert the cloned fieldset after the specified element
                 treeElement.querySelector('[data-open-menu]').append(clonedFieldset)
-                
+
 
               }
 
