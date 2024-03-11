@@ -675,7 +675,7 @@ overflow: auto;">
       const imageSrc = event.target.closest('.gallery-image').querySelector('img').src;
       console.log('Removing Image Src:', imageSrc);
       const sk = imageSrc.replace('https://s3.amazonaws.com/checkout-admin-panel/', "")
-      const imgId = event.target.closest('#gallery-menu-wrapper').id.replace('gallery-menu-wrapper;', '')
+      const imgId =  event.target.closest('fieldset[data-menu]').id.replace('gallery-menu-wrapper;', '')
       setImg('', imgId)
       await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:${sk}`, {
         method: 'DELETE',
@@ -774,7 +774,7 @@ overflow: auto;">
 
 
     function selectImage(event) {
-      const imgId = event.target.closest('#gallery-menu-wrapper').id.replace('gallery-menu-wrapper;', '')
+      const imgId = event.target.closest('fieldset[data-menu]').id.replace('gallery-menu-wrapper;', '')
       const imageSrc = event.target.closest('.gallery-image').querySelector('img').src;
       const galleryImage = event.target.closest('.gallery-image');
       // Remove all existing "selected" labels
