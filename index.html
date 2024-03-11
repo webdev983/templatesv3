@@ -675,7 +675,8 @@ overflow: auto;">
       const imageSrc = event.target.closest('.gallery-image').querySelector('img').src;
       console.log('Removing Image Src:', imageSrc);
       const sk = imageSrc.replace('https://s3.amazonaws.com/checkout-admin-panel/', "")
-      setImg('')
+      const imgId = event.target.closest('#gallery-menu-wrapper').id.replace('gallery-menu-wrapper;','')
+      setImg('',imgId)
       await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:${sk}`, {
         method: 'DELETE',
         headers: {
@@ -690,7 +691,8 @@ overflow: auto;">
 
 
     }
-    const setImg = async (path) => {
+    const setImg = async (path,imgId) => {
+      
       const payload2 = {
         id,
         sk: (new Date()).getTime().toString(),
@@ -773,6 +775,7 @@ overflow: auto;">
 
 
     function selectImage(event) {
+      const imgId = event.target.closest('#gallery-menu-wrapper').id.replace('gallery-menu-wrapper;','')
       const imageSrc = event.target.closest('.gallery-image').querySelector('img').src;
       const galleryImage = event.target.closest('.gallery-image');
       // Remove all existing "selected" labels
@@ -780,7 +783,7 @@ overflow: auto;">
       selectedLabels.forEach(label => label.remove());
 
       // Add your logic for selecting the image here
-      setImg(imageSrc);
+      setImg(imageSrc,imgId);
 
       // Add a "selected" label to the selected image
       const attachedLabel = galleryImage.querySelector('img')
