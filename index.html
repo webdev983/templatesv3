@@ -659,7 +659,7 @@ overflow: auto;">
     var cancelGalleryMenu = (event) => {
       event.target.closest('#menu-1').style.display = 'none';
     }
-    var loadImages = async (clonedFieldset) => {
+    var loadImages = async (clonedFieldset,src) => {
       const id = pathItem.id
       const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=pics&startsWith=true`, {
         method: 'GET',
@@ -745,7 +745,7 @@ overflow: auto;">
         method: 'DELETE',
       });
       setImg('https://via.placeholder.com/300/0000FF/FFFFFF?text=Article-Image', imgId)
-      loadImages(event.target.closest('fieldset[data-menu]'))
+      loadImages(event.target.closest('fieldset[data-menu]','https://via.placeholder.com/300/0000FF/FFFFFF?text=Article-Image'))
 
     }
     const setImg = async (path, imgId) => {
@@ -816,7 +816,7 @@ overflow: auto;">
           },
           body: JSON.stringify(payload),
         });
-        loadImages(event.target.closest('fieldset[data-menu]'))
+        loadImages(event.target.closest('fieldset[data-menu]','https://s3.amazonaws.com/checkout-admin-panel/'+path))
 
 
       } catch (error) {
@@ -2596,7 +2596,7 @@ overflow: auto;">
 
 
 
-                loadImages(clonedFieldset)
+                loadImages(clonedFieldset,src)
                 // Insert the cloned fieldset after the specified element
                 treeElement.querySelector('[data-open-menu]').append(clonedFieldset)
 
