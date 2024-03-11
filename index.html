@@ -2560,7 +2560,7 @@ overflow: auto;">
             if (treeElement) {
 
 
-              const existingClonedFieldset = treeElement.querySelector('[id^="gallery-menu-wrapper"]');
+              const existingClonedFieldset = treeElement.parentNode.querySelector('[id^="gallery-menu-wrapper"]');
 
               if (!existingClonedFieldset) {
                 // Clone the fieldset node
@@ -2599,7 +2599,7 @@ overflow: auto;">
 
                 loadImages(clonedFieldset,src)
                 // Insert the cloned fieldset after the specified element
-                treeElement.querySelector('[data-open-menu]').append(clonedFieldset)
+                treeElement.insertAdjacentElement('afterend', clonedFieldset);
 
 
               }
