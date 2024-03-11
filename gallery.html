@@ -186,39 +186,27 @@ function cancel(event) {
     const fileName = fileContent.name
 
     try {
-    // Create an Image element
-    const img = new Image();
 
-    // Set up a load event listener to ensure the image has loaded before accessing its dimensions
-    img.onload = async function() {
-        // Get the width of the loaded image
-        const width = this.naturalWidth;
+      const path = await upload(fileName, fileContent)
+      console.log(path)
+      //push to db image
+      // Send a POST request using fetch
+      const payload = {
+        id,
+        sk: path
+      }
+      const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+      location.reload()
 
-        const path = await upload(fileName, fileContent,width);
-        console.log(path);
 
-        // Push to the database with the image width
-        const payload = {
-            id,
-            sk: path,
-        };
-
-        const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload),
-        });
-
-        location.reload();
-    };
-
-    // Set the source of the image to the file content
-    img.src = URL.createObjectURL(fileContent);
-} catch (error) {
-    // Handle error
-}
+    } catch (error) {
+    }
   }
   const setImg = async (path) => {
     const payload2 = {
@@ -240,10 +228,9 @@ function cancel(event) {
       body: JSON.stringify(payload2),
     });
   }
-  const upload = async (fileName, fileContent,width) => {
+  const upload = async (fileName, fileContent) => {
     const body = {
-      fileName,
-      width
+      fileName
     }
     const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/upload', {
       method: 'POST',
