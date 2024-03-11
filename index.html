@@ -882,8 +882,13 @@ overflow: auto;">
       });
       const { src, data_src } = await response.json()
       const galleryImage = event.target.closest('.gallery-image');
-      const selectedLabels = querySelectorAll1('.selected');
+      const selectedLabels = event.target.closest('[data-menu]').querySelectorAll('.selected');
       selectedLabels.forEach(label => label.remove());
+      const attachedLabel = galleryImage.querySelector('img')
+      if (attachedLabel) {
+        attachedLabel.insertAdjacentHTML('afterend', '<label class="attached">📎</label>');
+      }
+      
       const payload = {
 
         time: (new Date()).getTime().toString(),
@@ -894,16 +899,7 @@ overflow: auto;">
 
       }
       await pushAction(payload)
-      const payload2 = {
-
-        time: (new Date()).getTime().toString(),
-        action: 'setAttribute',
-        target_element: imgId,
-        key: 'data-builder-image-source',
-        value: imageUUID,
-
-      }
-      await pushAction(payload2)
+      
       const payload3 = {
 
         time: (new Date()).getTime().toString(),
@@ -930,10 +926,7 @@ overflow: auto;">
 
 
       // Add a "selected" label to the selected image
-      const attachedLabel = galleryImage.querySelector('img')
-      if (attachedLabel) {
-        attachedLabel.insertAdjacentHTML('afterend', '<label class="attached">📎</label>');
-      }
+      
 
 
     }
