@@ -325,12 +325,12 @@ overflow: auto;">
     </div>
 
     <div id="gallery-menu-wrapper" data-menu>
-      <button class="b-3" id="remove-galeryMenu" >❌</button>
+      <button class="b-3" id="remove-galeryMenu">❌</button>
       <div style="font-size: 30px; height: 100px;">
         <input type="file" id="image-input" accept="image/*" hidden />
         <label style="font-size: 50px;" for="image-input" id="select-file-button" class="file-upload-button">📂</label>
         <button style="font-size: 50px; border-radius: 10px;" id="upload-button" class="upload-button"
-           hidden>📤</button>
+          hidden>📤</button>
         <span id="file-name" hidden>No file chosen</span>
       </div>
       <table>
@@ -659,7 +659,7 @@ overflow: auto;">
       event.target.closest('#menu-1').style.display = 'none';
     }
     var loadImages = async (clonedFieldset, src) => {
-      clonedFieldset.querySelector('#remove-galeryMenu').onclick = (e)=>{
+      clonedFieldset.querySelector('#remove-galeryMenu').onclick = (e) => {
         e.target.parentNode.remove()
       }
       clonedFieldset.querySelector('#upload-button').onclick = handleUpload1
@@ -687,6 +687,8 @@ overflow: auto;">
         const imageSrc = `https://s3.amazonaws.com/checkout-admin-panel/${item.sk}`;
         const imgEl = clonedRow.querySelector('.gallery-image img')
         imgEl.src = imageSrc;
+        const uuid = item.sk.split('.')[0].replace('pics', '')
+        imgEl.setAttribute('uuid', uuid)
 
         if (src !== imageSrc) {
           const attachedLabel = clonedRow.querySelector('.gallery-image .attached');
@@ -749,7 +751,8 @@ overflow: auto;">
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/upload?id=' + sk, {
         method: 'DELETE',
       });
-      setImg('https://via.placeholder.com/300/0000FF/FFFFFF?text=Article-Image', imgId)
+      //to cont
+      //setImg('https://via.placeholder.com/300/0000FF/FFFFFF?text=Article-Image', imgId)
       loadImages(event.target.closest('[data-menu]', 'https://via.placeholder.com/300/0000FF/FFFFFF?text=Article-Image'))
 
     }
@@ -828,27 +831,88 @@ overflow: auto;">
       }
     }
 
+    function generateRandomString(length) {
+      const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; // Letters and numbers
+      let randomString = '';
 
-    function selectImage(event) {
+      for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * charset.length); // Generate a random index
+        randomString += charset.charAt(randomIndex); // Append the random character to the string
+      }
+
+      return randomString;
+    }
+
+    async function selectImage(event) {
       const imgId = event.target.closest('[data-menu]').id.replace('gallery-menu-wrapper;', '')
-      const imageSrc = event.target.closest('.gallery-image').querySelector('img').src;
+      const image = event.target.closest('.gallery-image').querySelector('img')
+      const width = image.width;
+      const imageSrc = image.src;
+      const imageUUID = image.getAttribute('uuid')
+      const imageElement = getElementById1(removeLastOccurrence(imageSrc, '-tree'))
+      const name = imageElement.getAttribute('data-builder-image-name')
+      const defaultRes = imageElement.getAttribute('data-builder-image-default')
 
-      const galleryImage = event.target.closest('.gallery-image');
-      // Remove all existing "selected" labels
-      const selectedLabels = querySelectorAll1('.selected');
+      const site = pathItem.lsi1.split('/')[0]
+      let randomString = generateRandomString(3)
+      let url1 = 'https://' + site + '/pics/' + randomString + '_' + name
+      function checkSrcStartsWithUrl1() {
+        const elements = document.querySelectorAll('[src^="' + url1 + '"]');
+        return elements.length > 0;
+      }
+      while (checkSrcStartsWithUrl1()) {
+        randomString = generateRandomString(3);
+        url1 = 'https://' + site.toLowerCase() + '/pics/' + randomString + '_' + name;
+      }
+      const splited = pathItem.split('/')
+      splited.pop()
+      splited.shift()
+      // resize
+      const body = {
+        site,
+        width,
+        name:randomString + '_' + name,
+        imageSrc,
+        defaultRes,
+        pagePath:splited.join('/')
+      }
+      const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/upload', {
+        method: 'POST',
+        body: JSON.stringify(body),
+      });
+
       selectedLabels.forEach(label => label.remove());
+      const payload = {
 
+        time: (new Date()).getTime().toString(),
+        action: 'setAttribute',
+        target_element: imgId,
+        key: 'data-builder-image-source',
+        value: imageUUID,
+
+      }
+      await pushAction(payload2)
+      const payload2 = {
+
+        time: (new Date()).getTime().toString(),
+        action: 'setAttribute',
+        target_element: imgId,
+        key: 'data-builder-image-source',
+        value: imageUUID,
+
+      }
+      await pushAction(payload2)
       // Add your logic for selecting the image here
       setImg(imageSrc, imgId);
+
 
       // Add a "selected" label to the selected image
       const attachedLabel = galleryImage.querySelector('img')
       if (attachedLabel) {
         attachedLabel.insertAdjacentHTML('afterend', '<label class="attached">📎</label>');
       }
-
-      // Store the selected image source in a variable (if needed)
-      src = imageSrc;
+      
+      
     }
 
 
