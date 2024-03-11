@@ -659,7 +659,7 @@ overflow: auto;">
     var cancelGalleryMenu = (event) => {
       event.target.closest('#menu-1').style.display = 'none';
     }
-    var loadImages = async (clonedFieldset,src) => {
+    var loadImages = async (clonedFieldset, src) => {
       const id = pathItem.id
       const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=pics&startsWith=true`, {
         method: 'GET',
@@ -671,7 +671,7 @@ overflow: auto;">
       console.log('items' + JSON.stringify(items))
       const table = clonedFieldset.querySelector('#gallery-body');
       const templateRow = clonedFieldset.querySelector('#gallery-item');
-      clonedFieldset.querySelectorAll('#gallery-item:not([hidden])').forEach(i=>i.remove());
+      clonedFieldset.querySelectorAll('#gallery-item:not([hidden])').forEach(i => i.remove());
       // Loop through each image item
       items.forEach((item) => {
         // Clone the template row
@@ -745,7 +745,7 @@ overflow: auto;">
         method: 'DELETE',
       });
       setImg('https://via.placeholder.com/300/0000FF/FFFFFF?text=Article-Image', imgId)
-      loadImages(event.target.closest('fieldset[data-menu]','https://via.placeholder.com/300/0000FF/FFFFFF?text=Article-Image'))
+      loadImages(event.target.closest('fieldset[data-menu]', 'https://via.placeholder.com/300/0000FF/FFFFFF?text=Article-Image'))
 
     }
     const setImg = async (path, imgId) => {
@@ -816,7 +816,7 @@ overflow: auto;">
           },
           body: JSON.stringify(payload),
         });
-        loadImages(event.target.closest('fieldset[data-menu]','https://s3.amazonaws.com/checkout-admin-panel/'+path))
+        loadImages(event.target.closest('fieldset[data-menu]', 'https://s3.amazonaws.com/checkout-admin-panel/' + path))
 
 
       } catch (error) {
@@ -827,7 +827,7 @@ overflow: auto;">
     function selectImage(event) {
       const imgId = event.target.closest('fieldset[data-menu]').id.replace('gallery-menu-wrapper;', '')
       const imageSrc = event.target.closest('.gallery-image').querySelector('img').src;
-      
+
       const galleryImage = event.target.closest('.gallery-image');
       // Remove all existing "selected" labels
       const selectedLabels = document.querySelectorAll('.selected');
@@ -2563,13 +2563,14 @@ overflow: auto;">
               const existingClonedFieldset = treeElement.parentNode.querySelector('[id^="gallery-menu-wrapper"]');
 
               if (!existingClonedFieldset) {
+                console.log('cloning fieldset')
                 // Clone the fieldset node
                 const fieldset = getElementById1('gallery-menu-wrapper');
                 const clonedFieldset = fieldset.cloneNode(true);
 
                 // Assign a unique id to the cloned fieldset
-                clonedFieldset.id = 'gallery-menu-wrapper;' + imgId + '-tree'; 
-                
+                clonedFieldset.id = 'gallery-menu-wrapper;' + imgId + '-tree';
+
                 // image input change 
                 clonedFieldset.querySelector('#image-input').addEventListener('change', async function (event) {
                   var fileNameSpan = document.getElementById('file-name');
@@ -2596,7 +2597,7 @@ overflow: auto;">
 
 
 
-                loadImages(clonedFieldset,src)
+                loadImages(clonedFieldset, src)
                 // Insert the cloned fieldset after the specified element
                 treeElement.insertAdjacentElement('afterend', clonedFieldset);
 
