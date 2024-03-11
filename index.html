@@ -694,8 +694,8 @@ overflow: auto;">
     const setImg = async (path, imgId) => {
 
       const payload2 = {
-        id,
-        sk: (new Date()).getTime().toString(),
+        
+        time: (new Date()).getTime().toString(),
         action: 'setAttribute',
         target_element: imgId,
         key: 'src',
@@ -703,14 +703,7 @@ overflow: auto;">
         check_b: true
 
       }
-      //push to db action
-      const response2 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload2),
-      });
+      pushAction(payload2)
     }
     const upload = async (fileName, fileContent) => {
       const body = {
