@@ -205,15 +205,29 @@ overflow: auto;">
           <style>
 #sku-attribute {
   display: table;
-  width: auto; /* Задаёт ширину таблицы */
-  border-collapse: collapse; /* Убирает двойные границы между ячейками */
+  max-width: 100%;
+  width: auto;
+  border-collapse: collapse;
+  border-radius: 10px; /* Закругленные углы */
+  overflow: hidden; /* Обеспечивает, что закругленные углы видны */
+  margin: 0; /* Убирает стандартные отступы */
+  padding: 0; /* Убирает стандартные отступы */
+  background-color: #f9f9f9; /* Легкий фоновый цвет для контраста */
 }
 
 #sku-attribute span {
   display: table-cell; /* Преобразует элементы span в ячейки таблицы */
-  border: 1px solid black; /* Добавляет границу вокруг каждой ячейки */
+  border: 1px solid #ddd; /* Добавляет границу вокруг каждой ячейки */
+  padding: 8px; /* Добавляет немного внутреннего отступа для текста */
 }
-   </style>
+
+#sku-attribute span:first-child {
+  border-right: none; /* Удаляет правую границу у первой ячейки, чтобы избежать двойной границы */
+}
+
+#sku-attribute span:last-child {
+  border-left: none; /* Удаляет левую границу у последней ячейки, чтобы избежать двойной границы */
+}   </style>
 
           <ul class="list-1" hidden id="sku-attribute-list">
             <div id='sku-item'>
