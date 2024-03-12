@@ -4223,7 +4223,7 @@ overflow: auto;">
             inserted_component.componentId = item1.id
           }
           else if (inserted_component.componentId.startsWith('#')) {
-            let cPath = pathForRelative || pathItem.lsi1
+            let cPath = pathForRelative.current || pathItem.lsi1
             cPath = cPath.replace(';publish:published', "")
             console.log('cpath ' + cPath)
 
@@ -4985,7 +4985,7 @@ overflow: auto;">
               inserted_component.componentId = item1.id
             }
             else if (inserted_component.componentId.startsWith('#')) {
-              let cPath = pathForRelative || pathItem.lsi1
+              let cPath = pathForRelative.prev || pathItem.lsi1
               cPath = cPath.replace(';publish:published', "")
               console.log('cpath ' + cPath)
 
@@ -5030,7 +5030,7 @@ overflow: auto;">
             components.push(inserted_component.id)
             console.log(inserted_component.componentId)
 
-            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, componentPath)
+            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, {current:pathForRelative.prev,prev:pathForRelative.prev})
             break;
           }
           //case duplicate insert before
@@ -5961,7 +5961,7 @@ overflow: auto;">
         const componentPath = responseData.items.find(e => e.sk === 'path')?.lsi1.replace(';publish:published', '')
         const componentFileName = componentPath.split('/')[componentPath.split('/').length - 1]
         if (id) {
-          const relativecomponentFileName = pathForRelative.split('/')[pathForRelative.split('/').length - 1]
+          const relativecomponentFileName = pathForRelative.current.split('/')[pathForRelative.current.split('/').length - 1]
           if (componentFileName !== relativecomponentFileName) {
             newPathForRelative = componentPath
           }
@@ -6051,13 +6051,13 @@ overflow: auto;">
               }
 
               //insertDataIntoCodeLog(item.sk, item.action)
-              await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, newPathForRelative)
+              await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, {current:newPathForRelative,prev:pathForRelative.current})
 
               continue
             }
 
 
-            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, componentPath)
+            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, {current:componentPath,prev:componentPath})
           }
 
         }
