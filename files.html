@@ -693,6 +693,10 @@
           saveButton.onclick = async function (e) {
             e.stopPropagation()
             const new_value = cloned.querySelector('[data-input="copy-file-path-input"]').value
+            if(path===new_value){
+              alert('same path')
+            }
+            const d = new Date()
             const backupCheck = true
             //backup target
             const inputs = cloned.querySelectorAll('input[name="choose_components"]');
@@ -773,7 +777,7 @@
                 targetPaths = removeDuplicates(targetPaths)
                 console.log('targets '+ JSON.stringify(targetPaths))
                 await Promise.all(targetPaths.map(async new_value1 => {
-                  const d = new Date()
+                  
                   const newId = generateUUID()
 
                   const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${item.id}&startsWith=true`, {
@@ -1029,7 +1033,7 @@
               const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${path}`);
               //list of sub paths
               const data = await response.json();
-              const d = new Date()
+              
               let items = []
               if (hub || style || content) {
                 if (hub) {
