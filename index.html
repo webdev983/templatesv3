@@ -6256,7 +6256,7 @@ overflow: auto;">
         if (combinations === 1) {
           const prices = Array.from(priceItems[0].children).map(e => parseInt(e.textContent))
           delete json['offers-aggregate']
-          json.offers = { ...json['offers-single'], price: Math.min(...prices) }
+          json['offers-single'] && (json.offers = { ...json['offers-single'], price: Math.min(...prices) })
           delete json['offers-single']
         }
         else {
@@ -6267,7 +6267,7 @@ overflow: auto;">
           prices = prices.filter(e => e)
           console.log('prices' + JSON.stringify(prices))
           delete json['offers-single']
-          json.offers = { ...json['offers-aggregate'], lowPrice: Math.min(...prices), highPrice: Math.max(...prices), offerCount: combinations }
+          json['offers-aggregate'] && (json.offers = { ...json['offers-aggregate'], lowPrice: Math.min(...prices), highPrice: Math.max(...prices), offerCount: combinations })
           delete json['offers-aggregate']
 
         }
