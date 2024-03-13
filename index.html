@@ -6090,7 +6090,7 @@ overflow: auto;">
           // If the current value is an array, handle each element individually
           if (Array.isArray(json[key])) {
             // Find the data-transfer-cloner attribute for the current array
-            const clonerAttributes = querySelectorAll1(`[data-transfer-cloner="${sender}.${currentPath}"]`);
+            const clonerAttributes = querySelectorAll1(`[data-transfer-cloner="${sender}.${currentPath}"]:not([data-b-value=""]`);
             if (clonerAttributes.length > 0) {
               const arrayOfObjects = [];
               // Iterate through each set of cloned elements
@@ -6131,7 +6131,7 @@ overflow: auto;">
                     objectFromClonedElements[attributeKey] = clonerAttribute.getAttribute('src');
                   }
                   else {
-                    clonerAttribute.querySelectorAll('[data-transfer-sender]').forEach(element => {
+                    clonerAttribute.querySelectorAll('[data-transfer-sender]:not([data-b-value=""]').forEach(element => {
                       const attributeKey = element.getAttribute('data-transfer-sender').split('.').pop();
                       if (objectFromClonedElements[attributeKey] === null) {
                         objectFromClonedElements[attributeKey] = parseInt(clonerAttribute.textContent);
@@ -6140,11 +6140,11 @@ overflow: auto;">
                         objectFromClonedElements[attributeKey] = clonerAttribute.textContent;
                       }
                     });
-                    clonerAttribute.querySelectorAll('[data-transfer-sender-href]').forEach(element => {
+                    clonerAttribute.querySelectorAll('[data-transfer-sender-href]:not([data-b-value=""]').forEach(element => {
                       const attributeKey = element.getAttribute('data-transfer-sender-href').split('.').pop();
                       objectFromClonedElements[attributeKey] = clonerAttribute.getAttribute('href');
                     });
-                    clonerAttribute.querySelectorAll('[data-transfer-sender-src]').forEach(element => {
+                    clonerAttribute.querySelectorAll('[data-transfer-sender-src]:not([data-b-value=""]').forEach(element => {
                       const attributeKey = element.getAttribute('data-transfer-sender-src').split('.').pop();
                       objectFromClonedElements[attributeKey] = clonerAttribute.getAttribute('src');
                     });
@@ -6167,7 +6167,7 @@ overflow: auto;">
           } else {
             // If the current value is a string, check for the data-transfer-sender attribute
             const senderPath = sender ? `${sender}.${currentPath}` : currentPath;
-            let senderAttribute = querySelectorAll1(`[data-transfer-sender="${senderPath}"]`);
+            let senderAttribute = querySelectorAll1(`[data-transfer-sender="${senderPath}"]:not([data-b-value=""]`);
 
 
             if (senderAttribute.length) {
@@ -6180,7 +6180,7 @@ overflow: auto;">
 
             }
             else {
-              let senderAttribute = querySelectorAll1(`[data-transfer-sender-href="${senderPath}"]`);
+              let senderAttribute = querySelectorAll1(`[data-transfer-sender-href="${senderPath}"]:not([data-b-value=""]`);
               console.log('iiin2')
               if (senderAttribute.length) {
 
@@ -6188,7 +6188,7 @@ overflow: auto;">
 
 
               } else {
-                let senderAttribute = querySelectorAll1(`[data-transfer-sender-src="${senderPath}"]`);
+                let senderAttribute = querySelectorAll1(`[data-transfer-sender-src="${senderPath}"]:not([data-b-value=""]`);
                 console.log('iiin3')
                 if (senderAttribute.length) {
 
