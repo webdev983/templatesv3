@@ -4318,9 +4318,11 @@ overflow: auto;">
             let l = replaceAction.target_element.filter(e => e.componentId !== toReplace);
             let i = false;
 
-
+            console.log('solving ' +JSON.stringify(l))
             for (const el of l) {
-
+              if(i){
+                return
+              }
               await executeCommand({
                 time,
                 action: 'InsertBefore',
@@ -5055,7 +5057,7 @@ overflow: auto;">
             components.push(inserted_component.id)
             console.log(inserted_component.componentId)
 
-            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, inserted_component.id, { current: pathForRelative.prev, prev: pathForRelative.prev })
+            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev })
             break;
           }
           //case duplicate insert before
