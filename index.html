@@ -268,9 +268,9 @@ overflow: auto;">
       <button class="b-4">💾 Save</button>
       <input type="text" placeholder="⚓ Anchor" class="input-1" style=" width: 50px;">
     </div>
-  
 
-    
+
+
     <div id="stock-menu" data-menu style="margin-bottom: 30px;">
       <button style="margin-right:5px; margin-top: 5px; margin-bottom: 5px;" class="b-3"
         onclick="cancel(event)">❌</button>
@@ -474,7 +474,7 @@ overflow: auto;">
       <button style="margin-right: 5px;" class="b-3" id="code-tree-click-tag-remove-tag" onclick="removeTag(event)">🗑️️
         Remove
         element</button>
-        <button style="margin-right:5px; margin-top: 5px;" class="b-3" id="code-tree-click-tag-remove-tag"
+      <button style="margin-right:5px; margin-top: 5px;" class="b-3" id="code-tree-click-tag-remove-tag"
         onclick="removeTagAndCopies(event)">🗑️️ Remove +</button>
 
 
@@ -855,7 +855,7 @@ overflow: auto;">
     async function selectImage(event) {
       const imgId = event.target.closest('[data-menu]').id.replace('gallery-menu-wrapper;', '')
       const image = event.target.closest('.gallery-image').querySelector('img')
-      
+
       const imageSrc = image.src;
       const imageUUID = image.getAttribute('uuid')
       const imageElement = getElementById1(removeLastOccurrence(imgId, '-tree'))
@@ -883,7 +883,7 @@ overflow: auto;">
       // resize
       const body = {
         site,
-        
+
         name: randomString + '_' + name,
         imageSrc,
         defaultRes,
@@ -3865,15 +3865,15 @@ overflow: auto;">
     }
     let pauseExecution = false
     const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative) => {
-      
-      if(pauseExecution){
+
+      if (pauseExecution) {
         return
       }
       const { subAction, noSubComp, noComp, time, withParent, move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component, check_b } = command;
       let treeElement
       let componentElement
 
-      console.log('command is ' + JSON.stringify(command) + ' replace id ' + replaceId + 'pathForRelative '+pathForRelative?.current )
+      console.log('command is ' + JSON.stringify(command) + ' replace id ' + replaceId + 'pathForRelative ' + pathForRelative?.current)
       function handleAppendOrInsert(action, selectedArrayNotSorted, move) {
         // Sort
 
@@ -4328,7 +4328,7 @@ overflow: auto;">
                 inserted_component: el,
                 noComp: true,
                 noSubComp: i
-              }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions, el.id,undefined,pathForRelative)
+              }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions, el.id, undefined, pathForRelative)
               i = true
 
             }
@@ -4721,6 +4721,11 @@ overflow: auto;">
               console.log('handling' + treeElement + ' ' + componentElement + ' ' + replaceCopyId)
               const newEl = document.createElement(inserted_element.tagName)
               componentElement.appendChild(newEl)
+              if (componentElement.contains(newEl)) {
+                console.log('newEl was created and appended successfully.');
+              } else {
+                console.error('Failed to create or append newEl.');
+              }
               const attr1 = componentElement.getAttribute('data-replaceID')
               if (attr1) {
                 newEl.setAttribute('data-replaceID', attr1)
@@ -4744,18 +4749,18 @@ overflow: auto;">
               const newEl2 = component_el.cloneNode(true)
               const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
               button2.textContent = '🏷️' + inserted_element.tagName;
-              
+
               newEl2.id = replaceCopyId ? inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') + '-tree' : inserted_element.id + '-tree'
               if (componentElement.hasAttribute('data-parentid')) {
                 console.log('in12')
 
 
-                newEl.id = componentElement.id.split(';')[0] + ';' + newEl.id 
+                newEl.id = componentElement.id.split(';')[0] + ';' + newEl.id
                 newEl2.id = componentElement.id.split(';')[0] + ';' + newEl2.id
               }
 
               else if (splited.length > 1) {
-                newEl.id = splited[0] + ';' + newEl.id 
+                newEl.id = splited[0] + ';' + newEl.id
                 newEl2.id = splited[0] + ';' + newEl2.id
               }
               console.log(newEl.id)
@@ -4764,8 +4769,8 @@ overflow: auto;">
               button.addEventListener('mouseover', mouseOverTree);
 
               button.addEventListener('mouseout', mouseOutTree);
-              
-              
+
+
             }
 
             treeElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
@@ -5048,7 +5053,7 @@ overflow: auto;">
             components.push(inserted_component.id)
             console.log(inserted_component.componentId)
 
-            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, {current:pathForRelative.prev,prev:pathForRelative.prev})
+            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev })
             break;
           }
           //case duplicate insert before
@@ -5982,10 +5987,10 @@ overflow: auto;">
           const relativecomponentFileName = pathForRelative.current.split('/')[pathForRelative.current.split('/').length - 1]
           if (componentFileName !== relativecomponentFileName) {
             newPathForRelative = componentPath
-            console.log('test relative different ' + componentFileName +  'diff '+ relativecomponentFileName + ' path '+ newPathForRelative)
+            console.log('test relative different ' + componentFileName + 'diff ' + relativecomponentFileName + ' path ' + newPathForRelative)
           }
-          else{
-            console.log('test relative same '  + componentFileName + ' path '+ newPathForRelative)
+          else {
+            console.log('test relative same ' + componentFileName + ' path ' + newPathForRelative)
           }
         }
 
@@ -6065,7 +6070,7 @@ overflow: auto;">
               else {
 
                 item.target_element.split(':').length === 1 && (item.target_element = replaceWithNewId(item.target_element, newId))
-                item.inserted_element?.id &&  item.inserted_element?.id.split(':').length === 1 && (item.inserted_element.id = replaceWithNewId(item.inserted_element.id, newId))
+                item.inserted_element?.id && item.inserted_element?.id.split(':').length === 1 && (item.inserted_element.id = replaceWithNewId(item.inserted_element.id, newId))
                 item.inserted_element?.originalId && item.inserted_element?.originalId.split(':').length === 1 && (item.inserted_element.originalId = replaceWithNewId(item.inserted_element.originalId, newId))
 
 
@@ -6073,13 +6078,13 @@ overflow: auto;">
               }
 
               //insertDataIntoCodeLog(item.sk, item.action)
-              await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, {current:newPathForRelative,prev:pathForRelative.current})
+              await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: newPathForRelative, prev: pathForRelative.current })
 
               continue
             }
 
 
-            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, {current:componentPath,prev:componentPath})
+            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: componentPath, prev: componentPath })
           }
 
         }
@@ -6245,7 +6250,7 @@ overflow: auto;">
     const cleanJson = (json) => {
       let newJson = removeEmptyValues(json)
       newJson = removeSingleAtKey(json)
-      newJson = removeEmptyValues(json) 
+      newJson = removeEmptyValues(json)
       return newJson
     }
     const generateSchema = () => {
