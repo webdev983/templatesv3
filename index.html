@@ -4743,10 +4743,7 @@ overflow: auto;">
               const newEl2 = component_el.cloneNode(true)
               const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
               button2.textContent = '🏷️' + inserted_element.tagName;
-              const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
-              button.addEventListener('mouseover', mouseOverTree);
-
-              button.addEventListener('mouseout', mouseOutTree);
+              
               newEl2.id = replaceCopyId ? inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') + '-tree' : inserted_element.id + '-tree'
               if (componentElement.hasAttribute('data-parentid')) {
                 console.log('in12')
@@ -4761,8 +4758,13 @@ overflow: auto;">
                 newEl2.id = splited[0] + ';' + newEl2.id
               }
               console.log(newEl.id)
-              componentElement.appendChild(newEl)
               treeElement.appendChild(newEl2)
+              const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
+              button.addEventListener('mouseover', mouseOverTree);
+
+              button.addEventListener('mouseout', mouseOutTree);
+              componentElement.appendChild(newEl)
+              
             }
 
             treeElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
