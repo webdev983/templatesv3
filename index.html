@@ -4320,9 +4320,7 @@ overflow: auto;">
 
             console.log('solving ' +JSON.stringify(l))
             for (const el of l) {
-              if(i){
-                return
-              }
+              
               await executeCommand({
                 time,
                 action: 'InsertBefore',
@@ -4334,10 +4332,11 @@ overflow: auto;">
               i = true
 
             }
+            /*
             if (dontReplaceIndex === -1) {
               const elementsToRemove = querySelectorAll1(`[id^="${removeLastOccurrence(toReplace, '-tree') + ';'}"]`);
               elementsToRemove.forEach(element => element.remove());
-            }
+            }*/
             const el = getElementById1(toReplace)
             el.setAttribute('replaced', JSON.stringify(replaceAction.target_element))
             const el2 = el.querySelector('[data-element="optional-script"]')
