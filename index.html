@@ -4319,7 +4319,8 @@ overflow: auto;">
             let i = false;
 
 
-            for (const el of l) {
+            //for (const el of l) 
+            l.map(async el=>{
 
               await executeCommand({
                 time,
@@ -4331,7 +4332,7 @@ overflow: auto;">
               }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions, el.id, undefined, pathForRelative)
               i = true
 
-            }
+            })
             if (dontReplaceIndex === -1) {
               const elementsToRemove = querySelectorAll1(`[id^="${removeLastOccurrence(toReplace, '-tree') + ';'}"]`);
               elementsToRemove.forEach(element => element.remove());
