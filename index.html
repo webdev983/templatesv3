@@ -3863,7 +3863,11 @@ overflow: auto;">
         }
       }
     }
+    let pauseExecution = false
     const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative) => {
+      if(pauseExecution){
+        return
+      }
       const { subAction, noSubComp, noComp, time, withParent, move, action, target_element, insertedCode, tag_change, inserted_element, key, value, inserted_component, check_b } = command;
       let treeElement
       let componentElement
@@ -4754,6 +4758,12 @@ overflow: auto;">
               else if (splited.length > 1) {
                 newEl.id = splited[0] + ';' + newEl.id 
                 newEl2.id = splited[0] + ';' + newEl2.id
+              }
+              if(newEl.id ==="3bf8d522-9423-4818-ad91-d8dfcda1f425:3b4eaea8-5c9b-4cee-87f0-dc979a8b6d74"){
+
+                console.log('pushed '+ newEl.id)
+                pauseExecution = true
+
               }
               componentElement.appendChild(newEl)
               treeElement.appendChild(newEl2)
