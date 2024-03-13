@@ -710,6 +710,186 @@
             const splitedPath = path.split('/')
             const last = splitedPath[splitedPath.length-2]
             console.log('last '+ last)
+            const copyToTarget = async (path, new_value, backupCheck) => {
+              const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${path}`);
+              //list of sub paths
+              const data = await response.json();
+              
+              let items = []
+              if (hub || style || content) {
+                if (hub) {
+                  items.push(...data.items.filter(element => element.lsi1.endsWith('/Hub')))
+                }
+                if (style) {
+                  items.push(...data.items.filter(element => element.lsi1.endsWith('-Style') || element.lsi1.endsWith('-Structure')))
+                }
+
+                if (content) {
+                  items.push(...data.items.filter(element => element.lsi1.endsWith('-Content')))
+                }
+
+                //if (ids.includes("content-files")) {
+                //  items.push(...data.items.filter(element => !element.lsi1.endsWith('/Style') && !element.lsi1.endsWith('/Hub') && element.lsi1.split('/')[element.lsi1.split('/').length - 2] !== 'Components'))
+                //}
+              }
+              else {
+                console.log('all 11')
+                items = data.items
+              }
+
+              await Promise.all(items.map(async item => {
+                const newId = generateUUID()
+
+                const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${item.id}&startsWith=true`, {
+                  method: 'GET',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                });
+                const res2 = await response.json()
+                const pathI = res2.items.find(e => e.sk === 'path')
+                //create new file
+                const newLSI = pathI.lsi1.replace(path, new_value)
+
+                if (backupCheck) {
+                  const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${pathI.lsi1.replace(path, new_value)}`);
+                  //list of sub paths
+                  const data = await response.json();
+                  if (data.items.length) {
+                    //move to trash
+                    const id = data.items[0].id
+                    const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`, {
+                      method: 'GET',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                    });
+                    const res2 = await response.json()
+                    await Promise.all(res2.items.map(async item1 => {
+
+                      if (item1.sk === 'path') {
+                        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify(
+                            {
+                              ...item1,
+                              lsi1: 'trash/' + d.toISOString() + '-replace/' + item1.lsi1,
+
+                            }
+                          ),
+                        })
+
+                      }
+
+                    }))
+                  }
+                }
+                const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    ...pathI,
+                    id: newId,
+                    sk: 'path',
+                    lsi1: newLSI,
+                    ownerUUID: 'path',
+                    protected: false
+                  }),
+                })
+                console.log('putting ' + newId)
+                console.log('res ' + JSON.stringify(data))
+                if (byId || absolute || relative) {
+
+                  if (byId) {
+                    await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                        id: newId,
+                        sk: (new Date()).getTime().toString(),
+                        action: 'Add_Component',
+                        target_element: newId + '-tree',
+                        inserted_component: { componentId: pathI.id, id: generateUUID() },
+                      }),
+                    })
+                  }
+                  else if (absolute) {
+                    const p = pathI.lsi1.replace(';publish:published').split('/')
+                    p.shift()
+                    await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                        id: newId,
+                        sk: (new Date()).getTime().toString(),
+                        action: 'Add_Component',
+                        target_element: newId + '-tree',
+                        inserted_component: { componentId: "*/" + p.join('/'), id: generateUUID() },
+                      }),
+                    })
+                  }
+                  else {
+                    const relativePath = getRelativePath(newLSI, pathI.lsi1)
+                    await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                        id: newId,
+                        sk: (new Date()).getTime().toString(),
+                        action: 'Add_Component',
+                        target_element: newId + '-tree',
+                        inserted_component: { componentId: "#" + relativePath, id: generateUUID() },
+                      }),
+                    })
+                  }
+                }
+                else {
+                  await Promise.all(res2.items.map(async item1 => {
+
+
+
+                    //create new file actions
+                    if (item1.sk !== 'path') {
+                      //copy data
+
+                      if (item1.target_element === item1.id + '-tree') {
+                        console.log('err1')
+                        item1.target_element = newId + '-tree'
+                      }
+                      return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(
+                          {
+                            ...item1,
+                            id: newId
+                          }
+                        ),
+                      })
+
+
+
+                    }
+
+                  }))
+                }
+              }))
+
+            }
+
             if (update && !last.startsWith('Seed-')) {
               const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${path}`);
               //list of sub paths
@@ -1037,188 +1217,11 @@
 
             }
 
-            const copyToTarget = async (path, new_value, backupCheck) => {
-              const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${path}`);
-              //list of sub paths
-              const data = await response.json();
-              
-              let items = []
-              if (hub || style || content) {
-                if (hub) {
-                  items.push(...data.items.filter(element => element.lsi1.endsWith('/Hub')))
-                }
-                if (style) {
-                  items.push(...data.items.filter(element => element.lsi1.endsWith('-Style') || element.lsi1.endsWith('-Structure')))
-                }
-
-                if (content) {
-                  items.push(...data.items.filter(element => element.lsi1.endsWith('-Content')))
-                }
-
-                //if (ids.includes("content-files")) {
-                //  items.push(...data.items.filter(element => !element.lsi1.endsWith('/Style') && !element.lsi1.endsWith('/Hub') && element.lsi1.split('/')[element.lsi1.split('/').length - 2] !== 'Components'))
-                //}
-              }
-              else {
-                console.log('all 11')
-                items = data.items
-              }
-
-              await Promise.all(items.map(async item => {
-                const newId = generateUUID()
-
-                const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${item.id}&startsWith=true`, {
-                  method: 'GET',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                });
-                const res2 = await response.json()
-                const pathI = res2.items.find(e => e.sk === 'path')
-                //create new file
-                const newLSI = pathI.lsi1.replace(path, new_value)
-
-                if (backupCheck) {
-                  const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${pathI.lsi1.replace(path, new_value)}`);
-                  //list of sub paths
-                  const data = await response.json();
-                  if (data.items.length) {
-                    //move to trash
-                    const id = data.items[0].id
-                    const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`, {
-                      method: 'GET',
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                    });
-                    const res2 = await response.json()
-                    await Promise.all(res2.items.map(async item1 => {
-
-                      if (item1.sk === 'path') {
-                        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                          method: 'POST',
-                          headers: {
-                            'Content-Type': 'application/json',
-                          },
-                          body: JSON.stringify(
-                            {
-                              ...item1,
-                              lsi1: 'trash/' + d.toISOString() + '-replace/' + item1.lsi1,
-
-                            }
-                          ),
-                        })
-
-                      }
-
-                    }))
-                  }
-                }
-                const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    ...pathI,
-                    id: newId,
-                    sk: 'path',
-                    lsi1: newLSI,
-                    ownerUUID: 'path',
-                    protected: false
-                  }),
-                })
-                console.log('putting ' + newId)
-                console.log('res ' + JSON.stringify(data))
-                if (byId || absolute || relative) {
-
-                  if (byId) {
-                    await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify({
-                        id: newId,
-                        sk: (new Date()).getTime().toString(),
-                        action: 'Add_Component',
-                        target_element: newId + '-tree',
-                        inserted_component: { componentId: pathI.id, id: generateUUID() },
-                      }),
-                    })
-                  }
-                  else if (absolute) {
-                    const p = pathI.lsi1.replace(';publish:published').split('/')
-                    p.shift()
-                    await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify({
-                        id: newId,
-                        sk: (new Date()).getTime().toString(),
-                        action: 'Add_Component',
-                        target_element: newId + '-tree',
-                        inserted_component: { componentId: "*/" + p.join('/'), id: generateUUID() },
-                      }),
-                    })
-                  }
-                  else {
-                    const relativePath = getRelativePath(newLSI, pathI.lsi1)
-                    await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify({
-                        id: newId,
-                        sk: (new Date()).getTime().toString(),
-                        action: 'Add_Component',
-                        target_element: newId + '-tree',
-                        inserted_component: { componentId: "#" + relativePath, id: generateUUID() },
-                      }),
-                    })
-                  }
-                }
-                else {
-                  await Promise.all(res2.items.map(async item1 => {
-
-
-
-                    //create new file actions
-                    if (item1.sk !== 'path') {
-                      //copy data
-
-                      if (item1.target_element === item1.id + '-tree') {
-                        console.log('err1')
-                        item1.target_element = newId + '-tree'
-                      }
-                      return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(
-                          {
-                            ...item1,
-                            id: newId
-                          }
-                        ),
-                      })
-
-
-
-                    }
-
-                  }))
-                }
-              }))
-
-            }
-
+            
             //copy to target
-            !update && await copyToTarget(path, new_value, backupCheck)
+            else{
+              await copyToTarget(path, new_value, backupCheck)
+            } 
 
 
 
