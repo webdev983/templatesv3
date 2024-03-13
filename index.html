@@ -4319,20 +4319,19 @@ overflow: auto;">
             let i = false;
 
 
-            //for (const el of l) 
-            l.map(async el1=>{
+            for (const el of l) {
 
               await executeCommand({
                 time,
                 action: 'InsertBefore',
                 target_element: toReplace,
-                inserted_component: el1,
+                inserted_component: el,
                 noComp: true,
                 noSubComp: i
-              }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions, el1.id, undefined, pathForRelative)
+              }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions, el.id, undefined, pathForRelative)
               i = true
 
-            })
+            }
             if (dontReplaceIndex === -1) {
               const elementsToRemove = querySelectorAll1(`[id^="${removeLastOccurrence(toReplace, '-tree') + ';'}"]`);
               elementsToRemove.forEach(element => element.remove());
