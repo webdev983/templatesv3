@@ -4721,11 +4721,7 @@ overflow: auto;">
               console.log('handling' + treeElement + ' ' + componentElement + ' ' + replaceCopyId)
               const newEl = document.createElement(inserted_element.tagName)
               componentElement.appendChild(newEl)
-              if (componentElement.contains(newEl)) {
-                console.log(newEl.id+' was created and appended successfully.');
-              } else {
-                console.error('Failed to create or append newEl.');
-              }
+              
               const attr1 = componentElement.getAttribute('data-replaceID')
               if (attr1) {
                 newEl.setAttribute('data-replaceID', attr1)
@@ -4769,6 +4765,11 @@ overflow: auto;">
               button.addEventListener('mouseover', mouseOverTree);
 
               button.addEventListener('mouseout', mouseOutTree);
+              if (componentElement.contains(newEl)) {
+                console.log(newEl.id+' was created and appended successfully.');
+              } else {
+                console.error('Failed to create or append newEl.');
+              }
 
 
             }
