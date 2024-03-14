@@ -6906,10 +6906,10 @@ overflow: auto;">
           cloned.querySelector('#sku-attribute-value').textContent = item.sk.replace('qty;', '')
           parent.appendChild(cloned)
           const handleSkuItemClick = (event) => {
-            if (!cloned.querySelector('#stock-menu')) {
+            if (!cloned.nextElementId.startsWith('stock-menu')) {
               const stockMenuCloned = document.getElementById('stock-menu').cloneNode(true)
               stockMenuCloned.id = stockMenuCloned.id + ';' + item.sk.replace('qty;', '')
-              cloned.appendChild(stockMenuCloned)
+              cloned.insertAdjacentElement('afterend',stockMenuCloned)
             }
 
           }
