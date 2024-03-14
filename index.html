@@ -5918,18 +5918,25 @@ overflow: auto;">
                 stockMenuCloned.id = stockMenuCloned.id + ';' + item.sk.replace('qty;', '')
                 cloned.insertAdjacentElement('afterend', stockMenuCloned)
                 const handleTypeChange = (e) => {
-                  const digitalMenu = stockMenuCloned.querySelector('#digital-menu');
-                  const realGoodsMenu = stockMenuCloned.querySelector('#real-goods-menu');
-
-                  if (e.target.value === 'digital') {
-                    digitalMenu.toggleAttribute('hidden', !e.target.checked);
-                  } else if (e.target.value === 'real') {
-                    realGoodsMenu.toggleAttribute('hidden', !e.target.checked);
+                  if (e.target.id === 'digital-good') {
+                    if (e.target.checked) {
+                      stockMenuCloned.querySelector('#digital-menu').removeAttribute('hidden')
+                    }
+                    else {
+                      stockMenuCloned.querySelector('#digital-menu').setAttribute('hidden', '')
+                    }
                   }
-                };
+                  if (e.target.id === 'real-good') {
+                    if (e.target.checked) {
+                      stockMenuCloned.querySelector('#real-goods-menu').removeAttribute('hidden')
+                    }
+                    else {
+                      stockMenuCloned.querySelector('#real-goods-menu').setAttribute('hidden', '')
+                    }
+                  }
 
+                }
                 stockMenuCloned.querySelectorAll('input[type="radio"][name="choose-goods-type"]').forEach(e => e.addEventListener('change', handleTypeChange));
-
 
               }
 
@@ -6926,18 +6933,25 @@ overflow: auto;">
               stockMenuCloned.id = stockMenuCloned.id + ';' + item.sk.replace('qty;', '')
               cloned.insertAdjacentElement('afterend', stockMenuCloned)
               const handleTypeChange = (e) => {
-                const digitalMenu = stockMenuCloned.querySelector('#digital-menu');
-                const realGoodsMenu = stockMenuCloned.querySelector('#real-goods-menu');
-
-                if (e.target.value === 'digital') {
-                  digitalMenu.toggleAttribute('hidden', !e.target.checked);
-                } else if (e.target.value === 'real') {
-                  realGoodsMenu.toggleAttribute('hidden', !e.target.checked);
+                if (e.target.id === 'digital-good') {
+                  if (e.target.checked) {
+                    stockMenuCloned.querySelector('#digital-menu').removeAttribute('hidden')
+                  }
+                  else {
+                    stockMenuCloned.querySelector('#digital-menu').setAttribute('hidden', '')
+                  }
                 }
-              };
+                if (e.target.id === 'real-good') {
+                  if (e.target.checked) {
+                    stockMenuCloned.querySelector('#real-goods-menu').removeAttribute('hidden')
+                  }
+                  else {
+                    stockMenuCloned.querySelector('#real-goods-menu').setAttribute('hidden', '')
+                  }
+                }
 
+              }
               stockMenuCloned.querySelectorAll('input[type="radio"][name="choose-goods-type"]').forEach(e => e.addEventListener('change', handleTypeChange));
-
 
             }
 
