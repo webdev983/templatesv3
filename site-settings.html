@@ -57,23 +57,23 @@
 
     <label class="l-1 b-dark-blue" style="font-style: italic; margin-left: 30px; font-weight: 800;">PP</label>
     <ul class="list-1 hide-bullets" id="pp-creds" style="margin-left: 30px;">
-      <select id="environment-select" class="select-1" style="margin-bottom: 5px;">
+      <select id="environment-select" class="select-1" style="margin-bottom: 5px;" onchange="updateEnvironment(event)">
         <option id="env-sandbox">🏖️ Sandbox</option>
         <option id="env-live">🧑‍💼 Live</option>
       </select>
 
-      <li><label class="l-3" style="user-select: none; margin-right: 5px;">🆔</label><label class="l-3"
-          id="pp-id" ondblclick="onDoubleClick(event,'pp_id',true)">-</label></li>
-      <li><label class="l-3" style="user-select: none; margin-right: 5px;">🔑</label><label class="l-3"
-          id="pp-secret" ondblclick="onDoubleClick(event,'pp_secret',true)">-</label></li>
-      <li><label class="l-3" style="user-select: none; margin-right: 5px;"> 🌐</label><label class="l-3"
-          id="pp-domain" ondblclick="onDoubleClick(event,'pp_domain',true)">-</label></li>
-      <li><label class="l-3" style="user-select: none; margin-right: 5px;">🛒</label><label class="l-3"
-          id="pp-cart" ondblclick="onDoubleClick(event,'pp_cart',true)">-</label></li>
-      <li><label class="l-3" style="user-select: none; margin-right: 5px;">✅</label><label class="l-3"
-          id="pp-success" ondblclick="onDoubleClick(event,'pp_success',true)">-</label></li>
-      <li><label class="l-3" style="user-select: none; margin-right: 5px;">❌</label><label class="l-3"
-          id="pp-fail" ondblclick="onDoubleClick(event,'pp_fail',true)">-</label></li>
+      <li><label class="l-3" style="user-select: none; margin-right: 5px;">🆔</label><label class="l-3" id="pp-id"
+          ondblclick="onDoubleClick(event,'pp_id',true)">-</label></li>
+      <li><label class="l-3" style="user-select: none; margin-right: 5px;">🔑</label><label class="l-3" id="pp-secret"
+          ondblclick="onDoubleClick(event,'pp_secret',true)">-</label></li>
+      <li><label class="l-3" style="user-select: none; margin-right: 5px;"> 🌐</label><label class="l-3" id="pp-domain"
+          ondblclick="onDoubleClick(event,'pp_domain',true)">-</label></li>
+      <li><label class="l-3" style="user-select: none; margin-right: 5px;">🛒</label><label class="l-3" id="pp-cart"
+          ondblclick="onDoubleClick(event,'pp_cart',true)">-</label></li>
+      <li><label class="l-3" style="user-select: none; margin-right: 5px;">✅</label><label class="l-3" id="pp-success"
+          ondblclick="onDoubleClick(event,'pp_success',true)">-</label></li>
+      <li><label class="l-3" style="user-select: none; margin-right: 5px;">❌</label><label class="l-3" id="pp-fail"
+          ondblclick="onDoubleClick(event,'pp_fail',true)">-</label></li>
 
 
 
@@ -87,7 +87,11 @@
     const site = urlSearchParams.get('site');
     let response
     let pp_response
-    function onDoubleClick(e, name,pp) {
+    function updateEnvironment() {
+      document.getElementById('env-live').selected ? savePP('environment', 'live') :  savePP('environment', 'sandbox')
+      
+    }
+    function onDoubleClick(e, name, pp) {
       var target = e.target;
 
       // Prevent the default double-click behavior
@@ -127,7 +131,7 @@
         },
         body: JSON.stringify(response),
       });
-      
+
     }
     const savePP = async (name, text) => {
       // Create a new object to only send the updated field to the server
@@ -140,7 +144,7 @@
         },
         body: JSON.stringify(pp_response),
       });
-      
+
     }
     const getSite = async () => {
       const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${site}:creds`)
@@ -222,7 +226,7 @@
       cart.textContent = pp_response.pp_cart;
       success.textContent = pp_response.pp_success;
       fail.textContent = pp_response.pp_fail;
-     
+
 
       if (pp_response.environment === 'live') {
         document.getElementById('env-live').selected = true
