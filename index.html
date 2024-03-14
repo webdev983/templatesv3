@@ -569,7 +569,7 @@ overflow: auto;">
                 id="code-tree-tag-attribute-value"><span></td>
             <td><button onclick="removeAttributeFromCopies(event)" class="b-4">🗑️++️</button>
               <button id="code-tree-tag-attribute-remove-button" class="b-4"
-                onclick="removeAttribute1(event)">🗑️️</button> 
+                onclick="removeAttribute1(event)">🗑️️</button>
             </td>
           </tr>
         </tbody>
@@ -3865,7 +3865,7 @@ overflow: auto;">
     }
     let pauseExecution = false
     const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative) => {
-      
+
       if (pauseExecution) {
         return
       }
@@ -4318,9 +4318,9 @@ overflow: auto;">
             let l = replaceAction.target_element.filter(e => e.componentId !== toReplace);
             let i = false;
 
-            console.log('solving ' +JSON.stringify(l))
+            console.log('solving ' + JSON.stringify(l))
             for (const el of l) {
-              
+
               await executeCommand({
                 time,
                 action: 'InsertBefore',
@@ -4722,7 +4722,7 @@ overflow: auto;">
               console.log('handling' + treeElement + ' ' + componentElement + ' ' + replaceCopyId)
               const newEl = document.createElement(inserted_element.tagName)
               componentElement.appendChild(newEl)
-              
+
               const attr1 = componentElement.getAttribute('data-replaceID')
               if (attr1) {
                 newEl.setAttribute('data-replaceID', attr1)
@@ -4730,7 +4730,7 @@ overflow: auto;">
               if (noComp || noComp1) {
                 newEl.setAttribute('data-replaceID', replaceId)
               }
-              
+
 
               const splited = componentElement.id.split(';')
 
@@ -4768,7 +4768,7 @@ overflow: auto;">
 
               button.addEventListener('mouseout', mouseOutTree);
               if (componentElement.contains(newEl)) {
-                console.log(newEl.id+' was created and appended successfully.');
+                console.log(newEl.id + ' was created and appended successfully.');
               } else {
                 console.error('Failed to create or append newEl.');
               }
@@ -5055,7 +5055,7 @@ overflow: auto;">
             treeElement.parentNode.insertBefore(newEl2, treeElement)
             components.push(inserted_component.id)
             console.log(inserted_component.componentId)
-            console.log('insert before replace id '+ replaceId)
+            console.log('insert before replace id ' + replaceId)
             await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev })
             break;
           }
@@ -5896,6 +5896,7 @@ overflow: auto;">
         getElementById1("create-sku").setAttribute('hidden', '')
         const item1 = getElementById1("sku-item-1")
         const cloned1 = item1.cloneNode(true)
+        cloned1.id = sku
         cloned1.removeAttribute('hidden')
         getElementById1("sku-list").removeAttribute('hidden')
         cloned1.querySelector("#sku-value").textContent = sku
@@ -5910,6 +5911,15 @@ overflow: auto;">
             const cloned = el[0].cloneNode(true)
             cloned.querySelector('#sku-attribute-value').textContent = item.sk.replace('qty;', '')
             parent.appendChild(cloned)
+            const handleSkuItemClick = (event) => {
+              if (!cloned.querySelector('#stock-menu')) {
+                const stockMenuCloned = document.getElementById('stock-menu').cloneNode(true)
+                stockMenuCloned.id = stockMenuCloned.id + ';' + item.sk.replace('qty;', '')
+                cloned.appendChild(stockMenuCloned)
+              }
+
+            }
+            cloned.addEventListener('click', handleSkuItemClick)
           }
 
 
@@ -6037,8 +6047,8 @@ overflow: auto;">
 
 
               const replaceWithNewId = (s) => {
-                if(s.startsWith('3bf8d522-9423-4818-ad91-d8dfcda1f425')){
-                  console.log('fouuund '+s +'  replace  '+ replaceId)
+                if (s.startsWith('3bf8d522-9423-4818-ad91-d8dfcda1f425')) {
+                  console.log('fouuund ' + s + '  replace  ' + replaceId)
                 }
                 if (!replaceId || s === 'body-tree' || s === 'body' || s === 'head-tree' | s === 'head') return s
                 if (s.endsWith('-tree')) {
@@ -6879,6 +6889,7 @@ overflow: auto;">
       getElementById1("input-sku").setAttribute('hidden', '')
       getElementById1("create-sku").setAttribute('hidden', '')
       const cloned1 = item1.cloneNode(true)
+      cloned1.id = sku
       cloned1.removeAttribute('hidden')
       getElementById1("sku-list").removeAttribute('hidden')
       cloned1.querySelector("#sku-value").textContent = sku
@@ -6890,9 +6901,19 @@ overflow: auto;">
       if (items.length > 1) {
 
         for (const item of items) {
+
           const cloned = el[0].cloneNode(true)
           cloned.querySelector('#sku-attribute-value').textContent = item.sk.replace('qty;', '')
           parent.appendChild(cloned)
+          const handleSkuItemClick = (event) => {
+            if (!cloned.querySelector('#stock-menu')) {
+              const stockMenuCloned = document.getElementById('stock-menu').cloneNode(true)
+              stockMenuCloned.id = stockMenuCloned.id + ';' + item.sk.replace('qty;', '')
+              cloned.appendChild(stockMenuCloned)
+            }
+
+          }
+          cloned.addEventListener('click', handleSkuItemClick)
         }
 
 
