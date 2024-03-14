@@ -6270,6 +6270,7 @@ overflow: auto;">
       //sku 
 
       const combinations = pathItem.combinations
+      const forms = querySelectorAll1('[data-product-attribute-form]');
       const priceItems = querySelectorAll1('[data-builder-cart="price"]')
 
       for (const schema of schemas) {
@@ -6277,7 +6278,7 @@ overflow: auto;">
         let json = JSON.parse(schema.textContent)
         // Start traversing the JSON object
 
-        if (combinations === 1) {
+        if ((combinations && combinations === 1) || forms.length ===1) {
           const prices = Array.from(priceItems[0].children).map(e => parseInt(e.textContent))
           delete json['offers-aggregate']
           json['offers-single'] && (json.offers = { ...json['offers-single'], price: Math.min(...prices) })
