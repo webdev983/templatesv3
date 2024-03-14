@@ -275,8 +275,9 @@ overflow: auto;">
       <button style="margin-right:5px; margin-top: 5px; margin-bottom: 5px;" class="b-3"
         onclick="cancel(event)">❌</button>
       <br>
-      <label class="l-3"><input type="radio" id="digital-good" name="choose-goods-type" checked />📟 Digital</label>
-      <label class="l-3"><input type="radio" name="choose-goods-type" id="real-good" />📦 Real</label>
+      <label class="l-3"><input type="radio" id="digital-good" name="choose-goods-type" checked value="digital" />📟
+        Digital</label>
+      <label class="l-3"><input type="radio" name="choose-goods-type" id="real-good" value="real" />📦 Real</label>
       <div id="digital-menu" style="margin-top: 10px;">
         <button class="b-3">➕ Add</button>
         <button class="b-3">🔢 Qty</button>
@@ -5912,10 +5913,24 @@ overflow: auto;">
             cloned.querySelector('#sku-attribute-value').textContent = item.sk.replace('qty;', '')
             parent.appendChild(cloned)
             const handleSkuItemClick = (event) => {
-              if (!cloned.querySelector('#stock-menu')) {
+              if (!cloned.nextElementSibling?.id.startsWith('stock-menu')) {
                 const stockMenuCloned = document.getElementById('stock-menu').cloneNode(true)
                 stockMenuCloned.id = stockMenuCloned.id + ';' + item.sk.replace('qty;', '')
-                cloned.appendChild(stockMenuCloned)
+                cloned.insertAdjacentElement('afterend', stockMenuCloned)
+                const handleTypeChange = (e) => {
+                  const digitalMenu = stockMenuCloned.querySelector('#digital-menu');
+                  const realGoodsMenu = stockMenuCloned.querySelector('#real-goods-menu');
+
+                  if (e.target.value === 'digital') {
+                    digitalMenu.toggleAttribute('hidden', !e.target.checked);
+                  } else if (e.target.value === 'real') {
+                    realGoodsMenu.toggleAttribute('hidden', !e.target.checked);
+                  }
+                };
+
+                stockMenuCloned.querySelectorAll('input[type="radio"][name="choose-goods-type"]').forEach(e => e.addEventListener('change', handleTypeChange));
+
+
               }
 
             }
@@ -6911,25 +6926,18 @@ overflow: auto;">
               stockMenuCloned.id = stockMenuCloned.id + ';' + item.sk.replace('qty;', '')
               cloned.insertAdjacentElement('afterend', stockMenuCloned)
               const handleTypeChange = (e) => {
-                if (e.target.id === 'digital-good') {
-                  if (e.target.checked) {
-                    stockMenuCloned.querySelector('#digital-menu').removeAttribute('hidden')
-                  }
-                  else {
-                    stockMenuCloned.querySelector('#digital-menu').setAttribute('hidden','')
-                  }
-                }
-                if (e.target.id === 'real-good') {
-                  if (e.target.checked) {
-                    stockMenuCloned.querySelector('#real-goods-menu').removeAttribute('hidden')
-                  }
-                  else {
-                    stockMenuCloned.querySelector('#real-goods-menu').setAttribute('hidden','')
-                  }
-                }
+                const digitalMenu = stockMenuCloned.querySelector('#digital-menu');
+                const realGoodsMenu = stockMenuCloned.querySelector('#real-goods-menu');
 
-              }
+                if (e.target.value === 'digital') {
+                  digitalMenu.toggleAttribute('hidden', !e.target.checked);
+                } else if (e.target.value === 'real') {
+                  realGoodsMenu.toggleAttribute('hidden', !e.target.checked);
+                }
+              };
+
               stockMenuCloned.querySelectorAll('input[type="radio"][name="choose-goods-type"]').forEach(e => e.addEventListener('change', handleTypeChange));
+
 
             }
 
