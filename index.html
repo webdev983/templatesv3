@@ -6279,7 +6279,7 @@ overflow: auto;">
         // Start traversing the JSON object
 
         if (combinations === 1 || forms.length ===1) {
-          const prices = Array.from(priceItems[0].children).map(e => parseInt(e.textContent))
+          const prices = Array.from(priceItems[0].children).map(e => parseInt(e.textContent)).filter(e=>e)
           delete json['offers-aggregate']
           json['offers-single'] && (json.offers = { ...json['offers-single'], price: Math.min(...prices) })
           delete json['offers-single']
