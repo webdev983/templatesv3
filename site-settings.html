@@ -147,12 +147,12 @@
 
     }
     const getSite = async () => {
-      const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${site}:creds`)
+      const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${site.toLowerCase()}:creds`)
       response = await res.json()
       console.log('1' + JSON.stringify(response))
       if (!response) {
         response = {
-          id: site,
+          id: site.toLowerCase(),
           sk: 'creds',
           access_key: 'your_access_key',
           secret_key: 'your_secret_key',
@@ -168,7 +168,7 @@
         })
 
       }
-      response.id = site
+      response.id = site.toLowerCase()
       // Get references to the HTML elements
       const awsIdElement = document.getElementById('aws-id');
       const awsSecretElement = document.getElementById('aws-secret');
@@ -185,12 +185,12 @@
 
     }
     const getSitePP = async () => {
-      const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${site}:pp_creds`)
+      const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${site.toLowerCase()}:pp_creds`)
       pp_response = await res.json()
       console.log('1' + JSON.stringify(pp_response))
       if (!pp_response) {
         pp_response = {
-          id: site,
+          id: site.toLowerCase(),
           sk: 'pp_creds',
           pp_id: 'pp_id',
           pp_secret: 'pp_secret',
@@ -209,7 +209,7 @@
         })
 
       }
-      pp_response.id = site
+      pp_response.id = site.toLowerCase()
       // Get references to the HTML elements
       const pp_id = document.getElementById('pp-id');
       const secret = document.getElementById('pp-secret');
