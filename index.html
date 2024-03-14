@@ -5922,7 +5922,7 @@ overflow: auto;">
           cloned.querySelector('#sku-attribute-value').textContent = 'Solo'
           cloned.querySelector('#sku-qty').textContent = items[0].qty || 0
           parent.appendChild(cloned)
-          cloned.addEventListener('click', e=>handleSkuItemClick(cloned,items[0]))
+          cloned.addEventListener('click', e=>handleSkuItemClick(cloned,items[0],sku))
         }
         getElementById1("sku-list").appendChild(cloned1)
         el.forEach(e => e.remove())
@@ -6881,7 +6881,7 @@ overflow: auto;">
       };
       return resultList
     }
-    const handleSkuItemClick = (cloned,item) => {
+    const handleSkuItemClick = (cloned,item,sku) => {
       if (!cloned.nextElementSibling?.id.startsWith('stock-menu')) {
         const stockMenuCloned = document.getElementById('stock-menu').cloneNode(true)
         stockMenuCloned.id = stockMenuCloned.id + ';' + item.sk.replace('qty;', '')
@@ -6973,7 +6973,7 @@ overflow: auto;">
         cloned.querySelector('#sku-attribute-value').textContent = 'Solo'
         cloned.querySelector('#sku-qty').textContent = items[0].qty || 0
         parent.appendChild(cloned)
-        cloned.addEventListener('click', e=>handleSkuItemClick(cloned,items[0]))
+        cloned.addEventListener('click', e=>handleSkuItemClick(cloned,items[0],sku))
       }
       getElementById1("sku-list").appendChild(cloned1)
       el.forEach(e => e.remove())
