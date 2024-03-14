@@ -6767,6 +6767,9 @@ overflow: auto;">
           sk: 'qty;' + combination,
           qty:0
         }
+        if(combinations.length ===1){
+          item.sk ="qty;solo"
+        }
         const existing = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/' + value + ':' + item.sk)
           .then(response => response.json())
         if (!existing) {
