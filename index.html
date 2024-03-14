@@ -275,8 +275,8 @@ overflow: auto;">
       <button style="margin-right:5px; margin-top: 5px; margin-bottom: 5px;" class="b-3"
         onclick="cancel(event)">❌</button>
       <br>
-      <label class="l-3"><input type="radio" name="choose-goods-type" checked/>📟 Digital</label>
-      <label class="l-3"><input type="radio" name="choose-goods-type"/>📦 Real</label>
+      <label class="l-3"><input type="radio" id="digital-good" name="choose-goods-type" checked />📟 Digital</label>
+      <label class="l-3"><input type="radio" name="choose-goods-type" id="real-good" />📦 Real</label>
       <div id="digital-menu" style="margin-top: 10px;">
         <button class="b-3">➕ Add</button>
         <button class="b-3">🔢 Qty</button>
@@ -6909,7 +6909,28 @@ overflow: auto;">
             if (!cloned.nextElementSibling?.id.startsWith('stock-menu')) {
               const stockMenuCloned = document.getElementById('stock-menu').cloneNode(true)
               stockMenuCloned.id = stockMenuCloned.id + ';' + item.sk.replace('qty;', '')
-              cloned.insertAdjacentElement('afterend',stockMenuCloned)
+              cloned.insertAdjacentElement('afterend', stockMenuCloned)
+              const handleTypeChange = (e) => {
+                if (e.target.id === 'digital-good') {
+                  if (e.target.checked) {
+                    stockMenuCloned.querySelector('#digital-menu').removeAttribute('hidden')
+                  }
+                  else {
+                    stockMenuCloned.querySelector('#digital-menu').setAttribute('hidden','')
+                  }
+                }
+                if (e.target.id === 'real-good') {
+                  if (e.target.checked) {
+                    stockMenuCloned.querySelector('#real-goods-menu').removeAttribute('hidden')
+                  }
+                  else {
+                    stockMenuCloned.querySelector('#real-goods-menu').setAttribute('hidden','')
+                  }
+                }
+
+              }
+              stockMenuCloned.querySelectorAll('input[type="radio"][name="choose-goods-type"]').forEach(e => e.addEventListener('change', handleTypeChange));
+
             }
 
           }
