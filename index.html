@@ -5912,64 +5912,7 @@ overflow: auto;">
             const cloned = el[0].cloneNode(true)
             cloned.querySelector('#sku-attribute-value').textContent = item.sk.replace('qty;', '')
             parent.appendChild(cloned)
-            const handleSkuItemClick = (event) => {
-            if (!cloned.nextElementSibling?.id.startsWith('stock-menu')) {
-              const stockMenuCloned = document.getElementById('stock-menu').cloneNode(true)
-              stockMenuCloned.id = stockMenuCloned.id + ';' + item.sk.replace('qty;', '')
-              cloned.insertAdjacentElement('afterend', stockMenuCloned)
-              const handleTypeChange = (e) => {
-                if (e.target.id === 'digital-good') {
-                  if (e.target.checked) {
-                    stockMenuCloned.parentNode.querySelector('#digital-menu').removeAttribute('hidden')
-                    stockMenuCloned.parentNode.querySelector('#real-goods-menu').setAttribute('hidden', '')
-                  }
-                  else {
-                    stockMenuCloned.parentNode.querySelector('#digital-menu').setAttribute('hidden', '')
-                    stockMenuCloned.parentNode.querySelector('#real-goods-menu').removeAttribute('hidden')
-                  }
-                }
-                if (e.target.id === 'real-good') {
-                  if (e.target.checked) {
-                    stockMenuCloned.parentNode.querySelector('#real-goods-menu').removeAttribute('hidden')
-                    stockMenuCloned.parentNode.querySelector('#digital-menu').setAttribute('hidden', '')
-                  }
-                  else {
-                    stockMenuCloned.parentNode.querySelector('#real-goods-menu').setAttribute('hidden', '')
-                    stockMenuCloned.parentNode.querySelector('#digital-menu').removeAttribute('hidden')
-                  }
-                }
-
-              }
-              stockMenuCloned.querySelectorAll('input[type="radio"][name="choose-goods-type"]').forEach(e => e.addEventListener('change', handleTypeChange));
-              const qtyMenu = document.getElementById('stock-qty')
-
-              const handleStockQtyClick = (e) => {
-                if (!stockMenuCloned.nextElementSibling?.id.startsWith('stock-qty')) {
-                  const clonedQty = qtyMenu.cloneNode(true)
-                  clonedQty.id = clonedQty.id + ';' + sku
-                  item.qty && (clonedQty.querySelector('input').value = item.qty)
-                  const handleUpdateQty = (e) => {
-                    const newItem = { ...item }
-                    newItem.qty = clonedQty.querySelector('input').value
-                    fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                      method: 'POST',
-                      body: JSON.stringify(newItem),
-                    });
-                    cloned.querySelector('#sku-qty').textContent = newItem.qty
-                  }
-                  clonedQty.querySelector('#update-qty').addEventListener('click', handleUpdateQty)
-                  
-                  stockMenuCloned.insertAdjacentElement('afterend', clonedQty)
-
-                }
-              }
-              stockMenuCloned.querySelectorAll('[stock-qty]').forEach(e => {
-                e.addEventListener("click", handleStockQtyClick)
-              })
-            }
-
-          }
-          cloned.addEventListener('click', handleSkuItemClick)
+            cloned.addEventListener('click', e=>handleSkuItemClick(cloned,item))
           }
 
 
@@ -5977,7 +5920,9 @@ overflow: auto;">
         else {
           const cloned = el[0].cloneNode(true)
           cloned.querySelector('#sku-attribute-value').textContent = 'Solo'
+          cloned.querySelector('#sku-qty').textContent = items[0].qty || 0
           parent.appendChild(cloned)
+          cloned.addEventListener('click', e=>handleSkuItemClick(cloned,items[0]))
         }
         getElementById1("sku-list").appendChild(cloned1)
         el.forEach(e => e.remove())
@@ -6765,10 +6710,10 @@ overflow: auto;">
         const item = {
           id: value,
           sk: 'qty;' + combination,
-          qty:0
+          qty: 0
         }
-        if(combinations.length ===1){
-          item.sk ="qty;solo"
+        if (combinations.length === 1) {
+          item.sk = "qty;solo"
         }
         const existing = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/' + value + ':' + item.sk)
           .then(response => response.json())
@@ -6936,6 +6881,63 @@ overflow: auto;">
       };
       return resultList
     }
+    const handleSkuItemClick = (cloned,item) => {
+      if (!cloned.nextElementSibling?.id.startsWith('stock-menu')) {
+        const stockMenuCloned = document.getElementById('stock-menu').cloneNode(true)
+        stockMenuCloned.id = stockMenuCloned.id + ';' + item.sk.replace('qty;', '')
+        cloned.insertAdjacentElement('afterend', stockMenuCloned)
+        const handleTypeChange = (e) => {
+          if (e.target.id === 'digital-good') {
+            if (e.target.checked) {
+              stockMenuCloned.parentNode.querySelector('#digital-menu').removeAttribute('hidden')
+              stockMenuCloned.parentNode.querySelector('#real-goods-menu').setAttribute('hidden', '')
+            }
+            else {
+              stockMenuCloned.parentNode.querySelector('#digital-menu').setAttribute('hidden', '')
+              stockMenuCloned.parentNode.querySelector('#real-goods-menu').removeAttribute('hidden')
+            }
+          }
+          if (e.target.id === 'real-good') {
+            if (e.target.checked) {
+              stockMenuCloned.parentNode.querySelector('#real-goods-menu').removeAttribute('hidden')
+              stockMenuCloned.parentNode.querySelector('#digital-menu').setAttribute('hidden', '')
+            }
+            else {
+              stockMenuCloned.parentNode.querySelector('#real-goods-menu').setAttribute('hidden', '')
+              stockMenuCloned.parentNode.querySelector('#digital-menu').removeAttribute('hidden')
+            }
+          }
+
+        }
+        stockMenuCloned.querySelectorAll('input[type="radio"][name="choose-goods-type"]').forEach(e => e.addEventListener('change', handleTypeChange));
+        const qtyMenu = document.getElementById('stock-qty')
+
+        const handleStockQtyClick = (e) => {
+          if (!stockMenuCloned.nextElementSibling?.id.startsWith('stock-qty')) {
+            const clonedQty = qtyMenu.cloneNode(true)
+            clonedQty.id = clonedQty.id + ';' + sku
+            item.qty && (clonedQty.querySelector('input').value = item.qty)
+            const handleUpdateQty = (e) => {
+              const newItem = { ...item }
+              newItem.qty = clonedQty.querySelector('input').value
+              fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                method: 'POST',
+                body: JSON.stringify(newItem),
+              });
+              cloned.querySelector('#sku-qty').textContent = newItem.qty
+            }
+            clonedQty.querySelector('#update-qty').addEventListener('click', handleUpdateQty)
+
+            stockMenuCloned.insertAdjacentElement('afterend', clonedQty)
+
+          }
+        }
+        stockMenuCloned.querySelectorAll('[stock-qty]').forEach(e => {
+          e.addEventListener("click", handleStockQtyClick)
+        })
+      }
+
+    }
 
     const showSku = async (sku) => {
 
@@ -6960,64 +6962,7 @@ overflow: auto;">
           cloned.querySelector('#sku-attribute-value').textContent = item.sk.replace('qty;', '')
           cloned.querySelector('#sku-qty').textContent = item.qty || 0
           parent.appendChild(cloned)
-          const handleSkuItemClick = (event) => {
-            if (!cloned.nextElementSibling?.id.startsWith('stock-menu')) {
-              const stockMenuCloned = document.getElementById('stock-menu').cloneNode(true)
-              stockMenuCloned.id = stockMenuCloned.id + ';' + item.sk.replace('qty;', '')
-              cloned.insertAdjacentElement('afterend', stockMenuCloned)
-              const handleTypeChange = (e) => {
-                if (e.target.id === 'digital-good') {
-                  if (e.target.checked) {
-                    stockMenuCloned.parentNode.querySelector('#digital-menu').removeAttribute('hidden')
-                    stockMenuCloned.parentNode.querySelector('#real-goods-menu').setAttribute('hidden', '')
-                  }
-                  else {
-                    stockMenuCloned.parentNode.querySelector('#digital-menu').setAttribute('hidden', '')
-                    stockMenuCloned.parentNode.querySelector('#real-goods-menu').removeAttribute('hidden')
-                  }
-                }
-                if (e.target.id === 'real-good') {
-                  if (e.target.checked) {
-                    stockMenuCloned.parentNode.querySelector('#real-goods-menu').removeAttribute('hidden')
-                    stockMenuCloned.parentNode.querySelector('#digital-menu').setAttribute('hidden', '')
-                  }
-                  else {
-                    stockMenuCloned.parentNode.querySelector('#real-goods-menu').setAttribute('hidden', '')
-                    stockMenuCloned.parentNode.querySelector('#digital-menu').removeAttribute('hidden')
-                  }
-                }
-
-              }
-              stockMenuCloned.querySelectorAll('input[type="radio"][name="choose-goods-type"]').forEach(e => e.addEventListener('change', handleTypeChange));
-              const qtyMenu = document.getElementById('stock-qty')
-
-              const handleStockQtyClick = (e) => {
-                if (!stockMenuCloned.nextElementSibling?.id.startsWith('stock-qty')) {
-                  const clonedQty = qtyMenu.cloneNode(true)
-                  clonedQty.id = clonedQty.id + ';' + sku
-                  item.qty && (clonedQty.querySelector('input').value = item.qty)
-                  const handleUpdateQty = (e) => {
-                    const newItem = { ...item }
-                    newItem.qty = clonedQty.querySelector('input').value
-                    fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                      method: 'POST',
-                      body: JSON.stringify(newItem),
-                    });
-                    cloned.querySelector('#sku-qty').textContent = newItem.qty
-                  }
-                  clonedQty.querySelector('#update-qty').addEventListener('click', handleUpdateQty)
-                  
-                  stockMenuCloned.insertAdjacentElement('afterend', clonedQty)
-
-                }
-              }
-              stockMenuCloned.querySelectorAll('[stock-qty]').forEach(e => {
-                e.addEventListener("click", handleStockQtyClick)
-              })
-            }
-
-          }
-          cloned.addEventListener('click', handleSkuItemClick)
+          cloned.addEventListener('click', e=>handleSkuItemClick(cloned,item))
         }
 
 
@@ -7026,7 +6971,9 @@ overflow: auto;">
         console.log('showing sku')
         const cloned = el[0].cloneNode(true)
         cloned.querySelector('#sku-attribute-value').textContent = 'Solo'
+        cloned.querySelector('#sku-qty').textContent = items[0].qty || 0
         parent.appendChild(cloned)
+        cloned.addEventListener('click', e=>handleSkuItemClick(cloned,items[0]))
       }
       getElementById1("sku-list").appendChild(cloned1)
       el.forEach(e => e.remove())
