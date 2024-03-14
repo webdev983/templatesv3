@@ -63,17 +63,17 @@
       </select>
 
       <li><label class="l-3" style="user-select: none; margin-right: 5px;">🆔</label><label class="l-3"
-          id="pp-id">-</label></li>
+          id="pp-id" ondblclick="onDoubleClick(event,'pp_id',true)">-</label></li>
       <li><label class="l-3" style="user-select: none; margin-right: 5px;">🔑</label><label class="l-3"
-          id="pp-secret">-</label></li>
+          id="pp-secret" ondblclick="onDoubleClick(event,'pp_secret',true)">-</label></li>
       <li><label class="l-3" style="user-select: none; margin-right: 5px;"> 🌐</label><label class="l-3"
-          id="pp-domain">-</label></li>
+          id="pp-domain" ondblclick="onDoubleClick(event,'pp_domain',true)">-</label></li>
       <li><label class="l-3" style="user-select: none; margin-right: 5px;">🛒</label><label class="l-3"
-          id="pp-cart">-</label></li>
+          id="pp-cart" ondblclick="onDoubleClick(event,'pp_cart',true)">-</label></li>
       <li><label class="l-3" style="user-select: none; margin-right: 5px;">✅</label><label class="l-3"
-          id="pp-success">-</label></li>
+          id="pp-success" ondblclick="onDoubleClick(event,'pp_success',true)">-</label></li>
       <li><label class="l-3" style="user-select: none; margin-right: 5px;">❌</label><label class="l-3"
-          id="pp-fail">-</label></li>
+          id="pp-fail" ondblclick="onDoubleClick(event,'pp_fail',true)">-</label></li>
 
 
 
@@ -87,7 +87,7 @@
     const site = urlSearchParams.get('site');
     let response
     let pp_response
-    function onDoubleClick(e, name) {
+    function onDoubleClick(e, name,pp) {
       var target = e.target;
 
       // Prevent the default double-click behavior
@@ -105,7 +105,7 @@
         // Call the save function when the element loses focus
 
         if (textContent) {
-          save(name, blurEvent.target.textContent);
+          pp ? savePP(name, blurEvent.target.textContent) : save(name, blurEvent.target.textContent);
         }
 
         // Remove the 'contenteditable' attribute after blur
@@ -127,7 +127,20 @@
         },
         body: JSON.stringify(response),
       });
-      console.log(JSON.stringify(await res1.json()))
+      
+    }
+    const savePP = async (name, text) => {
+      // Create a new object to only send the updated field to the server
+      pp_response[name] = text
+
+      const res1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(pp_response),
+      });
+      
     }
     const getSite = async () => {
       const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${site}:creds`)
