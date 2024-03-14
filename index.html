@@ -6906,7 +6906,7 @@ overflow: auto;">
           cloned.querySelector('#sku-attribute-value').textContent = item.sk.replace('qty;', '')
           parent.appendChild(cloned)
           const handleSkuItemClick = (event) => {
-            if (!cloned.nextElementId.startsWith('stock-menu')) {
+            if (!cloned.nextElementSibling?.id.startsWith('stock-menu')) {
               const stockMenuCloned = document.getElementById('stock-menu').cloneNode(true)
               stockMenuCloned.id = stockMenuCloned.id + ';' + item.sk.replace('qty;', '')
               cloned.insertAdjacentElement('afterend',stockMenuCloned)
