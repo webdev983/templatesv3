@@ -280,7 +280,7 @@ overflow: auto;">
       <label class="l-3"><input type="radio" name="choose-goods-type" id="real-good" value="real" />📦 Real</label>
       <div id="digital-menu" style="margin-top: 10px;">
         <button class="b-3">➕ Add</button>
-        <button stock-qty  class="b-3">🔢 Qty</button>
+        <button stock-qty class="b-3">🔢 Qty</button>
         <button class="b-3">🔎 View</button>
         <button class="b-3">🏷️ Label</button>
       </div>
@@ -317,7 +317,7 @@ overflow: auto;">
     <div id="stock-qty" data-menu style="margin-bottom: 30px; ">
       <button onclick="cancel(event)" class="b-4" style="margin-top:5px; margin-bottom: 5px;">❌</button>
       <br>
-      <button class="b-4">💾 Update</button>
+      <button id="update-qty" class="b-4">💾 Update</button>
       <input type="number" placeholder="⚖️ Qty" class="input-2" value="0" style=" width: 50px;">
     </div>
 
@@ -6957,17 +6957,28 @@ overflow: auto;">
               }
               stockMenuCloned.querySelectorAll('input[type="radio"][name="choose-goods-type"]').forEach(e => e.addEventListener('change', handleTypeChange));
               const qtyMenu = document.getElementById('stock-qty')
-              
-              const handleStockQtyClick = (e)=>{
+
+              const handleStockQtyClick = (e) => {
                 if (!stockMenuCloned.nextElementSibling?.id.startsWith('stock-qty')) {
                   const clonedQty = qtyMenu.cloneNode(true)
-                  clonedQty.id = clonedQty.id+';'+sku
+                  clonedQty.id = clonedQty.id + ';' + sku
+                  item.qty && (clonedQty.querySelector('input').value = item.qty)
+                  const handleUpdateQty = (e) => {
+                    const newItem = { ...item }
+                    newItem.qty = clonedQty.querySelector('input').value
+                    fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                      method: 'POST',
+                      body: JSON.stringify(newItem),
+                    });
+                  }
+                  clonedQty.querySelector('#update-qty').addEventListener('click', handleUpdateQty)
+
                   stockMenuCloned.insertAdjacentElement('afterend', clonedQty)
 
                 }
               }
-              stockMenuCloned.querySelectorAll('[stock-qty]').forEach(e=>{
-                e.addEventListener("click",handleStockQtyClick)
+              stockMenuCloned.querySelectorAll('[stock-qty]').forEach(e => {
+                e.addEventListener("click", handleStockQtyClick)
               })
             }
 
