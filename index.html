@@ -6989,7 +6989,7 @@ overflow: auto;">
           if (!stockMenuCloned.nextElementSibling?.id.startsWith('view-stock')) {
             const clonedViewStock = viewStockMenu.cloneNode(true)
             clonedViewStock.id = clonedViewStock.id + ';' + sku
-            const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${item.id}&sk=${'stock-item;' + variant}&startsWith=true`
+            const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${item.id}&sk=${'stock-item;' + variant}&startsWith=true&descending=true`
             const res =await fetch(url, {
               method: 'GET',
               headers: {
@@ -6997,10 +6997,10 @@ overflow: auto;">
               },
             }).then(el => el.json())
             console.log(JSON.stringify(res))
-            const stockItem = document.querySelector('#stock-item')
+            const stockItem0 = getElementById1('stock-item')
             const table = clonedViewStock.querySelector('#stock-table-body')
             for (const item of res.items){
-              const clonedStockItem = stockItem.cloneNode(true)
+              const clonedStockItem = stockItem0.cloneNode(true)
               clonedStockItem.querySelector('#stock-item-value').textContent = item.lsi1.split(':')[1]
               clonedStockItem.querySelector('#stock-item-status').textContent = item.stockItem.split(';')[1].split(':')[0]
               table.append(clonedStockItem)
