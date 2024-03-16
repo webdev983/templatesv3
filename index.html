@@ -6990,15 +6990,16 @@ overflow: auto;">
             const clonedViewStock = viewStockMenu.cloneNode(true)
             clonedViewStock.id = clonedViewStock.id + ';' + sku
 
-            const { items } = fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${item.id}&sk=${'stock-item;' + variant}&startsWith=true`, {
+            const res = fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${item.id}&sk=${'stock-item;' + variant}&startsWith=true`, {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
               },
             }).then(e => e.json())
+            console.log(JSON.stringify(res))
             const stockItem =document.getElementById('stock-item')
             const table = clonedViewStock.querySelector('#stock-table-body')
-            for (const item of items){
+            for (const item of res.items){
               const clonedStockItem = stockItem.cloneNode(true)
               clonedStockItem.querySelector('#stock-item-value').textContent = item.lsi1.split(':')[1]
               clonedStockItem.querySelector('#stock-item-status').textContent = item.stockItem.split(';')[1].split(':')[0]
