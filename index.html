@@ -261,13 +261,7 @@ overflow: auto;">
 
 
   <div hidden>
-    <tr id="stock-item" stockItem>
-      <td><span class="l-4" style="user-select: none;">🔑</span><span class="l-4" id="stock-item-value"></span>
-      </td>
-      <td><span class="l-4" style="user-select: none;">👨</span><span class="l-4" id="stock-item-status"><span>
-      </td>
-      </td>
-    </tr>
+    
     <div id="add-anchor" data-menu style="margin-bottom: 30px; ">
       <button onclick="cancel(event)" class="b-4" style="margin-bottom: 5px;">❌</button>
       <br>
@@ -300,7 +294,13 @@ overflow: auto;">
 
       <table class="table-2 table-row-number-2">
         <tbody id="stock-table-body">
-          
+          <tr id="stock-item" hidden stockItem>
+            <td><span class="l-4" style="user-select: none;">🔑</span><span class="l-4" id="stock-item-value"></span>
+            </td>
+            <td><span class="l-4" style="user-select: none;">👨</span><span class="l-4" id="stock-item-status"><span>
+            </td>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -7004,6 +7004,7 @@ overflow: auto;">
               const clonedStockItem = stockItem0.cloneNode(true)
               const key =item.lsi1.split(':')[1]
               clonedStockItem.id = clonedStockItem.id+';'+key
+              clonedStockItem.removeAttribute('hidden')
               clonedStockItem.querySelector('#stock-item-value').textContent = key
               clonedStockItem.querySelector('#stock-item-status').textContent = item.stockItem.split(';')[1].split(':')[0]
               table.append(clonedStockItem)
