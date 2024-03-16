@@ -261,7 +261,13 @@ overflow: auto;">
 
 
   <div hidden>
-
+    <tr id="stock-item">
+      <td><span class="l-4" style="user-select: none;">🔑</span><span class="l-4" id="stock-item-value"></span>
+      </td>
+      <td><span class="l-4" style="user-select: none;">👨</span><span class="l-4" id="stock-item-status"><span>
+      </td>
+      </td>
+    </tr>
     <div id="add-anchor" data-menu style="margin-bottom: 30px; ">
       <button onclick="cancel(event)" class="b-4" style="margin-bottom: 5px;">❌</button>
       <br>
@@ -281,7 +287,7 @@ overflow: auto;">
       <div id="digital-menu" style="margin-top: 10px;">
         <button add-stock class="b-3">➕ Add</button>
         <button stock-qty class="b-3">🔢 Qty</button>
-        <button class="b-3">🔎 View</button>
+        <button view-stock class="b-3">🔎 View</button>
         <button class="b-3">🏷️ Label</button>
       </div>
       <div hidden id="real-goods-menu">
@@ -293,14 +299,8 @@ overflow: auto;">
       <button class="b-3" onclick="cancel(event)" style="margin-top: 10px; margin-bottom: 5px;">❌</button>
 
       <table class="table-2 table-row-number-2">
-        <tbody>
-          <tr id="stock-item">
-            <td><span class="l-4" style="user-select: none;">🔑</span><span class="l-4" id="stock-item-value"></span>
-            </td>
-            <td><span class="l-4" style="user-select: none;">👨</span><span class="l-4" id="stock-item-status"><span>
-            </td>
-            </td>
-          </tr>
+        <tbody id="stock-table-body">
+          
         </tbody>
       </table>
     </div>
@@ -6889,7 +6889,8 @@ overflow: auto;">
       return resultList
     }
     const handleSkuItemClick = (cloned, item, sku) => {
-      let newItem = {...item}
+      let newItem = { ...item }
+      const variant = item.sk.replace('qty;', '')
       if (!cloned.nextElementSibling?.id.startsWith('stock-menu')) {
         const stockMenuCloned = document.getElementById('stock-menu').cloneNode(true)
         stockMenuCloned.id = stockMenuCloned.id + ';' + item.sk.replace('qty;', '')
@@ -6947,18 +6948,18 @@ overflow: auto;">
             const clonedAddStock = addStockMenu.cloneNode(true)
             clonedAddStock.id = clonedAddStock.id + ';' + sku
 
-            const handleSaveStock = async(e) => {
+            const handleSaveStock = async (e) => {
               const input = clonedAddStock.querySelector('#add-stock-input').value
-              const lines = input.split('\n').map(e => e.trim()).filter(line=>line)
+              const lines = input.split('\n').map(e => e.trim()).filter(line => line)
               for (const line of lines) {
-                const variant = item.sk.replace('qty;','')
+
                 const timeStamp = (new Date()).getTime().toString()
-                const ownerid= localStorage.getItem('ownerid')
+                const ownerid = localStorage.getItem('ownerid')
                 const body = {
-                  id:item.id,
-                  sk: 'stock-item;'+ variant+timeStamp,
-                  lsi1:timeStamp+':'+line,
-                  stockItem:`${ownerid};free:${item.id};${variant}`
+                  id: item.id,
+                  sk: 'stock-item;' + variant + timeStamp,
+                  lsi1: timeStamp + ':' + line,
+                  stockItem: `${ownerid};free:${item.id};${variant}`
 
                 }
                 const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -6967,7 +6968,7 @@ overflow: auto;">
                 });
               }
               //update qty
-              newItem.qty ? (newItem.qty += lines.length) :(newItem.qty  = lines.length)
+              newItem.qty ? (newItem.qty += lines.length) : (newItem.qty = lines.length)
               fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                 method: 'POST',
                 body: JSON.stringify(newItem),
@@ -6975,8 +6976,36 @@ overflow: auto;">
               cloned.querySelector('#sku-qty').textContent = newItem.qty
               clonedAddStock.remove()
             }
-            clonedAddStock.querySelectorAll('[save-stock]').forEach(e=>e.addEventListener("click", handleSaveStock))
+            clonedAddStock.querySelectorAll('[save-stock]').forEach(e => e.addEventListener("click", handleSaveStock))
+
+
             stockMenuCloned.insertAdjacentElement('afterend', clonedAddStock)
+            stockMenuCloned.remove()
+
+          }
+        }
+        const viewStockMenu = document.getElementById('view-stock')
+        const handleViewStock = (e) => {
+          if (!stockMenuCloned.nextElementSibling?.id.startsWith('view-stock')) {
+            const clonedViewStock = viewStockMenu.cloneNode(true)
+            clonedViewStock.id = clonedViewStock.id + ';' + sku
+
+            const { items } = fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${item.id}&sk=${'stock-item;' + variant}&startsWith=true`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(e => e.json())
+            const stockItem =document.getElementById('stock-item')
+            const table = clonedViewStock.querySelector('#stock-table-body')
+            for (const item of items){
+              const clonedStockItem = stockItem.cloneNode(true)
+              clonedStockItem.querySelector('#stock-item-value').textContent = item.lsi1.split(':')[1]
+              clonedStockItem.querySelector('#stock-item-status').textContent = item.stockItem.split(';')[1].split(':')[0]
+              table.append(clonedStockItem)
+            }
+
+            stockMenuCloned.insertAdjacentElement('afterend', clonedViewStock)
             stockMenuCloned.remove()
 
           }
@@ -6985,6 +7014,8 @@ overflow: auto;">
           e.addEventListener("click", handleStockQtyClick)
         })
         stockMenuCloned.querySelector('[add-stock]').addEventListener("click", handleAddStock)
+        stockMenuCloned.querySelector('[view-stock]').addEventListener("click", handleViewStock)
+
 
       }
 
