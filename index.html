@@ -328,9 +328,9 @@ overflow: auto;">
       <br>
       <button class="b-3" style="margin-bottom:7px; margin-right: 5px;">💾 Save</button>
       <br>
-      <textarea class="text1" placeholder=" 📦 insert digital goods 1 per line"></textarea>
+      <textarea id="add-stock-input" class="text1" placeholder=" 📦 insert digital goods 1 per line"></textarea>
       <br>
-      <button class="b-3" style="margin-top:5px;">💾 save</button>
+      <button id="save-stock" class="b-3" style="margin-top:5px;">💾 save</button>
     </div>
 
     <div id="gallery-menu-wrapper" data-menu>
@@ -675,18 +675,18 @@ overflow: auto;">
       clonedFieldset.querySelector('#upload-button').onclick = handleUpload1
       const id = pathItem.id
       let mergedItems = []
-      const res = await Promise.all([...Object.keys(cache),id].map(e=>fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${e}&sk=pics&startsWith=true`, {
+      const res = await Promise.all([...Object.keys(cache), id].map(e => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${e}&sk=pics&startsWith=true`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-      }).then(e=>e.json().then(({items})=>{
+      }).then(e => e.json().then(({ items }) => {
         mergedItems.push(...items)
       }))
       ))
-      
+
       let items = mergedItems
-      
+
       console.log('items' + JSON.stringify(items))
       const table = clonedFieldset.querySelector('#gallery-body');
       const templateRow = clonedFieldset.querySelector('#gallery-item');
@@ -5918,7 +5918,7 @@ overflow: auto;">
             const cloned = el[0].cloneNode(true)
             cloned.querySelector('#sku-attribute-value').textContent = item.sk.replace('qty;', '')
             parent.appendChild(cloned)
-            cloned.addEventListener('click', e=>handleSkuItemClick(cloned,item))
+            cloned.addEventListener('click', e => handleSkuItemClick(cloned, item))
           }
 
 
@@ -5928,7 +5928,7 @@ overflow: auto;">
           cloned.querySelector('#sku-attribute-value').textContent = 'Solo'
           cloned.querySelector('#sku-qty').textContent = items[0].qty || 0
           parent.appendChild(cloned)
-          cloned.addEventListener('click', e=>handleSkuItemClick(cloned,items[0],sku))
+          cloned.addEventListener('click', e => handleSkuItemClick(cloned, items[0], sku))
         }
         getElementById1("sku-list").appendChild(cloned1)
         el.forEach(e => e.remove())
@@ -6284,8 +6284,8 @@ overflow: auto;">
         let json = JSON.parse(schema.textContent)
         // Start traversing the JSON object
 
-        if (combinations === 1 || forms.length ===1) {
-          const prices = Array.from(priceItems[0].children).map(e => parseInt(e.textContent)).filter(e=>e)
+        if (combinations === 1 || forms.length === 1) {
+          const prices = Array.from(priceItems[0].children).map(e => parseInt(e.textContent)).filter(e => e)
           delete json['offers-aggregate']
           json['offers-single'] && (json.offers = { ...json['offers-single'], price: Math.min(...prices) })
           delete json['offers-single']
@@ -6888,7 +6888,7 @@ overflow: auto;">
       };
       return resultList
     }
-    const handleSkuItemClick = (cloned,item,sku) => {
+    const handleSkuItemClick = (cloned, item, sku) => {
       if (!cloned.nextElementSibling?.id.startsWith('stock-menu')) {
         const stockMenuCloned = document.getElementById('stock-menu').cloneNode(true)
         stockMenuCloned.id = stockMenuCloned.id + ';' + item.sk.replace('qty;', '')
@@ -6946,9 +6946,36 @@ overflow: auto;">
           if (!stockMenuCloned.nextElementSibling?.id.startsWith('add-stock-menu')) {
             const clonedAddStock = addStockMenu.cloneNode(true)
             clonedAddStock.id = clonedAddStock.id + ';' + sku
-            
-           
 
+            const handleSaveStock = async(e) => {
+              const input = clonedAddStock.querySelector('#add-stock-input').value
+              const lines = input.split('\n').map(e => e.trim()).filter(line=>line)
+              for (const line of lines) {
+                const variant = item.sk.replace('qty;','')
+                const timeStamp = (new Date()).getTime().toString()
+                const ownerid= localStorage.getItem('ownerid')
+                const body = {
+                  id:item.id,
+                  sk: 'stock-item;'+ variant+timeStamp,
+                  lsi1:timeStamp+':'+line,
+                  stockItem:`${ownerid};free:${item.id};${variant}`
+
+                }
+                const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/upload', {
+                  method: 'POST',
+                  body: JSON.stringify(body),
+                });
+              }
+              //update qty
+              const newItem = { ...item }
+              newItem.qty += lines.length
+              fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                method: 'POST',
+                body: JSON.stringify(newItem),
+              });
+              cloned.querySelector('#sku-qty').textContent = newItem.qty
+            }
+            clonedAddStock.querySelector('#save-stock').addEventListener("click", handleSaveStock)
             stockMenuCloned.insertAdjacentElement('afterend', clonedAddStock)
             stockMenuCloned.remove()
 
@@ -6958,7 +6985,7 @@ overflow: auto;">
           e.addEventListener("click", handleStockQtyClick)
         })
         stockMenuCloned.querySelector('[add-stock]').addEventListener("click", handleAddStock)
-        
+
       }
 
     }
@@ -6986,7 +7013,7 @@ overflow: auto;">
           cloned.querySelector('#sku-attribute-value').textContent = item.sk.replace('qty;', '')
           cloned.querySelector('#sku-qty').textContent = item.qty || 0
           parent.appendChild(cloned)
-          cloned.addEventListener('click', e=>handleSkuItemClick(cloned,item))
+          cloned.addEventListener('click', e => handleSkuItemClick(cloned, item))
         }
 
 
@@ -6997,7 +7024,7 @@ overflow: auto;">
         cloned.querySelector('#sku-attribute-value').textContent = 'Solo'
         cloned.querySelector('#sku-qty').textContent = items[0].qty || 0
         parent.appendChild(cloned)
-        cloned.addEventListener('click', e=>handleSkuItemClick(cloned,items[0],sku))
+        cloned.addEventListener('click', e => handleSkuItemClick(cloned, items[0], sku))
       }
       getElementById1("sku-list").appendChild(cloned1)
       el.forEach(e => e.remove())
