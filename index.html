@@ -6889,6 +6889,7 @@ overflow: auto;">
       return resultList
     }
     const handleSkuItemClick = (cloned, item, sku) => {
+      let newItem = {...item}
       if (!cloned.nextElementSibling?.id.startsWith('stock-menu')) {
         const stockMenuCloned = document.getElementById('stock-menu').cloneNode(true)
         stockMenuCloned.id = stockMenuCloned.id + ';' + item.sk.replace('qty;', '')
@@ -6925,7 +6926,6 @@ overflow: auto;">
             clonedQty.id = clonedQty.id + ';' + sku
             item.qty && (clonedQty.querySelector('input').value = item.qty)
             const handleUpdateQty = (e) => {
-              const newItem = { ...item }
               newItem.qty = clonedQty.querySelector('input').value
               fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                 method: 'POST',
@@ -6967,7 +6967,6 @@ overflow: auto;">
                 });
               }
               //update qty
-              const newItem = { ...item }
               newItem.qty ? (newItem.qty += lines.length) : lines.length
               fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                 method: 'POST',
