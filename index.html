@@ -6985,17 +6985,17 @@ overflow: auto;">
           }
         }
         const viewStockMenu = document.getElementById('view-stock')
-        const handleViewStock = (e) => {
+        const handleViewStock = async(e) => {
           if (!stockMenuCloned.nextElementSibling?.id.startsWith('view-stock')) {
             const clonedViewStock = viewStockMenu.cloneNode(true)
             clonedViewStock.id = clonedViewStock.id + ';' + sku
-
-            const res = fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${item.id}&sk=${'stock-item;' + variant}&startsWith=true`, {
+            const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${item.id}&sk=${'stock-item;' + variant}&startsWith=true`
+            const res =await fetch(url, {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
               },
-            }).then(e => e.json())
+            }).then(el => el.json())
             console.log(JSON.stringify(res))
             const stockItem =document.getElementById('stock-item')
             const table = clonedViewStock.querySelector('#stock-table-body')
