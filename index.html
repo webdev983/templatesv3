@@ -326,11 +326,11 @@ overflow: auto;">
       <br>
       <button class="b-3" onclick="cancel(event)" style="margin-bottom:7px; margin-right: 5px;">❌</button>
       <br>
-      <button class="b-3" style="margin-bottom:7px; margin-right: 5px;">💾 Save</button>
+      <button save-stock class="b-3" style="margin-bottom:7px; margin-right: 5px;">💾 Save</button>
       <br>
       <textarea id="add-stock-input" class="text1" placeholder=" 📦 insert digital goods 1 per line"></textarea>
       <br>
-      <button id="save-stock" class="b-3" style="margin-top:5px;">💾 save</button>
+      <button save-stock class="b-3" style="margin-top:5px;">💾 save</button>
     </div>
 
     <div id="gallery-menu-wrapper" data-menu>
@@ -6974,8 +6974,9 @@ overflow: auto;">
                 body: JSON.stringify(newItem),
               });
               cloned.querySelector('#sku-qty').textContent = newItem.qty
+              clonedAddStock.remove()
             }
-            clonedAddStock.querySelector('#save-stock').addEventListener("click", handleSaveStock)
+            clonedAddStock.querySelectorAll('[save-stock]').forEach(e=>e.addEventListener("click", handleSaveStock))
             stockMenuCloned.insertAdjacentElement('afterend', clonedAddStock)
             stockMenuCloned.remove()
 
