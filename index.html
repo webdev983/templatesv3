@@ -279,7 +279,7 @@ overflow: auto;">
         Digital</label>
       <label class="l-3"><input type="radio" name="choose-goods-type" id="real-good" value="real" />📦 Real</label>
       <div id="digital-menu" style="margin-top: 10px;">
-        <button class="b-3">➕ Add</button>
+        <button add-stock class="b-3">➕ Add</button>
         <button stock-qty class="b-3">🔢 Qty</button>
         <button class="b-3">🔎 View</button>
         <button class="b-3">🏷️ Label</button>
@@ -322,7 +322,7 @@ overflow: auto;">
     </div>
 
 
-    <div data-menu style="margin-bottom: 30px; ">
+    <div id="add-stock-menu" data-menu style="margin-bottom: 30px; ">
       <br>
       <button class="b-3" onclick="cancel(event)" style="margin-bottom:7px; margin-right: 5px;">❌</button>
       <br>
@@ -6941,9 +6941,24 @@ overflow: auto;">
 
           }
         }
+        const addStockMenu = document.getElementById('add-stock-menu')
+        const handleAddStock = (e) => {
+          if (!stockMenuCloned.nextElementSibling?.id.startsWith('add-stock-menu')) {
+            const clonedAddStock = addStockMenu.cloneNode(true)
+            clonedAddStock.id = clonedAddStock.id + ';' + sku
+            
+           
+
+            stockMenuCloned.insertAdjacentElement('afterend', clonedAddStock)
+            stockMenuCloned.remove()
+
+          }
+        }
         stockMenuCloned.querySelectorAll('[stock-qty]').forEach(e => {
           e.addEventListener("click", handleStockQtyClick)
         })
+        stockMenuCloned.querySelector('[add-stock]').addEventListener("click", handleAddStock)
+        
       }
 
     }
