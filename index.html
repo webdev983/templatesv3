@@ -6259,7 +6259,7 @@ overflow: auto;">
       for (let prop in obj) {
         if (typeof obj[prop] === "object") {
           removeSingleAtKey(obj[prop]); // Recursively call removeSingleAtKey for nested objects
-          if (prop !== 'shippingDestination' && Object.keys(obj[prop]).length === 1 && Object.keys(obj[prop])[0].startsWith("@")) {
+          if (Object.keys(obj[prop]).length === 1 && Object.keys(obj[prop])[0].startsWith("@")) {
             delete obj[prop]; // Delete the attribute if it has only one key starting with "@"
           }
         }
