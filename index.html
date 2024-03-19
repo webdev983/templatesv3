@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-US">
+
 <head>
   <link rel="stylesheet" href="css/right-click-menu.css" media="all">
   <link rel="stylesheet" href="css/buttons-and-menus.css" media="all">
@@ -263,7 +264,7 @@ overflow: auto;">
 
 
   <div hidden>
-    
+
     <div id="add-anchor" data-menu style="margin-bottom: 30px; ">
       <button onclick="cancel(event)" class="b-4" style="margin-bottom: 5px;">❌</button>
       <br>
@@ -6258,7 +6259,7 @@ overflow: auto;">
       for (let prop in obj) {
         if (typeof obj[prop] === "object") {
           removeSingleAtKey(obj[prop]); // Recursively call removeSingleAtKey for nested objects
-          if (prop!=='shippingDestination' && Object.keys(obj[prop]).length === 1 && Object.keys(obj[prop])[0].startsWith("@") ) {
+          if (prop !== 'shippingDestination' && Object.keys(obj[prop]).length === 1 && Object.keys(obj[prop])[0].startsWith("@")) {
             delete obj[prop]; // Delete the attribute if it has only one key starting with "@"
           }
         }
@@ -6271,7 +6272,22 @@ overflow: auto;">
       newJson = removeEmptyValues(json)
       return newJson
     }
-    const generateSchema = () => {
+    const getPageUrl = (url) => {
+      const [s, ...rest] = url.split('/')
+      if (rest[rest.length - 1].toLowerCase() === 'hub') {
+        if (rest[rest.length - 2].toLowerCase() === 'home') {
+          rest.pop()
+
+        }
+        rest[rest.length - 1] = 'index.html'
+      }
+      else {
+        rest[rest.length - 1] = rest[rest.length - 1] + '.html'
+      }
+      const key = rest.join('/').toLowerCase()
+      return 'https://'+s.toLowerCase()+'/'+key
+    }
+    const generateSchema = (url) => {
       const generatedPage = getElementById1('generated-page')
       const schemas = querySelectorAll1('script[data-transfer-receiver]')
 
@@ -6304,6 +6320,7 @@ overflow: auto;">
           delete json['offers-aggregate']
 
         }
+        json.offers.url = getPageUrl(url)
         traverseJSONAndUpdate(json, '', receiverName);
 
         json = cleanJson(json)
@@ -6479,7 +6496,7 @@ overflow: auto;">
       console.log('Publishing:', pagePathContent);
       const urlSearchParams = new URLSearchParams(window.location.search);
       let idFromLink = urlSearchParams.get('id');
-      generateSchema()
+      generateSchema(pagePathContent.split(';')[0])
       const html = getElementById1('generated-page').innerHTML
       const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/publishv2', {
         method: 'POST',
@@ -6988,24 +7005,24 @@ overflow: auto;">
         }
         const viewStockMenu = document.getElementById('view-stock')
         const stockItem0 = document.querySelector('[stockItem]')
-        const handleViewStock = async(e) => {
+        const handleViewStock = async (e) => {
           if (!stockMenuCloned.nextElementSibling?.id.startsWith('view-stock')) {
             const clonedViewStock = viewStockMenu.cloneNode(true)
             clonedViewStock.id = clonedViewStock.id + ';' + sku
             const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${item.id}&sk=${'stock-item;' + variant}&startsWith=true&descending=true&pageSize=100`
-            const res =await fetch(url, {
+            const res = await fetch(url, {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
               },
             }).then(el => el.json())
             console.log(JSON.stringify(res))
-            
+
             const table = clonedViewStock.querySelector('#stock-table-body')
-            for (const item of res.items){
+            for (const item of res.items) {
               const clonedStockItem = stockItem0.cloneNode(true)
-              const key =item.lsi1.split(':')[1]
-              clonedStockItem.id = clonedStockItem.id+';'+key
+              const key = item.lsi1.split(':')[1]
+              clonedStockItem.id = clonedStockItem.id + ';' + key
               clonedStockItem.removeAttribute('hidden')
               clonedStockItem.querySelector('#stock-item-value').textContent = key
               clonedStockItem.querySelector('#stock-item-status').textContent = item.stockItem.split(';')[1].split(':')[0]
@@ -8492,4 +8509,5 @@ overflow: auto;">
     }
   </script>
 </body>
+
 </html>
