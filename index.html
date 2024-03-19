@@ -6568,7 +6568,15 @@ overflow: auto;">
       }
     }
     document.addEventListener('DOMContentLoaded', loadFirst);
+    const handleWebPageMenu = ()=>{
+      const splited = pathItem.lsi1.split(';')[0].split('/')
+      if(splited[0].endsWith('SeoSitesHome.com') && splited[splited.length-1] ==='Hub'){
+        const menu = document.getElementById('web-page-menu')
+        menu.removeAttribute('hidden')
+      }
 
+      
+    }
     async function loadFirst() {
       var iframe = getElementById1("generated-page-iframe");
 
@@ -6629,7 +6637,7 @@ overflow: auto;">
       await handleHead()
       await handleSelectedDependeeChange()
       await handleDependency()
-
+      handleWebPageMenu()
 
       await handleItemLink()
       //first menu
