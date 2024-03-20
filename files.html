@@ -902,7 +902,7 @@
               console.log('path ' + path)
               for (const item of data.items) {
                 item.lsi1 = item.lsi1.replace(';publish:published', '')
-                if (item.lsi1.endsWith('Script') || item.lsi1.endsWith('Style') || item.lsi1.endsWith('Structure') || item.lsi1.endsWith('/Hub')) {
+                if (item.lsi1.endsWith('Script') || item.lsi1.endsWith('Style') || item.lsi1.endsWith('Structure') || item.lsi1.endsWith('/Hub') || item.lsi1.endsWith('-Seed')) {
                   replaceByIditems.push(item)
                 }
                 else if (item.lsi1.endsWith('-Content')) {
@@ -1071,7 +1071,7 @@
 
 
               }))
-
+              
               await Promise.all(doNotReplaceItems.map(async item => {
                 console.log('donotreplaceitem ' + item.lsi1)
                 const splited = item.lsi1.split('/')
