@@ -1082,11 +1082,28 @@ overflow: auto;">
         body: JSON.stringify({ site }),
       });
     }
+    function capitalizeAndReplaceHyphens(str) {
+      // Replace hyphens with spaces and split the string into words
+      const words = str.replace(/-/g, ' ').split(' ');
+
+      // Capitalize the first letter of each word
+      const capitalizedWords = words.map(word => {
+        // Capitalize the first letter of the word
+        const firstLetter = word.charAt(0).toUpperCase();
+        // Concatenate the first letter with the rest of the word
+        return firstLetter + word.slice(1);
+      });
+
+      // Join the words back together to form the modified string
+      const capitalizedString = capitalizedWords.join(' ');
+
+      return capitalizedString;
+    }
     const generateBreadCrumb = async (event) => {
-      const arr = pathItem.lsi1.split('/')
+      let arr = pathItem.lsi1.split('/')
       const site = arr[0]
       arr.shift()
-
+      arr = arr.map(e=>capitalizeAndReplaceHyphens(e))
 
       const index = arr.indexOf('Content');
       if (index !== -1) {
@@ -1124,6 +1141,7 @@ overflow: auto;">
       }
 
       let last = breadC[0].id + '-tree'
+      
       for (let i = 0; i < arr.length; i++) {
         const id = duplicateId(breadC[0].id).id
         actionObject = {
