@@ -107,7 +107,7 @@ overflow: auto;">
 
 
 
-    <div  id="web-page-menu"  hidden class="panel-2 horizontal-menu"  data-user data-style >
+    <div id="web-page-menu" hidden class="panel-2 horizontal-menu" data-user data-style>
       <button id="path-icon" class='b-1' onclick="publish(event)"
         style="user-select: none; margin-right: 7px;">📰</button>
       <button hidden class="b-1" id="published-invalidate" onclick="invalidate(event)"
@@ -6190,7 +6190,7 @@ overflow: auto;">
 
               });
               // Update the value of the array in the JSON object
-              json[key] = arrayOfObjects.filter(e=>e);
+              json[key] = arrayOfObjects.filter(e => e);
             }
           }
 
@@ -6286,7 +6286,7 @@ overflow: auto;">
       }
       rest.pop()
       const key = rest.join('/').toLowerCase()
-      return 'https://'+s.toLowerCase()+'/'+key
+      return 'https://' + s.toLowerCase() + '/' + key
     }
     const generateSchema = (url) => {
       const generatedPage = getElementById1('generated-page')
@@ -6306,7 +6306,7 @@ overflow: auto;">
         if (combinations === 1 || forms.length === 1) {
           const prices = Array.from(priceItems[0].children).map(e => parseInt(e.textContent)).filter(e => e)
           delete json['offers-aggregate']
-          json['offers-single'] && (json.offers = { ...json['offers-single'], price: Math.min(...prices),url : getPageUrl(url) })
+          json['offers-single'] && (json.offers = { ...json['offers-single'], price: Math.min(...prices), url: getPageUrl(url) })
           delete json['offers-single']
         }
         else {
@@ -6317,7 +6317,7 @@ overflow: auto;">
           prices = prices.filter(e => e)
           console.log('prices' + JSON.stringify(prices))
           delete json['offers-single']
-          json['offers-aggregate'] && (json.offers = { ...json['offers-aggregate'], lowPrice: Math.min(...prices), highPrice: Math.max(...prices), offerCount: combinations ,url : getPageUrl(url)})
+          json['offers-aggregate'] && (json.offers = { ...json['offers-aggregate'], lowPrice: Math.min(...prices), highPrice: Math.max(...prices), offerCount: combinations, url: getPageUrl(url) })
           delete json['offers-aggregate']
 
         }
@@ -6569,18 +6569,18 @@ overflow: auto;">
       }
     }
     document.addEventListener('DOMContentLoaded', loadFirst);
-    const handleWebPageMenu = ()=>{
+    const handleWebPageMenu = () => {
       const splited = pathItem.lsi1.split(';')[0].split('/')
       const menu = document.getElementById('web-page-menu')
-      if(splited[0].endsWith('SeoSitesHome.com') || splited[splited.length-1] ==='Hub'){
-       
+      if (splited[0].endsWith('SeoSitesHome.com') || splited[splited.length - 1] === 'Hub') {
+
         menu.removeAttribute('hidden')
       }
-      else{
-        menu.setAttribute('hidden','')
+      else {
+        menu.setAttribute('hidden', '')
       }
 
-      
+
     }
     async function loadFirst() {
       var iframe = getElementById1("generated-page-iframe");
@@ -6642,9 +6642,14 @@ overflow: auto;">
       await handleHead()
       await handleSelectedDependeeChange()
       await handleDependency()
-      handleWebPageMenu()
+      await handleWebPageMenu()
 
       await handleItemLink()
+      //dispatch event
+      const event = new CustomEvent("pageloaded")
+      document.dispatchEvent(event)
+
+
       //first menu
       let buttons = querySelectorAll1('button[data-element="code-tree-tag-name-button"]');
       /*
