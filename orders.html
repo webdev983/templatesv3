@@ -69,10 +69,10 @@
       }).then(e => e.json())
     for (const item of items){
       const cloned = orderItem.cloneNode(true)
-      cloned.querySelector('[data-order-date-value]').textContent =  item.lsi1.split(':')[0]
+      cloned.querySelector('[data-order-date-value]').textContent =  item.lsi1?.split(':')[0]
       cloned.querySelector('[data-order-site-value]').textContent = item.id
       cloned.querySelector('[data-order-total-value]').textContent = item.total + '$'
-      cloned.querySelector('[data-order-status-value]').textContent = item.lsi1.split(':')[1]
+      cloned.querySelector('[data-order-status-value]').textContent = item.lsi1?.split(':')[1]
       cloned.removeAttribute('hidden')
       orderItem.parentNode.append(cloned)
     }
