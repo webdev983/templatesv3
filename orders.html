@@ -67,7 +67,13 @@
           'Content-Type': 'application/json',
         },
       }).then(e => e.json())
-    for (const item of items){
+    for (const item1 of items){
+      const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item1.id}:${item1.sk}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(e => e.json())
       const cloned = orderItem.cloneNode(true)
       cloned.querySelector('[data-order-date-value]').textContent =  item.lsi1?.split(':')[0]
       cloned.querySelector('[data-order-site-value]').textContent = item.id
