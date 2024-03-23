@@ -15,78 +15,85 @@
     </div>
 
     <div class="panel left" style="margin-top: 10px;">
-        <a href="https://webdev983.github.io/templatesv3/files"><button class="b-1">📂</button></a>
+      <a href="https://webdev983.github.io/templatesv3/files"><button class="b-1">📂</button></a>
     </div>
-  
-    </aside>
-    <main class="main">
 
-      <div style="margin: 10px;">
-        <a href="https://webdev983.github.io/templatesv3/sites">
-          <button class="b-4" style="margin-right: 5px;"><label class="l-1">🌐</label>
-            <label class="l-2">Sites</label></button>  
-          </a>
+  </aside>
+  <main class="main">
 
-          <a href="https://webdev983.github.io/templatesv3/orders">
-            <button class="b-4 b-selected" style="margin-right: 5px;"><label class="l-1">🛍️</label>
-              <label class="l-2">Orders</label></button>  
-          </a>
+    <div style="margin: 10px;">
+      <a href="https://webdev983.github.io/templatesv3/sites">
+        <button class="b-4" style="margin-right: 5px;"><label class="l-1">🌐</label>
+          <label class="l-2">Sites</label></button>
+      </a>
 
-          <a href="https://webdev983.github.io/templatesv3/invoices">
-            <button class="b-4" style="margin-right: 5px;"><label class="l-1">🧾</label>
-              <label class="l-2">Invoices</label></button>  
-          </a>
+      <a href="https://webdev983.github.io/templatesv3/orders">
+        <button class="b-4 b-selected" style="margin-right: 5px;"><label class="l-1">🛍️</label>
+          <label class="l-2">Orders</label></button>
+      </a>
 
+      <a href="https://webdev983.github.io/templatesv3/invoices">
+        <button class="b-4" style="margin-right: 5px;"><label class="l-1">🧾</label>
+          <label class="l-2">Invoices</label></button>
+      </a>
+
+
+    </div>
+    <label class="l-3"><input type="radio" checked name="choose-type">💧 All</label>
+    <label class="l-3"><input type="radio" name="choose-type">🆕 New</label>
+    <label class="l-3"><input type="radio" name="choose-type">✅ Completed</label>
+    <label class="l-3"><input type="radio" name="choose-type">⚠️ Attention</label>
+
+    <table class="table-1 table-row-number" style="margin-left:25px; margin-top: 10px; ">
+      <tbody>
+        <tr hidden id="order-item">
+          <td data-order-date><span data-order-date-value class="l-3">🕒 24.09.20 23:59</span></td>
+          <td data-order-site><span data-order-site-value class="l-3">🌐 accbuddy.com</span></td>
+          <td data-order-total><span data-order-total-value class="l-3">💰100$</span></td>
+          <td data-order-status><span data-order-status-value class="l-3">🆕 new</span></td>
+        </tr>
+
+
+        <!--✅- ❌  ⚠️- 🛒 📦-->
+      </tbody>
+    </table>
+    <script>
+
+      const load = async () => {
+        const orderItem = document.getElementById("order-item")
+        const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=order:${localStorage.getItem('ownerid')}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(e => e.json())
+        const items2Promise = items.map(item1 => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item1.id}:${item1.sk}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(e => e.json()))
+        const items2 = await Promise.all(items2Promise)
+        for (const item of items2) {
+          const timestamp = new Date(parseInt(item.lsi1?.split(':')[0]));
+
+          const year = timestamp.getFullYear().toString().slice(-2); // Get last two digits of the year
+          const month = ('0' + (timestamp.getMonth() + 1)).slice(-2); // Add leading zero if needed
+          const day = ('0' + timestamp.getDate()).slice(-2); // Add leading zero if needed
+          const hours = ('0' + timestamp.getHours()).slice(-2); // Add leading zero if needed
+          const minutes = ('0' + timestamp.getMinutes()).slice(-2); // Add leading zero if needed
+
+          // Construct the formatted string
+          const formattedDate = `${year}-${month}-${day}. ${hours}:${minutes}`;
           
-        </div>
-          <label class="l-3"><input type="radio" checked name="choose-type">💧 All</label>
-          <label class="l-3"><input type="radio" name="choose-type">🆕 New</label>
-          <label class="l-3"><input type="radio" name="choose-type">✅ Completed</label>
-          <label class="l-3"><input type="radio" name="choose-type">⚠️ Attention</label>
-
-<table class="table-1 table-row-number" style="margin-left:25px; margin-top: 10px; ">
-  <tbody >
-    <tr hidden id="order-item">
-      <td data-order-date><span data-order-date-value class="l-3">🕒 24.09.20 23:59</span></td> 
-      <td data-order-site><span data-order-site-value class="l-3">🌐 accbuddy.com</span></td> 
-      <td data-order-total><span data-order-total-value class="l-3">💰100$</span></td> 
-      <td data-order-status><span data-order-status-value class="l-3">🆕 new</span></td> 
-    </tr>
-
-
-    <!--✅- ❌  ⚠️- 🛒 📦-->
-  </tbody>      
-</table>
-<script>
-  
-  const load = async()=>{
-    const orderItem =document.getElementById("order-item")
-    const {items} = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=order:${localStorage.getItem('ownerid')}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }).then(e => e.json())
-    const items2Promise = items.map(item1=>fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item1.id}:${item1.sk}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }).then(e => e.json()))
-    const items2 = await Promise.all(items2Promise)
-    for (const item of items2){
-      
-      const cloned = orderItem.cloneNode(true)
-      cloned.querySelector('[data-order-date-value]').textContent =  item.lsi1?.split(':')[0]
-      cloned.querySelector('[data-order-site-value]').textContent = item.id.split(':')[0]
-      cloned.querySelector('[data-order-total-value]').textContent = item.total + '$'
-      cloned.querySelector('[data-order-status-value]').textContent = item.lsi1?.split(':')[1]
-      cloned.removeAttribute('hidden')
-      orderItem.parentNode.append(cloned)
-    }
-  }
-  document.addEventListener('DOMContentLoaded', load)
-</script>
-
-
-
+          const cloned = orderItem.cloneNode(true)
+          cloned.querySelector('[data-order-date-value]').textContent =formattedDate
+            cloned.querySelector('[data-order-site-value]').textContent = item.id.split(':')[0]
+          cloned.querySelector('[data-order-total-value]').textContent = item.total + '$'
+          cloned.querySelector('[data-order-status-value]').textContent = item.lsi1?.split(':')[1]
+          cloned.removeAttribute('hidden')
+          orderItem.parentNode.append(cloned)
+        }
+      }
+      document.addEventListener('DOMContentLoaded', load)
+    </script>
