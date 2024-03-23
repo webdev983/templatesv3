@@ -6701,7 +6701,7 @@ overflow: auto;">
       }, 100);
       const urlParams = new URLSearchParams(window.location.search);
       const idFromQuery = urlParams.get('id');
-
+      const toPublish = urlParams.get('publish')
       if (idFromQuery) {
         // Change the id of the element with id "component-element"
         const compTree = getElementById1('components-tree')
@@ -6740,6 +6740,10 @@ overflow: auto;">
 
       await handleItemLink()
       //dispatch event
+
+      if(toPublish =="1"){
+        await publish()
+      }
       const event = new CustomEvent("pageloaded")
       document.dispatchEvent(event)
 
