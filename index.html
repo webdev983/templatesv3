@@ -1106,7 +1106,7 @@ overflow: auto;">
       return capitalizedString;
     }
     const generateBreadCrumb = async (event) => {
-      let arr = pathItem.lsi1.split('/')
+      let arr = pathItem.lsi1.split(';')[0].split('/')
       const site = arr[0]
       arr.shift()
       arr = arr.map(e=>capitalizeAndReplaceHyphens(e))
@@ -1114,6 +1114,10 @@ overflow: auto;">
       const index = arr.indexOf('Content');
       if (index !== -1) {
         arr.splice(index);
+      }
+      const index2 = arr.indexOf('Home');
+      if (index !== -1) {
+        arr.splice(index2,1);
       }
       const active = arr.pop()
 
