@@ -6850,6 +6850,7 @@ overflow: auto;">
                   if (tag === 'img') {
                     const src = child.getAttribute('src')
                     const alt = child.getAttribute('alt')
+
                     const response = await fetch(src);
                     const blob = await response.blob()
 
@@ -6860,6 +6861,16 @@ overflow: auto;">
 
                     console.log('path ' + path)
                     const id = pathItem.id
+                    const payload2 = {
+
+                      time: (new Date()).getTime().toString(),
+                      action: 'setAttribute',
+                      target_element: foundE.element.id + '-tree',
+                      key: 'alt',
+                      value: alt,
+
+                    }
+                    pushAction(payload2)
                     const payload = {
                       id,
                       sk: path
@@ -6909,6 +6920,16 @@ overflow: auto;">
                   if (tag === 'img') {
                     const src = child.getAttribute('src')
                     const alt = child.getAttribute('alt')
+                    const payload2 = {
+
+                      time: (new Date()).getTime().toString(),
+                      action: 'setAttribute',
+                      target_element: newId,
+                      key: 'alt',
+                      value: alt,
+
+                    }
+                    pushAction(payload2)
                     const response = await fetch(src);
                     const blob = await response.blob()
 
