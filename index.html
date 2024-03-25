@@ -6740,13 +6740,24 @@ overflow: auto;">
                 const value = element.getAttribute(`data-import-${attr}`)
                 return { tag: value, element, set: false, index: 1 }
               })
+              let imgLead = false
+              let pLead = false
               for (const child of Array.from(div.childNodes)) {
                 if (!child?.tagName) {
                   continue
                 }
 
                 const tag = child.tagName.toLowerCase()
-                const foundE = map.findLast(e => e.element.getAttribute(`data-import-${attr}`) === tag)
+                let foundE = map.findLast(e => e.element.getAttribute(`data-import-${attr}`) === tag)
+                if(tag ==='img'  && !imgLead){
+                  imgLead = true
+                  foundE = map.findLast(e => e.element.getAttribute(`data-import-${attr}`) === 'img-lead')
+                }
+                else if (tag ==="p" && !pLead){
+                  pLead = true
+                  foundE = map.findLast(e => e.element.getAttribute(`data-import-${attr}`) === 'p-lead')
+                }
+                
                 if (foundE.set === false) {
                   const el = {
                     time: (new Date()).getTime(),
