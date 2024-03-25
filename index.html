@@ -6727,7 +6727,7 @@ overflow: auto;">
         body: JSON.stringify(body),
       });
       const { src, data_src } = await response.json()
-      
+
       const payload = {
 
         time: (new Date()).getTime().toString(),
@@ -6838,13 +6838,28 @@ overflow: auto;">
                   pLead = true
                   foundE = map.findLast(e => e.element.getAttribute(`data-import-${attr}`) === 'p-lead')
                 }
-
+                if (foundE.hasAttribute('data-builder-import-product-specification')) {
+                  const stamp = new Date().getTime().toString()
+                  const body = {id:pathItem.sku,sk:'data-specification:'+stamp,value:child.textContent}
+                  const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                    method: 'POST',
+                    body: JSON.stringify(body),
+                  });
+                }
+                if (foundE.hasAttribute('data-builder-import-product-details')) {
+                  const stamp = new Date().getTime().toString()
+                  const body = {id:pathItem.sku,sk:'data-details:'+stamp,value:child.textContent}
+                  const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                    method: 'POST',
+                    body: JSON.stringify(body),
+                  });
+                }
                 if (foundE.set === false) {
                   if (tag === 'img') {
                     const src = child.getAttribute('src')
                     const alt = child.getAttribute('alt')
 
-                    const response = await fetch('https://corsproxy.io/?'+src);
+                    const response = await fetch('https://corsproxy.io/?' + src);
                     const blob = await response.blob()
 
                     const splited = src.split('/')
@@ -6902,7 +6917,7 @@ overflow: auto;">
                     last = map.findLastIndex(e => e.index === foundIndex)
                   }
                   */
-                  const lastElement = map[map.length-1].element
+                  const lastElement = map[map.length - 1].element
                   const newId = duplicateId(foundE.element.id).id
                   const actionObject = {
                     time: (new Date()).getTime(),
@@ -6924,7 +6939,7 @@ overflow: auto;">
 
                     }
                     pushAction(payload2)
-                    const response = await fetch('https://corsproxy.io/?'+src);
+                    const response = await fetch('https://corsproxy.io/?' + src);
                     const blob = await response.blob()
 
                     const splited = src.split('/')
@@ -7175,7 +7190,7 @@ overflow: auto;">
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({id:value,sk:'created:'+new Date().getTime().toString(),ownerUUID:'sku:'+localStorage.getItem('ownerid')}),
+        body: JSON.stringify({ id: value, sk: 'created:' + new Date().getTime().toString(), ownerUUID: 'sku:' + localStorage.getItem('ownerid') }),
       });
       //create sku
       for (const combination of combinations) {
