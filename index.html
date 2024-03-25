@@ -6840,7 +6840,7 @@ overflow: auto;">
                 }
                 if (foundE.hasAttribute('data-builder-import-product-specification')) {
                   const stamp = new Date().getTime().toString()
-                  const body = {id:pathItem.sku,sk:'data-specification:'+stamp,value:child.textContent}
+                  const body = {id:pathItem.sku,sk:'data-specification:'+stamp,value:child.textContent,site:pathItem.lsi1.split('/')[0]}
                   const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                     method: 'POST',
                     body: JSON.stringify(body),
@@ -6848,7 +6848,7 @@ overflow: auto;">
                 }
                 if (foundE.hasAttribute('data-builder-import-product-details')) {
                   const stamp = new Date().getTime().toString()
-                  const body = {id:pathItem.sku,sk:'data-details:'+stamp,value:child.textContent}
+                  const body = {id:pathItem.sku,sk:'data-details:'+stamp,value:child.textContent,site:pathItem.lsi1.split('/')[0]}
                   const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                     method: 'POST',
                     body: JSON.stringify(body),
