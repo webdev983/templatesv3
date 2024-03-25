@@ -7169,6 +7169,14 @@ overflow: auto;">
         },
         body: JSON.stringify(pathItem),
       });
+      // add sku 
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({id:value,sk:'created:'+new Date().getTime().toString(),ownerUUID:'sku:'+localStorage.getItem('ownerid')}),
+      });
       //create sku
       for (const combination of combinations) {
         const item = {
