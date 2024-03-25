@@ -6690,7 +6690,19 @@ overflow: auto;">
       }
     }
     const handleImportMenu = () => {
-      const elements = querySelectorAll1('[^="data-import-"]');
+      const generatedPage = getElementById1('generated-page')
+      const elements1 = generatedPageElement.querySelectorAll('*');
+
+      // Filter elements with attributes starting with "data-import-"
+      const elements = Array.from(elements).filter(element => {
+        const attributes = element.attributes;
+        for (let i = 0; i < attributes.length; i++) {
+          if (attributes[i].name.startsWith('data-import-')) {
+            return true;
+          }
+        }
+        return false;
+      });
       if (elements.length > 0 && pathItem.lsi1.split(';')[0].endsWith('-Content')) {
         const importMenu = getElementById1('import-menu')
 
@@ -6708,7 +6720,7 @@ overflow: auto;">
               attr = attribute.name.replace('data-import-', '')
             }
           });
-          if(attrList.includes(attr)){
+          if (attrList.includes(attr)) {
             continue
           }
           attrList.push(attr)
@@ -6724,24 +6736,24 @@ overflow: auto;">
               const div = document.createElement('div')
               div.innerHTML = inputValue
               const allAttrs = querySelectorAll1(`[data-import-${attr}]`)
-              const map = allAttrs.map(element=>{
+              const map = allAttrs.map(element => {
                 const value = element.getAttribute(`data-import-${attr}`)
-                return {tag:value,element,set:false,index:1}
+                return { tag: value, element, set: false, index: 1 }
               })
-              for(const child of Array.from(div.childNodes)){
+              for (const child of Array.from(div.childNodes)) {
                 const tag = child.tagName.toLowerCase()
-                const foundE = map.findLast(e=>e.element.getAttribute(`data-import-${attr}`) ===tag)
-                if(set ===false){
+                const foundE = map.findLast(e => e.element.getAttribute(`data-import-${attr}`) === tag)
+                if (set === false) {
                   foundE.element.innerHTML = child.innerHTML
                 }
-                else{
+                else {
                   const clonedE = foundE.element.cloneNode(true)
                   const foundIndex = foundE.index
-                  let last = map.findLastIndex(e=>e.index===foundIndex +1)
-                  if(last<0){
-                    last = map.findLastIndex(e=>e.index===foundIndex )
+                  let last = map.findLastIndex(e => e.index === foundIndex + 1)
+                  if (last < 0) {
+                    last = map.findLastIndex(e => e.index === foundIndex)
                   }
-                  const newElement = {...foundE,element:clonedE,set:true,index:foundIndex+1}
+                  const newElement = { ...foundE, element: clonedE, set: true, index: foundIndex + 1 }
                   map.splice(last + 1, 0, newElement);
                   const lastElement = map[last].element
                   lastElement.insertAdjacentElement('afterend', clonedE);
