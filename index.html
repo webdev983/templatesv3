@@ -6896,12 +6896,13 @@ overflow: auto;">
                 else {
 
                   const foundIndex = foundE.index
+                  /*
                   let last = map.findLastIndex(e => e.index === foundIndex + 1)
                   if (last < 0) {
                     last = map.findLastIndex(e => e.index === foundIndex)
                   }
-
-                  const lastElement = map[last].element
+                  */
+                  const lastElement = map[map.length-1].element
                   const newId = duplicateId(foundE.element.id).id
                   const actionObject = {
                     time: (new Date()).getTime(),
@@ -6960,7 +6961,8 @@ overflow: auto;">
                   }
 
                   const newElement = { ...foundE, element: getElementById1(removeLastOccurrence(newId, '-tree')), set: true, index: foundIndex + 1 }
-                  map.splice(last + 1, 0, newElement);
+                  //map.splice(last + 1, 0, newElement);
+                  map.push(newElement)
                   //lastElement.insertAdjacentElement('afterend', clonedE);
 
                 }
