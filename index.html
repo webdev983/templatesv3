@@ -176,30 +176,33 @@ overflow: auto;">
 
       <fieldset id="import-menu" class="menu">
         <legend><label class="l-2">🚀 Import Menu</label></legend>
-                <button style="margin-left: 10px;" class="b-4" id="import-name"><span>🔡 </span><span id="import-name">Article</span></button>
-  
-        <div  id="import-data" data-menu style="margin-bottom: 30px; ">
+        <button style="margin-left: 10px;" class="b-4" id="import-name"><span>🔡 </span><span
+            id="import-name-span">Article</span></button>
+
+        <div id="import-data" hidden data-menu style="margin-bottom: 30px; ">
           <button onclick="cancel(event)" class="b-4" style="margin-bottom: 5px; margin-top: 10px;">❌</button>
           <br>
-          <div hidden id="variation-amount-field"><span class="l-3">🧮 Variations: </span><span id="variation-amount" class="l-3">10</span></div> 
-          <div hidden id="variation-site-field"><span class="l-3">🌐 Site: </span><span id="variant-site" class="l-3">accbuddy.com</span></div> 
-    
+          <div hidden id="variation-amount-field"><span class="l-3">🧮 Variations: </span><span id="variation-amount"
+              class="l-3">10</span></div>
+          <div hidden id="variation-site-field"><span class="l-3">🌐 Site: </span><span id="variant-site"
+              class="l-3">accbuddy.com</span></div>
+
           <span class="l-3"></span>
-          <button class="b-4">💾 Save</button>
+          <button data-save class="b-4">💾 Save</button>
           <button hidden class="b-4"> Prev. ◀️</button>
           <button hidden class="b-4">▶️ Next</button>
-          <button  hidden class="b-4">🗑️Remove</button>
+          <button hidden class="b-4">🗑️Remove</button>
           <div hidden id="approve-menu">
-          <button class="b-4"> ✅ Approve</button>
-          <button class="b-4"> ❌ Cancel</button>
-        </div>
+            <button class="b-4"> ✅ Approve</button>
+            <button class="b-4"> ❌ Cancel</button>
+          </div>
           <br>
-          <textarea id="add-stock-input" class="text1" style="width: 90vw" placeholder=" 🚀 Enter Import Text"></textarea>
+          <textarea id="import-input" class="text1" style="width: 90vw" placeholder=" 🚀 Enter Import Text"></textarea>
           <br>
-          <button class="b-4">💾 Save</button>
+          <button data-save class="b-4">💾 Save</button>
         </div>
       </fieldset>
-  
+
 
 
 
@@ -279,9 +282,9 @@ overflow: auto;">
       <button id='transform' class="b-1" onclick="transformToVisual(event)">✍️</button>
     </div>
 
-    
 
-      <!--
+
+    <!--
         IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
       IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
     IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
@@ -323,7 +326,7 @@ overflow: auto;">
       microphone; 
       web-share" class="horizontal-area">
     </iframe>
-      <!--
+    <!--
         IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
       IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
     IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
@@ -547,10 +550,10 @@ overflow: auto;">
       <button style="margin-right:5px; margin-top: 5px;" class="b-3" onclick="cancel(event)">❌</button>
       <br>
 
-     
+
       <label><input type="checkbox"><span class="l-3">⧉ Apply to Copies</span></label>
       <br>
-      
+
 
       <button class="b-3 t" data-element="code-tree-attributes-button" onclick="openAttributeContent(event)">🔑
         Attributes</button>
@@ -1133,7 +1136,7 @@ overflow: auto;">
       let arr = pathItem.lsi1.split(';')[0].split('/')
       const site = arr[0]
       arr.shift()
-      arr = arr.map(e=>capitalizeAndReplaceHyphens(e))
+      arr = arr.map(e => capitalizeAndReplaceHyphens(e))
 
       const index = arr.indexOf('Content');
       if (index !== -1) {
@@ -1141,7 +1144,7 @@ overflow: auto;">
       }
       const index2 = arr.indexOf('Home');
       if (index !== -1) {
-        arr.splice(index2,1);
+        arr.splice(index2, 1);
       }
       const active = arr.pop()
 
@@ -1175,7 +1178,7 @@ overflow: auto;">
       }
 
       let last = breadC[0].id + '-tree'
-      
+
       for (let i = 0; i < arr.length; i++) {
         const id = duplicateId(breadC[0].id).id
         actionObject = {
@@ -6686,6 +6689,82 @@ overflow: auto;">
         }
       }
     }
+    const handleImportMenu = () => {
+      const elements = querySelectorAll1('[^="data-import-"]');
+      if (elements.length > 0 && pathItem.lsi1.split(';')[0].endsWith('-Content')) {
+        const importMenu = getElementById1('import-menu')
+
+        importMenu.removeAttribute('hidden')
+
+        const button = importMenu.querySelector('#import-name')
+        attrList = []
+        for (const element of elements) {
+          const cloned = button.cloneNode(true)
+          let attr = ''
+          Array.from(element.attributes).forEach(attribute => {
+            // Check if the attribute name matches the pattern
+            if (attribute.name.startsWith('data-import-')) {
+              // If it matches, log the attribute value
+              attr = attribute.name.replace('data-import-', '')
+            }
+          });
+          if(attrList.includes(attr)){
+            continue
+          }
+          attrList.push(attr)
+          cloned.querySelector('#import-name-span').textContent = attr
+          button.parentNode.append(cloned)
+          button.remove()
+          cloned.addEventListener('click', (e) => {
+            const menu = importMenu.querySelector('#import-data')
+            menu.removeAttribute('hidden')
+            menu.setAttribute('import-name-value', attr)
+            const handleImport = (e) => {
+              const inputValue = menu.querySelector('#import-input').value
+              const div = document.createElement('div')
+              div.innerHTML = inputValue
+              const allAttrs = querySelectorAll1(`[data-import-${attr}]`)
+              const map = allAttrs.map(element=>{
+                const value = element.getAttribute(`data-import-${attr}`)
+                return {tag:value,element,set:false,index:1}
+              })
+              for(const child of Array.from(div.childNodes)){
+                const tag = child.tagName.toLowerCase()
+                const foundE = map.findLast(e=>e.element.getAttribute(`data-import-${attr}`) ===tag)
+                if(set ===false){
+                  foundE.element.innerHTML = child.innerHTML
+                }
+                else{
+                  const clonedE = foundE.element.cloneNode(true)
+                  const foundIndex = foundE.index
+                  let last = map.findLastIndex(e=>e.index===foundIndex +1)
+                  if(last<0){
+                    last = map.findLastIndex(e=>e.index===foundIndex )
+                  }
+                  const newElement = {...foundE,element:clonedE,set:true,index:foundIndex+1}
+                  map.splice(last + 1, 0, newElement);
+                  const lastElement = map[last].element
+                  lastElement.insertAdjacentElement('afterend', clonedE);
+
+                }
+
+              }
+
+
+
+            }
+            menu.querySelectorAll('[data-save]').forEach(element1 => {
+              element1.addEventListener('click', handleImport)
+            })
+          })
+
+        }
+        /*
+        
+        
+        */
+      }
+    }
     document.addEventListener('DOMContentLoaded', loadFirst);
     const handleWebPageMenu = () => {
       const splited = pathItem.lsi1.split(';')[0].split('/')
@@ -6764,8 +6843,9 @@ overflow: auto;">
 
       await handleItemLink()
       //dispatch event
+      await handleImportMenu()
 
-      if(toPublish =="1"){
+      if (toPublish == "1") {
         await publish()
       }
       const event = new CustomEvent("pageloaded")
