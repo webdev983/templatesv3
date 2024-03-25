@@ -6776,6 +6776,14 @@ overflow: auto;">
                     inserted_element: { originalId: foundE.element.id + '-tree', id:newId },
                   };
                   await pushAction(actionObject);
+                  const el = {
+                    time: (new Date()).getTime(),
+                    action: 'innerHtml',
+                    target_element: newId,
+                    insertedCode: child.innerHTML,
+
+                  }
+                  await pushAction(el)
                   const newElement = { ...foundE, element: getElementById1(removeLastOccurrence(newId,'-tree')), set: true, index: foundIndex + 1 }
                   map.splice(last + 1, 0, newElement);
                   //lastElement.insertAdjacentElement('afterend', clonedE);
