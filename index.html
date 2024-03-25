@@ -6689,7 +6689,7 @@ overflow: auto;">
         }
       }
     }
-    async function selectImage1(imgId,imageSrc,imageUUID) {
+    async function selectImage1(imgId, imageSrc, imageUUID) {
 
       const imageElement = getElementById1(removeLastOccurrence(imgId, '-tree'))
       const name = imageElement.getAttribute('data-builder-image-name')
@@ -6847,14 +6847,45 @@ overflow: auto;">
                 }
 
                 if (foundE.set === false) {
-                  const el = {
-                    time: (new Date()).getTime(),
-                    action: 'innerHtml',
-                    target_element: foundE.element.id + '-tree',
-                    insertedCode: child.innerHTML,
+                  if (tag === 'img') {
+                    const src = child.getAttribute('src')
+                    const alt = child.getAttribute('alt')
+                    const response = await fetch(src);
+                    const blob = await response.blob()
+
+                    const splited = src.split('/')
+                    const name = splited[splited.length - 1]
+
+                    const path = await upload(name, blob)
+
+                    console.log('path ' + path)
+                    const id = pathItem.id
+                    const payload = {
+                      id,
+                      sk: path
+                    }
+                    await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify(payload),
+                    });
+                    const imageSrc = `https://s3.amazonaws.com/checkout-admin-panel/${path}`
+                    await selectImage1(foundE.element.id + '-tree', imageSrc, path.split('.')[0].replace('pics', ''))
+
 
                   }
-                  await pushAction(el)
+                  else {
+                    const el = {
+                      time: (new Date()).getTime(),
+                      action: 'innerHtml',
+                      target_element: foundE.element.id + '-tree',
+                      insertedCode: child.innerHTML,
+
+                    }
+                    await pushAction(el)
+                  }
                   foundE.set = true
                   //foundE.element.innerHTML = child.innerHTML
                 }
@@ -6900,7 +6931,7 @@ overflow: auto;">
                       body: JSON.stringify(payload),
                     });
                     const imageSrc = `https://s3.amazonaws.com/checkout-admin-panel/${path}`
-                    await selectImage1(newId,imageSrc,path.split('.')[0].replace('pics',''))
+                    await selectImage1(newId, imageSrc, path.split('.')[0].replace('pics', ''))
 
 
                   } else {
