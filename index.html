@@ -6727,14 +6727,7 @@ overflow: auto;">
         body: JSON.stringify(body),
       });
       const { src, data_src } = await response.json()
-      const galleryImage = event.target.closest('.gallery-image');
-      const selectedLabels = event.target.closest('[data-menu]').querySelectorAll('.selected');
-      selectedLabels.forEach(label => label.remove());
-      const attachedLabel = galleryImage.querySelector('img')
-      if (attachedLabel) {
-        attachedLabel.insertAdjacentHTML('afterend', '<label class="attached">📎</label>');
-      }
-
+      
       const payload = {
 
         time: (new Date()).getTime().toString(),
