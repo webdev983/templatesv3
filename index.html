@@ -6741,6 +6741,10 @@ overflow: auto;">
                 return { tag: value, element, set: false, index: 1 }
               })
               for (const child of Array.from(div.childNodes)) {
+                if (child.nodeType !== Node.ELEMENT_NODE) {
+                  continue
+                }
+
                 const tag = child.tagName.toLowerCase()
                 const foundE = map.findLast(e => e.element.getAttribute(`data-import-${attr}`) === tag)
                 if (foundE.set === false) {
