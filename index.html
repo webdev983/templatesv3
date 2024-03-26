@@ -7143,14 +7143,20 @@ overflow: auto;">
 
             }
             const handleNext = () => {
-              itemsArr.length < index + 2 && (index = index + 1)
+              if(itemsArr.length-1 ===index){
+                return
+              }
+              index = index+1
               input.value = itemsArr[index].value
-              variationSite = itemsArr[index].site
+              variationSite.textContent = itemsArr[index].site
             }
             const handlePrevious = () => {
-              index > 0 && (index = index - 1)
+              if(index===0){
+                return
+              }
+              index = index-1
               input.value = itemsArr[index].value
-              variationSite = itemsArr[index].site
+              variationSite.textContent = itemsArr[index].site
             }
             const handleRemove = async () => {
               if (itemsArr.length < 2) {
@@ -7166,7 +7172,7 @@ overflow: auto;">
               itemsArr.splice(index, 1)
               index = index - 1 >= 0 ? (index = index - 1) : (index = index + 1)
               input.value = itemsArr[index].value
-              variationSite = itemsArr[index].site
+              variationSite.textContent = itemsArr[index].site
             }
             if (attr.startsWith('product-')) {
 
