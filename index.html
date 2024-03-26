@@ -6807,7 +6807,7 @@ overflow: auto;">
           attrList.push(attr)
           cloned.querySelector('#import-name-span').textContent = attr
           button.parentNode.append(cloned)
-          
+
           cloned.addEventListener('click', async (e) => {
             const menu = importMenu.querySelector('#import-data')
             menu.removeAttribute('hidden')
@@ -6838,21 +6838,23 @@ overflow: auto;">
                   pLead = true
                   foundE = map.findLast(e => e.element.getAttribute(`data-import-${attr}`) === 'p-lead')
                 }
-                if (foundE.element.hasAttribute('data-builder-import-product-specification')) {
-                  const stamp = new Date().getTime().toString()
-                  const body = {id:pathItem.sku,sk:'data-specification:'+stamp,value:child.textContent,site:pathItem.lsi1.split('/')[0]}
-                  const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                    method: 'POST',
-                    body: JSON.stringify(body),
-                  });
-                }
-                if (foundE.element.hasAttribute('data-builder-import-product-details')) {
-                  const stamp = new Date().getTime().toString()
-                  const body = {id:pathItem.sku,sk:'data-details:'+stamp,value:child.textContent,site:pathItem.lsi1.split('/')[0]}
-                  const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                    method: 'POST',
-                    body: JSON.stringify(body),
-                  });
+                for (const attribute of foundE.element.attributes) {
+                  if (attribute.name.startsWith('data-builder-import-product-')) {
+                    const prefix = 'data-builder-import-product-';
+                    const suffix = attribute.name.substring(prefix.length);
+                    const stamp = new Date().getTime().toString();
+                    const body = {
+                      id: pathItem.sku,
+                      sk: 'data-' + suffix + ':' + stamp,
+                      value: child.textContent,
+                      site: pathItem.lsi1.split('/')[0]
+                    };
+                    const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                      method: 'POST',
+                      body: JSON.stringify(body),
+                    });
+                    // You may want to handle the response here
+                  }
                 }
                 if (foundE.set === false) {
                   if (tag === 'img') {
@@ -7171,16 +7173,16 @@ overflow: auto;">
         .then(response => response.json())
       if (items.length) {
         const ownerid = localStorage.getItem('ownerid')
-        if(items[0].ownerUUID.replace('sku:','') === ownerid){
+        if (items[0].ownerUUID.replace('sku:', '') === ownerid) {
           alert('adding sku in progress')
         }
-        else{
+        else {
           getElementById1('input-sku').value = ''
-          
+
         }
         return
 
-        
+
       }
       const resultList = await getProductAttributes(true)
       const combinations = generateCombinations(resultList)
