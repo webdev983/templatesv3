@@ -6940,7 +6940,12 @@ overflow: auto;">
             menu.removeAttribute('hidden')
             menu.setAttribute('import-name-value', attr)
             const input = menu.querySelector('#import-input')
-
+            const prevButton = menu.querySelector('#previous-html')
+            const nextButton = menu.querySelector('#next-html')
+            const removeButton = menu.querySelector('#remove-html')
+            const updateButton = menu.querySelector('#update-html')
+            const variationAmount = menu.querySelector('#variation-amount')
+            const variationSite = menu.querySelector('#variant-site')
             let index
             let itemsArr = []
             const handleImport = async (e, update) => {
@@ -7165,14 +7170,16 @@ overflow: auto;">
             }
             const handleNext = () => {
               itemsArr.length < index + 2 && (index = index + 1)
-              input.value = itemsArr[index]
+              input.value = itemsArr[index].value
+              variationSite = itemsArr[index].site
             }
             const handlePrevious = () => {
               index > 0 && (index = index - 1)
-              input.value = itemsArr[index]
+              input.value = itemsArr[index].value
+              variationSite = itemsArr[index].site
             }
-            const handleRemove =async () => {
-              if(itemsArr.length<2){
+            const handleRemove = async () => {
+              if (itemsArr.length < 2) {
                 return
               }
               await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${itemsArr[index].id}:${temsArr[index].sk}`, {
@@ -7182,15 +7189,13 @@ overflow: auto;">
                   // Add any additional headers if needed
                 },
               });
-              itemsArr.splice(index,1)
+              itemsArr.splice(index, 1)
+              index = index - 1 >= 0 ? (index = index - 1) : (index = index + 1)
+              input.value = itemsArr[index].value
+              variationSite = itemsArr[index].site
             }
             if (attr.startsWith('product-')) {
-              const prevButton = menu.querySelector('#previous-html')
-              const nextButton = menu.querySelector('#next-html')
-              const removeButton = menu.querySelector('#remove-html')
-              const updateButton = menu.querySelector('#update-html')
-              const variationAmount = menu.querySelector('#variation-amount')
-              const variationSite = menu.querySelector('#variant-site')
+
               // get variations
               const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pathItem.sku}&sk=${attr}&startsWith=true`).then(re => re.json())
               itemsArr = [...items]
