@@ -189,9 +189,9 @@ overflow: auto;">
 
           <span class="l-3"></span>
           <button data-save class="b-4">💾 Save</button>
-          <button hidden class="b-4"> Prev. ◀️</button>
-          <button hidden class="b-4">▶️ Next</button>
-          <button hidden class="b-4">🗑️Remove</button>
+          <button hidden id='previous-html' class="b-4"> Prev. ◀️</button>
+          <button hidden id="next-html" class="b-4">▶️ Next</button>
+          <button hidden id="remove-html" class="b-4">🗑️Remove</button>
           <div hidden id="approve-menu">
             <button class="b-4"> ✅ Approve</button>
             <button class="b-4"> ❌ Cancel</button>
@@ -6937,8 +6937,9 @@ overflow: auto;">
             const menu = importMenu.querySelector('#import-data')
             menu.removeAttribute('hidden')
             menu.setAttribute('import-name-value', attr)
+            const input = menu.querySelector('#import-input')
             const handleImport = async (e) => {
-              const inputValue = menu.querySelector('#import-input').value
+              const inputValue = input.value
               // save content
               if (attr.startsWith('product')) {
                 const stamp = new Date().getTime().toString()
@@ -7157,6 +7158,29 @@ overflow: auto;">
             menu.querySelectorAll('[data-save]').forEach(element1 => {
               element1.addEventListener('click', handleImport)
             })
+
+            if(attr.startsWith('product-')){
+              const prevButton = menu.querySelector('#previous-html')
+              const nextButton = menu.querySelector('#next-html')
+              const removeButton = menu.querySelector('#remove-html')
+              const variationAmount = menu.querySelector('#variation-amount')
+              const variationSite= menu.querySelector('#variant-site')
+              // get variations
+              const {items} =await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pathItem.sku}&sk=${attr}&startsWith=true`).then(re=>re.json())
+              variationAmount.removeAttribute('hidden')
+              variationAmount.textContent = items.length
+              let index = items.length-1
+              if(items.length){
+                input.value = items[index].value
+                variationSite.removeAttribute('hidden')
+                variationSite.textContent = items[index].site
+              }
+              if(items.length>0){
+                prevButton.removeAttribute('hidden')
+                nextButton.removeAttribute('hidden')
+                removeButton.removeAttribute('hidden')
+              }
+            }
           })
 
         }
