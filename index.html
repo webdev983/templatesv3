@@ -6796,22 +6796,12 @@ overflow: auto;">
         // set value of first
         const el = {
           time: (new Date()).getTime(),
-          action: 'innerHtml',
+          action: 'textContent',
           target_element: liEl.id + '-tree',
-          insertedCode: lisToImport[0].innerHTML || lisToImport[0].textContent,
+          value: lisToImport[0].innerHTML || lisToImport[0].textContent,
 
         }
-        await pushAction(el)
-        // set data-b-value
-        const el2 = {
-          time: (new Date()).getTime(),
-          action: 'setAttribute',
-          target_element: liEl.id + '-tree',
-          key: 'data-b-value',
-          value: 'true',
-
-        }
-        await pushAction(el2)
+        
         let lastEl = liEl.id + '-tree'
         for (let i = 1; i < lisToImport.length; i++) {
           const content = lisToImport[i].innerHTML || lisToImport[i].textContent
@@ -6826,9 +6816,9 @@ overflow: auto;">
           await pushAction(actionObject)
           const el = {
             time: (new Date()).getTime(),
-            action: 'innerHtml',
+            action: 'textContent',
             target_element: newId,
-            insertedCode: content,
+            value: content,
 
           }
           await pushAction(el)
@@ -6857,21 +6847,13 @@ overflow: auto;">
         // set value of first
         const el = {
           time: (new Date()).getTime(),
-          action: 'innerHtml',
+          action: 'textContent',
           target_element: olEl.id + '-tree',
-          insertedCode: olsToImport[0].innerHTML || olsToImport[0].textContent,
+          value: olsToImport[0].innerHTML || olsToImport[0].textContent,
 
         }
         await pushAction(el)
-        const el2 = {
-          time: (new Date()).getTime(),
-          action: 'setAttribute',
-          target_element: olEl.id + '-tree',
-          key: 'data-b-value',
-          value: 'true',
-
-        }
-        await pushAction(el2)
+        
         let lastEl = olEl.id + '-tree'
         for (let i = 1; i < olsToImport.length; i++) {
           const content = olsToImport[i].innerHTML || olsToImport[i].textContent
@@ -6886,9 +6868,9 @@ overflow: auto;">
           await pushAction(actionObject)
           const el = {
             time: (new Date()).getTime(),
-            action: 'innerHtml',
+            action: 'textContent',
             target_element: newId,
-            insertedCode: content,
+            value: content,
 
           }
           await pushAction(el)
@@ -7061,22 +7043,14 @@ overflow: auto;">
                   else {
                     const el = {
                       time: (new Date()).getTime(),
-                      action: 'innerHtml',
+                      action: 'textContent',
                       target_element: foundE.element.id + '-tree',
-                      insertedCode: child.innerHTML,
+                      value: child.textContent,
 
                     }
                     await pushAction(el)
                   }
-                  const el = {
-                    time: (new Date()).getTime(),
-                    action: 'setAttribute',
-                    target_element: foundE.element.id + '-tree',
-                    key: 'data-b-value',
-                    value: `true`,
-
-                  }
-                  await pushAction(el)
+                  
                   foundE.set = true
                   //foundE.element.innerHTML = child.innerHTML
                 }
@@ -7148,9 +7122,9 @@ overflow: auto;">
                   else {
                     const el = {
                       time: (new Date()).getTime(),
-                      action: 'innerHtml',
+                      action: 'textContent',
                       target_element: newId,
-                      insertedCode: child.innerHTML,
+                      value: child.textContent,
 
                     }
                     await pushAction(el)
