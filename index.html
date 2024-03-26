@@ -6769,7 +6769,7 @@ overflow: auto;">
 
 
     }
-    const handleUls = async(child,ulElement) => {
+    const handleUls = async (child, ulElement) => {
       const lisToImport = Array.from(child.childNodes).filter(e => e.tagName?.toLowerCase() === "li")
       const olsToImport = Array.from(child.childNodes).filter(e => e.tagName?.toLowerCase() === "ol")
       const liEl = Array.from(ulElement.childNodes).find(e => e.tagName?.toLowerCase() === "li")
@@ -6785,7 +6785,7 @@ overflow: auto;">
       }
       else {
         // remove all lis exept the one we use 
-        for (const el of Array.from(ulElement.childNodes).filter(e => e?.tagName?.toLowerCase() === "li" && e?.id !== liEl.id) ) {
+        for (const el of Array.from(ulElement.childNodes).filter(e => e?.tagName?.toLowerCase() === "li" && e?.id !== liEl.id)) {
           await pushAction({
             time: (new Date()).getTime(),
             action: 'removeTag',
@@ -6801,9 +6801,19 @@ overflow: auto;">
 
         }
         await pushAction(el)
+        // set data-b-value
+        const el2 = {
+          time: (new Date()).getTime(),
+          action: 'setAttribute',
+          target_element: liEl.id + '-tree',
+          key: 'data-b-value',
+          value: 'true',
+
+        }
+        await pushAction(el2)
         let lastEl = liEl.id + '-tree'
         for (let i = 1; i < lisToImport.length; i++) {
-          const content = lisToImport[i].innerHTML || lisToImport[i].textContent 
+          const content = lisToImport[i].innerHTML || lisToImport[i].textContent
           //duplicate li
           const newId = duplicateId(liEl.id).id
           const actionObject = {
@@ -6825,7 +6835,7 @@ overflow: auto;">
         }
 
       }
-      
+
       if (!olsToImport.length) {
         for (const el of Array.from(ulElement.childNodes).filter(e => e.tagName?.toLowerCase() === "ol")) {
           await pushAction({
@@ -6836,7 +6846,7 @@ overflow: auto;">
         }
       }
       else {
-        for (const el of Array.from(ulElement.childNodes).filter(e => e?.tagName?.toLowerCase() === "ol" && e?.id !== olEl.id) ) {
+        for (const el of Array.from(ulElement.childNodes).filter(e => e?.tagName?.toLowerCase() === "ol" && e?.id !== olEl.id)) {
           await pushAction({
             time: (new Date()).getTime(),
             action: 'removeTag',
@@ -6852,9 +6862,18 @@ overflow: auto;">
 
         }
         await pushAction(el)
+        const el2 = {
+          time: (new Date()).getTime(),
+          action: 'setAttribute',
+          target_element: olEl.id + '-tree',
+          key: 'data-b-value',
+          value: 'true',
+
+        }
+        await pushAction(el2)
         let lastEl = olEl.id + '-tree'
         for (let i = 1; i < olsToImport.length; i++) {
-          const content = olsToImport[i].innerHTML || olsToImport[i].textContent 
+          const content = olsToImport[i].innerHTML || olsToImport[i].textContent
           //duplicate li
           const newId = duplicateId(olEl.id).id
           const actionObject = {
@@ -7022,7 +7041,7 @@ overflow: auto;">
                   }
                   else if (tag === "ul") {
                     const ulElement = getElementById1(foundE.element.id)
-                    await handleUls(child,ulElement)
+                    await handleUls(child, ulElement)
 
                   }
                   else {
@@ -7035,6 +7054,15 @@ overflow: auto;">
                     }
                     await pushAction(el)
                   }
+                  const el = {
+                    time: (new Date()).getTime(),
+                    action: 'setAttribute',
+                    target_element: foundE.element.id + '-tree',
+                    key: 'data-b-value',
+                    value: `true`,
+
+                  }
+                  await pushAction(el)
                   foundE.set = true
                   //foundE.element.innerHTML = child.innerHTML
                 }
@@ -7097,7 +7125,7 @@ overflow: auto;">
                   }
                   else if (tag === "ul") {
                     const ulElement = getElementById1(removeLastOccurrence(newId, '-tree'))
-                    await handleUls(child,ulElement)
+                    await handleUls(child, ulElement)
 
 
 
