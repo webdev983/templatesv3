@@ -7169,8 +7169,17 @@ overflow: auto;">
       const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${value}&sk=qty;&startsWith=true`)
         .then(response => response.json())
       if (items.length) {
-        getElementById1('input-sku').value = ''
+        const ownerid = localStorage.getItem('ownerid')
+        if(items[0].ownerUUID.replace('sku:','') === ownerid){
+          alert('adding sku in progress')
+        }
+        else{
+          getElementById1('input-sku').value = ''
+          
+        }
         return
+
+        
       }
       const resultList = await getProductAttributes(true)
       const combinations = generateCombinations(resultList)
