@@ -7185,12 +7185,12 @@ overflow: auto;">
               // get variations
               const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pathItem.sku}&sk=${attr}&startsWith=true`).then(re => re.json())
               itemsArr = [...items]
-              variationAmount.removeAttribute('hidden')
+              menu.querySelector("#variation-amount-field").removeAttribute('hidden')
               variationAmount.textContent = items.length
               index = items.length - 1
               if (items.length) {
                 input.value = itemsArr[index].value
-                variationSite.removeAttribute('hidden')
+                menu.querySelector("#variation-site-field").removeAttribute('hidden')
                 variationSite.textContent = itemsArr[index].site
                 prevButton.removeAttribute('hidden')
                 nextButton.removeAttribute('hidden')
