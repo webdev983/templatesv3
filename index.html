@@ -6797,13 +6797,13 @@ overflow: auto;">
           time: (new Date()).getTime(),
           action: 'innerHtml',
           target_element: liEl.id + '-tree',
-          insertedCode: lisToImport[0].innerHTML,
+          insertedCode: lisToImport[0].innerHTML || lisToImport[0].textContent,
 
         }
         await pushAction(el)
         let lastEl = liEl.id + '-tree'
         for (let i = 1; i < lisToImport.length; i++) {
-          const content = lisToImport[i].innerHTML
+          const content = lisToImport[i].innerHTML || lisToImport[i].textContent 
           //duplicate li
           const newId = duplicateId(liEl.id).id
           const actionObject = {
@@ -6847,13 +6847,13 @@ overflow: auto;">
           time: (new Date()).getTime(),
           action: 'innerHtml',
           target_element: olEl.id + '-tree',
-          insertedCode: olsToImport[0].innerHTML,
+          insertedCode: olsToImport[0].innerHTML || olsToImport[0].textContent,
 
         }
         await pushAction(el)
         let lastEl = olEl.id + '-tree'
         for (let i = 1; i < olsToImport.length; i++) {
-          const content = olsToImport[i].innerHTML
+          const content = olsToImport[i].innerHTML || olsToImport[i].textContent 
           //duplicate li
           const newId = duplicateId(olEl.id).id
           const actionObject = {
