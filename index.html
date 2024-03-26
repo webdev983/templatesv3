@@ -6940,9 +6940,10 @@ overflow: auto;">
             menu.removeAttribute('hidden')
             menu.setAttribute('import-name-value', attr)
             const input = menu.querySelector('#import-input')
-            
+
             let index
-            const handleImport = async (e,update) => {
+            let itemsArr = []
+            const handleImport = async (e, update) => {
               const inputValue = input.value
               // save content
               if (attr.startsWith('product')) {
@@ -6953,8 +6954,8 @@ overflow: auto;">
                   value: inputValue,
                   site: pathItem.lsi1.split('/')[0]
                 }
-                if(update){
-                  payload = {...items[index],value:inputValue}
+                if (update) {
+                  payload = { ...items[index], value: inputValue }
                 }
                 await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                   method: 'POST',
@@ -7162,46 +7163,59 @@ overflow: auto;">
 
 
             }
-            const handleNext = ()=>{
-
+            const handleNext = () => {
+              itemsArr.length < index + 2 && (index = index + 1)
+              input.value = itemsArr[index]
             }
-            const handlePrevious = ()=>{
-
+            const handlePrevious = () => {
+              index > 0 && (index = index - 1)
+              input.value = itemsArr[index]
             }
-            const handleRemove = ()=>{
-              
+            const handleRemove =async () => {
+              if(itemsArr.length<2){
+                return
+              }
+              await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${itemsArr[index].id}:${temsArr[index].sk}`, {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  // Add any additional headers if needed
+                },
+              });
+              itemsArr.splice(index,1)
             }
-            if(attr.startsWith('product-')){
+            if (attr.startsWith('product-')) {
               const prevButton = menu.querySelector('#previous-html')
               const nextButton = menu.querySelector('#next-html')
               const removeButton = menu.querySelector('#remove-html')
               const updateButton = menu.querySelector('#update-html')
               const variationAmount = menu.querySelector('#variation-amount')
-              const variationSite= menu.querySelector('#variant-site')
+              const variationSite = menu.querySelector('#variant-site')
               // get variations
-              const {items} =await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pathItem.sku}&sk=${attr}&startsWith=true`).then(re=>re.json())
+              const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pathItem.sku}&sk=${attr}&startsWith=true`).then(re => re.json())
+              itemsArr = [...items]
               variationAmount.removeAttribute('hidden')
               variationAmount.textContent = items.length
-              index = items.length-1
-              if(items.length){
-                input.value = items[index].value
+              index = items.length - 1
+              if (items.length) {
+                input.value = itemsArr[index].value
                 variationSite.removeAttribute('hidden')
-                variationSite.textContent = items[index].site
+                variationSite.textContent = itemsArr[index].site
                 prevButton.removeAttribute('hidden')
                 nextButton.removeAttribute('hidden')
                 removeButton.removeAttribute('hidden')
                 updateButton.removeAttribute('hidden')
-                updateButton.addEventListener('click',(e)=>handleImport(e,true))
-                removeButton.addEventListener('click',handleRemove)
-                nextButton.addEventListener('click',handleNext)
-                prevButton.addEventListener('click',handlePrevious)
+                updateButton.addEventListener('click', (e) => handleImport(e, true))
+                removeButton.addEventListener('click', handleRemove)
+                nextButton.addEventListener('click', handleNext)
+                prevButton.addEventListener('click', handlePrevious)
               }
-              
+
             }
             menu.querySelectorAll('[data-save]').forEach(element1 => {
               element1.addEventListener('click', handleImport)
             })
-            
+
           })
 
         }
