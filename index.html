@@ -192,6 +192,7 @@ overflow: auto;">
           <button hidden id='previous-html' class="b-4"> Prev. ◀️</button>
           <button hidden id="next-html" class="b-4">▶️ Next</button>
           <button hidden id="remove-html" class="b-4">🗑️Remove</button>
+          <button hidden id="update-html" class="b-4">🔄 Update</button>
           <div hidden id="approve-menu">
             <button class="b-4"> ✅ Approve</button>
             <button class="b-4"> ❌ Cancel</button>
@@ -6910,8 +6911,9 @@ overflow: auto;">
         return false;
       });
       if (elements.length > 0 && pathItem.lsi1.split(';')[0].endsWith('-Content')) {
-        const importMenu = getElementById1('import-menu')
-
+        const importMenuOriginal = getElementById1('import-menu')
+        const importMenu = importMenuOriginal.cloneNode(true)
+        importMenuOriginal.parentNode.append(importMenu)
         importMenu.removeAttribute('hidden')
 
         const button = importMenu.querySelector('#import-name')
@@ -7163,6 +7165,7 @@ overflow: auto;">
               const prevButton = menu.querySelector('#previous-html')
               const nextButton = menu.querySelector('#next-html')
               const removeButton = menu.querySelector('#remove-html')
+              const updateButton = menu.querySelector('#update-html')
               const variationAmount = menu.querySelector('#variation-amount')
               const variationSite= menu.querySelector('#variant-site')
               // get variations
@@ -7174,12 +7177,12 @@ overflow: auto;">
                 input.value = items[index].value
                 variationSite.removeAttribute('hidden')
                 variationSite.textContent = items[index].site
-              }
-              if(items.length>0){
                 prevButton.removeAttribute('hidden')
                 nextButton.removeAttribute('hidden')
                 removeButton.removeAttribute('hidden')
+                updateButton.removeAttribute('hidden')
               }
+              
             }
           })
 
