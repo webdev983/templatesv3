@@ -6801,7 +6801,7 @@ overflow: auto;">
           value: lisToImport[0].innerHTML || lisToImport[0].textContent,
 
         }
-        
+
         let lastEl = liEl.id + '-tree'
         for (let i = 1; i < lisToImport.length; i++) {
           const content = lisToImport[i].innerHTML || lisToImport[i].textContent
@@ -6853,7 +6853,7 @@ overflow: auto;">
 
         }
         await pushAction(el)
-        
+
         let lastEl = olEl.id + '-tree'
         for (let i = 1; i < olsToImport.length; i++) {
           const content = olsToImport[i].innerHTML || olsToImport[i].textContent
@@ -6935,14 +6935,18 @@ overflow: auto;">
               // save content
               if (attr.startsWith('product')) {
                 const stamp = new Date().getTime().toString()
-                let payload = {
-                  id: pathItem.sku,
-                  sk: attr + ':' + stamp,
-                  value: inputValue,
-                  site: pathItem.lsi1.split('/')[0]
-                }
+                let payload
                 if (update) {
-                  payload = { ...items[index], value: inputValue }
+                  itemsArr[index] = { ...itemsArr[index], value: inputValue }
+                  payload = itemsArr[index]
+                } else {
+                  payload = {
+                    id: pathItem.sku,
+                    sk: attr + ':' + stamp,
+                    value: inputValue,
+                    site: pathItem.lsi1.split('/')[0]
+                  }
+                  itemsArr[index].push(payload)
                 }
                 await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                   method: 'POST',
@@ -7050,7 +7054,7 @@ overflow: auto;">
                     }
                     await pushAction(el)
                   }
-                  
+
                   foundE.set = true
                   //foundE.element.innerHTML = child.innerHTML
                 }
@@ -7143,18 +7147,18 @@ overflow: auto;">
 
             }
             const handleNext = () => {
-              if(itemsArr.length-1 ===index){
+              if (itemsArr.length - 1 === index) {
                 return
               }
-              index = index+1
+              index = index + 1
               input.value = itemsArr[index].value
               variationSite.textContent = itemsArr[index].site
             }
             const handlePrevious = () => {
-              if(index===0){
+              if (index === 0) {
                 return
               }
-              index = index-1
+              index = index - 1
               input.value = itemsArr[index].value
               variationSite.textContent = itemsArr[index].site
             }
