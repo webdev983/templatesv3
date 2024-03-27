@@ -217,9 +217,10 @@ overflow: auto;">
 
           <span class="l-3"></span>
           <button data-save class="b-4">💾 Save</button>
-          <button hidden class="b-4"> Prev. ◀️</button>
-          <button hidden class="b-4">▶️ Next</button>
-          <button hidden class="b-4">🗑️Remove</button>
+          <button hidden id='previous-html' class="b-4"> Prev. ◀️</button>
+          <button hidden id="next-html" class="b-4">▶️ Next</button>
+          <button hidden id="remove-html" class="b-4">🗑️Remove</button>
+          <button hidden id="update-html" class="b-4">🔄 Update</button>
           <div hidden id="approve-menu">
             <button class="b-4"> ✅ Approve</button>
             <button class="b-4"> ❌ Cancel</button>
@@ -6797,7 +6798,114 @@ overflow: auto;">
 
 
     }
+    const handleUls = async (child, ulElement) => {
+      const lisToImport = Array.from(child.childNodes).filter(e => e.tagName?.toLowerCase() === "li")
+      const olsToImport = Array.from(child.childNodes).filter(e => e.tagName?.toLowerCase() === "ol")
+      const liEl = Array.from(ulElement.childNodes).find(e => e.tagName?.toLowerCase() === "li")
+      const olEl = Array.from(ulElement.childNodes).find(e => e.tagName?.toLowerCase() === "ol")
+      if (!lisToImport.length) {
+        for (const el of Array.from(ulElement.childNodes).filter(e => e.tagName?.toLowerCase() === "li")) {
+          await pushAction({
+            time: (new Date()).getTime(),
+            action: 'removeTag',
+            target_element: el.id + '-tree',
+          })
+        }
+      }
+      else {
+        // remove all lis exept the one we use 
+        for (const el of Array.from(ulElement.childNodes).filter(e => e?.tagName?.toLowerCase() === "li" && e?.id !== liEl.id)) {
+          await pushAction({
+            time: (new Date()).getTime(),
+            action: 'removeTag',
+            target_element: el.id + '-tree',
+          })
+        }
+        // set value of first
+        const el = {
+          time: (new Date()).getTime(),
+          action: 'textContent',
+          target_element: liEl.id + '-tree',
+          value: lisToImport[0].innerHTML || lisToImport[0].textContent,
 
+        }
+
+        let lastEl = liEl.id + '-tree'
+        for (let i = 1; i < lisToImport.length; i++) {
+          const content = lisToImport[i].innerHTML || lisToImport[i].textContent
+          //duplicate li
+          const newId = duplicateId(liEl.id).id
+          const actionObject = {
+            time: (new Date()).getTime(),
+            action: 'InsertAfter',
+            target_element: lastEl,
+            inserted_element: { originalId: liEl.id + '-tree', id: newId },
+          };
+          await pushAction(actionObject)
+          const el = {
+            time: (new Date()).getTime(),
+            action: 'textContent',
+            target_element: newId,
+            value: content,
+
+          }
+          await pushAction(el)
+          lastEl = newId
+        }
+
+      }
+
+      if (!olsToImport.length) {
+        for (const el of Array.from(ulElement.childNodes).filter(e => e.tagName?.toLowerCase() === "ol")) {
+          await pushAction({
+            time: (new Date()).getTime(),
+            action: 'removeTag',
+            target_element: el.id + '-tree',
+          })
+        }
+      }
+      else {
+        for (const el of Array.from(ulElement.childNodes).filter(e => e?.tagName?.toLowerCase() === "ol" && e?.id !== olEl.id)) {
+          await pushAction({
+            time: (new Date()).getTime(),
+            action: 'removeTag',
+            target_element: el.id + '-tree',
+          })
+        }
+        // set value of first
+        const el = {
+          time: (new Date()).getTime(),
+          action: 'textContent',
+          target_element: olEl.id + '-tree',
+          value: olsToImport[0].innerHTML || olsToImport[0].textContent,
+
+        }
+        await pushAction(el)
+
+        let lastEl = olEl.id + '-tree'
+        for (let i = 1; i < olsToImport.length; i++) {
+          const content = olsToImport[i].innerHTML || olsToImport[i].textContent
+          //duplicate li
+          const newId = duplicateId(olEl.id).id
+          const actionObject = {
+            time: (new Date()).getTime(),
+            action: 'InsertAfter',
+            target_element: lastEl,
+            inserted_element: { originalId: olEl.id + '-tree', id: newId },
+          };
+          await pushAction(actionObject)
+          const el = {
+            time: (new Date()).getTime(),
+            action: 'textContent',
+            target_element: newId,
+            value: content,
+
+          }
+          await pushAction(el)
+          lastEl = newId
+        }
+      }
+    }
     const handleImportMenu = () => {
       const generatedPage = getElementById1('generated-page')
       const elements1 = generatedPage.querySelectorAll('*');
@@ -6813,8 +6921,9 @@ overflow: auto;">
         return false;
       });
       if (elements.length > 0 && pathItem.lsi1.split(';')[0].endsWith('-Content')) {
-        const importMenu = getElementById1('import-menu')
-
+        const importMenuOriginal = getElementById1('import-menu')
+        const importMenu = importMenuOriginal.cloneNode(true)
+        importMenuOriginal.parentNode.append(importMenu)
         importMenu.removeAttribute('hidden')
 
         const button = importMenu.querySelector('#import-name')
@@ -6840,8 +6949,43 @@ overflow: auto;">
             const menu = importMenu.querySelector('#import-data')
             menu.removeAttribute('hidden')
             menu.setAttribute('import-name-value', attr)
-            const handleImport = async (e) => {
-              const inputValue = menu.querySelector('#import-input').value
+            const input = menu.querySelector('#import-input')
+            const prevButton = menu.querySelector('#previous-html')
+            const nextButton = menu.querySelector('#next-html')
+            const removeButton = menu.querySelector('#remove-html')
+            const updateButton = menu.querySelector('#update-html')
+            const variationAmount = menu.querySelector('#variation-amount')
+            const variationSite = menu.querySelector('#variant-site')
+            let index
+            let itemsArr = []
+            const handleImport = async (e, update) => {
+              const inputValue = input.value
+              // save content
+              if (attr.startsWith('product')) {
+                const stamp = new Date().getTime().toString()
+                let payload
+                if (update) {
+                  itemsArr[index] = { ...itemsArr[index], value: inputValue }
+                  payload = itemsArr[index]
+                } else {
+                  payload = {
+                    id: pathItem.sku,
+                    sk: attr + ':' + stamp,
+                    value: inputValue,
+                    site: pathItem.lsi1.split('/')[0]
+                  }
+                  itemsArr.push(payload)
+                  index = itemsArr.length-1
+                  variationAmount.textContent = itemsArr.length
+                }
+                await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(payload),
+                });
+              }
               const div = document.createElement('div')
               div.innerHTML = inputValue
               const allAttrs = querySelectorAll1(`[data-import-${attr}]`)
@@ -6925,16 +7069,22 @@ overflow: auto;">
 
 
                   }
+                  else if (tag === "ul") {
+                    const ulElement = getElementById1(foundE.element.id)
+                    await handleUls(child, ulElement)
+
+                  }
                   else {
                     const el = {
                       time: (new Date()).getTime(),
-                      action: 'innerHtml',
+                      action: 'textContent',
                       target_element: foundE.element.id + '-tree',
-                      insertedCode: child.innerHTML,
+                      value: child.textContent,
 
                     }
                     await pushAction(el)
                   }
+
                   foundE.set = true
                   //foundE.element.innerHTML = child.innerHTML
                 }
@@ -6994,12 +7144,21 @@ overflow: auto;">
                     await selectImage1(newId, imageSrc, path.split('.')[0].replace('pics', ''))
 
 
-                  } else {
+                  }
+                  else if (tag === "ul") {
+                    const ulElement = getElementById1(removeLastOccurrence(newId, '-tree'))
+                    await handleUls(child, ulElement)
+
+
+
+                  }
+
+                  else {
                     const el = {
                       time: (new Date()).getTime(),
-                      action: 'innerHtml',
+                      action: 'textContent',
                       target_element: newId,
-                      insertedCode: child.innerHTML,
+                      value: child.textContent,
 
                     }
                     await pushAction(el)
@@ -7017,9 +7176,67 @@ overflow: auto;">
 
 
             }
+            const handleNext = () => {
+              if (itemsArr.length - 1 === index) {
+                return
+              }
+              index = index + 1
+              input.value = itemsArr[index].value
+              variationSite.textContent = itemsArr[index].site
+            }
+            const handlePrevious = () => {
+              if (index === 0) {
+                return
+              }
+              index = index - 1
+              input.value = itemsArr[index].value
+              variationSite.textContent = itemsArr[index].site
+            }
+            const handleRemove = async () => {
+              if (itemsArr.length < 2) {
+                return
+              }
+              await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${itemsArr[index].id}:${itemsArr[index].sk}`, {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  // Add any additional headers if needed
+                },
+              });
+              itemsArr.splice(index, 1)
+              index = index + 1 !== itemsArr.length ? (index = index ) : (index = index - 1)
+              input.value = itemsArr[index].value
+              variationSite.textContent = itemsArr[index].site
+              variationAmount.textContent =itemsArr.length
+
+            }
+            if (attr.startsWith('product-')) {
+
+              // get variations
+              const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pathItem.sku}&sk=${attr}&startsWith=true`).then(re => re.json())
+              itemsArr = [...items]
+              menu.querySelector("#variation-amount-field").removeAttribute('hidden')
+              variationAmount.textContent = items.length
+              index = items.length - 1
+              if (items.length) {
+                input.value = itemsArr[index].value
+                menu.querySelector("#variation-site-field").removeAttribute('hidden')
+                variationSite.textContent = itemsArr[index].site
+                prevButton.removeAttribute('hidden')
+                nextButton.removeAttribute('hidden')
+                removeButton.removeAttribute('hidden')
+                updateButton.removeAttribute('hidden')
+                updateButton.addEventListener('click', (e) => handleImport(e, true))
+                removeButton.addEventListener('click', handleRemove)
+                nextButton.addEventListener('click', handleNext)
+                prevButton.addEventListener('click', handlePrevious)
+              }
+
+            }
             menu.querySelectorAll('[data-save]').forEach(element1 => {
               element1.addEventListener('click', handleImport)
             })
+
           })
 
         }
