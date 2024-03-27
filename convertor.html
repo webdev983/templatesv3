@@ -7,20 +7,25 @@
 </head>
 <body>
 
-<h2>TXT</h2>
-<textarea id="editor1"></textarea>
+<textarea style="height: 500px; width: 100px;" id="editor1"></textarea>
 
 <h2>HTML</h2>
-<textarea id="output" rows="10" cols="50" readonly></textarea>
+<textarea id="output" style="height: 300px; width: 100vw" readonly></textarea>
 
 <script>
-    CKEDITOR.replace('editor1', {
-        on: {
-            change: function() {
-                showHTML();
+    window.onload = function() {
+        var viewportHeight = window.innerHeight;
+        var desiredHeight = viewportHeight * 0.8; // 90% от высоты области просмотра
+        
+        CKEDITOR.replace('editor1', {
+            height: desiredHeight,
+            on: {
+                change: function() {
+                    showHTML();
+                }
             }
-        }
-    });
+        });
+    };
 
     function showHTML() {
         var htmlContent = CKEDITOR.instances.editor1.getData();
