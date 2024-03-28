@@ -3263,12 +3263,44 @@ overflow: auto;">
           return
         }
 
-        const el = {
+        let el = {
           time: (new Date()).getTime(),
           action,
           target_element: id,
           value: textareaValue,
 
+        }
+
+        if (event.target.getAttribute('data-builder-time') === 'dd month yyyy') {
+          function formatDate(date) {
+            const options = { day: '2-digit', month: 'long', year: 'numeric' };
+            const formattedDate = date.toLocaleDateString('en-US', options);
+            return formattedDate;
+          }
+          function formatDateYYYYMMDD(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+          }
+          const date = new Date()
+          const fDate = formatDate(date)
+          const fDate2 = formatDateYYYYMMDD(date)
+          const el1 = {
+            time: (new Date()).getTime(),
+            action: 'setAttribute',
+            target_element: id,
+            key: 'datetime',
+            value: fDate2,
+
+          }
+          pushAction(el1)
+          el = {
+            time: date.getTime(),
+            action,
+            target_element: id,
+            value: fDate,
+          }
         }
         console.log('ac' + JSON.stringify(el))
         pushAction(el)
@@ -6959,7 +6991,7 @@ overflow: auto;">
                     site: pathItem.lsi1.split('/')[0]
                   }
                   itemsArr.push(payload)
-                  index = itemsArr.length-1
+                  index = itemsArr.length - 1
                   variationAmount.textContent = itemsArr.length
                 }
                 await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -7188,10 +7220,10 @@ overflow: auto;">
                 },
               });
               itemsArr.splice(index, 1)
-              index = index + 1 !== itemsArr.length ? (index = index ) : (index = index - 1)
+              index = index + 1 !== itemsArr.length ? (index = index) : (index = index - 1)
               input.value = itemsArr[index].value
               variationSite.textContent = itemsArr[index].site
-              variationAmount.textContent =itemsArr.length
+              variationAmount.textContent = itemsArr.length
 
             }
             if (attr.startsWith('product-')) {
@@ -7202,7 +7234,7 @@ overflow: auto;">
               menu.querySelector("#variation-amount-field").removeAttribute('hidden')
               variationAmount.textContent = items.length
               index = items.length - 1
-              if (true){//items.length) {
+              if (true) {//items.length) {
                 input.value = itemsArr[index].value
                 menu.querySelector("#variation-site-field").removeAttribute('hidden')
                 variationSite.textContent = itemsArr[index].site
