@@ -5367,6 +5367,18 @@ overflow: auto;">
         case 'innerHtml':
           // Handle the 'innerHtml' action
           const targetElement = getElementById1(removeLastOccurrence(target_element, '-tree'));
+          if (targetElement.hasAttribute('data-b-value')) {
+            targetElement.setAttribute('data-b-value', true)
+            let parent = targetElement.parentNode
+            while (parent && parent.nodeType === 1) {
+              if (parent.hasAttribute('data-b')) {
+                parent.setAttribute('data-b', true)
+                break;
+              }
+              parent = parent.parentNode;
+            }
+
+          }
           targetElement.innerHTML = insertedCode;
 
           break;
@@ -6796,9 +6808,9 @@ overflow: auto;">
         // set value of first
         const el = {
           time: (new Date()).getTime(),
-          action: 'textContent',
+          action: 'innerHtml',
           target_element: liEl.id + '-tree',
-          value: lisToImport[0].innerHTML || lisToImport[0].textContent,
+          insertedCode: lisToImport[0].innerHTML || lisToImport[0].textContent,
 
         }
 
@@ -6816,9 +6828,9 @@ overflow: auto;">
           await pushAction(actionObject)
           const el = {
             time: (new Date()).getTime(),
-            action: 'textContent',
+            action: 'innerHtml',
             target_element: newId,
-            value: content,
+            insertedCode: content,
 
           }
           await pushAction(el)
@@ -6847,9 +6859,9 @@ overflow: auto;">
         // set value of first
         const el = {
           time: (new Date()).getTime(),
-          action: 'textContent',
+          action: 'innerHtml',
           target_element: olEl.id + '-tree',
-          value: olsToImport[0].innerHTML || olsToImport[0].textContent,
+          insertedCode: olsToImport[0].innerHTML || olsToImport[0].textContent,
 
         }
         await pushAction(el)
@@ -6868,9 +6880,9 @@ overflow: auto;">
           await pushAction(actionObject)
           const el = {
             time: (new Date()).getTime(),
-            action: 'textContent',
+            action: 'innerHtml',
             target_element: newId,
-            value: content,
+            insertedCode: content,
 
           }
           await pushAction(el)
@@ -7049,9 +7061,9 @@ overflow: auto;">
                   else {
                     const el = {
                       time: (new Date()).getTime(),
-                      action: 'textContent',
+                      action: 'innerHtml',
                       target_element: foundE.element.id + '-tree',
-                      value: child.textContent,
+                      insertedCode: child.textContent,
 
                     }
                     await pushAction(el)
@@ -7128,9 +7140,9 @@ overflow: auto;">
                   else {
                     const el = {
                       time: (new Date()).getTime(),
-                      action: 'textContent',
+                      action: 'innerHtml',
                       target_element: newId,
-                      value: child.textContent,
+                      insertedCode: child.textContent,
 
                     }
                     await pushAction(el)
