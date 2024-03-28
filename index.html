@@ -7047,7 +7047,7 @@ overflow: auto;">
 
                 const tag = child.tagName.toLowerCase()
                 console.log(tag)
-                let foundE = map.findLast(e => e.element.getAttribute(`data-import-${attr}`) === tag)
+                let foundE
                 if (tag === 'img' && !imgLead) {
                   imgLead = true
                   foundE = map.findLast(e => e.element.getAttribute(`data-import-${attr}`) === 'img-lead')
@@ -7055,6 +7055,9 @@ overflow: auto;">
                 else if (tag === "p" && !pLead) {
                   pLead = true
                   foundE = map.findLast(e => e.element.getAttribute(`data-import-${attr}`) === 'p-lead')
+                }
+                else{
+                  foundE = map.findLast(e => e.element.getAttribute(`data-import-${attr}`) === tag)
                 }
                 for (const attribute of foundE.element.attributes) {
                   if (attribute.name.startsWith('data-import-product-')) {
