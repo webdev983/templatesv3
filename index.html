@@ -6967,7 +6967,9 @@ overflow: auto;">
           button.parentNode.append(cloned)
 
           cloned.addEventListener('click', async (e) => {
-            const menu = importMenu.querySelector('#import-data')
+            const menuOriginal = importMenu.querySelector('#import-data')
+            const menu = menuOriginal.cloneNode(true)
+            menuOriginal.parentNode.append(menu)
             menu.removeAttribute('hidden')
             menu.setAttribute('import-name-value', attr)
             const input = menu.querySelector('#import-input')
