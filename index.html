@@ -1558,6 +1558,7 @@ overflow: auto;">
   <script>
 
     var pathItem
+    var selectedSku
     var dependencyItem
     var skuCreated
     var updatePathItem = () =>
@@ -6215,6 +6216,7 @@ overflow: auto;">
           else if (item.sku) {
             if (lvl < 2) {
               showSku(item.sku)
+              selectedSku = item.sku
             }
             else {
               getElementById1("input-sku").setAttribute('hidden', '')
@@ -6938,6 +6940,7 @@ overflow: auto;">
       }
     }
     const handleImportMenu = () => {
+      let sku1 =pathItem.sku || selectedSku
       const generatedPage = getElementById1('generated-page')
       const elements1 = generatedPage.querySelectorAll('*');
 
@@ -7012,7 +7015,7 @@ overflow: auto;">
                   }
                   else {
                     payload = {
-                      id: pathItem.sku,
+                      id: sku1,
                       sk: attr + ':' + stamp,
                       value: inputValue,
                       site
@@ -7065,7 +7068,7 @@ overflow: auto;">
                     const suffix = attribute.name.substring(prefix.length);
                     const stamp = new Date().getTime().toString();
                     const body = {
-                      id: pathItem.sku,
+                      id: sku1,
                       sk: 'data-' + suffix + ':' + stamp,
                       value: child.innerHTML,
                       site: pathItem.lsi1.split('/')[0]
@@ -7265,7 +7268,7 @@ overflow: auto;">
             if (attr.startsWith('product-')) {
 
               // get variations
-              const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pathItem.sku}&sk=${attr}&startsWith=true`).then(re => re.json())
+              const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku1}&sk=${attr}&startsWith=true`).then(re => re.json())
               itemsArr = [...items]
               menu.querySelector("#variation-amount-field").removeAttribute('hidden')
               variationAmount.textContent = items.length
