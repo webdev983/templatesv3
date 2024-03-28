@@ -6667,7 +6667,7 @@ overflow: auto;">
 
       // Access the content of the iframe
       var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-      const html =  '<!DOCTYPE html>' + iframeDocument.documentElement.outerHTML;
+      const html = '<!DOCTYPE html>' + iframeDocument.documentElement.outerHTML;
       console.log(html)
       const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/publishv2', {
         method: 'POST',
@@ -6981,6 +6981,7 @@ overflow: auto;">
             const variationSite = menu.querySelector('#variant-site')
             let index
             let itemsArr = []
+
             const handleImport = async (e, update) => {
               const inputValue = input.value
               // save content
@@ -6991,17 +6992,27 @@ overflow: auto;">
                   itemsArr[index] = { ...itemsArr[index], value: inputValue }
                   payload = itemsArr[index]
                 } else {
-                  payload = {
-                    id: pathItem.sku,
-                    sk: attr + ':' + stamp,
-                    value: inputValue,
-                    site: pathItem.lsi1.split('/')[0]
+                  const site = pathItem.lsi1.split('/')[0]
+                  if (itemsArr[index].value === inputValue) {
+                    const splitedSite = itemsArr[index].site.split(',')
+                    if(!splitedSite.includes(site)){
+                      splitedSite.push(site)
+                      payload = {...itemsArr[index],site:splitedSite.join(',')}
+                    }
                   }
-                  itemsArr.push(payload)
-                  index = itemsArr.length - 1
-                  variationAmount.textContent = itemsArr.length
+                  else {
+                    payload = {
+                      id: pathItem.sku,
+                      sk: attr + ':' + stamp,
+                      value: inputValue,
+                      site
+                    }
+                    itemsArr.push(payload)
+                    index = itemsArr.length - 1
+                    variationAmount.textContent = itemsArr.length
+                  }
                 }
-                await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                payload && await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
@@ -7246,7 +7257,7 @@ overflow: auto;">
               index = items.length - 1
               if (items.length) {
                 input.value = itemsArr[index].value
-                
+
                 variationSite.textContent = itemsArr[index].site
                 menu.querySelector("#variation-site-field").removeAttribute('hidden')
                 prevButton.removeAttribute('hidden')
@@ -7748,7 +7759,7 @@ overflow: auto;">
 
           }
         }
-        
+
         const viewStockMenu = document.getElementById('view-stock')
         const stockItem0 = document.querySelector('[stockItem]')
         const handleViewStock = async (e) => {
@@ -7786,8 +7797,8 @@ overflow: auto;">
             const clonedstockLabel = stockLabelMenu.cloneNode(true)
             clonedstockLabel.id = clonedstockLabel.id + ';' + sku
             clonedstockLabel.querySelector('#stock-label-input').value = newItem.label || ''
-            clonedstockLabel.querySelector('#update-label').addEventListener('click',async(e)=>{
-              const newLabel =  clonedstockLabel.querySelector('#stock-label-input').value
+            clonedstockLabel.querySelector('#update-label').addEventListener('click', async (e) => {
+              const newLabel = clonedstockLabel.querySelector('#stock-label-input').value
               newItem.label = newLabel
               item.label = newLabel
               await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
