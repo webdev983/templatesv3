@@ -6667,7 +6667,7 @@ overflow: auto;">
 
       // Access the content of the iframe
       var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-      const html = iframeDocument.documentElement.innerHTML
+      const html =  '<!DOCTYPE html>' + iframeDocument.documentElement.outerHTML;
       console.log(html)
       const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/publishv2', {
         method: 'POST',
