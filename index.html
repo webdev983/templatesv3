@@ -7216,7 +7216,9 @@ overflow: auto;">
               variationSite.textContent = itemsArr[index].site
             }
             const handleRemove = async () => {
-              
+              if (itemsArr.length < 2) {
+                return
+              }
               await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${itemsArr[index].id}:${itemsArr[index].sk}`, {
                 method: 'DELETE',
                 headers: {
@@ -7224,6 +7226,9 @@ overflow: auto;">
                   // Add any additional headers if needed
                 },
               });
+              if (itemsArr.length < 2) {
+                menu.remove()
+              }
               itemsArr.splice(index, 1)
               index = index + 1 !== itemsArr.length ? (index = index) : (index = index - 1)
               input.value = itemsArr[index].value
