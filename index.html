@@ -6983,14 +6983,14 @@ overflow: auto;">
                   foundE = map.findLast(e => e.element.getAttribute(`data-import-${attr}`) === 'p-lead')
                 }
                 for (const attribute of foundE.element.attributes) {
-                  if (attribute.name.startsWith('data-builder-import-product-')) {
-                    const prefix = 'data-builder-import-product-';
+                  if (attribute.name.startsWith('data-import-product-')) {
+                    const prefix = 'data-import-product-';
                     const suffix = attribute.name.substring(prefix.length);
                     const stamp = new Date().getTime().toString();
                     const body = {
                       id: pathItem.sku,
                       sk: 'data-' + suffix + ':' + stamp,
-                      value: child.textContent,
+                      value: child.innerHTML,
                       site: pathItem.lsi1.split('/')[0]
                     };
                     const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -7190,7 +7190,7 @@ overflow: auto;">
               menu.querySelector("#variation-amount-field").removeAttribute('hidden')
               variationAmount.textContent = items.length
               index = items.length - 1
-              if (items.length) {
+              if (true){//items.length) {
                 input.value = itemsArr[index].value
                 menu.querySelector("#variation-site-field").removeAttribute('hidden')
                 variationSite.textContent = itemsArr[index].site
