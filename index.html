@@ -383,7 +383,7 @@ overflow: auto;">
         <button add-stock class="b-3">➕ Add</button>
         <button stock-qty class="b-3">🔢 Qty</button>
         <button view-stock class="b-3">🔎 View</button>
-        <button class="b-3">🏷️ Label</button>
+        <button stock-label class="b-3">🏷️ Label</button>
       </div>
       <div hidden id="real-goods-menu">
         <button stock-qty class="b-3"> 🔢 Qty</button>
@@ -7737,6 +7737,7 @@ overflow: auto;">
 
           }
         }
+        
         const viewStockMenu = document.getElementById('view-stock')
         const stockItem0 = document.querySelector('[stockItem]')
         const handleViewStock = async (e) => {
@@ -7768,11 +7769,22 @@ overflow: auto;">
 
           }
         }
+        const stockLabelMenu = document.getElementById('stock-label')
+        const handleStockLabel = async (e) => {
+          if (!stockMenuCloned.nextElementSibling?.id.startsWith('stock-label')) {
+            const clonedViewStock = stockLabelMenu.cloneNode(true)
+            clonedViewStock.id = clonedViewStock.id + ';' + sku
+           
+            stockMenuCloned.remove()
+
+          }
+        }
         stockMenuCloned.querySelectorAll('[stock-qty]').forEach(e => {
           e.addEventListener("click", handleStockQtyClick)
         })
         stockMenuCloned.querySelector('[add-stock]').addEventListener("click", handleAddStock)
         stockMenuCloned.querySelector('[view-stock]').addEventListener("click", handleViewStock)
+        stockMenuCloned.querySelector('[stock-label]').addEventListener("click", handleStockLabel)
 
 
       }
