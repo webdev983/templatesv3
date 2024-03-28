@@ -7038,7 +7038,7 @@ overflow: auto;">
                 return { tag: value, element, set: false, index: 1 }
               })
               console.log('map is '+JSON.stringify(map))
-              console.log('map ids '+JSON.stringify(map.map(e=>e.element.id)))
+              console.log('map ids '+JSON.stringify(map.map(e=>e.element.attributes)))
               let imgLead = false
               let pLead = false
               for (const child of Array.from(div.childNodes)) {
@@ -7058,7 +7058,7 @@ overflow: auto;">
                   foundE = map.findLast(e => e.element.getAttribute(`data-import-${attr}`) === 'p-lead')
                 }
                 else{
-                  foundE = map.findLast(e => e.element.getAttribute(`data-import-${attr}`) === tag)
+                  foundE = map.findLast(el => el.element.getAttribute(`data-import-${attr}`) === tag)
                 }
                 for (const attribute of foundE.element.attributes) {
                   if (attribute.name.startsWith('data-import-product-')) {
