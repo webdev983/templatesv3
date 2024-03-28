@@ -7050,14 +7050,14 @@ overflow: auto;">
                 let foundE
                 if (tag === 'img' && !imgLead) {
                   imgLead = true
-                  foundE = map.findLast(e => e.element.getAttribute(`data-import-${attr}`) === 'img-lead')
+                  foundE = map.findLast(e => e.tag === 'img-lead')
                 }
                 else if (tag === "p" && !pLead) {
                   pLead = true
-                  foundE = map.findLast(e => e.element.getAttribute(`data-import-${attr}`) === 'p-lead')
+                  foundE = map.findLast(e => e.tag === 'p-lead')
                 }
                 else{
-                  foundE = map.findLast(el => el.element.getAttribute(`data-import-${attr}`) === tag)
+                  foundE = map.findLast(el => el.tag === tag)
                 }
                 for (const attribute of foundE.element.attributes) {
                   if (attribute.name.startsWith('data-import-product-')) {
