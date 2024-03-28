@@ -1148,7 +1148,7 @@ overflow: auto;">
         arr.splice(index2, 1);
       }
       const active = arr.pop()
-      console.log('active is '+active)
+      console.log('active is ' + active)
       const breadCA = querySelectorAll1('[data-builder-breadcrumb-active]')
       const breadC = querySelectorAll1('[data-builder-breadCrumb]')
       const a = breadC[0].querySelector('[data-builder-breadCrumb-value]')
@@ -1177,15 +1177,15 @@ overflow: auto;">
 
         await pushAction(el)
       }
-      else{
+      else {
         const el =
-          {
-            time: (new Date()).getTime(),
-            action: 'removeTag',
-            target_element: breadCA[0].id + '-tree',
+        {
+          time: (new Date()).getTime(),
+          action: 'removeTag',
+          target_element: breadCA[0].id + '-tree',
 
-          }
-          pushAction(el)
+        }
+        pushAction(el)
       }
 
       let last = breadC[0].id + '-tree'
@@ -6940,7 +6940,7 @@ overflow: auto;">
       }
     }
     const handleImportMenu = () => {
-      let sku1 =pathItem.sku || selectedSku
+      let sku1 = pathItem.sku || selectedSku
       const generatedPage = getElementById1('generated-page')
       const elements1 = generatedPage.querySelectorAll('*');
 
@@ -7001,16 +7001,19 @@ overflow: auto;">
               if (attr.startsWith('product')) {
                 const stamp = new Date().getTime().toString()
                 let payload
-                if (update && itemsArr[index]?.value !== inputValue) {
-                  itemsArr[index] = { ...itemsArr[index], value: inputValue }
-                  payload = itemsArr[index]
+                if (update) {
+                  if (itemsArr[index]?.value !== inputValue) {
+                    itemsArr[index] = { ...itemsArr[index], value: inputValue }
+                    payload = itemsArr[index]
+                  }
+
                 } else {
                   const site = pathItem.lsi1.split('/')[0]
                   if (itemsArr[index]?.value === inputValue) {
                     const splitedSite = itemsArr[index].site.split(',')
-                    if(!splitedSite.includes(site)){
+                    if (!splitedSite.includes(site)) {
                       splitedSite.push(site)
-                      payload = {...itemsArr[index],site:splitedSite.join(',')}
+                      payload = { ...itemsArr[index], site: splitedSite.join(',') }
                     }
                   }
                   else {
@@ -7040,14 +7043,14 @@ overflow: auto;">
                 const value = element.getAttribute(`data-import-${attr}`)
                 return { tag: value, element, set: false, index: 1 }
               })
-              console.log('map is '+JSON.stringify(map))
+              console.log('map is ' + JSON.stringify(map))
               let imgLead = false
               let pLead = false
               for (const child of Array.from(div.childNodes)) {
                 if (!child?.tagName) {
                   continue
                 }
-                console.log('map is '+JSON.stringify(map))
+                console.log('map is ' + JSON.stringify(map))
                 const tag = child.tagName.toLowerCase()
                 console.log(tag)
                 let foundE
@@ -7059,7 +7062,7 @@ overflow: auto;">
                   pLead = true
                   foundE = map.findLast(e => e.tag === 'p-lead') || map.findLast(e => e.tag === 'p')
                 }
-                else{
+                else {
                   foundE = map.findLast(el => el.tag === tag)
                 }
                 for (const attribute of foundE.element.attributes) {
