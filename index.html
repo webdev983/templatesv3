@@ -6663,7 +6663,11 @@ overflow: auto;">
       const urlSearchParams = new URLSearchParams(window.location.search);
       let idFromLink = urlSearchParams.get('id');
       generateSchema(pagePathContent.split(';')[0])
-      const html = getElementById1('generated-page').parentNode.innerHTML
+      var iframe = document.getElementById("generated-page-iframe");
+
+      // Access the content of the iframe
+      var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+      const html = iframeDocument.innerHTML
       const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/publishv2', {
         method: 'POST',
         headers: {
