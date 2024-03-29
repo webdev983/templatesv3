@@ -7713,25 +7713,30 @@ overflow: auto;">
         const stockMenuCloned = document.getElementById('stock-menu').cloneNode(true)
         stockMenuCloned.id = stockMenuCloned.id + ';' + item.sk.replace('qty;', '')
         cloned.insertAdjacentElement('afterend', stockMenuCloned)
+        let type ='digital-good'
         const handleTypeChange = (e) => {
           if (e.target.id === 'digital-good') {
             if (e.target.checked) {
               stockMenuCloned.parentNode.querySelector('#digital-menu').removeAttribute('hidden')
               stockMenuCloned.parentNode.querySelector('#real-goods-menu').setAttribute('hidden', '')
+              type = 'digital-good'
             }
             else {
               stockMenuCloned.parentNode.querySelector('#digital-menu').setAttribute('hidden', '')
               stockMenuCloned.parentNode.querySelector('#real-goods-menu').removeAttribute('hidden')
+              type = 'real-good'
             }
           }
           if (e.target.id === 'real-good') {
             if (e.target.checked) {
               stockMenuCloned.parentNode.querySelector('#real-goods-menu').removeAttribute('hidden')
               stockMenuCloned.parentNode.querySelector('#digital-menu').setAttribute('hidden', '')
+              type = 'real-good'
             }
             else {
               stockMenuCloned.parentNode.querySelector('#real-goods-menu').setAttribute('hidden', '')
               stockMenuCloned.parentNode.querySelector('#digital-menu').removeAttribute('hidden')
+              type = 'digital-good'
             }
           }
 
@@ -7777,7 +7782,8 @@ overflow: auto;">
                   id: item.id,
                   sk: 'stock-item;' + variant + timeStamp,
                   lsi1: timeStamp + ':' + line,
-                  ownerUUID: `free:${item.id};${variant}`
+                  ownerUUID: `free:${item.id};${variant}`,
+                  type
 
                 }
                 const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
