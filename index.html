@@ -7014,7 +7014,7 @@ overflow: auto;">
                     const splitedSite = itemsArr[index].site.split(',')
                     if (!splitedSite.includes(site)) {
                       splitedSite.push(site)
-                      payload = { ...itemsArr[index], site: splitedSite.join(',') }
+                      payload = { ...itemsArr[index], site: splitedSite.sort((a, b) => a.name.localeCompare(b.name)).join(',') }
                     }
                   }
                   else if (!itemsArr.find(item => item.value === inputValue)) {
