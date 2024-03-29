@@ -7002,7 +7002,8 @@ overflow: auto;">
                 const stamp = new Date().getTime().toString()
                 let payload
                 if (update) {
-                  if (itemsArr[index]?.value !== inputValue) {
+                  
+                  if (!itemsArr.find(item=>item.value ===inputValue)) {
                     itemsArr[index] = { ...itemsArr[index], value: inputValue }
                     payload = itemsArr[index]
                   }
@@ -7016,7 +7017,7 @@ overflow: auto;">
                       payload = { ...itemsArr[index], site: splitedSite.join(',') }
                     }
                   }
-                  else {
+                  else if(!itemsArr.find(item=>item.value ===inputValue)){
                     payload = {
                       id: sku1,
                       sk: attr + ':' + stamp,
