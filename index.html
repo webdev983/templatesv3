@@ -7027,26 +7027,27 @@ overflow: auto;">
                     itemsArr.push(payload)
                     index = itemsArr.length - 1
                     variationAmount.textContent = itemsArr.length
-                    for (let i = 0; i < itemsArr.length; i++) {
 
-                      if (i !== index) {
-                        const it = itemsArr[i]
-                        const splited1 = it.site.split(',')
-                        const siteI = splited1.findIndex(e => e === site)
-                       
-                        if (siteI > -1) {
-                          splited1.splice(siteI, 1)
-                          const sorted = splited1.filter(e=>e)
-                          sorted.sort()
-                          itemsArr[i] = {...itemsArr[i],site:sorted.join(',')}
-                          await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                            method: 'POST',
-                            headers: {
-                              'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({...itemsArr[i]}),
-                          });
-                        }
+                  }
+                  for (let i = 0; i < itemsArr.length; i++) {
+
+                    if (i !== index) {
+                      const it = itemsArr[i]
+                      const splited1 = it.site.split(',')
+                      const siteI = splited1.findIndex(e => e === site)
+
+                      if (siteI > -1) {
+                        splited1.splice(siteI, 1)
+                        const sorted = splited1.filter(e => e)
+                        sorted.sort()
+                        itemsArr[i] = { ...itemsArr[i], site: sorted.join(',') }
+                        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify({ ...itemsArr[i] }),
+                        });
                       }
                     }
                   }
