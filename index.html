@@ -1137,7 +1137,6 @@ overflow: auto;">
       let arr = pathItem.lsi1.split(';')[0].split('/')
       const site = arr[0]
       arr.shift()
-      
 
       const index = arr.indexOf('Content');
       if (index !== -1) {
@@ -1171,7 +1170,7 @@ overflow: auto;">
           time: (new Date()).getTime(),
           action: 'textContent',
           target_element: a.id + '-tree',
-          value: active,
+          value: capitalizeAndReplaceHyphens(active),
 
         }
 
@@ -1207,7 +1206,7 @@ overflow: auto;">
           time: (new Date()).getTime(),
           action: 'textContent',
           target_element: a.id + '-tree',
-          value: arr[i],
+          value: capitalizeAndReplaceHyphens(arr[i]),
 
         }
         await pushAction(el)
@@ -1234,7 +1233,6 @@ overflow: auto;">
       json.itemListElement[0].item["@id"] = 'https://' + site
       let link1 = 'https://' + site.toLowerCase() + '/'
       active && arr.push(active)
-      arr = arr.map(e => capitalizeAndReplaceHyphens(e))
       for (let i = 0; i < arr.length; i++) {
         const newEl = deepCopy(json.itemListElement[0])
         link1 = link1 + arr[i] + '/'
