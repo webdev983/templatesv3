@@ -483,7 +483,8 @@ overflow: auto;">
     <div id="code-tree-comment-form" data-menu style="margin-bottom: 30px; ">
       <button onclick="cancel(event)" class="b-4" style="margin-top:5px; margin-bottom: 5px;">❌</button>
       <br>
-      <label><input type="checkbox" id="applyToCopies"><span class="l-3" style="margin-bottom: 5px;">⧉ Apply to Copies</span></label>
+      <label><input type="checkbox" id="applyToCopies"><span class="l-3" style="margin-bottom: 5px;">⧉ Apply to
+          Copies</span></label>
       <br>
 
       <button class="b-4" onclick="removeComment(event)">🗑️️ Remove</button>
@@ -4674,6 +4675,105 @@ overflow: auto;">
           }
 
           break;
+        case 'Add_Parent':
+          const handleInsertParent = (treeElement, componentElement, replaceCopyId) => {
+            console.log('handling' + treeElement + ' ' + componentElement + ' ' + replaceCopyId)
+            const newEl = document.createElement(inserted_element.tagName)
+            componentElement.replaceWith(newEl);
+            newEl.appendChild(componentElement)
+
+            const attr1 = componentElement.getAttribute('data-replaceID')
+            if (attr1) {
+              newEl.setAttribute('data-replaceID', attr1)
+            }
+            if (noComp || noComp1) {
+              newEl.setAttribute('data-replaceID', replaceId)
+            }
+
+
+            const splited = componentElement.id.split(';')
+
+
+
+
+
+
+            newEl.id = replaceCopyId ? inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') : inserted_element.id
+
+            console.log(newEl.id)
+
+            const component_el = getElementById1('tree-element')
+            const newEl2 = component_el.cloneNode(true)
+            const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
+            button2.textContent = '🏷️' + inserted_element.tagName;
+
+            newEl2.id = replaceCopyId ? inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') + '-tree' : inserted_element.id + '-tree'
+            if (componentElement.hasAttribute('data-parentid')) {
+              console.log('in12')
+
+
+              newEl.id = componentElement.id.split(';')[0] + ';' + newEl.id
+              newEl2.id = componentElement.id.split(';')[0] + ';' + newEl2.id
+            }
+
+            else if (splited.length > 1) {
+              newEl.id = splited[0] + ';' + newEl.id
+              newEl2.id = splited[0] + ';' + newEl2.id
+            }
+            console.log(newEl.id)
+            treeElement.replaceWith(newEl2);
+            newEl2.appendChild(treeElement)
+            const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
+            button.addEventListener('mouseover', mouseOverTree);
+
+            button.addEventListener('mouseout', mouseOutTree);
+            if (componentElement.contains(newEl)) {
+              console.log(newEl.id + ' was created and appended successfully.');
+            } else {
+              console.error('Failed to create or append newEl.');
+            }
+
+
+          }
+
+          treeElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
+            getElementById1('code-tree')
+            : getElementById1(target_element)
+          //component
+          componentElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
+            getElementById1('generated-page')
+            :
+            getElementById1(removeLastOccurrence(target_element, '-tree'));
+          if (!componentElement) {
+            console.log('comp not found')
+            const mId = target_element.replace('-tree', '').split(':')[0]
+            const treeEls = []
+            const compEls = []
+            const existing = []
+            const elementsWithIdAndAttribute = querySelectorAll1('[id^="' + mId + '"][data-replaceid]')
+              .forEach(
+                el => {
+                  console.log('ffooound152 ' + el.id)
+                  if (!existing.includes(el.getAttribute('data-replaceid'))) {
+                    existing.push(el.getAttribute('data-replaceid'))
+                    treeEls.push(getElementById1(el.id + '-tree'));
+                    compEls.push(el)
+                  }
+
+                }
+              );
+
+            for (let i = 0; i < treeEls.length; i++) {
+              handleInsertParent(treeEls[i], compEls[i], true)
+            }
+            break;
+          }
+          console.log('handling insert')
+
+          handleInsertParent(treeElement, componentElement)
+
+
+          break;
 
         case 'Append':
           // Handle the 'Append' action
@@ -4993,62 +5093,6 @@ overflow: auto;">
 
 
 
-
-
-
-
-            console.log(command)
-            //fieldset
-            treeElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
-              getElementById1('code-tree')
-              : getElementById1(target_element)
-            //component
-
-            componentElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
-              getElementById('generated-page')
-              :
-              getElementById1(removeLastOccurrence(target_element, '-tree'));
-
-            const newEl = document.createElement(inserted_element.tagName)
-            const attr = componentElement.getAttribute('data-replaceID')
-            if (attr) {
-              newEl.setAttribute('data-replaceID', attr)
-            }
-            if (noComp1 || noComp) {
-              newEl.setAttribute('data-replaceID', replaceId)
-            }
-
-
-
-            console.log(newEl.id)
-            componentElement.appendChild(newEl)
-            const component_el = getElementById1('tree-element')
-            const newEl2 = component_el.cloneNode(true)
-            const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
-            button2.textContent = '🏷️' + inserted_element.tagName;
-            const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
-            button.addEventListener('mouseover', mouseOverTree);
-
-            button.addEventListener('mouseout', mouseOutTree);
-
-
-            newEl.id = inserted_element.id
-            newEl2.id = inserted_element.id + '-tree'
-            const splited = componentElement.id.split(';')
-            console.log('com1' + componentElement.hasAttribute('data-parentid') + componentElement.id)
-            if (componentElement.hasAttribute('data-parentid')) {
-              console.log('in12')
-              newEl.id = componentElement.id + ';' + inserted_element.id
-              newEl2.id = componentElement.id + ';' + inserted_element.id + '-tree'
-            }
-
-            else if (splited.length > 1) {
-              newEl.id = splited[0] + ';' + inserted_element.id
-              newEl2.id = splited[0] + ';' + inserted_element.id + '-tree'
-            }
-            componentElement.appendChild(newEl)
-            treeElement.appendChild(newEl2)
-            break;
           }
           if (target_element.length) {
             console.log('movestat ' + move)
@@ -8130,7 +8174,7 @@ overflow: auto;">
         e.target.parentNode.remove()
       }
     }
-    var addParent= (e) => {
+    var addParent = (e) => {
       const splited = e.target.parentNode.id.split(';')
       const [toRemove, ...rest] = splited
       const parentId = rest.join(';');
@@ -8147,7 +8191,7 @@ overflow: auto;">
           };
         }
         clonedFieldset.id = clonedFieldset.id + ';' + parentId;
-        clonedFieldset.setAttribute('action',applyToCopies ? "Add_Parent+" :  "Add_Parent")
+        clonedFieldset.setAttribute('action', applyToCopies ? "Add_Parent+" : "Add_Parent")
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
         e.target.parentNode.remove()
       }
