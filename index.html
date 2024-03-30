@@ -483,7 +483,7 @@ overflow: auto;">
     <div id="code-tree-comment-form" data-menu style="margin-bottom: 30px; ">
       <button onclick="cancel(event)" class="b-4" style="margin-top:5px; margin-bottom: 5px;">❌</button>
       <br>
-      <label><input type="checkbox"><span class="l-3" style="margin-bottom: 5px;">⧉ Apply to Copies</span></label>
+      <label><input type="checkbox" id="applyToCopies"><span class="l-3" style="margin-bottom: 5px;">⧉ Apply to Copies</span></label>
       <br>
 
       <button class="b-4" onclick="removeComment(event)">🗑️️ Remove</button>
@@ -568,7 +568,8 @@ overflow: auto;">
       <br>
       <button style="margin:5px; margin-left: 0px; background-color: #f0f0f0;" class="b-3"
         id="code-tree-click-tag-append-child" onclick="append(event)">👶 Append</button>
-      <button style="margin:5px; margin-left: 0px; background-color: #f0f0f0;" class="b-3">👨‍👦️ Add Parent</button>
+      <button style="margin:5px; margin-left: 0px; background-color: #f0f0f0;" onclick="addParent(event)"
+        class="b-3">👨‍👦️ Add Parent</button>
       <button style="margin:5px; margin-left: 0px; background-color: #f0f0f0;" class="b-3"
         id="code-tree-click-tag-insert-before" onclick="insertB(event)">⬅️ insertBefore</button>
       <br>
@@ -7713,7 +7714,7 @@ overflow: auto;">
         const stockMenuCloned = document.getElementById('stock-menu').cloneNode(true)
         stockMenuCloned.id = stockMenuCloned.id + ';' + item.sk.replace('qty;', '')
         cloned.insertAdjacentElement('afterend', stockMenuCloned)
-        let type ='digital-good'
+        let type = 'digital-good'
         const handleTypeChange = (e) => {
           if (e.target.id === 'digital-good') {
             if (e.target.checked) {
@@ -8125,6 +8126,28 @@ overflow: auto;">
 
         clonedFieldset.id = clonedFieldset.id + ';' + parentId;
         clonedFieldset.setAttribute('action', 'Append')
+        e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+        e.target.parentNode.remove()
+      }
+    }
+    var addParent= (e) => {
+      const splited = e.target.parentNode.id.split(';')
+      const [toRemove, ...rest] = splited
+      const parentId = rest.join(';');
+      const fieldset = getElementById1('tag-table');
+      const applyToCopies = e.target.parentNode.querySelector('#applyToCopies').checked
+      if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('tag-table')) {
+        const clonedFieldset = fieldset.cloneNode(true);
+
+        const clonedRows = clonedFieldset.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+        for (let i = 0; i < clonedRows.length; i++) {
+          const index = i; // Capture the current value of 'i' in a closure
+          clonedRows[i].onclick = function (event) {
+            chooseTag(index, event);
+          };
+        }
+        clonedFieldset.id = clonedFieldset.id + ';' + parentId;
+        clonedFieldset.setAttribute('action',applyToCopies ? "Add_Parent+" :  "Add_Parent")
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
         e.target.parentNode.remove()
       }
