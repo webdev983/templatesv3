@@ -5546,6 +5546,10 @@ overflow: auto;">
         case 'innerHtml':
           // Handle the 'innerHtml' action
           const targetElement = getElementById1(removeLastOccurrence(target_element, '-tree'));
+          if (targetElement) {
+            const textContentButton = element1.querySelector('[data-element="code-tree-inner-html-button"]');
+            textContentButton.textContent = `▶️${insertedCode.length}`;
+          }
           if (targetElement.hasAttribute('data-b-value')) {
             targetElement.setAttribute('data-b-value', true)
             let parent = targetElement.parentNode
