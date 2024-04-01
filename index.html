@@ -580,8 +580,7 @@ overflow: auto;">
       <button style="margin-right: 5px;" class="b-3" id="code-tree-click-tag-remove-tag" onclick="removeTag(event)">🗑️️
         Remove
         element</button>
-      <button style="margin-right:5px; margin-top: 5px;" class="b-3" id="code-tree-click-tag-remove-tag"
-        onclick="removeTagAndCopies(event)">🗑️️ Remove +</button>
+      
 
 
 
@@ -5688,7 +5687,7 @@ overflow: auto;">
 
 
           break;
-        case 'removeTagAndCopies':
+        case 'removeTag+':
           // Handle the 'removeTag' action
 
           // component
@@ -8408,33 +8407,21 @@ overflow: auto;">
       pushAction(el);
     };
     const removeTag = (e) => {
+      const checked = e.target.parentNode.querySelector('#applyToCopies').checked
       const splited = e.target.parentNode.id.split(';')
       const [toRemove, ...rest] = splited
       const parentId = rest.join(';');
       const el =
       {
         time: (new Date()).getTime(),
-        action: 'removeTag',
+        action: checked ? 'removeTag+' : 'removeTag',
         target_element: parentId,
 
       }
       pushAction(el)
       e.target.parentNode.remove()
     }
-    const removeTagAndCopies = (e) => {
-      const splited = e.target.parentNode.id.split(';')
-      const [toRemove, ...rest] = splited
-      const parentId = rest.join(';');
-      const el =
-      {
-        time: (new Date()).getTime(),
-        action: 'removeTagAndCopies',
-        target_element: parentId,
-
-      }
-      pushAction(el)
-      e.target.parentNode.remove()
-    }
+    
     const removeComponent = async (e) => {
       const splited = e.target.parentNode.id.split(';')
       const [toRemove, ...rest] = splited
