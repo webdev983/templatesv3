@@ -5870,7 +5870,7 @@ overflow: auto;">
       const button = event.target.closest('button[data-element="code-tree-attributes-button"]');
 
       if (button) {
-        const parentId = button.parentNode.id;
+        const parentId = button.parentNode.id.split(';')[1] ||button.parentNode.id;
         const generatedId = removeLastOccurrence(parentId, '-tree')
         const textContentButton = button.parentNode.querySelector('[data-element="code-tree-attributes-button]');
 
