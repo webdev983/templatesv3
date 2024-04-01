@@ -5510,9 +5510,14 @@ overflow: auto;">
           const targetElement = getElementById1(removeLastOccurrence(target_element, '-tree'));
           const targetElement1 = getElementById1(target_element, '-tree');
           if (targetElement1) {
-            const textContentButton = targetElement1.querySelector('[data-element="code-tree-inner-html-button"]');
-            insertedCode ? textContentButton.removeAttribute('hidden') : textContentButton.setAttribute('hidden','')
-            textContentButton.textContent = `▶️${insertedCode.length}`;
+            const innerHtmlButton = targetElement1.querySelector('[data-element="code-tree-inner-html-button"]');
+            insertedCode ? innerHtmlButton.removeAttribute('hidden') : innerHtmlButton.setAttribute('hidden','')
+            innerHtmlButton.textContent = `▶️${insertedCode.length}`;
+
+            const textContentButton = targetElement1.querySelector('[data-element="code-tree-text-content-button"]');
+            textContentButton.setAttribute('hidden','')
+            textContentButton.textContent = `📄`;
+
           }
           if (targetElement.hasAttribute('data-b-value')) {
             targetElement.setAttribute('data-b-value', true)
@@ -5678,6 +5683,10 @@ overflow: auto;">
             const textContentButton = element1.querySelector('[data-element="code-tree-text-content-button"]');
             value ? textContentButton.removeAttribute('hidden') : textContentButton.setAttribute('hidden','')
             textContentButton.textContent = `📄${value.length}`;
+
+            const innerHtmlButton = element1.querySelector('[data-element="code-tree-inner-html-button"]');
+            innerHtmlButton.setAttribute('hidden','')
+            innerHtmlButton.textContent = `▶️`;
           }
 
 
