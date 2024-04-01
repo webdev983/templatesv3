@@ -778,7 +778,7 @@ overflow: auto;">
         e.target.parentNode.remove()
       }
       clonedFieldset.querySelector('#upload-button').onclick = handleUpload1
-      const id =pathItem.sku || pathItem.id
+      const id = pathItem.sku || pathItem.id
       let mergedItems = []
       const res = await Promise.all([...Object.keys(cache), id].map(e => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${e}&sk=pics&startsWith=true`, {
         method: 'GET',
@@ -4708,7 +4708,7 @@ overflow: auto;">
             button2.textContent = '🏷️' + inserted_element.tagName;
 
             newEl2.id = attr1 ? inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') + '-tree' : inserted_element.id + '-tree'
-            
+
             if (splited.length > 1) {
               newEl.id = splited[0] + ';' + newEl.id
               newEl2.id = splited[0] + ';' + newEl2.id
@@ -4746,7 +4746,7 @@ overflow: auto;">
           const elementsWithIdAndAttribute = querySelectorAll1('[id^="' + mId + '"]')
             .forEach(
               el => {
-                if(el.id.endsWith('tree')){
+                if (el.id.endsWith('tree')) {
                   return
                 }
                 console.log('ffooound152 ' + el.id)
@@ -7642,7 +7642,16 @@ overflow: auto;">
       if (items.length) {
         const ownerid = localStorage.getItem('ownerid')
         if (items[0].ownerUUID.replace('sku:', '') === ownerid) {
-          alert('adding sku in progress')
+          pathItem.sku = value
+          const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(pathItem),
+          });
+          location.reload()
+          //alert('adding sku in progress')
         }
         else {
           getElementById1('input-sku').value = ''
