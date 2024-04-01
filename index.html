@@ -778,7 +778,7 @@ overflow: auto;">
         e.target.parentNode.remove()
       }
       clonedFieldset.querySelector('#upload-button').onclick = handleUpload1
-      const id = pathItem.id
+      const id =pathItem.sku || pathItem.id
       let mergedItems = []
       const res = await Promise.all([...Object.keys(cache), id].map(e => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${e}&sk=pics&startsWith=true`, {
         method: 'GET',
@@ -924,7 +924,7 @@ overflow: auto;">
     }
     async function handleUpload1(event) {
 
-      const id = pathItem.id
+      const id = pathItem.sku || pathItem.id
       const fileContent = await file
       const fileName = fileContent.name
 
