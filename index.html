@@ -2618,7 +2618,7 @@ overflow: auto;">
     
     async function removeAttribute1(event) {
       const saveButton = event.target;
-      const checked = saveButton.closest('[data-open-menu]').querySelector('#applyToCopies')
+      const checked = saveButton.closest('[data-open-menu]').querySelector('#applyToCopies').checked
       const tr = saveButton.closest('#code-tree-tag-attributes-list-item');
 
       if (!tr) {
@@ -5886,7 +5886,7 @@ overflow: auto;">
           const insertAfterElement = textContentButton || button;
 
           // Insert the cloned fieldset after the specified element
-          insertAfterElement.parentNode.querySelector('[data-open-menu]').append(clonedFieldset)
+          insertAfterElement.closest('[data-open-menu]').append(clonedFieldset)
           const elementWithAttributes = getElementById1(generatedId);
           if (elementWithAttributes) {
             const attributesList = clonedFieldset.querySelector('#code-tree-tag-attributes-list');
@@ -5920,7 +5920,7 @@ overflow: auto;">
       const button = event.target.closest('button[data-element="code-tree-text-content-button"]');
 
       if (button) {
-        const parentId = button.parentNode.id;
+        const parentId = button.parentNode.id.split(';')
         const textContentButton = button.parentNode.querySelector('[data-element="code-tree-text-content-button"]');
 
         const existingClonedFieldset = button.parentNode.querySelector('[id^="code-tree-tag-text-content-form"]');
@@ -5945,7 +5945,7 @@ overflow: auto;">
       const button = event.target.closest('button[data-element="code-tree-inner-html-button"]');
 
       if (button) {
-        const parentId = button.parentNode.id;
+        const parentId = button.parentNode.id.split(';')[1];
         const textContentButton = button.parentNode.querySelector('[data-element="code-tree-inner-html-button"]');
 
         const existingClonedFieldset = button.parentNode.querySelector('[id^="code-tree-tag-html-content-form"]');
