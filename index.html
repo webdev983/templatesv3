@@ -5600,6 +5600,7 @@ overflow: auto;">
 
           }
           break;
+        case 'ChangeTag+':
         case 'ChangeTagForCopies':
           // Handle the 'ChangeTag' action
           // tree el
@@ -8324,6 +8325,7 @@ overflow: auto;">
     }
     const changeTag = (e) => {
       const splited = e.target.parentNode.id.split(';')
+      const checked = e.target.parentNode.querySelector('#applyToCopies').checked
       const [toRemove, ...rest] = splited
       const parentId = rest.join(';');
       const fieldset = getElementById1('tag-table');
@@ -8340,34 +8342,12 @@ overflow: auto;">
           };
         }
         clonedFieldset.id = clonedFieldset.id + ';' + parentId;
-        clonedFieldset.setAttribute('action', 'ChangeTag')
+        checked ? clonedFieldset.setAttribute('action', 'ChangeTag+'):clonedFieldset.setAttribute('action', 'ChangeTag')
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
         e.target.parentNode.remove()
       }
     }
-    const changeTagForCopies = (e) => {
-      const splited = e.target.parentNode.id.split(';')
-      const [toRemove, ...rest] = splited
-      const parentId = rest.join(';');
-      const fieldset = getElementById1('tag-table');
-
-      if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('tag-table')) {
-        const clonedFieldset = fieldset.cloneNode(true);
-
-
-        const clonedRows = clonedFieldset.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-        for (let i = 0; i < clonedRows.length; i++) {
-          const index = i; // Capture the current value of 'i' in a closure
-          clonedRows[i].onclick = function (event) {
-            chooseTag(index, event);
-          };
-        }
-        clonedFieldset.id = clonedFieldset.id + ';' + parentId;
-        clonedFieldset.setAttribute('action', 'ChangeTagForCopies')
-        e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
-        e.target.parentNode.remove()
-      }
-    }
+    
     const duplicateTag = (e) => {
       const splited = e.target.parentNode.id.split(';');
       const [toRemove, ...rest] = splited;
@@ -9241,7 +9221,7 @@ overflow: auto;">
           target_element: splited.join(';'),
 
         }
-        if (fieldsetAction === 'ChangeTag' || fieldsetAction === 'ChangeTagForCopies') {
+        if (fieldsetAction === 'ChangeTag' || fieldsetAction === 'ChangeTag+') {
           el.tag_change = chosenTag.tagName
         }
 
