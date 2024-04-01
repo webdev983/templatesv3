@@ -138,11 +138,11 @@ overflow: auto;">
         <button class="b-3 arrow" data-element="code-tree-show-hide-button" onclick="toggleSubFields(event)">→</button>
         <button class="b-3 t" data-element="code-tree-tag-name-button"
           onclick="loader(event, handleTreeClick)">🏷️head</button>
-        <button class="b-3 t" data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)">
+        <button hidden class="b-3 t" data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)">
           ▶️</button>
-        <button class="b-3 t" data-element="code-tree-attributes-button"
+        <button class="b-3 t" hidden data-element="code-tree-attributes-button"
           onclick="openAttributeContent(event)">🔑</button>
-        <button class="b-3 t" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
+        <button class="b-3 t" hidden data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
         <span data-element="comment" hidden class="l-3 t b-dark-blue">💬</span>
         <div data-open-menu></div>
       </fieldset>
@@ -153,11 +153,11 @@ overflow: auto;">
         <button class="b-3 arrow" data-element="code-tree-show-hide-button" onclick="toggleSubFields(event)">→</button>
         <button class="b-3 t" data-element="code-tree-tag-name-button"
           onclick="loader(event, handleTreeClick)">🏷️body</button>
-        <button class="b-3 t " data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)">
+        <button class="b-3 t " hidden data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)">
           ▶️</button>
-        <button class="b-3 t" data-element="code-tree-attributes-button"
+        <button class="b-3 t" hidden data-element="code-tree-attributes-button"
           onclick="openAttributeContent(event)">🔑</button>
-        <button class="b-3 t b-dark-blue" data-element="code-tree-text-content-button"
+        <button class="b-3 t b-dark-blue" data-element="code-tree-text-content-button" hidden
           onclick="openTextContent(event)">📄</button>
         <span data-element="comment" hidden class="l-3 t b-dark-blue">💬</span>
 
@@ -521,11 +521,11 @@ overflow: auto;">
       <button class="b-3 arrow" data-element="code-tree-show-hide-button"
         onclick="toggleSubFields(event)">&#8594;</button>
       <button class="b-3 t" data-element="code-tree-tag-name-button"
-        onclick="loader(event, handleTreeClick)">🏷️component</button>
-      <button class="b-3 t" data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)">
+        onclick="loader(event, handleTreeClick)">🏷️component</button> 
+      <button class="b-3 t" data-element="code-tree-inner-html-button" hidden onclick="openInnerHtmlContent(event)">
         ▶️</button>
-      <button class="b-3 t" data-element="code-tree-attributes-button" onclick="openAttributeContent(event)">🔑</button>
-      <button class="b-3 t" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
+      <button class="b-3 t" data-element="code-tree-attributes-button" hidden onclick="openAttributeContent(event)">🔑</button>
+      <button class="b-3 t" data-element="code-tree-text-content-button" hidden onclick="openTextContent(event)">📄</button>
       <span data-element="comment" hidden class="l-3 t b-dark-blue">💬</span>
       <span data-open-menu></button>
     </fieldset>
@@ -557,14 +557,14 @@ overflow: auto;">
       <br>
 
 
-      <button class="b-3 t" data-element="code-tree-attributes-button" onclick="openAttributeContent(event)">🔑
+      <button class="b-3 t" data-element="code-tree-attributes-button" hidden onclick="openAttributeContent(event)">🔑
         Attributes</button>
 
       <button style="margin-right:5px; margin-top: 5px;" data-element="code-tree-comment-button" class="b-3"
         onclick="openComment(event)">💬 Comment</button>
-      <button class="b-3 t" data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)"> ▶️
+      <button class="b-3 t" data-element="code-tree-inner-html-button" hidden onclick="openInnerHtmlContent(event)"> ▶️
         InnerHtml</button>
-      <button class="b-3 t" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄
+      <button class="b-3 t" data-element="code-tree-text-content-button" hidden onclick="openTextContent(event)">📄
         TextContent</button>
       <br>
       <button style="margin:5px; margin-left: 0px; background-color: #f0f0f0;" class="b-3"
@@ -5511,6 +5511,7 @@ overflow: auto;">
           const targetElement1 = getElementById1(target_element, '-tree');
           if (targetElement1) {
             const textContentButton = targetElement1.querySelector('[data-element="code-tree-inner-html-button"]');
+            insertedCode ? textContentButton.removeAttribute('hidden') : textContentButton.setAttribute('hidden')
             textContentButton.textContent = `▶️${insertedCode.length}`;
           }
           if (targetElement.hasAttribute('data-b-value')) {
@@ -5675,6 +5676,7 @@ overflow: auto;">
           const element1 = getElementById1(target_element);
           if (element1) {
             const textContentButton = element1.querySelector('[data-element="code-tree-text-content-button"]');
+            value ? textContentButton.removeAttribute('hidden') : textContentButton.setAttribute('hidden')
             textContentButton.textContent = `📄${value.length}`;
           }
 
