@@ -5823,7 +5823,7 @@ overflow: auto;">
           console.log('pr' + target_element);
           target_element = target_element.endsWith('-tree') ? target_element : target_element + '-tree'
           const allSelector = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
-          const allTargets = Array.from(querySelectorAll1(allSelector)).filter(element => !element.id.endsWith('-fieldset') && !element.id.endsWith('-tree') )
+          const allTargets = Array.from(querySelectorAll1(allSelector)).map(element => !element.id.endsWith('-fieldset') && !element.id.endsWith('-tree') && element.setAttribute(key, value))
 
           // component
 
@@ -5832,7 +5832,7 @@ overflow: auto;">
             allTargets.forEach(element => element.setAttribute(key, value))
             break;
           }
-          const attributeButton1 = getElementById1((target_element).querySelector('[data-element="code-tree-attributes-button"]');
+          const attributeButton1 = getElementById1(target_element).querySelector('[data-element="code-tree-attributes-button"]');
           attributeButton1.removeAttribute('hidden')
           for (const element22 of allTargets) {
 
