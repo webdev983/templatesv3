@@ -9190,7 +9190,9 @@ overflow: auto;">
       const tableBody = getElementById1('tagsTable').getElementsByTagName('tbody')[0];
       const fieldset = getElementById1('tagsTable').parentNode
       const copiesOfInserting = fieldset.getAttribute('copiesOfInserting');
-      fieldset.querySelector('#applyForCopies2').checked = !!copiesOfInserting
+      if(copiesOfInserting){
+        fieldset.querySelector('#applyForCopies2').setAttribute('checked','')
+      }
       tags.forEach((tag, index) => {
         let row = tableBody.insertRow();
         row.onclick = function (event) { chooseTag(index, event); };
