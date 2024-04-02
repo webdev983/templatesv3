@@ -3758,7 +3758,7 @@ overflow: auto;">
       const [toRemove, ...rest] = splited
       const parentId = rest.join(';');
       const fieldset = getElementById1('code-tree-append-or-insert-approv-menu');
-
+      const checked = e.target.parentNode.getAttribute('copiesOfInserting')
       if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-append-or-insert-approv-menu')) {
         const clonedFieldset = fieldset.cloneNode(true);
 
@@ -3770,6 +3770,7 @@ overflow: auto;">
         // Get all fieldsets with data-element="code-tree-tag"
         var codeTreeTagFieldsets = querySelectorAll1('fieldset[data-element="code-tree-tag"]');
         var checkbox1 = clonedFieldset.querySelector('#code-tree-menu-dublicate-with-parent-option');
+        checked && (checkbox1.checked = !!checked)
         if (checkbox1 && action === 'InsertBefore') {
           clonedFieldset.querySelector('#code-tree-menu-dublicate-with-parent-option-1').setAttribute('hidden', "");
           clonedFieldset.querySelector('#code-tree-menu-dublicate-with-parent-option-2').setAttribute('hidden', "");
@@ -8288,12 +8289,13 @@ overflow: auto;">
       const [toRemove, ...rest] = splited
       const parentId = rest.join(';');
       const fieldset = getElementById1('code-tree-add-tag-step-1');
-
+      const checked = e.target.parentNode.querySelector('#applyToCopies').checked
       if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-add-tag-step-1')) {
         const clonedFieldset = fieldset.cloneNode(true);
 
         clonedFieldset.id = clonedFieldset.id + ';' + parentId;
         clonedFieldset.setAttribute('action', 'Append')
+        checked && clonedFieldset.setAttribute('copiesOfInserting', "true")
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
         e.target.parentNode.remove()
       }
