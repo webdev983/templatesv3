@@ -8266,7 +8266,7 @@ overflow: auto;">
       const parentId = rest.join(';');
       const fieldset = getElementById1('tag-table');
       const applyToCopies = e.target.parentNode.querySelector('#applyToCopies').checked
-      const applyToCopies2 = e.target.parentNode.querySelector('#applyForCopies2').checked
+      
       if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('tag-table')) {
         const clonedFieldset = fieldset.cloneNode(true);
 
@@ -8279,7 +8279,7 @@ overflow: auto;">
         }
         clonedFieldset.id = clonedFieldset.id + ';' + parentId;
         clonedFieldset.setAttribute('action', "Add_Parent" )
-        if(applyToCopies2 || applyToCopies){
+        if(applyToCopies){
           clonedFieldset.setAttribute('copiesOfInserting', "true" )
         }
         
@@ -9221,7 +9221,8 @@ overflow: auto;">
           target_element: splited.join(';'),
 
         }
-        if(copiesOfInserting){
+        const applyToCopies2 = e.target.parentNode.querySelector('#applyForCopies2').checked
+        if(copiesOfInserting || applyToCopies2){
           el.options = {copiesOfInserting:true}
         }
         if (fieldsetAction === 'ChangeTag' || fieldsetAction === 'ChangeTag+') {
