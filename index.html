@@ -9188,6 +9188,9 @@ overflow: auto;">
 
     function buildTable() {
       const tableBody = getElementById1('tagsTable').getElementsByTagName('tbody')[0];
+      const fieldset = getElementById1('tagsTable').parentNode
+      const copiesOfInserting = fieldset.getAttribute('copiesOfInserting');
+      fieldset.querySelector('#applyForCopies2').checked = !!copiesOfInserting
       tags.forEach((tag, index) => {
         let row = tableBody.insertRow();
         row.onclick = function (event) { chooseTag(index, event); };
@@ -9247,7 +9250,7 @@ overflow: auto;">
 
         }
         const applyToCopies2 = fieldset.querySelector('#applyForCopies2').checked
-        if(copiesOfInserting || applyToCopies2){
+        if( applyToCopies2){
           el.options = {copiesOfInserting:true}
         }
         if (fieldsetAction === 'ChangeTag' ) {
