@@ -41,7 +41,25 @@
       }
     });
   </script>
+<style>
+  .custom-tooltip {
+  position: relative;
+  cursor: pointer;
+}
 
+.custom-tooltip:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 0;
+  top: -35px;
+  padding: 5px 10px;
+  color: #fff;
+  background-color: #333;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+</style>
 
 </head>
 
@@ -78,7 +96,7 @@ overflow: auto;">
         <tbody id="code-log-body">
           <tr hidden id="code-log-element">
             <td data-type-code-log="action-time"><span id="code-log-action-time">1703707728031</span></td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span></td>
+            <td data-type-code-log="action-name"><span id="code-log-action" class="custom-tooltip" data-tooltip="copy with parent, blablabla lalala">append child</span></td>
             <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
             </td>
           </tr>
