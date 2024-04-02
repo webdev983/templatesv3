@@ -3771,6 +3771,9 @@ overflow: auto;">
         var checkbox1 = clonedFieldset.querySelector('#code-tree-menu-copies-too');
         var checkbox2 = clonedFieldset.querySelector('#code-tree-menu-copies-too');
         checked && (checkbox1.checked = !!checked) && checkbox2.removeAttribute('hidden')
+        checkbox1.addEventListener('change',(e)=>{
+          checkbox1.checked ? checkbox2.removeAttribute('hidden') : checkbox2.setAttribute('hidden','')
+        })
         /*
         if (checkbox1 && action === 'InsertBefore') {
           clonedFieldset.querySelector('#code-tree-menu-dublicate-with-parent-option-1').setAttribute('hidden', "");
