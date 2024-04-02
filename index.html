@@ -4700,7 +4700,12 @@ overflow: auto;">
             if (replaceCopyId) {
               newEl2.id = inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') + '-tree'
             } else if (copiesOfInserting) {
-              newEl2.id  = duplicateId(inserted_element.id)
+              if(copyId){
+                newEl2.id = inserted_element.id.split(':')[0] + ':' + copyId + '-tree'
+              }
+              else{
+                newEl2.id = inserted_element.id + '-tree'
+              }
             }
             else {
               newEl2.id = inserted_element.id + '-tree'
@@ -4728,7 +4733,11 @@ overflow: auto;">
             button.addEventListener('mouseover', mouseOverTree);
 
             button.addEventListener('mouseout', mouseOutTree);
-            
+            if (componentElement.contains(newEl)) {
+              console.log(newEl.id + ' was created and appended successfully.');
+            } else {
+              console.error('Failed to create or append newEl.');
+            }
 
 
           }
