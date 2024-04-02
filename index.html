@@ -107,7 +107,12 @@ overflow: auto;">
           <!--NUMBERS!! 1️⃣ 2️⃣ 3️⃣ 4️⃣-->
           <tr hidden id="code-log-element">
             <td data-type-code-log="action-time"><span id="code-log-action-time">1703707728031</span></td>
+<<<<<<< HEAD
             <td data-type-code-log="action-name"><span id="code-log-action" class="tooltip" data-tooltip="✅⧉ Apply to copies  &#10; 🚂⧉ Insert Copies  &#10;  🎯⧉ Dup Target">append child</span  id="options_amount" class="l-2"><span>3️⃣</span></td>
+=======
+            <td data-type-code-log="action-name"><span id="code-log-action" class="custom-tooltip"
+                data-tooltip="copy with parent, blablabla lalala">append child</span></td>
+>>>>>>> cc9be75 (!)
             <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
             </td>
           </tr>
@@ -606,13 +611,13 @@ overflow: auto;">
       <br>
       <button style="margin:5px; margin-left: 0px; background-color: #f0f0f0;" class="b-3"
         id="code-tree-click-tag-append-child" onclick="append(event)">👶 Append</button>
-        <button style="margin:5px; margin-left: 0px; background-color: #f0f0f0;" onclick="addParent(event)"
+      <button style="margin:5px; margin-left: 0px; background-color: #f0f0f0;" onclick="addParent(event)"
         class="b-3">👨‍👦️ Add Parent</button>
-  
+
       <button style="margin:5px; margin-left: 0px; background-color: #f0f0f0;" class="b-3"
         id="code-tree-click-tag-insert-before" onclick="insertB(event)">⬅️ insertBefore</button>
 
-        
+
       <br>
 
       <button style="margin-right: 5px;" class="b-3" id="code-tree-click-tag-change-tag" onclick="changeTag(event)">✏️
@@ -651,10 +656,11 @@ overflow: auto;">
       <span id="code-tree-amount-selected-for-append-or-insert" style="font-size: 24px;">0</span>
       <button class="b-4" id="code-tree-click-tag-approve" onclick="approve(event)"> ✅ Approve</button>
       <br>
-      <label><input type="checkbox" ><span class="l-3">🚂⧉ Insert Copies too</span></label>
-            <br>
-      <label class="l-3"><input
-         name="duplicate-or-not-target-for-copies"  id="code-tree-menu-dublicate-with-parent-option" id="code-tree-menu-dublicate-with-parent-option-1" id="code-tree-menu-dublicate-with-parent-option-2" type="checkbox">🎯⧉ Duplicate Target for Copies</label>
+      <label><input type="checkbox"><span class="l-3">🚂⧉ Insert Copies too</span></label>
+      <br>
+      <label class="l-3"><input name="duplicate-or-not-target-for-copies"
+          id="code-tree-menu-dublicate-with-parent-option" id="code-tree-menu-dublicate-with-parent-option-1"
+          id="code-tree-menu-dublicate-with-parent-option-2" type="checkbox">🎯⧉ Duplicate Target for Copies</label>
     </fieldset>
 
 
@@ -702,7 +708,7 @@ overflow: auto;">
       <button id="code-tree-tag-attributes-form-action-back" class="b-3" onclick="cancel(event)"
         style="margin-top: 10px; margin-bottom: 5px;">❌</button>
 
-  
+
       <table class="table-2 table-row-number-2" id="code-tree-tag-attributes-list">
         <tbody>
           <tr id="code-tree-tag-attributes-list-item">
@@ -719,7 +725,7 @@ overflow: auto;">
       </table>
       <div style="margin-bottom: 10px;">
         <br>
-        <label  ><input type="checkbox" id="applyToCopies" ><span class="l-3">⧉ Apply to Copies</span></label>
+        <label><input type="checkbox" id="applyToCopies"><span class="l-3">⧉ Apply to Copies</span></label>
         <br>
 
         <button class="b-3" onclick="saveAttribute(event)" style="margin-bottom: 5px; margin-top: 5px;">💾 Save</button>
@@ -735,7 +741,7 @@ overflow: auto;">
       <br>
 
       <label class="l-3">
-        <input type="checkbox" id="applyForCopies2"> 
+        <input type="checkbox" id="applyForCopies2">
         ⧉ InsertToCopies+
       </label>
 
@@ -4730,10 +4736,10 @@ overflow: auto;">
             if (replaceCopyId) {
               newEl2.id = inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') + '-tree'
             } else if (copiesOfInserting) {
-              if(copyId){
+              if (copyId) {
                 newEl2.id = inserted_element.id.split(':')[0] + ':' + copyId + '-tree'
               }
-              else{
+              else {
                 newEl2.id = inserted_element.id + '-tree'
               }
             }
@@ -8302,7 +8308,7 @@ overflow: auto;">
       const parentId = rest.join(';');
       const fieldset = getElementById1('tag-table');
       const applyToCopies = e.target.parentNode.querySelector('#applyToCopies').checked
-      
+
       if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('tag-table')) {
         const clonedFieldset = fieldset.cloneNode(true);
 
@@ -8314,11 +8320,11 @@ overflow: auto;">
           };
         }
         clonedFieldset.id = clonedFieldset.id + ';' + parentId;
-        clonedFieldset.setAttribute('action', "Add_Parent" )
-        if(applyToCopies){
-          clonedFieldset.setAttribute('copiesOfInserting', "true" )
+        clonedFieldset.setAttribute('action', "Add_Parent")
+        if (applyToCopies) {
+          clonedFieldset.setAttribute('copiesOfInserting', "true")
         }
-        
+
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
         e.target.parentNode.remove()
       }
@@ -8378,7 +8384,12 @@ overflow: auto;">
         }
         clonedFieldset.id = clonedFieldset.id + ';' + parentId;
         clonedFieldset.setAttribute('action', 'ChangeTag')
-        checked && clonedFieldset.setAttribute('copiesOfInserting', 'true')
+        if (checked) {
+          
+            console.log('setting checked')
+            clonedFieldset.querySelector('#applyForCopies2').checked =true
+          
+        }
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
         e.target.parentNode.remove()
       }
@@ -9200,12 +9211,7 @@ overflow: auto;">
 
     function buildTable() {
       const tableBody = getElementById1('tagsTable').getElementsByTagName('tbody')[0];
-      const fieldset = getElementById1('tagsTable').parentNode
-      const copiesOfInserting = fieldset.getAttribute('copiesOfInserting');
-      if(copiesOfInserting){
-        console.log('setting checked')
-        fieldset.querySelector('#applyForCopies2').setAttribute('checked','')
-      }
+
       tags.forEach((tag, index) => {
         let row = tableBody.insertRow();
         row.onclick = function (event) { chooseTag(index, event); };
@@ -9265,10 +9271,10 @@ overflow: auto;">
 
         }
         const applyToCopies2 = fieldset.querySelector('#applyForCopies2').checked
-        if( applyToCopies2){
-          el.options = {copiesOfInserting:true}
+        if (applyToCopies2) {
+          el.options = { copiesOfInserting: true }
         }
-        if (fieldsetAction === 'ChangeTag' ) {
+        if (fieldsetAction === 'ChangeTag') {
           el.tag_change = chosenTag.tagName
         }
 
