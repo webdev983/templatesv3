@@ -8336,12 +8336,13 @@ overflow: auto;">
       const [toRemove, ...rest] = splited
       const parentId = rest.join(';');
       const fieldset = getElementById1('code-tree-add-tag-step-1');
-
+      const checked = e.target.parentNode.querySelector('#applyToCopies').checked
       if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-add-tag-step-1')) {
         const clonedFieldset = fieldset.cloneNode(true);
 
         clonedFieldset.id = clonedFieldset.id + ';' + parentId;
         clonedFieldset.setAttribute('action', 'InsertBefore')
+        checked && clonedFieldset.setAttribute('copiesOfInserting', "true")
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
         e.target.parentNode.remove()
       }
