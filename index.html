@@ -8365,7 +8365,8 @@ overflow: auto;">
           };
         }
         clonedFieldset.id = clonedFieldset.id + ';' + parentId;
-        checked ? clonedFieldset.setAttribute('action', 'ChangeTag+') : clonedFieldset.setAttribute('action', 'ChangeTag')
+        clonedFieldset.setAttribute('action', 'ChangeTag')
+        checked && clonedFieldset.setAttribute('copiesOfInserting', 'true')
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
         e.target.parentNode.remove()
       }
@@ -9249,7 +9250,7 @@ overflow: auto;">
         if(copiesOfInserting || applyToCopies2){
           el.options = {copiesOfInserting:true}
         }
-        if (fieldsetAction === 'ChangeTag' || fieldsetAction === 'ChangeTag+') {
+        if (fieldsetAction === 'ChangeTag' ) {
           el.tag_change = chosenTag.tagName
         }
 
