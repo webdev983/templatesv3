@@ -8376,7 +8376,8 @@ overflow: auto;">
           };
         }
         clonedFieldset.id = clonedFieldset.id + ';' + parentId;
-        checked ? clonedFieldset.setAttribute('action', 'ChangeTag+') : clonedFieldset.setAttribute('action', 'ChangeTag')
+        clonedFieldset.setAttribute('action', 'ChangeTag')
+        checked && clonedFieldset.setAttribute('copiesOfInserting', 'true')
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
         e.target.parentNode.remove()
       }
@@ -9198,6 +9199,12 @@ overflow: auto;">
 
     function buildTable() {
       const tableBody = getElementById1('tagsTable').getElementsByTagName('tbody')[0];
+      const fieldset = getElementById1('tagsTable').parentNode
+      const copiesOfInserting = fieldset.getAttribute('copiesOfInserting');
+      if(copiesOfInserting){
+        console.log('setting checked')
+        fieldset.querySelector('#applyForCopies2').setAttribute('checked','')
+      }
       tags.forEach((tag, index) => {
         let row = tableBody.insertRow();
         row.onclick = function (event) { chooseTag(index, event); };
@@ -9257,10 +9264,10 @@ overflow: auto;">
 
         }
         const applyToCopies2 = fieldset.querySelector('#applyForCopies2').checked
-        if(copiesOfInserting || applyToCopies2){
+        if( applyToCopies2){
           el.options = {copiesOfInserting:true}
         }
-        if (fieldsetAction === 'ChangeTag' || fieldsetAction === 'ChangeTag+') {
+        if (fieldsetAction === 'ChangeTag' ) {
           el.tag_change = chosenTag.tagName
         }
 
