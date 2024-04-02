@@ -142,7 +142,8 @@ overflow: auto;">
           ▶️</button>
         <button class="b-3 t" hidden data-element="code-tree-attributes-button"
           onclick="openAttributeContent(event)">🔑</button>
-        <button class="b-3 t" hidden data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄</button>
+        <button class="b-3 t" hidden data-element="code-tree-text-content-button"
+          onclick="openTextContent(event)">📄</button>
         <span data-element="comment" hidden class="l-3 t b-dark-blue">💬</span>
         <div data-open-menu></div>
       </fieldset>
@@ -521,11 +522,13 @@ overflow: auto;">
       <button class="b-3 arrow" data-element="code-tree-show-hide-button"
         onclick="toggleSubFields(event)">&#8594;</button>
       <button class="b-3 t" data-element="code-tree-tag-name-button"
-        onclick="loader(event, handleTreeClick)">🏷️component</button> 
+        onclick="loader(event, handleTreeClick)">🏷️component</button>
       <button class="b-3 t" data-element="code-tree-inner-html-button" hidden onclick="openInnerHtmlContent(event)">
         ▶️</button>
-      <button class="b-3 t" data-element="code-tree-attributes-button" hidden onclick="openAttributeContent(event)">🔑</button>
-      <button class="b-3 t" data-element="code-tree-text-content-button" hidden onclick="openTextContent(event)">📄</button>
+      <button class="b-3 t" data-element="code-tree-attributes-button" hidden
+        onclick="openAttributeContent(event)">🔑</button>
+      <button class="b-3 t" data-element="code-tree-text-content-button" hidden
+        onclick="openTextContent(event)">📄</button>
       <span data-element="comment" hidden class="l-3 t b-dark-blue">💬</span>
       <span data-open-menu></button>
     </fieldset>
@@ -557,14 +560,14 @@ overflow: auto;">
       <br>
 
 
-      <button class="b-3 t" data-element="code-tree-attributes-button"  onclick="openAttributeContent(event)">🔑
+      <button class="b-3 t" data-element="code-tree-attributes-button" onclick="openAttributeContent(event)">🔑
         Attributes</button>
 
       <button style="margin-right:5px; margin-top: 5px;" data-element="code-tree-comment-button" class="b-3"
         onclick="openComment(event)">💬 Comment</button>
-      <button class="b-3 t" data-element="code-tree-inner-html-button"  onclick="openInnerHtmlContent(event)"> ▶️
+      <button class="b-3 t" data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)"> ▶️
         InnerHtml</button>
-      <button class="b-3 t" data-element="code-tree-text-content-button"  onclick="openTextContent(event)">📄
+      <button class="b-3 t" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄
         TextContent</button>
       <br>
       <button style="margin:5px; margin-left: 0px; background-color: #f0f0f0;" class="b-3"
@@ -580,7 +583,7 @@ overflow: auto;">
       <button style="margin-right: 5px;" class="b-3" id="code-tree-click-tag-remove-tag" onclick="removeTag(event)">🗑️️
         Remove
         element</button>
-      
+
 
 
 
@@ -2615,7 +2618,7 @@ overflow: auto;">
         return inputString;
       }
     }
-    
+
     async function removeAttribute1(event) {
       const saveButton = event.target;
       const checked = saveButton.closest('[data-open-menu]').querySelector('#applyToCopies').checked
@@ -2637,7 +2640,7 @@ overflow: auto;">
       }
 
       const { id } = parentMenu;
-      const action =checked ?'removeAttribute+' :'removeAttribute';
+      const action = checked ? 'removeAttribute+' : 'removeAttribute';
       console.log('Action: ' + action);
 
       const splited = id.split(';');
@@ -4299,7 +4302,22 @@ overflow: auto;">
       }
 
 
+      function recursivelyChangeIDs(element, newID, flag, treeType) {
+            if (!element) return; // Base case: stop if element is null
+            if (treeType) {
+              !flag && element.tagName.toLowerCase() === "fieldset" && (element.id = newID + ';' + element.id);
+            }
+            // Change ID of the current element
+            else {
+              !flag && (element.id = newID + ';' + element.id);
+            }
 
+
+            // Recursively change IDs of child elements
+            Array.from(element.children).forEach(child => {
+              recursivelyChangeIDs(child, newID, false, treeType);
+            });
+          }
       function cloneWithDescendants(element) {
         var clone = element.cloneNode(true);
         var clonedSubFieldsets = clone.querySelectorAll('fieldset[data-element="code-tree-tag"]');
@@ -5511,11 +5529,11 @@ overflow: auto;">
           const targetElement1 = getElementById1(target_element, '-tree');
           if (targetElement1) {
             const innerHtmlButton = targetElement1.querySelector('[data-element="code-tree-inner-html-button"]');
-            insertedCode ? innerHtmlButton.removeAttribute('hidden') : innerHtmlButton.setAttribute('hidden','')
+            insertedCode ? innerHtmlButton.removeAttribute('hidden') : innerHtmlButton.setAttribute('hidden', '')
             innerHtmlButton.textContent = `▶️${insertedCode.length}`;
 
             const textContentButton = targetElement1.querySelector('[data-element="code-tree-text-content-button"]');
-            textContentButton.setAttribute('hidden','')
+            textContentButton.setAttribute('hidden', '')
             textContentButton.textContent = `📄`;
 
           }
@@ -5682,11 +5700,11 @@ overflow: auto;">
           const element1 = getElementById1(target_element);
           if (element1) {
             const textContentButton = element1.querySelector('[data-element="code-tree-text-content-button"]');
-            value ? textContentButton.removeAttribute('hidden') : textContentButton.setAttribute('hidden','')
+            value ? textContentButton.removeAttribute('hidden') : textContentButton.setAttribute('hidden', '')
             textContentButton.textContent = `📄${value.length}`;
 
             const innerHtmlButton = element1.querySelector('[data-element="code-tree-inner-html-button"]');
-            innerHtmlButton.setAttribute('hidden','')
+            innerHtmlButton.setAttribute('hidden', '')
             innerHtmlButton.textContent = `▶️`;
           }
 
@@ -5752,7 +5770,7 @@ overflow: auto;">
           break;
         case 'setAttribute':
           console.log('pr' + target_element);
-          target_element = target_element.endsWith('-tree') ? target_element : target_element+ '-tree'
+          target_element = target_element.endsWith('-tree') ? target_element : target_element + '-tree'
 
           // component
 
@@ -5795,25 +5813,47 @@ overflow: auto;">
               element22.textContent = value
             }
           }
-          function recursivelyChangeIDs(element, newID, flag, treeType) {
-            if (!element) return; // Base case: stop if element is null
-            if (treeType) {
-              !flag && element.tagName.toLowerCase() === "fieldset" && (element.id = newID + ';' + element.id);
-            }
-            // Change ID of the current element
-            else {
-              !flag && (element.id = newID + ';' + element.id);
-            }
-
-
-            // Recursively change IDs of child elements
-            Array.from(element.children).forEach(child => {
-              recursivelyChangeIDs(child, newID, false, treeType);
-            });
-          }
+          
           if (key === 'data-parentid') {
             recursivelyChangeIDs(element22, removeLastOccurrence(target_element, '-tree'), true);
             recursivelyChangeIDs(element33, removeLastOccurrence(target_element, '-tree'), true, true);
+          }
+          break;
+        case 'setAttribute+':
+          console.log('pr' + target_element);
+          target_element = target_element.endsWith('-tree') ? target_element : target_element + '-tree'
+          const allSelector = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
+          const allTargets = Array.from(querySelectorAll1(allSelector)).map(element => !element.id.endsWith('-fieldset') && !element.id.endsWith('-tree') && element.setAttribute(key, value))
+
+          // component
+
+          if (key === 'style' || key === 'class') {
+
+            allTargets.forEach(element => element.setAttribute(key, value))
+            break;
+          }
+          const attributeButton1 = getElementById1(removeLastOccurrence(target_element, '-tree')).querySelector('[data-element="code-tree-attributes-button"]');
+          attributeButton1.removeAttribute('hidden')
+          for (const element22 of allTargets) {
+
+            const element33 = getElementById1(element22.id + 'tree');
+
+
+            if (key) {
+              console.log('key11 ' + key)
+              console.log('value ' + value)
+
+              element22.setAttribute(key, value);
+              if (!element22.textContent && key.toLowerCase() === 'data-visual-defaultTextNode'.toLowerCase()) {
+                console.log('not found 111')
+                element22.textContent = value
+              }
+            }
+            
+            if (key === 'data-parentid') {
+              recursivelyChangeIDs(element22, removeLastOccurrence(target_element, '-tree'), true);
+              recursivelyChangeIDs(element33, removeLastOccurrence(target_element, '-tree'), true, true);
+            }
           }
           break;
         case 'removeAttribute':
@@ -5882,7 +5922,7 @@ overflow: auto;">
       const button = event.target.closest('button[data-element="code-tree-attributes-button"]');
 
       if (button) {
-        const parentId = button.parentNode.id.split(';')[1] ||button.parentNode.id;
+        const parentId = button.parentNode.id.split(';')[1] || button.parentNode.id;
         const generatedId = removeLastOccurrence(parentId, '-tree')
         const textContentButton = button.parentNode.querySelector('[data-element="code-tree-attributes-button]');
 
@@ -5898,9 +5938,9 @@ overflow: auto;">
 
           // Find the position to insert the cloned fieldset
           const insertAfterElement = textContentButton || button;
-          
+
           // Insert the cloned fieldset after the specified element
-          const toA = insertAfterElement.closest('[data-open-menu]') ||insertAfterElement.parentNode.querySelector('[data-open-menu]')
+          const toA = insertAfterElement.closest('[data-open-menu]') || insertAfterElement.parentNode.querySelector('[data-open-menu]')
           // Insert the cloned fieldset after the specified element
           removeMenus()
           toA.append(clonedFieldset)
@@ -5921,7 +5961,7 @@ overflow: auto;">
 
               keyElement.textContent = attribute.name;
               valueElement.textContent = attribute.value;
-              
+
               // Append the modified tr to the list
               attributesList.appendChild(clonedTr);
             }
@@ -5930,7 +5970,7 @@ overflow: auto;">
             originalTr.remove();
 
           }
-          
+
         }
       }
     }
@@ -5950,10 +5990,10 @@ overflow: auto;">
           clonedFieldset.querySelector('textarea').value = getElementById1(parentId.replace('-tree', '')).innerHTML
           // Assign a unique id to the cloned fieldset
           clonedFieldset.id = 'code-tree-tag-text-content-form;' + parentId;
-          
+
           // Find the position to insert the cloned fieldset
           const insertAfterElement = textContentButton || button;
-          const toA = insertAfterElement.closest('[data-open-menu]') ||insertAfterElement.parentNode.querySelector('[data-open-menu]')
+          const toA = insertAfterElement.closest('[data-open-menu]') || insertAfterElement.parentNode.querySelector('[data-open-menu]')
           // Insert the cloned fieldset after the specified element
           removeMenus()
           toA.append(clonedFieldset)
@@ -5979,9 +6019,9 @@ overflow: auto;">
 
           // Find the position to insert the cloned fieldset
           const insertAfterElement = textContentButton || button;
-          
+
           // Insert the cloned fieldset after the specified element
-          const toA = insertAfterElement.closest('[data-open-menu]') ||insertAfterElement.parentNode.querySelector('[data-open-menu]')
+          const toA = insertAfterElement.closest('[data-open-menu]') || insertAfterElement.parentNode.querySelector('[data-open-menu]')
           // Insert the cloned fieldset after the specified element
           removeMenus()
           toA.append(clonedFieldset)
@@ -8164,14 +8204,14 @@ overflow: auto;">
     }
     const saveAttribute = async (event) => {
       const parentMenu = event.target.closest('.menu-1');
-
+      const checked = parentMenu.querySelector('#applyToCopies').checked
       if (!parentMenu) {
         console.error('Could not find parent menu element');
         return;
       }
 
       const { id } = parentMenu
-      const action = 'setAttribute'
+      const action = checked ? 'setAttribute' : 'setAttribute+'
       console.log('ac' + action)
 
       const saveButton = event.target;
@@ -8342,12 +8382,12 @@ overflow: auto;">
           };
         }
         clonedFieldset.id = clonedFieldset.id + ';' + parentId;
-        checked ? clonedFieldset.setAttribute('action', 'ChangeTag+'):clonedFieldset.setAttribute('action', 'ChangeTag')
+        checked ? clonedFieldset.setAttribute('action', 'ChangeTag+') : clonedFieldset.setAttribute('action', 'ChangeTag')
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
         e.target.parentNode.remove()
       }
     }
-    
+
     const duplicateTag = (e) => {
       const splited = e.target.parentNode.id.split(';');
       const [toRemove, ...rest] = splited;
@@ -8387,7 +8427,7 @@ overflow: auto;">
       pushAction(el)
       e.target.parentNode.remove()
     }
-    
+
     const removeComponent = async (e) => {
       const splited = e.target.parentNode.id.split(';')
       const [toRemove, ...rest] = splited
