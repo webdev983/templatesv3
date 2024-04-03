@@ -8503,6 +8503,8 @@ overflow: auto;">
 
       // Check if the "Duplicate with Parent" checkbox is checked
       var isDuplicateWithParent = duplicateCheckbox.checked;
+      var copyInsertingCheckbox = fieldset.querySelector('#code-tree-menu-copies-too');
+      var isCopiesOfInserting = copyInsertingCheckbox.checked;
       // Get the id and action attributes
       var fieldsetId = fieldset.id;
       var fieldsetAction = fieldset.getAttribute('action');
@@ -8527,18 +8529,12 @@ overflow: auto;">
       const splited = fieldsetId.split(';')
       splited.shift()
       const id = splited.join(';')
-      let el2 = {
-        time: (new Date()).getTime(),
-        action: fieldsetAction,
-        target_element: [{ type: 'tag', id, }, ...selected.map(id => {
-          return { type: 'tag', id }
-        })],
-      }
+
       if (isDuplicateWithParent) {
         pushAction({
           time: (new Date()).getTime(),
           action: fieldsetAction,
-          options:{copiesOfTarget: true},
+          options: { copiesOfTarget: true },
           target_element: [{ type: 'tag', id, }, ...selected.map(id => {
             return { type: 'tag', id }
           })],
@@ -8546,7 +8542,24 @@ overflow: auto;">
 
 
       }
+      else if(isCopiesOfInserting){
+        pushAction({
+          time: (new Date()).getTime(),
+          action: fieldsetAction,
+          options: { copiesOfInserting: true },
+          target_element: [{ type: 'tag', id, }, ...selected.map(id => {
+            return { type: 'tag', id }
+          })],
+        })
+      }
       else {
+        let el2 = {
+          time: (new Date()).getTime(),
+          action: fieldsetAction,
+          target_element: [{ type: 'tag', id, }, ...selected.map(id => {
+            return { type: 'tag', id }
+          })],
+        }
         pushAction(el2)
       }
       selected = []
