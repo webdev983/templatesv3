@@ -5635,7 +5635,7 @@ overflow: auto;">
         case 'ChangeTag':
           // Handle the 'ChangeTag' action
           // tree el
-          if (options.apply_to_copies) {
+          if (options?.apply_to_copies) {
             const selector1 = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
             querySelectorAll1(selector1).forEach(e => {
 
@@ -5736,7 +5736,7 @@ overflow: auto;">
         case 'removeTag':
           // Handle the 'removeTag' action
           // tree
-          if (options.apply_to_copies) {
+          if (options?.apply_to_copies) {
             const selector = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
             querySelectorAll1(selector).forEach(e => e.remove());
             break;
@@ -5844,7 +5844,7 @@ overflow: auto;">
           }
           break;
         case 'setAttribute':
-          if (options.apply_to_copies) {
+          if (options?.apply_to_copies) {
             target_element = target_element.endsWith('-tree') ? target_element : target_element + '-tree'
             const allSelector = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
             const allTargets = Array.from(querySelectorAll1(allSelector)).filter(element => !element.id.endsWith('-fieldset') && !element.id.endsWith('-tree'))
@@ -5970,7 +5970,7 @@ overflow: auto;">
           break;
         case 'removeAttribute':
           console.log('pr' + target_element);
-          if (options.apply_to_copies) {
+          if (options?.apply_to_copies) {
             const selector111 = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
             const els111 = querySelectorAll1(selector111); // Corrected the function name to document.querySelectorAll
             // component
