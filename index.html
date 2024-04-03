@@ -5984,7 +5984,7 @@ overflow: auto;">
     }
     function openAttributeContent(event) {
       const button = event.target.closest('button[data-element="code-tree-attributes-button"]');
-
+      const checked = e.target.parentNode.querySelector('#applyToCopies').checked
       if (button) {
         const parentId = button.parentNode.id.split(';')[1] || button.parentNode.id;
         const generatedId = removeLastOccurrence(parentId, '-tree')
@@ -5996,7 +5996,7 @@ overflow: auto;">
           // Clone the fieldset node
           const fieldset = getElementById1('code-tree-tag-attributes-form-1');
           const clonedFieldset = fieldset.cloneNode(true);
-
+          clonedFieldset.querySelector('#applyToCopies').checked = checked
           // Assign a unique id to the cloned fieldset
           clonedFieldset.id = 'code-tree-tag-attributes-form-1;' + parentId;
 
