@@ -4042,7 +4042,7 @@ overflow: auto;">
       return formattedDate;
     }
 
-    function insertDataIntoCodeLog(actionTime, actionName, inserted_component) {
+    function insertDataIntoCodeLog(actionTime, actionName,options, inserted_component) {
       const originalElement = getElementById1("code-log-element");
       const clonedElement = originalElement.cloneNode(true);
       clonedElement.removeAttribute('hidden')
@@ -4870,7 +4870,7 @@ overflow: auto;">
 
         case 'Append':
           // Handle the 'Append' action
-          if (options?.copiesOfTarget) {
+          if (options?.duplicateTarget) {
             // get all copies 
             const handleWithParent = async (id, items) => {
               console.log('input 6' + JSON.stringify(items))
@@ -5197,7 +5197,7 @@ overflow: auto;">
           // Handle the 'InsertBefore' action
           // Handle the 'Append' action
           //fieldset
-          if (options?.copiesOfTarget) {
+          if (options?.duplicateTarget) {
             // get all copies 
             const handleWithParent = async (id, items) => {
               console.log('input 6' + JSON.stringify(items))
@@ -8555,7 +8555,7 @@ overflow: auto;">
         pushAction({
           time: (new Date()).getTime(),
           action: fieldsetAction,
-          options: { copiesOfTarget: true, copiesOfInserting: true },
+          options: { duplicateTarget: true, insertCopies: true },
           target_element: [{ type: 'tag', id, }, ...selected.map(id => {
             return { type: 'tag', id }
           })],
@@ -8567,7 +8567,7 @@ overflow: auto;">
         pushAction({
           time: (new Date()).getTime(),
           action: fieldsetAction,
-          options: { copiesOfInserting: true },
+          options: { insertCopies: true },
           target_element: [{ type: 'tag', id, }, ...selected.map(id => {
             return { type: 'tag', id }
           })],
