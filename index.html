@@ -4064,9 +4064,9 @@ overflow: auto;">
         clonedElement.querySelector("#code-log-action").textContent = actionName;
         if (options) {
           const optionsStrings = []
-          options.copiesOfInserting && optionsStrings.push('✅⧉ Apply to copies')
-          options.insertCopies && optionsStrings.push('🚂⧉ Insert Copies')
-          options.duplicateTarget && optionsStrings.push('🎯⧉ Dup Target')
+          options.apply_to_copies && optionsStrings.push('✅⧉ Apply to copies')
+          options.insert_copies && optionsStrings.push('🚂⧉ Insert Copies')
+          options.dub_target && optionsStrings.push('🎯⧉ Dup Target')
           const optionString = optionsStrings.join('  &#10; ')
           clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip',optionString)
         }
@@ -4742,7 +4742,7 @@ overflow: auto;">
           break;
 
         case 'Add_Parent':
-          const handleInsertParent = (treeElement, componentElement, replaceCopyId, copiesOfInserting) => {
+          const handleInsertParent = (treeElement, componentElement, replaceCopyId, apply_to_copies) => {
             console.log('handling' + treeElement + ' ' + componentElement + ' ' + replaceCopyId)
 
             const newEl = document.createElement(inserted_element.tagName)
@@ -4772,7 +4772,7 @@ overflow: auto;">
             button2.textContent = '🏷️' + inserted_element.tagName;
             if (replaceCopyId) {
               newEl2.id = inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') + '-tree'
-            } else if (copiesOfInserting) {
+            } else if (apply_to_copies) {
               if (copyId) {
                 newEl2.id = inserted_element.id.split(':')[0] + ':' + copyId + '-tree'
               }
@@ -4814,7 +4814,7 @@ overflow: auto;">
 
 
           }
-          const { copiesOfInserting } = options
+          const { apply_to_copies } = options
           treeElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
             getElementById1('code-tree')
             : getElementById1(target_element)
@@ -4823,7 +4823,7 @@ overflow: auto;">
             getElementById1('generated-page')
             :
             getElementById1(removeLastOccurrence(target_element, '-tree'));
-          if (copiesOfInserting) {
+          if (apply_to_copies) {
             console.log('inSL')
             const mId = target_element.replace('-tree', '').split(':')[0]
             const treeEls = []
@@ -4882,7 +4882,7 @@ overflow: auto;">
 
         case 'Append':
           // Handle the 'Append' action
-          if (options?.duplicateTarget) {
+          if (options?.dub_target) {
             // get all copies 
             const handleWithParent = async (id, items) => {
               console.log('input 6' + JSON.stringify(items))
@@ -5209,7 +5209,7 @@ overflow: auto;">
           // Handle the 'InsertBefore' action
           // Handle the 'Append' action
           //fieldset
-          if (options?.duplicateTarget) {
+          if (options?.dub_target) {
             // get all copies 
             const handleWithParent = async (id, items) => {
               console.log('input 6' + JSON.stringify(items))
@@ -5624,7 +5624,7 @@ overflow: auto;">
         case 'ChangeTag':
           // Handle the 'ChangeTag' action
           // tree el
-          if (options.copiesOfInserting) {
+          if (options.apply_to_copies) {
             const selector1 = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
             querySelectorAll1(selector1).forEach(e => {
 
@@ -5725,7 +5725,7 @@ overflow: auto;">
         case 'removeTag':
           // Handle the 'removeTag' action
           // tree
-          if (options.copiesOfInserting) {
+          if (options.apply_to_copies) {
             const selector = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
             querySelectorAll1(selector).forEach(e => e.remove());
             break;
@@ -8503,7 +8503,7 @@ overflow: auto;">
 
       }
       if (checked) {
-        el.options = { copiesOfInserting: true }
+        el.options = { apply_to_copies: true }
       }
       pushAction(el)
       e.target.parentNode.remove()
@@ -8567,7 +8567,7 @@ overflow: auto;">
         pushAction({
           time: (new Date()).getTime(),
           action: fieldsetAction,
-          options: { duplicateTarget: true, insertCopies: true },
+          options: { duplicateTarget: true, insert_copies: true },
           target_element: [{ type: 'tag', id, }, ...selected.map(id => {
             return { type: 'tag', id }
           })],
@@ -8579,7 +8579,7 @@ overflow: auto;">
         pushAction({
           time: (new Date()).getTime(),
           action: fieldsetAction,
-          options: { insertCopies: true },
+          options: { insert_copies: true },
           target_element: [{ type: 'tag', id, }, ...selected.map(id => {
             return { type: 'tag', id }
           })],
@@ -9344,7 +9344,7 @@ overflow: auto;">
       if (fieldset) {
         const fieldsetId = fieldset.id;
         const fieldsetAction = fieldset.getAttribute('action');
-        const copiesOfInserting = fieldset.getAttribute('copiesOfInserting');
+        const apply_to_copies = fieldset.getAttribute('copiesOfInserting');
         console.log("Fieldset ID:", fieldsetId);
         console.log("Fieldset Action:", fieldsetAction);
         const splited = fieldsetId.split(';')
@@ -9359,7 +9359,7 @@ overflow: auto;">
         }
         const applyToCopies2 = fieldset.querySelector('#applyForCopies2').checked
         if (applyToCopies2) {
-          el.options = { copiesOfInserting: true }
+          el.options = { apply_to_copies: true }
         }
         if (fieldsetAction === 'ChangeTag') {
           el.tag_change = chosenTag.tagName
