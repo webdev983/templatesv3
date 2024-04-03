@@ -2690,7 +2690,7 @@ overflow: auto;">
       }
 
       const { id } = parentMenu;
-      const action = checked ? 'removeAttribute+' : 'removeAttribute';
+      const action = 'removeAttribute';
       console.log('Action: ' + action);
 
       const splited = id.split(';');
@@ -2702,7 +2702,9 @@ overflow: auto;">
         target_element: rest.join(';'),
         key,
       };
-
+      if(checked){
+        el.option ={apply_to_copies:true}
+      }
       tr.remove();
       console.log(JSON.stringify(el));
       await pushAction(el);
@@ -4055,7 +4057,7 @@ overflow: auto;">
       // Set the content and attributes for the cloned element
       clonedElement.removeAttribute("hidden");
       clonedElement.querySelector("#code-log-action-time").textContent = formatEpochTime(actionTime);
-      clonedElement.querySelector("#code-log-action-time").setAttribute('sk',actionTime)
+      clonedElement.querySelector("#code-log-action-time").setAttribute('sk', actionTime)
       if (inserted_component) {
         console.log('iiiiiiiiiiin0')
         clonedElement.querySelector("#code-log-action").textContent = '🧩' + inserted_component.name;
@@ -4068,9 +4070,9 @@ overflow: auto;">
           options.insert_copies && optionsStrings.push('🚂⧉ Insert Copies')
           options.dub_target && optionsStrings.push('🎯⧉ Dup Target')
           const optionString = optionsStrings.join('&#013;&#010;')
-          clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip',optionString)
+          clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionString)
         }
-        else{
+        else {
           clonedElement.querySelector("#code-log-action").removeAttribute('data-tooltip')
         }
       }
@@ -4100,7 +4102,7 @@ overflow: auto;">
       let componentElement
 
       console.log('command is ' + JSON.stringify(command) + ' replace id ' + replaceId + 'pathForRelative ' + pathForRelative?.current)
-      function handleAppendOrInsert(action, selectedArrayNotSorted, move,insert_copies) {
+      function handleAppendOrInsert(action, selectedArrayNotSorted, move, insert_copies) {
         // Sort
 
         console.log('start')
@@ -5549,7 +5551,7 @@ overflow: auto;">
           }
           if (target_element.length) {
             console.log(JSON.stringify(target_element))
-            handleAppendOrInsert('InsertBefore', target_element.map(i => i.id), move,options.insert_copies)
+            handleAppendOrInsert('InsertBefore', target_element.map(i => i.id), move, options.insert_copies)
 
           }
           break;
@@ -5833,6 +5835,43 @@ overflow: auto;">
           }
           break;
         case 'setAttribute':
+          if (options.apply_to_copies) {
+            target_element = target_element.endsWith('-tree') ? target_element : target_element + '-tree'
+            const allSelector = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
+            const allTargets = Array.from(querySelectorAll1(allSelector)).filter(element => !element.id.endsWith('-fieldset') && !element.id.endsWith('-tree'))
+
+            // component
+
+            if (key === 'style' || key === 'class') {
+
+              allTargets.forEach(element => element.setAttribute(key, value))
+              break;
+            }
+            const attributeButton1 = getElementById1(target_element).querySelector('[data-element="code-tree-attributes-button"]');
+            attributeButton1.removeAttribute('hidden')
+            for (const element22 of allTargets) {
+
+              const element33 = getElementById1(element22.id + 'tree');
+
+
+              if (key) {
+                console.log('key11 ' + key)
+                console.log('value ' + value)
+
+                element22.setAttribute(key, value);
+                if (!element22.textContent && key.toLowerCase() === 'data-visual-defaultTextNode'.toLowerCase()) {
+                  console.log('not found 111')
+                  element22.textContent = value
+                }
+              }
+
+              if (key === 'data-parentid') {
+                recursivelyChangeIDs(element22, removeLastOccurrence(target_element, '-tree'), true);
+                recursivelyChangeIDs(element33, removeLastOccurrence(target_element, '-tree'), true, true);
+              }
+            }
+            break;
+          }
           console.log('pr' + target_element);
           target_element = target_element.endsWith('-tree') ? target_element : target_element + '-tree'
 
@@ -5922,7 +5961,22 @@ overflow: auto;">
           break;
         case 'removeAttribute':
           console.log('pr' + target_element);
-
+          if (options.apply_to_copies) {
+            const selector111 = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
+            const els111 = querySelectorAll1(selector111); // Corrected the function name to document.querySelectorAll
+            // component
+            for (const elementToRemoveAttribute of els111) {
+              if (key) { // Check if key exists
+                elementToRemoveAttribute.removeAttribute(key);
+                if (key === 'data-parentid') {
+                  querySelectorAll1('[id^="' + elementToRemoveAttribute.id + ';"]').forEach(el => {
+                    el.id = el.id.replace(elementToRemoveAttribute.id + ';', '');
+                  });
+                }
+              }
+            }
+            break;
+          }
 
           // component
           const elementToRemoveAttribute = getElementById1(removeLastOccurrence(target_element, '-tree'));
@@ -8275,7 +8329,7 @@ overflow: auto;">
       }
 
       const { id } = parentMenu
-      const action = checked ? 'setAttribute+' : 'setAttribute'
+      const action =  'setAttribute'
       console.log('ac' + action)
 
       const saveButton = event.target;
@@ -8319,6 +8373,9 @@ overflow: auto;">
           key: element.key,
           value: element.value,
 
+        }
+        if(checked){
+          el.options = {apply_to_copies:true}
         }
         await pushAction(el)
 
