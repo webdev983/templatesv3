@@ -4100,7 +4100,7 @@ overflow: auto;">
       let componentElement
 
       console.log('command is ' + JSON.stringify(command) + ' replace id ' + replaceId + 'pathForRelative ' + pathForRelative?.current)
-      function handleAppendOrInsert(action, selectedArrayNotSorted, move) {
+      function handleAppendOrInsert(action, selectedArrayNotSorted, move,insert_copies) {
         // Sort
 
         console.log('start')
@@ -4150,7 +4150,7 @@ overflow: auto;">
         }
         console.log(JSON.stringify(restOfElements))
         restOfElements.sort(sortByPlace);
-        if (!move) {
+        if (!move && !insert_copies) {
           restOfElements = restOfElements.map(el => removeLastOccurrence(el, '-tree')).map(el =>
             getWithoutCopyId1(el)
           )
@@ -4186,7 +4186,7 @@ overflow: auto;">
             var selectedId = selectedArray[i].id;
             var originalId = selectedArray[i].originalId
             console.log(JSON.stringify(selectedArray[i]))
-            if (!move) {
+            if (!move && !insert_copies) {
               console.log('not moving' + JSON.stringify(selectedArrayNotSorted))
               const attr = data_replaceid
               const l = selectedId.split(';').length
@@ -4264,7 +4264,7 @@ overflow: auto;">
             }
           }
           console.log('eels12' + JSON.stringify(treeEls.map(e => e.id)))
-          if (!move) {
+          if (!move && !insert_copies) {
             if (treeEls.length) {
               treeEls.sort(sortByPlace1)
               compEls.sort(sortByPlace1)
@@ -5549,7 +5549,7 @@ overflow: auto;">
           }
           if (target_element.length) {
             console.log(JSON.stringify(target_element))
-            handleAppendOrInsert('InsertBefore', target_element.map(i => i.id), move)
+            handleAppendOrInsert('InsertBefore', target_element.map(i => i.id), move,options.insert_copies)
 
           }
           break;
