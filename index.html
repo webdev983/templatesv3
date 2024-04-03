@@ -43,32 +43,31 @@
   </script>
   <style>
     .tooltip {
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-}
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+    }
 
-.tooltip::before {
-  content: attr(data-tooltip);
-  position: absolute;
-  white-space: pre-line;
-  visibility: hidden;
-  width: 200px; 
-  color: #fff;
-  background-color: #333;
-  text-align: left;
-  border-radius: 6px;
-  padding: 5px 10px;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-}
+    .tooltip::before {
+      content: attr(data-tooltip);
+      position: absolute;
+      white-space: pre-line;
+      visibility: hidden;
+      width: 200px;
+      color: #fff;
+      background-color: #333;
+      text-align: left;
+      border-radius: 6px;
+      padding: 5px 10px;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+    }
 
-.tooltip:hover::before {
-  visibility: visible;
-}
-
+    .tooltip:hover::before {
+      visibility: visible;
+    }
   </style>
 
 </head>
@@ -107,7 +106,9 @@ overflow: auto;">
           <!--NUMBERS!! 1️⃣ 2️⃣ 3️⃣ 4️⃣-->
           <tr hidden id="code-log-element">
             <td data-type-code-log="action-time"><span id="code-log-action-time">1703707728031</span></td>
-            <td data-type-code-log="action-name"><span id="code-log-action" class="tooltip" data-tooltip="✅⧉ Apply to copies  &#10; 🚂⧉ Insert Copies  &#10;  🎯⧉ Dup Target">append child</span></td>
+            <td data-type-code-log="action-name"><span id="code-log-action" class="tooltip"
+                data-tooltip="✅⧉ Apply to copies  &#10; 🚂⧉ Insert Copies  &#10;  🎯⧉ Dup Target">append child</span>
+            </td>
             <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
             </td>
           </tr>
@@ -115,7 +116,7 @@ overflow: auto;">
       </table>
     </div>
 
-    |    | 
+    | |
     </div>
     <div id="bottom-buttons" class="panel bottom" data-user hidden>
       <button hidden class="b-1">📴</button>
@@ -650,12 +651,14 @@ overflow: auto;">
       <br>
       <span id="code-tree-amount-selected-for-append-or-insert" style="font-size: 24px;">0</span>
       <button class="b-4" id="code-tree-click-tag-approve" onclick="approve(event)"> ✅ Approve</button>
-      
+
       <br>
-      <label><input type="checkbox" id="code-tree-menu-copies-too"><span class="l-3">🚂⧉ Insert Copies too</span></label>
-            <br>
-      <label hidden class="l-3"><input
-         name="duplicate-or-not-target-for-copies"  id="code-tree-menu-dublicate-with-parent-option" id="code-tree-menu-dublicate-with-parent-option-1" id="code-tree-menu-dublicate-with-parent-option-2" type="checkbox">🎯⧉ Duplicate Target for Copies</label>
+      <label><input type="checkbox" id="code-tree-menu-copies-too"><span class="l-3">🚂⧉ Insert Copies
+          too</span></label>
+      <br>
+      <label hidden class="l-3"><input name="duplicate-or-not-target-for-copies"
+          id="code-tree-menu-dublicate-with-parent-option" id="code-tree-menu-dublicate-with-parent-option-1"
+          id="code-tree-menu-dublicate-with-parent-option-2" type="checkbox">🎯⧉ Duplicate Target for Copies</label>
     </fieldset>
 
 
@@ -3770,9 +3773,9 @@ overflow: auto;">
         var codeTreeTagFieldsets = querySelectorAll1('fieldset[data-element="code-tree-tag"]');
         var checkbox1 = clonedFieldset.querySelector('#code-tree-menu-copies-too');
         var checkbox2 = clonedFieldset.querySelector('#code-tree-menu-dublicate-with-parent-option');
-        
-        checkbox1.addEventListener('change',(e)=>{
-          checkbox1.checked ? checkbox2.parentNode.removeAttribute('hidden') : checkbox2.parentNode.setAttribute('hidden','')
+
+        checkbox1.addEventListener('change', (e) => {
+          checkbox1.checked ? checkbox2.parentNode.removeAttribute('hidden') : checkbox2.parentNode.setAttribute('hidden', '')
         })
         /*
         if (checkbox1 && action === 'InsertBefore') {
@@ -5588,7 +5591,33 @@ overflow: auto;">
         case 'ChangeTag':
           // Handle the 'ChangeTag' action
           // tree el
+          if (options.copiesOfInserting) {
+            const selector1 = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
+            querySelectorAll1(selector1).forEach(e => {
 
+              if (e.id.endsWith('-tree')) {
+                e.querySelector("[data-element='code-tree-tag-name-button']").textContent = '🏷️' + tag_change;
+              }
+              else {
+                var newElement = document.createElement(tag_change);
+
+                // Copy attributes from the div to the p element
+                for (var i = 0; i < e.attributes.length; i++) {
+                  var attribute = e.attributes[i];
+                  newElement.setAttribute(attribute.name, attribute.value);
+                }
+                newElement.id = e.id
+                // Copy content from the div to the p element
+                newElement.innerHTML = e.innerHTML;
+
+                // Replace the div element with the new p element
+
+                e.parentNode.replaceChild(newElement, e);
+              }
+            });
+
+            break;
+          }
           const elementToChange = getElementById1(target_element);
           elementToChange.querySelector("[data-element='code-tree-tag-name-button']").textContent = '🏷️' + tag_change;
           // builder el
@@ -5663,6 +5692,11 @@ overflow: auto;">
         case 'removeTag':
           // Handle the 'removeTag' action
           // tree
+          if (options.copiesOfInserting) {
+            const selector = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
+            querySelectorAll1(selector).forEach(e => e.remove());
+            break;
+          }
           const elementToRemove = getElementById1(target_element);
           elementToRemove && elementToRemove.parentNode.removeChild(elementToRemove);
 
@@ -8388,10 +8422,10 @@ overflow: auto;">
         clonedFieldset.id = clonedFieldset.id + ';' + parentId;
         clonedFieldset.setAttribute('action', 'ChangeTag')
         if (checked) {
-          
-            console.log('setting checked')
-            clonedFieldset.querySelector('#applyForCopies2').checked =true
-          
+
+          console.log('setting checked')
+          clonedFieldset.querySelector('#applyForCopies2').checked = true
+
         }
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
         e.target.parentNode.remove()
@@ -8430,9 +8464,13 @@ overflow: auto;">
       const el =
       {
         time: (new Date()).getTime(),
-        action: checked ? 'removeTag+' : 'removeTag',
+        action: 'removeTag',
+
         target_element: parentId,
 
+      }
+      if (checked) {
+        el.options = { copiesOfInserting: true }
       }
       pushAction(el)
       e.target.parentNode.remove()
