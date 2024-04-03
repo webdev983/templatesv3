@@ -3993,7 +3993,7 @@ overflow: auto;">
             ac = "Add_Component_Id"
           }
         }
-        await insertDataIntoCodeLog(time, ac)
+        await insertDataIntoCodeLog(time, ac, element.options)
       }
 
 
@@ -4027,7 +4027,7 @@ overflow: auto;">
     }
     function formatEpochTime(epoch) {
       // Convert epoch time to milliseconds
-      const date = new Date(parseInt(epoch) );
+      const date = new Date(parseInt(epoch));
 
       // Get the day, month, year, hours, and minutes
       const day = date.getDate().toString().padStart(2, '0');
@@ -4042,7 +4042,7 @@ overflow: auto;">
       return formattedDate;
     }
 
-    function insertDataIntoCodeLog(actionTime, actionName,options, inserted_component) {
+    function insertDataIntoCodeLog(actionTime, actionName, options, inserted_component) {
       const originalElement = getElementById1("code-log-element");
       const clonedElement = originalElement.cloneNode(true);
       clonedElement.removeAttribute('hidden')
@@ -4061,6 +4061,14 @@ overflow: auto;">
       }
       else {
         clonedElement.querySelector("#code-log-action").textContent = actionName;
+        if (options) {
+          const optionsStrings = []
+          options.copiesOfInserting && optionsStrings.push('✅⧉ Apply to copies')
+          options.insertCopies && optionsStrings.push('🚂⧉ Insert Copies')
+          options.duplicateTarget && optionsStrings.push('🎯⧉ Dup Target')
+          const optionString = optionsStrings.join('  &#10; ')
+          clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip',optionString)
+        }
       }
 
       // Get the parent of the original element
@@ -4538,7 +4546,7 @@ overflow: auto;">
           const level = lvl ? lvl + 1 : 1;
           console.log('foundlvl ' + lvl)
           if (replaceAction) {
-            await insertDataIntoCodeLog(replaceAction.sk, replaceAction.action)
+            await insertDataIntoCodeLog(replaceAction.sk, replaceAction.action, replaceAction.options)
             console.log('replace action in')
             const toReplace = replaceAction.target_element[0]
             replaceAction.target_element.shift()
