@@ -4063,7 +4063,7 @@ overflow: auto;">
         clonedElement.querySelector("#code-log-action").textContent = '🧩' + inserted_component.name;
       }
       else {
-        clonedElement.querySelector("#code-log-action").textContent = actionName;
+        
         if (options) {
           const optionsStrings = []
           options.apply_to_copies && optionsStrings.push('✅⧉ Apply to copies')
@@ -4071,9 +4071,18 @@ overflow: auto;">
           options.dub_target && optionsStrings.push('🎯⧉ Dup Target')
           const optionString = optionsStrings.join('&#013;&#010;')
           clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionString)
+          let emoji = "1️⃣"
+          if(optionsStrings.length ===2){
+            emoji ='2️⃣'
+          }
+          else if (optionsStrings.length ===3){
+            emoji ='3️⃣'
+          }
+          clonedElement.querySelector("#code-log-action").textContent = actionName+emoji;
         }
         else {
           clonedElement.querySelector("#code-log-action").removeAttribute('data-tooltip')
+          clonedElement.querySelector("#code-log-action").textContent = actionName;
         }
       }
 
