@@ -4849,7 +4849,7 @@ overflow: auto;">
 
         case 'Append':
           // Handle the 'Append' action
-          if (withParent) {
+          if (options?.copiesOfTarget) {
             // get all copies 
             const handleWithParent = async (id, items) => {
               console.log('input 6' + JSON.stringify(items))
@@ -5176,7 +5176,7 @@ overflow: auto;">
           // Handle the 'InsertBefore' action
           // Handle the 'Append' action
           //fieldset
-          if (withParent) {
+          if (options?.copiesOfTarget) {
             // get all copies 
             const handleWithParent = async (id, items) => {
               console.log('input 6' + JSON.stringify(items))
@@ -8538,7 +8538,7 @@ overflow: auto;">
         pushAction({
           time: (new Date()).getTime(),
           action: fieldsetAction,
-          withParent: true,
+          options:{copiesOfTarget: true},
           target_element: [{ type: 'tag', id, }, ...selected.map(id => {
             return { type: 'tag', id }
           })],
