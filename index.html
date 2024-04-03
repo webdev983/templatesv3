@@ -3942,7 +3942,7 @@ overflow: auto;">
 
       if (actionTimeElement) {
         // Retrieve the action time value
-        const actionTime = actionTimeElement.textContent;
+        const actionTime = actionTimeElement.getAttribute('sk');
 
         // Construct the URL for the delete request
         const urlSearchParams = new URLSearchParams(window.location.search);
@@ -4055,6 +4055,7 @@ overflow: auto;">
       // Set the content and attributes for the cloned element
       clonedElement.removeAttribute("hidden");
       clonedElement.querySelector("#code-log-action-time").textContent = formatEpochTime(actionTime);
+      clonedElement.querySelector("#code-log-action-time").setAttribute('sk',actionTime)
       if (inserted_component) {
         console.log('iiiiiiiiiiin0')
         clonedElement.querySelector("#code-log-action").textContent = '🧩' + inserted_component.name;
