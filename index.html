@@ -7793,13 +7793,10 @@ overflow: auto;">
     const addSku = async (event) => {
       const value = getElementById1('input-sku').value
 
-      const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${value}&sk=qty;&startsWith=true`)
+      const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${value}&sk=created:&startsWith=true`)
         .then(response => response.json())
       if (items.length) {
         const ownerid = localStorage.getItem('ownerid')
-        console.log('i4'+JSON.stringify(items))
-        const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${value}&sk=created:&startsWith=true`)
-        .then(response => response.json())
         if (items[0].ownerUUID.replace('sku:', '') === ownerid) {
           pathItem.sku = value
           const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
