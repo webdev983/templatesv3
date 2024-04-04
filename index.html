@@ -4634,7 +4634,7 @@ overflow: auto;">
           } else if (subAction === 'InsertBefore') {
             treeElement.parentNode.insertBefore(newEl2, treeElement)
           } else {
-            treeElement.parentNode.insertBefore(newEl2, treeElement.parentNode.firstChild);
+            treeElement.parentNode.append(newEl2);
           }
 
 
@@ -4657,7 +4657,7 @@ overflow: auto;">
 
               await executeCommand({
                 time,
-                action: 'InsertBefore',
+                action: 'InsertAfter',
                 target_element: toReplace,
                 inserted_component: el,
                 noComp: true,
@@ -4720,7 +4720,67 @@ overflow: auto;">
               referenceNode.parentNode.appendChild(newNode);
             }
           }
+          if (inserted_component) {
+            //fieldset
+            if (inserted_component.componentId.startsWith('*')) {
+              const site = pathItem.lsi1.split('/')[0]
+              const modId = inserted_component.componentId.replace('*', '')
+              const lsi = site + modId
+              const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + lsi)
+                .then(response => response.json())
+              const item1 = items.find(i => i.lsi1.replace(';publish:published', '') === lsi)
+              inserted_component.componentId = item1.id
+            }
+            else if (inserted_component.componentId.startsWith('#')) {
+              let cPath = pathForRelative.prev || pathItem.lsi1
+              cPath = cPath.replace(';publish:published', "")
+              console.log('cpath ' + cPath)
 
+
+              const relative = inserted_component.componentId.replace('#', '')
+              const absolutePath = getAbsolutePath(cPath, relative);
+
+
+              const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + absolutePath)
+                .then(response => response.json())
+              console.log('lsi' + absolutePath)
+              console.log(JSON.stringify(items))
+
+              const item1 = items.find(i => i.lsi1.replace(';publish:published', '') === absolutePath)
+              console.log(JSON.stringify(item1))
+              inserted_component.componentId = item1.id
+            }
+            console.log('in')
+            console.log(target_element)
+            treeElement = getElementById1(target_element);
+            //component
+            //componentElement = getElementById1(removeLastOccurrence(target_element, '-tree'));
+            //const newEl = document.createElement("div")
+            //newEl.id = inserted_component.id
+            //console.log(newEl.id)
+            //componentElement.appendChild(newEl)
+            const component_el = getElementById1('component-element')
+            const newEl2 = component_el.cloneNode(true)
+            const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
+            button2.textContent = '🧩' + inserted_component.name;
+            const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
+            button.addEventListener('mouseover', mouseOverTree);
+
+            button.addEventListener('mouseout', mouseOutTree);
+
+            newEl2.id = inserted_component.id + '-tree'
+            if (noComp || noComp1) {
+              console.log('no comp true')
+              newEl2.setAttribute('hidden', '')
+            }
+            treeElement.insertAdjacentElement('afterend', newEl2);
+            components.push(inserted_component.id)
+            console.log(inserted_component.componentId)
+            console.log('insert before replace id ' + replaceId)
+            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev })
+            break;
+          }
+          
           //case duplicate insert after  
           if (inserted_element?.originalId) {
             console.log('insert1' + JSON.stringify(command));
