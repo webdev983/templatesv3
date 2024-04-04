@@ -133,7 +133,8 @@ overflow: auto;">
       <button id="path_select" onclick="loadRoot()" class='b-1' title="change mode"
         style="user-select: none; margin-right: 7px;">👣</button>
 
-      <label id="page-path" onclick="labelClick(event)" class="l-2 b-dark-blue" style="cursor: pointer;  font:700;">~</label>
+      <label id="page-path" onclick="labelClick(event)" class="l-2 b-dark-blue"
+        style="cursor: pointer;  font:700;">~</label>
 
       <a href="" target="_blank" style="text-decoration: none; color: #000000;" hidden id="published-label"
         class="l-3">🌐</a>
@@ -209,14 +210,14 @@ overflow: auto;">
     </div>
     <div id="head-1" class="horizontal-area" data-user hidden>
 
-      <fieldset  id="catalog-folder" class="menu">
+      <fieldset id="catalog-folder" class="menu">
         <legend><label class="l-2">📂 Catalog-Folder</label></legend>
         <button class="b-4">💾 Update</button>
         <input type="text" placeholder="📂  Enter catalog folder" class="input-1" style=" width: 50px;">
       </fieldset>
 
 
-      <fieldset  id="catalog-amount" class="menu">
+      <fieldset id="catalog-amount" class="menu">
         <legend><label class="l-2">🏋️‍♂️ Amount items per page in catalog</label></legend>
         <button class="b-4">💾 Update</button>
         <input type="number" placeholder="🏋️‍♂️ Enter amount" class="input-1" style=" width: 50px;">
@@ -590,10 +591,12 @@ overflow: auto;">
       <button class="b-3" onclick="cancel(event)">❌Cancel</button>
       <button style="margin-right: 5px; margin-top: 5px;" class="b-3" onclick="replaceComponent(event)">🔄
         Replace</button>
-        <br>
-        <div id="content-type">
-        <button style="margin-right: 5px; margin-top: 5px;" class="b-3">🏘 Mark as main content </button>
-        <button style="margin-right: 5px; margin-top: 5px;" class="b-3">🫐 Mark as catalog item </button>
+      <br>
+      <div id="content-type">
+        <button style="margin-right: 5px; margin-top: 5px;" class="b-3" onclick="markAsMain(event)">🏘 Mark as main
+          content </button>
+        <button style="margin-right: 5px; margin-top: 5px;" class="b-3" onclick="markAsCatalogue(event)">🫐 Mark as
+          catalog item </button>
       </div>
       <!-- <button style="margin-right: 5px; margin-top: 5px;" class="b-2" id="code-tree-click-tag-append-child" onclick="append(event)">👶 Append</button>
       <button style="margin-right: 5px; margin-top: 5px;" class="b-2" id="code-tree-click-tag-insert-before" onclick="insertB(event)">⬅️ InsertBefore</button>
@@ -845,13 +848,13 @@ overflow: auto;">
       localStorage.setItem('storedPath', path)
 
       // Update the text content of the label
-      
+
       window.location.href = 'files.html';
     }
     function labelClick(event) {
       // Extract the clicked part of the text based on the click position
       const clickedText = getClickedText(event, event.target.textContent);
-      if(clickedText ===pathItem.lsi1.split(';')[0]){
+      if (clickedText === pathItem.lsi1.split(';')[0]) {
         return
       }
       const p = clickedText
@@ -860,7 +863,7 @@ overflow: auto;">
       console.log(path)
       window.location.href = 'files.html';
       // Update the text content of the label
-      
+
     }
 
     function getClickedText(event, labelText) {
@@ -904,6 +907,28 @@ overflow: auto;">
   </script>
   <script>
     //gallery scripts 
+    const markAsMain = (e) => {
+      const menu = e.target.closest('[data-menu]')
+      const path = menu.getAttribute('path')
+      const splited = path.split(';')[0].split('/')
+      const name = splited[splited.length - 1]
+      pathItem.updateItems?.length ? (pathItem.updateItems = [{ key: 'main-content', value: name }]) : (!pathItem.updateItems.find(e => e.value === name && key === 'main-content') && pathItem.updateItems.push(name))
+      fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        body: JSON.stringify(pathItem),
+      });
+    }
+    const markAsCatalogue = (e) => {
+      const menu = e.target.closest('[data-menu]')
+      const path = menu.getAttribute('path')
+      const splited = path.split(';')[0].split('/')
+      const name = splited[splited.length - 1]
+      pathItem.updateItems?.length ? (pathItem.updateItems = [{ key: 'catalogue-item', value: name }]) : (!pathItem.updateItems.find(e => e.value === name && key === 'catalogue-item') && pathItem.updateItems.push(name))
+      fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        body: JSON.stringify(pathItem),
+      });
+    }
     var cancelGalleryMenu = (event) => {
       event.target.closest('#menu-1').style.display = 'none';
     }
@@ -1198,6 +1223,7 @@ overflow: auto;">
   <script>
     const urlSearchParams = new URLSearchParams(window.location.search);
     var page_id = urlSearchParams.get('id');
+
     var removeMenus = () => document.querySelector("#code-tree").querySelectorAll('[data-menu]').forEach(menu => menu.remove())
     var getElementById1 = (id) => {
       const el = document.getElementById(id)
@@ -4780,7 +4806,7 @@ overflow: auto;">
             await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev })
             break;
           }
-          
+
           //case duplicate insert after  
           if (inserted_element?.originalId) {
             console.log('insert1' + JSON.stringify(command));
