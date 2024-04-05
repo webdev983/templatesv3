@@ -6480,6 +6480,16 @@ overflow: auto;">
             contentEl.querySelectorAll("[data-content-type]").forEach(element => {
               element.addEventListener('change', handleRadioChange)
             })
+            const splited = pathItem.hub_items.main_content.split(':')
+            if (splited[0] === 'article') {
+              contentEl.querySelector('[data-content-type="article"]').checked = true
+              contentEl.querySelector('#catalog-folder').querySelector('input').value =pathItem.hub_items.article_folder
+            }
+            else {
+              
+              contentEl.querySelector('[data-content-type="catalog"]').checked = true
+              contentEl.querySelector('#catalog-weight').querySelector('input').value =pathItem.hub_items.catalog_weight
+            }
             contentEl.removeAttribute('hidden')
           }
           // Insert the cloned fieldset after the specified element
@@ -6652,11 +6662,11 @@ overflow: auto;">
         el.setAttribute('path', items.find(e => e.sk === 'path').lsi1)
 
         if (pathItem.hub_items?.main_content) {
-          const splited = pathItem.hub_items.main_content.split(':')
+          
           if (name === splited[1] && !foundMainContent) {
             foundMainContent = true
             const span = el1.querySelector('[data-element="main-content"]')
-            const contentType = el1.querySelector('#content-type')
+           
             span.removeAttribute('hidden')
             if (splited[0] === 'article') {
               span.textContent = '🍓 Article'
@@ -6665,8 +6675,7 @@ overflow: auto;">
             }
             else {
               span.textContent = '🫐 Catalog'
-              contentType.querySelector('[data-content-type="catalog"]').checked = true
-              contentType.querySelector('#catalog-weight').querySelector('input').value =pathItem.hub_items.catalog_weight
+              
             }
           }
         }
