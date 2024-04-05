@@ -582,10 +582,10 @@ overflow: auto;">
       <button style="margin-right: 5px; margin-top: 5px;" class="b-3" onclick="replaceComponent(event)">🔄
         Replace</button>
       <br>
-      <div id="content-type">
-        <label class="l-3"><input type="radio" name="main-content-type" checked value="digital" />🗅 None</label>
-        <label class="l-3"><input type="radio" name="main-content-type" value="digital" />🍓 Article</label>
-        <label class="l-3"><input type="radio" name="main-content-type" value="real" />🫐 Catalog</label>
+      <div hidden id="content-type">
+        <label class="l-3"><input type="radio" name="main-content-type" checked value="none" />🗅 None</label>
+        <label class="l-3"><input type="radio" name="main-content-type" value="article" />🍓 Article</label>
+        <label class="l-3"><input type="radio" name="main-content-type" value="catalogue" />🫐 Catalog</label>
 
         <div hidden id="catalog-folder">
           <button class="b-4">💾 Update</button>
@@ -6429,7 +6429,9 @@ overflow: auto;">
           clonedFieldset.setAttribute('replaced', button.parentNode.getAttribute('replaced'))
           // Find the position to insert the cloned fieldset
           const insertAfterElement = textContentButton || button;
-
+          if(pathItem.lsi1.split(';')[0].endsWith('Hub')){
+            clonedFieldset.querySelector('#content-type').removeAttribute('hidden')
+          }
           // Insert the cloned fieldset after the specified element
           insertAfterElement.parentNode.querySelector('[data-open-menu]').append(clonedFieldset)
         }
