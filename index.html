@@ -150,7 +150,7 @@ overflow: auto;">
         style="user-select: none; margin-right: 7px;">📰</button>
       <button hidden class="b-1" id="published-invalidate" onclick="invalidate(event)"
         style="margin-right: 5px;">🔄</button>
-      <button hidden id="published-remove" class="b-1" style="margin-right: 5px;">🗑️️</button>
+      <button onclick="removeAndInvalidate(event)" hidden id="published-remove" class="b-1" style="margin-right: 5px;">🗑️️</button>
     </div>
 
     </div>
@@ -583,7 +583,8 @@ overflow: auto;">
         Replace</button>
       <br>
       <div hidden id="content-type">
-        <label class="l-3"><input type="radio" name="main-content-type" data-content-type="none" checked value="none" />🗅
+        <label class="l-3"><input type="radio" name="main-content-type" data-content-type="none" checked
+            value="none" />🗅
           None</label>
         <label class="l-3"><input type="radio" name="main-content-type" data-content-type="article" value="article" />🍓
           Article</label>
@@ -1248,6 +1249,14 @@ overflow: auto;">
 
   </script>
   <script>
+    const removeAndInvalidate = async(e)=>{
+      const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/removeandinvalidate/'+pathItem.id+':'+pathItem.sk, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    }
     const invalidate = async (e) => {
       const site = pathItem.lsi1.split('/')[0]
       const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/invalidate', {
@@ -6481,17 +6490,20 @@ overflow: auto;">
               element.addEventListener('change', handleRadioChange)
             })
             const splited = pathItem.hub_items?.main_content?.split(':')
-            if (splited[0] === 'article') {
-              contentEl.querySelector('[data-content-type="article"]').checked = true
-              contentEl.querySelector('#catalog-folder').removeAttribute('hidden')
-              contentEl.querySelector('#catalog-folder').querySelector('input').value =pathItem.hub_items.article_folder || ''
+            if (splited) {
+              if (splited[0] === 'article') {
+                contentEl.querySelector('[data-content-type="article"]').checked = true
+                contentEl.querySelector('#catalog-folder').removeAttribute('hidden')
+                contentEl.querySelector('#catalog-folder').querySelector('input').value = pathItem.hub_items.article_folder || ''
+              }
+              else {
+
+                contentEl.querySelector('[data-content-type="catalog"]').checked = true
+                contentEl.querySelector('#catalog-weight').removeAttribute('hidden')
+                contentEl.querySelector('#catalog-weight').querySelector('input').value = pathItem.hub_items.catalog_weight || ""
+              }
             }
-            else {
-              
-              contentEl.querySelector('[data-content-type="catalog"]').checked = true
-              contentEl.querySelector('#catalog-weight').removeAttribute('hidden')
-              contentEl.querySelector('#catalog-weight').querySelector('input').value =pathItem.hub_items.catalog_weight || ""
-            }
+
             contentEl.removeAttribute('hidden')
           }
           // Insert the cloned fieldset after the specified element
@@ -6662,24 +6674,24 @@ overflow: auto;">
         const el = el1.querySelector("[data-element='code-tree-tag-name-button']")
         el.textContent = '🧩' + name
         el.setAttribute('path', items.find(e => e.sk === 'path').lsi1)
-        
+
         if (pathItem.hub_items?.main_content) {
           const splited = pathItem.hub_items?.main_content?.split(':')
           if (name === splited[1] && !foundMainContent) {
             foundMainContent = true
             const span = el1.querySelector('[data-element="main-content"]')
-           
+
             span.removeAttribute('hidden')
-            if(splited){
+            if (splited) {
               if (splited[0] === 'article') {
-              span.textContent = '🍓 Article'
+                span.textContent = '🍓 Article'
+              }
+              else {
+                span.textContent = '🫐 Catalog'
+
+              }
             }
-            else {
-              span.textContent = '🫐 Catalog'
-              
-            }
-            }
-            
+
           }
         }
         //insertDataIntoCodeLog(timestamp, idFromLink, { name })
