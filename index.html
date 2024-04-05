@@ -150,7 +150,7 @@ overflow: auto;">
         style="user-select: none; margin-right: 7px;">📰</button>
       <button hidden class="b-1" id="published-invalidate" onclick="invalidate(event)"
         style="margin-right: 5px;">🔄</button>
-      <button hidden id="published-remove" class="b-1" style="margin-right: 5px;">🗑️️</button>
+      <button onclick="removeAndInvalidate(event)" hidden id="published-remove" class="b-1" style="margin-right: 5px;">🗑️️</button>
     </div>
 
     </div>
@@ -1249,6 +1249,14 @@ overflow: auto;">
 
   </script>
   <script>
+    const removeAndInvalidate = async(e)=>{
+      const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/removeandinvalidate/'+pathItem.id+':'+pathItem.sk, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    }
     const invalidate = async (e) => {
       const site = pathItem.lsi1.split('/')[0]
       const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/invalidate', {
