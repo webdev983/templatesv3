@@ -583,11 +583,11 @@ overflow: auto;">
         Replace</button>
       <br>
       <div hidden id="content-type">
-        <label class="l-3"><input type="radio" name="main-content-type" data-content-type checked value="none" />🗅
+        <label class="l-3"><input type="radio" name="main-content-type" data-content-type="none" checked value="none" />🗅
           None</label>
-        <label class="l-3"><input type="radio" name="main-content-type" data-content-type value="article" />🍓
+        <label class="l-3"><input type="radio" name="main-content-type" data-content-type="article" value="article" />🍓
           Article</label>
-        <label class="l-3"><input type="radio" name="main-content-type" data-content-type value="catalog" />🫐
+        <label class="l-3"><input type="radio" name="main-content-type" data-content-type="catalog" value="catalog" />🫐
           Catalog</label>
 
         <div hidden id="catalog-folder">
@@ -6454,17 +6454,17 @@ overflow: auto;">
               switch (selectedValue) {
                 case 'none':
                   pathItem.hub_items = {}
-                  mainContentSpan.setAttribute('hidden','')
+                  mainContentSpan.setAttribute('hidden', '')
                   break;
                 case 'article':
                   pathItem.hub_items.main_content = 'article:' + name
-                  mainContentSpan.removeAttribute('hidden','')
+                  mainContentSpan.removeAttribute('hidden', '')
                   mainContentSpan.textContent = '🍓 Article'
                   catFolder.removeAttribute('hidden')
                   break;
                 case 'catalog':
                   pathItem.hub_items.main_content = 'catalog:' + name
-                  mainContentSpan.removeAttribute('hidden','')
+                  mainContentSpan.removeAttribute('hidden', '')
                   mainContentSpan.textContent = '🫐 Catalog'
                   catWeight.removeAttribute('hidden')
                   break;
@@ -6579,7 +6579,7 @@ overflow: auto;">
       optionalScript && switchOptionalScript(false)
       LinkBP && switchLinkBP(false)
     }
-    let foundMainContent 
+    let foundMainContent
     const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative) => {
       console.log('load from db' + id)
       console.log('err2 ' + p)
@@ -6650,14 +6650,24 @@ overflow: auto;">
         const el = el1.querySelector("[data-element='code-tree-tag-name-button']")
         el.textContent = '🧩' + name
         el.setAttribute('path', items.find(e => e.sk === 'path').lsi1)
-       
-        if(pathItem.hub_items?.main_content){
+
+        if (pathItem.hub_items?.main_content) {
           const splited = pathItem.hub_items.main_content.split(':')
-          if(name ===splited[1] && !foundMainContent){
+          if (name === splited[1] && !foundMainContent) {
             foundMainContent = true
             const span = el1.querySelector('[data-element="main-content"]')
+            const contentType = el1.querySelector('#content-type')
             span.removeAttribute('hidden')
-            splited[0]==='article' ? (span.textContent ='🍓 Article') : (span.textContent ='🫐 Catalog')
+            if (splited[0] === 'article') {
+              span.textContent = '🍓 Article'
+              contentType.querySelector('[data-content-type="article"]').checked = true
+              contentType.querySelector('#catalog-folder').querySelector('input').value =pathItem.hub_items.article_folder
+            }
+            else {
+              span.textContent = '🫐 Catalog'
+              contentType.querySelector('[data-content-type="catalog"]').checked = true
+              contentType.querySelector('#catalog-weight').querySelector('input').value =pathItem.hub_items.catalog_weight
+            }
           }
         }
         //insertDataIntoCodeLog(timestamp, idFromLink, { name })
