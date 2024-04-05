@@ -1203,7 +1203,7 @@ overflow: auto;">
   <script>
     const urlSearchParams = new URLSearchParams(window.location.search);
     var page_id = urlSearchParams.get('id');
-    
+
     var removeMenus = () => document.querySelector("#code-tree").querySelectorAll('[data-menu]').forEach(menu => menu.remove())
     var getElementById1 = (id) => {
       const el = document.getElementById(id)
@@ -6413,9 +6413,29 @@ overflow: auto;">
           const insertAfterElement = textContentButton || button;
           if (pathItem.lsi1.split(';')[0].endsWith('Hub')) {
             const contentEl = clonedFieldset.querySelector('#content-type')
+            const catWeight = contentEl.querySelector('#catalog-weight')
+            const catFolder = contentEl.querySelector('#catalog-folder')
+            catFolder.querySelector('button').addEventListener('click', (e) => {
+              const inputV = catFolder.querySelector('input').value
+              pathItem.hub_items.article_folder = inputV
+              delete pathItem.hub_items.catalog_weight
+              fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                method: 'POST',
+                body: JSON.stringify(pathItem),
+              });
+            })
+            catWeight.querySelector('button').addEventListener('click', (e) => {
+              const inputV = catWeight.querySelector('input').value
+              pathItem.hub_items.catalog_weight = inputV
+              delete pathItem.hub_items.article_folder
+              fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                method: 'POST',
+                body: JSON.stringify(pathItem),
+              });
+            })
             function handleRadioChange(event) {
               // Check which radio button is selected
-              if (!e.target.checked) {
+              if (!event.target.checked) {
                 return
               }
               const selectedValue = event.target.value;
@@ -6427,15 +6447,26 @@ overflow: auto;">
               const splited = path.split(';')[0].split('/')
               const name = splited[splited.length - 1]
               // Run different functions based on the selected radio button
+
+              catWeight.setAttribute('hidden', '')
+              const mainContentSpan = clonedFieldset.closest('[data-element="main-content"]')
+              catFolder.setAttribute('hidden', '')
               switch (selectedValue) {
                 case 'none':
                   pathItem.hub_items = {}
+                  mainContentSpan.setAttribute('hidden','')
                   break;
                 case 'article':
                   pathItem.hub_items.main_content = 'article:' + name
+                  mainContentSpan.removeAttribute('hidden','')
+                  mainContentSpan.textContent = '🍓 Article'
+                  catFolder.removeAttribute('hidden')
                   break;
                 case 'catalog':
                   pathItem.hub_items.main_content = 'catalog:' + name
+                  mainContentSpan.removeAttribute('hidden','')
+                  mainContentSpan.textContent = '🫐 Catalog'
+                  catWeight.removeAttribute('hidden')
                   break;
                 default:
                   // Handle default case
