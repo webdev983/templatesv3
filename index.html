@@ -133,7 +133,8 @@ overflow: auto;">
       <button id="path_select" onclick="loadRoot()" class='b-1' title="change mode"
         style="user-select: none; margin-right: 7px;">👣</button>
 
-      <label id="page-path" onclick="labelClick(event)" class="l-2 b-dark-blue" style="cursor: pointer;  font:700;">~</label>
+      <label id="page-path" onclick="labelClick(event)" class="l-2 b-dark-blue"
+        style="cursor: pointer;  font:700;">~</label>
 
       <a href="" target="_blank" style="text-decoration: none; color: #000000;" hidden id="published-label"
         class="l-3">🌐</a>
@@ -580,21 +581,21 @@ overflow: auto;">
       <br>
       <button style="margin-right: 5px; margin-top: 5px;" class="b-3" onclick="replaceComponent(event)">🔄
         Replace</button>
-        <br>
-        <div id="content-type">
-          <label class="l-3"><input type="radio" name="main-content-type"  checked value="digital"/>🗅 None</label>
-          <label class="l-3"><input type="radio" name="main-content-type"  value="digital"/>🍓 Article</label>
-          <label class="l-3"><input type="radio" name="main-content-type"  value="real" />🫐 Catalog</label>
+      <br>
+      <div id="content-type">
+        <label class="l-3"><input type="radio" name="main-content-type" checked value="digital" />🗅 None</label>
+        <label class="l-3"><input type="radio" name="main-content-type" value="digital" />🍓 Article</label>
+        <label class="l-3"><input type="radio" name="main-content-type" value="real" />🫐 Catalog</label>
 
-            <div  hidden id="catalog-folder">
-            <button class="b-4">💾 Update</button>
-            <input type="text" placeholder="📂 Catalog folder" class="input-1" style=" width: 50px;">
-            </div>
-    
-            <div hidden id="catalog-weight">
-            <button class="b-4">💾 Update</button>
-            <input type="number" placeholder="🏋️‍♂️ Catalog Weight" class="input-1" style=" width: 50px;">
-          </div>
+        <div hidden id="catalog-folder">
+          <button class="b-4">💾 Update</button>
+          <input type="text" placeholder="📂 Catalog folder" class="input-1" style=" width: 50px;">
+        </div>
+
+        <div hidden id="catalog-weight">
+          <button class="b-4">💾 Update</button>
+          <input type="number" placeholder="🏋️‍♂️ Catalog Weight" class="input-1" style=" width: 50px;">
+        </div>
       </div>
       <!-- <button style="margin-right: 5px; margin-top: 5px;" class="b-2" id="code-tree-click-tag-append-child" onclick="append(event)">👶 Append</button>
       <button style="margin-right: 5px; margin-top: 5px;" class="b-2" id="code-tree-click-tag-insert-before" onclick="insertB(event)">⬅️ InsertBefore</button>
@@ -846,13 +847,13 @@ overflow: auto;">
       localStorage.setItem('storedPath', path)
 
       // Update the text content of the label
-      
+
       window.location.href = 'files.html';
     }
     function labelClick(event) {
       // Extract the clicked part of the text based on the click position
       const clickedText = getClickedText(event, event.target.textContent);
-      if(clickedText ===pathItem.lsi1.split(';')[0]){
+      if (clickedText === pathItem.lsi1.split(';')[0]) {
         return
       }
       const p = clickedText
@@ -861,7 +862,7 @@ overflow: auto;">
       console.log(path)
       window.location.href = 'files.html';
       // Update the text content of the label
-      
+
     }
 
     function getClickedText(event, labelText) {
@@ -1199,6 +1200,28 @@ overflow: auto;">
   <script>
     const urlSearchParams = new URLSearchParams(window.location.search);
     var page_id = urlSearchParams.get('id');
+    const markAsMain = (e) => {
+      const menu = e.target.closest('[data-menu]')
+      const path = menu.getAttribute('path')
+      const splited = path.split(';')[0].split('/')
+      const name = splited[splited.length - 1]
+      pathItem.updateItems?.length ? (pathItem.updateItems = [{ key: 'main-content', value: name }]) : (!pathItem.updateItems.find(e => e.value === name && key === 'main-content') && pathItem.updateItems.push(name))
+      fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        body: JSON.stringify(pathItem),
+      });
+    }
+    const markAsCatalogue = (e) => {
+      const menu = e.target.closest('[data-menu]')
+      const path = menu.getAttribute('path')
+      const splited = path.split(';')[0].split('/')
+      const name = splited[splited.length - 1]
+      pathItem.updateItems?.length ? (pathItem.updateItems = [{ key: 'catalogue-item', value: name }]) : (!pathItem.updateItems.find(e => e.value === name && key === 'catalogue-item') && pathItem.updateItems.push(name))
+      fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        body: JSON.stringify(pathItem),
+      });
+    }
     var removeMenus = () => document.querySelector("#code-tree").querySelectorAll('[data-menu]').forEach(menu => menu.remove())
     var getElementById1 = (id) => {
       const el = document.getElementById(id)
@@ -4635,7 +4658,7 @@ overflow: auto;">
           } else if (subAction === 'InsertBefore') {
             treeElement.parentNode.insertBefore(newEl2, treeElement)
           } else {
-            treeElement.parentNode.insertBefore(newEl2, treeElement.parentNode.firstChild);
+            treeElement.parentNode.append(newEl2);
           }
 
 
@@ -4658,7 +4681,7 @@ overflow: auto;">
 
               await executeCommand({
                 time,
-                action: 'InsertBefore',
+                action: 'InsertAfter',
                 target_element: toReplace,
                 inserted_component: el,
                 noComp: true,
@@ -4713,7 +4736,66 @@ overflow: auto;">
           break;
 
         case 'InsertAfter':
+          if (inserted_component) {
+            //fieldset
+            if (inserted_component.componentId.startsWith('*')) {
+              const site = pathItem.lsi1.split('/')[0]
+              const modId = inserted_component.componentId.replace('*', '')
+              const lsi = site + modId
+              const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + lsi)
+                .then(response => response.json())
+              const item1 = items.find(i => i.lsi1.replace(';publish:published', '') === lsi)
+              inserted_component.componentId = item1.id
+            }
+            else if (inserted_component.componentId.startsWith('#')) {
+              let cPath = pathForRelative.prev || pathItem.lsi1
+              cPath = cPath.replace(';publish:published', "")
+              console.log('cpath ' + cPath)
 
+
+              const relative = inserted_component.componentId.replace('#', '')
+              const absolutePath = getAbsolutePath(cPath, relative);
+
+
+              const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + absolutePath)
+                .then(response => response.json())
+              console.log('lsi' + absolutePath)
+              console.log(JSON.stringify(items))
+
+              const item1 = items.find(i => i.lsi1.replace(';publish:published', '') === absolutePath)
+              console.log(JSON.stringify(item1))
+              inserted_component.componentId = item1.id
+            }
+            console.log('in')
+            console.log(target_element)
+            treeElement = getElementById1(target_element);
+            //component
+            //componentElement = getElementById1(removeLastOccurrence(target_element, '-tree'));
+            //const newEl = document.createElement("div")
+            //newEl.id = inserted_component.id
+            //console.log(newEl.id)
+            //componentElement.appendChild(newEl)
+            const component_el = getElementById1('component-element')
+            const newEl2 = component_el.cloneNode(true)
+            const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
+            button2.textContent = '🧩' + inserted_component.name;
+            const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
+            button.addEventListener('mouseover', mouseOverTree);
+
+            button.addEventListener('mouseout', mouseOutTree);
+
+            newEl2.id = inserted_component.id + '-tree'
+            if (noComp || noComp1) {
+              console.log('no comp true')
+              newEl2.setAttribute('hidden', '')
+            }
+            treeElement.insertAdjacentElement('afterend', newEl2);
+            components.push(inserted_component.id)
+            console.log(inserted_component.componentId)
+            console.log('insert before replace id ' + replaceId)
+            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev })
+            break;
+          }
           function insertAfter(newNode, referenceNode) {
             if (referenceNode.nextSibling) {
               referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
