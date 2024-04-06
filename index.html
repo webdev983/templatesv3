@@ -7,27 +7,35 @@
 
 <body class="body">
 
-<form hidden  class="login-1" id="login">
-    <div  style="position: relative;">
-    <div id="error" hidden>
-        <label id="error-label" class="l-p" style=" user-select: none; width: 400px; display: inline-block;padding: 5px; margin-left: 35px; background: rgb(255, 121, 121);">incorrect data</label>
+  <form hidden class="login-1" id="login">
+    <div style="position: relative;">
+      <div id="error" hidden>
+        <label id="error-label" class="l-p"
+          style=" user-select: none; width: 400px; display: inline-block;padding: 5px; margin-left: 35px; background: rgb(255, 121, 121);">incorrect
+          data</label>
       </div>
       <div>
-          <label class="l-1" for="username" style="user-select: none;">👤</label>
-          <input placeholder="Username"  class="l-2" style="width: 400px; font-size: 18px; padding: 5px;" type="text" id="username" name="username">
+        <label class="l-1" for="username" style="user-select: none;">👤</label>
+        <input placeholder="Username" class="l-2" style="width: 400px; font-size: 18px; padding: 5px;" type="text"
+          id="username" name="username">
       </div>
       <div>
-          <label class="l-1"  for="password" style="user-select: none;">🔑</label>
-          <input placeholder="Password" class="l-3" class="l-2"  style="width: 400px; font-size: 18px; padding: 5px;" type="password" id="password" name="password">
+        <label class="l-1" for="password" style="user-select: none;">🔑</label>
+        <input placeholder="Password" class="l-3" class="l-2" style="width: 400px; font-size: 18px; padding: 5px;"
+          type="password" id="password" name="password">
       </div>
-      <div>  
-        <button  id="login" class="b-3" style="width: 400px; margin-left: 35px;  margin-top: 10px; background: rgb(235, 234, 234); border-color: rgb(184, 182, 182);">➡️ Login</button>
+      <div>
+        <button id="login" class="b-3"
+          style="width: 400px; margin-left: 35px;  margin-top: 10px; background: rgb(235, 234, 234); border-color: rgb(184, 182, 182);">➡️
+          Login</button>
         <br>
-        <button  id="login" class="b-3" style="width: 400px; margin-left: 35px;  margin-top: 10px; background: rgb(235, 234, 234); border-color: rgb(184, 182, 182);"> 🆕 Register</button>
+        <button id="login" class="b-3"
+          style="width: 400px; margin-left: 35px;  margin-top: 10px; background: rgb(235, 234, 234); border-color: rgb(184, 182, 182);">
+          🆕 Register</button>
       </div>
     </div>
-</form>
-  
+  </form>
+
   <aside class="aside">
     <div class="panel top">
       <button disabled class="b-1" id="last-action-time"
@@ -51,7 +59,7 @@
         <div data-section-aside="helpers" class="local-buttons" style="margin-top: 30px;">
           <button class="b-1" onclick="createNew()">➕</button>
         </div>
-  
+
       </div>
 
     </div>
@@ -63,407 +71,414 @@
 
 
   <main class="main">
-<section hidden data-section="brains">
-    <div style="margin: 10px;">
-      <button data-brains-button="sites" class="b-4 " style="margin-right: 5px;" id="sites-button"><label class="l-1">🌐</label><label class="l-2">Sites</label></button>  
-      <button data-brains-button="orders" class="b-4" style="margin-right: 5px;"><label class="l-1">🛍️</label><label class="l-2">Orders</label></button>  
-      <button data-brains-button="invoices" class="b-4 " style="margin-right: 5px;"><label class="l-1">🧾</label><label class="l-2">Invoices</label></button>  
-      <button data-brains-button="helpers" class="b-4 b-selected" style="margin-right: 5px;"><label class="l-1">👶</label><label class="l-2">Helpers</label></button> 
+    <section hidden data-section="brains">
+      <div style="margin: 10px;">
+        <button data-brains-button="sites" class="b-4 " style="margin-right: 5px;" id="sites-button"><label
+            class="l-1">🌐</label><label class="l-2">Sites</label></button>
+        <button data-brains-button="orders" class="b-4" style="margin-right: 5px;"><label class="l-1">🛍️</label><label
+            class="l-2">Orders</label></button>
+        <button data-brains-button="invoices" class="b-4 " style="margin-right: 5px;"><label
+            class="l-1">🧾</label><label class="l-2">Invoices</label></button>
+        <button data-brains-button="helpers" class="b-4 b-selected" style="margin-right: 5px;"><label
+            class="l-1">👶</label><label class="l-2">Helpers</label></button>
 
-    </div>
+      </div>
 
-<section  hidden data-brains="sites">
-  <ol class="list-1" id="sites-list">
-    <li hidden id="site-name" style="cursor: pointer;"><label class="l-3"
-      style="user-select: none; margin-right: 5px;">🌐</label><label onclick="openSite(event)" class="l-2"
-      id="site-name-value">accbuddy.com</label></li>   
-</ol>
+      <section hidden data-brains="sites">
+        <ol class="list-1" id="sites-list">
+          <li hidden id="site-name" style="cursor: pointer;"><label class="l-3"
+              style="user-select: none; margin-right: 5px;">🌐</label><label onclick="openSite(event)" class="l-2"
+              id="site-name-value">accbuddy.com</label></li>
+        </ol>
 
 
 
-<script>
-const openSite =(event)=>{
-const site = event.target.textContent
-window.location.href = './site-settings.html?site='+site;
-console.log(site)
-}
-const loadSites = async () => {
-const res = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true')
-const response = await res.json()
-console.log('res'+ JSON.stringify(response))
-const paths = response.items.map(item => item.lsi1.split('/')[0])
-const sites = []
-for (const path of paths) {
-if (!sites.includes(path)) {
-  sites.push(path)
-}
-}
-console.log(sites)
-// Get the parent element (sites-list)
-const sitesList = document.getElementById('sites-list');
+        <script>
+          const openSite = (event) => {
+            const site = event.target.textContent
+            window.location.href = './site-settings.html?site=' + site;
+            console.log(site)
+          }
+          const loadSites = async () => {
+            const res = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true')
+            const response = await res.json()
+            console.log('res' + JSON.stringify(response))
+            const paths = response.items.map(item => item.lsi1.split('/')[0])
+            const sites = []
+            for (const path of paths) {
+              if (!sites.includes(path)) {
+                sites.push(path)
+              }
+            }
+            console.log(sites)
+            // Get the parent element (sites-list)
+            const sitesList = document.getElementById('sites-list');
 
-// Clone the template node
-const templateNode = document.getElementById('site-name');
+            // Clone the template node
+            const templateNode = document.getElementById('site-name');
 
-// Clear the existing content inside sites-list
-sitesList.innerHTML = '';
+            // Clear the existing content inside sites-list
+            sitesList.innerHTML = '';
 
-// Iterate through the array and create list items
-sites.forEach(site => {
-// Clone the template node
-const clonedNode = templateNode.cloneNode(true);
+            // Iterate through the array and create list items
+            sites.forEach(site => {
+              // Clone the template node
+              const clonedNode = templateNode.cloneNode(true);
 
-// Update the content of the cloned node with the current site
-clonedNode.querySelector('#site-name-value').textContent = site;
+              // Update the content of the cloned node with the current site
+              clonedNode.querySelector('#site-name-value').textContent = site;
 
-// Append the cloned node to sites-list
-sitesList.appendChild(clonedNode);
+              // Append the cloned node to sites-list
+              sitesList.appendChild(clonedNode);
 
-// Show the cloned node (remove the 'hidden' attribute)
-clonedNode.removeAttribute('hidden');
-});
+              // Show the cloned node (remove the 'hidden' attribute)
+              clonedNode.removeAttribute('hidden');
+            });
 
-}
-document.addEventListener('DOMContentLoaded',loadSites);
-</script>
+          }
+          document.addEventListener('DOMContentLoaded', loadSites);
+        </script>
 
-</section>
+      </section>
 
-<section  hidden data-brains="orders">
+      <section hidden data-brains="orders">
 
-  <div id="order-types">
-    <label class="l-3"><input type="radio" checked name="choose-type">💧 All</label>
-    <label hidden class="l-3"><input type="radio" name="choose-type">🆕 New</label>
-    <label hidden class="l-3"><input type="radio" name="choose-type">✅ Completed</label>
-    <label hidden class="l-3"><input type="radio" name="choose-type">⚠️ Attention</label>
-  </div>
-    <table  id="orders-table" class="table-1 table-row-number" style="margin-left:25px; margin-top: 10px; ">
-      <tbody>
-        <tr hidden id="order-item">
-          <td data-order-date><span data-order-date-value class="l-3">🕒 24.09.20 23:59</span></td>
-          <td data-order-site><span data-order-site-value class="l-3">🌐 accbuddy.com</span></td>
-          <td data-order-total><span data-order-total-value class="l-3">💰100$</span></td>
-          <td data-order-status><span data-order-status-value class="l-3">🆕 new</span></td>
-        </tr>
+        <div id="order-types">
+          <label class="l-3"><input type="radio" checked name="choose-type">💧 All</label>
+          <label hidden class="l-3"><input type="radio" name="choose-type">🆕 New</label>
+          <label hidden class="l-3"><input type="radio" name="choose-type">✅ Completed</label>
+          <label hidden class="l-3"><input type="radio" name="choose-type">⚠️ Attention</label>
+        </div>
+        <table id="orders-table" class="table-1 table-row-number" style="margin-left:25px; margin-top: 10px; ">
+          <tbody>
+            <tr hidden id="order-item">
+              <td data-order-date><span data-order-date-value class="l-3">🕒 24.09.20 23:59</span></td>
+              <td data-order-site><span data-order-site-value class="l-3">🌐 accbuddy.com</span></td>
+              <td data-order-total><span data-order-total-value class="l-3">💰100$</span></td>
+              <td data-order-status><span data-order-status-value class="l-3">🆕 new</span></td>
+            </tr>
 
-        <!--✅- ❌  ⚠️- 🛒 📦-->
-      </tbody>
-    </table>
+            <!--✅- ❌  ⚠️- 🛒 📦-->
+          </tbody>
+        </table>
 
-    <div id="order-details">
+        <div id="order-details">
 
-      
-    </div>
-    <script>
 
-      const load = async () => {
-        const orderItem = document.getElementById("order-item")
-        const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=order:${localStorage.getItem('ownerid')}`, {
+        </div>
+        <script>
+
+          const load = async () => {
+            const orderItem = document.getElementById("order-item")
+            const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=order:${localStorage.getItem('ownerid')}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(e => e.json())
+            const items2Promise = items.map(item1 => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item1.id}:${item1.sk}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(e => e.json()))
+            const items2 = await Promise.all(items2Promise)
+            for (const item of items2) {
+              const timestamp = new Date(parseInt(item.lsi1?.split(':')[0]));
+
+              const year = timestamp.getFullYear().toString().slice(-2); // Get last two digits of the year
+              const month = ('0' + (timestamp.getMonth() + 1)).slice(-2); // Add leading zero if needed
+              const day = ('0' + timestamp.getDate()).slice(-2); // Add leading zero if needed
+              const hours = ('0' + timestamp.getHours()).slice(-2); // Add leading zero if needed
+              const minutes = ('0' + timestamp.getMinutes()).slice(-2); // Add leading zero if needed
+
+              // Construct the formatted string
+              const formattedDate = `${year}-${month}-${day}. ${hours}:${minutes}`;
+
+              const cloned = orderItem.cloneNode(true)
+              cloned.querySelector('[data-order-date-value]').textContent = formattedDate
+              cloned.querySelector('[data-order-site-value]').textContent = item.id.split(':')[0]
+              cloned.querySelector('[data-order-total-value]').textContent = item.total + '$'
+              cloned.querySelector('[data-order-status-value]').textContent = item.lsi1?.split(':')[1]
+              cloned.removeAttribute('hidden')
+              orderItem.parentNode.append(cloned)
+            }
+          }
+          document.addEventListener('DOMContentLoaded', load)
+        </script>
+
+      </section>
+
+
+      <section hidden data-brains="invoices">
+
+        </div>
+        <label class="l-3"><input type="radio" checked name="choose-type">💧 All</label>
+        <label hidden class="l-3"><input type="radio" name="choose-type">🆕 New</label>
+        <label hidden class="l-3"><input type="radio" name="choose-type">✅ Completed</label>
+        <label hidden class="l-3"><input type="radio" name="choose-type">⚠️ Attention</label>
+
+        <table class="table-1 table-row-number" style="margin-left:25px; margin-top: 10px; ">
+          <tbody>
+            <tr id="invoice-item" hidden>
+              <td data-invoice-date><span data-invoice-date-value class="l-3">🕒 24.09.20 23:59</span></td>
+              <td data-invoice-site><span data-invoice-site-value class="l-3">🌐 accbuddy.com</span></td>
+              <td data-invoice-total><span data-invoice-total-value class="l-3">💰100$</span></td>
+              <td data-invoice-status><span data-invoice-status-value class="l-3">🆕 new</span></td>
+            </tr>
+
+
+            <!--✅- ❌  ⚠️- 🛒 📦-->
+          </tbody>
+        </table>
+
+        <script>
+
+          /*
+          const load = async () => {
+          const orderItem = document.getElementById("invoice-item")
+          const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=cart:${localStorage.getItem('ownerid')}`, {
           method: 'GET',
           headers: {
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
           },
-        }).then(e => e.json())
-        const items2Promise = items.map(item1 => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item1.id}:${item1.sk}`, {
+          }).then(e => e.json())
+          const items2Promise = items.map(item1 => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item1.id}:${item1.sk}`, {
           method: 'GET',
           headers: {
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
           },
-        }).then(e => e.json()))
-        const items2 = await Promise.all(items2Promise)
-        for (const item of items2) {
-          const timestamp = new Date(parseInt(item.lsi1?.split(':')[0]));
-
+          }).then(e => e.json()))
+          const items2 = await Promise.all(items2Promise)
+          for (const item of items2) {
+          const timestamp = new Date(parseInt(item.sk));
+          
           const year = timestamp.getFullYear().toString().slice(-2); // Get last two digits of the year
           const month = ('0' + (timestamp.getMonth() + 1)).slice(-2); // Add leading zero if needed
           const day = ('0' + timestamp.getDate()).slice(-2); // Add leading zero if needed
           const hours = ('0' + timestamp.getHours()).slice(-2); // Add leading zero if needed
           const minutes = ('0' + timestamp.getMinutes()).slice(-2); // Add leading zero if needed
-
+          
           // Construct the formatted string
           const formattedDate = `${year}-${month}-${day}. ${hours}:${minutes}`;
           
           const cloned = orderItem.cloneNode(true)
-          cloned.querySelector('[data-order-date-value]').textContent =formattedDate
-            cloned.querySelector('[data-order-site-value]').textContent = item.id.split(':')[0]
-          cloned.querySelector('[data-order-total-value]').textContent = item.total + '$'
-          cloned.querySelector('[data-order-status-value]').textContent = item.lsi1?.split(':')[1]
+          cloned.querySelector('[data-invoice-date-value]').textContent =formattedDate
+          cloned.querySelector('[data-invoice-site-value]').textContent = item.site
+          cloned.querySelector('[data-invoice-total-value]').textContent = item.total + '$'
+          cloned.querySelector('[data-invoice-status-value]').textContent = item.lsi1?.split(':')[1]
           cloned.removeAttribute('hidden')
           orderItem.parentNode.append(cloned)
-        }
-      }
-      document.addEventListener('DOMContentLoaded', load)
-    </script>
-
-</section>
+          }
+          }
+          document.addEventListener('DOMContentLoaded', load)*/
+        </script>
 
 
-<section hidden data-brains="invoices">
-         
-</div>
-<label class="l-3"><input type="radio" checked name="choose-type">💧 All</label>
-<label hidden class="l-3"><input type="radio" name="choose-type">🆕 New</label>
-<label hidden class="l-3"><input type="radio" name="choose-type">✅ Completed</label>
-<label hidden class="l-3"><input type="radio" name="choose-type">⚠️ Attention</label>
-
-<table class="table-1 table-row-number" style="margin-left:25px; margin-top: 10px; ">
-<tbody >
-<tr id="invoice-item" hidden>
-<td data-invoice-date><span data-invoice-date-value class="l-3">🕒 24.09.20 23:59</span></td> 
-<td data-invoice-site><span data-invoice-site-value class="l-3">🌐 accbuddy.com</span></td> 
-<td data-invoice-total><span data-invoice-total-value class="l-3">💰100$</span></td> 
-<td data-invoice-status><span data-invoice-status-value class="l-3">🆕 new</span></td> 
-</tr>
 
 
-<!--✅- ❌  ⚠️- 🛒 📦-->
-</tbody>      
-</table>
+      </section>
 
-<script>
+      <section data-brains="helpers">
 
-/*
-const load = async () => {
-const orderItem = document.getElementById("invoice-item")
-const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=cart:${localStorage.getItem('ownerid')}`, {
-method: 'GET',
-headers: {
-'Content-Type': 'application/json',
-},
-}).then(e => e.json())
-const items2Promise = items.map(item1 => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item1.id}:${item1.sk}`, {
-method: 'GET',
-headers: {
-'Content-Type': 'application/json',
-},
-}).then(e => e.json()))
-const items2 = await Promise.all(items2Promise)
-for (const item of items2) {
-const timestamp = new Date(parseInt(item.sk));
+        <ol class="list-1" id="helpers_list">
+          <li id="helper_name" style="cursor: pointer;"><label class="l-3"
+              style="user-select: none; margin-right: 5px;">👤</label><label class="l-2"
+              id="site-name-value">helper1</label></li>
+        </ol>
 
-const year = timestamp.getFullYear().toString().slice(-2); // Get last two digits of the year
-const month = ('0' + (timestamp.getMonth() + 1)).slice(-2); // Add leading zero if needed
-const day = ('0' + timestamp.getDate()).slice(-2); // Add leading zero if needed
-const hours = ('0' + timestamp.getHours()).slice(-2); // Add leading zero if needed
-const minutes = ('0' + timestamp.getMinutes()).slice(-2); // Add leading zero if needed
+        <div data-menu>
+          <button style="margin-top:5px; margin-bottom: 5px;" onclick="cancel(event)" class="b-4">❌</button>
+          <div style="margin-left: 30px;">
+            <label class="l-3"><input type="checkbox">📂 Files</label>
+            <label class="l-3"><input type="checkbox">🛍️ eCommerce</label>
+          </div>
 
-// Construct the formatted string
-const formattedDate = `${year}-${month}-${day}. ${hours}:${minutes}`;
+          <span class="l-1" style="user-select: none;">👤</span>
+          <input placeholder=" 👤 Username" class="input-1" type="text">
+          <br>
+          <span class="l-1" style="user-select: none;">🔑</span>
+          <input placeholder="🔑 Password" class="input-1" type="text">
 
-const cloned = orderItem.cloneNode(true)
-cloned.querySelector('[data-invoice-date-value]').textContent =formattedDate
-cloned.querySelector('[data-invoice-site-value]').textContent = item.site
-cloned.querySelector('[data-invoice-total-value]').textContent = item.total + '$'
-cloned.querySelector('[data-invoice-status-value]').textContent = item.lsi1?.split(':')[1]
-cloned.removeAttribute('hidden')
-orderItem.parentNode.append(cloned)
-}
-}
-document.addEventListener('DOMContentLoaded', load)*/
-</script>
+          <div style="margin-left: 30px;">
+            <button class="b-4">🗑️ Remove</button>
+            <button class="b-4">🔄 Update</button>
+            <br>
+          </div>
 
 
-  
-  
-</section>
 
-<section  data-brains="helpers">
 
-  <ol class="list-1" id="helpers_list">
-    <li  id="helper_name" style="cursor: pointer;"><label class="l-3"
-      style="user-select: none; margin-right: 5px;">👤</label><label class="l-2"
-      id="site-name-value">helper1</label></li>
-  </ol>
 
-  <div  data-menu>
-    <button style="margin-top:5px; margin-bottom: 5px;" onclick="cancel(event)" class="b-4">❌</button>
-      <div style="margin-left: 30px;">
-      <label class="l-3"><input type="checkbox">📂 Files</label>
-      <label class="l-3"><input type="checkbox">🛍️ eCommerce</label>
+        </div>
+
+        <div data-menu style="margin-bottom: 30px;">
+          <button style="margin-top:5px; margin-bottom: 5px;" onclick="cancel(event)" class="b-4">❌</button>
+          <br>
+
+          <details style="margin-bottom: 7px;">
+            <summary class="summary-L-3"><span class="l-3 b-dark-blue"> </span></summary>
+            <select class="select-1" style="display: inline-block; margin-bottom: 7px; margin-left: 18px;"
+              id="choose_link_type">
+              <option> ⬇️ Select</option>
+              <option> 👤 777999</option>
+              <option> 👤 blablabla</option>
+              <option> 👤 dredredre</option>
+            </select>
+            <button class="b-4">💾 Save</button>
+          </details>
+
+          <span class="l-3 b-dark-blue">👨🏾‍💻 Owner:</span>
+          <select class="select-1" style="display: inline-block; margin-bottom: 7px;" id="choose_link_type">
+            <option> ⬇️ Change</option>
+            <option> 👤 777999</option>
+            <option> 👤 blablabla</option>
+            <option> 👤 dredredre</option>
+          </select>
+          <button class="b-4">💾 Save</button>
+          <br>
+
+          <span class="l-3 b-dark-blue">👶 Helper:</span>
+          <select class="select-1" style="display: inline-block; margin-bottom: 7px;" id="choose_link_type">
+            <option> ⬇️ Select</option>
+            <option> 👤 777999</option>
+            <option> 👤 blablabla</option>
+            <option> 👤 dredredre</option>
+          </select>
+          <button class="b-4">💾 Save</button>
+
+          <div hidden id="approve-menu">
+            <button class="b-4"> ✅ Approve</button>
+            <button class="b-4"> ❌ Cancel</button>
+          </div>
+
+        </div>
+
+
+      </section>
+
+
+    </section>
+
+
+
+    <section data-section="files">
+      <div class="panel horizontal-menu">
+        <button id="path_select" onclick="loadRoot()" class='b-1' title="change mode"
+          style="user-select: none; margin-right: 7px;">👣</button><label class="l-2 b-dark-blue"
+          style="cursor: pointer; font:700;" id="path-label" onclick="labelClick(event)"></label>
       </div>
 
-    <span class="l-1" style="user-select: none;">👤</span>
-    <input placeholder=" 👤 Username"   class="input-1" type="text">
-    <br>
-    <span class="l-1"   style="user-select: none;">🔑</span>
-    <input placeholder="🔑 Password" class="input-1"   type="text">
-
-  <div style="margin-left: 30px;">
-    <button  class="b-4">🗑️ Remove</button>
-    <button  class="b-4">🔄 Update</button>
-    <br>
-  </div>
-
-  
-  
-
-
-</div>
-
-<div    data-menu style="margin-bottom: 30px;">
-  <button style="margin-top:5px; margin-bottom: 5px;" onclick="cancel(event)" class="b-4">❌</button>
-    <br>
-
-    <details style="margin-bottom: 7px;">
-      <summary class="summary-L-3"><span class="l-3 b-dark-blue">  </span></summary>
-      <select class="select-1" style="display: inline-block; margin-bottom: 7px; margin-left: 18px;" id="choose_link_type">
-        <option> ⬇️ Select</option>
-        <option> 👤 777999</option>
-        <option> 👤 blablabla</option>
-        <option> 👤 dredredre</option>
-      </select>
-      <button class="b-4">💾 Save</button>
-    </details>
-
-    <span class="l-3 b-dark-blue">👨🏾‍💻 Owner:</span>
-    <select class="select-1" style="display: inline-block; margin-bottom: 7px;" id="choose_link_type">
-      <option> ⬇️ Change</option>
-      <option> 👤 777999</option>
-      <option> 👤 blablabla</option>
-      <option> 👤 dredredre</option>
-    </select>
-    <button class="b-4">💾 Save</button>
-<br>
-
-      <span class="l-3 b-dark-blue">👶 Helper:</span>
-      <select class="select-1" style="display: inline-block; margin-bottom: 7px;" id="choose_link_type">
-        <option> ⬇️ Select</option>
-        <option> 👤 777999</option>
-        <option> 👤 blablabla</option>
-        <option> 👤 dredredre</option>
-      </select>
-      <button class="b-4">💾 Save</button>
-
-      <div hidden id="approve-menu">
-        <button class="b-4"> ✅ Approve</button>
-        <button class="b-4"> ❌ Cancel</button>
+      <div hidden id="pathSelector" onchange="handlePathSelection()">
       </div>
 
-    </div>
-
-
-</section>
-
-
-</section>
-
-
-
-<section data-section="files">
-    <div class="panel horizontal-menu">
-      <button id="path_select" onclick="loadRoot()" class='b-1' title="change mode"
-        style="user-select: none; margin-right: 7px;">👣</button><label class="l-2 b-dark-blue"
-        style="cursor: pointer; font:700;" id="path-label" onclick="labelClick(event)"></label>
-    </div>
-
-    <div hidden id="pathSelector" onchange="handlePathSelection()">
-    </div>
 
 
 
 
+      <div hidden data-element="create-new-file-path" data-menu style="margin-bottom: 30px;">
+        <span class="l-3" style="margin-right: 3px;">🆕</span>
 
-    <div hidden data-element="create-new-file-path" data-menu style="margin-bottom: 30px;">
-      <span class="l-3" style="margin-right: 3px;">🆕</span>
+        <input type="text" placeholder="📂path" data-input="create-new-file-path-input" class="input-1"
+          style="margin-top: 7px;" oninput="adjustWidthToContent(this)">
+        <br>
+        <button data-action="create-new-file-path-cancel" onclick="cancel(event)" class="b-4">❌ Cancel</button>
+        <button data-action="create-new-file-path-save" onclick="loader(event,savePath)" class="b-4">💾 Save</button>
+      </div>
 
-      <input type="text" placeholder="📂path" data-input="create-new-file-path-input" class="input-1"
-        style="margin-top: 7px;" oninput="adjustWidthToContent(this)">
-      <br>
-      <button data-action="create-new-file-path-cancel" onclick="cancel(event)" class="b-4">❌ Cancel</button>
-      <button data-action="create-new-file-path-save" onclick="loader(event,savePath)" class="b-4">💾 Save</button>
-    </div>
+      <ol data-element="file-path-list" id="filePathList" class="list-1" style="margin-left: -10px;">
 
-    <ol data-element="file-path-list" id="filePathList" class="list-1" style="margin-left: -10px;">
+      </ol>
+      <li hidden data-element="file-path" id="item">
+        <label data-value="file-path" class="l-3">universal/blablabla/blablabla/coolcss</label><label
+          data-value="file-emoji" style="user-select: none; margin-left: 5px;" class="l-3"> 🧩</label>
+      </li>
 
-    </ol>
-    <li hidden data-element="file-path" id="item">
-      <label data-value="file-path" class="l-3">universal/blablabla/blablabla/coolcss</label><label
-        data-value="file-emoji" style="user-select: none; margin-left: 5px;" class="l-3"> 🧩</label>
-    </li>
-
-    <select id="amount-of-rows"
-    style="margin-top: 10px; min-width: 50px; position: absolute; right: 10px; font-size:20px;">
-    <option value="path0">25</option>
-    <option value="path1">50</option>
-    <option value="path2">100</option>
-    <option value="path3">150</option>
-    <option value="path3">200</option>
-  </select>
-  
-
-
-  <div style="display: none;" id="right-click-menu" class="right-click-menu">
-    <div class="menu-option" onclick="alert('Option 0 selected')">🖼️ edit pic</div>
-  </div>
-
-
-
-  <div hidden data-element="file-id" data-menu style="margin-bottom: 30px;">
-    <button class="b-4" onclick="cancel(event)" style="user-select: none;">❌Close</button>
-    <span class="l-4" style="user-select: none;">🆔</span><span data-value="file-id"
-      class="l-4">1414124-414221412-4124214124-412412</span>
-  </div>
-
-  <div hidden id="cancelation" data-menu style="margin-bottom: 30px;">
-    <span class="l-4 b-dark-blue">Are you sure want to remove this file?</span>
-    <br>
-    <button onclick="cancel(event)" class="b-4">❌ Cancel</button>
-    <button class="b-4" data-action="remove-file-confirmation">✅ Delete</button>
-
-  </div>
-  <!-- file path-->
-
-
-  <div hidden data-element="copy-folder" data-menu style="margin-bottom: 30px;">
-    <span class="l-3" style="margin-right: 3px;">🆕</span>
-    <input data-input="copy-file-path-input" type="text" placeholder="📂name" class="input-1" style="margin-top: 7px;">
-    <details style="margin-bottom: 7px;">
-      <summary class="summary-L-3"><span class="l-3 b-dark-blue"> 🔗 Link Type (Optional)</span></summary>
-      <select class="select-1" style="display: block; margin-bottom: 7px; margin-left: 18px;" id="choose_link_type">
-        <option> ⬇️ Select</option>
-        <option id="update"> 🌐 Update</option>
-        <option id="byId"> 🆔 Id</option>
-        <option id="absolute"> 📂 Absolute</option>
-        <option id="relative"> 🗂️ Relative</option>
+      <select id="amount-of-rows"
+        style="margin-top: 10px; min-width: 50px; position: absolute; right: 10px; font-size:20px;">
+        <option value="path0">25</option>
+        <option value="path1">50</option>
+        <option value="path2">100</option>
+        <option value="path3">150</option>
+        <option value="path3">200</option>
       </select>
-    </details>
 
 
-    <details style="margin-bottom: 7px;">
-      <summary class="summary-L-3"><span class="l-3 b-dark-blue"> 🌐 File Type (Optional)</span></summary>
-      <select class="select-1" id="site-checkboxes" style="display: block; margin-bottom: 7px; margin-left: 18px;"
-        multiple>
-        <option id="All"> ✔️ All</option>
-        <option id="Hub"> 🗺️ Hub</option>
-        <option id="Style"> 🎨 Style</option>
-        <option id="Content"> 📄 Content</option>
-      </select>
-    </details>
-    <button data-action="copy-file-path-cancel" class="b-4">❌ Cancel</button>
-    <button class="b-4" data-action="copy-file-path-save">✅ Copy</button>
-  </div>
 
-  <div hidden data-element="copy-file" data-menu style="margin-bottom: 30px;">
-    <span class="l-3" style="margin-right: 3px;">🆕</span>
-
-    <input data-input="copy-file-path-input" type="text" placeholder="📂name" class="input-1" style="margin-top: 7px;">
-    <details style="margin-bottom: 7px;">
-      <summary class="summary-L-3"><span class="l-3 b-dark-blue"> 🔗 Link Type (Optional)</span></summary>
-      <select class="select-1" style="display: block; margin-bottom: 7px; margin-left: 18px;" id="choose_link_type">
-        <option value=""> ⬇️ Select</option>
-        <option value="" id="byId"> 🆔 Id</option>
-        <option value="" id="absolute"> 📂 Absolute</option>
-        <option value="" id="relative"> 🗂️ Relative</option>
-      </select>
-    </details>
+      <div style="display: none;" id="right-click-menu" class="right-click-menu">
+        <div class="menu-option" onclick="alert('Option 0 selected')">🖼️ edit pic</div>
+      </div>
 
 
-    <button data-action="copy-file-path-cancel" class="b-4">❌ Cancel</button>
-    <button class="b-4" data-action="copy-file-path-save">✅ Copy</button>
-  </div>
+
+      <div hidden data-element="file-id" data-menu style="margin-bottom: 30px;">
+        <button class="b-4" onclick="cancel(event)" style="user-select: none;">❌Close</button>
+        <span class="l-4" style="user-select: none;">🆔</span><span data-value="file-id"
+          class="l-4">1414124-414221412-4124214124-412412</span>
+      </div>
+
+      <div hidden id="cancelation" data-menu style="margin-bottom: 30px;">
+        <span class="l-4 b-dark-blue">Are you sure want to remove this file?</span>
+        <br>
+        <button onclick="cancel(event)" class="b-4">❌ Cancel</button>
+        <button class="b-4" data-action="remove-file-confirmation">✅ Delete</button>
+
+      </div>
+      <!-- file path-->
 
 
-</section>
+      <div hidden data-element="copy-folder" data-menu style="margin-bottom: 30px;">
+        <span class="l-3" style="margin-right: 3px;">🆕</span>
+        <input data-input="copy-file-path-input" type="text" placeholder="📂name" class="input-1"
+          style="margin-top: 7px;">
+        <details style="margin-bottom: 7px;">
+          <summary class="summary-L-3"><span class="l-3 b-dark-blue"> 🔗 Link Type (Optional)</span></summary>
+          <select class="select-1" style="display: block; margin-bottom: 7px; margin-left: 18px;" id="choose_link_type">
+            <option> ⬇️ Select</option>
+            <option id="update"> 🌐 Update</option>
+            <option id="byId"> 🆔 Id</option>
+            <option id="absolute"> 📂 Absolute</option>
+            <option id="relative"> 🗂️ Relative</option>
+          </select>
+        </details>
+
+
+        <details style="margin-bottom: 7px;">
+          <summary class="summary-L-3"><span class="l-3 b-dark-blue"> 🌐 File Type (Optional)</span></summary>
+          <select class="select-1" id="site-checkboxes" style="display: block; margin-bottom: 7px; margin-left: 18px;"
+            multiple>
+            <option id="All"> ✔️ All</option>
+            <option id="Hub"> 🗺️ Hub</option>
+            <option id="Style"> 🎨 Style</option>
+            <option id="Content"> 📄 Content</option>
+          </select>
+        </details>
+        <button data-action="copy-file-path-cancel" class="b-4">❌ Cancel</button>
+        <button class="b-4" data-action="copy-file-path-save">✅ Copy</button>
+      </div>
+
+      <div hidden data-element="copy-file" data-menu style="margin-bottom: 30px;">
+        <span class="l-3" style="margin-right: 3px;">🆕</span>
+
+        <input data-input="copy-file-path-input" type="text" placeholder="📂name" class="input-1"
+          style="margin-top: 7px;">
+        <details style="margin-bottom: 7px;">
+          <summary class="summary-L-3"><span class="l-3 b-dark-blue"> 🔗 Link Type (Optional)</span></summary>
+          <select class="select-1" style="display: block; margin-bottom: 7px; margin-left: 18px;" id="choose_link_type">
+            <option value=""> ⬇️ Select</option>
+            <option value="" id="byId"> 🆔 Id</option>
+            <option value="" id="absolute"> 📂 Absolute</option>
+            <option value="" id="relative"> 🗂️ Relative</option>
+          </select>
+        </details>
+
+
+        <button data-action="copy-file-path-cancel" class="b-4">❌ Cancel</button>
+        <button class="b-4" data-action="copy-file-path-save">✅ Copy</button>
+      </div>
+
+
+    </section>
   </main>
 
 
@@ -1297,19 +1312,22 @@ document.addEventListener('DOMContentLoaded', load)*/
                       }))
                     }
                   }
+                  const payload = {
+
+                    id: newId,
+                    sk: 'path',
+                    lsi1: newLSI,
+                    ownerUUID: 'path',
+                    protected: false,
+                    
+                  }
+                  item.hub_items && (payload.hub_items = item.hub_items)
                   const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-
-                      id: newId,
-                      sk: 'path',
-                      lsi1: newLSI,
-                      ownerUUID: 'path',
-                      protected: false,
-                    }),
+                    body: JSON.stringify(),
                   })
                   console.log('putting ' + newId)
                   console.log('res ' + JSON.stringify(data))
@@ -1563,7 +1581,7 @@ document.addEventListener('DOMContentLoaded', load)*/
         const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=${path}`);
         //list of sub paths
         const { items } = await response.json();
-        const publishPromise = items.filter(item=>item.lsi1.split(';')[0].endsWith('Hub')).map(async item => {
+        const publishPromise = items.filter(item => item.lsi1.split(';')[0].endsWith('Hub')).map(async item => {
           const url = 'https://b3dutg6xlx4zfz52xgrf4staza0dgeff.lambda-url.us-east-1.on.aws/';
 
           // Event data
@@ -2288,50 +2306,50 @@ document.addEventListener('DOMContentLoaded', load)*/
   </script>
 
 
-<script>
+  <script>
 
-document.addEventListener('DOMContentLoaded', function () {
-    // Определяем кнопки, которые будут переключать секции
-    const buttons = document.querySelectorAll('button[data-section-button="brains"], button[data-section-button="files"]');
-    buttons.forEach(button => {
+    document.addEventListener('DOMContentLoaded', function () {
+      // Определяем кнопки, которые будут переключать секции
+      const buttons = document.querySelectorAll('button[data-section-button="brains"], button[data-section-button="files"]');
+      buttons.forEach(button => {
         button.addEventListener('click', function () {
-            const sectionToShow = this.getAttribute('data-section-button');
+          const sectionToShow = this.getAttribute('data-section-button');
 
-            // Переключение класса 'b-selected' для кнопок
-            buttons.forEach(btn => {
-                if (btn.getAttribute('data-section-button') === sectionToShow) {
-                    btn.classList.add('b-selected');
-                } else {
-                    btn.classList.remove('b-selected');
-                }
-            });
+          // Переключение класса 'b-selected' для кнопок
+          buttons.forEach(btn => {
+            if (btn.getAttribute('data-section-button') === sectionToShow) {
+              btn.classList.add('b-selected');
+            } else {
+              btn.classList.remove('b-selected');
+            }
+          });
 
-            // Переключение видимости секций
-            const sections = document.querySelectorAll('section[data-section="brains"], section[data-section="files"]');
-            sections.forEach(section => {
-                if (section.getAttribute('data-section') === sectionToShow) {
-                    section.hidden = false;
-                } else {
-                    section.hidden = true;
-                }
-            });
+          // Переключение видимости секций
+          const sections = document.querySelectorAll('section[data-section="brains"], section[data-section="files"]');
+          sections.forEach(section => {
+            if (section.getAttribute('data-section') === sectionToShow) {
+              section.hidden = false;
+            } else {
+              section.hidden = true;
+            }
+          });
 
-            // Переключение видимости связанных элементов aside
-            const asides = document.querySelectorAll('div[data-section-aside="brains"], div[data-section-aside="files"]');
-            asides.forEach(aside => {
-                if (aside.getAttribute('data-section-aside') === sectionToShow) {
-                    aside.hidden = false;
-                } else {
-                    aside.hidden = true;
-                }
-            });
+          // Переключение видимости связанных элементов aside
+          const asides = document.querySelectorAll('div[data-section-aside="brains"], div[data-section-aside="files"]');
+          asides.forEach(aside => {
+            if (aside.getAttribute('data-section-aside') === sectionToShow) {
+              aside.hidden = false;
+            } else {
+              aside.hidden = true;
+            }
+          });
         });
+      });
     });
-});
 
 
 
 
-</script>
+  </script>
 
 </body>
