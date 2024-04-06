@@ -6429,7 +6429,7 @@ overflow: auto;">
             catFolder.querySelector('button').addEventListener('click', (e) => {
               const inputV = catFolder.querySelector('input').value
               pathItem.hub_items.article_folder = inputV
-              delete pathItem.hub_items.catalog_weight
+              delete pathItem.hub_items.catalog_page_weight
               fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                 method: 'POST',
                 body: JSON.stringify(pathItem),
@@ -6437,7 +6437,7 @@ overflow: auto;">
             })
             catWeight.querySelector('button').addEventListener('click', (e) => {
               const inputV = catWeight.querySelector('input').value
-              pathItem.hub_items.catalog_weight = inputV
+              pathItem.hub_items.catalog_page_weight = inputV
               delete pathItem.hub_items.article_folder
               fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                 method: 'POST',
@@ -6502,7 +6502,7 @@ overflow: auto;">
 
                 contentEl.querySelector('[data-content-type="catalog"]').checked = true
                 contentEl.querySelector('#catalog-weight').removeAttribute('hidden')
-                contentEl.querySelector('#catalog-weight').querySelector('input').value = pathItem.hub_items.catalog_weight || ""
+                contentEl.querySelector('#catalog-weight').querySelector('input').value = pathItem.hub_items.catalog_page_weight || ""
               }
             }
 
