@@ -1197,7 +1197,10 @@
               }
               console.log('replaceByIditems ' + JSON.stringify(replaceByIditems))
               console.log('doNotReplaceItems ' + JSON.stringify(doNotReplaceItems))
-              await Promise.all(replaceByIditems.map(async item => {
+              await Promise.all(replaceByIditems.map(async item55 => {
+                const item =  await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item55.id}:${item55.sk}`)
+                              .then(e=>e.json())
+                item.id = item55.id
                 const splited = item.lsi1.split('/')
                 const el = splited.find(e => e === 'Seed-Home')
 
