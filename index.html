@@ -60,11 +60,13 @@
   <main class="main">
 <section hidden data-section="brains">
     <div style="margin: 10px;">
-      <button data-brains-button="sites" class="b-4 b-selected" style="margin-right: 5px;" id="sites-button"><label class="l-1">🌐</label><label class="l-2">Sites</label></button>  
+      <button data-brains-button="sites" class="b-4 " style="margin-right: 5px;" id="sites-button"><label class="l-1">🌐</label><label class="l-2">Sites</label></button>  
       <button data-brains-button="orders" class="b-4" style="margin-right: 5px;"><label class="l-1">🛍️</label><label class="l-2">Orders</label></button>  
+      <button data-brains-button="invoices" class="b-4 b-selected" style="margin-right: 5px;"><label class="l-1">🧾</label><label class="l-2">Invoices</label></button>  
+
     </div>
 
-<section data-brains="sites">
+<section  hidden data-brains="sites">
   <ol class="list-1" id="sites-list">
     <li hidden id="site-name" style="cursor: pointer;"><label class="l-3"
       style="user-select: none; margin-right: 5px;">🌐</label><label onclick="openSite(event)" class="l-2"
@@ -189,6 +191,67 @@ document.addEventListener('DOMContentLoaded',loadSites);
 
 </section>
 
+
+<section data-brains="invoices">
+  <table class="table-1 table-row-number" style="margin-left:25px; margin-top: 10px; ">
+    <tbody >
+      <tr id="invoice-item" hidden>
+        <td data-invoice-date><span data-invoice-date-value class="l-3">🕒 24.09.20 23:59</span></td> 
+        <td data-invoice-site><span data-invoice-site-value class="l-3">🌐 accbuddy.com</span></td> 
+        <td data-invoice-total><span data-invoice-total-value class="l-3">💰100$</span></td> 
+        <td data-invoice-status><span data-invoice-status-value class="l-3">🆕 new</span></td> 
+      </tr>
+  
+  
+      <!--✅- ❌  ⚠️- 🛒 📦-->
+    </tbody>      
+  </table>
+  
+  <script>
+  
+    const load = async () => {
+      const orderItem = document.getElementById("invoice-item")
+      const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=cart:${localStorage.getItem('ownerid')}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(e => e.json())
+      const items2Promise = items.map(item1 => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item1.id}:${item1.sk}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(e => e.json()))
+      const items2 = await Promise.all(items2Promise)
+      for (const item of items2) {
+        const timestamp = new Date(parseInt(item.sk));
+  
+        const year = timestamp.getFullYear().toString().slice(-2); // Get last two digits of the year
+        const month = ('0' + (timestamp.getMonth() + 1)).slice(-2); // Add leading zero if needed
+        const day = ('0' + timestamp.getDate()).slice(-2); // Add leading zero if needed
+        const hours = ('0' + timestamp.getHours()).slice(-2); // Add leading zero if needed
+        const minutes = ('0' + timestamp.getMinutes()).slice(-2); // Add leading zero if needed
+  
+        // Construct the formatted string
+        const formattedDate = `${year}-${month}-${day}. ${hours}:${minutes}`;
+        
+        const cloned = orderItem.cloneNode(true)
+        cloned.querySelector('[data-invoice-date-value]').textContent =formattedDate
+          cloned.querySelector('[data-invoice-site-value]').textContent = item.site
+        cloned.querySelector('[data-invoice-total-value]').textContent = item.total + '$'
+        cloned.querySelector('[data-invoice-status-value]').textContent = item.lsi1?.split(':')[1]
+        cloned.removeAttribute('hidden')
+        orderItem.parentNode.append(cloned)
+      }
+    }
+    document.addEventListener('DOMContentLoaded', load)
+  </script>
+  
+  
+  
+  
+</section>
 </section>
 
 
@@ -2202,37 +2265,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 </script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Определяем кнопки, которые будут переключать разделы
-    const buttons = document.querySelectorAll('button[data-brains-button]');
-    buttons.forEach(button => {
-        button.addEventListener('click', function () {
-            const targetValue = this.getAttribute('data-brains-button');
-
-            // Устанавливаем или снимаем активный класс для кнопок
-            buttons.forEach(btn => {
-                if (btn.getAttribute('data-brains-button') === targetValue) {
-                    btn.classList.add('b-selected');
-                } else {
-                    btn.classList.remove('b-selected');
-                }
-            });
-
-            // Показываем или скрываем разделы в зависимости от выбранного значения
-            const sections = document.querySelectorAll('div[data-brains]');
-            sections.forEach(section => {
-                if (section.getAttribute('data-brains') === targetValue) {
-                    section.style.display = ''; // Убираем свойство display, используя значение по умолчанию
-                } else {
-                    section.style.display = 'none'; // Скрываем раздел
-                }
-            });
-        });
-    });
-});
-</script>
-
 
 </body>
