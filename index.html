@@ -5,7 +5,6 @@
 
 </head>
 
-
 <body class="body">
 
 <form hidden  class="login-1" id="login">
@@ -2126,4 +2125,39 @@
       });
     });
   </script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Находим все кнопки и добавляем слушатель событий клика к каждой из них
+    const buttons = document.querySelectorAll('button[data-section-button]');
+    buttons.forEach(button => {
+        button.addEventListener('click', function () {
+            // Получаем значение атрибута data-section-button нажатой кнопки
+            const sectionToShow = button.getAttribute('data-section-button');
+
+            // Переключаем класс b-selected у кнопок
+            buttons.forEach(btn => {
+                if (btn.getAttribute('data-section-button') === sectionToShow) {
+                    btn.classList.add('b-selected');
+                } else {
+                    btn.classList.remove('b-selected');
+                }
+            });
+
+            // Находим все секции и переключаем атрибут hidden
+            const sections = document.querySelectorAll('section[data-section]');
+            sections.forEach(section => {
+                if (section.getAttribute('data-section') === sectionToShow) {
+                    section.removeAttribute('hidden');
+                } else {
+                    section.setAttribute('hidden', 'true');
+                }
+            });
+        });
+    });
+});
+
+</script>
+
 </body>
