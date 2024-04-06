@@ -2198,6 +2198,42 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+
+
+
 </script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Определяем кнопки для переключения, исходя из новых атрибутов и их значений
+    const buttons = document.querySelectorAll('button[data-brains-button="sites"], button[data-brains-button="orders"]');
+    buttons.forEach(button => {
+        button.addEventListener('click', function () {
+            const valueToShow = this.getAttribute('data-brains-button');
+
+            // Переключение активного состояния кнопок
+            buttons.forEach(btn => {
+                if (btn.getAttribute('data-brains-button') === valueToShow) {
+                    btn.classList.add('b-selected');
+                } else {
+                    btn.classList.remove('b-selected');
+                }
+            });
+
+            // Переключение видимости секций, соответствующих значению data-brains
+            const sections = document.querySelectorAll('div[data-brains="sites"], div[data-brains="orders"]');
+            sections.forEach(section => {
+                if (section.getAttribute('data-brains') === valueToShow) {
+                    section.hidden = false;
+                } else {
+                    section.hidden = true;
+                }
+            });
+        });
+    });
+});
+
+</script>
+
 
 </body>
