@@ -2204,35 +2204,34 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // Определяем кнопки для переключения, исходя из новых атрибутов и их значений
-    const buttons = document.querySelectorAll('button[data-brains-button="sites"], button[data-brains-button="orders"]');
+document.addEventListener('DOMContentLoaded', function () {
+    // Определяем кнопки, которые будут переключать разделы
+    const buttons = document.querySelectorAll('button[data-brains-button]');
     buttons.forEach(button => {
         button.addEventListener('click', function () {
-            const valueToShow = this.getAttribute('data-brains-button');
+            const targetValue = this.getAttribute('data-brains-button');
 
-            // Переключение активного состояния кнопок
+            // Устанавливаем или снимаем активный класс для кнопок
             buttons.forEach(btn => {
-                if (btn.getAttribute('data-brains-button') === valueToShow) {
+                if (btn.getAttribute('data-brains-button') === targetValue) {
                     btn.classList.add('b-selected');
                 } else {
                     btn.classList.remove('b-selected');
                 }
             });
 
-            // Переключение видимости секций, соответствующих значению data-brains
-            const sections = document.querySelectorAll('div[data-brains="sites"], div[data-brains="orders"]');
+            // Показываем или скрываем разделы в зависимости от выбранного значения
+            const sections = document.querySelectorAll('div[data-brains]');
             sections.forEach(section => {
-                if (section.getAttribute('data-brains') === valueToShow) {
-                    section.hidden = false;
+                if (section.getAttribute('data-brains') === targetValue) {
+                    section.style.display = ''; // Убираем свойство display, используя значение по умолчанию
                 } else {
-                    section.hidden = true;
+                    section.style.display = 'none'; // Скрываем раздел
                 }
             });
         });
     });
 });
-
 </script>
 
 
