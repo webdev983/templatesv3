@@ -60,6 +60,69 @@
   <main class="main">
 <section data-section="brains">
 
+
+<section  data-section="sites">
+  <ol class="list-1" id="sites-list">
+
+</ol>
+
+
+
+
+<li hidden id="site-name" style="cursor: pointer;"><label class="l-3"
+style="user-select: none; margin-right: 5px;">🌐</label><label onclick="openSite(event)" class="l-2"
+id="site-name-value">accbuddy.com</label></li>
+</section>
+
+
+
+</main>
+<script>
+const openSite =(event)=>{
+const site = event.target.textContent
+window.location.href = './site-settings.html?site='+site;
+console.log(site)
+}
+const loadSites = async () => {
+const res = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true')
+const response = await res.json()
+console.log('res'+ JSON.stringify(response))
+const paths = response.items.map(item => item.lsi1.split('/')[0])
+const sites = []
+for (const path of paths) {
+if (!sites.includes(path)) {
+  sites.push(path)
+}
+}
+console.log(sites)
+// Get the parent element (sites-list)
+const sitesList = document.getElementById('sites-list');
+
+// Clone the template node
+const templateNode = document.getElementById('site-name');
+
+// Clear the existing content inside sites-list
+sitesList.innerHTML = '';
+
+// Iterate through the array and create list items
+sites.forEach(site => {
+// Clone the template node
+const clonedNode = templateNode.cloneNode(true);
+
+// Update the content of the cloned node with the current site
+clonedNode.querySelector('#site-name-value').textContent = site;
+
+// Append the cloned node to sites-list
+sitesList.appendChild(clonedNode);
+
+// Show the cloned node (remove the 'hidden' attribute)
+clonedNode.removeAttribute('hidden');
+});
+
+}
+document.addEventListener('DOMContentLoaded',loadSites);
+</script>
+
 </section>
 
 <section data-section="files">
