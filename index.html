@@ -353,7 +353,7 @@ document.addEventListener('DOMContentLoaded', load)*/
     <div class="panel horizontal-menu">
       <button id="path_select" onclick="loadRoot()" class='b-1' title="change mode"
         style="user-select: none; margin-right: 7px;">👣</button><label class="l-2 b-dark-blue"
-        style="cursor: pointer; font:700;" onclick="labelClick(event)"></label>
+        style="cursor: pointer; font:700;" id="path-label" onclick="labelClick(event)"></label>
     </div>
 
     <div hidden id="pathSelector" onchange="handlePathSelection()">
@@ -1920,7 +1920,7 @@ document.addEventListener('DOMContentLoaded', load)*/
                 path = item + '/'
                 localStorage.setItem('storedPath', path)
                 console.log(path)
-                const labelElement = document.querySelector('.l-2');
+                const labelElement = document.querySelector('#path-label');
 
                 // Update the text content of the label
                 labelElement.textContent = `${path}`;
@@ -2163,7 +2163,7 @@ document.addEventListener('DOMContentLoaded', load)*/
                 path = path + item + '/'
                 localStorage.setItem('storedPath', path)
                 console.log(path)
-                const labelElement = document.querySelector('.l-2');
+                const labelElement = document.querySelector('#path-label');
 
                 // Update the text content of the label
                 labelElement.textContent = `${path}`;
@@ -2236,7 +2236,7 @@ document.addEventListener('DOMContentLoaded', load)*/
       const storedPath = localStorage.getItem('storedPath')
       if (storedPath) {
         path = storedPath
-        const labelElement = document.querySelector('.l-2');
+        const labelElement = document.querySelector('#path-label');
 
         // Update the text content of the label
         labelElement.textContent = `${path}`;
