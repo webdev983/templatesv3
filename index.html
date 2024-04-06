@@ -42,11 +42,16 @@
 
 
 
-      <div data-section-aside="files" class="local-buttons" style="margin-top: 30px;" data-section="helpers">
+      <div data-section-aside="files" class="local-buttons" style="margin-top: 30px;">
         <button class="b-1" onclick="createNew()">➕</button>
       </div>
 
-      <div data-section-aside="brains" class="local-buttons" style="margin-top: 30px;" data-section="helpers">
+      <div hidden data-section-aside="brains" class="local-buttons" style="margin-top: 30px;">
+
+        <div data-section-aside="helpers" class="local-buttons" style="margin-top: 30px;">
+          <button class="b-1" onclick="createNew()">➕</button>
+        </div>
+  
       </div>
 
     </div>
@@ -262,27 +267,80 @@ document.addEventListener('DOMContentLoaded', load)
 </section>
 
 <section  data-brains="helpers">
-  <div  data-menu style="margin-bottom: 30px;">
-      <br>
-      <span class="l-1" style="user-select: none;">👤</span>
-      <input placeholder="Username"  class="l-2" style="width: 400px; font-size: 18px; padding: 5px;" type="text" id="username" name="username">
-      <br>
-      <span class="l-1"   style="user-select: none;">🔑</span>
-      <input placeholder="Password" class="l-3" class="l-2"  style="width: 400px; font-size: 18px; padding: 5px;" type="text" id="password" name="password">
-    <br>
-    <div style="margin-left: 30px;">
-      <label class="l-3"><input type="checkbox">📂 Files</label>
-      <label class="l-3"><input type="checkbox">🛍️ Shopping</label>
-      </div>
-
-    <button  id="login" class="b-3" style="width: 400px; margin-left: 35px;  margin-top: 10px; background: rgb(235, 234, 234); border-color: rgb(184, 182, 182);">➡️ Save</button>
-  </div>
 
   <ol class="list-1" id="helpers_list">
     <li  id="helper_name" style="cursor: pointer;"><label class="l-3"
       style="user-select: none; margin-right: 5px;">👤</label><label class="l-2"
       id="site-name-value">helper1</label></li>
   </ol>
+
+  <div  data-menu>
+    <button style="margin-top:5px; margin-bottom: 5px;" onclick="cancel(event)" class="b-4">❌</button>
+      <div style="margin-left: 30px;">
+      <label class="l-3"><input type="checkbox">📂 Files</label>
+      <label class="l-3"><input type="checkbox">🛍️ eCommerce</label>
+      </div>
+
+    <span class="l-1" style="user-select: none;">👤</span>
+    <input placeholder=" 👤 Username"   class="input-1" type="text">
+    <br>
+    <span class="l-1"   style="user-select: none;">🔑</span>
+    <input placeholder="🔑 Password" class="input-1"   type="text">
+
+  <div style="margin-left: 30px;">
+    <button  class="b-4">🗑️ Remove</button>
+    <button  class="b-4">🔄 Update</button>
+    <br>
+  </div>
+
+  
+  
+
+
+</div>
+
+<div    data-menu style="margin-bottom: 30px;">
+  <button style="margin-top:5px; margin-bottom: 5px;" onclick="cancel(event)" class="b-4">❌</button>
+    <br>
+
+    <details style="margin-bottom: 7px;">
+      <summary class="summary-L-3"><span class="l-3 b-dark-blue">  </span></summary>
+      <select class="select-1" style="display: inline-block; margin-bottom: 7px; margin-left: 18px;" id="choose_link_type">
+        <option> ⬇️ Select</option>
+        <option> 👤 777999</option>
+        <option> 👤 blablabla</option>
+        <option> 👤 dredredre</option>
+      </select>
+      <button class="b-4">💾 Save</button>
+    </details>
+
+    <span class="l-3 b-dark-blue">👨🏾‍💻 Owner:</span>
+    <select class="select-1" style="display: inline-block; margin-bottom: 7px;" id="choose_link_type">
+      <option> ⬇️ Change</option>
+      <option> 👤 777999</option>
+      <option> 👤 blablabla</option>
+      <option> 👤 dredredre</option>
+    </select>
+    <button class="b-4">💾 Save</button>
+<br>
+
+      <span class="l-3 b-dark-blue">👶 Helper:</span>
+      <select class="select-1" style="display: inline-block; margin-bottom: 7px;" id="choose_link_type">
+        <option> ⬇️ Select</option>
+        <option> 👤 777999</option>
+        <option> 👤 blablabla</option>
+        <option> 👤 dredredre</option>
+      </select>
+      <button class="b-4">💾 Save</button>
+
+      <div hidden id="approve-menu">
+        <button class="b-4"> ✅ Approve</button>
+        <button class="b-4"> ❌ Cancel</button>
+      </div>
+
+    </div>
+
+
 </section>
 
 
@@ -302,31 +360,6 @@ document.addEventListener('DOMContentLoaded', load)
 
 
 
-    <div   hidden data-menu style="margin-bottom: 30px;">
-      <button style="margin-top:5px; margin-bottom: 5px;" onclick="cancel(event)" class="b-4">❌</button>
-        <br>
-        <button class="b-4">💾 Save</button>
-
-        <details style="margin-bottom: 7px;">
-          <summary class="summary-L-3"><span class="l-3 b-dark-blue">  👨🏾‍💻 Owner</span></summary>
-          <select class="select-1" style="display: block; margin-bottom: 7px; margin-left: 18px;" id="choose_link_type">
-            <option> ⬇️ Select</option>
-            <option> 👤 777999</option>
-            <option> 👤 blablabla</option>
-            <option> 👤 dredredre</option>
-          </select>
-        </details>
-    
-    
-        <details style="margin-bottom: 7px;">
-          <summary class="summary-L-3"><span class="l-3 b-dark-blue">👶 Helper</span></summary>
-          <select class="select-1" id="site-checkboxes" style="display: block; margin-bottom: 7px; margin-left: 18px;"
-            multiple>
-            <option > 👤 blabla</option>
-            <option > 👤 dredre</option>
-          </select>
-        </details>
-    </div>
 
 
     <div hidden data-element="create-new-file-path" data-menu style="margin-bottom: 30px;">
