@@ -2083,91 +2083,17 @@ document.addEventListener('DOMContentLoaded',loadSites);
     });
   </script>
 
-  <script>
-    // Функция для обновления видимости и стилей кнопок
-    function updateButtons(selectedType) {
-      const allButtonsIds = ['btn-all', 'btn-page', 'btn-component', 'btn-css', 'btn-js'];
-
-      allButtonsIds.forEach(btnId => {
-        const btn = document.getElementById(btnId);
-        if (btnId === `btn-${selectedType}`) {
-          // Показываем выбранную кнопку и добавляем класс b-selected
-          btn.hidden = false;
-          btn.classList.add('b-selected');
-        } else {
-          // Скрываем все другие кнопки и удаляем класс b-selected
-          btn.hidden = true;
-          btn.classList.remove('b-selected');
-        }
-      });
-
-      // Специальная обработка для "hide" опции
-      if (selectedType === 'hide') {
-        const btnAll = document.getElementById('btn-all');
-        btnAll.hidden = false; // Показываем btn-all
-        btnAll.classList.remove('b-selected'); // Удаляем класс b-selected, если он есть
-      }
-    }
-
-    // Обработчик левого клика по кнопке
-    function handleLeftClickOnButton(clickedButtonId) {
-      const allButtonsIds = ['btn-page', 'btn-component', 'btn-css', 'btn-js'];
-
-      if (clickedButtonId === 'btn-all') {
-        // Переключаем класс b-selected для btn-all
-        document.getElementById(clickedButtonId).classList.toggle('b-selected');
-      } else {
-        // Скрываем все кнопки, кроме btn-all, и добавляем btn-all класс b-selected
-        allButtonsIds.forEach(btnId => {
-          document.getElementById(btnId).hidden = true;
-        });
-        const btnAll = document.getElementById('btn-all');
-        btnAll.hidden = false;
-        btnAll.classList.add('b-selected');
-      }
-    }
-
-    const allButtonsIds1 = ['btn-all', 'btn-page', 'btn-component', 'btn-css', 'btn-js'];
-
-    allButtonsIds1.forEach(btnId => {
-      const button = document.getElementById(btnId);
-      button.addEventListener('click', function (e) {
-        handleLeftClickOnButton(e.target.id);
-      });
-    });
-
-    // Функция для контекстного меню
-    const menu = document.querySelector('#R-click-file-type');
-    document.addEventListener('contextmenu', function (e) {
-      if (e.target.id.startsWith('btn-')) {
-        e.preventDefault();
-        menu.style.display = 'block';
-        menu.style.left = `${e.pageX}px`;
-        menu.style.top = `${e.pageY}px`;
-      }
-    });
-
-    // Скрываем меню при клике
-    window.addEventListener('click', function () {
-      menu.style.display = 'none';
-    });
-
-    // Обработчик выбора из контекстного меню
-    function fileTypeChoose(selectedType) {
-      updateButtons(selectedType);
-    }
-  </script>
 
 <script>
+
 document.addEventListener('DOMContentLoaded', function () {
-    // Находим все кнопки и добавляем слушатель событий клика к каждой из них
-    const buttons = document.querySelectorAll('button[data-section-button]');
+    // Определяем кнопки, которые будут переключать секции
+    const buttons = document.querySelectorAll('button[data-section-button="brains"], button[data-section-button="files"]');
     buttons.forEach(button => {
         button.addEventListener('click', function () {
-            // Получаем значение атрибута data-section-button нажатой кнопки
-            const sectionToShow = button.getAttribute('data-section-button');
+            const sectionToShow = this.getAttribute('data-section-button');
 
-            // Переключаем класс b-selected у кнопок
+            // Переключение класса 'b-selected' для кнопок
             buttons.forEach(btn => {
                 if (btn.getAttribute('data-section-button') === sectionToShow) {
                     btn.classList.add('b-selected');
@@ -2176,13 +2102,23 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
 
-            // Находим все секции и переключаем атрибут hidden
-            const sections = document.querySelectorAll('section[data-section], div[data-section-aside]');
+            // Переключение видимости секций
+            const sections = document.querySelectorAll('section[data-section="brains"], section[data-section="files"]');
             sections.forEach(section => {
-                if (section.getAttribute('data-section') === sectionToShow || section.getAttribute('data-section-aside') === sectionToShow) {
-                    section.removeAttribute('hidden'); // Показываем секцию и соответствующие кнопки
+                if (section.getAttribute('data-section') === sectionToShow) {
+                    section.hidden = false;
                 } else {
-                    section.setAttribute('hidden', 'true'); // Скрываем остальные секции и кнопки
+                    section.hidden = true;
+                }
+            });
+
+            // Переключение видимости связанных элементов aside
+            const asides = document.querySelectorAll('div[data-section-aside="brains"], div[data-section-aside="files"]');
+            asides.forEach(aside => {
+                if (aside.getAttribute('data-section-aside') === sectionToShow) {
+                    aside.hidden = false;
+                } else {
+                    aside.hidden = true;
                 }
             });
         });
