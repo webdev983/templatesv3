@@ -42,11 +42,13 @@
 
 
 
-      <div class="local-buttons" style="margin-top: 30px;" data-section="helpers">
+      <div data-section-aside="files" class="local-buttons" style="margin-top: 30px;" data-section="helpers">
         <button class="b-1" onclick="createNew()">➕</button>
-        <div id="filters" hidden>
-        </div>
       </div>
+
+      <div data-section-aside="brains" class="local-buttons" style="margin-top: 30px;" data-section="helpers">
+      </div>
+
     </div>
 
     <div class="panel bottom">
@@ -2097,38 +2099,9 @@
       updateButtons(selectedType);
     }
   </script>
-  <script>document.addEventListener('DOMContentLoaded', function () {
-      var filtersOpenButton = document.getElementById('filters-open');
-      var mainContent = document.getElementById('main-content');
-      var leftSidePanel = document.querySelector('.left-side-panel');
-      var buttonsToShowOrHide = ['publish', 'sitemap', 'robots', 'dates', 'btn-all']; // ID кнопок для показа/скрытия
-
-      filtersOpenButton.addEventListener('click', function () {
-        // Переключаем класс b-selected
-        filtersOpenButton.classList.toggle('b-selected');
-
-        // Переключаем ширину left-side-panel
-        var currentWidth = leftSidePanel.style.width;
-        leftSidePanel.style.width = currentWidth === '300px' ? '65px' : '300px';
-
-        // Переключаем margin-left для main-content
-        var currentMargin = mainContent.style.marginLeft;
-        mainContent.style.marginLeft = currentMargin === '315px' ? '80px' : '315px';
-
-        // Переключаем видимость кнопок
-        buttonsToShowOrHide.forEach(function (buttonId) {
-          var button = document.getElementById(buttonId);
-          if (button) {
-            button.hidden = !button.hidden;
-          }
-        });
-      });
-    });
-  </script>
-
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
     // Находим все кнопки и добавляем слушатель событий клика к каждой из них
     const buttons = document.querySelectorAll('button[data-section-button]');
     buttons.forEach(button => {
@@ -2146,12 +2119,12 @@
             });
 
             // Находим все секции и переключаем атрибут hidden
-            const sections = document.querySelectorAll('section[data-section]');
+            const sections = document.querySelectorAll('section[data-section], div[data-section-aside]');
             sections.forEach(section => {
-                if (section.getAttribute('data-section') === sectionToShow) {
-                    section.removeAttribute('hidden');
+                if (section.getAttribute('data-section') === sectionToShow || section.getAttribute('data-section-aside') === sectionToShow) {
+                    section.removeAttribute('hidden'); // Показываем секцию и соответствующие кнопки
                 } else {
-                    section.setAttribute('hidden', 'true');
+                    section.setAttribute('hidden', 'true'); // Скрываем остальные секции и кнопки
                 }
             });
         });
