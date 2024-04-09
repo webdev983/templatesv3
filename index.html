@@ -2475,4 +2475,28 @@
 
   </script>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Listen for clicks on the entire document
+    document.addEventListener('click', function(e) {
+        // Check if the clicked element has the data-brains-button attribute
+        if (e.target.hasAttribute('data-brains-button')) {
+            // Get the value from the clicked element's attribute
+            const value = e.target.getAttribute('data-brains-button');
+            
+            // Select all elements with matching data-brains or data-brains-aside values and show them
+            const matchingElements = document.querySelectorAll(`[data-brains="${value}"], [data-brains-aside="${value}"]`);
+            matchingElements.forEach(el => el.style.display = '');
+
+            // Hide all elements with data-brains or data-brains-aside attributes that don't match the value
+            const nonMatchingElementsBrains = document.querySelectorAll(`[data-brains]:not([data-brains="${value}"])`);
+            const nonMatchingElementsBrainsAside = document.querySelectorAll(`[data-brains-aside]:not([data-brains-aside="${value}"])`);
+
+            nonMatchingElementsBrains.forEach(el => el.style.display = 'none');
+            nonMatchingElementsBrainsAside.forEach(el => el.style.display = 'none');
+        }
+    });
+});
+
+</script>
 </body>
