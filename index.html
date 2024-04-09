@@ -108,9 +108,14 @@
         <script>
 
           const showHelpers = async (event) => {
-            document.querySelectorAll('[data-brains]').forEach(e => e.setAttribute('hidden', ''))
-            const helpersEl = document.querySelector('[data-brains="helpers"]')
+            document.querySelectorAll('[data-brains-button]').forEach(e => {e.setAttribute('hidden', '');e.classList.remove('b-selected')})
+            document.querySelectorAll('[data-brains-aside]').forEach(e => {e.setAttribute('hidden', '')})
+            document.querySelectorAll('[data-brains]').forEach(e => {e.setAttribute('hidden', '')})
+            const helpersEl = document.querySelector('[data-brains-button="helpers"]')
+            document.querySelectorAll('[data-brains-aside="helpers"]').forEach(e=>e.removeAttribute('hidden'))
+            document.querySelectorAll('[data-brains="helpers"]').forEach(e=>e.removeAttribute('hidden'))
             helpersEl.removeAttribute('hidden')
+            helpersEl.classList.add('b-selected')
             const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2' + `?id=${localStorage.getItem('ownerid')}&sk=helper:&startsWith=true`)
               .then(e => e.json())
             const original = helpersEl.querySelector('#helper_name')
