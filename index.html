@@ -120,7 +120,7 @@
               const name = item.lsi1.split(';')[0]
               cloned.querySelector('#helper-name-value').textContent = name
               const showHelperMenu = (e)=>{
-                
+
               }
               cloned.onclick = showHelperMenu
               original.parentNode.append(cloned)
@@ -2362,6 +2362,11 @@
       }, 100);
       */
       const storedPath = localStorage.getItem('storedPath')
+      if(localStorage.getItem('token')){
+        document.getElementById('login').classList.add('hidden')
+        document.getElementById('aside_element').removeAttribute('hidden')
+        document.getElementById('main_element').removeAttribute('hidden')
+      }
       try {
         if (storedPath) {
           path = storedPath
@@ -2376,6 +2381,7 @@
         }
       }
       catch (e) {
+        localStorage.removeItem('token')
         document.getElementById('login').classList.remove('hidden')
         document.getElementById('aside_element').setAttribute('hidden', '')
         document.getElementById('main_element').setAttribute('hidden', '')
