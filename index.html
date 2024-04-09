@@ -2479,24 +2479,4 @@
 
   </script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    document.addEventListener('click', function(e) {
-        // Проверяем, имеет ли кликнутый элемент атрибут data-brains-button
-        if (e.target.hasAttribute('data-brains-button')) {
-            const value = e.target.getAttribute('data-brains-button');
-            
-            // Сначала показываем все элементы, чтобы сбросить предыдущие изменения
-            document.querySelectorAll('[data-brains], [data-brains-aside]').forEach(el => {
-                el.style.display = ''; // Сброс стиля display
-            });
-
-            // Скрываем все элементы с атрибутами data-brains и data-brains-aside, которые не соответствуют текущему значению
-            document.querySelectorAll(`[data-brains]:not([data-brains="${value}"]), [data-brains-aside]:not([data-brains-aside="${value}"])`).forEach(el => {
-                el.style.display = 'none';
-            });
-        }
-    });
-});
-</script>
 </body>
