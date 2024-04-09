@@ -25,7 +25,7 @@
           type="password" id="password" name="password">
       </div>
       <div>
-        <button id="login" onclick="login(event)" class="b-3" 
+        <button id="login" onclick="login(event)" class="b-3"
           style="width: 400px; margin-left: 35px;  margin-top: 10px; background: rgb(235, 234, 234); border-color: rgb(184, 182, 182);">➡️
           Login</button>
         <br>
@@ -56,8 +56,8 @@
 
       <div hidden data-section-aside="brains" class="local-buttons" style="margin-top: 30px;">
 
-        <div data-brains-aside="helpers" class="local-buttons" style="margin-top: 30px;">
-          <button class="b-1" onclick="createNew()">➕</button>
+        <div data-section-aside="helpers" class="local-buttons" style="margin-top: 30px;">
+          <button class="b-1" onclick="createNewHelper()">➕</button>
         </div>
 
       </div>
@@ -106,20 +106,20 @@
 
 
         <script>
-          
-          const showHelpers = async(event)=>{
-            document.querySelectorAll('[data-brains]').forEach(e=>e.setAttribute('hidden',''))
+
+          const showHelpers = async (event) => {
+            document.querySelectorAll('[data-brains]').forEach(e => e.setAttribute('hidden', ''))
             const helpersEl = document.querySelector('[data-brains="helpers"]')
             helpersEl.removeAttribute('hidden')
-            const {items} = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2'+`?id=${localStorage.getItem('ownerid')}&sk=helper:&startsWith=true`)
-            .then(e=>e.json())
+            const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2' + `?id=${localStorage.getItem('ownerid')}&sk=helper:&startsWith=true`)
+              .then(e => e.json())
             const original = helpersEl.querySelector('#helper_name')
-            for(const item of items){
+            for (const item of items) {
               const cloned = original.cloneNode(true)
               cloned.id = item.sk
               const name = item.lsi1.split(';')[0]
               cloned.querySelector('#helper-name-value').textContent = name
-              const showHelperMenu = (e)=>{
+              const showHelperMenu = (e) => {
 
               }
               cloned.onclick = showHelperMenu
@@ -311,7 +311,26 @@
 
 
       </section>
+      <div data-menu id="helper-menu">
 
+        <button style="margin-top:5px; margin-bottom: 5px;" onclick="cancel(event)" class="b-4">❌</button>
+        <div style="margin-left: 30px;">
+          <label class="l-3"><input type="checkbox">📂 Files</label>
+          <label class="l-3"><input type="checkbox">🛍️ eCommerce</label>
+        </div>
+
+        <span class="l-1" style="user-select: none;">👤</span>
+        <input placeholder=" 👤 Username" class="input-1" type="text">
+        <br>
+        <span class="l-1" style="user-select: none;">🔑</span>
+        <input placeholder="🔑 Password" class="input-1" type="text">
+
+        <div style="margin-left: 30px;">
+          <button class="b-4">🗑️ Remove</button>
+          <button class="b-4">🔄 Update</button>
+          <br>
+        </div>
+      </div>
       <section hidden data-brains="helpers">
 
         <ol class="list-1" id="helpers_list">
@@ -320,30 +339,7 @@
               id="helper-name-value">helper1</label></li>
         </ol>
 
-        <div data-menu>
-          <button style="margin-top:5px; margin-bottom: 5px;" onclick="cancel(event)" class="b-4">❌</button>
-          <div style="margin-left: 30px;">
-            <label class="l-3"><input type="checkbox">📂 Files</label>
-            <label class="l-3"><input type="checkbox">🛍️ eCommerce</label>
-          </div>
-
-          <span class="l-1" style="user-select: none;">👤</span>
-          <input placeholder=" 👤 Username" class="input-1" type="text">
-          <br>
-          <span class="l-1" style="user-select: none;">🔑</span>
-          <input placeholder="🔑 Password" class="input-1" type="text">
-
-          <div style="margin-left: 30px;">
-            <button class="b-4">🗑️ Remove</button>
-            <button class="b-4">🔄 Update</button>
-            <br>
-          </div>
-
-
-
-
-
-        </div>
+        
 
         <div data-menu style="margin-bottom: 30px;">
           <button style="margin-top:5px; margin-bottom: 5px;" onclick="cancel(event)" class="b-4">❌</button>
@@ -539,7 +535,7 @@
       let username = document.getElementById('username').value
       let password = document.getElementById('password').value
       try {
-         r = await fetch(backend_url + '/login', {
+        r = await fetch(backend_url + '/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -552,10 +548,10 @@
             }
           ),
         })
-        if(!r.ok){
+        if (!r.ok) {
           throw new Error('wrong creds')
         }
-        const { id, temp_token } =await r.json()
+        const { id, temp_token } = await r.json()
         localStorage.setItem('ownerid', id)
         localStorage.setItem('token', temp_token)
         document.getElementById('login').classList.add('hidden')
@@ -1813,6 +1809,14 @@
 
       var fieldset2 = document.querySelector('[data-element="create-new-file-path"]');
       fieldset2.removeAttribute('hidden');
+      
+    }
+    function createNewHelper() {
+
+      const helperSection = document.querySelector('[data-brains="helpers"]')
+      const helperMenu = document.getElementById('helper-menu')
+      const cloned = helperMenu.cloneNode(true)
+      helperSection.append(cloned)
     }
     function savePath() {
       var fieldset2 = document.querySelector('[data-element="create-new-file-path"]');
@@ -2116,7 +2120,7 @@
             pathSelector.innerHTML += `<option value="${lvl}">➡️ ${lvl}</option>`;
           });*/
         })
-        
+
 
     }
     const openPath = () => {
@@ -2348,7 +2352,7 @@
 
 
         })
-        
+
     }
     document.addEventListener('DOMContentLoaded', async function () {
       /*
@@ -2362,7 +2366,7 @@
       }, 100);
       */
       const storedPath = localStorage.getItem('storedPath')
-      if(localStorage.getItem('token')){
+      if (localStorage.getItem('token')) {
         document.getElementById('login').classList.add('hidden')
         document.getElementById('aside_element').removeAttribute('hidden')
         document.getElementById('main_element').removeAttribute('hidden')
