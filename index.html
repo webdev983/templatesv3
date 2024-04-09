@@ -116,9 +116,10 @@
             document.querySelectorAll('[data-brains="helpers"]').forEach(e=>e.removeAttribute('hidden'))
             helpersEl.removeAttribute('hidden')
             helpersEl.classList.add('b-selected')
+            const helperEl2 = document.querySelector('[data-brains="helpers"]')
             const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2' + `?id=${localStorage.getItem('ownerid')}&sk=helper:&startsWith=true`)
               .then(e => e.json())
-            const original = helpersEl.querySelector('#helper_name')
+            const original = helperEl2.querySelector('#helper_name')
             for (const item of items) {
               const cloned = original.cloneNode(true)
               cloned.id = item.sk
@@ -130,7 +131,7 @@
               cloned.onclick = showHelperMenu
               original.parentNode.append(cloned)
             }
-            original.remove()
+            original.setAttribute('hidden','')
           }
           const openSite = (event) => {
             const site = event.target.textContent
