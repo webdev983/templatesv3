@@ -126,7 +126,11 @@
               const name = item.lsi1.split(';')[0]
               cloned.querySelector('#helper-name-value').textContent = name
               const showHelperMenu = (e) => {
-
+                const helperMenu = document.getElementById('helper-menu')
+                const cloned = helperMenu.cloneNode(true)
+                cloned.removeAttribute('hidden')
+                cloned.setAttribute('sk', item.sk)
+                helperEl2.append(cloned)
               }
               cloned.onclick = showHelperMenu
               original.parentNode.append(cloned)
@@ -536,7 +540,7 @@
 
   <script>
     let backend_url = 'https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2'
-    
+
     const login = async (e) => {
       let username = document.getElementById('username').value
       let password = document.getElementById('password').value
@@ -1859,7 +1863,7 @@
           // Add any additional headers if needed
         },
       });
-      
+
     }
     function createNewHelper() {
 
