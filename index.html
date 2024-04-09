@@ -518,7 +518,7 @@
       let username = document.getElementById('username').value
       let password = document.getElementById('username').value
       try {
-        const { id, temp_token } = await fetch(backend_url + '/login', {
+         r = await fetch(backend_url + '/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -530,7 +530,11 @@
 
             }
           ),
-        }).then(r => r.json())
+        })
+        if(!r.ok){
+          throw new Error('wrong creds')
+        }
+        const { id, temp_token } =await r.json()
         localStorage.setItem('ownerid', id)
         localStorage.setItem('token', temp_token)
         document.getElementById('login').classList.add('hidden')
