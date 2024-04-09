@@ -1960,7 +1960,13 @@
       // Fetch GET request
 
       fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&token=${localStorage.getItem('token')}`)
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          // Parse response as JSON
+          return response.json();
+        })
         .then(data => {
           // Replace existing file paths with dynamic content
           var filePathList = document.getElementById('filePathList');
@@ -2200,7 +2206,13 @@
     }
     const loadUsingPath = () => {
       return fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}&token=${localStorage.getItem('token')}`)
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          // Parse response as JSON
+          return response.json();
+        })
         .then(data => {
           // Replace existing file paths with dynamic content
           var filePathList = document.getElementById('filePathList');
@@ -2336,10 +2348,10 @@
           loadFileList()
         }
       }
-      catch(e){
+      catch (e) {
         document.getElementById('login').classList.remove('hidden')
-        document.getElementById('aside_element').setAttribute('hidden','')
-        document.getElementById('main_element"').setAttribute('hidden','')
+        document.getElementById('aside_element').setAttribute('hidden', '')
+        document.getElementById('main_element"').setAttribute('hidden', '')
       }
       //clearInterval(interval);
       //console.log(timerElement.textContent)
