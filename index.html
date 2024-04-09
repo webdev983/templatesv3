@@ -128,6 +128,10 @@
               const showHelperMenu = (e) => {
                 const helperMenu = document.getElementById('helper-menu')
                 const cloned = helperMenu.cloneNode(true)
+                cloned.querySelector('#helper-username').value = item.lsi1.split(';')[0]
+                cloned.querySelector('#helper-password').value= item.lsi1.split(';')[1]
+                 cloned.querySelector('#filesCheckbox').checked= item.permission.files
+                cloned.querySelector('#ecomCheckbox').checked= item.permission.ecommerce
                 cloned.removeAttribute('hidden')
                 cloned.setAttribute('sk', item.sk)
                 helperEl2.append(cloned)
@@ -336,20 +340,20 @@
             <label class="l-3"><input id="filesCheckbox" type="checkbox">📂 Files</label>
             <label class="l-3"><input id="ecomCheckbox" type="checkbox">🛍️ eCommerce</label>
           </div>
-  
+
           <span class="l-1" style="user-select: none;">👤</span>
           <input id="helper-username" placeholder=" 👤 Username" class="input-1" type="text">
           <br>
           <span class="l-1" style="user-select: none;">🔑</span>
           <input id="helper-password" placeholder="🔑 Password" class="input-1" type="text">
-  
+
           <div style="margin-left: 30px;">
             <button class="b-4" onclick="removeHelper(event)">🗑️ Remove</button>
             <button class="b-4" onclick="updateHelper(event)">🔄 Update</button>
             <br>
           </div>
         </div>
-  
+
 
         <div hidden data-menu style="margin-bottom: 30px;">
           <button style="margin-top:5px; margin-bottom: 5px;" onclick="cancel(event)" class="b-4">❌</button>
