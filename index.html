@@ -108,12 +108,12 @@
         <script>
 
           const showHelpers = async (event) => {
-            document.querySelectorAll('[data-brains-button]').forEach(e => {e.classList.remove('b-selected')})
-            document.querySelectorAll('[data-brains-aside]').forEach(e => {e.setAttribute('hidden', '')})
-            document.querySelectorAll('[data-brains]').forEach(e => {e.setAttribute('hidden', '')})
+            document.querySelectorAll('[data-brains-button]').forEach(e => { e.classList.remove('b-selected') })
+            document.querySelectorAll('[data-brains-aside]').forEach(e => { e.setAttribute('hidden', '') })
+            document.querySelectorAll('[data-brains]').forEach(e => { e.setAttribute('hidden', '') })
             const helpersEl = document.querySelector('[data-brains-button="helpers"]')
-            document.querySelectorAll('[data-brains-aside="helpers"]').forEach(e=>e.removeAttribute('hidden'))
-            document.querySelectorAll('[data-brains="helpers"]').forEach(e=>e.removeAttribute('hidden'))
+            document.querySelectorAll('[data-brains-aside="helpers"]').forEach(e => e.removeAttribute('hidden'))
+            document.querySelectorAll('[data-brains="helpers"]').forEach(e => e.removeAttribute('hidden'))
             helpersEl.removeAttribute('hidden')
             helpersEl.classList.add('b-selected')
             const helperEl2 = document.querySelector('[data-brains="helpers"]')
@@ -131,7 +131,7 @@
               cloned.onclick = showHelperMenu
               original.parentNode.append(cloned)
             }
-            original.setAttribute('hidden','')
+            original.setAttribute('hidden', '')
           }
           const openSite = (event) => {
             const site = event.target.textContent
@@ -321,19 +321,19 @@
 
         <button style="margin-top:5px; margin-bottom: 5px;" onclick="cancel(event)" class="b-4">❌</button>
         <div style="margin-left: 30px;">
-          <label class="l-3"><input type="checkbox">📂 Files</label>
-          <label class="l-3"><input type="checkbox">🛍️ eCommerce</label>
+          <label class="l-3"><input id="filesCheckbox" type="checkbox">📂 Files</label>
+          <label class="l-3"><input id="ecomCheckbox" type="checkbox">🛍️ eCommerce</label>
         </div>
 
         <span class="l-1" style="user-select: none;">👤</span>
-        <input placeholder=" 👤 Username" class="input-1" type="text">
+        <input id="helper-username" placeholder=" 👤 Username" class="input-1" type="text">
         <br>
         <span class="l-1" style="user-select: none;">🔑</span>
-        <input placeholder="🔑 Password" class="input-1" type="text">
+        <input id="helper-password" placeholder="🔑 Password" class="input-1" type="text">
 
         <div style="margin-left: 30px;">
-          <button class="b-4">🗑️ Remove</button>
-          <button class="b-4">🔄 Update</button>
+          <button class="b-4" onclick="removeHelper(event)">🗑️ Remove</button>
+          <button class="b-4" onclick="updateHelper(event)">🔄 Update</button>
           <br>
         </div>
       </div>
@@ -345,7 +345,7 @@
               id="helper-name-value">helper1</label></li>
         </ol>
 
-        
+
 
         <div hidden data-menu style="margin-bottom: 30px;">
           <button style="margin-top:5px; margin-bottom: 5px;" onclick="cancel(event)" class="b-4">❌</button>
@@ -536,7 +536,7 @@
 
   <script>
     let backend_url = 'https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2'
-
+    ci
     const login = async (e) => {
       let username = document.getElementById('username').value
       let password = document.getElementById('password').value
@@ -1815,6 +1815,49 @@
 
       var fieldset2 = document.querySelector('[data-element="create-new-file-path"]');
       fieldset2.removeAttribute('hidden');
+
+    }
+    const updateHelper = async (event) => {
+      const target = event.target
+      const menu = target.closest('#helper-menu')
+      const sk = menu.getAttribute('sk')
+      const username = menu.querySelector('#helper-username').value
+      const password = menu.querySelector('#helper-password').value
+      const files = menu.querySelector('#filesCheckbox').checked
+      const ecom = menu.querySelector('#ecomCheckbox').checked
+      const payload = {
+        id: localStorage.getItem('ownerid'),
+        sk,
+        lsi1: username + ';' + password,
+        ownerUUID: 'credentials',
+        permission: {
+          ecommerce: ecom,
+          files
+        }
+      }
+      await fetch(backend_url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+          payload
+        ),
+      })
+      alert('created')
+
+    }
+    const removeHelper = async (event) => {
+      const target = event.target
+      const menu = target.closest('#helper-menu')
+      const sk = menu.getAttribute('sk')
+      await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${localStorage.getItem('ownerid')}:${sk}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          // Add any additional headers if needed
+        },
+      });
       
     }
     function createNewHelper() {
@@ -1823,6 +1866,7 @@
       const helperMenu = document.getElementById('helper-menu')
       const cloned = helperMenu.cloneNode(true)
       cloned.removeAttribute('hidden')
+      cloned.setAttribute('sk', 'helper:' + generateUUID())
       helperSection.append(cloned)
     }
     function savePath() {
