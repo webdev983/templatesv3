@@ -80,7 +80,7 @@
         <button data-brains-button="invoices" class="b-4 " style="margin-right: 5px;"><label
             class="l-1">🧾</label><label class="l-2">Invoices</label></button>
         <button data-brains-button="helpers" class="b-4 " style="margin-right: 5px;"><label class="l-1">👶</label><label
-            class="l-2">Helpers</label></button>
+            class="l-2" onclick="showHelpers(event)">Helpers</label></button>
         <button data-brains-button="sku" class="b-4 b-selected" style="margin-right: 5px;"><label
             class="l-1">📦</label><label class="l-2">Stock</label></button>
 
@@ -106,6 +106,27 @@
 
 
         <script>
+          
+          const showHelpers = async(event)=>{
+            document.querySelectorAll('[data-brains]').forEach(e=>e.setAttribute('hidden',''))
+            const helpersEl = document.querySelector('[data-brains="helpers"]')
+            helpersEl.removeAttribute('hidden')
+            const {items} = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2'+`?id=${localStorage.getItem('ownerid')}&sk=helper:&startsWith=true`)
+            .then(e=>e.json())
+            const original = helpersEl.querySelector('helper_name')
+            for(const item of items){
+              const cloned = original.cloneNode(true)
+              cloned.id = item.sk
+              const name = item.lsi1.split(';')[0]
+              cloned.querySelector('#helper-name-value').textContent = name
+              const showHelperMenu = (e)=>{
+                
+              }
+              cloned.onclick = showHelperMenu
+              original.parentNode.append(cloned)
+            }
+            original.remove()
+          }
           const openSite = (event) => {
             const site = event.target.textContent
             window.location.href = './site-settings.html?site=' + site;
@@ -296,7 +317,7 @@
         <ol class="list-1" id="helpers_list">
           <li id="helper_name" style="cursor: pointer;"><label class="l-3"
               style="user-select: none; margin-right: 5px;">👤</label><label class="l-2"
-              id="site-name-value">helper1</label></li>
+              id="helper-name-value">helper1</label></li>
         </ol>
 
         <div data-menu>
