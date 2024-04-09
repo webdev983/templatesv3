@@ -7,7 +7,7 @@
 
 <body class="body">
 
-  <form   class="login hidden" id="login">
+  <form class="login hidden" id="login">
     <div style="position: relative;">
       <div id="error" hidden>
         <label id="error-label" class="l-p"
@@ -25,18 +25,18 @@
           type="password" id="password" name="password">
       </div>
       <div>
-        <button id="login" class="b-3"
+        <button id="login" onclick="login(event)" class="b-3"
           style="width: 400px; margin-left: 35px;  margin-top: 10px; background: rgb(235, 234, 234); border-color: rgb(184, 182, 182);">➡️
           Login</button>
         <br>
-        <button id="login" class="b-3"
+        <button onclick="register(event)" id="login" class="b-3"
           style="width: 400px; margin-left: 35px;  margin-top: 10px; background: rgb(235, 234, 234); border-color: rgb(184, 182, 182);">
           🆕 Register</button>
       </div>
     </div>
   </form>
 
-  <aside  class="aside">
+  <aside class="aside" id="aside_element">
     <div class="panel top">
       <button disabled class="b-1" id="last-action-time"
         style="color: black;z-index:1; position: absolute;top: 50%;left: 50%; transform: translate(-50%, -50%);">0.0</button>
@@ -70,7 +70,7 @@
   </aside>
 
 
-  <main  class="main">
+  <main class="main" id="main_element">
     <section hidden data-section="brains">
       <div style="margin: 10px;">
         <button data-brains-button="sites" class="b-4 " style="margin-right: 5px;" id="sites-button"><label
@@ -79,17 +79,18 @@
             class="l-2">Orders</label></button>
         <button data-brains-button="invoices" class="b-4 " style="margin-right: 5px;"><label
             class="l-1">🧾</label><label class="l-2">Invoices</label></button>
-        <button data-brains-button="helpers" class="b-4 " style="margin-right: 5px;"><label
-            class="l-1">👶</label><label class="l-2">Helpers</label></button>
-       <button data-brains-button="sku" class="b-4 b-selected" style="margin-right: 5px;"><label
-              class="l-1">📦</label><label class="l-2">Stock</label></button>
-  
-  
+        <button data-brains-button="helpers" class="b-4 " style="margin-right: 5px;"><label class="l-1">👶</label><label
+            class="l-2">Helpers</label></button>
+        <button data-brains-button="sku" class="b-4 b-selected" style="margin-right: 5px;"><label
+            class="l-1">📦</label><label class="l-2">Stock</label></button>
+
+
       </div>
 
-      <section  data-brains="sku">
+      <section data-brains="sku">
         <ol class="list-1" id="sku-list">
-          <li  id="sku-name" style="cursor: pointer;"><label class="l-3" style="user-select: none; margin-right: 5px;">📦</label><label onclick="openSite(event)" class="l-2"
+          <li id="sku-name" style="cursor: pointer;"><label class="l-3"
+              style="user-select: none; margin-right: 5px;">📦</label><label onclick="openSite(event)" class="l-2"
               id="sku-name-value">blablabla</label></li>
         </ol>
 
@@ -387,25 +388,25 @@
 
 
 
-      <div   hidden data-element="create-new-file-path" data-menu style="margin-bottom: 30px;">
+      <div hidden data-element="create-new-file-path" data-menu style="margin-bottom: 30px;">
         <br>
-          <div style="margin-left:30px;">
+        <div style="margin-left:30px;">
 
 
-            <span class="l-3">🌐 Page type:</span>
-            <select class="select-1" style="display: inline-block; margin-bottom: 7px;" id="create-new-file-path">
-              <option>🧩 Empty component</option>
-              <option disabled>📦 Product</option>
-              <option disabled>📝 Article</option>
-            </select>
+          <span class="l-3">🌐 Page type:</span>
+          <select class="select-1" style="display: inline-block; margin-bottom: 7px;" id="create-new-file-path">
+            <option>🧩 Empty component</option>
+            <option disabled>📦 Product</option>
+            <option disabled>📝 Article</option>
+          </select>
         </div>
         <span class="l-3" style="margin-right: 3px;">🆕</span>
         <input type="text" placeholder="📂path" data-input="create-new-file-path-input" class="input-1"
           style="margin-top: 7px;" oninput="adjustWidthToContent(this)">
         <div style="margin-left:30px;">
-        <button data-action="create-new-file-path-cancel" onclick="cancel(event)" class="b-4">❌ Cancel</button>
-        <button data-action="create-new-file-path-save" onclick="loader(event,savePath)" class="b-4">💾 Save</button>
-      </div>
+          <button data-action="create-new-file-path-cancel" onclick="cancel(event)" class="b-4">❌ Cancel</button>
+          <button data-action="create-new-file-path-save" onclick="loader(event,savePath)" class="b-4">💾 Save</button>
+        </div>
       </div>
       <ol data-element="file-path-list" id="filePathList" class="list-1" style="margin-left: -10px;">
 
@@ -511,6 +512,52 @@
 
 
   <script>
+    let backend_url = 'https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2'
+
+    const login = async (e) => {
+      let username = document.getElementById('username').value
+      let password = document.getElementById('username').value
+      try {
+        const { id, temp_token } = await fetch(backend_url + '/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(
+            {
+              username,
+              password
+
+            }
+          ),
+        }).then(r => r.json())
+        localStorage.setItem('ownerid', id)
+        localStorage.setItem('token', temp_token)
+        document.getElementById('login').classList.add('hidden')
+        document.getElementById('aside_element').removeAttribute('hidden')
+        document.getElementById('main_element"').removeAttribute('hidden')
+      } catch (e) {
+        alert('wrong credentials')
+      }
+    }
+    const register = async (e) => {
+      let username = document.getElementById('username').value
+      let password = document.getElementById('username').value
+      const { id, temp_token } = await fetch(backend_url + '/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+          {
+            username,
+            password
+
+          }
+        ),
+      }).then(r => r.json())
+
+    }
     function toggleLinkType(event) {
       const chooseLinkTypeDiv = event.target.closest('[data-element="copy-file"]').querySelector('#choose_link_type');
       const linkedCloneCheckbox = event.target
@@ -1219,8 +1266,8 @@
               console.log('replaceByIditems ' + JSON.stringify(replaceByIditems))
               console.log('doNotReplaceItems ' + JSON.stringify(doNotReplaceItems))
               await Promise.all(replaceByIditems.map(async item55 => {
-                const item =  await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item55.id}:${item55.sk}`)
-                              .then(e=>e.json())
+                const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item55.id}:${item55.sk}`)
+                  .then(e => e.json())
                 item.id = item55.id
                 const splited = item.lsi1.split('/')
                 const el = splited.find(e => e === 'Seed-Home')
@@ -1343,7 +1390,7 @@
                     lsi1: newLSI,
                     ownerUUID: 'path',
                     protected: false,
-                    
+
                   }
                   item.hub_items && (payload.hub_items = item.hub_items)
                   const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -1767,7 +1814,7 @@
         body: JSON.stringify({
           sk: 'path',
           lsi1: newPath,
-          ownerUUID: 'path'
+          ownerUUID: 'path:' + localStorage.getItem('ownerid')
         }),
       })
         .then(response => response.json())
@@ -1912,7 +1959,7 @@
     function loadFileList() {
       // Fetch GET request
 
-      fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true')
+      fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&token=${localStorage.getItem('token')}`)
         .then(response => response.json())
         .then(data => {
           // Replace existing file paths with dynamic content
@@ -2152,7 +2199,7 @@
       return width;
     }
     const loadUsingPath = () => {
-      return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + path)
+      return fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}&token=${localStorage.getItem('token')}`)
         .then(response => response.json())
         .then(data => {
           // Replace existing file paths with dynamic content
@@ -2276,16 +2323,23 @@
       }, 100);
       */
       const storedPath = localStorage.getItem('storedPath')
-      if (storedPath) {
-        path = storedPath
-        const labelElement = document.querySelector('#path-label');
+      try {
+        if (storedPath) {
+          path = storedPath
+          const labelElement = document.querySelector('#path-label');
 
-        // Update the text content of the label
-        labelElement.textContent = `${path}`;
-        loadUsingPath()
+          // Update the text content of the label
+          labelElement.textContent = `${path}`;
+          loadUsingPath()
+        }
+        else {
+          loadFileList()
+        }
       }
-      else {
-        loadFileList()
+      catch(e){
+        document.getElementById('login').classList.remove('hidden')
+        document.getElementById('aside_element').setAttribute('hidden','')
+        document.getElementById('main_element"').setAttribute('hidden','')
       }
       //clearInterval(interval);
       //console.log(timerElement.textContent)
