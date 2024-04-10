@@ -1039,14 +1039,19 @@
             'Content-Type': 'application/json',
           }
         }).then(re => re.json())
-        for (const item of res2.items) {
+        for (const item1 of res2.items) {
+          const item = await fetch(backend_url + `/${item1.id}:${item1.sk}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        }).then(re => re.json())
           let optionElement = document.createElement("option");
           const name = item.lsi1.split(';')[0]
           optionElement.value = item.id
           optionElement.textContent = name;
           ownersSelect.appendChild(optionElement);
         }
-        // Clear existing options
         
 
         // Toggle the visibility of the file ID element
