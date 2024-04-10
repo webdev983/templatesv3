@@ -1016,6 +1016,8 @@
         cloned.removeAttribute('hidden')
         const ownersSelect = cloned.querySelector("#owners-select");
         const helpersSelect = cloned.querySelector("#helpers-select");
+        ownersSelect.innerHTML = "";
+        helpersSelect.innerHTML = "";
         //get helpers
         const res1 = await fetch(backend_url + `?id=${localStorage.getItem('ownerid')}&sk=helper:&startsWith=true`, {
           method: 'GET',
@@ -1045,8 +1047,7 @@
           ownersSelect.appendChild(optionElement);
         }
         // Clear existing options
-        ownersSelect.innerHTML = "";
-        helpersSelect.innerHTML = "";
+        
 
         // Toggle the visibility of the file ID element
         fieldset.insertAdjacentElement('afterend', cloned);
