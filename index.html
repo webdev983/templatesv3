@@ -582,8 +582,11 @@
         if (!r.ok) {
           throw new Error('wrong creds')
         }
-        const { id, temp_token } = await r.json()
+        const { id,sk, temp_token } = await r.json()
         localStorage.setItem('ownerid', id)
+        if(sk.startsWith('helper')){
+          localStorage.setItem('helperid',sk.split(':')[1])
+        }
         localStorage.setItem('token', temp_token)
         document.getElementById('login').classList.add('hidden')
         document.getElementById('aside_element').removeAttribute('hidden')
@@ -2068,8 +2071,11 @@
     }
     function loadFileList() {
       // Fetch GET request
-
-      return fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&token=${localStorage.getItem('token')}`)
+      let url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&token=${localStorage.getItem('token')}`
+      if(localStorage.getItem('helperid')){
+        url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${localStorage.getItem('helperid')}&ownerUUID=${localStorage.getItem('ownerid')}&helperlsi1=true&token=${localStorage.getItem('token')}`
+      }
+      return fetch(url)
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -2315,7 +2321,11 @@
       return width;
     }
     const loadUsingPath = () => {
-      return fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}&token=${localStorage.getItem('token')}`)
+      let url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}&token=${localStorage.getItem('token')}`
+      if(localStorage.getItem('helperid')){
+        url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${localStorage.getItem('helperid')}&ownerUUID=${localStorage.getItem('ownerid')}&helperlsi1=true&lsi1=${path}&token=${localStorage.getItem('token')}`
+      }
+      return fetch(url)
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
