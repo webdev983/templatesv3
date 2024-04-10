@@ -73,16 +73,16 @@
   <main hidden class="main" id="main_element">
     <section hidden data-section="brains">
       <div style="margin: 10px;">
-        <button onclick="showBrain(event,'sites')" data-brains-button="sites" class="b-4 " style="margin-right: 5px;" id="sites-button"><label
-            class="l-1">🌐</label><label class="l-2">Sites</label></button>
-        <button onclick="showBrain(event,'orders')" data-brains-button="orders" class="b-4" style="margin-right: 5px;"><label class="l-1">🛍️</label><label
-            class="l-2">Orders</label></button>
-        <button onclick="showBrain(event,'invoices')" data-brains-button="invoices" class="b-4 " style="margin-right: 5px;"><label
-            class="l-1">🧾</label><label class="l-2">Invoices</label></button>
-        <button onclick="showBrain(event,'helpers')" data-brains-button="helpers" class="b-4 " style="margin-right: 5px;"><label class="l-1">👶</label><label
-            class="l-2" >Helpers</label></button>
-        <button onclick="showBrain(event,'sku')" data-brains-button="sku" class="b-4 b-selected" style="margin-right: 5px;"><label
-            class="l-1">📦</label><label class="l-2">Stock</label></button>
+        <button onclick="showBrain(event,'sites')" data-brains-button="sites" class="b-4 " style="margin-right: 5px;"
+          id="sites-button"><label class="l-1">🌐</label><label class="l-2">Sites</label></button>
+        <button onclick="showBrain(event,'orders')" data-brains-button="orders" class="b-4"
+          style="margin-right: 5px;"><label class="l-1">🛍️</label><label class="l-2">Orders</label></button>
+        <button onclick="showBrain(event,'invoices')" data-brains-button="invoices" class="b-4 "
+          style="margin-right: 5px;"><label class="l-1">🧾</label><label class="l-2">Invoices</label></button>
+        <button onclick="showBrain(event,'helpers')" data-brains-button="helpers" class="b-4 "
+          style="margin-right: 5px;"><label class="l-1">👶</label><label class="l-2">Helpers</label></button>
+        <button onclick="showBrain(event,'sku')" data-brains-button="sku" class="b-4 b-selected"
+          style="margin-right: 5px;"><label class="l-1">📦</label><label class="l-2">Stock</label></button>
 
 
       </div>
@@ -106,19 +106,19 @@
 
 
         <script>
-          const removeMenus2 = ()=>{
-            document.querySelectorAll('[data-menu]:not([hidden])').forEach(e=>e.remove())
+          const removeMenus2 = () => {
+            document.querySelectorAll('[data-menu]:not([hidden])').forEach(e => e.remove())
           }
-          const loadHelpers = async()=>{
+          const loadHelpers = async () => {
             const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2' + `?id=${localStorage.getItem('ownerid')}&sk=helper:&startsWith=true`)
               .then(e => e.json())
             const helperEl2 = document.querySelector('[data-brains="helpers"]')
-            document.querySelectorAll('[helper]').forEach(e=>e.remove())
+            document.querySelectorAll('[helper]').forEach(e => e.remove())
             const original = helperEl2.querySelector('#helper_name')
             for (const item of items) {
               const cloned = original.cloneNode(true)
               cloned.id = item.sk
-              cloned.setAttribute('helper','')
+              cloned.setAttribute('helper', '')
               cloned.removeAttribute('hidden')
               const name = item.lsi1.split(';')[0]
               cloned.querySelector('#helper-name-value').textContent = name
@@ -127,19 +127,19 @@
                 const helperMenu = document.getElementById('helper-menu')
                 const cloned1 = helperMenu.cloneNode(true)
                 cloned1.querySelector('#helper-username').value = item.lsi1.split(';')[0]
-                cloned1.querySelector('#helper-password').value= item.lsi1.split(';')[1]
-                cloned1.querySelector('#filesCheckbox').checked= item.permission.files
-                cloned1.querySelector('#ecomCheckbox').checked= item.permission.ecommerce
+                cloned1.querySelector('#helper-password').value = item.lsi1.split(';')[1]
+                cloned1.querySelector('#filesCheckbox').checked = item.permission.files
+                cloned1.querySelector('#ecomCheckbox').checked = item.permission.ecommerce
                 cloned1.removeAttribute('hidden')
                 cloned1.setAttribute('sk', item.sk)
-                cloned.insertAdjacentElement('afterend',cloned1)
+                cloned.insertAdjacentElement('afterend', cloned1)
               }
               cloned.onclick = showHelperMenu
               original.parentNode.append(cloned)
             }
             original.setAttribute('hidden', '')
           }
-          const showBrain = async (event,type) => {
+          const showBrain = async (event, type) => {
             document.querySelectorAll('[data-brains-button]').forEach(e => { e.classList.remove('b-selected') })
             document.querySelectorAll('[data-brains-aside]').forEach(e => { e.setAttribute('hidden', '') })
             document.querySelectorAll('[data-brains]').forEach(e => { e.setAttribute('hidden', '') })
@@ -148,10 +148,10 @@
             document.querySelectorAll(`[data-brains="${type}"]`).forEach(e => e.removeAttribute('hidden'))
             helpersEl.removeAttribute('hidden')
             helpersEl.classList.add('b-selected')
-            
-            type ==="helpers" && loadHelpers()
-            type ==="sites" && loadSites()
-            type ==="orders" && load()
+
+            type === "helpers" && loadHelpers()
+            type === "sites" && loadSites()
+            type === "orders" && load()
             //type ==="invoices" && load()
             //type ==="sku" && load()
           }
@@ -161,7 +161,7 @@
             console.log(site)
           }
           const loadSites = async () => {
-            const url = 'https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:'+localStorage.getItem('ownerid')+'&gsi1lsi1=true'
+            const url = 'https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:' + localStorage.getItem('ownerid') + '&gsi1lsi1=true'
             console.log(url)
             const res = await fetch(url)
             const response = await res.json()
@@ -452,7 +452,7 @@
       </div>
 
 
-      <div  id="change-owner-menu" hidden data-menu style="margin-bottom: 30px;">
+      <div id="change-owner-menu" hidden data-menu style="margin-bottom: 30px;">
         <button style="margin-top:5px; margin-bottom: 5px;" onclick="cancel(event)" class="b-4">❌</button>
         <br>
         <details style="margin-bottom: 7px;">
@@ -468,7 +468,7 @@
         </details>
 
         <span class="l-3 b-dark-blue">👨🏾‍💻 Owner:</span>
-        <select class="select-1" style="display: inline-block; margin-bottom: 7px;">
+        <select id="owners-select" class="select-1" style="display: inline-block; margin-bottom: 7px;">
           <option> ⬇️ Change</option>
           <option> 👤 777999</option>
           <option> 👤 blablabla</option>
@@ -478,7 +478,7 @@
         <br>
 
         <span class="l-3 b-dark-blue">👶 Helper:</span>
-        <select class="select-1" style="display: inline-block; margin-bottom: 7px;">
+        <select id="helpers-select" class="select-1" style="display: inline-block; margin-bottom: 7px;">
           <option> ⬇️ Select</option>
           <option> 👤 777999</option>
           <option> 👤 blablabla</option>
@@ -582,10 +582,10 @@
         if (!r.ok) {
           throw new Error('wrong creds')
         }
-        const { id,sk, temp_token } = await r.json()
+        const { id, sk, temp_token } = await r.json()
         localStorage.setItem('ownerid', id)
-        if(sk.startsWith('helper')){
-          localStorage.setItem('helperid',sk.split(':')[1])
+        if (sk.startsWith('helper')) {
+          localStorage.setItem('helperid', sk.split(':')[1])
         }
         localStorage.setItem('token', temp_token)
         document.getElementById('login').classList.add('hidden')
@@ -1004,7 +1004,7 @@
         // Toggle the visibility of the file ID element
         fieldset.insertAdjacentElement('afterend', cloned);
       }
-      function changeOwner(id) {
+      async function changeOwner(id) {
         console.log('event' + JSON.stringify(event.target.target))
         // Get the parent fieldset of the clicked button
         var fieldset = document.getElementById(id);
@@ -1012,9 +1012,41 @@
         // Get the file ID element within the fieldset
         var fileIdElement = document.querySelector('#change-owner-menu');
         const cloned = fileIdElement.cloneNode(true)
-        cloned.id =id
+        cloned.id = id
         cloned.removeAttribute('hidden')
-
+        const ownersSelect = cloned.querySelector("#owners-select");
+        const helpersSelect = cloned.querySelector("#helpers-select");
+        //get helpers
+        const res1 = await fetch(backend_url + `?id=${localStorage.getItem('ownerid')}&sk=helper:&startsWith=true`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        }).then(re => re.json())
+        for (const item of res1.items) {
+          let optionElement = document.createElement("option");
+          const name = item.lsi1.split(';')[0]
+          optionElement.value = item.sk.split(':')[1];
+          optionElement.textContent = name;
+          helpersSelect.appendChild(optionElement);
+        }
+        //get owners
+        const res2 = await fetch(backend_url + `?ownerUUID=credentials&startsWith=owner`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        }).then(re => re.json())
+        for (const item of res2.items) {
+          let optionElement = document.createElement("option");
+          const name = item.lsi1.split(';')[0]
+          optionElement.value = item.id
+          optionElement.textContent = name;
+          ownersSelect.appendChild(optionElement);
+        }
+        // Clear existing options
+        ownersSelect.innerHTML = "";
+        helpersSelect.innerHTML = "";
 
         // Toggle the visibility of the file ID element
         fieldset.insertAdjacentElement('afterend', cloned);
@@ -1715,6 +1747,21 @@
           fieldset.insertAdjacentElement('afterend', cloned);
         }
       };
+      function changeOwner(id, path) {
+        console.log('event' + JSON.stringify(event.target.target))
+        // Get the parent fieldset of the clicked button
+        var fieldset = document.getElementById(id);
+
+        // Get the file ID element within the fieldset
+        var fileIdElement = document.querySelector('#change-owner-menu');
+        const cloned = fileIdElement.cloneNode(true)
+        cloned.id = path
+        cloned.removeAttribute('hidden')
+
+
+        // Toggle the visibility of the file ID element
+        fieldset.insertAdjacentElement('afterend', cloned);
+      }
       addMenuEntry(menu, '✏️ Edit', (e) => edit(id, path))
       addMenuEntry(menu, '🗑️ Delete', (e) => openRemove1(id, path))
       addMenuEntry(menu, '⧉ Copy', (e) => copy(id, path))
@@ -1937,14 +1984,14 @@
 
       // Fetch POST request
       const payload = {
-          sk: 'path',
-          lsi1: newPath,
-          ownerUUID: 'path:' + localStorage.getItem('ownerid'),
-          created:new Date().getTime()
-        }
+        sk: 'path',
+        lsi1: newPath,
+        ownerUUID: 'path:' + localStorage.getItem('ownerid'),
+        created: new Date().getTime()
+      }
       const helperId = localStorage.getItem('helperid')
-      if(helperId){
-        payload.helperUUID = 'path:' +helperId
+      if (helperId) {
+        payload.helperUUID = 'path:' + helperId
       }
       fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
@@ -2095,7 +2142,7 @@
     function loadFileList() {
       // Fetch GET request
       let url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&token=${localStorage.getItem('token')}`
-      if(localStorage.getItem('helperid')){
+      if (localStorage.getItem('helperid')) {
         url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${localStorage.getItem('helperid')}&ownerUUID=${localStorage.getItem('ownerid')}&helperlsi1=true&token=${localStorage.getItem('token')}`
       }
       return fetch(url)
@@ -2345,7 +2392,7 @@
     }
     const loadUsingPath = () => {
       let url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}&token=${localStorage.getItem('token')}`
-      if(localStorage.getItem('helperid')){
+      if (localStorage.getItem('helperid')) {
         url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${localStorage.getItem('helperid')}&ownerUUID=${localStorage.getItem('ownerid')}&helperlsi1=true&lsi1=${path}&token=${localStorage.getItem('token')}`
       }
       return fetch(url)
