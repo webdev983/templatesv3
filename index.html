@@ -121,14 +121,14 @@
               cloned.querySelector('#helper-name-value').textContent = name
               const showHelperMenu = (e) => {
                 const helperMenu = document.getElementById('helper-menu')
-                const cloned = helperMenu.cloneNode(true)
-                cloned.querySelector('#helper-username').value = item.lsi1.split(';')[0]
-                cloned.querySelector('#helper-password').value= item.lsi1.split(';')[1]
-                 cloned.querySelector('#filesCheckbox').checked= item.permission.files
-                cloned.querySelector('#ecomCheckbox').checked= item.permission.ecommerce
-                cloned.removeAttribute('hidden')
-                cloned.setAttribute('sk', item.sk)
-                helperEl2.append(cloned)
+                const cloned1 = helperMenu.cloneNode(true)
+                cloned1.querySelector('#helper-username').value = item.lsi1.split(';')[0]
+                cloned1.querySelector('#helper-password').value= item.lsi1.split(';')[1]
+                cloned1.querySelector('#filesCheckbox').checked= item.permission.files
+                cloned1.querySelector('#ecomCheckbox').checked= item.permission.ecommerce
+                cloned1.removeAttribute('hidden')
+                cloned1.setAttribute('sk', item.sk)
+                cloned.insertAdjacentElement('afterend',cloned1)
               }
               cloned.onclick = showHelperMenu
               original.parentNode.append(cloned)
