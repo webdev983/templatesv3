@@ -1064,10 +1064,10 @@
       addMenuEntry(menu, '⧉ Copy', (e) => copy(id))
       addMenuEntry(menu, '👤 user', (e) => changeOwner(id))
       if (protected) {
-        addMenuEntry(menu, '❌ Disable Protection', (e) => setProtected(id, false))
+        addMenuEntry(menu, '❌ - Protection', (e) => setProtected(id, false))
       }
       else {
-        addMenuEntry(menu, '✅ Enable Protection', (e) => setProtected(id, true))
+        addMenuEntry(menu, '✅ + Protection', (e) => setProtected(id, true))
       }
 
       const setProtected = async (id, protected) => {
@@ -1773,8 +1773,8 @@
       addMenuEntry(menu, '⧉ Copy', (e) => copy(id, path))
       addMenuEntry(menu, '👤 user', (e) => changeOwner(id, path))
 
-      addMenuEntry(menu, '✅ Enable Protection', (e) => setProtected(id, path, true))
-      addMenuEntry(menu, '❌ Disable Protection', (e) => setProtected(id, path, false))
+      addMenuEntry(menu, '✅ + Protection', (e) => setProtected(id, path, true))
+      addMenuEntry(menu, '❌ - Protection', (e) => setProtected(id, path, false))
       const publishFolder = async (id, path) => {
         const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}`);
         //list of sub paths
