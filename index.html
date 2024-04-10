@@ -1004,12 +1004,27 @@
         // Toggle the visibility of the file ID element
         fieldset.insertAdjacentElement('afterend', cloned);
       }
+      function changeOwner(id) {
+        console.log('event' + JSON.stringify(event.target.target))
+        // Get the parent fieldset of the clicked button
+        var fieldset = document.getElementById(id);
+
+        // Get the file ID element within the fieldset
+        var fileIdElement = document.querySelector('#change-owner-menu');
+        const cloned = fileIdElement.cloneNode(true)
+        cloned.id =id
+        cloned.removeAttribute('hidden')
+
+
+        // Toggle the visibility of the file ID element
+        fieldset.insertAdjacentElement('afterend', cloned);
+      }
 
       addMenuEntry(menu, 'ℹ️ Info', (e) => showId1(id))
       addMenuEntry(menu, '✏️ Edit', (e) => edit(id))
       addMenuEntry(menu, '🗑️ Delete', (e) => openRemove1(id))
       addMenuEntry(menu, '⧉ Copy', (e) => copy(id))
-
+      addMenuEntry(menu, '⧉ user', (e) => changeOwner(id))
       if (protected) {
         addMenuEntry(menu, '❌ Disable Protection', (e) => setProtected(id, false))
       }
@@ -1703,6 +1718,7 @@
       addMenuEntry(menu, '✏️ Edit', (e) => edit(id, path))
       addMenuEntry(menu, '🗑️ Delete', (e) => openRemove1(id, path))
       addMenuEntry(menu, '⧉ Copy', (e) => copy(id, path))
+      addMenuEntry(menu, '⧉ user', (e) => changeOwner(id, path))
 
       addMenuEntry(menu, '✅ Enable Protection', (e) => setProtected(id, path, true))
       addMenuEntry(menu, '❌ Disable Protection', (e) => setProtected(id, path, false))
