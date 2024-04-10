@@ -1068,6 +1068,7 @@
               'Content-Type': 'application/json',
             }
           }).then(re => re.json())
+          item.id = item.id.split(':')[0]
           item.ownerUUID = 'path:' + selectedValue
           //update it 
           await fetch(backend_url, {
@@ -1099,6 +1100,7 @@
             }
           }).then(re => re.json())
           item.helperUUID = 'path:' + selectedValue
+          item.id = item.id.split(':')[0]
           console.log(JSON.stringify(item))
           //update it 
           await fetch(backend_url, {
