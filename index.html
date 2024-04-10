@@ -474,7 +474,7 @@
           <option> 👤 blablabla</option>
           <option> 👤 dredredre</option>
         </select>
-        <button class="b-4">💾 Save</button>
+        <button id="save-owner" class="b-4">💾 Save</button>
         <br>
 
         <span class="l-3 b-dark-blue">👶 Helper:</span>
@@ -484,7 +484,7 @@
           <option> 👤 blablabla</option>
           <option> 👤 dredredre</option>
         </select>
-        <button class="b-4">💾 Save</button>
+        <button id="save-helper" class="b-4">💾 Save</button>
 
         <div hidden id="approve-menu">
           <button class="b-4"> ✅ Approve</button>
@@ -1041,18 +1041,78 @@
         }).then(re => re.json())
         for (const item1 of res2.items) {
           const item = await fetch(backend_url + `/${item1.id}:${item1.sk}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        }).then(re => re.json())
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          }).then(re => re.json())
           let optionElement = document.createElement("option");
           const name = item.lsi1.split(';')[0]
-          optionElement.value = item.id
+          optionElement.value = item.id.split(':')[0]
           optionElement.textContent = name;
           ownersSelect.appendChild(optionElement);
         }
-        
+        cloned.querySelector('#save-owner').onclick = async (e) => {
+          var ownersSelect = cloned.querySelector("#owners-select");
+
+          // Get the selected option
+          var selectedOption = ownersSelect.options[ownersSelect.selectedIndex];
+
+          // Get the value of the selected option
+          var selectedValue = selectedOption.value;
+
+          // get path item
+          const item = await fetch(backend_url + `/${id}:path`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          }).then(re => re.json())
+          item.ownerUUID = 'path:' + selectedValue
+          //update it 
+          await fetch(backend_url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+              item
+            ),
+          })
+
+          alert('saved')
+        }
+        cloned.querySelector('#save-helper').onclick = async (e) => {
+          var ownersSelect = cloned.querySelector("#helpers-select");
+
+          // Get the selected option
+          var selectedOption = ownersSelect.options[ownersSelect.selectedIndex];
+
+          // Get the value of the selected option
+          var selectedValue = selectedOption.value;
+
+          // get path item
+          const item = await fetch(backend_url + `/${id}:path`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          }).then(re => re.json())
+          item.helperUUID = 'path:' + selectedValue
+          //update it 
+          await fetch(backend_url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+              item
+            ),
+          })
+
+          alert('saved')
+        }
+
 
         // Toggle the visibility of the file ID element
         fieldset.insertAdjacentElement('afterend', cloned);
@@ -1753,7 +1813,7 @@
           fieldset.insertAdjacentElement('afterend', cloned);
         }
       };
-      function changeOwner(id, path) {
+      async function changeOwner(id, path) {
         console.log('event' + JSON.stringify(event.target.target))
         // Get the parent fieldset of the clicked button
         var fieldset = document.getElementById(id);
@@ -1761,13 +1821,127 @@
         // Get the file ID element within the fieldset
         var fileIdElement = document.querySelector('#change-owner-menu');
         const cloned = fileIdElement.cloneNode(true)
-        cloned.id = path
+        cloned.id = id
         cloned.removeAttribute('hidden')
+        const ownersSelect = cloned.querySelector("#owners-select");
+        const helpersSelect = cloned.querySelector("#helpers-select");
+        ownersSelect.innerHTML = "";
+        helpersSelect.innerHTML = "";
+        //get helpers
+        const res1 = await fetch(backend_url + `?id=${localStorage.getItem('ownerid')}&sk=helper:&startsWith=true`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        }).then(re => re.json())
+        for (const item of res1.items) {
+          let optionElement = document.createElement("option");
+          const name = item.lsi1.split(';')[0]
+          optionElement.value = item.sk.split(':')[1];
+          optionElement.textContent = name;
+          helpersSelect.appendChild(optionElement);
+        }
+        //get owners
+        const res2 = await fetch(backend_url + `?ownerUUID=credentials&startsWith=owner`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        }).then(re => re.json())
+        for (const item1 of res2.items) {
+          const item = await fetch(backend_url + `/${item1.id}:${item1.sk}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          }).then(re => re.json())
+          let optionElement = document.createElement("option");
+          const name = item.lsi1.split(';')[0]
+          optionElement.value = item.id.split(':')[0]
+          optionElement.textContent = name;
+          ownersSelect.appendChild(optionElement);
+        }
+        cloned.querySelector('#save-owner').onclick = async (e) => {
+          var ownersSelect = cloned.querySelector("#owners-select");
+
+          // Get the selected option
+          var selectedOption = ownersSelect.options[ownersSelect.selectedIndex];
+
+          // Get the value of the selected option
+          var selectedValue = selectedOption.value;
+          let url = `${backend_url}?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}&token=${localStorage.getItem('token')}`
+          if (localStorage.getItem('helperid')) {
+            url = `${backend_url}?helperUUID=path:${localStorage.getItem('helperid')}&ownerUUID=${localStorage.getItem('ownerid')}&helperlsi1=true&lsi1=${path}&token=${localStorage.getItem('token')}`
+          }
+          const { items } = await fetch(url).then(e => e.json())
+          const promises = items.map(async item1 => {
+            const item = await fetch(backend_url + `/${item1.id}:path`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              }
+            }).then(re => re.json())
+            item.ownerUUID = 'path:' + selectedValue
+            //update it 
+            await fetch(backend_url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(
+                item
+              ),
+            })
+          })
+          // get path item
+          await Promise.all(promises)
+
+          alert('saved')
+        }
+        cloned.querySelector('#save-helper').onclick = async (e) => {
+          var ownersSelect = cloned.querySelector("#helpers-select");
+
+          // Get the selected option
+          var selectedOption = ownersSelect.options[ownersSelect.selectedIndex];
+
+          // Get the value of the selected option
+          var selectedValue = selectedOption.value;
+
+
+          let url = `${backend_url}?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}&token=${localStorage.getItem('token')}`
+          if (localStorage.getItem('helperid')) {
+            url = `${backend_url}?helperUUID=path:${localStorage.getItem('helperid')}&ownerUUID=${localStorage.getItem('ownerid')}&helperlsi1=true&lsi1=${path}&token=${localStorage.getItem('token')}`
+          }
+          const { items } = await fetch(url).then(e => e.json())
+          const promises = items.map(async item1 => {
+            const item = await fetch(backend_url + `/${item1.id}:path`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              }
+            }).then(re => re.json())
+            item.helperUUID = 'path:' + selectedValue
+            //update it 
+            await fetch(backend_url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(
+                item
+              ),
+            })
+          })
+          await Promise.all(promises)
+
+          alert('saved')
+        }
 
 
         // Toggle the visibility of the file ID element
         fieldset.insertAdjacentElement('afterend', cloned);
       }
+
       addMenuEntry(menu, '✏️ Edit', (e) => edit(id, path))
       addMenuEntry(menu, '🗑️ Delete', (e) => openRemove1(id, path))
       addMenuEntry(menu, '⧉ Copy', (e) => copy(id, path))
