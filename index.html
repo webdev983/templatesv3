@@ -1920,16 +1920,21 @@
       console.log('at path:', newPath);
 
       // Fetch POST request
+      const payload = {
+          sk: 'path',
+          lsi1: newPath,
+          ownerUUID: 'path:' + localStorage.getItem('ownerid')
+        }
+      const helperId = localStorage.getItem('helperid')
+      if(helperId){
+        payload.helperUUID = 'path:' +helperId
+      }
       fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          sk: 'path',
-          lsi1: newPath,
-          ownerUUID: 'path:' + localStorage.getItem('ownerid')
-        }),
+        body: JSON.stringify(payload),
       })
         .then(response => response.json())
         .then(data => console.log('API Response:', data))
