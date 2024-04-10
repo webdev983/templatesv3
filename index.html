@@ -73,15 +73,15 @@
   <main hidden class="main" id="main_element">
     <section hidden data-section="brains">
       <div style="margin: 10px;">
-        <button data-brains-button="sites" class="b-4 " style="margin-right: 5px;" id="sites-button"><label
+        <button onclick="showBrain(event,'sites')" data-brains-button="sites" class="b-4 " style="margin-right: 5px;" id="sites-button"><label
             class="l-1">🌐</label><label class="l-2">Sites</label></button>
-        <button data-brains-button="orders" class="b-4" style="margin-right: 5px;"><label class="l-1">🛍️</label><label
+        <button onclick="showBrain(event,'orders')" data-brains-button="orders" class="b-4" style="margin-right: 5px;"><label class="l-1">🛍️</label><label
             class="l-2">Orders</label></button>
-        <button data-brains-button="invoices" class="b-4 " style="margin-right: 5px;"><label
+        <button onclick="showBrain(event,'invoices')" data-brains-button="invoices" class="b-4 " style="margin-right: 5px;"><label
             class="l-1">🧾</label><label class="l-2">Invoices</label></button>
-        <button data-brains-button="helpers" class="b-4 " style="margin-right: 5px;"><label class="l-1">👶</label><label
-            class="l-2" onclick="showHelpers(event)">Helpers</label></button>
-        <button data-brains-button="sku" class="b-4 b-selected" style="margin-right: 5px;"><label
+        <button onclick="showBrain(event,'helpers')" data-brains-button="helpers" class="b-4 " style="margin-right: 5px;"><label class="l-1">👶</label><label
+            class="l-2" >Helpers</label></button>
+        <button onclick="showBrain(event,'sku')" data-brains-button="sku" class="b-4 b-selected" style="margin-right: 5px;"><label
             class="l-1">📦</label><label class="l-2">Stock</label></button>
 
 
@@ -135,17 +135,17 @@
             }
             original.setAttribute('hidden', '')
           }
-          const showHelpers = async (event) => {
+          const showBrain = async (event,type) => {
             document.querySelectorAll('[data-brains-button]').forEach(e => { e.classList.remove('b-selected') })
             document.querySelectorAll('[data-brains-aside]').forEach(e => { e.setAttribute('hidden', '') })
             document.querySelectorAll('[data-brains]').forEach(e => { e.setAttribute('hidden', '') })
-            const helpersEl = document.querySelector('[data-brains-button="helpers"]')
-            document.querySelectorAll('[data-brains-aside="helpers"]').forEach(e => e.removeAttribute('hidden'))
-            document.querySelectorAll('[data-brains="helpers"]').forEach(e => e.removeAttribute('hidden'))
+            const helpersEl = document.querySelector(`[data-brains-button="${type}"]`)
+            document.querySelectorAll(`[data-brains-aside="${type}"]`).forEach(e => e.removeAttribute('hidden'))
+            document.querySelectorAll(`[data-brains="${type}"]`).forEach(e => e.removeAttribute('hidden'))
             helpersEl.removeAttribute('hidden')
             helpersEl.classList.add('b-selected')
             
-            loadHelpers()
+            type ==="helper" && loadHelpers()
           }
           const openSite = (event) => {
             const site = event.target.textContent
