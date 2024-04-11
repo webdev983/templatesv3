@@ -1089,6 +1089,7 @@
               item
             ),
           })
+          await createFolders(item.lsi1.split(';')[0].replace('|','/'),selectedValue)
           cloned.remove()
 
         }
@@ -1121,6 +1122,7 @@
               item
             ),
           })
+          await createFolders(item.lsi1.split(';')[0].replace('|','/'),selectedValue)
           cloned.remove()
 
         }
@@ -2158,12 +2160,12 @@
       cloned.setAttribute('sk', 'helper:' + generateUUID())
       helperSection.append(cloned)
     }
-    const createFolders =async path=>{
+    const createFolders =async (path,ownerid1,helperid1)=>{
       const splited = path.split('/')
       const fileName = splited.pop()
       let path1
-      const helper = localStorage.getItem('helperid')
-      const ownerid = localStorage.getItem('ownerid')
+      const helper = helperid1 || localStorage.getItem('helperid')
+      const ownerid =ownerid1 || localStorage.getItem('ownerid')
       for (let i = 0; i < splited.length && i < 3; i++) {
         if (i !== 0) {
           path1 = path1 + '/' + splited[i]
