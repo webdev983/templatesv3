@@ -2751,6 +2751,7 @@
             let { items } = await fetch(url).then(e => e.json())
             if (!items.length) {
               console.log('folder '+ folder +'items '+ JSON.stringify(items))
+              console.log(url)
               const sk = `folder:${helperid ? helperid : ownerid}:lvl${path.split('/').length}:${path}${folder}`
               const encoded = `${ownerid}:${sk}`.replaceAll('/','#1')
               await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${encoded}`, {
