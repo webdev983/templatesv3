@@ -2670,7 +2670,7 @@
         else {
           url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${spath}&token=${localStorage.getItem('token')}`;
         }
-        data = await fetch(url).then(e => e.json)
+        data = await fetch(url).then(e => e.json())
         let elements = data.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace(spath, '').split(';')[0] } });
         elements.sort((a, b) => a.name.localeCompare(b.name));
         for (const el1 of elements) {
