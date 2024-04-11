@@ -952,7 +952,7 @@
               body: JSON.stringify(
                 {
                   ...res1,
-                  lsi1: splited.join('/')+'|'+fileName, id
+                  lsi1: splited.join('/') + '|' + fileName, id
                 }
               ),
             })
@@ -2177,7 +2177,7 @@
       // Fetch POST request
       const payload = {
         sk: 'path',
-        lsi1: splited.join('/')+'|'+fileName,
+        lsi1: splited.join('/') + '|' + fileName,
         ownerUUID: 'path:' + localStorage.getItem('ownerid'),
         created: new Date().getTime()
       }
@@ -2586,14 +2586,14 @@
         //get files
         const spath = path.slice(0, -1) + '|';
 
-        if (localStorage.getItem('helperid')) {
-          url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${localStorage.getItem('helperid')}&ownerUUID=${localStorage.getItem('ownerid')}&helperlsi1=true&lsi1=${spath}&token=${localStorage.getItem('token')}`;
+        if (helperid) {
+          url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${helperid}&ownerUUID=${ownerid}&helperlsi1=true&lsi1=${spath}&token=${localStorage.getItem('token')}`;
         }
         else {
-          url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${spath}&token=${localStorage.getItem('token')}`;
+          url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${spath}&token=${localStorage.getItem('token')}`;
         }
         let data1 = fetch(url).then(e => e.json())
-
+        let checkFolders = false
         //get folders
         if (path.split('/').length > 3) {
           //normal
@@ -2616,12 +2616,12 @@
             if (splited.length > 1) {
               folders.push(splited[0]);
             }
-            else{
+            else {
               folders.push(splited[0].split('|')[0])
             }
           }
         }
-        else{
+        else {
           //use folders
           const sk = `folder:${helperid ? helperid : ownerid}:lvl${path.split('/').length}:${path}`
           console.log(sk)
@@ -2632,12 +2632,13 @@
           }
           let data = await response.json();
           folders = data.items.map(item => item.sk.replace(sk, ''))
+          checkFolders = true
         }
 
 
         // Replace existing file paths with dynamic content
 
-        console.log('folders' +JSON.stringify(folders))
+        console.log('folders' + JSON.stringify(folders))
         folders = removeDuplicates(folders);
         folders.sort();
         folders.forEach(item => {
@@ -2678,8 +2679,8 @@
 
         //elements
 
-        
-        data1 =await data1
+
+        data1 = await data1
         let elements = data1.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace(spath, '').split(';')[0] } });
         elements.sort((a, b) => a.name.localeCompare(b.name));
         for (const el1 of elements) {
@@ -2715,6 +2716,29 @@
             // Append the cloned item to the filePathList
             filePathList.appendChild(clonedItem);
           }
+        }
+        if (checkFolders) {
+          folders.map(async folder => {
+            if (helperid) {
+              url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${helperid}&ownerUUID=${ownerid}&helperlsi1=true&lsi1=${path + folder + '/'}&token=${localStorage.getItem('token')}&pageSize=1`;
+            }
+            else {
+              url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${path + folder + '/'}&token=${localStorage.getItem('token')}&pageSize=1`;
+            }
+            let { items } = fetch(url).then(e => e.json())
+            if (!item.length) {
+              const sk = `folder:${helperid ? helperid : ownerid}:lvl${path.split('/').length}:${path}${folder}`
+              await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${ownerid}:${sk}`, {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  // Add any additional headers if needed
+                },
+              });
+              document.getElementById(folder).remove()
+            }
+
+          })
         }
       } catch (error) {
         console.error('Error:', error);
