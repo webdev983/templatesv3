@@ -2452,7 +2452,7 @@
             let { items } = await fetch(url).then(e => e.json())
             if (!items.length) {
               const sk = `folder:${helperid ? helperid : ownerid}:lvl${path.split('/').length}:${path}${folder}`
-              const encoded = `${ownerid}:${sk}`.replaceAll('/','#1')
+              const encoded = `${ownerid}:${sk}`.replaceAll('/','~')
               await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${encoded}`, {
                 method: 'DELETE',
                 headers: {
@@ -2751,7 +2751,7 @@
               console.log('folder '+ folder +'items '+ JSON.stringify(items))
               console.log(url)
               const sk = `folder:${helperid ? helperid : ownerid}:lvl${path.split('/').length}:${path}${folder}`
-              const encoded = `${ownerid}:${sk}`.replaceAll('/','#1')
+              const encoded = `${ownerid}:${sk}`.replaceAll('/','~')
               await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${encoded}`, {
                 method: 'DELETE',
                 headers: {
