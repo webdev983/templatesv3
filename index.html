@@ -928,7 +928,7 @@
           const input = cloned.querySelector('[data-input="create-new-file-path-input"]');
           const name = fieldset.querySelector('[data-value="file-path"]').textContent;
 
-          input.value = path.slice(0, -1)+'|' + name;
+          input.value = path + name;
           input.onclick = (event) => {
             event.stopPropagation()
           }
@@ -941,7 +941,8 @@
                 'Content-Type': 'application/json',
               }
             }).then(re => re.json())
-
+            const splited = new_value.split('/')
+            const fileName = splited.pop()
 
             await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
               method: 'POST',
@@ -951,7 +952,7 @@
               body: JSON.stringify(
                 {
                   ...res1,
-                  lsi1: new_value, id
+                  lsi1: splited.join('/')+'|'+fileName, id
                 }
               ),
             })
