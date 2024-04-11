@@ -943,6 +943,8 @@
             }).then(re => re.json())
             const splited = new_value.split('/')
             const fileName = splited.pop()
+            // create folders 
+
 
             await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
               method: 'POST',
@@ -956,6 +958,7 @@
                 }
               ),
             })
+            await createFolders(new_value)
             loadUsingPath()
             cloned.remove();
           };
@@ -2155,6 +2158,44 @@
       cloned.setAttribute('sk', 'helper:' + generateUUID())
       helperSection.append(cloned)
     }
+    const createFolders =async path=>{
+      const splited = path.split('/')
+      const fileName = splited.pop()
+      let path1
+      const helper = localStorage.getItem('helperid')
+      const ownerid = localStorage.getItem('ownerid')
+      for (let i = 0; i < splited.length && i < 3; i++) {
+        if (i !== 0) {
+          path1 = path1 + '/' + splited[i]
+        }
+        else {
+          path1 = splited[i]
+        }
+        let payload = {
+          id: ownerid,
+          sk: `folder:${ownerid}:lvl${i + 1}:${path1}`
+        }
+        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        })
+        const helper = localStorage.getItem('helperid')
+        if (helper) {
+          payload.sk = `folder:${helper}:lvl${i + 1}:${path1}`
+          await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+          })
+        }
+
+      }
+    }
     async function savePath() {
       var fieldset2 = document.querySelector('[data-element="create-new-file-path"]');
       fieldset2.setAttribute('hidden', '');
@@ -2196,40 +2237,7 @@
 
         .catch(error => console.error('Error:', error));
       //create folders
-      let path1
-      const helper = localStorage.getItem('helperid')
-      const ownerid = localStorage.getItem('ownerid')
-      for (let i = 0; i < splited.length && i < 3; i++) {
-        if (i !== 0) {
-          path1 = path1 + '/' + splited[i]
-        }
-        else {
-          path1 = splited[i]
-        }
-        let payload = {
-          id: ownerid,
-          sk: `folder:${ownerid}:lvl${i + 1}:${path1}`
-        }
-        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
-        })
-        const helper = localStorage.getItem('helperid')
-        if (helper) {
-          payload.sk = `folder:${helper}:lvl${i + 1}:${path1}`
-          await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload),
-          })
-        }
-
-      }
+      await createFolders(newPath)
 
       path ? loadUsingPath() : loadFileList()
     }
