@@ -2196,19 +2196,19 @@
       //create folders
       const folders = newPath.split('|')[0]
       const splited = folders.split('/')
-      let path
+      let path1
       const helper = localStorage.getItem('helperid')
       const ownerid = localStorage.getItem('ownerid')
       for (let i = 0; i < splited.length && i < 3; i++) {
         if (i !== 0) {
-          path = path + '/' + splited[i]
+          path1 = path1 + '/' + splited[i]
         }
         else {
-          path = splited[i]
+          path1 = splited[i]
         }
         let payload = {
           id:ownerid,
-          sk:`folder:${ownerid}:lvl${i+1}:${path}`
+          sk:`folder:${ownerid}:lvl${i+1}:${path1}`
         }
         await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
           method: 'POST',
@@ -2219,7 +2219,7 @@
         })
         const helper = localStorage.getItem('helperid')
         if (helper) {
-          payload.sk = `folder:${helper}:lvl${i+1}:${path}`
+          payload.sk = `folder:${helper}:lvl${i+1}:${path1}`
           await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
             method: 'POST',
             headers: {
