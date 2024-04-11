@@ -1802,7 +1802,7 @@
             //list of sub paths
             const data = await response.json();
 
-            for (const item of data.items) {
+            data.items.map(item => {
               await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                 method: 'POST',
                 headers: {
@@ -1815,230 +1815,234 @@
                   }
                 ),
               })
-            }
+              return createFolders(item.lsi1.replace(path, new_value).replace('|','/'))
+            })
 
-            loadUsingPath()
-            cloned.remove();
-          };
 
-          cloned.style.display = 'block';
-          fieldset.insertAdjacentElement('afterend', cloned);
+          }
+
+          loadUsingPath()
+          cloned.remove();
+        };
+
+        cloned.style.display = 'block';
+        fieldset.insertAdjacentElement('afterend', cloned);
+      }
+    };
+    async function changeOwner(id, path) {
+      console.log('event' + JSON.stringify(event.target.target))
+      // Get the parent fieldset of the clicked button
+      var fieldset = document.getElementById(id);
+
+      // Get the file ID element within the fieldset
+      var fileIdElement = document.querySelector('#change-owner-menu');
+      const cloned = fileIdElement.cloneNode(true)
+      cloned.id = id
+      cloned.removeAttribute('hidden')
+      const ownersSelect = cloned.querySelector("#owners-select");
+      const helpersSelect = cloned.querySelector("#helpers-select");
+      ownersSelect.innerHTML = "";
+      helpersSelect.innerHTML = "";
+      //get helpers
+      const res1 = await fetch(backend_url + `?id=${localStorage.getItem('ownerid')}&sk=helper:&startsWith=true`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
         }
-      };
-      async function changeOwner(id, path) {
-        console.log('event' + JSON.stringify(event.target.target))
-        // Get the parent fieldset of the clicked button
-        var fieldset = document.getElementById(id);
-
-        // Get the file ID element within the fieldset
-        var fileIdElement = document.querySelector('#change-owner-menu');
-        const cloned = fileIdElement.cloneNode(true)
-        cloned.id = id
-        cloned.removeAttribute('hidden')
-        const ownersSelect = cloned.querySelector("#owners-select");
-        const helpersSelect = cloned.querySelector("#helpers-select");
-        ownersSelect.innerHTML = "";
-        helpersSelect.innerHTML = "";
-        //get helpers
-        const res1 = await fetch(backend_url + `?id=${localStorage.getItem('ownerid')}&sk=helper:&startsWith=true`, {
+      }).then(re => re.json())
+      for (const item of res1.items) {
+        let optionElement = document.createElement("option");
+        const name = item.lsi1.split(';')[0]
+        optionElement.value = item.sk.split(':')[1];
+        optionElement.textContent = name;
+        helpersSelect.appendChild(optionElement);
+      }
+      //get owners
+      const res2 = await fetch(backend_url + `?ownerUUID=credentials&startsWith=owner`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      }).then(re => re.json())
+      for (const item1 of res2.items) {
+        const item = await fetch(backend_url + `/${item1.id}:${item1.sk}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
           }
         }).then(re => re.json())
-        for (const item of res1.items) {
-          let optionElement = document.createElement("option");
-          const name = item.lsi1.split(';')[0]
-          optionElement.value = item.sk.split(':')[1];
-          optionElement.textContent = name;
-          helpersSelect.appendChild(optionElement);
+        let optionElement = document.createElement("option");
+        const name = item.lsi1.split(';')[0]
+        optionElement.value = item.id.split(':')[0]
+        optionElement.textContent = name;
+        ownersSelect.appendChild(optionElement);
+      }
+      cloned.querySelector('#save-owner').onclick = async (e) => {
+        var ownersSelect = cloned.querySelector("#owners-select");
+
+        // Get the selected option
+        var selectedOption = ownersSelect.options[ownersSelect.selectedIndex];
+
+        // Get the value of the selected option
+        var selectedValue = selectedOption.value;
+        let url = `${backend_url}?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}&token=${localStorage.getItem('token')}`
+        if (localStorage.getItem('helperid')) {
+          url = `${backend_url}?helperUUID=path:${localStorage.getItem('helperid')}&ownerUUID=${localStorage.getItem('ownerid')}&helperlsi1=true&lsi1=${path}&token=${localStorage.getItem('token')}`
         }
-        //get owners
-        const res2 = await fetch(backend_url + `?ownerUUID=credentials&startsWith=owner`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        }).then(re => re.json())
-        for (const item1 of res2.items) {
-          const item = await fetch(backend_url + `/${item1.id}:${item1.sk}`, {
+        const { items } = await fetch(url).then(e => e.json())
+        const promises = items.map(async item1 => {
+          const item = await fetch(backend_url + `/${item1.id}:path`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
             }
           }).then(re => re.json())
-          let optionElement = document.createElement("option");
-          const name = item.lsi1.split(';')[0]
-          optionElement.value = item.id.split(':')[0]
-          optionElement.textContent = name;
-          ownersSelect.appendChild(optionElement);
-        }
-        cloned.querySelector('#save-owner').onclick = async (e) => {
-          var ownersSelect = cloned.querySelector("#owners-select");
-
-          // Get the selected option
-          var selectedOption = ownersSelect.options[ownersSelect.selectedIndex];
-
-          // Get the value of the selected option
-          var selectedValue = selectedOption.value;
-          let url = `${backend_url}?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}&token=${localStorage.getItem('token')}`
-          if (localStorage.getItem('helperid')) {
-            url = `${backend_url}?helperUUID=path:${localStorage.getItem('helperid')}&ownerUUID=${localStorage.getItem('ownerid')}&helperlsi1=true&lsi1=${path}&token=${localStorage.getItem('token')}`
-          }
-          const { items } = await fetch(url).then(e => e.json())
-          const promises = items.map(async item1 => {
-            const item = await fetch(backend_url + `/${item1.id}:path`, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              }
-            }).then(re => re.json())
-            item.ownerUUID = 'path:' + selectedValue
-            item.id = item.id.split(':')[0]
-            //update it 
-            await fetch(backend_url, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(
-                item
-              ),
-            })
-          })
-          // get path item
-          await Promise.all(promises)
-          cloned.remove()
-
-        }
-        cloned.querySelector('#save-helper').onclick = async (e) => {
-          var ownersSelect = cloned.querySelector("#helpers-select");
-
-          // Get the selected option
-          var selectedOption = ownersSelect.options[ownersSelect.selectedIndex];
-
-          // Get the value of the selected option
-          var selectedValue = selectedOption.value;
-
-
-          let url = `${backend_url}?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}&token=${localStorage.getItem('token')}`
-          if (localStorage.getItem('helperid')) {
-            url = `${backend_url}?helperUUID=path:${localStorage.getItem('helperid')}&ownerUUID=${localStorage.getItem('ownerid')}&helperlsi1=true&lsi1=${path}&token=${localStorage.getItem('token')}`
-          }
-          const { items } = await fetch(url).then(e => e.json())
-          const promises = items.map(async item1 => {
-            const item = await fetch(backend_url + `/${item1.id}:path`, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              }
-            }).then(re => re.json())
-            item.helperUUID = 'path:' + selectedValue
-            item.id = item.id.split(':')[0]
-            //update it 
-            await fetch(backend_url, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(
-                item
-              ),
-            })
-          })
-          await Promise.all(promises)
-          cloned.remove()
-
-        }
-
-
-        // Toggle the visibility of the file ID element
-        fieldset.insertAdjacentElement('afterend', cloned);
-      }
-
-      addMenuEntry(menu, '✏️ Edit', (e) => edit(id, path))
-      addMenuEntry(menu, '🗑️ Delete', (e) => openRemove1(id, path))
-      addMenuEntry(menu, '⧉ Copy', (e) => copy(id, path))
-      addMenuEntry(menu, '👤 User', (e) => changeOwner(id, path))
-
-      addMenuEntry(menu, '✅ Protection +', (e) => setProtected(id, path, true))
-      addMenuEntry(menu, '❌ Protection -', (e) => setProtected(id, path, false))
-      const publishFolder = async (id, path) => {
-        const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}`);
-        //list of sub paths
-        const { items } = await response.json();
-        const publishPromise = items.filter(item => item.lsi1.split(';')[0].endsWith('Hub')).map(async item => {
-          const url = 'https://b3dutg6xlx4zfz52xgrf4staza0dgeff.lambda-url.us-east-1.on.aws/';
-
-          // Event data
-          const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${item.id}&publish=1` };
-
-          // Fetch options
-          const options = {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(eventData)
-          };
-
-          try {
-            // Make the fetch request
-            const response = await fetch(url, options);
-
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
-            }
-
-            const data = await response.json();
-            console.log('Success:' + item.id);
-          } catch (error) {
-            console.error('Error:', error);
-          }
-        })
-        await Promise.all(publishPromise)
-        const site = path.split('/')[0]
-        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/invalidate', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ site }),
-        });
-        console.log('published all')
-        alert('published folder')
-      }
-      addMenuEntry(menu, '📰 Publish', (e) => publishFolder(id, path))
-
-
-      const setProtected = async (id, path, protected) => {
-        const response1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}`);
-        //list of sub paths
-        const data = await response1.json();
-        await Promise.all(data.items.map(item =>
-          fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          item.ownerUUID = 'path:' + selectedValue
+          item.id = item.id.split(':')[0]
+          //update it 
+          await fetch(backend_url, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ ...item, protected }),
+            body: JSON.stringify(
+              item
+            ),
           })
-        ))
-        alert('protection set')
+        })
+        // get path item
+        await Promise.all(promises)
+        cloned.remove()
 
       }
-      // Adjust the position relative to the viewport
-      const offsetX = e.pageX;
-      const offsetY = e.pageY;
+      cloned.querySelector('#save-helper').onclick = async (e) => {
+        var ownersSelect = cloned.querySelector("#helpers-select");
 
-      menu.style.display = 'block';
-      menu.style.left = `${offsetX}px`;
-      menu.style.top = `${offsetY}px`;
+        // Get the selected option
+        var selectedOption = ownersSelect.options[ownersSelect.selectedIndex];
 
-      // Hide the menu when clicking the left mouse button
-      window.addEventListener('click', function () {
-        menu.style.display = 'none';
+        // Get the value of the selected option
+        var selectedValue = selectedOption.value;
+
+
+        let url = `${backend_url}?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}&token=${localStorage.getItem('token')}`
+        if (localStorage.getItem('helperid')) {
+          url = `${backend_url}?helperUUID=path:${localStorage.getItem('helperid')}&ownerUUID=${localStorage.getItem('ownerid')}&helperlsi1=true&lsi1=${path}&token=${localStorage.getItem('token')}`
+        }
+        const { items } = await fetch(url).then(e => e.json())
+        const promises = items.map(async item1 => {
+          const item = await fetch(backend_url + `/${item1.id}:path`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          }).then(re => re.json())
+          item.helperUUID = 'path:' + selectedValue
+          item.id = item.id.split(':')[0]
+          //update it 
+          await fetch(backend_url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+              item
+            ),
+          })
+        })
+        await Promise.all(promises)
+        cloned.remove()
+
+      }
+
+
+      // Toggle the visibility of the file ID element
+      fieldset.insertAdjacentElement('afterend', cloned);
+    }
+
+    addMenuEntry(menu, '✏️ Edit', (e) => edit(id, path))
+    addMenuEntry(menu, '🗑️ Delete', (e) => openRemove1(id, path))
+    addMenuEntry(menu, '⧉ Copy', (e) => copy(id, path))
+    addMenuEntry(menu, '👤 User', (e) => changeOwner(id, path))
+
+    addMenuEntry(menu, '✅ Protection +', (e) => setProtected(id, path, true))
+    addMenuEntry(menu, '❌ Protection -', (e) => setProtected(id, path, false))
+    const publishFolder = async (id, path) => {
+      const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}`);
+      //list of sub paths
+      const { items } = await response.json();
+      const publishPromise = items.filter(item => item.lsi1.split(';')[0].endsWith('Hub')).map(async item => {
+        const url = 'https://b3dutg6xlx4zfz52xgrf4staza0dgeff.lambda-url.us-east-1.on.aws/';
+
+        // Event data
+        const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${item.id}&publish=1` };
+
+        // Fetch options
+        const options = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(eventData)
+        };
+
+        try {
+          // Make the fetch request
+          const response = await fetch(url, options);
+
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+
+          const data = await response.json();
+          console.log('Success:' + item.id);
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      })
+      await Promise.all(publishPromise)
+      const site = path.split('/')[0]
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/invalidate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ site }),
       });
+      console.log('published all')
+      alert('published folder')
+    }
+    addMenuEntry(menu, '📰 Publish', (e) => publishFolder(id, path))
+
+
+    const setProtected = async (id, path, protected) => {
+      const response1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}`);
+      //list of sub paths
+      const data = await response1.json();
+      await Promise.all(data.items.map(item =>
+        fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ ...item, protected }),
+        })
+      ))
+      alert('protection set')
+
+    }
+    // Adjust the position relative to the viewport
+    const offsetX = e.pageX;
+    const offsetY = e.pageY;
+
+    menu.style.display = 'block';
+    menu.style.left = `${offsetX}px`;
+    menu.style.top = `${offsetY}px`;
+
+    // Hide the menu when clicking the left mouse button
+    window.addEventListener('click', function () {
+      menu.style.display = 'none';
+    });
 
     }
     async function loader(e, handler) {
@@ -2158,7 +2162,7 @@
       cloned.setAttribute('sk', 'helper:' + generateUUID())
       helperSection.append(cloned)
     }
-    const createFolders =async path=>{
+    const createFolders = async path => {
       const splited = path.split('/')
       const fileName = splited.pop()
       let path1
@@ -2386,7 +2390,7 @@
 
       var filePathList = document.getElementById('filePathList');
       filePathList.innerHTML = '';
-      
+
       if (helperid) {
         url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${helperid}&ownerUUID=${ownerid}&helperlsi1=true&lsi1=|&token=${localStorage.getItem('token')}`;
       }
@@ -2394,7 +2398,7 @@
         url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=|&token=${localStorage.getItem('token')}`;
       }
       let data1 = fetch(url).then(e => e.json())
-      url =  `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`
+      url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`
       return fetch(url)
         .then(response => {
           if (!response.ok) {
@@ -2409,7 +2413,7 @@
 
           let i = 0;
           let folders = data.items.map(item => item.sk.replace(sk, ''))
-          
+
           console.log(JSON.stringify(data))
 
 
@@ -2522,14 +2526,14 @@
               filePathList.appendChild(clonedItem);
             }
           }
-            // Update select options
-            /*
-            var pathSelector = document.getElementById('pathSelector');
-            pathSelector.innerHTML = '<option value="select">⬇️ select</option><option value="back">⬅️ back</option>';
-            lvls.forEach((lvl, index) => {
-              pathSelector.innerHTML += `<option value="${lvl}">➡️ ${lvl}</option>`;
-            });*/
-          }).catch(e => console.log(e))
+          // Update select options
+          /*
+          var pathSelector = document.getElementById('pathSelector');
+          pathSelector.innerHTML = '<option value="select">⬇️ select</option><option value="back">⬅️ back</option>';
+          lvls.forEach((lvl, index) => {
+            pathSelector.innerHTML += `<option value="${lvl}">➡️ ${lvl}</option>`;
+          });*/
+        }).catch(e => console.log(e))
 
 
     }
