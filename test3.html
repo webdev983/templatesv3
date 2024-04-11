@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <link rel="stylesheet" href="css/right-click-menu.css" media="all">
+  <link rel="stylesheet" href="css/buttons-and-menus.css" media="all">
+  <link rel="stylesheet" href="css/panels.css" media="all">
+
+</head>
+
+<body class="body">
+  <aside class="aside" data-user data-style hidden>
+    <div class="panel top">
+      <button disabled class="b-1" id="last-action-time"
+        style="color: black;z-index:1; position: absolute;top: 50%;left: 50%; transform: translate(-50%, -50%);">⏳</button>
+    </div>
+
+    <div class="panel left">
+        <div hidden id="nav-buttons" data-user hidden>
+          <a href="https://webdev983.github.io/templatesv3/"><button class="b-1">📂</button></a>
+        </div>
+        <div style="margin-top: 30px;">
+          <button class="b-1 " id="toggle-component-tree" onclick="toggleComponentTree()" data-user hidden>🧩</button>
+          <button class="b-1 " id="toggle-code-tree" onclick="toggleCodeTree()">🏷️</button>
+          <button class="b-1 " id="toggle-head" onclick="toggleHead()" data-user hidden>🗿</button>
+          <button class="b-1 " id="toggle-generated-page" onclick="toggleGeneratedPage()">👁️</button>
+        </div>
+        <div id="logs-menu">
+          <button class="b-1 b-select" id="log-open">🪵</button>
+        </div>
+      <table id="code-log" class="table-1" hidden style="margin-bottom: 100px;">
+        <button hidden id="refresh-page" class="b-1" onclick="reloadPage(event)">🔄</button>
+        <thead>
+          <tr>
+            <th style="text-align: left;">🕓time</th>
+            <th style="text-align: left;">✔️action</th>
+          </tr>
+        </thead>
+        <tbody id="code-log-body">
+          <!--NUMBERS!! 1️⃣ 2️⃣ 3️⃣ 4️⃣-->
+          <tr hidden id="code-log-element">
+            <td data-type-code-log="action-time"><span id="code-log-action-time">1703707728031</span></td>
+            <td data-type-code-log="action-name"><span id="code-log-action" class="tooltip"
+                data-tooltip="✅⧉ Apply to copies  &#10; 🚂⧉ Insert Copies  &#10;  🎯⧉ Dup Target">append child</span>
+            </td>
+            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel bottom" style="position: fixed; bottom: 0; left: 0;">
+      <button class="b-1" onclick="removeTokenAndReload()">📴</button>
+      <script>function removeTokenAndReload() {
+        // Удаляем 'token' из localStorage
+        localStorage.removeItem('token');
+        localStorage.removeItem('ownerid');
+        localStorage.removeItem('helperid');
+
+        // Перезагружаем страницу
+        window.location.href = '/templatesv3/';
+    }
+    </script>
+    </div>
+
+  </aside>
+  <main class="main" style="position: relative;">
+
+
+
+    <div id="head-menu" class="panel horizontal-menu" data-user >
+      <label class="l-1" style="margin-right: 10px; user-select: none;">🗿</label>
+      <button hidden class="b-1 b-selected" style="margin-right: 5px;" >⭐</button>
+
+    </div>
+    <div id="head-1" class="horizontal-area" data-user >
+
+      <details style="margin-bottom: 7px;">
+        <summary class="summary-L-3"><span class="l-3 b-dark-blue">🤖 AI</span></summary>
+        <label class="l-3"><input type="radio" checked name="choose-type">1️⃣Core</label>
+        <label class="l-3"><input type="radio" name="choose-type">2️⃣Style</label>
+        <label class="l-3"><input type="radio" name="choose-type">3️⃣Site</label>
+        <label class="l-3"><input type="radio" name="choose-type">4️⃣Page</label>
+
+        <table class="table-1" data-head="meta">
+          <tr data-generate="product_title_description_leadp">
+            <td class="l-3"><label class="l-3" data-status>🔴</label><label class="l-3" style="margin: 10px;">Product Title&Description+Lead Paragraph</label></td>
+            <td class="l-3"> <button class="b-3">🤖</button></td>
+            <td class="l-3"> <button style="margin-left: 10px;" class="b-3">✏️</button></td>
+          </tr>
+          <tr data-generate="product_description">
+            <td class="l-3"><label class="l-3" data-status>🔴</label><label class="l-3" style="margin: 10px;">Product Description</label></td>
+            <td class="l-3"> <button class="b-3">🤖</button></td>
+            <td class="l-3"> <button style="margin-left: 10px;" class="b-3">✏️</button></td>
+          </tr>
+          <tr data-generate="article_faq">
+            <td class="l-3"><label class="l-3" data-status>🔴</label><label class="l-3" style="margin: 10px;">Article FAQ</label></td>
+            <td class="l-3"> <button class="b-3">🤖</button></td>
+            <td class="l-3"> <button style="margin-left: 10px;" class="b-3">✏️</button></td>
+
+          </tr>
+          <tr data-generate="article_title_description">
+            <td class="l-3"><label class="l-3" data-status>🔴</label><label class="l-3" style="margin: 10px;">Article Title&Description</label></td>
+            <td class="l-3"> <button class="b-3">🤖</button></td>
+            <td class="l-3"> <button style="margin-left: 10px;" class="b-3">✏️</button></td>
+          </tr>
+        </table>  
+
+        <button data-save class="b-4">💾 Save</button>
+<br>
+        <textarea id="import-input" class="text1" style="width: 50vw" placeholder=" 🤖 AI Task"></textarea>
+        <br>
+        <button data-save class="b-4">💾 Save</button>
+
+
+      </details>
+
+
+
+      <details style="margin-bottom: 7px;">
+        <summary class="summary-L-3"><span class="l-3 b-dark-blue">📣 Meta</span></summary>
+          <table class="table-1" data-head="meta">
+            <tr data-head-value="title">
+              <td class="l-3" >🔴 Title</td>
+              <td class="l-3"
+              data-transfer-sender="title.text-content" contenteditable>{Title}</td>
+            </tr>
+    
+            <tr data-head-value="description">
+              <td class="l-3">🔴 Description</td>
+              <td class="l-3"  data-transfer-sender="meta-description.content" contenteditable>{Description}</td>
+            </tr>
+          </table>  
+      </details>
+
+
+
+<details style="margin-bottom: 7px;">
+        <summary class="summary-L-3"><span class="l-3 b-dark-blue">📦 Product Spec</span></summary>
+        <table class="table-1" data-head="product-specification">
+          <tr data-head-value="product_name">
+          <td class="l-3">🟢 Product name</td>
+          <td class="l-3"  contenteditable>{Product name}</td>
+          <td class="l-3">-</td>
+          <td><label class="l-3"><input type="checkbox">Benefit</label></td>
+        </tr>
+        <tr>
+          <td class="l-3" data-head-value="brand">🔴 Brand</td>
+          <td class="l-3"  contenteditable>{Brand}</td>
+          <td class="l-3">-</td>
+          <td><label class="l-3"><input type="checkbox">Benefit</label></td>
+        </tr>
+
+        <tr>
+          <td class="l-3" data-head-value="sku">🔴 SKU</td>
+          <td class="l-3"  contenteditable>{SKU}</td>
+          <td class="l-3">-</td>
+          <td><label class="l-3"><input type="checkbox">Benefit</label></td>
+        </tr>
+        <tr>
+          <td class="l-3" data-head-value="gtin13">🔴 GTIN13</td>
+          <td class="l-3" contenteditable>{GTIN13}</td>
+          <td class="l-3">-</td>
+          <td><label class="l-3"><input type="checkbox">Benefit</label></td>
+        </tr>
+        <tr>
+          <td class="l-3" data-head-value="shipping">🔴 Shipping</td>
+          <td class="l-3" contenteditable>{Shipping}</td>
+          <td>
+            <select class="select-1" style="display: inline-block; margin-bottom: 7px;">
+            <option>⬇️ Select</option>
+            <option>➡️ Instant online delivery</option>
+            <option>➡️ Free shipping</option>
+          </select>
+    </td>
+          <td><label class="l-3"><input type="checkbox">Benefit</label></td>
+          <tr data-head-value="return">
+            <td class="l-3">🔴 Return</td>
+            <td class="l-3" contenteditable>{Shipping}</td>
+            <td>
+              <select class="select-1" style="display: inline-block; margin-bottom: 7px;">
+              <option>⬇️ Select</option>
+              <option>➡️ 30 Days Moneyback</option>
+              <option style="background-color: #22cb00" >➡️ 7 days Moneyback</option>
+            </select>
+      </td>
+            <td><label class="l-3"><input type="checkbox">Benefit</label></td>
+          <tr>
+
+            <tr data-head-value="language">
+              <td class="l-3">🔴 Language</td>
+              <td class="l-3" contenteditable>{Shipping}</td>
+
+              <td >
+                <select class="select-1" style="display: inline-block; margin-bottom: 7px;">
+                <option>⬇️ Select</option>
+                <option>➡️ All-language support</option>
+              </select>
+        </td>
+              <td><label class="l-3"><input type="checkbox">Benefit</label></td>
+            <tr hidden>    
+          <td class="l-1" colspan="3" style="text-align: center !important; background-color:#b0afaf; padding: 5px;"></td></tr>
+      </table>
+</details>
+
+<details hidden id="breadCrumb-menu" style="margin-bottom: 7px;">
+  <summary class="summary-L-3"><span class="l-3 b-dark-blue">🥖 BreadCrumb Menu</span></summary>
+  <button class="b-3" onclick="generateBreadCrumb(event)"> Generate</button>
+</details>
+
+
+
+<details id="import-menu"  hidden style="margin-bottom: 7px;">
+  <summary class="summary-L-3"><span class="l-3 b-dark-blue">🚀 Import Menu</span></summary>
+        <button style="margin-left: 10px;" class="b-4" id="import-name"><span>🔡 </span><span
+            id="import-name-span">Article</span></button>
+
+        <div id="import-data" hidden data-menu style="margin-bottom: 30px; ">
+          <button onclick="cancel(event)" class="b-4" style="margin-bottom: 5px; margin-top: 10px;">❌</button>
+          <br>
+          <div hidden id="variation-amount-field"><span class="l-3">🧮 Variations: </span><span id="variation-amount"
+              class="l-3">10</span></div>
+          <div hidden id="variation-site-field"><span class="l-3">🌐 Site: </span><span id="variant-site"
+              class="l-3">accbuddy.com</span></div>
+
+          <span class="l-3"></span>
+          <button data-save class="b-4">💾 Save</button>
+          <button hidden id='previous-html' class="b-4"> Prev. ◀️</button>
+          <button hidden id="next-html" class="b-4">▶️ Next</button>
+          <button hidden id="remove-html" class="b-4">🗑️Remove</button>
+          <button hidden id="update-html" class="b-4">🔄 Update</button>
+          <div hidden id="approve-menu">
+            <button class="b-4"> ✅ Approve</button>
+            <button class="b-4"> ❌ Cancel</button>
+          </div>
+          <br>
+          <textarea id="import-input" class="text1" style="width: 50vw" placeholder=" 🚀 Enter Import Text"></textarea>
+          <br>
+          <button data-save class="b-4">💾 Save</button>
+        </div>
+</details>
+
+
+
+
+        <details id="sku-menu" hidden style="margin-bottom: 7px;">
+          <summary class="summary-L-3"><span class="l-3 b-dark-blue">📦 SKU Menu</span></summary>
+          <input type="text" class="b-3" id="input-sku" placeholder="enter sku">
+          <button class="b-3" id="create-sku" onclick="addSku(event)">▶️</button>
+          <div id="sku-list" hidden>
+          </div>
+
+          <label id="checkbox-label" hidden data-type="dependant" class="l-3"><input type="checkbox">Color</label>
+          <fieldset hidden id="dependee-menu-item" data-type="dependee">
+            <legend>
+              <label class="l-2">🎚️</label>
+              <label data-type="dependee-value" class="l-2 b-dark-blue">Price</label>
+            </legend>
+    
+            <div>
+              <button class="b-3" id="generate-dependees" onclick="generateDependees(event)">Generate</button>
+            </div>
+          </fieldset>
+    
+    
+    
+            <div hidden id=sku-item-1>
+              <label class="l-3 b-dark-blue">SKU:</label><label class="l-2" id="sku-value"></label>
+              <button class="b-3" id="toggleSkuAttributeList" onclick='toggleSkuAttributeList(event)'>👀</button>
+              <button class="b-3" id="toggleDependencyMenu1" onclick='toggleDependencyMenu1(event)'>🛠️</button>
+    
+    
+              <button class="b-3" id="remove-sku" onclick="openRemoveSku(event)">🗑️️</button>
+    
+              <fieldset style="display: none;" id="remove-sku-menu" class="menu">
+                <legend><button class="b-6" onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
+                <label class="l-3">Are you sure want to remove this SKU?</label>
+                <br>
+                <button onclick="removeSku(event)" class="b-3">🗑️️ Remove</button>
+              </fieldset>
+    
+    
+              <ul class="list-1" hidden id="sku-attribute-list">
+                <div id='sku-item'>
+                  <li id="sku-attribute">
+                    <span class="l-4">🔖</span><span class="l-4" id="sku-attribute-value">Solo</span>
+                    <span style="margin-left: 10px;" class="l-4">📦</span>
+                    <span class="l-4" id="sku-qty">10</span>
+                  </li>
+                </div>
+              </ul>
+    
+              <div id="dependee-menu" hidden>
+                <fieldset data-type="dependee">
+                  <legend>
+                    <label class="l-2">🎚️</label>
+                    <label data-type="dependee-value" class="l-2 b-dark-blue">Price</label>
+                  </legend>
+                  <label data-type="dependant" class="l-3"><input type="checkbox">Color</label>
+                  <div>
+                    <button class="b-3" id="generate-dependees">Generate</button>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+    
+        </details>
+        </div>
+ 
+
+</main>
+</body>
+
+</html>
