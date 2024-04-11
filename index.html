@@ -42,18 +42,15 @@
         style="color: black;z-index:1; position: absolute;top: 50%;left: 50%; transform: translate(-50%, -50%);">0.0</button>
     </div>
 
-    <div class="panel left">
+    <div class="panel left" style="overflow-y: auto;     height: 100%; overflow: auto;">
       <div id="nav-buttons">
         <button data-section-button="brains" class="b-1">🧠</button>
         <button data-section-button="files" class="b-1 b-selected">📂</button>
       </div>
 
-
-
       <div data-section-aside="files" class="local-buttons" style="margin-top: 30px;">
         <button class="b-1" onclick="createNew()">➕</button>
       </div>
-
       <div hidden data-section-aside="brains" class="local-buttons" style="margin-top: 30px;">
 
         <div data-section-aside="helpers" class="local-buttons" style="margin-top: 30px;">
@@ -67,12 +64,10 @@
     <div class="panel bottom">
       <button class="b-1" onclick="removeTokenAndReload()">📴</button>
       <script>function removeTokenAndReload() {
-        // Удаляем 'token' из localStorage
         localStorage.removeItem('token');
         localStorage.removeItem('ownerid');
         localStorage.removeItem('helperid');
 
-        // Перезагружаем страницу
         window.location.reload();
     }
     </script>
