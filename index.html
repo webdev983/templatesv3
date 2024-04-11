@@ -2369,10 +2369,9 @@
     }
     function loadFileList() {
       // Fetch GET request
-      let url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&token=${localStorage.getItem('token')}`
-      if (localStorage.getItem('helperid')) {
-        url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${localStorage.getItem('helperid')}&ownerUUID=${localStorage.getItem('ownerid')}&helperlsi1=true&token=${localStorage.getItem('token')}`
-      }
+      const sk = `folder:${localStorage.getItem('helperid')}:lvl1:`
+      let url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${localStorage.getItem('ownerid')}&sk=${sk}`
+      
       return fetch(url)
         .then(response => {
           if (!response.ok) {
@@ -2386,20 +2385,12 @@
           var filePathList = document.getElementById('filePathList');
           filePathList.innerHTML = '';
           let i = 0;
-          let folders = []
+          let folders = data.items.map(item=>item.sk.replace(sk,''))
           const elements = []
           console.log(JSON.stringify(data))
-          const items = data.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace(path, '').split(';')[0] } })
+         
           console.log(JSON.stringify(items))
-          for (const item of items) {
-            const splited = item.name.split(';')[0].split('/')
-            if (splited.length > 1) {
-              folders.push(splited[0])
-            }
-            else {
-              elements.push({ name: splited[0], ...item })
-            }
-          }
+          
           folders = removeDuplicates(folders)
           console.log(JSON.stringify(elements))
           folders.sort()
