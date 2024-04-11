@@ -1086,7 +1086,7 @@
             ),
           })
           cloned.remove()
-          
+
         }
         cloned.querySelector('#save-helper').onclick = async (e) => {
           var ownersSelect = cloned.querySelector("#helpers-select");
@@ -1118,7 +1118,7 @@
             ),
           })
           cloned.remove()
-          
+
         }
 
 
@@ -1905,7 +1905,7 @@
           // get path item
           await Promise.all(promises)
           cloned.remove()
-          
+
         }
         cloned.querySelector('#save-helper').onclick = async (e) => {
           var ownersSelect = cloned.querySelector("#helpers-select");
@@ -1944,7 +1944,7 @@
           })
           await Promise.all(promises)
           cloned.remove()
-          
+
         }
 
 
@@ -2154,7 +2154,7 @@
       cloned.setAttribute('sk', 'helper:' + generateUUID())
       helperSection.append(cloned)
     }
-    function savePath() {
+    async function savePath() {
       var fieldset2 = document.querySelector('[data-element="create-new-file-path"]');
       fieldset2.setAttribute('hidden', '');
 
@@ -2183,7 +2183,7 @@
       if (helperId) {
         payload.helperUUID = 'path:' + helperId
       }
-      fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -2191,9 +2191,47 @@
         body: JSON.stringify(payload),
       })
         .then(response => response.json())
-        .then(data => console.log('API Response:', data))
-        .then(e => { path ? loadUsingPath() : loadFileList() })
+
         .catch(error => console.error('Error:', error));
+      //create folders
+      const folders = newPath.split('|')[0]
+      const splited = folders.split('/')
+      let path
+      const helper = localStorage.getItem('helperid')
+      const ownerid = localStorage.getItem('ownerid')
+      for (const i = 0; i < splited.length && i < 3; i++) {
+        if (i !== 0) {
+          path = path + '/' + splited[i]
+        }
+        else {
+          path = splited[i]
+        }
+        let payload = {
+          id:ownerid,
+          sk:`folder:${ownerid}:lvl${i+1}:${path}`
+        }
+        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        })
+        const helper = localStorage.getItem('helperid')
+        if (helper) {
+          payload.sk = `folder:${helper}:lvl${i+1}:${path}`
+          await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+          })
+        }
+
+      }
+
+      path ? loadUsingPath() : loadFileList()
     }
     let path = ''
     let lvls = []
