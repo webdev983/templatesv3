@@ -2367,13 +2367,26 @@
     function removeDuplicates(arr) {
       return Array.from(new Set(arr));
     }
-    function loadFileList() {
+    async function loadFileList() {
       // Fetch GET request
       const helperid = localStorage.getItem('helperid')
       const ownerid = localStorage.getItem('ownerid')
       const sk = `folder:${helperid ? helperid : ownerid}:lvl1:`
       let url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`
       console.log(url)
+
+
+      var filePathList = document.getElementById('filePathList');
+      filePathList.innerHTML = '';
+      let lvls = [];
+      let i = 0;
+      if (helperid) {
+        url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${helperid}&ownerUUID=${ownerid}&helperlsi1=true&lsi1=|&token=${localStorage.getItem('token')}`;
+      }
+      else {
+        url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=|&token=${localStorage.getItem('token')}`;
+      }
+      let data1 = fetch(url).then(e => e.json())
       return fetch(url)
         .then(response => {
           if (!response.ok) {
@@ -2382,14 +2395,13 @@
           // Parse response as JSON
           return response.json();
         })
-        .then(data => {
+        .then(async data => {
           console.log(JSON.stringify(data))
           // Replace existing file paths with dynamic content
-          var filePathList = document.getElementById('filePathList');
-          filePathList.innerHTML = '';
+
           let i = 0;
           let folders = data.items.map(item => item.sk.replace(sk, ''))
-          const elements = []
+          
           console.log(JSON.stringify(data))
 
 
@@ -2441,18 +2453,18 @@
             fieldset.id !== 'cancelation' && fieldset.removeAttribute('hidden');
           });
 
-          
+
           folders.map(async folder => {
             if (helperid) {
-              url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${helperid}&ownerUUID=${ownerid}&helperlsi1=true&lsi1=${path + folder }&token=${localStorage.getItem('token')}&pageSize=1`;
+              url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${helperid}&ownerUUID=${ownerid}&helperlsi1=true&lsi1=${path + folder}&token=${localStorage.getItem('token')}&pageSize=1`;
             }
             else {
-              url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${path + folder }&token=${localStorage.getItem('token')}&pageSize=1`;
+              url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${path + folder}&token=${localStorage.getItem('token')}&pageSize=1`;
             }
             let { items } = await fetch(url).then(e => e.json())
             if (!items.length) {
               const sk = `folder:${helperid ? helperid : ownerid}:lvl${path.split('/').length}:${path}${folder}`
-              const encoded = `${ownerid}:${sk}`.replaceAll('/','~')
+              const encoded = `${ownerid}:${sk}`.replaceAll('/', '~')
               await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${encoded}`, {
                 method: 'DELETE',
                 headers: {
@@ -2464,16 +2476,52 @@
             }
 
           })
-        
 
-          // Update select options
-          /*
-          var pathSelector = document.getElementById('pathSelector');
-          pathSelector.innerHTML = '<option value="select">⬇️ select</option><option value="back">⬅️ back</option>';
-          lvls.forEach((lvl, index) => {
-            pathSelector.innerHTML += `<option value="${lvl}">➡️ ${lvl}</option>`;
-          });*/
-        }).catch(e => console.log(e))
+          data1 = await data1
+          let elements = data1.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace(spath, '').split(';')[0] } });
+          elements.sort((a, b) => a.name.localeCompare(b.name));
+          for (const el1 of elements) {
+            const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${el1.id}:${el1.sk}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(el => el.json()).then(el2 => { return { ...el2, ...el1 } });
+            if (i < 1000) {
+              i++;
+              // Clone the fieldset
+              var clonedItem = document.getElementById('item').cloneNode(true);
+              clonedItem.removeAttribute('hidden');
+              // Set unique ID for the cloned item
+              clonedItem.id = item.id;
+
+              // Set file path and emoji
+              const item_path = clonedItem.querySelector('[data-value="file-path"]');
+              item_path.textContent = item.name;
+              clonedItem.addEventListener('contextmenu', (e) => addMenu(e, item.id, item.protected, item.lsi1));
+              clonedItem.onclick = function (event) {
+                redirect(item.id);
+              };
+              let icon = '🧩';
+              if (item.lsi1.startsWith('css')) {
+                icon = '🎨';
+              } else if (item.lsi1.startsWith('javascript')) {
+                icon = '💻';
+              }
+              clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
+
+              // Append the cloned item to the filePathList
+              filePathList.appendChild(clonedItem);
+            }
+          }
+            // Update select options
+            /*
+            var pathSelector = document.getElementById('pathSelector');
+            pathSelector.innerHTML = '<option value="select">⬇️ select</option><option value="back">⬅️ back</option>';
+            lvls.forEach((lvl, index) => {
+              pathSelector.innerHTML += `<option value="${lvl}">➡️ ${lvl}</option>`;
+            });*/
+          }).catch(e => console.log(e))
 
 
     }
@@ -2741,17 +2789,17 @@
         if (path.split('/').length < 4) {
           folders.map(async folder => {
             if (helperid) {
-              url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${helperid}&ownerUUID=${ownerid}&helperlsi1=true&lsi1=${path + folder }&token=${localStorage.getItem('token')}&pageSize=1`;
+              url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${helperid}&ownerUUID=${ownerid}&helperlsi1=true&lsi1=${path + folder}&token=${localStorage.getItem('token')}&pageSize=1`;
             }
             else {
-              url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${path + folder }&token=${localStorage.getItem('token')}&pageSize=1`;
+              url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${path + folder}&token=${localStorage.getItem('token')}&pageSize=1`;
             }
             let { items } = await fetch(url).then(e => e.json())
             if (!items.length) {
-              console.log('folder '+ folder +'items '+ JSON.stringify(items))
+              console.log('folder ' + folder + 'items ' + JSON.stringify(items))
               console.log(url)
               const sk = `folder:${helperid ? helperid : ownerid}:lvl${path.split('/').length}:${path}${folder}`
-              const encoded = `${ownerid}:${sk}`.replaceAll('/','~')
+              const encoded = `${ownerid}:${sk}`.replaceAll('/', '~')
               await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${encoded}`, {
                 method: 'DELETE',
                 headers: {
