@@ -704,7 +704,7 @@
         return v.toString(16);
       });
     }
-    function addMenu(e, id, protected, itemLsi1) {
+    function addMenu(e, id, protected, itemLsi1,menuItem) {
       e.preventDefault(); // Prevent the default context menu from opening
       console.log('in11');
       const menu = document.querySelector('#right-click-menu'); // Use # for ID selector
@@ -792,17 +792,20 @@
             if (byId || relative || absolute) {
 
               const uuid = generateUUID()
+              const pLoad = {
+                  ...menuItem,
+                  id: uuid,
+                  sk: 'path',
+                  lsi1: new_value,
+                  ownerUUID: 'path'
+                }
+              delete pLoad.href
               const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                  id: uuid,
-                  sk: 'path',
-                  lsi1: new_value,
-                  ownerUUID: 'path'
-                }),
+                body: JSON.stringify(pLoad),
               })
               if (byId) {
                 await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -2508,7 +2511,7 @@
               // Set file path and emoji
               const item_path = clonedItem.querySelector('[data-value="file-path"]');
               item_path.textContent = item.name;
-              clonedItem.addEventListener('contextmenu', (e) => addMenu(e, item.id, item.protected, item.lsi1));
+              clonedItem.addEventListener('contextmenu', (e) => addMenu(e, item.id, item.protected, item.lsi1,item));
               clonedItem.onclick = function (event) {
                 redirect(item.id);
               };

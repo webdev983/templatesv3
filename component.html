@@ -6731,7 +6731,7 @@
         const { items } = responseData
         console.log('iteeems ' + JSON.stringify(items))
         //change component 
-        const splited = items.find(e => e.sk === 'path').lsi1.split(';')[0].split('/')
+        const splited =convertToOldPath(items.find(e => e.sk === 'path').lsi1.split(';')[0]).split('/')
         const name = splited[splited.length - 1]
         const { testPage, optionalScript } = items.find(e => e.sk === 'path')
         const el1 = getElementById1(newId + '-tree')
@@ -6824,7 +6824,7 @@
         const upper1 = upperRemoveActions ? upperRemoveActions : []
         const replaceActions = [...responseData.items.filter(el => el.action === 'Replace_Component'), ...upper]
         const removeActions = [...responseData.items.filter(el => el.action === 'removeComponent'), ...upper1]
-        const componentPath = responseData.items.find(e => e.sk === 'path')?.lsi1.replace(';publish:published', '')
+        const componentPath =convertToOldPath(responseData.items.find(e => e.sk === 'path')?.lsi1).replace(';publish:published', '')
         const componentFileName = componentPath.split('/')[componentPath.split('/').length - 1]
         if (id) {
           const relativecomponentFileName = pathForRelative.current.split('/')[pathForRelative.current.split('/').length - 1]
@@ -6843,7 +6843,7 @@
             if (item.sk === 'path') {
               const el = getElementById1('page-path')
 
-              el.textContent = item.lsi1.replace(';publish:published', '')
+              el.textContent = convertToOldPath(item.lsi1).replace(';publish:published', '')
 
               if (item.lsi1.includes('publish:published')) {
                 const el2 = getElementById1("path-icon")
