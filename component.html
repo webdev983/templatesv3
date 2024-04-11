@@ -945,7 +945,7 @@
     function labelClick(event) {
       // Extract the clicked part of the text based on the click position
       const clickedText = getClickedText(event, event.target.textContent);
-      if (clickedText === pathItem.lsi1.split(';')[0]) {
+      if (clickedText === pathItemPath.split(';')[0]) {
         return
       }
       const p = clickedText
@@ -1202,7 +1202,7 @@
       const name = imageElement.getAttribute('data-builder-image-name')
       const defaultRes = imageElement.getAttribute('data-builder-image-default')
 
-      const site = pathItem.lsi1.split('/')[0]
+      const site = pathItemPath.split('/')[0]
       let randomString = generateRandomString(3)
       let url1 = 'https://' + site + '/pics/' + randomString + '_' + name
       function checkSrcStartsWithUrl1() {
@@ -1213,7 +1213,7 @@
         randomString = generateRandomString(3);
         url1 = 'https://' + site.toLowerCase() + '/pics/' + randomString + '_' + name;
       }
-      const splited = pathItem.lsi1.split('/')
+      const splited = pathItemPath.split('/')
       splited.pop()
       splited.shift()
       const index = splited.indexOf('Content');
@@ -1346,7 +1346,7 @@
       });
     }
     const invalidate = async (e) => {
-      const site = pathItem.lsi1.split('/')[0]
+      const site = pathItemPath.split('/')[0]
       const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/invalidate', {
         method: 'POST',
         headers: {
@@ -1373,7 +1373,7 @@
       return capitalizedString;
     }
     const generateBreadCrumb = async (event) => {
-      let arr = pathItem.lsi1.split(';')[0].split('/')
+      let arr = pathItemPath.split(';')[0].split('/')
       const site = arr[0]
       arr.shift()
 
@@ -1794,8 +1794,8 @@
 
   </script>
   <script>
-
     var pathItem
+    var pathItemPath
     var selectedSku
     var dependencyItem
     var skuCreated
@@ -2487,7 +2487,7 @@
           addComponent1("*/" + p.join('/'))
         }
         else if (optionList.querySelector('#file-list-link-by-name').classList.contains('b-selected')) {
-          const currentLsi = pathItem.lsi1.replace(';publish:published', "")
+          const currentLsi = pathItemPath.replace(';publish:published', "")
           const relativePath = getRelativePath(currentLsi, data.lsi1.replace(';publish:published', ""));
 
           addComponent1("#" + relativePath)
@@ -4663,7 +4663,7 @@
         case 'Add_Component':
 
           if (inserted_component.componentId.startsWith('*')) {
-            const site = pathItem.lsi1.split('/')[0]
+            const site = pathItemPath.split('/')[0]
             const modId = inserted_component.componentId.replace('*', '')
             const lsi = site + modId
             const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + lsi)
@@ -4674,7 +4674,7 @@
             inserted_component.componentId = item1.id
           }
           else if (inserted_component.componentId.startsWith('#')) {
-            let cPath = pathForRelative.current || pathItem.lsi1
+            let cPath = pathForRelative.current || pathItemPath
             cPath = cPath.replace(';publish:published', "")
             console.log('cpath ' + cPath)
 
@@ -4818,7 +4818,7 @@
           if (inserted_component) {
             //fieldset
             if (inserted_component.componentId.startsWith('*')) {
-              const site = pathItem.lsi1.split('/')[0]
+              const site = pathItemPath.split('/')[0]
               const modId = inserted_component.componentId.replace('*', '')
               const lsi = site + modId
               const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + lsi)
@@ -4827,7 +4827,7 @@
               inserted_component.componentId = item1.id
             }
             else if (inserted_component.componentId.startsWith('#')) {
-              let cPath = pathForRelative.prev || pathItem.lsi1
+              let cPath = pathForRelative.prev || pathItemPath
               cPath = cPath.replace(';publish:published', "")
               console.log('cpath ' + cPath)
 
@@ -5581,7 +5581,7 @@
           if (inserted_component) {
             //fieldset
             if (inserted_component.componentId.startsWith('*')) {
-              const site = pathItem.lsi1.split('/')[0]
+              const site = pathItemPath.split('/')[0]
               const modId = inserted_component.componentId.replace('*', '')
               const lsi = site + modId
               const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + lsi)
@@ -5590,7 +5590,7 @@
               inserted_component.componentId = item1.id
             }
             else if (inserted_component.componentId.startsWith('#')) {
-              let cPath = pathForRelative.prev || pathItem.lsi1
+              let cPath = pathForRelative.prev || pathItemPath
               cPath = cPath.replace(';publish:published', "")
               console.log('cpath ' + cPath)
 
@@ -6508,7 +6508,7 @@
           clonedFieldset.setAttribute('replaced', button.parentNode.getAttribute('replaced'))
           // Find the position to insert the cloned fieldset
           const insertAfterElement = textContentButton || button;
-          if (pathItem.lsi1.split(';')[0].endsWith('Hub')) {
+          if (pathItemPath.split(';')[0].endsWith('Hub')) {
             const contentEl = clonedFieldset.querySelector('#content-type')
             const catWeight = contentEl.querySelector('#catalog-weight')
             const catFolder = contentEl.querySelector('#catalog-folder')
@@ -6797,20 +6797,22 @@
         if (!pathItem) {
           window.location.href = 'index.html'
         }
+        //converst lsi1 to old
+        pathItemPath =convertToOldPath(pathItem.lsi1)
 
-        if (pathItem.lsi1.toLowerCase().includes('seositeshome.com/home/hub')) {
+        if (pathItemPath.toLowerCase().includes('seositeshome.com/home/hub')) {
           if (pathItem.hub_items) {
-            pathItem.hub_items.style = pathItem.lsi1.split('/')[0].toLowerCase()
+            pathItem.hub_items.style = pathItemPath.split('/')[0].toLowerCase()
           }
           else {
-            pathItem.hub_items = { style: pathItem.lsi1.split('/')[0].toLowerCase() }
+            pathItem.hub_items = { style: pathItemPath.split('/')[0].toLowerCase() }
           }
           await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
             method: 'POST',
             body: JSON.stringify(pathItem),
           });
         }
-        const splited = pathItem.lsi1.split(';')[0].split('/')
+        const splited = pathItemPath.split(';')[0].split('/')
 
         console.log('path item ' + JSON.stringify(pathItem))
         setOptions(pathItem)
@@ -6820,7 +6822,7 @@
         }
         const el = getElementById1(idFromLink + '-tree').querySelector("[data-element='code-tree-tag-name-button']")
         el.textContent = '🧩' + name
-        el.setAttribute('path', pathItem.lsi1)
+        el.setAttribute('path', pathItemPath)
         await r;
         //insertDataIntoCodeLog('root', idFromLink, { name })
       }
@@ -7170,7 +7172,7 @@
       for (const tag of tags) {
         if (tag.tagName.toLowerCase() !== 'script') {
           const receiver = tag.getAttribute('data-transfer-receiver');
-          const link = pathItem.lsi1.replace(';publish:published', '').toLowerCase()
+          const link = pathItemPath.replace(';publish:published', '').toLowerCase()
           if (receiver === "canonical" && link.endsWith('/hub')) {
             const splited = link.split('/')
             splited.pop()
@@ -7240,7 +7242,7 @@
       }
     }
     var handleItemLink = async () => {
-      const currentPath = pathItem.lsi1.replace(';publish:published', '').toLowerCase()
+      const currentPath = pathItemPath.replace(';publish:published', '').toLowerCase()
       if ((currentPath.endsWith("/article-content") || currentPath.endsWith("/product-content")) &&
         (currentPath.includes("/products/") || currentPath.includes("/blog/")) &&
         !currentPath.includes("/seed-") &&
@@ -7417,7 +7419,7 @@
       const name = imageElement.getAttribute('data-builder-image-name')
       const defaultRes = imageElement.getAttribute('data-builder-image-default')
 
-      const site = pathItem.lsi1.split('/')[0]
+      const site = pathItemPath.split('/')[0]
       let randomString = generateRandomString(3)
       let url1 = 'https://' + site + '/pics/' + randomString + '_' + name
       function checkSrcStartsWithUrl1() {
@@ -7428,7 +7430,7 @@
         randomString = generateRandomString(3);
         url1 = 'https://' + site.toLowerCase() + '/pics/' + randomString + '_' + name;
       }
-      const splited = pathItem.lsi1.split('/')
+      const splited = pathItemPath.split('/')
       splited.pop()
       splited.shift()
       const index = splited.indexOf('Content');
@@ -7614,7 +7616,7 @@
         }
         return false;
       });
-      if (elements.length > 0 && pathItem.lsi1.split(';')[0].endsWith('-Content')) {
+      if (elements.length > 0 && pathItemPath.split(';')[0].endsWith('-Content')) {
         const importMenuOriginal = getElementById1('import-menu')
         const importMenu = importMenuOriginal.cloneNode(true)
         importMenuOriginal.parentNode.append(importMenu)
@@ -7669,7 +7671,7 @@
                   }
 
                 } else {
-                  const site = pathItem.lsi1.split('/')[0]
+                  const site = pathItemPath.split('/')[0]
                   if (itemsArr[index]?.value === inputValue) {
                     const splitedSite = itemsArr[index].site.split(',')
                     if (!splitedSite.includes(site)) {
@@ -7757,7 +7759,7 @@
                       id: sku1,
                       sk: 'data-' + suffix + ':' + stamp,
                       value: child.innerHTML,
-                      site: pathItem.lsi1.split('/')[0]
+                      site: pathItemPath.split('/')[0]
                     };
                     const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                       method: 'POST',
@@ -7991,7 +7993,7 @@
     }
     document.addEventListener('DOMContentLoaded', loadFirst);
     const handleWebPageMenu = () => {
-      const splited = pathItem.lsi1.split(';')[0].split('/')
+      const splited = pathItemPath.split(';')[0].split('/')
       const menu = document.getElementById('web-page-menu')
       if (splited[0].endsWith('SeoSitesHome.com') || splited[splited.length - 1] === 'Hub') {
 
@@ -8254,7 +8256,7 @@
     }
     const setDataProduct = async (sku, items) => {
       const dataProductEls = querySelectorAll1('[data-product=""]')
-      const splited = pathItem.lsi1.split(';')[0].split('/')
+      const splited = pathItemPath.split(';')[0].split('/')
       const name = splited[splited.length - 1]
       dataProductEls.forEach(async dataProductEl => {
         const el = {
@@ -8598,7 +8600,7 @@
 
 
       }
-      const splited = pathItem.lsi1.split(';')[0].split('/')
+      const splited = pathItemPath.split(';')[0].split('/')
       const name = splited[splited.length - 1]
       /*
       querySelectorAll1('[data-product]').forEach(
