@@ -2372,14 +2372,13 @@
       const helperid = localStorage.getItem('helperid')
       const ownerid = localStorage.getItem('ownerid')
       const sk = `folder:${helperid ? helperid : ownerid}:lvl1:`
-      let url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`
+      let url
       console.log(url)
 
 
       var filePathList = document.getElementById('filePathList');
       filePathList.innerHTML = '';
-      let lvls = [];
-      let i = 0;
+      
       if (helperid) {
         url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${helperid}&ownerUUID=${ownerid}&helperlsi1=true&lsi1=|&token=${localStorage.getItem('token')}`;
       }
@@ -2387,6 +2386,7 @@
         url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=|&token=${localStorage.getItem('token')}`;
       }
       let data1 = fetch(url).then(e => e.json())
+      url =  `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`
       return fetch(url)
         .then(response => {
           if (!response.ok) {
