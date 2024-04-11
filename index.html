@@ -2750,7 +2750,8 @@
             let { items } = await fetch(url).then(e => e.json())
             if (!items.length) {
               const sk = `folder:${helperid ? helperid : ownerid}:lvl${path.split('/').length}:${path}${folder}`
-              await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${ownerid}:${sk}`, {
+              const encoded = encodeURIComponent(`${ownerid}:${sk}`)
+              await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${encoded}`, {
                 method: 'DELETE',
                 headers: {
                   'Content-Type': 'application/json',
