@@ -2171,11 +2171,12 @@
 
       // Perform additional actions based on the selected type and path
       console.log('at path:', newPath);
-
+      const splited = newPath.split('/')
+      const fileName = splited.pop()
       // Fetch POST request
       const payload = {
         sk: 'path',
-        lsi1: newPath,
+        lsi1: splited.join('/')+'|'+fileName,
         ownerUUID: 'path:' + localStorage.getItem('ownerid'),
         created: new Date().getTime()
       }
@@ -2194,8 +2195,6 @@
 
         .catch(error => console.error('Error:', error));
       //create folders
-      const folders = newPath.split('|')[0]
-      const splited = folders.split('/')
       let path1
       const helper = localStorage.getItem('helperid')
       const ownerid = localStorage.getItem('ownerid')
