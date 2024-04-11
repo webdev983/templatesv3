@@ -2434,52 +2434,7 @@
             }
 
           });
-          elements.sort((a, b) => a.name.localeCompare(b.name))
-          elements && elements.forEach(async el1 => {
-            const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${el1.id}:${el1.sk}`, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            }).then(el => el.json()).then(el2 => { return { ...el2, ...el1 } })
-
-            if (i < 1000) {
-              i++
-              // Clone the fieldset
-              var clonedItem = document.getElementById('item').cloneNode(true);
-              clonedItem.removeAttribute('hidden')
-              // Set unique ID for the cloned item
-              clonedItem.id = item.id;
-
-              // Set file path and emoji
-              const item_path = clonedItem.querySelector('[data-value="file-path"]')
-              item_path.textContent = item.name;
-              clonedItem.onclick = function (event) {
-                event.stopPropagation()
-                redirect(item.id);
-              };
-              clonedItem.addEventListener('contextmenu', (e) => addMenu(e, item.id, item.protected, item.lsi1))
-              let icon = '🧩';
-              if (item.lsi1.startsWith('css')) {
-                icon = '🎨';
-              } else if (item.lsi1.startsWith('javascript')) {
-                icon = '💻';
-              }
-              clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
-
-
-
-              // Set up onclick for file-open button
-
-
-              // Append the cloned item to the filePathList
-              filePathList.appendChild(clonedItem);
-            }
-
-          });
-
-
-
+          
           // Show the cloned fieldsets
           document.querySelectorAll('#filePathList fieldset').forEach(fieldset => {
             fieldset.id !== 'cancelation' && fieldset.removeAttribute('hidden');
