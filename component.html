@@ -2268,7 +2268,7 @@ component</button> -->
           //elements
 
 
-          
+
           data1 = await data1
           let elements = data1.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace(spath, '').split(';')[0] } });
           elements.sort((a, b) => a.name.localeCompare(b.name));
@@ -2313,7 +2313,7 @@ component</button> -->
               filePathList.appendChild(clonedItem);
             }
           }
-          
+
         } catch (error) {
           console.error('Error:', error);
         }
@@ -2415,7 +2415,9 @@ component</button> -->
 
             });
 
-
+            querySelectorAll1('#filePathList fieldset').forEach(fieldset => {
+              fieldset.id !== 'cancelation' && fieldset.removeAttribute('hidden');
+            });
 
           })
           .catch(error => console.error('Error:', error));
