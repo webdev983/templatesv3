@@ -840,7 +840,7 @@
                 })
               }
               else if (relative) {
-                const relativePath = getRelativePath(new_value, itemLsi1)
+                const relativePath = getRelativePath(new_value, itemLsi1.replace('|','/'))
                 await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                   method: 'POST',
                   headers: {
@@ -1246,7 +1246,7 @@
             const byId = cloned.querySelector('#byId').selected
             const absolute = cloned.querySelector('#absolute').selected
             const relative = cloned.querySelector('#relative').selected
-            const splitedPath = path.split('/')
+            const splitedPath = path.replace('|',"/").split('/')
             const last = splitedPath[splitedPath.length - 2]
             console.log('last ' + last)
             const copyToTarget = async (path, new_value, backupCheck) => {
@@ -1377,7 +1377,7 @@
                     })
                   }
                   else {
-                    const relativePath = getRelativePath(newLSI, pathI.lsi1)
+                    const relativePath = getRelativePath(newLSI, pathI.lsi1.replace('|','/'))
                     await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                       method: 'POST',
                       headers: {
