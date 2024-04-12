@@ -2142,13 +2142,14 @@ component</button> -->
       let selected = []
       let path1 = ''
       var addSelected = (itemId, path) => {
-        const clonedFieldset2 = getElementById1('file-list-attach-component-options;')
-        if (Array.from(clonedFieldset2.children).find(el => el.id === itemId)) {
+        const clonedFieldset2 = getElementById1('filePathList;')
+        if (Array.from(clonedFieldset2.children).find(el => el.id === itemId && el.hasAttribute('added'))) {
           return
         }
         var clonedItem = getElementById1('item').cloneNode(true);
         selected.push(itemId)
         clonedItem.id = itemId;
+        clonedItem.setAttribute('added')
         const file_path = clonedItem.querySelector('[data-value="file-path"]')
         file_path.textContent = path;
         clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
