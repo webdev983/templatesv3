@@ -2142,14 +2142,13 @@ component</button> -->
       let selected = []
       let path1 = ''
       var addSelected = (itemId, path) => {
-        const clonedFieldset2 = getElementById1('filePathList;')
-        if (Array.from(clonedFieldset2.children).find(el => el.id === itemId && el.hasAttribute('added'))) {
+        const clonedFieldset2 = getElementById1('selectedFilePathList;')
+        if (Array.from(clonedFieldset2.children).find(el => el.id === itemId )) {
           return
         }
         var clonedItem = getElementById1('item').cloneNode(true);
         selected.push(itemId)
         clonedItem.id = itemId;
-        clonedItem.setAttribute('added', '')
         const file_path = clonedItem.querySelector('[data-value="file-path"]')
         file_path.textContent = path;
         clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
@@ -2511,6 +2510,7 @@ component</button> -->
         clonedFieldset3.id = 'file-list-attach-component-options;'
 
         clonedFieldset.id = clonedFieldset.id + ';';
+        clonedFieldset2.id = clonedFieldset2.id + ';';
         clonedFieldset.setAttribute('action', 'Add_Component')
         clonedFieldset3.querySelector('[data-action="moveBack"]').onclick = (e) => {
           const splited = path1.split('/')
@@ -2531,6 +2531,7 @@ component</button> -->
           }
         }
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+        e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset2);
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset3);
 
         loadFileList1()
@@ -2598,10 +2599,10 @@ component</button> -->
       return relativePath;
     }
     var approveAddComponent = async (e) => {
-      const m1 = document.getElementById('filePathList;')
+      const m1 = document.getElementById('selectedFilePathList;')
 
 
-      const ids = Array.from(m1.children).filter(e=>e.hasAttribute('added')).map(e => e.id)
+      const ids = Array.from(m1.children).map(e => e.id)
       const optionList = getElementById1('file-list-attach-component-options;')
       for (const id of ids) {
         const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/' + id + ':path')
