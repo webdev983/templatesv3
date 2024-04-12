@@ -570,41 +570,40 @@
         <span id="file-name" hidden>No file chosen</span>
       </div>
       <table>
-        <tr hidden id="gallery-item" data-gallery-image>
+        <tr hidden id="gallery-item">
           <td>
             <div class="gallery-image">
+              <div data-picture-meta>
+                <br>
+                <label class="l-3">Created: </label>
+                <time data-picture-time class="l-3 b-dark-blue">24.02.23 15:39</time>
+                <br>
+                <div data-picture-attached>
+                <label class="l-3">Attached: </label><label class="l-3 b-dark-blue"> 📎Yes</label>
+              </div>
+                <label class="attached">📎</label>
+                <div data-file-name-show="Product-Content">
+                <label class="l-3">
+                  <input data-picture-main-checkbox type="checkbox">⭐ Main
+                </label>
+                <br>
+                <label class="l-3">
+                  <input data-picture-secondary-checkbox type="checkbox">✨ Secondary
+                </label>
+              </div>
+              <div>
+                <button class="b-3" data-select-image>✅ Attach</button>
+                <button hidden class="b-3" data-show-menu>🔍</button>
+                <button class="b-3" data-remove-image>🗑️ Delete️</button>
+              </div>
+
+              </div>
 
               <img style="width: 800px; height: auto;" src="https://via.placeholder.com/500/0000FF/FFFFFF?text=image">
               
             </div>
           </td>
           <td>
-            <div data-picture-meta>
-              <br>
-              <label class="l-3">Created: </label>
-              <time data-picture-time class="l-3 b-dark-blue">24.02.23 15:39</time>
-              <br>
-              <div data-picture-attached>
-              <label class="l-3">Attached: </label><label class="l-3 b-dark-blue"> 📎Yes</label>
-            </div>
-              <label class="attached">📎</label>
-              <div data-file-name-show="Product-Content">
-              <label class="l-3">
-                <input data-picture-main-checkbox type="checkbox">⭐ Main
-              </label>
-              <br>
-              <label class="l-3">
-                <input data-picture-secondary-checkbox type="checkbox">✨ Secondary
-              </label>
-            </div>
-            <div>
-              <button class="b-3" data-select-image>✅ Attach</button>
-              <button hidden class="b-3" data-show-menu>🔍</button>
-              <button class="b-3" data-remove-image>🗑️ Delete️</button>
-            </div>
-
-            </div>
-
 
           </td>
         </tr>
@@ -1225,10 +1224,9 @@ component</button> -->
       return randomString;
     }
 
-    
     async function selectImage(event) {
       const imgId = event.target.closest('[data-menu]').id.replace('gallery-menu-wrapper;', '')
-      const image = event.target.closest('[data-gallery-image]').querySelector('img')
+      const image = event.target.closest('.gallery-image').querySelector('img')
 
       const imageSrc = image.src;
       const imageUUID = image.getAttribute('uuid')
