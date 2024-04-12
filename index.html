@@ -88,14 +88,14 @@
           style="margin-right: 5px;"><label class="l-1">👶</label><label class="l-2">Helpers</label></button>
         <button onclick="showBrain(event,'sku')" data-brains-button="sku" class="b-4 b-selected"
           style="margin-right: 5px;"><label class="l-1">📦</label><label class="l-2">Stock</label></button>
+<<<<<<< HEAD
         <button onclick="showBrain(event,'settings')" data-brains-button="settings" class="b-4"
           style="margin-right: 5px;"><label class="l-1">⚙️</label><label class="l-2">Settings</label></button>
+=======
+
+
+>>>>>>> 16ae479 (!)
       </div>
-
-      <section data-brains="settings">
-        Hello
-      </section>
-
 
       <section data-brains="sku">
         <ol class="list-1" id="sku-list">
@@ -709,7 +709,7 @@
         return v.toString(16);
       });
     }
-    function addMenu(e, id, protected, itemLsi1, menuItem) {
+    function addMenu(e, id, protected, itemLsi1,menuItem) {
       e.preventDefault(); // Prevent the default context menu from opening
       console.log('in11');
       const menu = document.querySelector('#right-click-menu'); // Use # for ID selector
@@ -798,12 +798,12 @@
 
               const uuid = generateUUID()
               const pLoad = {
-                ...menuItem,
-                id: uuid,
-                sk: 'path',
-                lsi1: new_value,
-                ownerUUID: 'path'
-              }
+                  ...menuItem,
+                  id: uuid,
+                  sk: 'path',
+                  lsi1: new_value,
+                  ownerUUID: 'path'
+                }
               delete pLoad.href
               const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                 method: 'POST',
@@ -845,7 +845,7 @@
                 })
               }
               else if (relative) {
-                const relativePath = getRelativePath(new_value, itemLsi1.replace('|', '/'))
+                const relativePath = getRelativePath(new_value, itemLsi1.replace('|','/'))
                 await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                   method: 'POST',
                   headers: {
@@ -1097,7 +1097,7 @@
               item
             ),
           })
-          await createFolders(item.lsi1.split(';')[0].replace('|', '/'), selectedValue)
+          await createFolders(item.lsi1.split(';')[0].replace('|','/'),selectedValue)
           cloned.remove()
 
         }
@@ -1130,7 +1130,7 @@
               item
             ),
           })
-          await createFolders(item.lsi1.split(';')[0].replace('|', '/'), item.ownerUUID.split(':')[1], selectedValue)
+          await createFolders(item.lsi1.split(';')[0].replace('|','/'),item.ownerUUID.split(':')[1],selectedValue)
           cloned.remove()
 
         }
@@ -1251,7 +1251,7 @@
             const byId = cloned.querySelector('#byId').selected
             const absolute = cloned.querySelector('#absolute').selected
             const relative = cloned.querySelector('#relative').selected
-            const splitedPath = path.replace('|', "/").split('/')
+            const splitedPath = path.replace('|',"/").split('/')
             const last = splitedPath[splitedPath.length - 2]
             console.log('last ' + last)
             const copyToTarget = async (path, new_value, backupCheck) => {
@@ -1382,7 +1382,7 @@
                     })
                   }
                   else {
-                    const relativePath = getRelativePath(newLSI, pathI.lsi1.replace('|', '/'))
+                    const relativePath = getRelativePath(newLSI, pathI.lsi1.replace('|','/'))
                     await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                       method: 'POST',
                       headers: {
@@ -1826,8 +1826,7 @@
                   }
                 ),
               })
-              return createFolders(item.lsi1.replace(path, new_value).replace('|', '/'))
-            })
+              return createFolders(item.lsi1.replace(path, new_value).replace('|','/'))})
 
             loadUsingPath()
             cloned.remove();
@@ -2170,12 +2169,12 @@
       cloned.setAttribute('sk', 'helper:' + generateUUID())
       helperSection.append(cloned)
     }
-    const createFolders = async (path, ownerid1, helperid1) => {
+    const createFolders =async (path,ownerid1,helperid1)=>{
       const splited = path.split('/')
       const fileName = splited.pop()
       let path1
       const helper = helperid1 || localStorage.getItem('helperid')
-      const ownerid = ownerid1 || localStorage.getItem('ownerid')
+      const ownerid =ownerid1 || localStorage.getItem('ownerid')
       for (let i = 0; i < splited.length && i < 3; i++) {
         if (i !== 0) {
           path1 = path1 + '/' + splited[i]
@@ -2392,13 +2391,13 @@
       const helperid = localStorage.getItem('helperid')
       const ownerid = localStorage.getItem('ownerid')
       const sk = `folder:${helperid ? helperid : ownerid}:lvl1:`
-      
+      let url
       console.log(url)
 
 
       var filePathList = document.getElementById('filePathList');
       filePathList.innerHTML = '';
-      let url
+      
       if (helperid) {
         url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${helperid}&ownerUUID=${ownerid}&helperlsi1=true&lsi1=|&token=${localStorage.getItem('token')}`;
       }
@@ -2406,109 +2405,143 @@
         url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=|&token=${localStorage.getItem('token')}`;
       }
       let data1 = fetch(url).then(e => e.json())
-      try {
-        const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`;
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        console.log(JSON.stringify(data));
-
-        let i = 0;
-        let folders = data.items.map(item => item.sk.replace(sk, ''));
-        console.log(JSON.stringify(data));
-
-        folders = removeDuplicates(folders);
-        console.log(JSON.stringify(folders));
-        folders.sort();
-
-        for (const item of folders) {
-          if (i < 1000) {
-            i++;
-            var clonedItem = document.getElementById('item').cloneNode(true);
-            clonedItem.removeAttribute('hidden');
-            clonedItem.id = item;
-            const file_path = clonedItem.querySelector('[data-value="file-path"]');
-            file_path.textContent = item;
-            clonedItem.onclick = setPath;
-            let icon = '📂';
-            clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
-            function setPath() {
-              path = item + '/';
-              localStorage.setItem('storedPath', path);
-              console.log(path);
-              const labelElement = document.querySelector('#path-label');
-              labelElement.textContent = `${path}`;
-              openPath();
-            };
-            clonedItem.addEventListener('contextmenu', (e) => addDirectoryMenu(e, item + '/', item));
-            filePathList.appendChild(clonedItem);
+      url =  `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`
+      return fetch(url)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
           }
-        }
+          // Parse response as JSON
+          return response.json();
+        })
+        .then(async data => {
+          console.log(JSON.stringify(data))
+          // Replace existing file paths with dynamic content
 
-        document.querySelectorAll('#filePathList fieldset').forEach(fieldset => {
-          fieldset.id !== 'cancelation' && fieldset.removeAttribute('hidden');
-        });
+          let i = 0;
+          let folders = data.items.map(item => item.sk.replace(sk, ''))
+          
+          console.log(JSON.stringify(data))
 
-        for (const folder of folders) {
-          let url = '';
-          if (helperid) {
-            url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${helperid}&ownerUUID=${ownerid}&helperlsi1=true&lsi1=${path + folder}&token=${localStorage.getItem('token')}&pageSize=1`;
-          } else {
-            url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${path + folder}&token=${localStorage.getItem('token')}&pageSize=1`;
-          }
-          let { items } = await fetch(url).then(e => e.json());
-          if (!items.length) {
-            const sk = `folder:${helperid ? helperid : ownerid}:lvl${path.split('/').length}:${path}${folder}`;
-            const encoded = `${ownerid}:${sk}`.replaceAll('/', '~');
-            await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${encoded}`, {
-              method: 'DELETE',
+
+          folders = removeDuplicates(folders)
+          console.log(JSON.stringify(folders))
+          folders.sort()
+          folders.forEach(item => {
+
+
+            if (i < 1000) {
+              i++
+              // Clone the fieldset
+              var clonedItem = document.getElementById('item').cloneNode(true);
+              clonedItem.removeAttribute('hidden')
+              // Set unique ID for the cloned item
+              clonedItem.id = item;
+
+              // Set file path and emoji
+              const file_path = clonedItem.querySelector('[data-value="file-path"]')
+              file_path.textContent = item;
+              clonedItem.onclick = setPath
+              let icon = '📂';
+
+              clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
+
+              // Set file ID
+
+              // Set up onclick for file-open button
+              function setPath() {
+                path = item + '/'
+                localStorage.setItem('storedPath', path)
+                console.log(path)
+                const labelElement = document.querySelector('#path-label');
+
+                // Update the text content of the label
+                labelElement.textContent = `${path}`;
+                openPath();
+              };
+              clonedItem.addEventListener('contextmenu', (e) => addDirectoryMenu(e, item + '/', item))
+
+              // Append the cloned item to the filePathList
+              filePathList.appendChild(clonedItem);
+            }
+
+          });
+
+          // Show the cloned fieldsets
+          document.querySelectorAll('#filePathList fieldset').forEach(fieldset => {
+            fieldset.id !== 'cancelation' && fieldset.removeAttribute('hidden');
+          });
+
+
+          folders.map(async folder => {
+            if (helperid) {
+              url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${helperid}&ownerUUID=${ownerid}&helperlsi1=true&lsi1=${path + folder}&token=${localStorage.getItem('token')}&pageSize=1`;
+            }
+            else {
+              url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${path + folder}&token=${localStorage.getItem('token')}&pageSize=1`;
+            }
+            let { items } = await fetch(url).then(e => e.json())
+            if (!items.length) {
+              const sk = `folder:${helperid ? helperid : ownerid}:lvl${path.split('/').length}:${path}${folder}`
+              const encoded = `${ownerid}:${sk}`.replaceAll('/', '~')
+              await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${encoded}`, {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  // Add any additional headers if needed
+                },
+              });
+              document.getElementById(folder).remove()
+            }
+
+          })
+
+          data1 = await data1
+          let elements = data1.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace('|', '').split(';')[0] } });
+          elements.sort((a, b) => a.name.localeCompare(b.name));
+          for (const el1 of elements) {
+            const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${el1.id}:${el1.sk}`, {
+              method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
               },
-            });
-            document.getElementById(folder).remove();
-          }
-        }
+            }).then(el => el.json()).then(el2 => { return { ...el2, ...el1 } });
+            if (i < 1000) {
+              i++;
+              // Clone the fieldset
+              var clonedItem = document.getElementById('item').cloneNode(true);
+              clonedItem.removeAttribute('hidden');
+              // Set unique ID for the cloned item
+              clonedItem.id = item.id;
 
-        const elements = await Promise.all(data1.items.filter(i => i.lsi1).map(async item1 => {
-          const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item1.id}:${item1.sk}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }).then(el => el.json()).then(el2 => ({ ...el2, ...item1 }));
-          return { ...item, name: item.lsi1.replace('|', '').split(';')[0] };
-        }));
+              // Set file path and emoji
+              const item_path = clonedItem.querySelector('[data-value="file-path"]');
+              item_path.textContent = item.name;
+              clonedItem.addEventListener('contextmenu', (e) => addMenu(e, item.id, item.protected, item.lsi1,item));
+              clonedItem.onclick = function (event) {
+                redirect(item.id);
+              };
+              let icon = '🧩';
+              if (item.lsi1.startsWith('css')) {
+                icon = '🎨';
+              } else if (item.lsi1.startsWith('javascript')) {
+                icon = '💻';
+              }
+              clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
 
-        elements.sort((a, b) => a.name.localeCompare(b.name));
-
-        for (const item of elements) {
-          if (i < 1000) {
-            i++;
-            var clonedItem = document.getElementById('item').cloneNode(true);
-            clonedItem.removeAttribute('hidden');
-            clonedItem.id = item.id;
-            const item_path = clonedItem.querySelector('[data-value="file-path"]');
-            item_path.textContent = item.name;
-            clonedItem.addEventListener('contextmenu', (e) => addMenu(e, item.id, item.protected, item.lsi1, item));
-            clonedItem.onclick = function (event) {
-              redirect(item.id);
-            };
-            let icon = '🧩';
-            if (item.lsi1.startsWith('css')) {
-              icon = '🎨';
-            } else if (item.lsi1.startsWith('javascript')) {
-              icon = '💻';
+              // Append the cloned item to the filePathList
+              filePathList.appendChild(clonedItem);
             }
-            clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
-            filePathList.appendChild(clonedItem);
           }
-        }
-      } catch (error) {
-        console.error('Error:', error);
-      }
+            // Update select options
+            /*
+            var pathSelector = document.getElementById('pathSelector');
+            pathSelector.innerHTML = '<option value="select">⬇️ select</option><option value="back">⬅️ back</option>';
+            lvls.forEach((lvl, index) => {
+              pathSelector.innerHTML += `<option value="${lvl}">➡️ ${lvl}</option>`;
+            });*/
+          }).catch(e => console.log(e))
+
 
     }
     const openPath = () => {
