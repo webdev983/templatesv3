@@ -2604,6 +2604,7 @@ component</button> -->
 
       const ids = Array.from(m1.children).map(e => e.id)
       const optionList = getElementById1('file-list-attach-component-options;')
+      let flag
       for (const id of ids) {
         const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/' + id + ':path')
           .then(response => response.json())
@@ -2620,13 +2621,14 @@ component</button> -->
           const relativePath = getRelativePath(currentLsi,convertToOldPath(data.lsi1.replace(';publish:published', "")));
 
           await addComponent1("#" + relativePath).catch(e=>console.log(e))
-          location.reload()
+          flag= true
         }
         else {
           addComponent1(id)
         }
+        
       }
-
+      flag && location.reload()
       getElementById1('file-list-attach-component-options;').remove()
       getElementById1('filePathList;').remove()
       getElementById1('selectedFilePathList;').remove()
