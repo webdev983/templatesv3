@@ -2614,7 +2614,11 @@ component</button> -->
           const p = convertToOldPath(data.lsi1.split(';')[0]).split('/')
           p.shift()
           const fileName = p.pop()
-          addComponent1("*/" + p.join('/')+ '|'+fileName)
+          let r 
+          if(p.length){
+            r = '/'+p.join('/')
+          }
+          addComponent1("*" + + '|'+fileName)
         }
         else if (optionList.querySelector('#file-list-link-by-name').classList.contains('b-selected')) {
           const currentLsi = pathItemPath.replace(';publish:published', "")
