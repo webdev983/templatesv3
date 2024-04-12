@@ -2312,33 +2312,7 @@ component</button> -->
               filePathList.appendChild(clonedItem);
             }
           }
-          if (path.split('/').length < 4) {
-            folders.map(async folder => {
-              if (helperid) {
-                url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${helperid}&ownerUUID=${ownerid}&helperlsi1=true&lsi1=${path + folder}&token=${localStorage.getItem('token')}&pageSize=1`;
-              }
-              else {
-                url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${path + folder}&token=${localStorage.getItem('token')}&pageSize=1`;
-              }
-              let { items } = await fetch(url).then(e => e.json())
-              if (!items.length) {
-                console.log('folder ' + folder + 'items ' + JSON.stringify(items))
-                console.log(url)
-                const sk = `folder:${helperid ? helperid : ownerid}:lvl${path.split('/').length}:${path}${folder}`
-                const encoded = `${ownerid}:${sk}`.replaceAll('/', '~')
-                await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${encoded}`, {
-                  method: 'DELETE',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    // Add any additional headers if needed
-                  },
-                });
-                console.log(encoded)
-                document.getElementById(folder).remove()
-              }
-
-            })
-          }
+          
         } catch (error) {
           console.error('Error:', error);
         }
