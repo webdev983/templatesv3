@@ -1257,7 +1257,7 @@
               let items = []
               if (hub || style || content) {
                 if (hub) {
-                  items.push(...data.items.filter(element => element.lsi1.endsWith('/Hub')))
+                  items.push(...data.items.filter(element => element.lsi1.endsWith('|Hub')))
                 }
                 if (style) {
                   items.push(...data.items.filter(element => element.lsi1.endsWith('-Style') || element.lsi1.endsWith('-Structure')))
@@ -1441,7 +1441,7 @@
               console.log('path ' + path)
               for (const item of data.items) {
                 item.lsi1 = item.lsi1.replace(';publish:published', '')
-                if (item.lsi1.endsWith('Script') || item.lsi1.endsWith('Style') || item.lsi1.endsWith('Structure') || item.lsi1.endsWith('/Hub') || item.lsi1.endsWith('-Seed')) {
+                if (item.lsi1.endsWith('Script') || item.lsi1.endsWith('Style') || item.lsi1.endsWith('Structure') || item.lsi1.endsWith('|Hub') || item.lsi1.endsWith('-Seed')) {
                   replaceByIditems.push(item)
                 }
                 else if (item.lsi1.endsWith('-Content')) {
@@ -1572,15 +1572,16 @@
                     }
                   }
                   const payload = {
-
+                    ...pathI,
                     id: newId,
                     sk: 'path',
                     lsi1: newLSI,
                     ownerUUID: 'path',
                     protected: false,
+                    href: undefined
 
                   }
-                  item.hub_items && (payload.hub_items = item.hub_items)
+                  pathI.hub_items && (payload.hub_items = pathI.hub_items)
                   const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                     method: 'POST',
                     headers: {
