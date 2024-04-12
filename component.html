@@ -2149,12 +2149,15 @@ component</button> -->
         var clonedItem = getElementById1('item').cloneNode(true);
         selected.push(itemId)
         clonedItem.id = itemId;
-        clonedItem.setAttribute('added','')
+        clonedItem.setAttribute('added', '')
         const file_path = clonedItem.querySelector('[data-value="file-path"]')
         file_path.textContent = path;
         clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
         clonedItem.onclick = (e) => { e.target.closest('li').remove(); selected.filter(el => el !== itemId) }
-        clonedFieldset2.appendChild(clonedItem)
+        var firstChild = clonedFieldset2.firstChild;
+
+        // Insert clonedItem before the first child
+        clonedFieldset2.insertBefore(clonedItem, firstChild);
         console.log(JSON.stringify(selected))
 
       }
@@ -2318,7 +2321,7 @@ component</button> -->
         } catch (error) {
           console.error('Error:', error);
         }
-        
+
       }
       var loadFileList1 = async () => {
         // Fetch GET request
