@@ -2612,13 +2612,14 @@ component</button> -->
 
           const p = convertToOldPath(data.lsi1.split(';')[0]).split('/')
           p.shift()
-          addComponent1("*/" + convertToNewPath( p.join('/')))
+          const fileName = p.pop()
+          addComponent1("*/" + p.join('/')+ '|'+fileName)
         }
         else if (optionList.querySelector('#file-list-link-by-name').classList.contains('b-selected')) {
           const currentLsi = pathItemPath.replace(';publish:published', "")
           const relativePath = getRelativePath(currentLsi,convertToOldPath(data.lsi1.replace(';publish:published', "")));
 
-          await addComponent1("#" + relativePath)
+          await addComponent1("#" + relativePath).catch(e=>console.log(e))
           location.reload()
         }
         else {
