@@ -1869,7 +1869,7 @@ component</button> -->
       updatePathItem()
     }
     //not used
-    const addComponent1 = (id) => {
+    const addComponent1 = async(id) => {
       //getElementById1('file-list-attach-component-options;').remove()
       const actionObject = {
         time: (new Date()).getTime(),
@@ -1877,7 +1877,7 @@ component</button> -->
         target_element: page_id + '-tree',
         inserted_component: { componentId: id, id: generateUUID() },
       };
-      pushAction(actionObject);
+      await pushAction(actionObject);
     }
     var loadUsingPath2 = (path1, filePathList, optionList) => {
       return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + path1)
@@ -2618,7 +2618,8 @@ component</button> -->
           const currentLsi = pathItemPath.replace(';publish:published', "")
           const relativePath = getRelativePath(currentLsi,convertToOldPath(data.lsi1.replace(';publish:published', "")));
 
-          addComponent1("#" + relativePath)
+          await addComponent1("#" + relativePath)
+          location.reload()
         }
         else {
           addComponent1(id)
