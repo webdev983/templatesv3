@@ -4795,7 +4795,7 @@ checkbox1.setAttribute('hidden', "");
             const site = pathItemPath.split('/')[0]
             const modId = inserted_component.componentId.replace('*', '')
             const lsi = site + modId
-            const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + lsi)
+            const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:'+localStorage.getItem('ownerid')+'&gsi1lsi1=true&lsi1=' + lsi)
               .then(response => response.json())
             console.log(lsi)
             console.log(items.map(i => i.lsi1))
@@ -4812,7 +4812,7 @@ checkbox1.setAttribute('hidden', "");
             const absolutePath = getAbsolutePath(cPath, relative);
 
 
-            const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + absolutePath)
+            const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:'+localStorage.getItem('ownerid')+'&gsi1lsi1=true&lsi1=' + absolutePath)
               .then(response => response.json())
             console.log('lsi' + absolutePath)
             console.log(JSON.stringify(items))
