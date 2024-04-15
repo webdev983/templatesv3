@@ -596,7 +596,7 @@
     var convertToNewPath = (path) => {
       const splited = path.split('/')
       const fileName = splited.pop()
-      return splited.join('/') + '/' + fileName
+      return splited.join('/') + '|' + fileName
     }
     const login = async (e) => {
       let username = document.getElementById('username').value
@@ -1862,7 +1862,7 @@
             const response2 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${filePath}`);
             //list of sub paths
             const data2 = await response2.json();
-            
+
             const promises2 = data2.items.map(async item => {
               await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                 method: 'POST',
