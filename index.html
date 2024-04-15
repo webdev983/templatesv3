@@ -1856,6 +1856,29 @@
               })
               return createFolders(item.lsi1.replace(path, new_value))
             })
+            const splited = path.split('/')
+            splited.pop()
+            const filePath = splited.join('/')+'|'
+            const response2 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${filePath}`);
+            //list of sub paths
+            const data2 = await response.json();
+            const promises2 = data2.items.map(async item => {
+              await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(
+                  {
+                    ...item,
+                    lsi1: item.lsi1.replace(filePath,convertToNewPath(new_value))
+                  }
+                ),
+              })
+              
+            })
+            await createFolders(new_value)
+            await Promise.all(promises2)
             await Promise.all(promises)
             loadUsingPath()
             cloned.remove();
