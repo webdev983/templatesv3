@@ -900,7 +900,7 @@
                   }),
                 })
               }
-
+              await createFolders(new_value)
               loadUsingPath()
               return
             }
@@ -946,7 +946,7 @@
                 throw new Error(`Failed to load data from the database. Status: ${response.status}`);
               }
             }
-
+            await createFolders(new_value)
 
 
 
@@ -1297,21 +1297,27 @@
             const last = splitedPath[splitedPath.length - 2]
             console.log('last ' + last)
             const copyToTarget = async (path, new_value, backupCheck) => {
-              const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}`);
+              const response1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}`);
               //list of sub paths
-              const data = await response.json();
-
+              const data1 = await response.json();
+              const splited = path.split('/')
+              splited.pop()
+              const fpath = splited.join('/')+'|'
+              const response2 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${fpath}`);
+              //list of sub paths
+              const data2 = await response.json();
+              const items1 = [...data1.items,...data2.items]
               let items = []
               if (hub || style || content) {
                 if (hub) {
-                  items.push(...data.items.filter(element => element.lsi1.endsWith('|Hub')))
+                  items.push(...items1.filter(element => element.lsi1.endsWith('|Hub')))
                 }
                 if (style) {
-                  items.push(...data.items.filter(element => element.lsi1.endsWith('-Style') || element.lsi1.endsWith('-Structure')))
+                  items.push(...items1.filter(element => element.lsi1.endsWith('-Style') || element.lsi1.endsWith('-Structure')))
                 }
 
                 if (content) {
-                  items.push(...data.items.filter(element => element.lsi1.endsWith('-Content')))
+                  items.push(...items1.filter(element => element.lsi1.endsWith('-Content')))
                 }
 
                 //if (ids.includes("content-files")) {
@@ -1320,7 +1326,7 @@
               }
               else {
                 console.log('all 11')
-                items = data.items
+                items = items1
               }
 
               await Promise.all(items.map(async item => {
@@ -1481,6 +1487,7 @@
 
                   }))
                 }
+                await await createFolders(newLSI)
               }))
 
             }
