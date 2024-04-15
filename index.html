@@ -588,7 +588,16 @@
 
   <script>
     let backend_url = 'https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2'
-
+    var convertToOldPath = (path) => {
+      const splited = path.split('|')
+      const fileName = splited.pop()
+      return splited[0] + '/' + fileName
+    }
+    var convertToNewPath = (path) => {
+      const splited = path.split('/')
+      const fileName = splited.pop()
+      return splited.join('/') + '/' + fileName
+    }
     const login = async (e) => {
       let username = document.getElementById('username').value
       let password = document.getElementById('password').value
@@ -806,7 +815,7 @@
           saveButton.onclick = async function (e) {
             e.stopPropagation()
 
-            const new_value = cloned.querySelector('[data-input="copy-file-path-input"]').value
+            const new_value = convertToNewPath(cloned.querySelector('[data-input="copy-file-path-input"]').value)
             const linked = cloned.querySelector('#linked-clone')
             const byId = cloned.querySelector('#byId').selected
             const relative = cloned.querySelector('#relative').selected
