@@ -867,7 +867,7 @@
                 if (p.length) {
                   r = '/' + p.join('/')
                 }
-                const compId = "*" +r + '|'+fileName
+                const compId = "*" + r + '|' + fileName
                 await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                   method: 'POST',
                   headers: {
@@ -884,8 +884,8 @@
               }
               else if (relative) {
                 console.log(new_value)
-                console.log(convertToOldPath (itemLsi1))
-                const relativePath = getRelativePath(convertToOldPath (new_value),convertToOldPath (itemLsi1))
+                console.log(convertToOldPath(itemLsi1))
+                const relativePath = getRelativePath(convertToOldPath(new_value), convertToOldPath(itemLsi1))
                 await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                   method: 'POST',
                   headers: {
@@ -1407,7 +1407,16 @@
                     })
                   }
                   else if (absolute) {
-                    const p = pathI.lsi1.replace(';publish:published').split('/')
+
+
+                    const p = convertToOldPath(pathI.lsi1.split(';')[0]).split('/')
+                    p.shift()
+                    const fileName = p.pop()
+                    let r = ''
+                    if (p.length) {
+                      r = '/' + p.join('/')
+                    }
+                    const compId = "*" + r + '|' + fileName
                     p.shift()
                     await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                       method: 'POST',
@@ -1424,7 +1433,7 @@
                     })
                   }
                   else {
-                    const relativePath = getRelativePath(newLSI, pathI.lsi1.replace('|', '/'))
+                    const relativePath = getRelativePath(convertToOldPath(newLSI), pathI.lsi1.replace('|', '/'))
                     await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                       method: 'POST',
                       headers: {
