@@ -2195,6 +2195,7 @@
       let path1
       const helper = helperid1 || localStorage.getItem('helperid')
       const ownerid =ownerid1 || localStorage.getItem('ownerid')
+      
       for (let i = 0; i < splited.length && i < 3; i++) {
         if (i !== 0) {
           path1 = path1 + '/' + splited[i]
@@ -2213,7 +2214,7 @@
           },
           body: JSON.stringify(payload),
         })
-        const helper = localStorage.getItem('helperid')
+        
         if (helper) {
           payload.sk = `folder:${helper}:lvl${i + 1}:${path1}`
           await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
