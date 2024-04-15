@@ -1841,7 +1841,7 @@
             //list of sub paths
             const data = await response.json();
 
-            data.items.map(async item => {
+            const promises = data.items.map(async item => {
               await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                 method: 'POST',
                 headers: {
@@ -1854,8 +1854,9 @@
                   }
                 ),
               })
-              return createFolders(item.lsi1.replace(path, new_value).replace('|','/'))})
-
+              return createFolders(item.lsi1.replace(path, new_value))
+            })
+            await Promise.all(promises)
             loadUsingPath()
             cloned.remove();
           };
