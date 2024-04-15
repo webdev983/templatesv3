@@ -1598,7 +1598,7 @@
                   const res2 = await response.json()
                   const pathI = res2.items.find(e => e.sk === 'path')
                   //create new file
-                  let newLSI = pathI.lsi1.replace(path, new_value1).replaceAll('-Seed', "").replace(';publish:published', '')
+                  let newLSI = pathI.lsi1.replace(path.slice(0, -1), new_value1.slice(0, -1)).replaceAll('-Seed', "").replace(';publish:published', '')
                   if (new_value !== new_value1) {
                     console.log('newval' + new_value1)
                     const s1 = convertToOldPath( pathI.lsi1).split('/')
@@ -1760,7 +1760,7 @@
                   const res2 = await response.json()
                   const pathI = res2.items.find(e => e.sk === 'path')
                   //create new file
-                  let newLSI = pathI.lsi1.replace(path, new_value1).replace(';publish:published', '')
+                  let newLSI = pathI.lsi1.replace(path.slice(0, -1), new_value1.slice(0, -1)).replace(';publish:published', '')
                   if (new_value !== new_value1) {
                     const s1 =convertToOldPath(pathI.lsi1).split('/')
                     const s2 = new_value1.split('/')
