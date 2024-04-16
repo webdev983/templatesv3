@@ -7060,7 +7060,7 @@ elementsToRemove.forEach(element => element.remove());
         pathItemPath = convertToOldPath(pathItem.lsi1)
         //get head content
         if (!pathItemPath.split('/').includes('Stock')) {
-          const headLsi = pathItem.lsi1.split(';')[0].split('|')[0] + '/Content/Page|Head-Content'
+          const headLsi = pathItem.lsi1.split(';')[0].split('|')[0].split('/').slice(0, 3).join('/') + '/Content/Page|Head-Content'
           const ownerid = localStorage.getItem('ownerid')
 
           console.log('head lsi'+ headLsi)
@@ -7160,7 +7160,7 @@ elementsToRemove.forEach(element => element.remove());
           else if (item.sk === 'path') {
             let currentSku
             if (!convertToOldPath(item.lsi1.split(';')[0]).split('/').includes('Stock')) {
-              const headLsi = item.lsi1.split(';')[0].split('|')[0] + '/Content/Page|Head-Content'
+              const headLsi = item.lsi1.split(';')[0].split('|')[0].split('/').slice(0, 3).join('/') + '/Content/Page|Head-Content'
               const ownerid = localStorage.getItem('ownerid')
               const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headLsi}`;
               await fetch(url).then(res => res.json())
