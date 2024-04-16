@@ -1071,7 +1071,7 @@ component</button> -->
         e.target.parentNode.remove()
       }
       clonedFieldset.querySelector('#upload-button').onclick = handleUpload1
-      const id = pathItem.sku || pathItem.id
+      const id = pathItemSku || pathItem.id
       let mergedItems = []
       const res = await Promise.all([...Object.keys(cache), id].map(e => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${e}&sk=pics&startsWith=true`, {
         method: 'GET',
@@ -1217,7 +1217,7 @@ component</button> -->
     }
     async function handleUpload1(event) {
 
-      const id = pathItem.sku || pathItem.id
+      const id = pathItemSku || pathItem.id
       const fileContent = await file
       const fileName = fileContent.name
 
@@ -1861,6 +1861,8 @@ component</button> -->
   <script>
     var pathItem
     var pathItemPath
+    var pathItemSku
+    var headContentItem
     var selectedSku
     var dependencyItem
     var skuCreated
@@ -2464,7 +2466,7 @@ component</button> -->
             });
 
 
-            
+
 
             data1 = await data1
             let elements = data1.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace('|', '').split(';')[0] } });
@@ -2722,7 +2724,7 @@ component</button> -->
 
 
 
-      var loadUsingPath1 = async(id, path) => {
+      var loadUsingPath1 = async (id, path) => {
         try {
           //get files
           let url
@@ -2879,9 +2881,9 @@ component</button> -->
           console.error('Error:', error);
         }
 
-        
+
       }
-      var loadFileList1 =async (id) => {
+      var loadFileList1 = async (id) => {
         // Fetch GET request
 
         console.log('loading filelist')
@@ -2967,7 +2969,7 @@ component</button> -->
             });
 
 
-            
+
 
             data1 = await data1
             let elements = data1.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace('|', '').split(';')[0] } });
@@ -3025,7 +3027,7 @@ component</button> -->
 
 
 
-        
+
       }
       const splited = e.target.parentNode.id.split(';')
       const path = e.target.parentNode.getAttribute('path')
@@ -7056,6 +7058,23 @@ elementsToRemove.forEach(element => element.remove());
         }
         //converst lsi1 to old
         pathItemPath = convertToOldPath(pathItem.lsi1)
+        //get head content
+        if (!pathItemPath.split('/').includes('Stock')) {
+          const headLsi = pathItem.lsi1.split(';')[0].split('|')[0] + '/Content/Page|Head-Content'
+          const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headLsi}`;
+          await fetch(url).then(res => res.json())
+            .then(async ({ items }) => {
+              if (!item.length) {
+                return
+              }
+              headContentItem = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${items[0].id}:${items[0].sk}`)
+              headContentItem.id = items[0].id
+              pathItemSku = headContentItem.sku
+            })
+        }
+        else {
+          pathItemSku = pathItem.sku
+        }
 
         if (pathItemPath.toLowerCase().includes('seositeshome.com/home/hub')) {
           if (pathItem.hub_items) {
@@ -7133,15 +7152,35 @@ elementsToRemove.forEach(element => element.remove());
             }
 
           }
-          else if (item.sku) {
-            if (lvl < 2) {
-              showSku(item.sku)
-              selectedSku = item.sku
+          else if (item.sk === 'path') {
+            let currentSku
+            if (!convertToOldPath(item.lsi1.split(';')[0]).split('/').includes('Stock')) {
+              const headLsi = item.lsi1.split(';')[0].split('|')[0] + '/Content/Page|Head-Content'
+              const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headLsi}`;
+              await fetch(url).then(res => res.json())
+                .then(async ({ items }) => {
+                  if (!item.length) {
+                    return
+                  }
+                  const headContentItem = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${items[0].id}:${items[0].sk}`)
+
+                  currentSku = headContentItem.sku
+                })
             }
             else {
-              getElementById1("input-sku").setAttribute('hidden', '')
-              getElementById1("create-sku").setAttribute('hidden', '')
+              currentSku = item.sku
             }
+            if (currentSku) {
+              if (lvl < 2) {
+                showSku(currentSku)
+                selectedSku = currentSku
+              }
+              else {
+                getElementById1("input-sku").setAttribute('hidden', '')
+                getElementById1("create-sku").setAttribute('hidden', '')
+              }
+            }
+
 
           }
           if (item.action) {
@@ -7860,7 +7899,7 @@ elementsToRemove.forEach(element => element.remove());
       }
     }
     const handleImportMenu = () => {
-      let sku1 = pathItem.sku || selectedSku
+      let sku1 = pathItemSku || selectedSku
       const generatedPage = getElementById1('generated-page')
       const elements1 = generatedPage.querySelectorAll('*');
 
@@ -8387,14 +8426,29 @@ elementsToRemove.forEach(element => element.remove());
     const removeSku = async (event) => {
 
       const sku = event.target.parentNode.parentNode.querySelector('#sku-value').textContent
-      pathItem.sku = undefined
-      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(pathItem),
-      });
+      // to do 
+      if (headContentItem) {
+        headContentItem.sku = undefined
+        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(headContentItem),
+        });
+        pathItemSku = undefined
+      }
+      else {
+        pathItem.sku = undefined
+        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(pathItem),
+        });
+      }
+
       /*
       const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku}&startsWith=true`)
         .then(response => response.json())
@@ -8415,6 +8469,38 @@ headers: {
       getElementById1("input-sku").removeAttribute('hidden')
       getElementById1("create-sku").removeAttribute('hidden')
     }
+    const setSku = async(value) => {
+      if (!pathItemPath.split('/').includes('Stock')) {
+        pathItem.sku = value
+        const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(pathItem),
+        });
+
+      }
+      else {
+        const headLsi = pathItem.lsi1.split(';')[0].split('|')[0] + '/Content/Page|Head-Content'
+        const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headLsi}`;
+        await fetch(url).then(res => res.json())
+          .then(async ({ items }) => {
+            if (!item.length) {
+              return
+            }
+            headContentItem = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${items[0].id}:${items[0].sk}`)
+            headContentItem.id = items[0].id
+            headContentItem.sku = value
+            pathItemSku = headContentItem.sku
+            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+              method: 'POST',
+              body: JSON.stringify(headContentItem),
+            });
+          })
+      }
+      pathItemSku = value
+    }
     const addSku = async (event) => {
       const value = getElementById1('input-sku').value
 
@@ -8423,14 +8509,7 @@ headers: {
       if (items.length) {
         const ownerid = localStorage.getItem('ownerid')
         if (items[0].ownerUUID.replace('sku:', '') === ownerid) {
-          pathItem.sku = value
-          const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(pathItem),
-          });
+          await setSku(value)
           showSku(value)
           return
           //alert('adding sku in progress')
@@ -8445,7 +8524,7 @@ headers: {
       }
       const resultList = await getProductAttributes(true)
       const combinations = generateCombinations(resultList)
-      pathItem.sku = value
+      await setSku(value)
       pathItem.combinations = combinations.length
       //update path item
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -8850,10 +8929,10 @@ headers: {
 
       const resultList = await getProductAttributes()
 
-      if (resultList.length || pathItem.sku) {
+      if (resultList.length || pathItemSku) {
         getElementById1('sku-menu').removeAttribute('hidden')
 
-        pathItem.sku && showSku(pathItem.sku, true)
+        pathItemSku && showSku(pathItemSku, true)
 
 
 
