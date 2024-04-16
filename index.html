@@ -2129,7 +2129,7 @@
         const data = await response1.json();
         let url2 = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${path.slice(0, -1) + '|'}`;
         let data2 = await fetch(url2).then(e => e.json())
-        await Promise.all([...data.items, data2.items].map(async item1 => {
+        await Promise.all([...data.items, ...data2.items].map(async item1 => {
           const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item1.id}:${item1.sk}`, {
               method: 'GET',
               headers: {
