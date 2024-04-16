@@ -8469,7 +8469,7 @@ headers: {
       getElementById1("input-sku").removeAttribute('hidden')
       getElementById1("create-sku").removeAttribute('hidden')
     }
-    const setSku = async(value) => {
+    const setSku = async (value) => {
       if (!pathItemPath.split('/').includes('Stock')) {
         pathItem.sku = value
         const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -8482,24 +8482,17 @@ headers: {
 
       }
       else {
-        const headLsi = pathItem.lsi1.split(';')[0].split('|')[0] + '/Content/Page|Head-Content'
-        const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headLsi}`;
-        await fetch(url).then(res => res.json())
-          .then(async ({ items }) => {
-            if (!item.length) {
-              return
-            }
-            headContentItem = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${items[0].id}:${items[0].sk}`)
-            headContentItem.id = items[0].id
-            headContentItem.sku = value
-            pathItemSku = headContentItem.sku
-            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-              method: 'POST',
-              body: JSON.stringify(headContentItem),
-            });
-          })
+
+
+        headContentItem.sku = value
+        pathItemSku = headContentItem.sku
+        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          body: JSON.stringify(headContentItem),
+        });
+
+        pathItemSku = value
       }
-      pathItemSku = value
     }
     const addSku = async (event) => {
       const value = getElementById1('input-sku').value
