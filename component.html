@@ -7071,7 +7071,7 @@ elementsToRemove.forEach(element => element.remove());
                 return
               }
               console.log(JSON.stringify(items))
-              headContentItem = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${items[0].id}:${items[0].sk}`)
+              headContentItem = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${items[0].id}:${items[0].sk}`).then(re=>re.json())
               headContentItem.id = items[0].id
               console.log('head content item'+ JSON.stringify(headContentItem))
               pathItemSku = headContentItem.sku
@@ -7168,7 +7168,7 @@ elementsToRemove.forEach(element => element.remove());
                   if (!items.length) {
                     return
                   }
-                  const headContentItem = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${items[0].id}:${items[0].sk}`)
+                  const headContentItem = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${items[0].id}:${items[0].sk}`).then(re=>re.json())
 
                   currentSku = headContentItem.sku
                 })
