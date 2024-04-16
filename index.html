@@ -2123,7 +2123,8 @@
 
 
       const setProtected = async (id, path, protected) => {
-        const response1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}`);
+        const ownerid = localStorage.getItem('ownerid')
+        const response1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${path}`);
         //list of sub paths
         const data = await response1.json();
         let url2 = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${path.slice(0,-1) + '|'}`;
