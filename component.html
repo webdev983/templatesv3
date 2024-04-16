@@ -7062,12 +7062,15 @@ elementsToRemove.forEach(element => element.remove());
         if (!pathItemPath.split('/').includes('Stock')) {
           const headLsi = pathItem.lsi1.split(';')[0].split('|')[0] + '/Content/Page|Head-Content'
           const ownerid = localStorage.getItem('ownerid')
+
+          console.log('head lsi'+ headLsi)
           const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headLsi}`;
           await fetch(url).then(res => res.json())
             .then(async ({ items }) => {
-              if (!item.length) {
+              if (!items.length) {
                 return
               }
+              console.log(JSON.stringify(items))
               headContentItem = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${items[0].id}:${items[0].sk}`)
               headContentItem.id = items[0].id
               pathItemSku = headContentItem.sku
@@ -7161,7 +7164,7 @@ elementsToRemove.forEach(element => element.remove());
               const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headLsi}`;
               await fetch(url).then(res => res.json())
                 .then(async ({ items }) => {
-                  if (!item.length) {
+                  if (!items.length) {
                     return
                   }
                   const headContentItem = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${items[0].id}:${items[0].sk}`)
