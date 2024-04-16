@@ -1302,11 +1302,11 @@
               const data1 = await response1.json();
               const splited = path.split('/')
               splited.pop()
-              const fpath = splited.join('/')+'|'
+              const fpath = splited.join('/') + '|'
               const response2 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${fpath}`);
               //list of sub paths
               const data2 = await response2.json();
-              const items1 = [...data1.items,...data2.items]
+              const items1 = [...data1.items, ...data2.items]
               let items = []
               if (hub || style || content) {
                 if (hub) {
@@ -1341,22 +1341,22 @@
                 const res2 = await response.json()
                 const pathI = res2.items.find(e => e.sk === 'path')
                 //create new file
-                let newLSI 
-                if(pathI.lsi1.includes(path)){
+                let newLSI
+                if (pathI.lsi1.includes(path)) {
                   newLSI = pathI.lsi1.replace(path, new_value)
                 }
-                else if( pathI.lsi1.includes(fpath)){
+                else if (pathI.lsi1.includes(fpath)) {
                   const sp = new_value.split('/')
                   sp.pop()
 
-                  newLSI = pathI.lsi1.replace(fpath, sp.join('/')+'|')
+                  newLSI = pathI.lsi1.replace(fpath, sp.join('/') + '|')
                 }
 
                 if (backupCheck) {
                   const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${newLSI}`);
                   //list of sub paths
                   const data = await response.json();
-                  console.log('backuping '+ JSON.stringify(data.items))
+                  console.log('backuping ' + JSON.stringify(data.items))
                   if (data.items.length) {
                     //move to trash
                     const id = data.items[0].id
@@ -1383,7 +1383,7 @@
                             }
                           ),
                         })
-                        await createFolders(convertToOldPath( 'trash/' + d.toISOString() + '-replace/' + item1.lsi1))
+                        await createFolders(convertToOldPath('trash/' + d.toISOString() + '-replace/' + item1.lsi1))
 
                       }
 
@@ -1497,8 +1497,8 @@
 
                   }))
                 }
-                console.log('newLSI'+newLSI)
-                await createFolders(convertToOldPath( newLSI))
+                console.log('newLSI' + newLSI)
+                await createFolders(convertToOldPath(newLSI))
               }))
 
             }
@@ -1509,11 +1509,11 @@
               const data1 = await response1.json();
               const splited = path.split('/')
               splited.pop()
-              const fpath = splited.join('/')+'|'
+              const fpath = splited.join('/') + '|'
               const response2 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${fpath}`);
               //list of sub paths
               const data2 = await response2.json();
-              const items1 = [...data1.items,...data2.items]
+              const items1 = [...data1.items, ...data2.items]
 
               let replaceByIditems = []
               let doNotReplaceItems = []
@@ -1537,7 +1537,7 @@
                 const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item55.id}:${item55.sk}`)
                   .then(e => e.json())
                 item.id = item55.id
-                const splited =convertToOldPath(item.lsi1).split('/')
+                const splited = convertToOldPath(item.lsi1).split('/')
                 const el = splited.find(e => e === 'Seed-Home')
 
                 const el1 = splited.find(e => e.startsWith('Seed-'))
@@ -1601,7 +1601,7 @@
                   let newLSI = pathI.lsi1.replace(path.slice(0, -1), new_value1.slice(0, -1)).replaceAll('-Seed', "").replace(';publish:published', '')
                   if (new_value !== new_value1) {
                     console.log('newval' + new_value1)
-                    const s1 = convertToOldPath( pathI.lsi1).split('/')
+                    const s1 = convertToOldPath(pathI.lsi1).split('/')
                     const s2 = new_value1.split('/')
                     const remainingS1 = s1.slice(s2.length);
 
@@ -1645,7 +1645,7 @@
                               }
                             ),
                           })
-                          await createFolders(convertToOldPath( 'trash/' + d.toISOString() + '-replace/' + item1.lsi1))
+                          await createFolders(convertToOldPath('trash/' + d.toISOString() + '-replace/' + item1.lsi1))
                         }
 
                       }))
@@ -1670,7 +1670,7 @@
                   })
                   console.log('putting ' + newId)
                   console.log('res ' + JSON.stringify(data))
-                  await createFolders(convertToOldPath( newLSI))
+                  await createFolders(convertToOldPath(newLSI))
 
 
                   await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -1699,7 +1699,7 @@
 
               await Promise.all(doNotReplaceItems.map(async item => {
                 console.log('donotreplaceitem ' + item.lsi1)
-                const splited =convertToOldPath(item.lsi1).split('/')
+                const splited = convertToOldPath(item.lsi1).split('/')
                 const el = splited.find(e => e === 'Seed-Home')
 
                 const el1 = splited.find(e => e.startsWith('Seed-'))
@@ -1726,7 +1726,7 @@
                 }
                 else if (el1 && !last.startsWith('Seed-')) {
                   const index = splited.indexOf(el1)
-                  const splited2 =  convertToOldPath(item.lsi1).replace(path, new_value).split('/')
+                  const splited2 = convertToOldPath(item.lsi1).replace(path, new_value).split('/')
                   splited2.splice(index)
                   const startsWith = splited2.join('/') + '/'
                   const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${startsWith}`);
@@ -1762,13 +1762,13 @@
                   //create new file
                   let newLSI = pathI.lsi1.replace(path, new_value1).replace(';publish:published', '')
                   if (new_value !== new_value1) {
-                    const s1 =convertToOldPath(pathI.lsi1).split('/')
+                    const s1 = convertToOldPath(pathI.lsi1).split('/')
                     const s2 = new_value1.split('/')
                     const remainingS1 = s1.slice(s2.length);
 
                     // Concatenate s2 with the remaining elements of s1
                     const result = [...s2, ...remainingS1];
-                    newLSI =convertToNewPath( result.join('/')).replace(';publish:published', '')
+                    newLSI = convertToNewPath(result.join('/')).replace(';publish:published', '')
                     console.log('got new lsi ' + newLSI)
                   }
                   {
@@ -2127,9 +2127,16 @@
         const response1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${path}`);
         //list of sub paths
         const data = await response1.json();
-        let url2 = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${path.slice(0,-1) + '|'}`;
-        let data2 =await fetch(url2).then(e => e.json())
-        await Promise.all([...data.items,data2.items].map(item =>
+        let url2 = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${path.slice(0, -1) + '|'}`;
+        let data2 = await fetch(url2).then(e => e.json())
+        await Promise.all([...data.items, data2.items].map(async item1 => {
+          const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item1.id}:${item1.sk}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(el => el.json())
+          item.id = item1.id
           fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
             method: 'POST',
             headers: {
@@ -2137,6 +2144,7 @@
             },
             body: JSON.stringify({ ...item, protected }),
           })
+        }
         ))
         alert('protection set')
 
@@ -2369,10 +2377,10 @@
         //list of sub paths
         const data = await response.json();
 
-        const response2 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path.slice(0,-1)+'|'}`);
+        const response2 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path.slice(0, -1) + '|'}`);
         //list of sub paths
         const data2 = await response.json();
-        const items = [...data.items,...data2.items]
+        const items = [...data.items, ...data2.items]
         const all = await Promise.all(items.map(async item => {
 
           const { id, sk, } = item;
