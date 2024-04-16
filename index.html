@@ -2368,7 +2368,11 @@
         //list of sub paths
         const data = await response.json();
 
-        const all = await Promise.all(data.items.map(async item => {
+        const response2 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path.slice(0,-1)+'|'}`);
+        //list of sub paths
+        const data2 = await response.json();
+        const items = [...data.items,...data2.items]
+        const all = await Promise.all(items.map(async item => {
 
           const { id, sk, } = item;
           const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`).then(e => e.json())
