@@ -202,16 +202,16 @@
   data-file-name-show="Product-Content"
   -->
 
-      <details style="margin-bottom: 7px;" data-file-name-show="/Hub">
+      <details style="margin-bottom: 7px;" data-file-name-show="/Hub" >
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">⚙️ ChatGPT</span></summary>
-        <textarea id="import-input" class="text1" style="width: 50vw" placeholder=" 🤖 AI tasks"></textarea>
-        <button data-save class="b-4">💾 Save</button>
+        <textarea id="gpt-input" class="text1" style="width: 50vw" placeholder=" 🤖 AI tasks"></textarea>
+        <button onclick="saveGpt(event)" data-save class="b-4">💾 Save</button>
       </details>
 
       <details style="margin-bottom: 7px;" data-file-name-show="/Hub">
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">⚙️ List</span></summary>
-        <textarea id="import-input" class="text1" style="width: 50vw" placeholder=" 📍 List tasks"></textarea>
-        <button data-save class="b-4">💾 Save</button>
+        <textarea id="list-input" class="text1" style="width: 50vw" placeholder=" 📍 List tasks"></textarea>
+        <button onclick="saveList(event)" data-save class="b-4">💾 Save</button>
       </details>
 
 
@@ -727,22 +727,20 @@
         <label hidden class="l-3"><input type="radio" name="main-content-type" data-content-type="none" checked
             value="none" />🗅
           None</label>
-        <label  class="b-3"><input type="radio" name="main-content-type" data-content-type="article"
-            value="article" />⭐
+        <label class="b-3"><input type="radio" name="main-content-type" data-content-type="article" value="article" />⭐
           Article</label>
-          <label  class="b-3"><input type="radio" name="main-content-type" data-content-type="catalog"
-              value="catalog" />✨
-            Catalog</label>
+        <label class="b-3"><input type="radio" name="main-content-type" data-content-type="catalog" value="catalog" />✨
+          Catalog</label>
 
-          <div hidden id="catalog-folder">
-            <button class="b-4">💾 Update</button>
-            <input type="text" placeholder="📂 Catalog folder" class="input-1" style=" width: 50px;">
-          </div>
+        <div hidden id="catalog-folder">
+          <button class="b-4">💾 Update</button>
+          <input type="text" placeholder="📂 Catalog folder" class="input-1" style=" width: 50px;">
+        </div>
 
-          <div hidden id="catalog-weight">
-            <button class="b-4">💾 Update</button>
-            <input type="number" placeholder="🏋️‍♂️ Catalog Weight" class="input-1" style=" width: 50px;">
-          </div>
+        <div hidden id="catalog-weight">
+          <button class="b-4">💾 Update</button>
+          <input type="number" placeholder="🏋️‍♂️ Catalog Weight" class="input-1" style=" width: 50px;">
+        </div>
       </div>
       <!-- <button style="margin-right: 5px; margin-top: 5px;" class="b-2" id="code-tree-click-tag-append-child" onclick="append(event)">👶 Append</button>
       <button style="margin-right: 5px; margin-top: 5px;" class="b-2" id="code-tree-click-tag-insert-before" onclick="insertB(event)">⬅️ InsertBefore</button>
@@ -1867,6 +1865,28 @@ component</button> -->
     var dependencyItem
     var skuCreated
     var ownerid
+    var saveGpt = (event) => {
+      const { value } = event.target.parentNode.querySelector('#gpt-input')
+      if (!pathItem.hub_items) {
+        pathItem.hub_items = {}
+      }
+      pathItem.hub_items.gpt = value
+      fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        body: JSON.stringify(pathItem),
+      });
+    }
+    var saveList = (event) => {
+      const { value } = event.target.parentNode.querySelector('#list-input')
+      if (!pathItem.hub_items) {
+        pathItem.hub_items = {}
+      }
+      pathItem.hub_items.list = value
+      fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        body: JSON.stringify(pathItem),
+      });
+    }
     var updatePathItem = () =>
       fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
@@ -5037,7 +5057,7 @@ checkbox1.setAttribute('hidden', "");
             el2.innerHTML = `🔄${replaceAction.target_element.length}`;
           }
           console.log('calling path for relative ' + pathForRelative)
-          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions, replaceId, pathForRelative,newEl2)
+          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions, replaceId, pathForRelative, newEl2)
 
 
           break;
@@ -6948,7 +6968,7 @@ elementsToRemove.forEach(element => element.remove());
       LinkBP && switchLinkBP(false)
     }
     let foundMainContent
-    const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative,treeElement) => {
+    const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative, treeElement) => {
       console.log('load from db' + id)
       console.log('err2 ' + p)
       console.log('path for relative ' + pathForRelative?.current)
@@ -7003,7 +7023,7 @@ elementsToRemove.forEach(element => element.remove());
         const splited = convertToOldPath(items.find(e => e.sk === 'path').lsi1.split(';')[0]).split('/')
         const name = splited[splited.length - 1]
         const { testPage, optionalScript } = items.find(e => e.sk === 'path')
-        const el1 =treeElement || getElementById1(newId + '-tree')
+        const el1 = treeElement || getElementById1(newId + '-tree')
 
         if ((testPage && lvl > 2) || (optionalScript && localStorage.getItem('visualOn'))) {
           el1.remove()
@@ -7058,8 +7078,8 @@ elementsToRemove.forEach(element => element.remove());
         //get head content
         if (!pathItemPath.split('/').includes('Stock')) {
           const headLsi = pathItem.lsi1.split(';')[0].split('|')[0].split('/').slice(0, 3).join('/') + '/Content/Page|Head-Content'
-          
-          console.log('head lsi'+ headLsi)
+
+          console.log('head lsi' + headLsi)
           const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headLsi}`;
           await fetch(url).then(res => res.json())
             .then(async ({ items }) => {
@@ -7067,9 +7087,9 @@ elementsToRemove.forEach(element => element.remove());
                 return
               }
               console.log(JSON.stringify(items))
-              headContentItem = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${items[0].id}:${items[0].sk}`).then(re=>re.json())
+              headContentItem = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${items[0].id}:${items[0].sk}`).then(re => re.json())
               headContentItem.id = items[0].id
-              console.log('head content item'+ JSON.stringify(headContentItem))
+              console.log('head content item' + JSON.stringify(headContentItem))
               pathItemSku = headContentItem.sku
             })
         }
@@ -7157,14 +7177,14 @@ elementsToRemove.forEach(element => element.remove());
             let currentSku
             if (!convertToOldPath(item.lsi1.split(';')[0]).split('/').includes('Stock')) {
               const headLsi = item.lsi1.split(';')[0].split('|')[0].split('/').slice(0, 3).join('/') + '/Content/Page|Head-Content'
-             
+
               const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headLsi}`;
               await fetch(url).then(res => res.json())
                 .then(async ({ items }) => {
                   if (!items.length) {
                     return
                   }
-                  const headContentItem = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${items[0].id}:${items[0].sk}`).then(re=>re.json())
+                  const headContentItem = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${items[0].id}:${items[0].sk}`).then(re => re.json())
 
                   currentSku = headContentItem.sku
                 })
@@ -8304,6 +8324,16 @@ elementsToRemove.forEach(element => element.remove());
 
 
     }
+    const setHubItems = ()=>{
+      const gptValue = pathItem.hub_items?.gpt
+      const listValue = pathItem.hub_items?.list
+      if (list){
+        document.getElementById('list-input').value = listValue
+      }
+      if(gpt){
+        document.getElementById('gpt-input').value = gptValue
+      }
+    }
     async function loadFirst() {
       var iframe = getElementById1("generated-page-iframe");
 
@@ -8330,7 +8360,7 @@ elementsToRemove.forEach(element => element.remove());
       const urlParams = new URLSearchParams(window.location.search);
       const idFromQuery = urlParams.get('id');
       const toPublish = urlParams.get('publish')
-      ownerid =localStorage.getItem('ownerid') || urlParams.get('ownerid')
+      ownerid = localStorage.getItem('ownerid') || urlParams.get('ownerid')
       if (idFromQuery) {
         // Change the id of the element with id "component-element"
         const compTree = getElementById1('components-tree')
@@ -8371,11 +8401,14 @@ elementsToRemove.forEach(element => element.remove());
       //dispatch event
       await handleImportMenu()
 
+      setHubItems()
+
+
       document.querySelectorAll('[data-file-name-show]').forEach(
-        element=>{
+        element => {
           const p = element.getAttribute('data-file-name-show')
-          if(!pathItemPath.split(';')[0].endsWith(p)){
-            element.setAttribute('hidden','')
+          if (!pathItemPath.split(';')[0].endsWith(p)) {
+            element.setAttribute('hidden', '')
           }
         }
       )
@@ -8502,7 +8535,7 @@ headers: {
           body: JSON.stringify(headContentItem),
         });
 
-        
+
       }
       pathItemSku = value
     }
