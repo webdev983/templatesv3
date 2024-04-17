@@ -5040,7 +5040,7 @@ checkbox1.setAttribute('hidden', "");
             el2.innerHTML = `🔄${replaceAction.target_element.length}`;
           }
           console.log('calling path for relative ' + pathForRelative)
-          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions, replaceId, pathForRelative,button2)
+          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions, replaceId, pathForRelative,newEl2)
 
 
           break;
@@ -6951,7 +6951,7 @@ elementsToRemove.forEach(element => element.remove());
       LinkBP && switchLinkBP(false)
     }
     let foundMainContent
-    const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative,treeButton) => {
+    const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative,treeElement) => {
       console.log('load from db' + id)
       console.log('err2 ' + p)
       console.log('path for relative ' + pathForRelative?.current)
@@ -7006,7 +7006,7 @@ elementsToRemove.forEach(element => element.remove());
         const splited = convertToOldPath(items.find(e => e.sk === 'path').lsi1.split(';')[0]).split('/')
         const name = splited[splited.length - 1]
         const { testPage, optionalScript } = items.find(e => e.sk === 'path')
-        const el1 =treeButton || getElementById1(newId + '-tree')
+        const el1 =treeElement || getElementById1(newId + '-tree')
 
         if ((testPage && lvl > 2) || (optionalScript && localStorage.getItem('visualOn'))) {
           el1.remove()
