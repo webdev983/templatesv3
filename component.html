@@ -8371,6 +8371,15 @@ elementsToRemove.forEach(element => element.remove());
       //dispatch event
       await handleImportMenu()
 
+      document.querySelectorAll('[data-file-name-show]').forEach(
+        element=>{
+          const p = element.getAttribute('data-file-name-show')
+          if(!pathItemPath.split(';')[0].endsWith(p)){
+            element.setAttribute('hidden','')
+          }
+        }
+      )
+
       if (toPublish == "1") {
         await publish()
       }
