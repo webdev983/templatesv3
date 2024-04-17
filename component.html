@@ -1866,6 +1866,7 @@ component</button> -->
     var selectedSku
     var dependencyItem
     var skuCreated
+    var ownerid
     var updatePathItem = () =>
       fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
@@ -2227,7 +2228,6 @@ component</button> -->
           //get files
           let url
           const helperid = localStorage.getItem('helperid')
-          const ownerid = localStorage.getItem('ownerid')
 
           var filePathList = getElementById1('filePathList;');
           filePathList.innerHTML = '';
@@ -2386,7 +2386,6 @@ component</button> -->
         console.log('loading filelist')
         // Fetch GET request
         const helperid = localStorage.getItem('helperid')
-        const ownerid = localStorage.getItem('ownerid')
         const sk = `folder:${helperid ? helperid : ownerid}:lvl1:`
         let url
         console.log(url)
@@ -2729,7 +2728,6 @@ component</button> -->
           //get files
           let url
           const helperid = localStorage.getItem('helperid')
-          const ownerid = localStorage.getItem('ownerid')
 
           var filePathList = getElementById1('filePathList;' + id);
           filePathList.innerHTML = '';
@@ -2889,7 +2887,6 @@ component</button> -->
         console.log('loading filelist')
         // Fetch GET request
         const helperid = localStorage.getItem('helperid')
-        const ownerid = localStorage.getItem('ownerid')
         const sk = `folder:${helperid ? helperid : ownerid}:lvl1:`
         let url
         console.log(url)
@@ -4925,7 +4922,7 @@ checkbox1.setAttribute('hidden', "");
             const site = pathItemPath.split('/')[0]
             const modId = inserted_component.componentId.replace('*', '')
             const lsi = site + modId
-            const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:' + localStorage.getItem('ownerid') + '&gsi1lsi1=true&lsi1=' + lsi)
+            const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:' + ownerid + '&gsi1lsi1=true&lsi1=' + lsi)
               .then(response => response.json())
             console.log('lsi to search' + lsi)
             console.log('lsis' + items.map(i => i.lsi1))
@@ -4942,7 +4939,7 @@ checkbox1.setAttribute('hidden', "");
             const absolutePath = getAbsolutePath(cPath, relative);
 
 
-            const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:' + localStorage.getItem('ownerid') + '&gsi1lsi1=true&lsi1=' + absolutePath)
+            const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:' + ownerid + '&gsi1lsi1=true&lsi1=' + absolutePath)
               .then(response => response.json())
             console.log('lsi' + absolutePath)
             console.log(JSON.stringify(items))
@@ -7061,8 +7058,7 @@ elementsToRemove.forEach(element => element.remove());
         //get head content
         if (!pathItemPath.split('/').includes('Stock')) {
           const headLsi = pathItem.lsi1.split(';')[0].split('|')[0].split('/').slice(0, 3).join('/') + '/Content/Page|Head-Content'
-          const ownerid = localStorage.getItem('ownerid')
-
+          
           console.log('head lsi'+ headLsi)
           const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headLsi}`;
           await fetch(url).then(res => res.json())
@@ -7161,7 +7157,7 @@ elementsToRemove.forEach(element => element.remove());
             let currentSku
             if (!convertToOldPath(item.lsi1.split(';')[0]).split('/').includes('Stock')) {
               const headLsi = item.lsi1.split(';')[0].split('|')[0].split('/').slice(0, 3).join('/') + '/Content/Page|Head-Content'
-              const ownerid = localStorage.getItem('ownerid')
+             
               const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headLsi}`;
               await fetch(url).then(res => res.json())
                 .then(async ({ items }) => {
@@ -8334,6 +8330,7 @@ elementsToRemove.forEach(element => element.remove());
       const urlParams = new URLSearchParams(window.location.search);
       const idFromQuery = urlParams.get('id');
       const toPublish = urlParams.get('publish')
+      ownerid =localStorage.getItem('ownerid') || urlParams.get('ownerid')
       if (idFromQuery) {
         // Change the id of the element with id "component-element"
         const compTree = getElementById1('components-tree')
@@ -8506,7 +8503,6 @@ headers: {
       const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${value}&sk=created:&startsWith=true`)
         .then(response => response.json())
       if (items.length) {
-        const ownerid = localStorage.getItem('ownerid')
         if (items[0].ownerUUID.replace('sku:', '') === ownerid) {
           await setSku(value)
           showSku(value)
@@ -8539,7 +8535,7 @@ headers: {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: value, sk: 'created:' + new Date().getTime().toString(), ownerUUID: 'sku:' + localStorage.getItem('ownerid') }),
+        body: JSON.stringify({ id: value, sk: 'created:' + new Date().getTime().toString(), ownerUUID: 'sku:' + ownerid }),
       });
       //create sku
       for (const combination of combinations) {
@@ -8788,7 +8784,6 @@ headers: {
               for (const line of lines) {
 
                 const timeStamp = (new Date()).getTime().toString()
-                const ownerid = localStorage.getItem('ownerid')
                 const body = {
                   id: item.id,
                   sk: 'stock-item;' + variant + timeStamp,
