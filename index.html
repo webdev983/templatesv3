@@ -1621,7 +1621,7 @@
                     const data = await response.json();
                     if (data.items.length) {
                       //move to trash
-                      await Promise.all(async el => {
+                      await Promise.all(data.items.map(async el => {
                         const id = el.id
                         const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`, {
                           method: 'GET',
@@ -1652,7 +1652,7 @@
 
                         }))
                       }
-                      )
+                      ))
                     }
                   }
                   const payload = {
