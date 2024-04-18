@@ -2021,7 +2021,7 @@ component</button> -->
       for (const element of parsed['chatgpt-tasks']) {
         const cloned = originalRow.cloneNode(true);
         cloned.querySelector('[data-ai-label]').textContent = element.name;
-        cloned.querySelector('[data-ai-send]').addEventListener('click', () => {
+        cloned.querySelector('[data-ai-send]').addEventListener('click', async() => {
           const res = await sendGptRequest(gptToken,element.task,element.model)
           console.log(JSON.stringify(res))
         })
