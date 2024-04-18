@@ -1905,8 +1905,8 @@ component</button> -->
           const select = clonedListElement.querySelector('[data-list-element-selection]')
           span.addEventListener('blur', async function () {
             const value = span.textContent
-            const exisitingValue = {
-              ...exisitingValue
+            exisitingValue = {
+              ...exisitingValue,
               value
             }
             await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -1930,8 +1930,8 @@ component</button> -->
             }
             exisitingValue.value && (select.value = exisitingValue.value)
             select.addEventListener('change', async function () {
-              const exisitingValue = {
-                ...exisitingValue
+              exisitingValue = {
+                ...exisitingValue,
                 value: select.value
               }
               await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -1953,8 +1953,8 @@ component</button> -->
             exisitingValue.benefit && (input.checked = true)
             input.addEventListener('change', async function () {
               const exisitingValue = {
-                ...exisitingValue
-                checked: input.checked
+                ...exisitingValue,
+                benefit: input.checked
               }
               await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                 method: 'POST',
