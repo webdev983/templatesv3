@@ -1885,7 +1885,7 @@ component</button> -->
           span.textContent = `{${option.name.replaceAll('_', ' ')}}`
           const storageSk = `list:${list.name}:${option.name}`
           const select = clonedListElement.querySelector('[data-list-element-selection]')
-          span.addEventListener('blur', function () {
+          span.addEventListener('blur', async function () {
             const value = span.textContent
             const payload = {
               id: storageId,
@@ -1916,7 +1916,7 @@ component</button> -->
               originalValue.parentNode.append(clonedValue)
             }
             exisitingValue &&(select.value = exisitingValue.value)
-            select.addEventListener('change', function () {
+            select.addEventListener('change',async function () {
               const payload = {
                 id: storageId,
                 sk: storageSk,
