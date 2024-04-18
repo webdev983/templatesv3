@@ -1533,6 +1533,8 @@
               }
               console.log('replaceByIditems ' + JSON.stringify(replaceByIditems))
               console.log('doNotReplaceItems ' + JSON.stringify(doNotReplaceItems))
+              replaceByIditems = removeDuplicates(replaceByIditems)
+              doNotReplaceItems = removeDuplicates(doNotReplaceItems)
               await Promise.all(replaceByIditems.map(async item55 => {
                 const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item55.id}:${item55.sk}`)
                   .then(e => e.json())
