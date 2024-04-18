@@ -2006,6 +2006,30 @@ component</button> -->
       }
 
     }
+    const getReplacementValue = (name)=>{
+      const res1 = querySelectorAll1(`[data-builder-varlist="${name}"]`)
+      const res2 = querySelectorAll1(`[data-builder-variable="${name}"]`)
+      let res = ''
+      res1.forEach(el=>res=res+el.textContent +' ')
+      res2.forEach(el=>res=res+el.textContent +' ')
+      return res
+    }
+    const replaceVars = (string) => {
+      const regex = /{([^}]+)}/g;
+
+      // Use match() to find all placeholders
+      const matches = string.match(regex);
+
+      // Replace each placeholder with its corresponding value
+      if (matches) {
+        matches.forEach(match => {
+          const placeholder = match.substring(1, match.length - 1); // Remove {}
+          const replacement = getReplacementValue(placeholder); // Replace this with your replacement logic
+          string = string.replace(match, replacement);
+        });
+      }
+      return string
+    }
     var showai = async (list) => {
       const item = await fetch(`${backend_url}/${ownerid}:${sk}`, {
         method: 'GET',
@@ -2027,6 +2051,7 @@ component</button> -->
           let task = element.task
 
           task = task.replace('{site}', site).replace('{company}', company)
+          task = replaceVars(task)
           const res = await sendGptRequest(gptToken, task, element.model)
           console.log(JSON.stringify(res))
         })
