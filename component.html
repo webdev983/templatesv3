@@ -2039,7 +2039,14 @@ component</button> -->
         },
       }).then(e => e.json())
       const gptToken = item.token
-      const parsed = JSON.parse(list);
+      let parsed 
+      try{
+        parsed= JSON.parse(list);
+      }
+      catch(e){
+        console.log('wrong json')
+        return
+      }
       const ai = document.querySelector('[data-ai]');
       ai.removeAttribute('hidden');
       const originalRow = ai.querySelector('[data-ai-row]');
