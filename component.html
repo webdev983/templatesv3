@@ -2048,7 +2048,7 @@ component</button> -->
       for (const element of parsed['chatgpt-tasks']) {
         const cloned = originalRow.cloneNode(true);
         cloned.querySelector('[data-ai-label]').textContent = element.name;
-        cloned.querySelector('[data-ai-send]').addEventListener('click', async () => {
+        cloned.parentNode.querySelector('[data-ai-send]').addEventListener('click', async () => {
           let task = element.task
 
           task = task.replace('{site}', site).replace('{company}', company)
