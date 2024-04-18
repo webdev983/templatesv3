@@ -1860,6 +1860,7 @@ component</button> -->
     }
   </script>
   <script>
+    var backend_url = 'https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2'
     var pathItem
     var pathItemPath
     var pathItemSku
@@ -2018,15 +2019,15 @@ component</button> -->
       ai.removeAttribute('hidden');
       const originalRow = ai.querySelector('[data-ai-row]');
       const site = pathItemPath.split('/')[0]
-          const company =site.split('.')[0]
+      const company = site.split('.')[0]
       for (const element of parsed['chatgpt-tasks']) {
         const cloned = originalRow.cloneNode(true);
         cloned.querySelector('[data-ai-label]').textContent = element.name;
-        cloned.querySelector('[data-ai-send]').addEventListener('click', async() => {
+        cloned.querySelector('[data-ai-send]').addEventListener('click', async () => {
           let task = element.task
-          
-          task = task.replace('{site}',site).replace('{company}',company)
-          const res = await sendGptRequest(gptToken,task,element.model)
+
+          task = task.replace('{site}', site).replace('{company}', company)
+          const res = await sendGptRequest(gptToken, task, element.model)
           console.log(JSON.stringify(res))
         })
         originalRow.parentNode.append(cloned);
