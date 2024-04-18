@@ -157,6 +157,7 @@
             type === "helpers" && loadHelpers()
             type === "sites" && loadSites()
             type === "orders" && load()
+            type === 'settings' && loadGpt()
             //type ==="invoices" && load()
             //type ==="sku" && load()
           }
@@ -164,6 +165,37 @@
             const site = event.target.textContent
             window.location.href = './site-settings.html?site=' + site;
             console.log(site)
+          }
+          const loadGpt = async () => {
+            const tokenLabel = document.getElementById('token-label');
+            const ownerid = localStorage.getItem('ownerid')
+            const sk = 'chatgpt_token'
+            const item = await fetch(`${backend_url}/${ownerid}:${sk}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(e => e.json())
+            item?.token && (tokenLabel.textContent = item.token)
+            // Add an onblur event handler to the label element
+            tokenLabel.addEventListener('blur', function (event) {
+              // Do something when the label loses focus
+              console.log('Label content changed:', event.target.textContent);
+              fetch(backend_url + '/login', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(
+                  {
+                    id:ownerid,
+                    sk,
+                    token:event.target.textContent
+
+                  }
+                ),
+              })
+            });
           }
           const loadSites = async () => {
             const url = 'https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:' + localStorage.getItem('ownerid') + '&gsi1lsi1=true'

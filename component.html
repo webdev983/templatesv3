@@ -218,7 +218,7 @@
           <tr>
             <td data-ai-row class="l-3"><label class="l-3">🔴</label><label data-ai-label class="l-3"
                 style="margin: 10px;"></label></td>
-            <td class="l-3"> <button class="b-3">🤖</button></td>
+            <td class="l-3"> <button class="b-3" data-ai-send>🤖</button></td>
           </tr>
         </table>
       </details>
@@ -1838,6 +1838,28 @@ component</button> -->
 
   </script>
   <script>
+    function sendGptRequest(prompt,token,model) {
+       
+    
+        const data = {
+            model: model || 'gpt-4',
+            messages: [{ role: 'user', content: prompt }],
+            temperature: 0.7
+        };
+    
+        return fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .catch(error => console.error('Error:', error));
+    }
+    </script>
+  <script>
     var pathItem
     var pathItemPath
     var pathItemSku
@@ -1993,6 +2015,9 @@ component</button> -->
       for (const element of parsed['chatgpt-tasks']) {
         const cloned = originalRow.cloneNode(true);
         cloned.querySelector('[data-ai-label]').textContent = element.name;
+        cloned.querySelector('[data-ai-send]').addEventListener('click',()=>{
+          sendGptRequest()
+        })
         originalRow.parentNode.append(cloned);
       }
       originalRow.remove();
