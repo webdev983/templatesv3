@@ -1872,7 +1872,9 @@ component</button> -->
         cloned.querySelector('[data-list-emoji]').textContent = list.emoji
         cloned.querySelector('[data-list-name]').textContent = list.name
         const listOriginalElement = cloned.querySelector('[data-lists-element]')
-
+        if(!list.benefits){
+          cloned.querySelector('[data-list-element-benefit]').remove()
+        }
         for (const option of list.options) {
           const clonedListElement = listOriginalElement.cloneNode(true)
           clonedListElement.querySelector('[data-lists-element-key]').textContent = option.name
