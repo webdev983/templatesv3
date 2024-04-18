@@ -1849,7 +1849,7 @@ component</button> -->
       });
       event.target.parentNode.removeAttribute('open')
     }
-    var saveList = (event) => {
+    var saveList =async (event) => {
       const { value } = event.target.parentNode.querySelector('#list-input')
       if (!pathItem.hub_items) {
         pathItem.hub_items = {}
@@ -1860,7 +1860,7 @@ component</button> -->
         body: JSON.stringify(pathItem),
       });
       event.target.parentNode.removeAttribute('open')
-      showList(value)
+      await showList(value)
     }
     var showList = async(lists) => {
       const parsedLists = JSON.parse(lists)
@@ -9032,7 +9032,7 @@ headers: {
       const splited = pathItemPath.split(';')[0].split('/')
       const name = splited[splited.length - 1]
       if (pathItem.hub_items?.list) {
-        showList(pathItem.hub_items?.list)
+        await showList(pathItem.hub_items?.list)
       }
 
 
