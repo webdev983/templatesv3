@@ -1849,7 +1849,7 @@ component</button> -->
       });
       event.target.parentNode.removeAttribute('open')
     }
-    var saveList =async (event) => {
+    var saveList = async (event) => {
       const { value } = event.target.parentNode.querySelector('#list-input')
       if (!pathItem.hub_items) {
         pathItem.hub_items = {}
@@ -1862,8 +1862,8 @@ component</button> -->
       event.target.parentNode.removeAttribute('open')
       await showList(value)
     }
-    var showList = async(lists) => {
-      
+    var showList = async (lists) => {
+
       const parsedLists = JSON.parse(lists)
       const list1 = document.querySelector('[data-list][hidden]')
       document.querySelectorAll('[data-list]:not([hidden])').forEach(e => e.remove())
@@ -1871,13 +1871,14 @@ component</button> -->
         const cloned = list1.cloneNode(true)
         cloned.removeAttribute('hidden')
         const storage = list.data_storage
-        let storageId =(storage === 'sku') ? (pathItemSku || selectedSku) : headContentItem.id
+        let storageId = (storage === 'sku') ? (pathItemSku || selectedSku) : headContentItem.id
         cloned.querySelector('[data-list-emoji]').textContent = list.emoji
         cloned.querySelector('[data-list-name]').textContent = list.name
         const listOriginalElement = cloned.querySelector('[data-lists-element]')
         if (!list?.benefit) {
           cloned.querySelector('[data-list-element-benefit-label]').remove()
         }
+        
         for (const option of list.options) {
           const clonedListElement = listOriginalElement.cloneNode(true)
           const storageSk = `list:${list.name}:${option.name}`
@@ -1888,24 +1889,29 @@ component</button> -->
             },
           }).then(e => e.json())
           const statusEl = clonedListElement.querySelector('[data-lists-element-status]')
-          if(exisitingValue){
+          if (exisitingValue) {
             statusEl.textContent = '🟢'
+          }
+          else {
+            exisitingValue = {
+              id: storageId,
+              sk: storageSk,
+            }
           }
           clonedListElement.querySelector('[data-lists-element-key]').textContent = option.name
           const span = clonedListElement.querySelector('[data-lists-element-value]')
           span.textContent = `{${option.name.replaceAll('_', ' ')}}`
-          
+
           const select = clonedListElement.querySelector('[data-list-element-selection]')
           span.addEventListener('blur', async function () {
             const value = span.textContent
-            const payload = {
-              id: storageId,
-              sk: storageSk,
+            const exisitingValue = {
+              ...exisitingValue
               value
             }
             await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
               method: 'POST',
-              body: JSON.stringify(payload),
+              body: JSON.stringify(exisitingValue),
             });
             select.value = "none"
             statusEl.textContent = '🟢'
@@ -1913,7 +1919,7 @@ component</button> -->
           if (option.transfer) {
             span.setAttribute('data-transfer-sender', option.transfer)
           }
-          
+
           if (option.values) {
             const originalValue = clonedListElement.querySelector('[data-list-element-selection-value]')
             for (const value of option.values) {
@@ -1922,16 +1928,15 @@ component</button> -->
               clonedValue.value = value
               originalValue.parentNode.append(clonedValue)
             }
-            exisitingValue &&(select.value = exisitingValue.value)
-            select.addEventListener('change',async function () {
-              const payload = {
-                id: storageId,
-                sk: storageSk,
+            exisitingValue.value && (select.value = exisitingValue.value)
+            select.addEventListener('change', async function () {
+              const exisitingValue = {
+                ...exisitingValue
                 value: select.value
               }
               await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                 method: 'POST',
-                body: JSON.stringify(payload),
+                body: JSON.stringify(exisitingValue),
               });
               span.textContent = `{${option.name.replaceAll('_', ' ')}}`
               statusEl.textContent = '🟢'
@@ -1940,17 +1945,32 @@ component</button> -->
             originalValue.remove()
           }
           else {
-            exisitingValue && (span.textContent = exisitingValue.value)
+            exisitingValue.value && (span.textContent = exisitingValue.value)
             select.remove()
           }
-          
+          if (!list?.benefit) {
+            const input =  cloned.querySelector('[data-list-element-benefit]')
+            exisitingValue.benefit && (input.checked = true)
+            input.addEventListener('change', async function () {
+              const exisitingValue = {
+                ...exisitingValue
+                checked: input.checked
+              }
+              await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                method: 'POST',
+                body: JSON.stringify(exisitingValue),
+              });
+              statusEl.textContent = '🟢'
+
+            });
+          }
           listOriginalElement.parentNode.append(clonedListElement)
 
         }
         listOriginalElement.remove()
         list1.parentNode.append(cloned)
       }
-      
+
     }
     var updatePathItem = () =>
       fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
