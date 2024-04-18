@@ -1846,7 +1846,7 @@ component</button> -->
     var dependencyItem
     var skuCreated
     var ownerid
-    var saveGpt = (event) => {
+    var saveGpt = async(event) => {
       const { value } = event.target.parentNode.querySelector('#gpt-input')
       if (!pathItem.hub_items) {
         pathItem.hub_items = {}
@@ -9088,7 +9088,9 @@ headers: {
       const splited = pathItemPath.split(';')[0].split('/')
       const name = splited[splited.length - 1]
 
-      
+      if (pathItem.hub_items?.gpt) {
+        await showai(pathItem.hub_items?.gpt)
+      }
       if (pathItem.hub_items?.list) {
         await showList(pathItem.hub_items?.list)
       }
