@@ -196,7 +196,7 @@
             Meta</span></summary>
         <table class="table-1" style="margin-left: 30px;">
           <tr data-lists-element>
-            <td class="l-3"><label class="l-3" style="margin-right: 5px;" data-lists-element-status>🟢</label>
+            <td class="l-3"><label class="l-3" style="margin-right: 5px;" data-lists-element-status>🔴</label>
               <label class="l-3" data-lists-element-key></label>
             </td>
             <td class="l-3">
@@ -1875,15 +1875,26 @@ component</button> -->
         cloned.querySelector('[data-list-emoji]').textContent = list.emoji
         cloned.querySelector('[data-list-name]').textContent = list.name
         const listOriginalElement = cloned.querySelector('[data-lists-element]')
-        if (!list.benefits) {
+        if (!list.benefit) {
           cloned.querySelector('[data-list-element-benefit-label]').remove()
         }
         for (const option of list.options) {
           const clonedListElement = listOriginalElement.cloneNode(true)
+          const storageSk = `list:${list.name}:${option.name}`
+          const exisitingValue = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${storageId}:${storageSk}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json())
+          const statusEl = clonedListElement.querySelector('[data-lists-element-status]')
+          if(exisitingValue){
+            statusEl.textContent = '🟢'
+          }
           clonedListElement.querySelector('[data-lists-element-key]').textContent = option.name
           const span = clonedListElement.querySelector('[data-lists-element-value]')
           span.textContent = `{${option.name.replaceAll('_', ' ')}}`
-          const storageSk = `list:${list.name}:${option.name}`
+          
           const select = clonedListElement.querySelector('[data-list-element-selection]')
           span.addEventListener('blur', async function () {
             const value = span.textContent
@@ -1897,16 +1908,12 @@ component</button> -->
               body: JSON.stringify(payload),
             });
             select.value = "none"
+            statusEl.textContent = '🟢'
           });
           if (option.transfer) {
             span.setAttribute('data-transfer-sender', option.transfer)
           }
-          const exisitingValue = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${storageId}:${storageSk}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }).then(e => e.json())
+          
           if (option.values) {
             const originalValue = clonedListElement.querySelector('[data-list-element-selection-value]')
             for (const value of option.values) {
@@ -1927,6 +1934,7 @@ component</button> -->
                 body: JSON.stringify(payload),
               });
               span.textContent = `{${option.name.replaceAll('_', ' ')}}`
+              statusEl.textContent = '🟢'
 
             });
             originalValue.remove()
@@ -1935,6 +1943,7 @@ component</button> -->
             exisitingValue && (span.textContent = exisitingValue.value)
             select.remove()
           }
+          if()
           listOriginalElement.parentNode.append(clonedListElement)
 
         }
