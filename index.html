@@ -1378,12 +1378,12 @@
                           body: JSON.stringify(
                             {
                               ...item1,
-                              lsi1: 'trash/' + d.toISOString() + '-replace/' + item1.lsi1,
+                              lsi1: 'trash/' + d.toISOString().slice(0, -5) + '-replace/' + item1.lsi1,
 
                             }
                           ),
                         })
-                        await createFolders(convertToOldPath('trash/' + d.toISOString() + '-replace/' + item1.lsi1))
+                        await createFolders(convertToOldPath('trash/' + d.toISOString().slice(0, -5) + '-replace/' + item1.lsi1))
 
                       }
 
@@ -1632,7 +1632,7 @@
                       await Promise.all(res2.items.map(async item1 => {
 
                         if (item1.sk === 'path') {
-                          const trashLsi = 'trash/' + d.toISOString() + '-replace/' + item1.lsi1
+                          const trashLsi = 'trash/' + d.toISOString().slice(0, -5) + '-replace/' + item1.lsi1
                           await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                             method: 'POST',
                             headers: {
