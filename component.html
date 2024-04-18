@@ -191,27 +191,28 @@
     <div id="head-1" class="horizontal-area" data-user hidden>
 
 
-      <details style="margin-bottom: 7px; " data-list>
-        <summary class="summary-L-3"><span data-list-emoji>📣</span><span class="l-3 b-dark-blue" data-list-name> Meta</span></summary>
-        <table class="table-1"  style="margin-left: 30px;">
+      <details style="margin-bottom: 7px; " data-list hidden>
+        <summary class="summary-L-3"><span data-list-emoji>📣</span><span class="l-3 b-dark-blue" data-list-name>
+            Meta</span></summary>
+        <table class="table-1" style="margin-left: 30px;">
           <tr data-lists-element>
             <td class="l-3"><label class="l-3" style="margin-right: 5px;" data-lists-element-status>🟢</label>
               <label class="l-3" data-lists-element-key></label>
             </td>
             <td class="l-3">
-                <span data-transfer-sender="title.text-content" data-lists-element-value contenteditable></span>
+              <span data-transfer-sender="title.text-content" data-lists-element-value contenteditable></span>
             </td>
-            <td class="l-3" >
-                <select class="select-1" data-list-element-selection>
-                  <option>⬇️ Select</option>
-                  <option data-list-element-selection-value>➡️</option>
-                </select>
-              </td>
-              <td><label class="l-3"><input data-list-element-benefit type="checkbox">Benefit</label></td>
-                </table>
-        </details>
+            <td class="l-3">
+              <select class="select-1" data-list-element-selection>
+                <option>⬇️ Select</option>
+                <option data-list-element-selection-value>➡️</option>
+              </select>
+            </td>
+            <td><label class="l-3"><input data-list-element-benefit type="checkbox">Benefit</label></td>
+        </table>
+      </details>
 
-        
+
       <!--
   data-head="product-specification"
   data-head-element="product_name"
@@ -223,13 +224,13 @@
   data-file-name-show="Product-Content"
   -->
 
-      <details hidden style="margin-bottom: 7px;" data-file-name-show="Hub" >
+      <details hidden style="margin-bottom: 7px;" data-file-name-show="Hub">
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">⚙️ ChatGPT</span></summary>
         <textarea id="gpt-input" class="text1" style="width: 50vw" placeholder=" 🤖 AI tasks"></textarea>
         <button onclick="saveGpt(event)" data-save class="b-4">💾 Save</button>
       </details>
 
-      <details hidden  style="margin-bottom: 7px;" data-file-name-show="Hub">
+      <details hidden style="margin-bottom: 7px;" data-file-name-show="Hub">
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">⚙️ List</span></summary>
         <textarea id="list-input" class="text1" style="width: 50vw" placeholder=" 📍 List tasks"></textarea>
         <button onclick="saveList(event)" data-save class="b-4">💾 Save</button>
@@ -1858,6 +1859,39 @@ component</button> -->
         body: JSON.stringify(pathItem),
       });
       event.target.parentNode.removeAttribute('open')
+      showList(value)
+    }
+    var showList = (lists) => {
+      const parsedLists = JSON.parse(lists)
+      const list = document.querySelector('[data-list][hidden]')
+      document.querySelectorAll('[data-list]:not([hidden])').forEach(e => e.remove())
+      for (const list of parsedLists['data-lists']) {
+        const cloned = list.cloneNode(true)
+        cloned.removeAttribute('hidden')
+
+        cloned.querySelector('[data-list-emoji]').textContent = list.emoji
+        cloned.querySelector('[data-list-name]').textContent = list.name
+        const listOriginalElement = cloned.querySelector('[data-lists-element]')
+
+        for (const option of list.options) {
+          const clonedListElement = listOriginalElement.cloneNode(true)
+          clonedListElement.querySelector('[data-lists-element-key]').textContent = option.name
+          if (option.values) {
+            const originalValue = clonedListElement.querySelector('[data-list-element-selection-value]')
+            for (const value of option.values) {
+              const clonedValue = originalValue.cloneNode(true)
+              clonedValue.textContent = value
+              originalValue.parentNode.append(clonedValue)
+            }
+            originalValue.remove()
+          }
+          listOriginalElement.parentNode.append(clonedListElement)
+
+        }
+        listOriginalElement.remove()
+        list.parentNode.append(cloned)
+      }
+
     }
     var updatePathItem = () =>
       fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -8297,13 +8331,13 @@ elementsToRemove.forEach(element => element.remove());
 
 
     }
-    const setHubItems = ()=>{
+    const setHubItems = () => {
       const gptValue = pathItem.hub_items?.gpt
       const listValue = pathItem.hub_items?.list
-      if (listValue){
+      if (listValue) {
         document.getElementById('list-input').value = listValue
       }
-      if(gptValue){
+      if (gptValue) {
         document.getElementById('gpt-input').value = gptValue
       }
     }
