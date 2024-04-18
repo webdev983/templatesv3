@@ -204,11 +204,12 @@
             </td>
             <td class="l-3">
               <select class="select-1" data-list-element-selection>
-                <option>⬇️ Select</option>
+                <option value="none">⬇️ Select</option>
                 <option data-list-element-selection-value>➡️</option>
               </select>
             </td>
-            <td><label data-list-element-benefit-label class="l-3"><input data-list-element-benefit type="checkbox">Benefit</label></td>
+            <td><label data-list-element-benefit-label class="l-3"><input data-list-element-benefit
+                  type="checkbox">Benefit</label></td>
         </table>
       </details>
 
@@ -1868,32 +1869,70 @@ component</button> -->
       for (const list of parsedLists['data-lists']) {
         const cloned = list1.cloneNode(true)
         cloned.removeAttribute('hidden')
-
+        const storage = list.data_storage
+        let storageId = storage === 'sku' ? (pathItemSku || selectedSku) : headContentItem.id
         cloned.querySelector('[data-list-emoji]').textContent = list.emoji
         cloned.querySelector('[data-list-name]').textContent = list.name
         const listOriginalElement = cloned.querySelector('[data-lists-element]')
-        if(!list.benefits){
+        if (!list.benefits) {
           cloned.querySelector('[data-list-element-benefit-label]').remove()
         }
         for (const option of list.options) {
           const clonedListElement = listOriginalElement.cloneNode(true)
           clonedListElement.querySelector('[data-lists-element-key]').textContent = option.name
           const span = clonedListElement.querySelector('[data-lists-element-value]')
-          span.textContent =`{${option.name.replaceAll('_',' ')}}` 
-          if(option.transfer){
-            span.setAttribute('data-transfer-sender',option.transfer)
+          span.textContent = `{${option.name.replaceAll('_', ' ')}}`
+          const storageSk = `list:${list.name}:${option.name}`
+          const select = clonedListElement.querySelector('[data-list-element-selection]')
+          span.addEventListener('blur', function () {
+            const value = span.textContent
+            const payload = {
+              id: storageId,
+              sk: storageSk,
+              value
+            }
+            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+              method: 'POST',
+              body: JSON.stringify(payload),
+            });
+            select.value = "none"
+          });
+          if (option.transfer) {
+            span.setAttribute('data-transfer-sender', option.transfer)
           }
+          const exisitingValue = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${storageId}:${storageSk}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json())
           if (option.values) {
             const originalValue = clonedListElement.querySelector('[data-list-element-selection-value]')
             for (const value of option.values) {
               const clonedValue = originalValue.cloneNode(true)
               clonedValue.textContent = value
+              clonedValue.value = value
               originalValue.parentNode.append(clonedValue)
             }
+            exisitingValue &&(select.value = exisitingValue.value)
+            select.addEventListener('change', function () {
+              const payload = {
+                id: storageId,
+                sk: storageSk,
+                value: select.value
+              }
+              await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                method: 'POST',
+                body: JSON.stringify(payload),
+              });
+              span.textContent = `{${option.name.replaceAll('_', ' ')}}`
+
+            });
             originalValue.remove()
           }
-          else{
-            clonedListElement.querySelector('[data-list-element-selection]').remove()
+          else {
+            exisitingValue && (span.textContent = exisitingValue.value)
+            select.remove()
           }
           listOriginalElement.parentNode.append(clonedListElement)
 
@@ -8992,10 +9031,10 @@ headers: {
       }
       const splited = pathItemPath.split(';')[0].split('/')
       const name = splited[splited.length - 1]
-      if(pathItem.hub_items?.list){
+      if (pathItem.hub_items?.list) {
         showList(pathItem.hub_items?.list)
       }
-      
+
 
       /*
       querySelectorAll1('[data-product]').forEach(
