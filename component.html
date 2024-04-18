@@ -8414,8 +8414,8 @@ elementsToRemove.forEach(element => element.remove());
       document.querySelectorAll('[data-file-name-show]').forEach(
         element => {
           const p = element.getAttribute('data-file-name-show')
-          if (!pathItemPath.split(';')[0].endsWith(p)) {
-            element.setAttribute('hidden', '')
+          if (pathItemPath.split(';')[0].endsWith(p)) {
+            element.removeAttribute('hidden')
           }
         }
       )
