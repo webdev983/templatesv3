@@ -192,7 +192,8 @@
 
 
       <details style="margin-bottom: 7px; " data-list hidden>
-        <summary class="summary-L-3"><span class="l-3" data-list-emoji>📣</span><span> </span><span class="l-3 b-dark-blue" data-list-name>
+        <summary class="summary-L-3"><span class="l-3" data-list-emoji>📣</span><span> </span><span
+            class="l-3 b-dark-blue" data-list-name>
             Meta</span></summary>
         <table class="table-1" style="margin-left: 30px;">
           <tr data-lists-element>
@@ -216,8 +217,8 @@
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">🤖 AI</span></summary>
         <table class="table-1" data-head="meta" style="margin-left: 30px;">
           <tr data-ai-row>
-            <td  class="l-3"><label class="l-3">🔴</label><label data-ai-label class="l-3"
-                style="margin: 10px;"></label></td>
+            <td class="l-3"><label class="l-3">🔴</label><label data-ai-label class="l-3" style="margin: 10px;"></label>
+            </td>
             <td class="l-3"> <button class="b-3" data-ai-send>🤖</button></td>
           </tr>
         </table>
@@ -1844,10 +1845,10 @@ component</button> -->
         const label = cloned.querySelector('[data-list-element-benefit-label]')
         if (!list?.varlist) {
           label.remove()
-          
+
         }
-        else{
-          label.innerHTML = label.innerHTML.replace('Benefit',list.varlist)
+        else {
+          label.innerHTML = label.innerHTML.replace('Benefit', list.varlist)
         }
 
         for (const option of list.options) {
@@ -1860,7 +1861,7 @@ component</button> -->
             },
           }).then(e => e.json())
           const statusEl = clonedListElement.querySelector('[data-lists-element-status]')
-          console.log('existing '+JSON.stringify(exisitingValue))
+          console.log('existing ' + JSON.stringify(exisitingValue))
           if (exisitingValue) {
             exisitingValue.id = storageId
             statusEl.textContent = '🟢'
@@ -1923,17 +1924,22 @@ component</button> -->
           }
           if (list?.varlist) {
             const input = clonedListElement.querySelector('[data-list-element-benefit]')
-            if( exisitingValue.varlist || option.varlist){
-              
+            if (exisitingValue.varlist || option.varlist) {
+
               input.checked = true
             }
             //exisitingValue.varlist===true ? (input.checked = true) : (input.checked = !!option.varlist)
             input.addEventListener('change', async function () {
-              exisitingValue = {
-                ...exisitingValue,
-                varlist: input.checked,
-                varName:list.varlist
+              if (input.checked) {
+                exisitingValue = {
+                  ...exisitingValue,
+                  varlist: list.varlist,
+                }
               }
+              else {
+                delete exisitingValue.varlist
+              }
+
               console.log(JSON.stringify(exisitingValue))
               await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                 method: 'POST',
@@ -1951,12 +1957,12 @@ component</button> -->
       }
 
     }
-    const getReplacementValue = (name)=>{
+    const getReplacementValue = (name) => {
       const res1 = querySelectorAll1(`[data-builder-varlist="${name}"]`)
       const res2 = querySelectorAll1(`[data-builder-variable="${name}"]`)
       let res = ''
-      res1.forEach(el=>res=res+el.textContent +' ')
-      res2.forEach(el=>res=res+el.textContent +' ')
+      res1.forEach(el => res = res + el.textContent + ' ')
+      res2.forEach(el => res = res + el.textContent + ' ')
       return res
     }
     const replaceVars = (string) => {
@@ -1984,11 +1990,11 @@ component</button> -->
         },
       }).then(e => e.json())
       const gptToken = item.token
-      let parsed 
-      try{
-        parsed= JSON.parse(list);
+      let parsed
+      try {
+        parsed = JSON.parse(list);
       }
-      catch(e){
+      catch (e) {
         console.log('wrong json')
         return
       }
