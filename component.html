@@ -2022,7 +2022,7 @@ component</button> -->
             const compid = document.querySelector(`[name="${import_page}"]`).parentNode.getAttribute('cid')
             const data = content[import_name]
             const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&attr=${import_name}&val=${data}&ownerid=${localStorage.getItem('ownerid')}` };
-            console.log('event '+ eventData.url)
+            console.log('event ' + eventData.url)
             // Fetch options
             const options = {
               method: 'POST',
@@ -7199,7 +7199,7 @@ elementsToRemove.forEach(element => element.remove());
 
         const el = el1.querySelector("[data-element='code-tree-tag-name-button']")
         el.textContent = '🧩' + name
-        el.setAttribute('name',name)
+        el.setAttribute('name', name)
         el.setAttribute('path', items.find(e => e.sk === 'path').lsi1)
 
         if (pathItem.hub_items?.main_content) {
@@ -8093,7 +8093,7 @@ elementsToRemove.forEach(element => element.remove());
 
           time: (new Date()).getTime().toString(),
           action: 'setAttribute',
-          target_element: id1+'-tree',
+          target_element: id1 + '-tree',
           key: 'content',
           value: inputValue,
 
@@ -8101,7 +8101,20 @@ elementsToRemove.forEach(element => element.remove());
         await pushAction(payload2)
         return
       }
+      if (!inputValue.startsWith('<')) {
+        const allAttrs = querySelectorAll1(`[data-import-${attr}]`)
+        allAttrs[0]
 
+        const el = {
+          time: (new Date()).getTime(),
+          action: 'innerHtml',
+          target_element: allAttrs[0].id + '-tree',
+          insertedCode: inputValue,
+
+        }
+        await pushAction(el)
+        return
+      }
 
       if (attr.startsWith('product')) {
         const stamp = new Date().getTime().toString()
@@ -8320,7 +8333,7 @@ elementsToRemove.forEach(element => element.remove());
 
       }
 
-      
+
 
     }
     const handleImportMenu = () => {
