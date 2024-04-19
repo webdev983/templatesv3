@@ -217,7 +217,7 @@
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">🤖 AI</span></summary>
         <table class="table-1" data-head="meta" style="margin-left: 30px;">
           <tr data-ai-row>
-            <td class="l-3"><label class="l-3">🔴</label><label data-ai-label class="l-3" style="margin: 10px;"></label>
+            <td class="l-3"><label data-ai-status class="l-3">🔴</label><label data-ai-label class="l-3" style="margin: 10px;"></label>
             </td>
             <td class="l-3"> <button class="b-3" data-ai-send>🤖</button></td>
           </tr>
@@ -2007,9 +2007,10 @@ component</button> -->
       for (const element of parsed['chatgpt-tasks']) {
         const cloned = originalRow.cloneNode(true);
         cloned.querySelector('[data-ai-label]').textContent = element.name;
+        const status = cloned.querySelector('[data-ai-status]')
         cloned.querySelector('[data-ai-send]').addEventListener('click', async () => {
           let task = element.task
-
+          status.textContent = '🟠'
           task = task.replace('{site}', site).replace('{company}', company)
           task = replaceVars(task)
           const res = await sendGptRequest(gptToken, task, element.model)
@@ -2038,7 +2039,7 @@ component</button> -->
 
             // get component id with name
           }
-
+          status.textContent = '🟢'
           console.log(JSON.stringify(res))
         })
         originalRow.parentNode.append(cloned);
