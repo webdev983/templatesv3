@@ -217,7 +217,8 @@
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">🤖 AI</span></summary>
         <table class="table-1" data-head="meta" style="margin-left: 30px;">
           <tr data-ai-row>
-            <td class="l-3"><label data-ai-status class="l-3">🔴</label><label data-ai-label class="l-3" style="margin: 10px;"></label>
+            <td class="l-3"><label data-ai-status class="l-3">🔴</label><label data-ai-label class="l-3"
+                style="margin: 10px;"></label>
             </td>
             <td class="l-3"> <button class="b-3" data-ai-send>🤖</button></td>
           </tr>
@@ -8085,6 +8086,22 @@ elementsToRemove.forEach(element => element.remove());
     const handleImportGpt = async (inputValue, attr) => {
       let sku1 = pathItemSku || selectedSku
       // save content
+      if (attr === 'meta_description') {
+        const id1 = querySelectorAll1('meta[name="description"]')[0].id
+        const payload2 = {
+
+          time: (new Date()).getTime().toString(),
+          action: 'setAttribute',
+          target_element: id1+'-tree',
+          key: 'content',
+          value: inputValue,
+
+        }
+        await pushAction(payload2)
+        return
+      }
+
+
       if (attr.startsWith('product')) {
         const stamp = new Date().getTime().toString()
 
