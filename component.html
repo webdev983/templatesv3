@@ -2019,7 +2019,7 @@ component</button> -->
           for (const toImport of element.import_data) {
             const { import_page, import_name } = toImport
 
-            const compid = document.querySelector('🧩' + import_page).parentNode.getAttribute('cid')
+            const compid = document.querySelector(`[name="${import_page}"]`).parentNode.getAttribute('cid')
             const data = content[import_name]
             const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&attr=${import_name}&val=${data}&ownerid=${localStorage.getItem('ownerid')}` };
             console.log('event '+ eventData.url)
@@ -7199,6 +7199,7 @@ elementsToRemove.forEach(element => element.remove());
 
         const el = el1.querySelector("[data-element='code-tree-tag-name-button']")
         el.textContent = '🧩' + name
+        el.setAttribute('name',name)
         el.setAttribute('path', items.find(e => e.sk === 'path').lsi1)
 
         if (pathItem.hub_items?.main_content) {
