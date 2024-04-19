@@ -1841,8 +1841,9 @@ component</button> -->
         cloned.querySelector('[data-list-emoji]').textContent = list.emoji
         cloned.querySelector('[data-list-name]').textContent = list.name
         const listOriginalElement = cloned.querySelector('[data-lists-element]')
-        if (!list?.benefit) {
+        if (!list?.varlist) {
           cloned.querySelector('[data-list-element-benefit-label]').remove()
+          cloned.querySelector('[data-list-element-benefit]').textContent = list.varlist
         }
 
         for (const option of list.options) {
@@ -1914,13 +1915,13 @@ component</button> -->
             exisitingValue.value && (span.textContent = exisitingValue.value)
             select.remove()
           }
-          if (list?.benefit) {
+          if (list?.varlist) {
             const input = clonedListElement.querySelector('[data-list-element-benefit]')
-            exisitingValue.benefit && (input.checked = true)
+            exisitingValue.varlist ? (input.checked = true) : (input.checked = !!option.varlist)
             input.addEventListener('change', async function () {
               exisitingValue = {
                 ...exisitingValue,
-                benefit: input.checked
+                varlist: input.checked
               }
               await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                 method: 'POST',
