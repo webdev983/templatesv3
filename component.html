@@ -1924,7 +1924,7 @@ component</button> -->
           }
           if (list?.varlist) {
             const input = clonedListElement.querySelector('[data-list-element-benefit]')
-            if (exisitingValue.varlist ===list.varlist) {
+            if (exisitingValue.varlist === list.varlist) {
 
               input.checked = true
             }
@@ -1981,6 +1981,7 @@ component</button> -->
       }
       return string
     }
+    const pup_url = 'https://b3dutg6xlx4zfz52xgrf4staza0dgeff.lambda-url.us-east-1.on.aws/';
     var showai = async (list) => {
       const sk = 'chatgpt_token'
       const item = await fetch(`${backend_url}/${ownerid}:${sk}`, {
@@ -2012,6 +2013,32 @@ component</button> -->
           task = task.replace('{site}', site).replace('{company}', company)
           task = replaceVars(task)
           const res = await sendGptRequest(gptToken, task, element.model)
+          const content = JSON.parse(res.choices[0].message.content)
+          for (const toImport of element.import_data) {
+            const { import_page, import_name } = toImport
+
+            const compid = document.querySelector('🧩' + import_page).parentNode.getAttribute('cid')
+            const data = content[import_name]
+            const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&attr=${import_name}&val=${data}&ownerid=${localStorage.getItem('ownerid')}` };
+
+            // Fetch options
+            const options = {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(eventData)
+            };
+            const response = await fetch(url, options);
+
+            if (!response.ok) {
+              console.log('error pup')
+            }
+
+
+            // get component id with name
+          }
+
           console.log(JSON.stringify(res))
         })
         originalRow.parentNode.append(cloned);
@@ -5137,6 +5164,7 @@ checkbox1.setAttribute('hidden', "");
           button.addEventListener('mouseout', mouseOutTree);
 
           newEl2.id = inserted_component.id + '-tree'
+          newEl2.setAttribute('cid', inserted_component.componentId)
           if (noSubComp1 || noComp || noComp1) {
             newEl2.setAttribute('hidden', '')
           }
@@ -8053,6 +8081,229 @@ elementsToRemove.forEach(element => element.remove());
         }
       }
     }
+    const handleImportGpt = async (inputValue, attr) => {
+      let sku1 = pathItemSku || selectedSku
+      // save content
+      if (attr.startsWith('product')) {
+        const stamp = new Date().getTime().toString()
+
+
+        const site = pathItemPath.split('/')[0]
+
+
+        let payload = {
+          id: sku1,
+          sk: attr + ':' + stamp,
+          value: inputValue,
+          site
+        }
+
+
+
+
+        payload && await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+      }
+      const div = document.createElement('div')
+      div.innerHTML = inputValue
+      const allAttrs = querySelectorAll1(`[data-import-${attr}]`)
+      const map = allAttrs.map(element => {
+        const value = element.getAttribute(`data-import-${attr}`)
+        return { tag: value, element, set: false, index: 1 }
+      })
+      console.log('map is ' + JSON.stringify(map))
+      let imgLead = false
+      let pLead = false
+      for (const child of Array.from(div.childNodes)) {
+        if (!child?.tagName) {
+          continue
+        }
+        console.log('map is ' + JSON.stringify(map))
+        const tag = child.tagName.toLowerCase()
+        console.log(tag)
+        let foundE
+        if (tag === 'img' && !imgLead) {
+          imgLead = true
+          foundE = map.findLast(e => e.tag === 'img-lead') || map.findLast(e => e.tag === 'img')
+        }
+        else if (tag === "p" && !pLead) {
+          pLead = true
+          foundE = map.findLast(e => e.tag === 'p-lead') || map.findLast(e => e.tag === 'p')
+        }
+        else {
+          foundE = map.findLast(el => el.tag === tag)
+        }
+        for (const attribute of foundE.element.attributes) {
+          if (attribute.name.startsWith('data-import-product-')) {
+            const prefix = 'data-import-product-';
+            const suffix = attribute.name.substring(prefix.length);
+            const stamp = new Date().getTime().toString();
+            const body = {
+              id: sku1,
+              sk: 'data-' + suffix + ':' + stamp,
+              value: child.innerHTML,
+              site: pathItemPath.split('/')[0]
+            };
+            const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+              method: 'POST',
+              body: JSON.stringify(body),
+            });
+            // You may want to handle the response here
+          }
+        }
+        if (foundE.set === false) {
+          if (tag === 'img') {
+            const src = child.getAttribute('src')
+            const alt = child.getAttribute('alt')
+
+            const response = await fetch('https://corsproxy.io/?' + src);
+            const blob = await response.blob()
+
+            const splited = src.split('/')
+            const name = splited[splited.length - 1].split('?')[0]
+
+            const path = await upload(name, blob)
+
+            console.log('path ' + path)
+            const id = pathItem.id
+            const payload2 = {
+
+              time: (new Date()).getTime().toString(),
+              action: 'setAttribute',
+              target_element: foundE.element.id + '-tree',
+              key: 'alt',
+              value: alt,
+
+            }
+            pushAction(payload2)
+            const payload = {
+              id,
+              sk: path
+            }
+            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(payload),
+            });
+            const imageSrc = `https://s3.amazonaws.com/checkout-admin-panel/${path}`
+            await selectImage1(foundE.element.id + '-tree', imageSrc, path.split('.')[0].replace('pics', ''))
+
+
+          }
+          else if (tag === "ul") {
+            const ulElement = getElementById1(foundE.element.id)
+            await handleUls(child, ulElement)
+
+          }
+          else {
+            const el = {
+              time: (new Date()).getTime(),
+              action: 'innerHtml',
+              target_element: foundE.element.id + '-tree',
+              insertedCode: child.textContent,
+
+            }
+            await pushAction(el)
+          }
+
+          foundE.set = true
+          //foundE.element.innerHTML = child.innerHTML
+        }
+        else {
+
+          const foundIndex = foundE.index
+          /*
+          let last = map.findLastIndex(e => e.index === foundIndex + 1)
+          if (last < 0) {
+  last = map.findLastIndex(e => e.index === foundIndex)
+          }
+          */
+          const lastElement = map[map.length - 1].element
+          const newId = duplicateId(foundE.element.id).id
+          const actionObject = {
+            time: (new Date()).getTime(),
+            action: 'InsertAfter',
+            target_element: lastElement.id + '-tree',
+            inserted_element: { originalId: foundE.element.id + '-tree', id: newId },
+          };
+          await pushAction(actionObject);
+          if (tag === 'img') {
+            const src = child.getAttribute('src')
+            const alt = child.getAttribute('alt')
+            const payload2 = {
+
+              time: (new Date()).getTime().toString(),
+              action: 'setAttribute',
+              target_element: newId,
+              key: 'alt',
+              value: alt,
+
+            }
+            pushAction(payload2)
+            const response = await fetch('https://corsproxy.io/?' + src);
+            const blob = await response.blob()
+
+            const splited = src.split('/')
+            const name = splited[splited.length - 1].split('?')[0]
+
+            const path = await upload(name, blob)
+
+            console.log('path ' + path)
+            const id = pathItem.id
+            const payload = {
+              id,
+              sk: path
+            }
+            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(payload),
+            });
+            const imageSrc = `https://s3.amazonaws.com/checkout-admin-panel/${path}`
+            await selectImage1(newId, imageSrc, path.split('.')[0].replace('pics', ''))
+
+
+          }
+          else if (tag === "ul") {
+            const ulElement = getElementById1(removeLastOccurrence(newId, '-tree'))
+            await handleUls(child, ulElement)
+
+
+
+          }
+
+          else {
+            const el = {
+              time: (new Date()).getTime(),
+              action: 'innerHtml',
+              target_element: newId,
+              insertedCode: child.textContent,
+
+            }
+            await pushAction(el)
+          }
+
+          const newElement = { ...foundE, element: getElementById1(removeLastOccurrence(newId, '-tree')), set: true, index: foundIndex + 1 }
+          //map.splice(last + 1, 0, newElement);
+          map.push(newElement)
+          //lastElement.insertAdjacentElement('afterend', clonedE);
+
+        }
+
+      }
+
+      menu.remove()
+
+    }
     const handleImportMenu = () => {
       let sku1 = pathItemSku || selectedSku
       const generatedPage = getElementById1('generated-page')
@@ -8109,7 +8360,7 @@ elementsToRemove.forEach(element => element.remove());
             let index
             let itemsArr = []
 
-            const handleImport = async (e, update) => {
+            const handleImport = async (e, update, input, attr, itemsArr, index) => {
               const inputValue = input.value
               // save content
               if (attr.startsWith('product')) {
@@ -8422,7 +8673,7 @@ elementsToRemove.forEach(element => element.remove());
                 nextButton.removeAttribute('hidden')
                 removeButton.removeAttribute('hidden')
                 updateButton.removeAttribute('hidden')
-                updateButton.addEventListener('click', (e) => handleImport(e, true))
+                updateButton.addEventListener('click', (e) => handleImport(e, true, input, attr, itemsArr, index))
                 removeButton.addEventListener('click', handleRemove)
                 nextButton.addEventListener('click', handleNext)
                 prevButton.addEventListener('click', handlePrevious)
@@ -8493,6 +8744,8 @@ elementsToRemove.forEach(element => element.remove());
       const urlParams = new URLSearchParams(window.location.search);
       const idFromQuery = urlParams.get('id');
       const toPublish = urlParams.get('publish')
+      const importAttribute = urlParams.get('attr')
+      const importValue = urlParams.get('val')
       ownerid = localStorage.getItem('ownerid') || urlParams.get('ownerid')
       if (idFromQuery) {
         // Change the id of the element with id "component-element"
@@ -8549,6 +8802,10 @@ elementsToRemove.forEach(element => element.remove());
       if (toPublish == "1") {
         await publish()
       }
+      if (importAttribute) {
+        await handleImportGpt(importValue, importAttribute)
+      }
+
       const event = new CustomEvent("pageloaded")
       document.dispatchEvent(event)
 
