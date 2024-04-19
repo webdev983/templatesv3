@@ -1921,7 +1921,10 @@ component</button> -->
           }
           if (list?.varlist) {
             const input = clonedListElement.querySelector('[data-list-element-benefit]')
-            exisitingValue.varlist===true ? (input.checked = true) : (input.checked = !!option.varlist)
+            if( exisitingValue.varlist || option.varlist){
+              input.checked = true
+            }
+            //exisitingValue.varlist===true ? (input.checked = true) : (input.checked = !!option.varlist)
             input.addEventListener('change', async function () {
               exisitingValue = {
                 ...exisitingValue,
