@@ -2009,7 +2009,17 @@ component</button> -->
         const cloned = originalRow.cloneNode(true);
         cloned.querySelector('[data-ai-label]').textContent = element.name;
         const status = cloned.querySelector('[data-ai-status]')
+        let ex = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${headContentItem.id}&sk=${`ai:${element.name}`}&startsWith=true`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json())
+        if(ex.items.length){
+          status.textContent = '🟢'
+        }
         cloned.querySelector('[data-ai-send]').addEventListener('click', async () => {
+          if (status.textContent === '🟠') { return }
           let task = element.task
           status.textContent = '🟠'
           task = task.replace('{site}', site).replace('{company}', company)
@@ -2040,6 +2050,17 @@ component</button> -->
 
             // get component id with name
           }
+          const payload = {
+            id: headContentItem.id,
+            sk: `ai:${element.name}:${new Date().getTime()}`
+          }
+          await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+          });
           status.textContent = '🟢'
           console.log(JSON.stringify(res))
         })
