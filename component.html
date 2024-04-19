@@ -8151,6 +8151,7 @@ elementsToRemove.forEach(element => element.remove());
       console.log('map is ' + JSON.stringify(map))
       let imgLead = false
       let pLead = false
+      let previous
       for (const child of Array.from(div.childNodes)) {
         if (!child?.tagName) {
           continue
@@ -8189,6 +8190,7 @@ elementsToRemove.forEach(element => element.remove());
           }
         }
         if (foundE.set === false) {
+
           if (tag === 'img') {
             const src = child.getAttribute('src')
             const alt = child.getAttribute('alt')
@@ -8244,8 +8246,17 @@ elementsToRemove.forEach(element => element.remove());
             }
             await pushAction(el)
           }
+          if (previous && previous.nextElementSibling.id !== foundE.element.id) {
+            let el2 = {
+              time: (new Date()).getTime(),
+              action: 'InsertAfter',
+              target_element: [{ type: 'tag', id:previous.id+'-tree', }, { type: 'tag', id:foundE.element.id+'-tree' }],
+            }
+            await pushAction(el2)
+          }
 
           foundE.set = true
+          previous = foundE.element
           //foundE.element.innerHTML = child.innerHTML
         }
         else {
@@ -8323,10 +8334,11 @@ elementsToRemove.forEach(element => element.remove());
             }
             await pushAction(el)
           }
-
-          const newElement = { ...foundE, element: getElementById1(removeLastOccurrence(newId, '-tree')), set: true, index: foundIndex + 1 }
+          const newE = getElementById1(removeLastOccurrence(newId, '-tree'))
+          const newElement = { ...foundE, element: newE, set: true, index: foundIndex + 1 }
           //map.splice(last + 1, 0, newElement);
           map.push(newElement)
+          previous = newE
           //lastElement.insertAdjacentElement('afterend', clonedE);
 
         }
