@@ -8250,14 +8250,15 @@ elementsToRemove.forEach(element => element.remove());
             let el2 = {
               time: (new Date()).getTime(),
               action: 'InsertAfter',
-              target_element: [{ type: 'tag', id:previous.id+'-tree', }, { type: 'tag', id:foundE.element.id+'-tree' }],
+              target_element: [{ type: 'tag', id: previous.id + '-tree', }, { type: 'tag', id: foundE.element.id + '-tree' }],
             }
             await pushAction(el2)
-            const index1 = map.findIndex(e=>e.element.id ===foundE.element.id)
-            const index2 = map.findIndex(e=>e.element.id ===previous.element.id)
-            [map[index1], map[index2]] = [map[index2], map[index1]];
+            const index1 = map.findIndex(e => e.element.id === foundE.element.id)
+            const index2 = map.findIndex(e => e.element.id === previous.element.id)
+            const element = map.splice(index1, 1)[0];
+            map.splice(index2 + 1, 0, element);
           }
-          
+
           foundE.set = true
           previous = foundE
           //foundE.element.innerHTML = child.innerHTML
