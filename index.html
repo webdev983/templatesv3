@@ -45,14 +45,17 @@
     <div class="panel left">
       <div id="nav-buttons">
         <button data-section-button="brains" hidden class="b-1">🧠</button>
-        <script>document.addEventListener('DOMContentLoaded', function() {
-          if (localStorage.getItem('helperid')) {
-            const element = document.querySelector('[data-section-button="brains"]');
-            if (element) {
-              element.style.display = 'none';
-            }
-          }
-        });
+        <script>
+document.addEventListener('DOMContentLoaded', function() {
+  const element = document.querySelector('[data-section-button="brains"]');
+  if (!element) return;
+
+  if (localStorage.getItem('helperid')) {
+    element.style.display = 'none'; // Скрываем элемент, если helperid есть в localStorage
+  } else {
+    element.style.display = ''; // Удаляем стиль display, чтобы элемент стал видимым, если helperid отсутствует
+  }
+});
         </script>
         <button data-section-button="files" class="b-1 b-selected">📂</button>
       </div>
