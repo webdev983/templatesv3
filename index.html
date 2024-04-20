@@ -2403,9 +2403,11 @@
         const hub = newPath.split('/')[0] + '/Home|Hub'
         const response1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${hub}`);
         //list of sub paths
+        console.log(hub)
         const data1 = await response1.json();
+        console.log(JSON.stringify(data1))
         // get style
-        const style = data1[0].hub_items.style
+        const style = data1.items[0].hub_items.style
         const copyFrom = style + '/Blog/Seed-Article/'
         const splitedPath = copyFrom.replace('|', "/").split('/')
         const last = splitedPath[splitedPath.length - 2]
