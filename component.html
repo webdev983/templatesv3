@@ -2032,6 +2032,7 @@ component</button> -->
           task = task.replace('{site}', site).replace('{company}', company)
           task = replaceVars(task)
           const res = await sendGptRequest(gptToken, task, element.model)
+          console.log(JSON.stringify(res))
           const content = JSON.parse(res.choices[0].message.content)
           for (const toImport of element.import_data) {
             const { import_page, import_name } = toImport
@@ -2069,7 +2070,7 @@ component</button> -->
             body: JSON.stringify(payload),
           });
           status.textContent = '🟢'
-          console.log(JSON.stringify(res))
+          
         })
         originalRow.parentNode.append(cloned);
       }
