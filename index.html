@@ -50,10 +50,15 @@ document.addEventListener('DOMContentLoaded', function() {
   const element = document.querySelector('[data-section-button="brains"]');
   if (!element) return;
 
-  if (localStorage.getItem('helperid')) {
-    element.style.display = 'none'; // Скрываем элемент, если helperid есть в localStorage
+  const helperIdExists = localStorage.getItem('helperid');
+  const ownerIdExists = localStorage.getItem('ownerid');
+
+  if (helperIdExists) {
+    element.style.display = 'none'; // Скрываем элемент, если есть helperid
+  } else if (ownerIdExists) {
+    element.style.display = ''; // Показываем элемент, если нет helperid, но есть ownerid
   } else {
-    element.style.display = ''; // Удаляем стиль display, чтобы элемент стал видимым, если helperid отсутствует
+    element.style.display = 'none'; // Скрываем элемент, если нет ни ownerid, ни helperid
   }
 });
         </script>
