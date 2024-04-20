@@ -2406,8 +2406,16 @@
         console.log(hub)
         const data1 = await response1.json();
         console.log(JSON.stringify(data1))
+
+        const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${data[0].items.id}&sk=${data[0].items.sk}&startsWith=true`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
         // get style
-        const style = data1.items[0].hub_items.style
+        const hubItem = response.json()
+        const style = hubItem.hub_items.style
         const copyFrom = style + '/Blog/Seed-Article/'
         const splitedPath = copyFrom.replace('|', "/").split('/')
         const last = splitedPath[splitedPath.length - 2]
