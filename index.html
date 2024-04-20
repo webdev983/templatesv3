@@ -1275,7 +1275,7 @@
       });
 
     }
-    const updateFolder = async (path, new_value, last) => {
+    const updateFolder = async (path, new_value, last,d) => {
 
       const response1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}`);
       //list of sub paths
@@ -1900,7 +1900,7 @@
 
 
             if (update) {
-              await updateFolder(path, new_value, last)
+              await updateFolder(path, new_value, last,d)
             }
             else {
               await copyToTarget(path, new_value, backupCheck)
@@ -2420,7 +2420,7 @@
         const copyFrom = style + '/Blog/Seed-Article/'
         const splitedPath = copyFrom.replace('|', "/").split('/')
         const last = splitedPath[splitedPath.length - 2]
-        await updateFolder(copyFrom, path, last)
+        await updateFolder(copyFrom, path, last,new Date())
         path ? loadUsingPath() : loadFileList()
         return
       }
