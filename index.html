@@ -465,7 +465,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <div id="file-type">
           <label class="l-3"><input type="radio" checked name="choose-file-type">🧩 Empty</label>
           <label class="l-3"><input type="radio" name="choose-file-type">📦 Product</label>
-          <label class="l-3"><input type="radio" name="choose-file-type">📝 BlogPost</label>
+          <label class="l-3"><input type="radio" onchange="handleBlogPostChange(event)" name="choose-file-type">📝 BlogPost</label>
           <label class="l-3"><input type="radio" name="choose-file-type">💡 NewsPost</label>
         </div>
 
@@ -2272,9 +2272,15 @@ document.addEventListener('DOMContentLoaded', function() {
       var fieldset = document.querySelector('[data-element="choose-new-file-type"]');
       fieldset.removeAttribute('hidden');
     }
+    const handleBlogPostChange = (e)=>{
+      const storedPath = localStorage.getItem('storedPath')
+      document.querySelector('[data-input="create-new-file-path-input"]').textContent = storedPath.split('/')[0]+'/Blog'
+    }
     function createNew() {
 
       var fieldset2 = document.querySelector('[data-element="create-new-file-path"]');
+      const storedPath = localStorage.getItem('storedPath')
+      fieldset2.querySelector('[data-input="create-new-file-path-input"]').textContent = storedPath
       fieldset2.removeAttribute('hidden');
 
     }
