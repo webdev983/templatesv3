@@ -2080,14 +2080,34 @@ component</button> -->
           });
           const element0 = document.getElementById('ai-logs')
           element0.removeAttribute('hidden')
-          element0.querySelector('textarea').value = [element0.querySelector('textarea').value, JSON.stringify(res, null, 2)+'\n\n'+JSON.stringify(content)].join('\n\n=============================================\n\n')
+          element0.querySelector('textarea').value = [element0.querySelector('textarea').value, JSON.stringify(res, null, 2) + '\n\n' + JSON.stringify(content)].join('\n\n=============================================\n\n')
           for (const toImport of element.import_data) {
             const { import_page, import_name } = toImport
 
             const compid = document.querySelector(`[name="${import_page}"]`).parentNode.getAttribute('cid')
             const data = content[import_name]
-            const encodedData = encodeURIComponent(data);
-            const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&attr=${import_name}&val=${encodedData}&ownerid=${localStorage.getItem('ownerid')}` };
+            const currentDate = new Date();
+
+            // Add one day to the current date
+            const tomorrow = new Date(currentDate);
+            tomorrow.setDate(currentDate.getDate() + 1);
+
+            // Convert the date to ISO 8601 format (required by DynamoDB)
+            const ttl = tomorrow.getTime();
+            const db = {
+              id: generateUUID(),
+              sk: 'import',
+              ttl,
+              data,
+            }
+            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(),
+            });
+            const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&attr=${import_name}&val=${db.id}&ownerid=${localStorage.getItem('ownerid')}` };
             console.log('event ' + eventData.url)
             // Fetch options
             const options = {
@@ -8162,7 +8182,14 @@ elementsToRemove.forEach(element => element.remove());
         }
       }
     }
-    const handleImportGpt = async (inputValue, attr) => {
+    const handleImportGpt = async (valueId, attr) => {
+      const items1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${valueId}:import`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(el => el.json())
+      inputValue= items1.items.data
       let sku1 = pathItemSku || selectedSku
       // save content
       if (attr === 'meta_description') {
@@ -9519,7 +9546,7 @@ headers: {
         if (res.items.length) {
           const element = document.getElementById('ai-logs')
           element.removeAttribute('hidden')
-          element.querySelector('textarea').value = res.items.map(el => JSON.stringify(el.gptResponse, null, 2)+'\n\n'+JSON.stringify(el.content)+'\n\n').join('\n\n=============================================\n\n')
+          element.querySelector('textarea').value = res.items.map(el => JSON.stringify(el.gptResponse, null, 2) + '\n\n' + JSON.stringify(el.content) + '\n\n').join('\n\n=============================================\n\n')
         }
       }
       if (pathItem.hub_items?.list) {
