@@ -1861,7 +1861,8 @@ component</button> -->
 
         }
         else {
-          label.innerHTML = label.innerHTML.replace('Benefit', filteredKeys[0].replace('varlist_', ''))
+          const first = filteredKeys[0].replace('varlist_', '')
+          label.innerHTML = label.innerHTML.replace('Benefit', first)
           label.parentNode.querySelector('input').setAttribute('varname', filteredKeys[0])
           for (let i = 1; i < filteredKeys.length; i++) {
             const originalTd = label.parentNode
@@ -1869,7 +1870,7 @@ component</button> -->
             const clonedLabel = cloned.querySelector('[data-list-element-benefit-label]')
             const clonedInput = cloned.querySelector('input')
             clonedInput.setAttribute('varname', filteredKeys[i])
-            clonedLabel.innerHTML = clonedLabel.innerHTML.replace('Benefit', filteredKeys[i].replace('varlist_', ''))
+            clonedLabel.innerHTML = clonedLabel.innerHTML.replace(first, filteredKeys[i].replace('varlist_', ''))
             originalTd.parentNode.append(cloned)
 
           }
