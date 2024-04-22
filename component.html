@@ -8717,7 +8717,7 @@ elementsToRemove.forEach(element => element.remove());
           last = map.findLastIndex(e => e.index === foundIndex)
                   }
                   */
-                  const lastElement = map[map.length - 1].element
+                  const lastElement = previous.element
                   const newId = duplicateId(foundE.element.id).id
                   const actionObject = {
                     time: (new Date()).getTime(),
@@ -8787,6 +8787,7 @@ elementsToRemove.forEach(element => element.remove());
                   const newElement = { ...foundE, element: getElementById1(removeLastOccurrence(newId, '-tree')), set: true, index: foundIndex + 1 }
                   //map.splice(last + 1, 0, newElement);
                   map.push(newElement)
+                  previous = newElement
                   //lastElement.insertAdjacentElement('afterend', clonedE);
 
                 }
