@@ -2062,7 +2062,7 @@ component</button> -->
           });
           const element0 = document.getElementById('ai-logs')
           element0.removeAttribute('hidden')
-          element0.querySelector('textarea').value = [element0.querySelector('textarea').value,res].join('/n/n=============================================/n/n')
+          element0.querySelector('textarea').value = [element0.querySelector('textarea').value,JSON.stringify(res)].join('/n/n=============================================/n/n')
           for (const toImport of element.import_data) {
             const { import_page, import_name } = toImport
 
@@ -9484,7 +9484,7 @@ headers: {
         if (res.items.length) {
           const element = document.getElementById('ai-logs')
           element.removeAttribute('hidden')
-          element.querySelector('textarea').value = res.items.map(el => el.gptResponse).join('/n/n=============================================/n/n')
+          element.querySelector('textarea').value = res.items.map(el => JSON.stringify(el.gptResponse)).join('/n/n=============================================/n/n')
         }
       }
       if (pathItem.hub_items?.list) {
