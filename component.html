@@ -2062,7 +2062,7 @@ component</button> -->
           });
           const element0 = document.getElementById('ai-logs')
           element0.removeAttribute('hidden')
-          element0.querySelector('textarea').value = [element0.querySelector('textarea').value,JSON.stringify(res,null,2)].join('/n/n=============================================/n/n')
+          element0.querySelector('textarea').value = [element0.querySelector('textarea').value, JSON.stringify(res, null, 2)].join('/n/n=============================================/n/n')
           for (const toImport of element.import_data) {
             const { import_page, import_name } = toImport
 
@@ -8541,6 +8541,7 @@ elementsToRemove.forEach(element => element.remove());
               console.log('map is ' + JSON.stringify(map))
               let imgLead = false
               let pLead = false
+              let previous
               for (const child of Array.from(div.childNodes)) {
                 if (!child?.tagName) {
                   continue
@@ -8635,7 +8636,21 @@ elementsToRemove.forEach(element => element.remove());
                     await pushAction(el)
                   }
 
+                  if (previous && previous.element.nextElementSibling.id !== foundE.element.id) {
+                    let el2 = {
+                      time: (new Date()).getTime(),
+                      action: 'InsertAfter',
+                      target_element: [{ type: 'tag', id: previous.element.id + '-tree', }, { type: 'tag', id: foundE.element.id + '-tree' }],
+                    }
+                    await pushAction(el2)
+                    const index1 = map.findIndex(e => e.element.id === foundE.element.id)
+                    const index2 = map.findIndex(e => e.element.id === previous.element.id)
+                    const element = map.splice(index1, 1)[0];
+                    map.splice(index2 + 1, 0, element);
+                  }
+
                   foundE.set = true
+                  previous = foundE
                   //foundE.element.innerHTML = child.innerHTML
                 }
                 else {
@@ -9484,7 +9499,7 @@ headers: {
         if (res.items.length) {
           const element = document.getElementById('ai-logs')
           element.removeAttribute('hidden')
-          element.querySelector('textarea').value = res.items.map(el => JSON.stringify(el.gptResponse,null,2)).join('/n/n=============================================/n/n')
+          element.querySelector('textarea').value = res.items.map(el => JSON.stringify(el.gptResponse, null, 2)).join('/n/n=============================================/n/n')
         }
       }
       if (pathItem.hub_items?.list) {
