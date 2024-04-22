@@ -8686,7 +8686,7 @@ elementsToRemove.forEach(element => element.remove());
                     await pushAction(el)
                   }
 
-                  if (previous && previous.element.nextElementSibling.id !== foundE.element.id && !pLead1 && !imgLead) {
+                  if (previous && previous.element.nextElementSibling.id !== foundE.element.id ) {
                     let el2 = {
                       time: (new Date()).getTime(),
                       action: 'InsertAfter',
@@ -8701,15 +8701,9 @@ elementsToRemove.forEach(element => element.remove());
                   
 
                   foundE.set = true
+                  previous = foundE
                   
-                  if(pLead1 || imgLead1){
-                    
-                    pLead1 = false
-                    imgLead1 = false
-                  }
-                  else{
-                    previous = foundE
-                  }
+                  
                   //foundE.element.innerHTML = child.innerHTML
                 }
                 else {
