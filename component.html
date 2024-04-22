@@ -2086,7 +2086,8 @@ component</button> -->
 
             const compid = document.querySelector(`[name="${import_page}"]`).parentNode.getAttribute('cid')
             const data = content[import_name]
-            const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&attr=${import_name}&val=${data}&ownerid=${localStorage.getItem('ownerid')}` };
+            const encodedData = encodeURIComponent(data);
+            const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&attr=${import_name}&val=${encodedData}&ownerid=${localStorage.getItem('ownerid')}` };
             console.log('event ' + eventData.url)
             // Fetch options
             const options = {
