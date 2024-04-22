@@ -8,11 +8,11 @@
 
   <script>
 
-if (localStorage.getItem('token') === '5cc4d822-f4c7-446d-b43c-7fde7b3f9d9b') {
-  localStorage.setItem('usertype', 'style');
-} else {
-  localStorage.setItem('usertype', 'su777');
-}
+    if (localStorage.getItem('token') === '5cc4d822-f4c7-446d-b43c-7fde7b3f9d9b') {
+      localStorage.setItem('usertype', 'style');
+    } else {
+      localStorage.setItem('usertype', 'su777');
+    }
 
     document.addEventListener('DOMContentLoaded', function () {
       var userType = localStorage.getItem('usertype');
@@ -196,11 +196,11 @@ if (localStorage.getItem('token') === '5cc4d822-f4c7-446d-b43c-7fde7b3f9d9b') {
 
     </div>
     <div id="head-1" class="horizontal-area" data-user hidden>
-      <details hidden style="margin-bottom: 7px; " >
+      <details hidden style="margin-bottom: 7px; " id="ai-logs">
         <summary class="summary-L-3"><span class="l-3">🪵 AI logs</span></summary>
         <textarea class="text1"></textarea>
       </details>
-          
+
       <details style="margin-bottom: 7px; " data-list hidden>
         <summary class="summary-L-3"><span class="l-3" data-list-emoji>📣</span><span> </span><span
             class="l-3 b-dark-blue" data-list-name>
@@ -2020,12 +2020,12 @@ component</button> -->
         cloned.querySelector('[data-ai-label]').textContent = element.name;
         const status = cloned.querySelector('[data-ai-status]')
         let ex = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${headContentItem.id}&sk=${`ai:${element.name}`}&startsWith=true`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }).then(e => e.json())
-        if(ex.items.length){
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(e => e.json())
+        if (ex.items.length) {
           status.textContent = '🟢'
         }
         cloned.querySelector('[data-ai-send]').addEventListener('click', async () => {
@@ -2037,6 +2037,32 @@ component</button> -->
           const res = await sendGptRequest(gptToken, task, element.model)
           console.log(JSON.stringify(res))
           const content = JSON.parse(res.choices[0].message.content)
+
+          const currentDate = new Date();
+
+          // Add one day to the current date
+          const tomorrow = new Date(currentDate);
+          tomorrow.setDate(currentDate.getDate() + 1);
+
+          // Convert the date to ISO 8601 format (required by DynamoDB)
+          const ttl = tomorrow.getTime();
+          const aiPayload = {
+            id: pathItem.id,
+            sk: `ai-logs:${new Date().getTime()}`,
+            content,
+            gptResponse: res,
+            ttl
+          }
+          await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(aiPayload),
+          });
+          const element0 = document.getElementById('ai-logs')
+          element0.removeAttribute('hidden')
+          element0.querySelector('textarea').value = [element0.querySelector('textarea').value,res].join('/n/n=============================================/n/n')
           for (const toImport of element.import_data) {
             const { import_page, import_name } = toImport
 
@@ -2053,6 +2079,7 @@ component</button> -->
               body: JSON.stringify(eventData)
             };
             const response = await fetch(pup_url, options);
+
 
             if (!response.ok) {
               console.log('error pup')
@@ -2073,7 +2100,7 @@ component</button> -->
             body: JSON.stringify(payload),
           });
           status.textContent = '🟢'
-          
+
         })
         originalRow.parentNode.append(cloned);
       }
@@ -8440,7 +8467,7 @@ elementsToRemove.forEach(element => element.remove());
             let index
             let itemsArr = []
 
-            const handleImport = async (e, update, ) => {
+            const handleImport = async (e, update,) => {
               const inputValue = input.value
               // save content
               if (attr.startsWith('product')) {
@@ -9448,6 +9475,17 @@ headers: {
 
       if (pathItem.hub_items?.gpt) {
         await showai(pathItem.hub_items?.gpt)
+        const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pathItem.id}&sk=ai-logs:&startsWith=true`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(e => e.json())
+        if (res.items.length) {
+          const element = document.getElementById('ai-logs')
+          element.removeAttribute('hidden')
+          element.querySelector('textarea').value = res.items.map(el => el.gptResponse).join('/n/n=============================================/n/n')
+        }
       }
       if (pathItem.hub_items?.list) {
         await showList(pathItem.hub_items?.list)
