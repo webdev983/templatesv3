@@ -8599,14 +8599,16 @@ elementsToRemove.forEach(element => element.remove());
                 console.log(tag)
                 let foundE
                 if (tag === 'img' && !imgLead) {
-                  imgLead = true
+                  
                   imgLead1 = true
                   foundE = map.findLast(e => e.tag === 'img-lead') || map.findLast(e => e.tag === 'img')
+                  imgLead = foundE
                 }
                 else if (tag === "p" && !pLead) {
-                  pLead = true
+                  
                   pLead1 = true
                   foundE = map.findLast(e => e.tag === 'p-lead') || map.findLast(e => e.tag === 'p')
+                  pLead = foundE
                 }
                 else {
                   foundE = map.findLast(el => el.tag === tag)
@@ -8685,8 +8687,8 @@ elementsToRemove.forEach(element => element.remove());
                     }
                     await pushAction(el)
                   }
-
-                  if (previous && previous.element.nextElementSibling.id !== foundE.element.id ) {
+                  var siblings = Array.from(foundE.element.parentNode.children);
+                  if (previous && siblings.indexOf(foundElement) < siblings.indexOf(previousElement) ) {
                     let el2 = {
                       time: (new Date()).getTime(),
                       action: 'InsertAfter',
