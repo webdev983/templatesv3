@@ -8587,6 +8587,8 @@ elementsToRemove.forEach(element => element.remove());
               console.log('map is ' + JSON.stringify(map))
               let imgLead = false
               let pLead = false
+              let imgLead1 = false
+              let pLead1 = false
               let previous
               for (const child of Array.from(div.childNodes)) {
                 if (!child?.tagName) {
@@ -8598,10 +8600,12 @@ elementsToRemove.forEach(element => element.remove());
                 let foundE
                 if (tag === 'img' && !imgLead) {
                   imgLead = true
+                  imgLead1 = true
                   foundE = map.findLast(e => e.tag === 'img-lead') || map.findLast(e => e.tag === 'img')
                 }
                 else if (tag === "p" && !pLead) {
                   pLead = true
+                  pLead1 = true
                   foundE = map.findLast(e => e.tag === 'p-lead') || map.findLast(e => e.tag === 'p')
                 }
                 else {
@@ -8682,7 +8686,7 @@ elementsToRemove.forEach(element => element.remove());
                     await pushAction(el)
                   }
 
-                  if (previous && previous.element.nextElementSibling.id !== foundE.element.id) {
+                  if (previous && previous.element.nextElementSibling.id !== foundE.element.id && !pLead1 && !imgLead) {
                     let el2 = {
                       time: (new Date()).getTime(),
                       action: 'InsertAfter',
@@ -8693,6 +8697,11 @@ elementsToRemove.forEach(element => element.remove());
                     const index2 = map.findIndex(e => e.element.id === previous.element.id)
                     const element = map.splice(index1, 1)[0];
                     map.splice(index2 + 1, 0, element);
+                  }
+                  else{
+                    previous = undefined
+                    pLead1 = false
+                    imgLead1 = false
                   }
 
                   foundE.set = true
