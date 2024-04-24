@@ -464,7 +464,7 @@
           data-action="create-new-file-path-cancel">❌</button>
         <div id="file-type">
           <label class="l-3"><input type="radio" checked name="choose-file-type">🧩 Empty</label>
-          <label class="l-3"><input type="radio" name="choose-file-type">📦 Product</label>
+          <label class="l-3"><input type="radio" name="choose-file-type" onchange="handleProductPostChange(event)">📦 Product</label>
           <label class="l-3"><input type="radio" id="blog-checkbox" onchange="handleBlogPostChange(event)"
               name="choose-file-type">📝 BlogPost</label>
           <label class="l-3"><input type="radio" name="choose-file-type">💡 NewsPost</label>
@@ -2283,6 +2283,10 @@
     const handleBlogPostChange = (e) => {
       const storedPath = localStorage.getItem('storedPath')
       document.querySelector('[data-input="create-new-file-path-input"]').value = storedPath.split('/')[0] + '/Blog/'
+    }
+    const handleProductPostChange = (e) => {
+      const pathE = document.getElementById('file-path-list-attached')
+      pathE.removeAttribute('hidden')
     }
     function createNew() {
 
