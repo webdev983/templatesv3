@@ -1840,19 +1840,19 @@ component</button> -->
       await showList(value)
     }
 
-    var showList = async (lists) => {
-      let parsedLists 
-      try{
+    var showList = async (lists, nohide) => {
+      let parsedLists
+      try {
         parsedLists = JSON.parse(lists)
       }
-      catch(e){
+      catch (e) {
         const input = document.getElementById('list-input')
-        input.value = 'INCORRECT LIST JSON \n============================\n'+ input.value
+        input.value = 'INCORRECT LIST JSON \n============================\n' + input.value
         return
       }
-      
+
       const list1 = document.querySelector('[data-list][hidden]')
-      document.querySelectorAll('[data-list]:not([hidden])').forEach(e => e.remove())
+      !nohide && document.querySelectorAll('[data-list]:not([hidden])').forEach(e => e.remove())
       for (const list of parsedLists['data-lists']) {
         const cloned = list1.cloneNode(true)
         cloned.removeAttribute('hidden')
@@ -8192,12 +8192,12 @@ elementsToRemove.forEach(element => element.remove());
     }
     const handleImportGpt = async (valueId, attr) => {
       const items1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${valueId}:import`, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            }).then(el => el.json())
-      inputValue= items1.data
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(el => el.json())
+      inputValue = items1.data
       let sku1 = pathItemSku || selectedSku
       // save content
       if (attr === 'meta_description') {
@@ -8607,13 +8607,13 @@ elementsToRemove.forEach(element => element.remove());
                 console.log(tag)
                 let foundE
                 if (tag === 'img' && !imgLead) {
-                  
+
                   imgLead1 = true
                   foundE = map.findLast(e => e.tag === 'img-lead') || map.findLast(e => e.tag === 'img')
                   imgLead = foundE
                 }
                 else if (tag === "p" && !pLead) {
-                  
+
                   pLead1 = true
                   foundE = map.findLast(e => e.tag === 'p-lead') || map.findLast(e => e.tag === 'p')
                   pLead = foundE
@@ -8696,7 +8696,7 @@ elementsToRemove.forEach(element => element.remove());
                     await pushAction(el)
                   }
                   var siblings = Array.from(foundE.element.parentNode.children);
-                  if (previous && siblings.indexOf(foundE.element) < siblings.indexOf(previous.element) ) {
+                  if (previous && siblings.indexOf(foundE.element) < siblings.indexOf(previous.element)) {
                     let el2 = {
                       time: (new Date()).getTime(),
                       action: 'InsertAfter',
@@ -8708,12 +8708,12 @@ elementsToRemove.forEach(element => element.remove());
                     const element = map.splice(index1, 1)[0];
                     map.splice(index2 + 1, 0, element);
                   }
-                  
+
 
                   foundE.set = true
                   previous = foundE
-                  
-                  
+
+
                   //foundE.element.innerHTML = child.innerHTML
                 }
                 else {
@@ -9571,19 +9571,25 @@ headers: {
       if (pathItem.hub_items?.list) {
         await showList(pathItem.hub_items?.list)
       }
-
-
+      mainHubLsi = splited[0] + '/Home|Hub'
+      url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${mainHubLsi}`;
+      const mainHub = fetch(url).then(e => e.json()).then(e => e.items[0])
+        .then(e => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${e.id}:${e.sk}`))
+        .then(e => e.json())
+      if (mainHubLsi.hub_items?.list) {
+        await showList(mainHubLsi.hub_items?.list)
+      }
       /*
-      querySelectorAll1('[data-product]').forEach(
-        element => {
+querySelectorAll1('[data-product]').forEach(
+element => {
 const prev = element.getAttribute('data-product')
 if (prev) {
-  const [first, last] = prev.split(';')
-  element.setAttribute('data-product', [first, name].join(';'))
+const [first, last] = prev.split(';')
+element.setAttribute('data-product', [first, name].join(';'))
 }
-        }
-      )
-      */
+}
+)
+*/
 
 
     }
