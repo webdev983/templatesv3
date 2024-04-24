@@ -476,16 +476,12 @@
 
         <ol hidden data-element="file-path-list-attached" id="file-path-list-attached" class="list-1"
           style="margin-left: -10px;">
-          <li data-element="file-pathpattached" id="file-pathpattached">
+          <li data-element="file-pathpattached" hidden id="file-pathpattached">
             <label class="l-3" style="margin-right: 3px;" id="Pushpin">📌</label>
             <label data-value="file-path" class="l-3">universal/blablabla/blablabla/coolcss</label>
             <label data-value="file-emoji" style="user-select: none; margin-left: 5px;" class="l-3">🧩</label>
           </li>
-          <li data-element="file-pathpattached" id="file-pathpattached">
-            <label class="l-3" style="margin-right: 3px;" id="Pushpin">📌</label>
-            <label data-value="file-path" class="l-3">universal/blablabla/blablabla/coolcss</label>
-            <label data-value="file-emoji" style="user-select: none; margin-left: 5px;" class="l-3">📂</label>
-          </li>
+         
         </ol>
         <div style="margin-left:30px;">
           <button data-action="create-new-file-path-save" onclick="loader(event,savePath)" class="b-4">💾 Save</button>
@@ -1229,7 +1225,14 @@
         // Toggle the visibility of the file ID element
         fieldset.insertAdjacentElement('afterend', cloned);
       }
-
+      const addProduct = (id)=>{
+        const name = itemLsi1 
+        const original = document.getElementById('file-pathpattached')
+        const cloned = original.cloneNode(true)
+        cloned.removeAttribute('hidden')
+        cloned.querySelector('[data-value="file-path"]').textContent = name
+        original.parentElement.append(cloned)
+      }
       addMenuEntry(menu, 'ℹ️ Info', (e) => showId1(id))
       addMenuEntry(menu, '✏️ Edit', (e) => edit(id))
       addMenuEntry(menu, '🗑️ Delete', (e) => openRemove1(id))
@@ -2126,7 +2129,15 @@
         // Toggle the visibility of the file ID element
         fieldset.insertAdjacentElement('afterend', cloned);
       }
-
+      const addProduct = (id,path)=>{
+        const name = path
+        const original = document.getElementById('file-pathpattached')
+        const cloned = original.cloneNode(true)
+        cloned.removeAttribute('hidden')
+        cloned.querySelector('[data-value="file-path"]').textContent = name
+        cloned.querySelector('[data-value="file-emoji"]').textContent = '📂'
+        original.parentElement.append(cloned)
+      }
       addMenuEntry(menu, '✏️ Edit', (e) => edit(id, path))
       addMenuEntry(menu, '🗑️ Delete', (e) => openRemove1(id, path))
       addMenuEntry(menu, '⧉ Copy', (e) => copy(id, path))
