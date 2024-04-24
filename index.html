@@ -2460,7 +2460,10 @@
         const elements = document.querySelectorAll('[data-element="file-pathpattached"]')
         const folders = Array.from(elements).filter(e => e.hasAttribute('folder')).map(e => e.getAttribute('folder'))
         const components = Array.from(elements).filter(e => e.hasAttribute('component')).map(e => { return { lsi1: e.getAttribute('component'), id: e.id } })
-        const components2 = [...components]
+        const components1 = await Promise.all(
+          components.map(({ id }) => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:path`))
+        )
+        const components2 = [...components1]
         for (const folder of folders) {
           const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${folder.slice(0, -1) + '|'}`);
           //list of sub paths
@@ -2472,8 +2475,20 @@
           const splitedPath = copyFrom.replace('|', "/").split('/')
           const last = splitedPath[splitedPath.length - 2]
           const compName = component.lsi1.split(';')[0].split('|')[1]
-          const copyTo = newPath.split('/')[0] + '/Products/'+compName+'/'
+          const copyTo = newPath.split('/')[0] + '/Products/' + compName + '/'
           await updateFolder(copyFrom, copyTo, last, new Date())
+          //Set sku
+          const headLSI = copyTo + 'Content/Page|Head-Content'
+          const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${headLSI}`);
+          //list of sub paths
+          const { items } = await response.json();
+          const toUp = items[0]
+          toUp.sku = component.sku
+          await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/upload', {
+            method: 'POST',
+            body: JSON.stringify(toUp),
+          });
+
         }
 
 
