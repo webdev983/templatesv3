@@ -1841,8 +1841,15 @@ component</button> -->
     }
 
     var showList = async (lists) => {
-
-      const parsedLists = JSON.parse(lists)
+      let parsedLists 
+      try{
+        parsedLists = JSON.parse(lists)
+      }
+      catch(e){
+        
+        return
+      }
+      
       const list1 = document.querySelector('[data-list][hidden]')
       document.querySelectorAll('[data-list]:not([hidden])').forEach(e => e.remove())
       for (const list of parsedLists['data-lists']) {
