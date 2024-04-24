@@ -464,7 +464,8 @@
           data-action="create-new-file-path-cancel">❌</button>
         <div id="file-type">
           <label class="l-3"><input type="radio" checked name="choose-file-type">🧩 Empty</label>
-          <label class="l-3"><input type="radio" name="choose-file-type" onchange="handleProductPostChange(event)">📦 Product</label>
+          <label class="l-3"><input type="radio" id="product-checkbox" name="choose-file-type"
+              onchange="handleProductPostChange(event)">📦 Product</label>
           <label class="l-3"><input type="radio" id="blog-checkbox" onchange="handleBlogPostChange(event)"
               name="choose-file-type">📝 BlogPost</label>
           <label class="l-3"><input type="radio" name="choose-file-type">💡 NewsPost</label>
@@ -481,7 +482,7 @@
             <label data-value="file-path" class="l-3">universal/blablabla/blablabla/coolcss</label>
             <label data-value="file-emoji" style="user-select: none; margin-left: 5px;" class="l-3">🧩</label>
           </li>
-         
+
         </ol>
         <div style="margin-left:30px;">
           <button data-action="create-new-file-path-save" onclick="loader(event,savePath)" class="b-4">💾 Save</button>
@@ -1225,10 +1226,12 @@
         // Toggle the visibility of the file ID element
         fieldset.insertAdjacentElement('afterend', cloned);
       }
-      const addProduct = (id)=>{
-        const name = itemLsi1 
+      const addProduct = (id) => {
+        const name = itemLsi1
         const original = document.getElementById('file-pathpattached')
         const cloned = original.cloneNode(true)
+        cloned.setAttribute('component', itemLsi1)
+        cloned.id = id
         cloned.removeAttribute('hidden')
         cloned.querySelector('[data-value="file-path"]').textContent = name
         original.parentElement.append(cloned)
@@ -1279,7 +1282,7 @@
       });
 
     }
-    const updateFolder = async (path, new_value, last,d) => {
+    const updateFolder = async (path, new_value, last, d) => {
 
       const response1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}`);
       //list of sub paths
@@ -1439,7 +1442,7 @@
             lsi1: newLSI,
             protected: false,
             href: undefined,
-            hosting_time:undefined
+            hosting_time: undefined
 
           }
           pathI.hub_items && (payload.hub_items = pathI.hub_items)
@@ -1577,7 +1580,7 @@
               lsi1: newLSI,
               protected: false,
               href: undefined,
-              hosting_time:undefined
+              hosting_time: undefined
             }),
           })
           console.log('created ' + newLSI)
@@ -1906,7 +1909,7 @@
 
 
             if (update) {
-              await updateFolder(path, new_value, last,d)
+              await updateFolder(path, new_value, last, d)
             }
             else {
               await copyToTarget(path, new_value, backupCheck)
@@ -2130,10 +2133,12 @@
         // Toggle the visibility of the file ID element
         fieldset.insertAdjacentElement('afterend', cloned);
       }
-      const addProduct = (id,path)=>{
+      const addProduct = (id, path) => {
         const name = path
         const original = document.getElementById('file-pathpattached')
+
         const cloned = original.cloneNode(true)
+        cloned.setAttribute('folder', path)
         cloned.removeAttribute('hidden')
         cloned.querySelector('[data-value="file-path"]').textContent = name
         cloned.querySelector('[data-value="file-emoji"]').textContent = '📂'
@@ -2302,15 +2307,15 @@
     const handleProductPostChange = (e) => {
       const pathE = document.getElementById('file-path-list-attached')
       console.log('checked')
-      if(e.target.checked){
+      if (e.target.checked) {
         pathE.removeAttribute('hidden')
         product = true
       }
-      else{
-        pathE.setAttribute('hidden','')
+      else {
+        pathE.setAttribute('hidden', '')
       }
-      
-      
+
+
     }
     function createNew() {
 
@@ -2419,6 +2424,8 @@
       fieldset2.setAttribute('hidden', '');
       const blogCheckbox = document.getElementById('blog-checkbox')
 
+      const productCheckbox = document.getElementById('product-checkbox')
+
       // Access the type from the choose-new-file-type fieldset
       // var type = document.querySelector('[data-element="choose-new-file-type"]').getAttribute('type');
 
@@ -2429,6 +2436,50 @@
 
       // Create a new path based on the type
       var newPath = path;
+      if (productCheckbox.checked) {
+        //get style from hub
+        const hub = newPath.split('/')[0] + '/Home|Hub'
+        const response1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${hub}`);
+        //list of sub paths
+        console.log(hub)
+        const data1 = await response1.json();
+        console.log(JSON.stringify(data1))
+
+        const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${data1.items[0].id}&sk=${data1.items[0].sk}&startsWith=true`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        // get style
+        const hubItems = await response.json()
+        console.log(JSON.stringify(hubItems))
+        const style = hubItems.items[0].hub_items.style
+
+
+        const elements = document.querySelectorAll('[data-element="file-pathpattached"]')
+        const folders = Array.from(elements).filter(e => e.hasAttribute('folder')).map(e => e.getAttribute('folder'))
+        const components = Array.from(elements).filter(e => e.hasAttribute('component')).map(e => { return { lsi1: e.getAttribute('component'), id: e.id } })
+        const components2 = [...components]
+        for (const folder of folders) {
+          const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${folder.slice(0, -1) + '|'}`);
+          //list of sub paths
+          const { items } = await response.json();
+          components2 = [...components2, ...items]
+        }
+        for (const component of components) {
+          const copyFrom = style + '/Products/Seed-Product/'
+          const splitedPath = copyFrom.replace('|', "/").split('/')
+          const last = splitedPath[splitedPath.length - 2]
+          const compName = component.lsi1.split(';')[0].split('|')[1]
+          const copyTo = newPath.split('/')[0] + '/Products|'+compName
+          await updateFolder(copyFrom, copyTo, last, new Date())
+        }
+
+
+        path ? loadUsingPath() : loadFileList()
+        return
+      }
       if (blogCheckbox.checked) {
         const hub = newPath.split('/')[0] + '/Home|Hub'
         const response1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${hub}`);
@@ -2438,11 +2489,11 @@
         console.log(JSON.stringify(data1))
 
         const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${data1.items[0].id}&sk=${data1.items[0].sk}&startsWith=true`, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            });
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
         // get style
         const hubItems = await response.json()
         console.log(JSON.stringify(hubItems))
@@ -2450,7 +2501,7 @@
         const copyFrom = style + '/Blog/Seed-Article/'
         const splitedPath = copyFrom.replace('|', "/").split('/')
         const last = splitedPath[splitedPath.length - 2]
-        await updateFolder(copyFrom, path, last,new Date())
+        await updateFolder(copyFrom, path, last, new Date())
         path ? loadUsingPath() : loadFileList()
         return
       }
