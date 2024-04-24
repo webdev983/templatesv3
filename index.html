@@ -1235,7 +1235,7 @@
       addMenuEntry(menu, '🗑️ Delete', (e) => openRemove1(id))
       addMenuEntry(menu, '⧉ Copy', (e) => copy(id))
       addMenuEntry(menu, '👤 User', (e) => changeOwner(id))
-      addMenuEntry(menu, '📦 Product +', (e) => zz(id))
+      product && addMenuEntry(menu, '📦 Product +', (e) => addProduct(id))
 
       if (protected) {
         addMenuEntry(menu, '❌ Protection -', (e) => setProtected(id, false))
@@ -2131,7 +2131,7 @@
       addMenuEntry(menu, '🗑️ Delete', (e) => openRemove1(id, path))
       addMenuEntry(menu, '⧉ Copy', (e) => copy(id, path))
       addMenuEntry(menu, '👤 User', (e) => changeOwner(id, path))
-      addMenuEntry(menu, '📦 Product +', (e) => zz(id, path))
+      product && addMenuEntry(menu, '📦 Product +', (e) => addProduct(id, path))
       addMenuEntry(menu, '✅ Protection +', (e) => setProtected(id, path, true))
       addMenuEntry(menu, '❌ Protection -', (e) => setProtected(id, path, false))
 
@@ -2284,11 +2284,13 @@
       const storedPath = localStorage.getItem('storedPath')
       document.querySelector('[data-input="create-new-file-path-input"]').value = storedPath.split('/')[0] + '/Blog/'
     }
+    var product = false
     const handleProductPostChange = (e) => {
       const pathE = document.getElementById('file-path-list-attached')
       console.log('checked')
       if(e.target.checked){
         pathE.removeAttribute('hidden')
+        product = true
       }
       else{
         pathE.setAttribute('hidden','')
