@@ -2461,8 +2461,8 @@
         const folders = Array.from(elements).filter(e => e.hasAttribute('folder')).map(e => e.getAttribute('folder'))
         const components = Array.from(elements).filter(e => e.hasAttribute('component')).map(e => { return { lsi1: e.getAttribute('component'), id: e.id } })
         const components1 = await Promise.all(
-          components.map(({ id }) => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:path`).then(e=>e.json()).then(r=>{
-            r.id=id
+          components.map(({ id }) => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:path`).then(e => e.json()).then(r => {
+            r.id = id
             return r
           }))
         )
@@ -2471,16 +2471,16 @@
           const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${folder.slice(0, -1) + '|'}`);
           //list of sub paths
           const { items } = await response.json();
-          const items2 =  await Promise.all(
-            items.map(({ id }) => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:path`).then(e=>e.json()).then(r=>{
-            r.id=id
-            return r
-          }))
-        )
+          const items2 = await Promise.all(
+            items.map(({ id }) => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:path`).then(e => e.json()).then(r => {
+              r.id = id
+              return r
+            }))
+          )
           components2 = [...components2, ...items2]
         }
-        for (const component of components) {
-          console.log('component'+ JSON.stringify(component))
+        for (const component of components2) {
+          console.log('component' + JSON.stringify(component))
           const copyFrom = style + '/Products/Seed-Product/'
           const splitedPath = copyFrom.replace('|', "/").split('/')
           const last = splitedPath[splitedPath.length - 2]
@@ -2493,7 +2493,7 @@
           //list of sub paths
           const { items } = await response.json();
           const toUp = items[0]
-          const item =await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${toUp.id}:path`).then(r=>r.json())
+          const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${toUp.id}:path`).then(r => r.json())
           item.sku = component.sku
           console.log(JSON.stringify(item))
           await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
