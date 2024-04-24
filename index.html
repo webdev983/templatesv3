@@ -2474,6 +2474,7 @@
           components2 = [...components2, ...items]
         }
         for (const component of components) {
+          console.log('component'+ JSON.stringify(component))
           const copyFrom = style + '/Products/Seed-Product/'
           const splitedPath = copyFrom.replace('|', "/").split('/')
           const last = splitedPath[splitedPath.length - 2]
@@ -2488,10 +2489,10 @@
           const toUp = items[0]
           const item =await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${toUp.id}:path`).then(r=>r.json())
           item.sku = component.sku
-          console.log(JSON.stringify(toUp))
+          console.log(JSON.stringify(item))
           await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
             method: 'POST',
-            body: JSON.stringify(toUp),
+            body: JSON.stringify(item),
           });
 
         }
