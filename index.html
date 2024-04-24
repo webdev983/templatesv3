@@ -2493,7 +2493,9 @@
           //list of sub paths
           const { items } = await response.json();
           const toUp = items[0]
-          const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${toUp.id}:path`).then(r => r.json())
+          const url =`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${toUp.id}:${toUp.sk}`
+          console.log(url)
+          const item = await fetch(url).then(r => r.json())
           item.id= toUp.id
           item.sku = component.sku
           console.log(JSON.stringify(item))
