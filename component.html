@@ -9573,7 +9573,7 @@ headers: {
       }
       mainHubLsi = splited[0] + '/Home|Hub'
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${mainHubLsi}`;
-      const mainHub = fetch(url).then(e => e.json()).then(e => e.items[0])
+      const mainHub =await fetch(url).then(e => e.json()).then(e => e.items[0])
         .then(e => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${e.id}:${e.sk}`))
         .then(e => e.json())
       if (mainHubLsi.hub_items?.list) {
