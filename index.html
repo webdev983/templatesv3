@@ -1233,12 +1233,13 @@
         cloned.querySelector('[data-value="file-path"]').textContent = name
         original.parentElement.append(cloned)
       }
+      const storedPath = localStorage.getItem('storedPath')
       addMenuEntry(menu, 'ℹ️ Info', (e) => showId1(id))
       addMenuEntry(menu, '✏️ Edit', (e) => edit(id))
       addMenuEntry(menu, '🗑️ Delete', (e) => openRemove1(id))
       addMenuEntry(menu, '⧉ Copy', (e) => copy(id))
       addMenuEntry(menu, '👤 User', (e) => changeOwner(id))
-      product && addMenuEntry(menu, '📦 Product +', (e) => addProduct(id))
+      storedPath.startsWith('Stock') && product && addMenuEntry(menu, '📦 Product +', (e) => addProduct(id))
 
       if (protected) {
         addMenuEntry(menu, '❌ Protection -', (e) => setProtected(id, false))
@@ -2137,13 +2138,14 @@
         cloned.querySelector('[data-value="file-path"]').textContent = name
         cloned.querySelector('[data-value="file-emoji"]').textContent = '📂'
         original.parentElement.append(cloned)
-        
+
       }
+      const storedPath = localStorage.getItem('storedPath')
       addMenuEntry(menu, '✏️ Edit', (e) => edit(id, path))
       addMenuEntry(menu, '🗑️ Delete', (e) => openRemove1(id, path))
       addMenuEntry(menu, '⧉ Copy', (e) => copy(id, path))
       addMenuEntry(menu, '👤 User', (e) => changeOwner(id, path))
-      product && addMenuEntry(menu, '📦 Product +', (e) => addProduct(id, path))
+      storedPath.startsWith('Stock') && product && addMenuEntry(menu, '📦 Product +', (e) => addProduct(id, path))
       addMenuEntry(menu, '✅ Protection +', (e) => setProtected(id, path, true))
       addMenuEntry(menu, '❌ Protection -', (e) => setProtected(id, path, false))
 
