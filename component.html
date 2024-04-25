@@ -1857,7 +1857,7 @@ component</button> -->
         const cloned = list1.cloneNode(true)
         cloned.removeAttribute('hidden')
         const storage = list.data_storage
-        let storageId =storageId1 ??( (storage === 'sku') ? (pathItemSku || selectedSku) : headContentItem.id)
+        let storageId = storageId1 ?? ((storage === 'sku') ? (pathItemSku || selectedSku) : headContentItem.id)
         cloned.querySelector('[data-list-emoji]').textContent = list.emoji
         cloned.querySelector('[data-list-name]').textContent = list.name
         const listOriginalElement = cloned.querySelector('[data-lists-element]')
@@ -8880,7 +8880,7 @@ elementsToRemove.forEach(element => element.remove());
         */
       }
     }
-    
+
     const handleWebPageMenu = () => {
       const splited = pathItemPath.split(';')[0].split('/')
       const menu = document.getElementById('web-page-menu')
@@ -9573,17 +9573,21 @@ headers: {
         await showList(pathItem.hub_items?.list)
       }
       mainHubLsi = splited[0] + '/Home|Hub'
-      url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${mainHubLsi}`;
-      const mainHub =await fetch(url).then(e => e.json()).then(e => e.items[0])
-        .then(e => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${e.id}:${e.sk}`))
-        .then(e => e.json())
-        .catch(e=>e)
-      if (mainHub?.hub_items?.list) {
-        headHubLsi = splited[0] + '/Home/Content/Page|Head-Content'
-        url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headHubLsi}`;
-        const {items } = await fetch(url).then(e => e.json())
-        await showList(mainHub.hub_items?.list,items[0].id)
+      if (pathItemPath.split(';')[0] !== mainHubLsi) {
+        url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${mainHubLsi}`;
+        const mainHub = await fetch(url).then(e => e.json()).then(e => e.items[0])
+          .then(e => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${e.id}:${e.sk}`))
+          .then(e => e.json())
+          .catch(e => e)
+        if (mainHub?.hub_items?.list) {
+          headHubLsi = splited[0] + '/Home/Content/Page|Head-Content'
+          url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headHubLsi}`;
+          const { items } = await fetch(url).then(e => e.json())
+          await showList(mainHub.hub_items?.list, items[0].id)
+        }
       }
+
+
       /*
 querySelectorAll1('[data-product]').forEach(
 element => {
