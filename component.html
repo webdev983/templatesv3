@@ -532,7 +532,8 @@
               <time data-picture-time class="l-3 b-dark-blue">24.02.23 15:39</time>
               <br>
               <div data-picture-attached>
-                <label class="l-3">Attached: </label><label class="l-3 b-dark-blue" data-picture-attached-label> 📎Yes</label>
+                <label class="l-3">Attached: </label><label class="l-3 b-dark-blue" data-picture-attached-label>
+                  📎Yes</label>
                 <label class="attached">📎</label>
               </div>
               <div data-file-name-show="Product-Content">
@@ -546,7 +547,7 @@
               </div>
               <div>
                 <button class="b-3" data-select-image>✅ Attach</button>
-                
+
                 <button class="b-3" data-remove-image>🗑️ Delete️</button>
               </div>
 
@@ -989,36 +990,36 @@ component</button> -->
     var cancelGalleryMenu = (event) => {
       event.target.closest('#menu-1').style.display = 'none';
     }
-    var handleMainChange =async (e,item)=>{
+    var handleMainChange = async (e, item) => {
       const checked = e.target.checked
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(
-            {...item,main:checked}
-          ),
-        });
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+          { ...item, main: checked }
+        ),
+      });
     }
-    var handleSecondaryChange =async (e,item)=>{
+    var handleSecondaryChange = async (e, item) => {
       const checked = e.target.checked
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(
-            {...item,secondary:checked}
-          ),
-        });
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+          { ...item, secondary: checked }
+        ),
+      });
     }
     var loadImages = async (clonedFieldset, src) => {
-      
+
       clonedFieldset.querySelector('#remove-galeryMenu').onclick = (e) => {
         e.target.closest('fieldset').remove()
       }
-      clonedFieldset.querySelector('#upload-button').onclick =(e) =>handleUpload1(e,src)
+      clonedFieldset.querySelector('#upload-button').onclick = (e) => handleUpload1(e, src)
       const id = pathItemSku || pathItem.id
       let mergedItems = []
       const res = await Promise.all([...Object.keys(cache), id].map(e => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${e}&sk=pics&startsWith=true`, {
@@ -1032,7 +1033,7 @@ component</button> -->
       ))
 
       let items = mergedItems
-      items.sort((a,b)=>b.sk.localeCompare(a.sk))
+      items.sort((a, b) => b.sk.localeCompare(a.sk))
       console.log('items' + JSON.stringify(items))
       const table = clonedFieldset.querySelector('#gallery-body');
       const templateRow = clonedFieldset.querySelector('#gallery-item');
@@ -1044,14 +1045,14 @@ component</button> -->
         clonedRow.querySelector('[data-picture-time]').textContent = item.date || ''
         const mainCheckbox = clonedRow.querySelector('[data-picture-main-checkbox]')
         mainCheckbox.checked = !!item.main
-        mainCheckbox.onchange =(e)=> handleMainChange(e,item)
+        mainCheckbox.onchange = (e) => handleMainChange(e, item)
         const secondaryCheckbox = clonedRow.querySelector('[data-picture-secondary-checkbox]')
         secondaryCheckbox.checked = !!item.secondary
-        secondaryCheckbox.onchange =e=> handleSecondaryChange(e,item)
+        secondaryCheckbox.onchange = e => handleSecondaryChange(e, item)
         clonedRow.removeAttribute('hidden'); // Show the cloned row
         clonedRow.querySelector('[data-select-image]').onclick = selectImage
         //clonedRow.querySelector('[data-show-menu]').onclick = showMenu
-        clonedRow.querySelector('[data-remove-image]').onclick =(e)=> removeImage(e,src)
+        clonedRow.querySelector('[data-remove-image]').onclick = (e) => removeImage(e, src)
         // Update the image source based on the item's sk
         const imageSrc = `https://s3.amazonaws.com/checkout-admin-panel/${item.sk}`;
         const imgEl = clonedRow.querySelector('.gallery-image img')
@@ -1060,7 +1061,7 @@ component</button> -->
         imgEl.setAttribute('uuid', uuid)
 
         if (src !== uuid) {
-        
+
           const attachedLabel = clonedRow.querySelector('[data-picture-attached-label]');
           if (attachedLabel) {
             attachedLabel.textContent = 'NO'
@@ -1104,7 +1105,7 @@ component</button> -->
       const menu = getElementById1('menu-1');
       menu.style.display = 'block';
     }
-    async function removeImage(event,src) {
+    async function removeImage(event, src) {
       const id = pathItem.id
       const imageSrc = event.target.closest('tr').querySelector('img').src;
       console.log('Removing Image Src:', imageSrc);
@@ -1182,7 +1183,7 @@ component</button> -->
       const formattedDate = `${day}:${month}:${year} ${hours}:${minutes}`;
       return formattedDate
     }
-    async function handleUpload1(event,src) {
+    async function handleUpload1(event, src) {
 
       const id = pathItemSku || pathItem.id
       const fileContent = await file
@@ -1269,9 +1270,9 @@ component</button> -->
       });
       const { src, data_src } = await response.json()
       const selectedLabels = dataMenu.querySelectorAll('[data-picture-attached-label]');
-      selectedLabels.forEach(label => label.textContent ="NO");
+      selectedLabels.forEach(label => label.textContent = "NO");
       event.target.closest('tr').querySelector('[data-picture-attached-label]').textContent = 'YES'
-      
+
 
       const payload = {
 
@@ -1371,6 +1372,18 @@ component</button> -->
           'Content-Type': 'application/json',
         },
       });
+      const el2 = getElementById1("path-icon")
+      el2.classList.remove('b-green');
+      el2.classList.remove('b-selected');
+      const el3 = getElementById1("published-label")
+      const el4 = getElementById1("published-invalidate")
+      const el5 = getElementById1("published-remove")
+
+      el3.setAttribute('hidden','')
+      el4.setAttribute('hidden','')
+      el5.setAttribute('hidden','')
+
+      el3.removeAttribute('href')
     }
     const invalidate = async (e) => {
       const site = pathItemPath.split('/')[0]
@@ -7896,10 +7909,10 @@ elementsToRemove.forEach(element => element.remove());
       }
     }
     const publish = async (e) => {
-      if(visualOn){
+      if (visualOn) {
         localStorage.removeItem('visualOn')
         let newUrl = window.location.href + '&publish=1';
-        
+
         // Reload the page with the new URL
         window.location.href = newUrl;
       }
@@ -9811,7 +9824,7 @@ element.setAttribute('data-product', [first, name].join(';'))
       event.target.parentNode.nextElementSibling.remove()
       event.target.parentNode.remove()
     }
-    const cancelAddComponent = (event)=>{
+    const cancelAddComponent = (event) => {
       document.getElementById('file-list-attach-component-options;').remove()
       document.getElementById('selectedFilePathList;').remove()
       document.getElementById('filePathList;').remove()
