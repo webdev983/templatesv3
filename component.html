@@ -1018,7 +1018,7 @@ component</button> -->
       clonedFieldset.querySelector('#remove-galeryMenu').onclick = (e) => {
         e.target.closest('fieldset').remove()
       }
-      clonedFieldset.querySelector('#upload-button').onclick = handleUpload1
+      clonedFieldset.querySelector('#upload-button').onclick =(e) =>handleUpload1(e,src)
       const id = pathItemSku || pathItem.id
       let mergedItems = []
       const res = await Promise.all([...Object.keys(cache), id].map(e => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${e}&sk=pics&startsWith=true`, {
@@ -1182,7 +1182,7 @@ component</button> -->
       const formattedDate = `${day}:${month}:${year} ${hours}:${minutes}`;
       return formattedDate
     }
-    async function handleUpload1(event) {
+    async function handleUpload1(event,src) {
 
       const id = pathItemSku || pathItem.id
       const fileContent = await file
