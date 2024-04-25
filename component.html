@@ -1051,7 +1051,7 @@ component</button> -->
         clonedRow.removeAttribute('hidden'); // Show the cloned row
         clonedRow.querySelector('[data-select-image]').onclick = selectImage
         //clonedRow.querySelector('[data-show-menu]').onclick = showMenu
-        clonedRow.querySelector('[data-remove-image]').onclick = removeImage
+        clonedRow.querySelector('[data-remove-image]').onclick =(e)=> removeImage(e,src)
         // Update the image source based on the item's sk
         const imageSrc = `https://s3.amazonaws.com/checkout-admin-panel/${item.sk}`;
         const imgEl = clonedRow.querySelector('.gallery-image img')
@@ -1104,7 +1104,7 @@ component</button> -->
       const menu = getElementById1('menu-1');
       menu.style.display = 'block';
     }
-    async function removeImage(event) {
+    async function removeImage(event,src) {
       const id = pathItem.id
       const imageSrc = event.target.closest('tr').querySelector('img').src;
       console.log('Removing Image Src:', imageSrc);
@@ -1123,7 +1123,7 @@ component</button> -->
       });
       //to cont
       //setImg('https://via.placeholder.com/300/0000FF/FFFFFF?text=Article-Image', imgId)
-      loadImages(event.target.closest('[data-menu]', 'https://via.placeholder.com/300/0000FF/FFFFFF?text=Article-Image'))
+      loadImages(event.target.closest('[data-menu]', src))
 
     }
     const setImg = async (path, imgId) => {
