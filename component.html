@@ -1059,7 +1059,7 @@ component</button> -->
         const uuid = item.sk.split('.')[0].replace('pics', '')
         imgEl.setAttribute('uuid', uuid)
 
-        if (src !== imageSrc) {
+        if (src !== uuid) {
         
           const attachedLabel = clonedRow.querySelector('[data-picture-attached-label]');
           if (attachedLabel) {
@@ -3639,7 +3639,7 @@ component</button> -->
           }
           if (e.target.tagName.toLowerCase() === 'img') {
             addMenuEntry(menu, `🖼️ Edit image`, () => {
-              redirectToImgPage(e.target.id, e.target.getAttribute('src'))
+              redirectToImgPage(e.target.id, e.target.getAttribute('data-builder-image-source'))
             });
           }
           if (e.target.hasAttribute('data-visual-href')) {
