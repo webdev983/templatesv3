@@ -9578,7 +9578,10 @@ headers: {
         .then(e => e.json())
         .catch(e=>e)
       if (mainHub?.hub_items?.list) {
-        await showList(mainHub.hub_items?.list,true)
+        headHubLsi = splited[0] + '/Home/Content/Page|Head-Content'
+        url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headHubLsi}`;
+        const {items } = await fetch(url).then(e => e.json())
+        await showList(mainHub.hub_items?.list,items[0].id)
       }
       /*
 querySelectorAll1('[data-product]').forEach(
