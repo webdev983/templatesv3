@@ -7902,6 +7902,13 @@ elementsToRemove.forEach(element => element.remove());
       }
     }
     const publish = async (e) => {
+      if(visualOn){
+        localStorage.removeItem('visualOn')
+        let newUrl = window.location.href + '&publish=1';
+        
+        // Reload the page with the new URL
+        window.location.href = newUrl;
+      }
       const el2 = getElementById1("path-icon")
       el2.classList.remove('b-green');
       el2.classList.remove('b-selected');
