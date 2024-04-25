@@ -1840,7 +1840,7 @@ component</button> -->
       await showList(value)
     }
 
-    var showList = async (lists, nohide) => {
+    var showList = async (lists, storageId1) => {
       let parsedLists
       try {
         parsedLists = JSON.parse(lists)
@@ -1852,12 +1852,12 @@ component</button> -->
       }
 
       const list1 = document.querySelector('[data-list][hidden]')
-      !nohide && document.querySelectorAll('[data-list]:not([hidden])').forEach(e => e.remove())
+      !storageId1 && document.querySelectorAll('[data-list]:not([hidden])').forEach(e => e.remove())
       for (const list of parsedLists['data-lists']) {
         const cloned = list1.cloneNode(true)
         cloned.removeAttribute('hidden')
         const storage = list.data_storage
-        let storageId = (storage === 'sku') ? (pathItemSku || selectedSku) : headContentItem.id
+        let storageId =storageId1 ??( (storage === 'sku') ? (pathItemSku || selectedSku) : headContentItem.id)
         cloned.querySelector('[data-list-emoji]').textContent = list.emoji
         cloned.querySelector('[data-list-name]').textContent = list.name
         const listOriginalElement = cloned.querySelector('[data-lists-element]')
@@ -9576,7 +9576,8 @@ headers: {
       const mainHub =await fetch(url).then(e => e.json()).then(e => e.items[0])
         .then(e => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${e.id}:${e.sk}`))
         .then(e => e.json())
-      if (mainHub.hub_items?.list) {
+        .catch(e=>e)
+      if (mainHub?.hub_items?.list) {
         await showList(mainHub.hub_items?.list,true)
       }
       /*
