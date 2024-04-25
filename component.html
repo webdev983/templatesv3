@@ -1226,8 +1226,9 @@ component</button> -->
     }
 
     async function selectImage(event) {
-      const imgId = event.target.closest('[data-menu]').id.replace('gallery-menu-wrapper;', '')
-      const image = event.target.closest('tr').querySelector('img')
+      const dataMenu = event.target.closest('[data-menu]')
+      const imgId = dataMenu.id.replace('gallery-menu-wrapper;', '')
+      const image = event.target.closest('.gallery-image').querySelector('img')
 
       const imageSrc = image.src;
       const imageUUID = image.getAttribute('uuid')
@@ -1267,13 +1268,10 @@ component</button> -->
         body: JSON.stringify(body),
       });
       const { src, data_src } = await response.json()
-      const galleryImage = event.target.closest('.gallery-image');
-      const selectedLabels = event.target.closest('[data-menu]').querySelectorAll('.selected');
-      selectedLabels.forEach(label => label.remove());
-      const attachedLabel = galleryImage.querySelector('img')
-      if (attachedLabel) {
-        attachedLabel.insertAdjacentHTML('afterend', '<label class="attached">📎</label>');
-      }
+      const selectedLabels = dataMenu.querySelectorAll('[data-picture-attached-label]');
+      selectedLabels.forEach(label => label.textContent ="NO");
+      dataMenu.querySelector('[[data-picture-attached-label]').textContent = 'YES'
+      
 
       const payload = {
 
