@@ -8974,12 +8974,21 @@ elementsToRemove.forEach(element => element.remove());
         document.getElementById('gpt-input').value = gptValue
       }
     }
-    const handleTableGeneration = async() => {
+    const handleTableGeneration = async () => {
       const tableContentElements1 = querySelectorAll1('[data-table-of-contents-element]')
       if (tableContentElements1.length) {
         const tableElement = getElementById1('table-generation')
         tableElement.removeAttribute('hidden')
-        tableElement.querySelector('#generate-table-button').onclick =async (e) => {
+        let exisitingValue = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${headContentItem.id}:generated-table`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json())
+        if(exisitingValue){
+          tableElement.querySelector('span').textContent = '📑 Table of contents 🟢'
+        }
+        tableElement.querySelector('#generate-table-button').onclick = async (e) => {
           tableElement.querySelector('span').textContent = '📑 Table of contents 🟠'
           const tableContentElement = querySelectorAll1('[data-table-of-contents-element]')[0]
           const headingElements = querySelectorAll1('[data-table-of-contents-heading]')
@@ -9014,6 +9023,10 @@ elementsToRemove.forEach(element => element.remove());
             await pushAction(el)
             last = id
           }
+          await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            body: JSON.stringify({id:headContentItem.id,sk:'generated-table'}),
+          });
           tableElement.querySelector('span').textContent = '📑 Table of contents 🟢'
         }
       }
