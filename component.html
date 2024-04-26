@@ -1817,41 +1817,52 @@ component</button> -->
       }
     }
     document.addEventListener('DOMContentLoaded', function () {
-      const s1 = localStorage.getItem('codeTreeToggle')
-      if (s1) {
-        getElementById1('toggle-code-tree').classList.add('b-selected')
-      }
-      else {
-        getElementById1('code-tree-menu').setAttribute('hidden', '')
-        getElementById1('code-tree').setAttribute('hidden', '')
-      }
-      const s2 = localStorage.getItem('componentTreeToggle')
-      if (s2) {
-        getElementById1('toggle-component-tree').classList.add('b-selected')
-      }
-      else {
-        getElementById1('components-tree').setAttribute('hidden', '')
-        getElementById1('components-tree-menu').setAttribute('hidden', '')
-      }
-      const s3 = localStorage.getItem('headToggle')
-      if (s3) {
-        getElementById1('toggle-head').classList.add('b-selected')
-      }
-      else {
-        getElementById1('head-menu').setAttribute('hidden', '')
-        getElementById1('head-1').setAttribute('hidden', '')
-      }
-      const s4 = localStorage.getItem('generatedPageToggle')
-      if (s4) {
-        getElementById1('toggle-generated-page').classList.add('b-selected')
-      }
-      else {
-        getElementById1('generated-page-menu').setAttribute('hidden', '')
-        getElementById1('generated-page').setAttribute('hidden', '')
+      const iframe = document.getElementById("generated-page-iframe");
+
+      // Function to execute when the iframe and DOM content are loaded
+      function handleContentLoaded() {
+        const s1 = localStorage.getItem('codeTreeToggle');
+        if (s1) {
+          getElementById1('toggle-code-tree').classList.add('b-selected');
+        } else {
+          getElementById1('code-tree-menu').setAttribute('hidden', '');
+          getElementById1('code-tree').setAttribute('hidden', '');
+        }
+        const s2 = localStorage.getItem('componentTreeToggle');
+        if (s2) {
+          getElementById1('toggle-component-tree').classList.add('b-selected');
+        } else {
+          getElementById1('components-tree').setAttribute('hidden', '');
+          getElementById1('components-tree-menu').setAttribute('hidden', '');
+        }
+        const s3 = localStorage.getItem('headToggle');
+        if (s3) {
+          getElementById1('toggle-head').classList.add('b-selected');
+        } else {
+          getElementById1('head-menu').setAttribute('hidden', '');
+          getElementById1('head-1').setAttribute('hidden', '');
+        }
+        const s4 = localStorage.getItem('generatedPageToggle');
+        if (s4) {
+          getElementById1('toggle-generated-page').classList.add('b-selected');
+        } else {
+          getElementById1('generated-page-menu').setAttribute('hidden', '');
+          getElementById1('generated-page').setAttribute('hidden', '');
+        }
       }
 
-
-    })
+      // Check if the iframe is already loaded
+      if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
+        // If the iframe is already loaded, execute the function immediately
+        handleContentLoaded();
+      } else {
+        // If the iframe is not yet loaded, wait for the load event
+        iframe.onload = function () {
+          // Execute the function when the iframe is loaded
+          handleContentLoaded();
+        };
+      }
+    });
 
   </script>
   <script>
@@ -8990,13 +9001,13 @@ elementsToRemove.forEach(element => element.remove());
       if (tableContentElements1.length) {
         const tableElement = getElementById1('table-generation')
         tableElement.removeAttribute('hidden')
-        let exisitingValue =headContentItem && await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${headContentItem.id}:generated-table`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }).then(e => e.json())
-        if(exisitingValue){
+        let exisitingValue = headContentItem && await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${headContentItem.id}:generated-table`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(e => e.json())
+        if (exisitingValue) {
           tableElement.querySelector('span').textContent = '📑 Table of contents 🟢'
         }
         tableElement.querySelector('#generate-table-button').onclick = async (e) => {
@@ -9036,7 +9047,7 @@ elementsToRemove.forEach(element => element.remove());
           }
           await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
             method: 'POST',
-            body: JSON.stringify({id:headContentItem.id,sk:'generated-table'}),
+            body: JSON.stringify({ id: headContentItem.id, sk: 'generated-table' }),
           });
           tableElement.querySelector('span').textContent = '📑 Table of contents 🟢'
         }
