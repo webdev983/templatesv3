@@ -8974,12 +8974,12 @@ elementsToRemove.forEach(element => element.remove());
         document.getElementById('gpt-input').value = gptValue
       }
     }
-    const handleTableGeneration = () => {
+    const handleTableGeneration = async() => {
       const tableContentElements1 = querySelectorAll1('[data-table-of-contents-element]')
       if (tableContentElements1.length) {
         const tableElement = getElementById1('table-generation')
         tableElement.removeAttribute('hidden')
-        tableElement.querySelector('#generate-table-button').onclick = (e) => {
+        tableElement.querySelector('#generate-table-button').onclick =async (e) => {
           tableElement.querySelector('span').textContent = '📑 Table of contents 🟠'
           const tableContentElement = querySelectorAll1('[data-table-of-contents-element]')[0]
           const headingElements = querySelectorAll1('[data-table-of-contents-heading]')
