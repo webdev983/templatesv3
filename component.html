@@ -2165,8 +2165,8 @@ component</button> -->
       const ai = document.querySelector('[data-ai]');
       ai.removeAttribute('hidden');
       const originalRow = ai.querySelector('[data-ai-row]');
-      const site = pathItemPath.split('/')[0]
-      const company = site.split('.')[0]
+      const site = getFromSiteData('site')
+      const company = getFromSiteData('company')
       for (const element of parsed['chatgpt-tasks']) {
         const cloned = originalRow.cloneNode(true);
         cloned.querySelector('[data-ai-label]').textContent = element.name;
@@ -7984,6 +7984,31 @@ elementsToRemove.forEach(element => element.remove());
         }
       }
     }
+    const replacePlaceHolders = (html)=>{
+      const all = document.querySelectorAll('[data-list]:not([hidden])')
+      for(const el of all){
+        const rows = el.querySelectorAll('[data-lists-element]')
+        for(const row of rows){
+          const key = row.querySelector('[data-lists-element-key]').textContent
+          const value = row.querySelector('[data-lists-element-value]').textContent
+          html.replaceAll(key,value)
+        }
+      }
+      return html
+    }
+    const getFromSiteData = (k)=>{
+      const all = document.querySelectorAll('[data-list]:not([hidden])')
+      for(const el of all){
+        const rows = el.querySelectorAll('[data-lists-element]')
+        for(const row of rows){
+          const key = row.querySelector('[data-lists-element-key]').textContent
+          const value = row.querySelector('[data-lists-element-value]').textContent
+          if(key ===k){
+            return value
+          }
+        }
+      }
+    }
     const publish = async (e) => {
       if (visualOn) {
         localStorage.removeItem('visualOn')
@@ -8065,7 +8090,9 @@ elementsToRemove.forEach(element => element.remove());
 
       // Access the content of the iframe
       var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-      const html = '<!DOCTYPE html>' + iframeDocument.documentElement.outerHTML;
+      let html = '<!DOCTYPE html>' + iframeDocument.documentElement.outerHTML;
+
+      html = replacePlaceHolders(html)
       console.log(html)
       const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/publishv2', {
         method: 'POST',
