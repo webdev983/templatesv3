@@ -7951,19 +7951,22 @@ elementsToRemove.forEach(element => element.remove());
       }
     }
     const replacePlaceHolders = (html)=>{
-      const all = document.querySelectorAll('[data-list]:not([hidden])')
+      let nHtml = html
+      const all = document.querySelectorAll('[data-list]')
       for(const el of all){
         const rows = el.querySelectorAll('[data-lists-element]')
         for(const row of rows){
+          
           const key = row.querySelector('[data-lists-element-key]').textContent
+          console.log('key'+key)
           const value = row.querySelector('[data-lists-element-value]').textContent
-          html.replaceAll(key,value)
+          nHtml.replaceAll('{'+key+'}',value)
         }
       }
-      return html
+      return nHtml
     }
     const getFromSiteData = (k)=>{
-      const all = document.querySelectorAll('[data-list]:not([hidden])')
+      const all = document.querySelectorAll('[data-list]')
       for(const el of all){
         const rows = el.querySelectorAll('[data-lists-element]')
         for(const row of rows){
@@ -8056,9 +8059,9 @@ elementsToRemove.forEach(element => element.remove());
 
       // Access the content of the iframe
       var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-      let html = '<!DOCTYPE html>' + iframeDocument.documentElement.outerHTML;
+      let html = '<!DOCTYPE html>' + replacePlaceHolders(iframeDocument.documentElement.outerHTML);
 
-      html = replacePlaceHolders(html)
+     
       console.log(html)
       const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/publishv2', {
         method: 'POST',
