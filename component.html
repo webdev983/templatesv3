@@ -2165,7 +2165,7 @@ component</button> -->
           task = replaceVars(task)
           const res = await sendGptRequest(gptToken, task, element.model)
           console.log(JSON.stringify(res))
-          const content = JSON.parse(res.choices[0].message.content)
+          const content = JSON.parse(res.choices[0].message.content.replaceAll('\n',''))
 
           const currentDate = new Date();
 
