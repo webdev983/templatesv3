@@ -9075,7 +9075,7 @@ elementsToRemove.forEach(element => element.remove());
         last = id
       }
     }
-    const generateTableApi = async () => {
+    const generateTableApi = async (textContents) => {
       const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Article-Table-Of-Contents-Content'
       console.log(tableLsi)
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
@@ -9092,7 +9092,7 @@ elementsToRemove.forEach(element => element.remove());
         id: generateUUID(),
         sk: 'import',
         ttl,
-        data,
+        data:textContents,
       }
 
       const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&generatetable=${db.id}&ownerid=${localStorage.getItem('ownerid')}` };
