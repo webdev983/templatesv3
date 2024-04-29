@@ -8093,9 +8093,9 @@ elementsToRemove.forEach(element => element.remove());
 
       // Access the content of the iframe
       var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-      let html = '<!DOCTYPE html>' + iframeDocument.documentElement.outerHTML;
+      let html = '<!DOCTYPE html>' + replacePlaceHolders(iframeDocument.documentElement.outerHTML);
 
-      html = replacePlaceHolders(html)
+     
       console.log(html)
       const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/publishv2', {
         method: 'POST',
