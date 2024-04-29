@@ -7985,6 +7985,7 @@ elementsToRemove.forEach(element => element.remove());
       }
     }
     const replacePlaceHolders = (html)=>{
+      let nHtml = html
       const all = document.querySelectorAll('[data-list]')
       for(const el of all){
         const rows = el.querySelectorAll('[data-lists-element]')
@@ -7993,10 +7994,10 @@ elementsToRemove.forEach(element => element.remove());
           const key = row.querySelector('[data-lists-element-key]').textContent
           console.log('key'+key)
           const value = row.querySelector('[data-lists-element-value]').textContent
-          html.replaceAll('{'+key+'}',value)
+          nHtml.replaceAll('{'+key+'}',value)
         }
       }
-      return html
+      return nHtml
     }
     const getFromSiteData = (k)=>{
       const all = document.querySelectorAll('[data-list]')
