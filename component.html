@@ -295,7 +295,7 @@
 
       <details hidden id="breadCrumb-menu" style="margin-bottom: 7px;">
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">🥖 BreadCrumb Menu</span></summary>
-        <button class="b-3" onclick="generateBreadCrumb(event)"> Generate</button>
+        <button class="b-3" onclick="generateBreadCrumbApi(event)"> Generate</button>
       </details>
 
 
@@ -1451,6 +1451,22 @@ component</button> -->
       const capitalizedString = capitalizedWords.join(' ');
 
       return capitalizedString;
+    }
+    const generateBreadCrumbApi = async() => {
+      const tableLsi = pathItemPath.split('|')[0] + '/Content/Page|BreadCrumb-Content'
+      url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
+      const { items } = await fetch(url).then(e => e.json())
+      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&generatebreadcrumb=true&ownerid=${localStorage.getItem('ownerid')}` };
+      
+      // Fetch options
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData)
+      };
+      const response = await fetch(pup_url, options);
     }
     const generateBreadCrumb = async (event) => {
       let arr = pathItemPath.split(';')[0].split('/')
@@ -9121,6 +9137,7 @@ elementsToRemove.forEach(element => element.remove());
       const idFromQuery = urlParams.get('id');
       const toPublish = urlParams.get('publish')
       const generatetable = urlParams.get('generatetable')
+      const generatebreadcrumb = urlParams.get('generatebreadcrumb')
       const importAttribute = urlParams.get('attr')
       const importValue = urlParams.get('val')
       ownerid = localStorage.getItem('ownerid') || urlParams.get('ownerid')
@@ -9181,6 +9198,9 @@ elementsToRemove.forEach(element => element.remove());
       }
       if (generatetable) {
         await generateTable()
+      }
+      if (generatebreadcrumb) {
+        await generateBreadCrumb()
       }
       if (importAttribute) {
         await handleImportGpt(importValue, importAttribute)
