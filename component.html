@@ -198,33 +198,33 @@
     <div id="head-1" class="horizontal-area" data-user hidden>
 
 
-    <ul class="list-1" hidden>
-      <li>
-        <label class="l-3">📑</label>
-        <label class="l-3">Table of contents</label>
-        <label class="l-3">🔴</label>
-      </li>
-      <li>
-        <label class="l-3">🥖</label>
-        <label class="l-3">BreadCrumb Menu</label>
-        <label class="l-3">🔴</label>
-      </li>
-      <li>
-        <label class="l-3">🤖</label>
-        <label class="l-3">article_meta</label>
-        <label class="l-3">🔴</label>
-      </li>
+      <ul class="list-1">
+        <li>
+          <label class="l-3">📑</label>
+          <label class="l-3">Table of contents</label>
+          <label class="l-3">🔴</label>
+        </li>
+        <li>
+          <label class="l-3">🥖</label>
+          <label class="l-3">BreadCrumb Menu</label>
+          <label class="l-3">🔴</label>
+        </li>
+        <li>
+          <label class="l-3">🤖</label>
+          <label class="l-3">article_meta</label>
+          <label class="l-3">🔴</label>
+        </li>
 
-      <li>
-        <label class="l-3">🤖</label>
-        <label class="l-3">article_FAQ</label>
-        <label class="l-3">🔴</label>
-      </li>
+        <li>
+          <label class="l-3">🤖</label>
+          <label class="l-3">article_FAQ</label>
+          <label class="l-3">🔴</label>
+        </li>
 
 
 
-      
-    </ul>
+
+      </ul>
 
 
       <details style="margin-bottom: 7px; " id="table-generation" hidden>
@@ -2166,7 +2166,7 @@ component</button> -->
           const res = await sendGptRequest(gptToken, task, element.model)
           console.log(JSON.stringify(res))
           const content = JSON.parse(res.choices[0].message.content.replace(/\\"/g, '"').replace(/\\n/g, '\\n'))
-          console.log('content '+ JSON.stringify(content))
+          console.log('content ' + JSON.stringify(content))
           const currentDate = new Date();
 
           // Add one day to the current date
@@ -9017,6 +9017,57 @@ elementsToRemove.forEach(element => element.remove());
         document.getElementById('gpt-input').value = gptValue
       }
     }
+    const generateTable = async () => {
+      const tableContentElement = querySelectorAll1('[data-table-of-contents-element]')[0]
+      const headingElements = querySelectorAll1('[data-table-of-contents-heading]')
+      const el = {
+        time: (new Date()).getTime(),
+        action: 'textContent',
+        target_element: tableContentElement.id + '-tree',
+        value: headingElements[0].textContent,
+
+      }
+
+      await pushAction(el)
+      let last = tableContentElement.id + '-tree'
+      for (let i = 1; i < headingElements.length; i++) {
+        const heading = headingElements[i]
+        const textContent = heading.textContent
+        const id = duplicateId(tableContentElement.id + '-tree').id
+        actionObject = {
+          time: (new Date()).getTime(),
+          action: 'InsertAfter',
+          target_element: last,
+          inserted_element: { originalId: tableContentElement.id + '-tree', id },
+        };
+        await pushAction(actionObject)
+        const el = {
+          time: (new Date()).getTime(),
+          action: 'textContent',
+          target_element: id,
+          value: textContent,
+
+        }
+        await pushAction(el)
+        last = id
+      }
+    }
+    const generateTableApi = async() => {
+      const tableLsi = pathItemPath.split('|')[0] + '/Content/Main|Article-Table-Of-Contents-Content'
+      url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
+      const { items } = await fetch(url).then(e => e.json())
+      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&generatetable=true&ownerid=${localStorage.getItem('ownerid')}` };
+      
+      // Fetch options
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData)
+      };
+      const response = await fetch(pup_url, options);
+    }
     const handleTableGeneration = async () => {
       const tableContentElements1 = querySelectorAll1('[data-table-of-contents-element]')
       if (tableContentElements1.length) {
@@ -9033,39 +9084,7 @@ elementsToRemove.forEach(element => element.remove());
         }
         tableElement.querySelector('#generate-table-button').onclick = async (e) => {
           tableElement.querySelector('span').textContent = '📑 Table of contents 🟠'
-          const tableContentElement = querySelectorAll1('[data-table-of-contents-element]')[0]
-          const headingElements = querySelectorAll1('[data-table-of-contents-heading]')
-          const el = {
-            time: (new Date()).getTime(),
-            action: 'textContent',
-            target_element: tableContentElement.id + '-tree',
-            value: headingElements[0].textContent,
-
-          }
-
-          await pushAction(el)
-          let last = tableContentElement.id + '-tree'
-          for (let i = 1; i < headingElements.length; i++) {
-            const heading = headingElements[i]
-            const textContent = heading.textContent
-            const id = duplicateId(tableContentElement.id + '-tree').id
-            actionObject = {
-              time: (new Date()).getTime(),
-              action: 'InsertAfter',
-              target_element: last,
-              inserted_element: { originalId: tableContentElement.id + '-tree', id },
-            };
-            await pushAction(actionObject)
-            const el = {
-              time: (new Date()).getTime(),
-              action: 'textContent',
-              target_element: id,
-              value: textContent,
-
-            }
-            await pushAction(el)
-            last = id
-          }
+          await generateTableApi()
           await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
             method: 'POST',
             body: JSON.stringify({ id: headContentItem.id, sk: 'generated-table' }),
@@ -9101,6 +9120,7 @@ elementsToRemove.forEach(element => element.remove());
       const urlParams = new URLSearchParams(window.location.search);
       const idFromQuery = urlParams.get('id');
       const toPublish = urlParams.get('publish')
+      const generatetable = urlParams.get('generatetable')
       const importAttribute = urlParams.get('attr')
       const importValue = urlParams.get('val')
       ownerid = localStorage.getItem('ownerid') || urlParams.get('ownerid')
@@ -9158,6 +9178,9 @@ elementsToRemove.forEach(element => element.remove());
 
       if (toPublish == "1") {
         await publish()
+      }
+      if (generatetable) {
+        await generateTable()
       }
       if (importAttribute) {
         await handleImportGpt(importValue, importAttribute)
