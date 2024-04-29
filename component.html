@@ -1452,13 +1452,13 @@ component</button> -->
 
       return capitalizedString;
     }
-    const generateBreadCrumbApi = async() => {
+    const generateBreadCrumbApi = async () => {
       const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Page|BreadCrumb-Content'
       console.log(tableLsi)
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
       const { items } = await fetch(url).then(e => e.json())
       const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&generatebreadcrumb=true&ownerid=${localStorage.getItem('ownerid')}` };
-      
+
       // Fetch options
       const options = {
         method: 'POST',
@@ -9034,9 +9034,15 @@ elementsToRemove.forEach(element => element.remove());
         document.getElementById('gpt-input').value = gptValue
       }
     }
-    const generateTable = async () => {
+    const generateTable = async (id) => {
+      const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${el1.id}:${el1.sk}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(el => el.json())
       const tableContentElement = querySelectorAll1('[data-table-of-contents-element]')[0]
-      const headingElements = querySelectorAll1('[data-table-of-contents-heading]')
+
       const el = {
         time: (new Date()).getTime(),
         action: 'textContent',
@@ -9047,9 +9053,9 @@ elementsToRemove.forEach(element => element.remove());
 
       await pushAction(el)
       let last = tableContentElement.id + '-tree'
-      for (let i = 1; i < headingElements.length; i++) {
+      for (let i = 1; i < item.data.length; i++) {
         const heading = headingElements[i]
-        const textContent = heading.textContent
+        const textContent = heading
         const id = duplicateId(tableContentElement.id + '-tree').id
         actionObject = {
           time: (new Date()).getTime(),
@@ -9069,12 +9075,27 @@ elementsToRemove.forEach(element => element.remove());
         last = id
       }
     }
-    const generateTableApi = async() => {
+    const generateTableApi = async () => {
       const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Article-Table-Of-Contents-Content'
       console.log(tableLsi)
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
       const { items } = await fetch(url).then(e => e.json())
-      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&generatetable=true&ownerid=${localStorage.getItem('ownerid')}` };
+      const currentDate = new Date();
+
+      // Add one day to the current date
+      const tomorrow = new Date(currentDate);
+      tomorrow.setDate(currentDate.getDate() + 1);
+
+      // Convert the date to ISO 8601 format (required by DynamoDB)
+      const ttl = tomorrow.getTime();
+      const db = {
+        id: generateUUID(),
+        sk: 'import',
+        ttl,
+        data,
+      }
+
+      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&generatetable=${db.id}&ownerid=${localStorage.getItem('ownerid')}` };
       console.log(eventData.url)
       // Fetch options
       const options = {
@@ -9102,7 +9123,9 @@ elementsToRemove.forEach(element => element.remove());
         }
         tableElement.querySelector('#generate-table-button').onclick = async (e) => {
           tableElement.querySelector('span').textContent = '📑 Table of contents 🟠'
-          await generateTableApi()
+          const headingElements = querySelectorAll1('[data-table-of-contents-heading]')
+          const textContents = Array.from(headingElements).map(e => e.textContent)
+          await generateTableApi(textContents)
           await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
             method: 'POST',
             body: JSON.stringify({ id: headContentItem.id, sk: 'generated-table' }),
@@ -9199,7 +9222,7 @@ elementsToRemove.forEach(element => element.remove());
         await publish()
       }
       if (generatetable) {
-        await generateTable()
+        await generateTable(generatetable)
       }
       if (generatebreadcrumb) {
         await generateBreadCrumb()
