@@ -1468,6 +1468,10 @@ component</button> -->
         body: JSON.stringify(eventData)
       };
       const response = await fetch(pup_url, options);
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            body: JSON.stringify({ id: headContentItem.id, sk: 'generated-breadcrumb' }),
+          });
     }
     const generateBreadCrumb = async (event) => {
       let arr = pathItemPath.split(';')[0].split('/')
