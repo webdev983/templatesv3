@@ -1437,15 +1437,14 @@ component</button> -->
     }
     function capitalizeAndReplaceHyphens(str) {
       // Replace hyphens with spaces and split the string into words
-      const words = str.replace(/-/g, ' ').split(' ');
+      const capitalizedWords = str.replace(/-/g, ' ').split(' ');
 
       // Capitalize the first letter of each word
-      const capitalizedWords = words.map(word => {
-        // Capitalize the first letter of the word
-        const firstLetter = word.charAt(0).toUpperCase();
-        // Concatenate the first letter with the rest of the word
-        return firstLetter + word.slice(1);
-      });
+     
+      const firstLetter = capitalizedWords[0].charAt(0).toUpperCase();
+      // Concatenate the first letter with the rest of the word
+      capitalizedWords[0] =  firstLetter + capitalizedWords[0].slice(1);
+      
 
       // Join the words back together to form the modified string
       const capitalizedString = capitalizedWords.join(' ');
