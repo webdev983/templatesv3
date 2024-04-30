@@ -8005,7 +8005,7 @@ elementsToRemove.forEach(element => element.remove());
         const rows = el.querySelectorAll('[data-lists-element]')
         for (const row of rows) {
           const key = row.querySelector('[data-lists-element-key]').textContent
-          const value = row.querySelector('[data-lists-element-value]').textContent
+          const value = row.querySelector('[data-lists-element-value]').textContent ||  row.querySelector('[data-list-element-selection-value]')?.value || ''
           html = html.replaceAll('{' + key + '}', value)
           const checkboxs = row.querySelectorAll('[data-list-element-benefit]')
           for(const checkbox of checkboxs){
@@ -8022,7 +8022,7 @@ elementsToRemove.forEach(element => element.remove());
         }
       }
       for(const key of Object.keys(checked)){
-        html = html.replaceAll('{' + key + '}', checked[key].join(','))
+        html = html.replaceAll('{' + key + '}',`${key.replace('_',' '): }`+ checked[key].join(','))
       }
       return html
     }
