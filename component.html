@@ -9852,6 +9852,10 @@ headers: {
       const splited = pathItemPath.split(';')[0].split('/')
       const name = splited[splited.length - 1]
 
+      
+      if (pathItem.hub_items?.list) {
+        await showList(pathItem.hub_items?.list)
+      }
       if (pathItem.hub_items?.gpt) {
         await showai(pathItem.hub_items?.gpt)
         const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pathItem.id}&sk=ai-logs:&startsWith=true`, {
@@ -9865,9 +9869,6 @@ headers: {
           element.removeAttribute('hidden')
           element.querySelector('textarea').value = res.items.map(el => JSON.stringify(el.gptResponse, null, 2) + '\n\n' + JSON.stringify(el.content) + '\n\n').join('\n\n=============================================\n\n')
         }
-      }
-      if (pathItem.hub_items?.list) {
-        await showList(pathItem.hub_items?.list)
       }
       mainHubLsi = splited[0] + '/Home|Hub'
       if (pathItem.lsi1.split(';')[0] !== mainHubLsi) {
