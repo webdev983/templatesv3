@@ -7762,7 +7762,11 @@ elementsToRemove.forEach(element => element.remove());
           // If the current value is an object or an array, recursively traverse it
           else if (typeof json[key] === 'object' && json[key] !== null) {
             traverseJSONAndUpdate(json[key], currentPath, sender);
-          } else {
+          }
+          else if (key ==='datePublished'){
+            json[key] = 
+          } 
+          else {
             // If the current value is a string, check for the data-transfer-sender attribute
             const senderPath = sender ? `${sender}.${currentPath}` : currentPath;
             let senderAttribute = querySelectorAll1(`[data-transfer-sender="${senderPath}"]:not([data-b-value=""]`);
@@ -8096,8 +8100,9 @@ elementsToRemove.forEach(element => element.remove());
       // set date
       if (pathItemPath.includes('/Blog/') || pathItemPath.includes('/Home')) {
         const dateEl = getElementById1('[data-builder-time-published]')
-        dateEl.setAttribute('datetime', new Date(headContentItem.hosting_time.published).toISOString() || date.toISOString())
-        dateEl.textContent = headContentItem.hosting_time.published ? formatDate(new Date(headContentItem.hosting_time.published)) : formatDate(date)
+        const d =headContentItem.hosting_time?.published ? new Date(headContentItem.hosting_time.published).toISOString() : date.toISOString()
+        dateEl.setAttribute('datetime', d)
+        dateEl.textContent = headContentItem.hosting_time?.published ? formatDate(new Date(headContentItem.hosting_time.published)) : formatDate(date)
       }
 
 
