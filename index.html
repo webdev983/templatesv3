@@ -215,18 +215,16 @@
             });
           }
           const loadSites = async () => {
-            const url = 'https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:' + localStorage.getItem('ownerid') + '&gsi1lsi1=true'
+            const ownerid = localStorage.getItem('ownerid')
+            const helperid = localStorage.getItem('helperid')
+            const sk = `folder:${helperid ? helperid : ownerid}:lvl1:`
+            url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`
             console.log(url)
             const res = await fetch(url)
             const response = await res.json()
             console.log('res' + JSON.stringify(response))
-            const paths = response.items.map(item => item.lsi1.split('/')[0])
-            const sites = []
-            for (const path of paths) {
-              if (!sites.includes(path)) {
-                sites.push(path)
-              }
-            }
+            const sites = response.items.map(item => item.sk.replace(sk, ''))
+            
             console.log(sites)
             // Get the parent element (sites-list)
             const sitesList = document.getElementById('sites-list');
