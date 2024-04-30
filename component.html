@@ -7761,10 +7761,10 @@ elementsToRemove.forEach(element => element.remove());
 
           // If the current value is an object or an array, recursively traverse it
           else if (typeof json[key] === 'object' && json[key] !== null) {
-            traverseJSONAndUpdate(json[key], currentPath, sender);
+            traverseJSONAndUpdate(json[key], currentPath, sender,date);
           }
           else if (key ==='datePublished'){
-            json[key] = 
+            json[key] = headContentItem.hosting_time?.published ? new Date(headContentItem.hosting_time.published).toISOString() : date.toISOString()
           } 
           else {
             // If the current value is a string, check for the data-transfer-sender attribute
