@@ -8018,6 +8018,11 @@ elementsToRemove.forEach(element => element.remove());
         }
       }
     }
+    function formatDate(date) {
+            const options = { day: '2-digit', month: 'long', year: 'numeric' };
+            const formattedDate = date.toLocaleDateString('en-US', options);
+            return formattedDate;
+          }
     const publish = async (e) => {
       const date = new Date()
       if (visualOn) {
@@ -8087,6 +8092,10 @@ elementsToRemove.forEach(element => element.remove());
       */
 
 
+      // set date
+      const dateEl = getElementById1('[data-builder-time-published]')
+      dateEl.setAttribute('datetime',headContentItem.hosting_time.published || date.getTime())
+      dateEl.textContent = headContentItem.hosting_time.published ?formatDate(new Date(headContentItem.hosting_time.published)) :formatDate(date)
 
 
       const pagePathContent = getElementById1('page-path').textContent;
