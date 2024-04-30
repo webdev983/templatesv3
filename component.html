@@ -7679,7 +7679,7 @@ elementsToRemove.forEach(element => element.remove());
 
 
     }
-    function traverseJSONAndUpdate(json, path = '', sender = '',date) {
+    function traverseJSONAndUpdate(json, path = '', sender = '', date) {
       // Iterate through each key-value pair in the JSON object
       for (const key in json) {
         if (json.hasOwnProperty(key)) {
@@ -7761,11 +7761,11 @@ elementsToRemove.forEach(element => element.remove());
 
           // If the current value is an object or an array, recursively traverse it
           else if (typeof json[key] === 'object' && json[key] !== null) {
-            traverseJSONAndUpdate(json[key], currentPath, sender,date);
+            traverseJSONAndUpdate(json[key], currentPath, sender, date);
           }
-          else if (key ==='datePublished'){
+          else if (key === 'datePublished') {
             json[key] = headContentItem.hosting_time?.published ? new Date(headContentItem.hosting_time.published).toISOString() : date.toISOString()
-          } 
+          }
           else {
             // If the current value is a string, check for the data-transfer-sender attribute
             const senderPath = sender ? `${sender}.${currentPath}` : currentPath;
@@ -7890,7 +7890,7 @@ elementsToRemove.forEach(element => element.remove());
           delete json['offers-aggregate']
 
         }
-        traverseJSONAndUpdate(json, '', receiverName,date);
+        traverseJSONAndUpdate(json, '', receiverName, date);
 
         json = cleanJson(json)
         // After updating, stringify the JSON object and assign it back to the text content of the schema element
@@ -8100,9 +8100,12 @@ elementsToRemove.forEach(element => element.remove());
       // set date
       if (pathItemPath.includes('/Blog/') || pathItemPath.includes('/Home')) {
         const dateEl = querySelectorAll1('[data-builder-time-published]')[0]
-        const d =headContentItem.hosting_time?.published ? new Date(headContentItem.hosting_time.published).toISOString() : date.toISOString()
-        dateEl.setAttribute('datetime', d)
-        dateEl.textContent = headContentItem.hosting_time?.published ? formatDate(new Date(headContentItem.hosting_time.published)) : formatDate(date)
+        if (dateEl) {
+          const d = headContentItem.hosting_time?.published ? new Date(headContentItem.hosting_time.published).toISOString() : date.toISOString()
+          dateEl.setAttribute('datetime', d)
+          dateEl.textContent = headContentItem.hosting_time?.published ? formatDate(new Date(headContentItem.hosting_time.published)) : formatDate(date)
+        }
+
       }
 
 
