@@ -5483,12 +5483,12 @@ checkbox1.setAttribute('hidden', "");
             newEle.onerror = function () {
               // Set republish variable to true
               console.log('republish true')
-              try{
-                
+              try {
+
                 republish = true;
               }
-              catch(e){}
-              
+              catch (e) { }
+
             };
           }
           console.log('no comp val' + noComp1)
@@ -6052,6 +6052,19 @@ checkbox1.setAttribute('hidden', "");
             const handleInsert = (treeElement, componentElement, replaceCopyId) => {
               console.log('handling' + treeElement + ' ' + componentElement + ' ' + replaceCopyId)
               const newEl = document.createElement(inserted_element.tagName)
+              if (inserted_element.tagName.toLowerCase() === 'img') {
+                console.log('set ev')
+                newEl.onerror = function () {
+                  // Set republish variable to true
+                  console.log('republish true')
+                  try {
+
+                    republish = true;
+                  }
+                  catch (e) { }
+
+                };
+              }
               componentElement.appendChild(newEl)
 
               const attr1 = componentElement.getAttribute('data-replaceID')
@@ -6424,6 +6437,19 @@ checkbox1.setAttribute('hidden', "");
             const handleInsert = (treeElement, componentElement, replaceCopyId) => {
               console.log('handling' + treeElement + ' ' + componentElement + ' ' + replaceCopyId)
               const newEl = document.createElement(inserted_element.tagName)
+              if (inserted_element.tagName.toLowerCase() === 'img') {
+                console.log('set ev')
+                newEl.onerror = function () {
+                  // Set republish variable to true
+                  console.log('republish true')
+                  try {
+
+                    republish = true;
+                  }
+                  catch (e) { }
+
+                };
+              }
               const attr1 = componentElement.getAttribute('data-replaceID')
               if (attr1) {
                 newEl.setAttribute('data-replaceID', attr1)
