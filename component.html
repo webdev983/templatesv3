@@ -4162,7 +4162,7 @@ component</button> -->
           value: textareaValue,
 
         }
-
+        /*
         if (event.target.getAttribute('data-builder-time') === 'dd month yyyy') {
           function formatDate(date) {
             const options = { day: '2-digit', month: 'long', year: 'numeric' };
@@ -4194,6 +4194,7 @@ component</button> -->
             value: fDate,
           }
         }
+        */
         console.log('ac' + JSON.stringify(el))
         pushAction(el)
         event.target.removeAttribute('contenteditable')
@@ -8018,6 +8019,7 @@ elementsToRemove.forEach(element => element.remove());
       }
     }
     const publish = async (e) => {
+      const date = new Date()
       if (visualOn) {
         localStorage.removeItem('visualOn')
         let newUrl = window.location.href + '&publish=1';
@@ -8107,7 +8109,7 @@ elementsToRemove.forEach(element => element.remove());
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: idFromLink, html, path: pagePathContent, toRemove, robotsTxt, siteMapPriority, siteMapNotDefiniedPriorities }),
+        body: JSON.stringify({ id: idFromLink, html, path: pagePathContent, toRemove, robotsTxt, siteMapPriority, siteMapNotDefiniedPriorities,date:date.getTime() }),
       });
       const r = await response.json()
       console.log('link: ' + r.link)
