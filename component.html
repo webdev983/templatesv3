@@ -283,10 +283,10 @@
       </details>
 
 
-      <details  style="margin-bottom: 7px;" id="hub-scritps" data-file-name-show="Hub">
+      <details style="margin-bottom: 7px;" id="hub-scritps" data-file-name-show="Hub">
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">⚙️ Scripts</span></summary>
         <textarea id="hub-scripts-input" class="text1" style="width: 50vw"></textarea>
-        <button  class="b-4">💾 Save</button>
+        <button class="b-4">💾 Save</button>
       </details>
 
 
@@ -302,7 +302,8 @@
 
 
       <details hidden id="breadCrumb-menu" style="margin-bottom: 7px;" data-file-name-show="Hub">
-        <summary class="summary-L-3"><span class="l-3 b-dark-blue" id='breadcrumb-status'>🥖 BreadCrumb Menu 🔴</span></summary>
+        <summary class="summary-L-3"><span class="l-3 b-dark-blue" id='breadcrumb-status'>🥖 BreadCrumb Menu 🔴</span>
+        </summary>
         <button class="b-3" onclick="generateBreadCrumbApi(event)"> Generate</button>
       </details>
 
@@ -1005,7 +1006,7 @@ component</button> -->
       // Find the part that corresponds to the clicked position
       let accumulatedWidth = 0;
       for (const part of parts) {
-        const partWidth = getTextWidth(part+'/', event.target);
+        const partWidth = getTextWidth(part + '/', event.target);
         accumulatedWidth += partWidth;
         if (accumulatedWidth >= relativeClickX) {
           const parts1 = parts.slice(0, parts.indexOf(part) + 1)
@@ -1448,11 +1449,11 @@ component</button> -->
       const capitalizedWords = str.replace(/-/g, ' ').split(' ');
 
       // Capitalize the first letter of each word
-     
+
       const firstLetter = capitalizedWords[0].charAt(0).toUpperCase();
       // Concatenate the first letter with the rest of the word
-      capitalizedWords[0] =  firstLetter + capitalizedWords[0].slice(1);
-      
+      capitalizedWords[0] = firstLetter + capitalizedWords[0].slice(1);
+
 
       // Join the words back together to form the modified string
       const capitalizedString = capitalizedWords.join(' ');
@@ -1478,10 +1479,10 @@ component</button> -->
       };
       const response = await fetch(pup_url, options);
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-            method: 'POST',
-            body: JSON.stringify({ id: headContentItem.id, sk: 'generated-breadcrumb' }),
-          });
-          breadcrumb.textContent = '🥖 BreadCrumb Menu 🟢'
+        method: 'POST',
+        body: JSON.stringify({ id: headContentItem.id, sk: 'generated-breadcrumb' }),
+      });
+      breadcrumb.textContent = '🥖 BreadCrumb Menu 🟢'
     }
     const generateBreadCrumb = async (event) => {
       let arr = pathItemPath.split(';')[0].split('/')
@@ -7852,7 +7853,7 @@ elementsToRemove.forEach(element => element.remove());
       const key = rest.join('/').toLowerCase()
       return 'https://' + s.toLowerCase() + '/' + key
     }
-    const generateSchema = (url) => {
+    const generateSchema = (url, date) => {
       const generatedPage = getElementById1('generated-page')
       const schemas = querySelectorAll1('script[data-transfer-receiver]')
 
@@ -7993,36 +7994,36 @@ elementsToRemove.forEach(element => element.remove());
         }
       }
     }
-    const replacePlaceHolders = (html)=>{
+    const replacePlaceHolders = (html) => {
       const all = document.querySelectorAll('[data-list]:not([hidden])')
-      for(const el of all){
+      for (const el of all) {
         const rows = el.querySelectorAll('[data-lists-element]')
-        for(const row of rows){
+        for (const row of rows) {
           const key = row.querySelector('[data-lists-element-key]').textContent
           const value = row.querySelector('[data-lists-element-value]').textContent
-          html = html.replaceAll('{'+key+'}',value)
+          html = html.replaceAll('{' + key + '}', value)
         }
       }
       return html
     }
-    const getFromSiteData = (k)=>{
+    const getFromSiteData = (k) => {
       const all = document.querySelectorAll('[data-list]:not([hidden])')
-      for(const el of all){
+      for (const el of all) {
         const rows = el.querySelectorAll('[data-lists-element]')
-        for(const row of rows){
+        for (const row of rows) {
           const key = row.querySelector('[data-lists-element-key]').textContent
           const value = row.querySelector('[data-lists-element-value]').textContent
-          if(key ===k){
+          if (key === k) {
             return value
           }
         }
       }
     }
     function formatDate(date) {
-            const options = { day: '2-digit', month: 'long', year: 'numeric' };
-            const formattedDate = date.toLocaleDateString('en-US', options);
-            return formattedDate;
-          }
+      const options = { day: '2-digit', month: 'long', year: 'numeric' };
+      const formattedDate = date.toLocaleDateString('en-US', options);
+      return formattedDate;
+    }
     const publish = async (e) => {
       const date = new Date()
       if (visualOn) {
@@ -8093,9 +8094,12 @@ elementsToRemove.forEach(element => element.remove());
 
 
       // set date
-      const dateEl = getElementById1('[data-builder-time-published]')
-      dateEl.setAttribute('datetime',headContentItem.hosting_time.published || date.getTime())
-      dateEl.textContent = headContentItem.hosting_time.published ?formatDate(new Date(headContentItem.hosting_time.published)) :formatDate(date)
+      if (pathItemPath.includes('/Blog/') || pathItemPath.includes('/Home')) {
+        const dateEl = getElementById1('[data-builder-time-published]')
+        dateEl.setAttribute('datetime', headContentItem.hosting_time.published || date.getTime())
+        dateEl.textContent = headContentItem.hosting_time.published ? formatDate(new Date(headContentItem.hosting_time.published)) : formatDate(date)
+      }
+
 
 
       const pagePathContent = getElementById1('page-path').textContent;
@@ -8104,7 +8108,7 @@ elementsToRemove.forEach(element => element.remove());
       console.log('Publishing:', pagePathContent);
       const urlSearchParams = new URLSearchParams(window.location.search);
       let idFromLink = urlSearchParams.get('id');
-      generateSchema(pagePathContent.split(';')[0])
+      generateSchema(pagePathContent.split(';')[0], date)
       var iframe = document.getElementById("generated-page-iframe");
 
       // Access the content of the iframe
@@ -8118,7 +8122,7 @@ elementsToRemove.forEach(element => element.remove());
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: idFromLink, html, path: pagePathContent, toRemove, robotsTxt, siteMapPriority, siteMapNotDefiniedPriorities,date:date.getTime() }),
+        body: JSON.stringify({ id: idFromLink, html, path: pagePathContent, toRemove, robotsTxt, siteMapPriority, siteMapNotDefiniedPriorities, date: date.getTime() }),
       });
       const r = await response.json()
       console.log('link: ' + r.link)
@@ -9165,14 +9169,14 @@ elementsToRemove.forEach(element => element.remove());
       };
       const response = await fetch(pup_url, options);
     }
-    const handleBreadCrumbStatus = async()=>{
+    const handleBreadCrumbStatus = async () => {
       let exisitingValue = headContentItem && await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${headContentItem.id}:generated-breadcrumb`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }).then(e => e.json())
-      if(exisitingValue){
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(e => e.json())
+      if (exisitingValue) {
         const breadcrumb = document.getElementById('breadcrumb-status')
         breadcrumb.textContent = '🥖 BreadCrumb Menu 🟢'
       }
@@ -9863,7 +9867,7 @@ headers: {
       const splited = pathItemPath.split(';')[0].split('/')
       const name = splited[splited.length - 1]
 
-      
+
       if (pathItem.hub_items?.list) {
         await showList(pathItem.hub_items?.list)
       }
