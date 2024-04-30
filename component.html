@@ -7679,7 +7679,7 @@ elementsToRemove.forEach(element => element.remove());
 
 
     }
-    function traverseJSONAndUpdate(json, path = '', sender = '') {
+    function traverseJSONAndUpdate(json, path = '', sender = '',date) {
       // Iterate through each key-value pair in the JSON object
       for (const key in json) {
         if (json.hasOwnProperty(key)) {
@@ -7886,7 +7886,7 @@ elementsToRemove.forEach(element => element.remove());
           delete json['offers-aggregate']
 
         }
-        traverseJSONAndUpdate(json, '', receiverName);
+        traverseJSONAndUpdate(json, '', receiverName,date);
 
         json = cleanJson(json)
         // After updating, stringify the JSON object and assign it back to the text content of the schema element
@@ -8096,7 +8096,7 @@ elementsToRemove.forEach(element => element.remove());
       // set date
       if (pathItemPath.includes('/Blog/') || pathItemPath.includes('/Home')) {
         const dateEl = getElementById1('[data-builder-time-published]')
-        dateEl.setAttribute('datetime', headContentItem.hosting_time.published || date.getTime())
+        dateEl.setAttribute('datetime', new Date(headContentItem.hosting_time.published).toISOString() || date.toISOString())
         dateEl.textContent = headContentItem.hosting_time.published ? formatDate(new Date(headContentItem.hosting_time.published)) : formatDate(date)
       }
 
