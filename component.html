@@ -1948,6 +1948,7 @@ component</button> -->
     var dependencyItem
     var skuCreated
     var ownerid
+    var republish
     var saveGpt = async (event) => {
       const { value } = event.target.parentNode.querySelector('#gpt-input')
       if (!pathItem.hub_items) {
@@ -2174,7 +2175,7 @@ component</button> -->
       const ai = document.querySelector('[data-ai]');
       ai.removeAttribute('hidden');
       const originalRow = ai.querySelector('[data-ai-row]');
-      
+
       for (const element of parsed['chatgpt-tasks']) {
         const cloned = originalRow.cloneNode(true);
         cloned.querySelector('[data-ai-label]').textContent = element.name;
@@ -2194,7 +2195,7 @@ component</button> -->
           status.textContent = '🟠'
           task = replacePlaceHolders(task)
           task = replaceVars(task)
-          console.log('chat gpt task: \n'+ task )
+          console.log('chat gpt task: \n' + task)
           const res = await sendGptRequest(gptToken, task, element.model)
           console.log(JSON.stringify(res))
           const content = JSON.parse(res.choices[0].message.content.replace(/\\"/g, '"').replace(/\\n/g, '\\n'))
@@ -5476,6 +5477,13 @@ checkbox1.setAttribute('hidden', "");
             getElementById1('generated-page')
             : getElementById1(removeLastOccurrence(target_element, '-tree'));
           const newEle = document.createElement(inserted_element.tagName)
+          // Check if the tag is <img>
+          if (inserted_element.tagName.toLowerCase() === 'img') {
+            newEle.onerror = function () {
+              // Set republish variable to true
+              republish = true;
+            };
+          }
           console.log('no comp val' + noComp1)
           console.log('replaceid1 ' + replaceId)
           noComp1 && newEle.setAttribute('data-replaceID', replaceId)
@@ -8005,25 +8013,25 @@ elementsToRemove.forEach(element => element.remove());
         const rows = el.querySelectorAll('[data-lists-element]')
         for (const row of rows) {
           const key = row.querySelector('[data-lists-element-key]').textContent
-          const value = row.querySelector('[data-list-element-selection]')?.value ||  row.querySelector('[data-lists-element-value]').textContent || ''
-         
+          const value = row.querySelector('[data-list-element-selection]')?.value || row.querySelector('[data-lists-element-value]').textContent || ''
+
           html = html.replaceAll('{' + key + '}', value)
           const checkboxs = row.querySelectorAll('[data-list-element-benefit]')
-          for(const checkbox of checkboxs){
-            if(checkbox.checked){
-              const name = checkbox.getAttribute('varname').replace('varlist_','')
-              if(checked[name]){
-                checked[name].push(key+': ' +value)
+          for (const checkbox of checkboxs) {
+            if (checkbox.checked) {
+              const name = checkbox.getAttribute('varname').replace('varlist_', '')
+              if (checked[name]) {
+                checked[name].push(key + ': ' + value)
               }
-              else{
-                checked[name] = [key+': '+value]
+              else {
+                checked[name] = [key + ': ' + value]
               }
             }
           }
         }
       }
-      for(const key of Object.keys(checked)){
-        html = html.replaceAll('{' + key + '}',checked[key].join(','))
+      for (const key of Object.keys(checked)) {
+        html = html.replaceAll('{' + key + '}', checked[key].join(','))
       }
       return html
     }
@@ -9318,7 +9326,7 @@ elementsToRemove.forEach(element => element.remove());
         }
       )
 
-      if (toPublish == "1") {
+      if (toPublish == "1" || republish) {
         await publish()
       }
       if (generatetable) {
@@ -9475,7 +9483,7 @@ headers: {
 
 
       }
-      
+
       const combinations = generateCombinations(resultList)
       await setSku(value)
       pathItem.combinations = combinations.length
@@ -9628,7 +9636,7 @@ headers: {
         }
 
       }
-      else if(items.length === 1){
+      else if (items.length === 1) {
         const element = items[0].form
         const el =
         {
@@ -9883,7 +9891,7 @@ headers: {
       const resultList = await getProductAttributes()
 
       if (resultList.length || pathItemSku) {
-        console.log('path item sku'+ pathItemSku)
+        console.log('path item sku' + pathItemSku)
         getElementById1('sku-menu').removeAttribute('hidden')
 
         pathItemSku && showSku(pathItemSku, true)
