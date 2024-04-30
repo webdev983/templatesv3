@@ -8000,13 +8000,29 @@ elementsToRemove.forEach(element => element.remove());
     }
     const replacePlaceHolders = (html) => {
       const all = document.querySelectorAll('[data-list]:not([hidden])')
+      const checked = {}
       for (const el of all) {
         const rows = el.querySelectorAll('[data-lists-element]')
         for (const row of rows) {
           const key = row.querySelector('[data-lists-element-key]').textContent
           const value = row.querySelector('[data-lists-element-value]').textContent
           html = html.replaceAll('{' + key + '}', value)
+          const checkboxs = row.querySelectorAll('[data-list-element-benefit]')
+          for(const checkbox of checkboxs){
+            if(checkbox.checked){
+              const name = checkbox.getAttribute('varname').replace('varlist_','')
+              if(checked[name]){
+                checked[name].push(value)
+              }
+              else{
+                checked[name] = [value]
+              }
+            }
+          }
         }
+      }
+      for(const key of Object.keys(checked)){
+        html = html.replaceAll('{' + key + '}', checked[key].join(','))
       }
       return html
     }
