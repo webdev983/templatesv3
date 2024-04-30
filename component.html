@@ -4967,6 +4967,16 @@ checkbox1.setAttribute('hidden', "");
       }
     }
     let pauseExecution = false
+    function imgError() {
+      // Set republish variable to true
+      console.log('republish true')
+      try {
+
+        republish = true;
+      }
+      catch (e) { }
+
+    };
     const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative) => {
 
       if (pauseExecution) {
@@ -5480,16 +5490,7 @@ checkbox1.setAttribute('hidden', "");
           // Check if the tag is <img>
           if (inserted_element.tagName.toLowerCase() === 'img') {
             console.log('set ev')
-            newEle.onerror = function () {
-              // Set republish variable to true
-              console.log('republish true')
-              try {
-
-                republish = true;
-              }
-              catch (e) { }
-
-            };
+            newEle.addEventListener("error", imgError);
           }
           console.log('no comp val' + noComp1)
           console.log('replaceid1 ' + replaceId)
@@ -6054,16 +6055,7 @@ checkbox1.setAttribute('hidden', "");
               const newEl = document.createElement(inserted_element.tagName)
               if (inserted_element.tagName.toLowerCase() === 'img') {
                 console.log('set ev')
-                newEl.onerror = function () {
-                  // Set republish variable to true
-                  console.log('republish true')
-                  try {
-
-                    republish = true;
-                  }
-                  catch (e) { }
-
-                };
+                newEl.addEventListener("error", imgError);
               }
               componentElement.appendChild(newEl)
 
@@ -6439,16 +6431,7 @@ checkbox1.setAttribute('hidden', "");
               const newEl = document.createElement(inserted_element.tagName)
               if (inserted_element.tagName.toLowerCase() === 'img') {
                 console.log('set ev')
-                newEl.onerror = function () {
-                  // Set republish variable to true
-                  console.log('republish true')
-                  try {
-
-                    republish = true;
-                  }
-                  catch (e) { }
-
-                };
+                newEl.addEventListener("error", imgError);
               }
               const attr1 = componentElement.getAttribute('data-replaceID')
               if (attr1) {
