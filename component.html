@@ -8013,17 +8013,17 @@ elementsToRemove.forEach(element => element.remove());
             if(checkbox.checked){
               const name = checkbox.getAttribute('varname').replace('varlist_','')
               if(checked[name]){
-                checked[name].push(value)
+                checked[name].push(key+': ' +value)
               }
               else{
-                checked[name] = [value]
+                checked[name] = [key+': '+value]
               }
             }
           }
         }
       }
       for(const key of Object.keys(checked)){
-        html = html.replaceAll('{' + key + '}',`${key.replace('_',' ') }:`+ checked[key].join(','))
+        html = html.replaceAll('{' + key + '}',checked[key].join(','))
       }
       return html
     }
