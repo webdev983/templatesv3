@@ -2499,10 +2499,10 @@
           //list of sub paths
           const { items } = await response.json();
           const toUp = items[0]
-          const url =`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${toUp.id}:${toUp.sk}`
+          const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${toUp.id}:${toUp.sk}`
           console.log(url)
           const item = await fetch(url).then(r => r.json())
-          item.id= toUp.id
+          item.id = toUp.id
           item.sku = component.sku
           console.log(JSON.stringify(item))
           await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -2960,7 +2960,7 @@
       // Find the part that corresponds to the clicked position
       let accumulatedWidth = 0;
       for (const part of parts) {
-        const partWidth = getTextWidth(part+'/', event.target);
+        const partWidth = getTextWidth(part + '/', event.target);
         accumulatedWidth += partWidth;
         if (accumulatedWidth >= relativeClickX) {
           const parts1 = parts.slice(0, parts.indexOf(part) + 1)
@@ -3059,6 +3059,28 @@
         console.log('folders' + JSON.stringify(folders))
         folders = removeDuplicates(folders);
         folders.sort();
+        folders.sort((a, b) => {
+          // Check if either element is "Home" or starts with "Home-Page"
+          const aIsHome = a === "Home" || a.startsWith("Home-Page");
+          const bIsHome = b === "Home" || b.startsWith("Home-Page");
+
+          // If both are "Home" or start with "Home-Page", maintain their order
+          if (aIsHome && bIsHome) {
+            return 0;
+          }
+          // If only 'a' is "Home" or starts with "Home-Page", move it before 'b'
+          else if (aIsHome) {
+            return -1;
+          }
+          // If only 'b' is "Home" or starts with "Home-Page", move it before 'a'
+          else if (bIsHome) {
+            return 1;
+          }
+          // Otherwise, maintain the original order
+          else {
+            return 0;
+          }
+        });
         folders.forEach(item => {
           if (i < 1000) {
             i++;
