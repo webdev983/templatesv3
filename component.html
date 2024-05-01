@@ -4743,6 +4743,10 @@ checkbox1.setAttribute('hidden', "");
       )
       if (republish) {
         for (const imageId of imagesIds) {
+          const element = getElementById1(imageId)
+          if(!element){
+            continue
+          }
           const flag = await fetch('https://api.allorigins.win/raw?url=' + value)
             .then(async response => {
               if (response.ok || response.status === 200) {
@@ -4772,7 +4776,7 @@ checkbox1.setAttribute('hidden', "");
             continue
           }
           const site = pathItemPath.split('/')[0]
-          const element = getElementById1(imageId)
+          
           const nsrc = element.getAttribute('src')
           const splited = nsrc.split('/')
           const last = splited[splited.length - 1]
