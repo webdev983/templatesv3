@@ -224,7 +224,7 @@
             const response = await res.json()
             console.log('res' + JSON.stringify(response))
             const sites = response.items.map(item => item.sk.replace(sk, ''))
-            
+
             console.log(sites)
             // Get the parent element (sites-list)
             const sitesList = document.getElementById('sites-list');
@@ -2647,7 +2647,7 @@
       // Get the closest list item (li) element
       var listItem = document.getElementById(id);
 
-
+      const d = new Date()
       try {
         const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`);
         if (!response.ok) {
@@ -2662,38 +2662,27 @@
 
         // Step 2: Iterate through the items and send a DELETE request for each
         for (const item of data.items) {
-          const { id, sk, sku } = item;
+          const { id, sk } = item;
+          if (sk === 'path') {
+            const trashLsi = 'trash/' + d.toISOString().slice(0, -5) + '-replace/' + item.lsi1
+            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(
+                {
+                  ...item,
+                  lsi1: trashLsi,
 
-          if (sku) {
-            const skuResponse = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku}&sk=qty;&startsWith=true`);
-            if (!skuResponse.ok) {
-              throw new Error(`HTTP error! Status: ${skuResponse.status}`);
-            }
-            const skuData = await skuResponse.json();
-
-            for (const skuItem of skuData.items) {
-              await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${skuItem.id}:${skuItem.sk}`, {
-                method: 'DELETE',
-                headers: {
-                  'Content-Type': 'application/json',
-                  // Add any additional headers if needed
-                },
-              });
-            }
+                }
+              ),
+            })
+            await createFolders(convertToOldPath(trashLsi))
           }
 
-          const deleteResponse = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:${sk}`, {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-              // Add any additional headers if needed
-            },
-          });
 
-          if (!deleteResponse.ok) {
-            throw new Error(`HTTP error! Status: ${deleteResponse.status}`);
-          }
-          console.log(`Successfully deleted item with id:${id} and sk:${sk}`);
+
         }
       } catch (error) {
         console.error('Error:', error);
