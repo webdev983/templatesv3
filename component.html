@@ -1121,24 +1121,24 @@ component</button> -->
       console.log('Removing Image Src:', imageSrc);
       const sk = imageSrc.replace('https://s3.amazonaws.com/checkout-admin-panel/', "")
       const imgId = event.target.closest('[data-menu]').id.replace('gallery-menu-wrapper;', '')
-      try{
+      try {
         await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:${sk}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          // Add any additional headers if needed
-        },
-      });
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            // Add any additional headers if needed
+          },
+        });
       }
-      catch(e){
-        console.log('error '+ JSON.stringify(e))
+      catch (e) {
+        console.log('error ' + JSON.stringify(e))
       }
-      try{
-      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/upload?id=' + sk, {
-        method: 'DELETE',
-      });
+      try {
+        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/upload?id=' + sk, {
+          method: 'DELETE',
+        });
       }
-      catch(e){
+      catch (e) {
         console.log(JSON.stringify(e))
       }
       //to cont
@@ -4742,6 +4742,34 @@ checkbox1.setAttribute('hidden', "");
       )
       if (republish) {
         for (const imageId of imagesIds) {
+          const flag = await fetch('https://api.allorigins.win/raw?url=' + value)
+            .then(async response => {
+              if (response.ok || response.status === 200) {
+                const t = await response.text()
+                if (t.includes('404')) {
+                  console.log('image doesnt exist')
+                  republish = true
+                  return true
+                }
+                else {
+                  console.log('Image exists.');
+                }
+
+              } else {
+                console.log('image doesnt exist')
+                republish = true
+                return true
+              }
+            })
+            .catch(error => {
+              console.error('Error checking image existence:', error);
+             
+              republish = true
+              return true
+            });
+          if(!flag){
+            continue
+          }
           const site = pathItemPath.split('/')[0]
           const element = getElementById1(imageId)
           const nsrc = element.getAttribute('src')
@@ -4760,7 +4788,7 @@ checkbox1.setAttribute('hidden', "");
             site,
 
             name: randomString + '_' + splited2.join('_'),
-            imageSrc:panelSrc,
+            imageSrc: panelSrc,
             defaultRes,
             pagePath: splited.join('/')
           }
@@ -6941,28 +6969,8 @@ elementsToRemove.forEach(element => element.remove());
           const element22 = getElementById1(removeLastOccurrence(target_element, '-tree'));
           const element33 = getElementById1(target_element);
           if (element22.tagName.toLowerCase() === 'img' && key === 'src') {
-            fetch('https://api.allorigins.win/raw?url=' + value)
-              .then(async response => {
-                if (response.ok || response.status === 200) {
-                  const t = await response.text()
-                  if (t.includes('404')) {
-                    console.log('image doesnt exist')
-                    republish = true
-                    imagesIds.push(element22.id)
-                  }
-                  else {
-                    console.log('Image exists.');
-                  }
+            imagesIds.push(element22.id)
 
-                } else {
-                  console.log('image doesnt exist')
-                  republish = true
-                }
-              })
-              .catch(error => {
-                console.error('Error checking image existence:', error);
-                republish = true
-              });
           }
           const attributeButton = element33.querySelector('[data-element="code-tree-attributes-button"]');
           attributeButton.removeAttribute('hidden')
