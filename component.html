@@ -4216,125 +4216,7 @@ component</button> -->
         }
       });
 
-      document.addEventListener('DOMContentLoaded', loadFirst);
-      var loadFirst = async () => {
-        var iframe = getElementById1("generated-page-iframe");
-
-        // Wait for the iframe to load completely
-        await new Promise(resolve => {
-          iframe.addEventListener("load", resolve);
-
-        });
-        var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-        const lastActionTime = getElementById1('last-action-time');
-        lastActionTime.addEventListener('dblclick', function () {
-          // Handle double-click event here
-          console.log('Double-clicked on the button');
-          // Add your custom logic for double-click handling
-        });
-        const loadingScreen = getElementById1('loading');
-        loadingScreen.style.display = 'flex';
-        const timerElement = getElementById1('timer');
-        let tenthsOfSeconds = 0;
-        const interval = setInterval(function () {
-          tenthsOfSeconds++;
-          timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
-        }, 100);
-        const urlParams = new URLSearchParams(window.location.search);
-        const idFromQuery = urlParams.get('id');
-        const toPublish = urlParams.get('publish')
-        const generatetable = urlParams.get('generatetable')
-        const generatebreadcrumb = urlParams.get('generatebreadcrumb')
-        const importAttribute = urlParams.get('attr')
-        const importValue = urlParams.get('val')
-        ownerid = localStorage.getItem('ownerid') || urlParams.get('ownerid')
-        if (idFromQuery) {
-          // Change the id of the element with id "component-element"
-          const compTree = getElementById1('components-tree')
-          const component_el = getElementById1('component-element')
-          const newEl2 = component_el.cloneNode(true)
-          newEl2.id = idFromQuery + '-tree'
-          compTree.append(newEl2)
-
-          const builderElement = getElementById1('63ae5927-390f-4391-993d-b25ab09c8ada');
-          if (builderElement) {
-            builderElement.id = idFromQuery;
-          }
-
-          // Change the text content of the button with data-element "code-tree-tag-name-button"
-          const componentNameButton = document.querySelector('[data-element="code-tree-tag-name-button"]');
-          if (componentNameButton) {
-            componentNameButton.innerText = `🧩${idFromQuery}`;
-          }
-        }
-        await loadFromDb()
-        if (updateComponentsMap) {
-          const componentsIds = Object.keys(cache)
-          const response1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ id: idFromQuery, sk: 'componentsMap', items: componentsIds }),
-          });
-
-        }
-        await handleHead()
-        await handleSelectedDependeeChange()
-        await handleDependency()
-        await handleWebPageMenu()
-        await handleTableGeneration()
-        await handleBreadCrumbStatus()
-        await handleItemLink()
-        //dispatch event
-        await handleImportMenu()
-
-        setHubItems()
-
-
-        document.querySelectorAll('[data-file-name-show]').forEach(
-          element => {
-            const p = element.getAttribute('data-file-name-show')
-            if (pathItemPath.split(';')[0].includes(p)) {
-              element.removeAttribute('hidden')
-            }
-          }
-        )
-
-        if (toPublish == "1" || republish) {
-          await publish()
-        }
-        if (generatetable) {
-          await generateTable(generatetable)
-        }
-        if (generatebreadcrumb) {
-          await generateBreadCrumb()
-        }
-        if (importAttribute) {
-          await handleImportGpt(importValue, importAttribute)
-        }
-
-        const event = new CustomEvent("pageloaded")
-        document.dispatchEvent(event)
-
-
-        //first menu
-        let buttons = querySelectorAll1('button[data-element="code-tree-tag-name-button"]');
-        /*
-        buttons.forEach(function (button) {
-          button.addEventListener('click', e => loader(e, handleComponentClick));
-        });*/
-        clearInterval(interval);
-        console.log(timerElement.textContent)
-        if (localStorage.getItem('visualOn')) {
-
-          getElementById1('transform').click()
-        }
-        lastActionTime.textContent = timerElement.textContent;
-        loadingScreen.style.display = 'none';
-
-      }
-
+      
 
       // Function to check if an element has the 'data-visual-draggable' attribute
       function isDraggable(element) {
@@ -9903,6 +9785,125 @@ element.setAttribute('data-product', [first, name].join(';'))
 
 
     }
+    document.addEventListener('DOMContentLoaded', loadFirst);
+      var loadFirst = async () => {
+        var iframe = getElementById1("generated-page-iframe");
+
+        // Wait for the iframe to load completely
+        await new Promise(resolve => {
+          iframe.addEventListener("load", resolve);
+
+        });
+        var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+        const lastActionTime = getElementById1('last-action-time');
+        lastActionTime.addEventListener('dblclick', function () {
+          // Handle double-click event here
+          console.log('Double-clicked on the button');
+          // Add your custom logic for double-click handling
+        });
+        const loadingScreen = getElementById1('loading');
+        loadingScreen.style.display = 'flex';
+        const timerElement = getElementById1('timer');
+        let tenthsOfSeconds = 0;
+        const interval = setInterval(function () {
+          tenthsOfSeconds++;
+          timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
+        }, 100);
+        const urlParams = new URLSearchParams(window.location.search);
+        const idFromQuery = urlParams.get('id');
+        const toPublish = urlParams.get('publish')
+        const generatetable = urlParams.get('generatetable')
+        const generatebreadcrumb = urlParams.get('generatebreadcrumb')
+        const importAttribute = urlParams.get('attr')
+        const importValue = urlParams.get('val')
+        ownerid = localStorage.getItem('ownerid') || urlParams.get('ownerid')
+        if (idFromQuery) {
+          // Change the id of the element with id "component-element"
+          const compTree = getElementById1('components-tree')
+          const component_el = getElementById1('component-element')
+          const newEl2 = component_el.cloneNode(true)
+          newEl2.id = idFromQuery + '-tree'
+          compTree.append(newEl2)
+
+          const builderElement = getElementById1('63ae5927-390f-4391-993d-b25ab09c8ada');
+          if (builderElement) {
+            builderElement.id = idFromQuery;
+          }
+
+          // Change the text content of the button with data-element "code-tree-tag-name-button"
+          const componentNameButton = document.querySelector('[data-element="code-tree-tag-name-button"]');
+          if (componentNameButton) {
+            componentNameButton.innerText = `🧩${idFromQuery}`;
+          }
+        }
+        await loadFromDb()
+        if (updateComponentsMap) {
+          const componentsIds = Object.keys(cache)
+          const response1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id: idFromQuery, sk: 'componentsMap', items: componentsIds }),
+          });
+
+        }
+        await handleHead()
+        await handleSelectedDependeeChange()
+        await handleDependency()
+        await handleWebPageMenu()
+        await handleTableGeneration()
+        await handleBreadCrumbStatus()
+        await handleItemLink()
+        //dispatch event
+        await handleImportMenu()
+
+        setHubItems()
+
+
+        document.querySelectorAll('[data-file-name-show]').forEach(
+          element => {
+            const p = element.getAttribute('data-file-name-show')
+            if (pathItemPath.split(';')[0].includes(p)) {
+              element.removeAttribute('hidden')
+            }
+          }
+        )
+
+        if (toPublish == "1" || republish) {
+          await publish()
+        }
+        if (generatetable) {
+          await generateTable(generatetable)
+        }
+        if (generatebreadcrumb) {
+          await generateBreadCrumb()
+        }
+        if (importAttribute) {
+          await handleImportGpt(importValue, importAttribute)
+        }
+
+        const event = new CustomEvent("pageloaded")
+        document.dispatchEvent(event)
+
+
+        //first menu
+        let buttons = querySelectorAll1('button[data-element="code-tree-tag-name-button"]');
+        /*
+        buttons.forEach(function (button) {
+          button.addEventListener('click', e => loader(e, handleComponentClick));
+        });*/
+        clearInterval(interval);
+        console.log(timerElement.textContent)
+        if (localStorage.getItem('visualOn')) {
+
+          getElementById1('transform').click()
+        }
+        lastActionTime.textContent = timerElement.textContent;
+        loadingScreen.style.display = 'none';
+
+      }
+
     const save = async (event) => {
       const parent = event.target.parentNode
       const { id } = parent
