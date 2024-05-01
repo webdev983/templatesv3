@@ -1121,17 +1121,26 @@ component</button> -->
       console.log('Removing Image Src:', imageSrc);
       const sk = imageSrc.replace('https://s3.amazonaws.com/checkout-admin-panel/', "")
       const imgId = event.target.closest('[data-menu]').id.replace('gallery-menu-wrapper;', '')
-
-      await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:${sk}`, {
+      try{
+        await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:${sk}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
           // Add any additional headers if needed
         },
       });
+      }
+      catch(e){
+        console.log('error '+ JSON.stringify(e))
+      }
+      try{
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/upload?id=' + sk, {
         method: 'DELETE',
       });
+      }
+      catch(e){
+        console.log(JSON.stringify(e))
+      }
       //to cont
       //setImg('https://via.placeholder.com/300/0000FF/FFFFFF?text=Article-Image', imgId)
       loadImages(event.target.closest('[data-menu]', src))
