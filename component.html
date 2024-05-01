@@ -4929,16 +4929,7 @@ checkbox1.setAttribute('hidden', "");
       }
     }
     let pauseExecution = false
-    function imgError() {
-      // Set republish variable to true
-      console.log('republish true')
-      try {
 
-        republish = true;
-      }
-      catch (e) { }
-
-    };
     const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative) => {
 
       if (pauseExecution) {
@@ -5450,10 +5441,7 @@ checkbox1.setAttribute('hidden', "");
             : getElementById1(removeLastOccurrence(target_element, '-tree'));
           const newEle = document.createElement(inserted_element.tagName)
           // Check if the tag is <img>
-          if (inserted_element.tagName.toLowerCase() === 'img') {
-            console.log('set ev')
-            newEle.addEventListener("error", imgError);
-          }
+
           console.log('no comp val' + noComp1)
           console.log('replaceid1 ' + replaceId)
           noComp1 && newEle.setAttribute('data-replaceID', replaceId)
@@ -6015,10 +6003,7 @@ checkbox1.setAttribute('hidden', "");
             const handleInsert = (treeElement, componentElement, replaceCopyId) => {
               console.log('handling' + treeElement + ' ' + componentElement + ' ' + replaceCopyId)
               const newEl = document.createElement(inserted_element.tagName)
-              if (inserted_element.tagName.toLowerCase() === 'img') {
-                console.log('set ev')
-                newEl.addEventListener("error", imgError);
-              }
+
               componentElement.appendChild(newEl)
 
               const attr1 = componentElement.getAttribute('data-replaceID')
@@ -6391,10 +6376,7 @@ checkbox1.setAttribute('hidden', "");
             const handleInsert = (treeElement, componentElement, replaceCopyId) => {
               console.log('handling' + treeElement + ' ' + componentElement + ' ' + replaceCopyId)
               const newEl = document.createElement(inserted_element.tagName)
-              if (inserted_element.tagName.toLowerCase() === 'img') {
-                console.log('set ev')
-                newEl.addEventListener("error", imgError);
-              }
+
               const attr1 = componentElement.getAttribute('data-replaceID')
               if (attr1) {
                 newEl.setAttribute('data-replaceID', attr1)
@@ -6805,6 +6787,19 @@ elementsToRemove.forEach(element => element.remove());
 
           const element22 = getElementById1(removeLastOccurrence(target_element, '-tree'));
           const element33 = getElementById1(target_element);
+          if (element22.tagName.toLowerCase() === 'img' && key === 'src') {
+            fetch(value, { method: 'HEAD' })
+              .then(response => {
+                if (response.ok || response.status === 200) {
+                  console.log('Image exists.');
+                } else {
+                  republish = true
+                }
+              })
+              .catch(error => {
+                console.error('Error checking image existence:', error);
+              });
+          }
           const attributeButton = element33.querySelector('[data-element="code-tree-attributes-button"]');
           attributeButton.removeAttribute('hidden')
           if (check_b) {
