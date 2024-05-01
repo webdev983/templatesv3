@@ -3,8 +3,8 @@
 
 <head>
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
   <link rel="stylesheet" href="css/right-click-menu.css" media="all">
   <link rel="stylesheet" href="css/buttons-and-menus.css" media="all">
   <link rel="stylesheet" href="css/panels.css" media="all">
@@ -20,13 +20,13 @@
     </div>
 
     <div class="panel left" style="overflow-y: auto; height: 80vh;">
-      <div id="nav-buttons">
+      <div  id="nav-buttons">
         <a href="https://webdev983.github.io/templatesv3/"><button class="b-1">📂</button></a>
       </div>
       <div style="margin-top: 30px;">
         <button class="b-1 " id="toggle-component-tree" onclick="toggleComponentTree()">🧩</button>
         <button class="b-1 " id="toggle-code-tree" onclick="toggleCodeTree()">🏷️</button>
-        <button class="b-1 " id="toggle-head" onclick="toggleHead()">🗿</button>
+        <button class="b-1 " id="toggle-head" onclick="toggleHead()" >🗿</button>
         <button class="b-1 " id="toggle-generated-page" onclick="toggleGeneratedPage()">👁️</button>
       </div>
       <div id="logs-menu">
@@ -71,7 +71,7 @@
   </aside>
   <main class="main" style="position: relative;">
 
-    <div class="panel horizontal-menu">
+    <div class="panel horizontal-menu" >
       <button id="path_select" onclick="loadRoot()" class='b-1'
         style="user-select: none; margin-right: 7px;">👣</button>
 
@@ -101,19 +101,19 @@
 
     </div>
 
-    <div id="components-tree-menu" class="panel horizontal-menu">
+    <div id="components-tree-menu" class="panel horizontal-menu" >
       <label class="l-1" style="margin-right: 10px; user-select: none;">🧩</label>
       <button class="b-1" style="margin-right: 5px;" onclick="addComponent(event)">➕</button>
     </div>
 
-    <div id="components-tree" class="horizontal-area" style="position: relative;">
+    <div id="components-tree"  class="horizontal-area" style="position: relative;">
     </div>
 
-    <div id="code-tree-menu" class="panel horizontal-menu">
+    <div id="code-tree-menu" class="panel horizontal-menu" >
       <label class="l-1" style="margin-right: 10px; user-select: none;">🏷️</label>
-      <button class="b-1" onclick="addTreeElement(event)">➕</button>
+      <button  class="b-1" onclick="addTreeElement(event)">➕</button>
     </div>
-    <div id="code-tree" class="horizontal-area" style="position: relative;">
+    <div id="code-tree" class="horizontal-area" style="position: relative;" >
       <fieldset id="head-tree" data-element="code-tree-tag" class="tree-element">
         <legend class="l-p b-dark-blue"></legend>
         <input id="selectedCheckbox" hidden="" type="checkbox" onchange="handleCheckboxChange(event)">
@@ -151,7 +151,7 @@
     </div>
 
 
-    <div id="head-menu" class="panel horizontal-menu">
+    <div id="head-menu" class="panel horizontal-menu" >
       <label class="l-1" style="margin-right: 10px; user-select: none;">🗿</label>
       <button hidden class="b-1 b-selected" style="margin-right: 5px;">⭐</button>
 
@@ -408,12 +408,12 @@
     IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
 
   -->
-    <iframe id="generated-page-iframe" src="./iframe.html"
-      style="width:100%; height:20000px; border:none; margin-bottom: 200px;" allowfullscreen="true" allow="
+      <iframe id="generated-page-iframe" src="./iframe.html"
+        style="width:100%; height:20000px; border:none; margin-bottom: 200px;" allowfullscreen="true" allow="
       
       display-capture;
 " class="horizontal-area">
-    </iframe>
+      </iframe>
     <!--
         IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
       IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
@@ -918,7 +918,6 @@ component</button> -->
     <button style="font-size: 30px;" id="remove-loading">❌</button>
   </div>
   <script>
-
     var convertToOldPath = (path) => {
       const splited = path.split('|')
       const fileName = splited.pop()
@@ -992,6 +991,8 @@ component</button> -->
       return width;
     }
 
+  </script>
+  <script>
     //gallery scripts 
     var cancelGalleryMenu = (event) => {
       event.target.closest('#menu-1').style.display = 'none';
@@ -1320,6 +1321,10 @@ component</button> -->
 
 
 
+
+  </script>
+
+  <script>
     const urlSearchParams = new URLSearchParams(window.location.search);
     var page_id = urlSearchParams.get('id');
 
@@ -1366,6 +1371,8 @@ component</button> -->
       getElementById1('loading').remove();
     });
 
+  </script>
+  <script>
     const removeAndInvalidate = async (e) => {
       const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/removeandinvalidate/' + pathItem.id + ':' + pathItem.sk, {
         method: 'DELETE',
@@ -1867,6 +1874,8 @@ component</button> -->
       }
     });
 
+  </script>
+  <script>
     function sendGptRequest(token, prompt, model) {
 
 
@@ -1887,6 +1896,8 @@ component</button> -->
         .then(response => response.json())
         .catch(error => console.error('Error:', error));
     }
+  </script>
+  <script>
     var backend_url = 'https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2'
     var pathItem
     var pathItemPath
@@ -1897,7 +1908,6 @@ component</button> -->
     var skuCreated
     var ownerid
     var republish
-
     var saveGpt = async (event) => {
       const { value } = event.target.parentNode.querySelector('#gpt-input')
       if (!pathItem.hub_items) {
@@ -3465,6 +3475,8 @@ component</button> -->
       }
     }
 
+  </script>
+  <script>
     let path = ''
     let lvls = []
     var removeLastOccurrence = (inputString, substringToRemove) => {
@@ -4216,7 +4228,7 @@ component</button> -->
         }
       });
 
-      
+
 
       // Function to check if an element has the 'data-visual-draggable' attribute
       function isDraggable(element) {
@@ -4548,6 +4560,8 @@ component</button> -->
         })
         .catch(error => console.error('Error:', error));
     }
+  </script>
+  <script>
     var memData = {}
     //third menu 
     const addNew = (e) => {
@@ -4631,6 +4645,128 @@ checkbox1.setAttribute('hidden', "");
     }
 
 
+  </script>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', loadFirst);
+    async function loadFirst() {
+      var iframe = getElementById1("generated-page-iframe");
+
+      // Wait for the iframe to load completely
+      await new Promise(resolve => {
+        iframe.addEventListener("load", resolve);
+
+      });
+      var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+      const lastActionTime = getElementById1('last-action-time');
+      lastActionTime.addEventListener('dblclick', function () {
+        // Handle double-click event here
+        console.log('Double-clicked on the button');
+        // Add your custom logic for double-click handling
+      });
+      const loadingScreen = getElementById1('loading');
+      loadingScreen.style.display = 'flex';
+      const timerElement = getElementById1('timer');
+      let tenthsOfSeconds = 0;
+      const interval = setInterval(function () {
+        tenthsOfSeconds++;
+        timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
+      }, 100);
+      const urlParams = new URLSearchParams(window.location.search);
+      const idFromQuery = urlParams.get('id');
+      const toPublish = urlParams.get('publish')
+      const generatetable = urlParams.get('generatetable')
+      const generatebreadcrumb = urlParams.get('generatebreadcrumb')
+      const importAttribute = urlParams.get('attr')
+      const importValue = urlParams.get('val')
+      ownerid = localStorage.getItem('ownerid') || urlParams.get('ownerid')
+      if (idFromQuery) {
+        // Change the id of the element with id "component-element"
+        const compTree = getElementById1('components-tree')
+        const component_el = getElementById1('component-element')
+        const newEl2 = component_el.cloneNode(true)
+        newEl2.id = idFromQuery + '-tree'
+        compTree.append(newEl2)
+
+        const builderElement = getElementById1('63ae5927-390f-4391-993d-b25ab09c8ada');
+        if (builderElement) {
+          builderElement.id = idFromQuery;
+        }
+
+        // Change the text content of the button with data-element "code-tree-tag-name-button"
+        const componentNameButton = document.querySelector('[data-element="code-tree-tag-name-button"]');
+        if (componentNameButton) {
+          componentNameButton.innerText = `🧩${idFromQuery}`;
+        }
+      }
+      await loadFromDb()
+      if (updateComponentsMap) {
+        const componentsIds = Object.keys(cache)
+        const response1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id: idFromQuery, sk: 'componentsMap', items: componentsIds }),
+        });
+
+      }
+      await handleHead()
+      await handleSelectedDependeeChange()
+      await handleDependency()
+      await handleWebPageMenu()
+      await handleTableGeneration()
+      await handleBreadCrumbStatus()
+      await handleItemLink()
+      //dispatch event
+      await handleImportMenu()
+
+      setHubItems()
+
+
+      document.querySelectorAll('[data-file-name-show]').forEach(
+        element => {
+          const p = element.getAttribute('data-file-name-show')
+          if (pathItemPath.split(';')[0].includes(p)) {
+            element.removeAttribute('hidden')
+          }
+        }
+      )
+
+      if (toPublish == "1" || republish) {
+        await publish()
+      }
+      if (generatetable) {
+        await generateTable(generatetable)
+      }
+      if (generatebreadcrumb) {
+        await generateBreadCrumb()
+      }
+      if (importAttribute) {
+        await handleImportGpt(importValue, importAttribute)
+      }
+
+      const event = new CustomEvent("pageloaded")
+      document.dispatchEvent(event)
+
+
+      //first menu
+      let buttons = querySelectorAll1('button[data-element="code-tree-tag-name-button"]');
+      /*
+      buttons.forEach(function (button) {
+        button.addEventListener('click', e => loader(e, handleComponentClick));
+      });*/
+      clearInterval(interval);
+      console.log(timerElement.textContent)
+      if (localStorage.getItem('visualOn')) {
+
+        getElementById1('transform').click()
+      }
+      lastActionTime.textContent = timerElement.textContent;
+      loadingScreen.style.display = 'none';
+
+    }
 
     var actionLog = []
     var selected = []
@@ -6768,7 +6904,7 @@ elementsToRemove.forEach(element => element.remove());
           const element22 = getElementById1(removeLastOccurrence(target_element, '-tree'));
           const element33 = getElementById1(target_element);
           if (element22.tagName.toLowerCase() === 'img' && key === 'src') {
-            fetch('https://api.allorigins.win/raw?url=' + value, { method: 'HEAD' })
+            fetch('https://api.allorigins.win/raw?url='+value, { method: 'HEAD' })
               .then(response => {
                 if (response.ok || response.status === 200) {
                   console.log('Image exists.');
@@ -9785,125 +9921,6 @@ element.setAttribute('data-product', [first, name].join(';'))
 
 
     }
-    document.addEventListener('DOMContentLoaded', loadFirst);
-      var loadFirst = async () => {
-        var iframe = getElementById1("generated-page-iframe");
-
-        // Wait for the iframe to load completely
-        await new Promise(resolve => {
-          iframe.addEventListener("load", resolve);
-
-        });
-        var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-        const lastActionTime = getElementById1('last-action-time');
-        lastActionTime.addEventListener('dblclick', function () {
-          // Handle double-click event here
-          console.log('Double-clicked on the button');
-          // Add your custom logic for double-click handling
-        });
-        const loadingScreen = getElementById1('loading');
-        loadingScreen.style.display = 'flex';
-        const timerElement = getElementById1('timer');
-        let tenthsOfSeconds = 0;
-        const interval = setInterval(function () {
-          tenthsOfSeconds++;
-          timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
-        }, 100);
-        const urlParams = new URLSearchParams(window.location.search);
-        const idFromQuery = urlParams.get('id');
-        const toPublish = urlParams.get('publish')
-        const generatetable = urlParams.get('generatetable')
-        const generatebreadcrumb = urlParams.get('generatebreadcrumb')
-        const importAttribute = urlParams.get('attr')
-        const importValue = urlParams.get('val')
-        ownerid = localStorage.getItem('ownerid') || urlParams.get('ownerid')
-        if (idFromQuery) {
-          // Change the id of the element with id "component-element"
-          const compTree = getElementById1('components-tree')
-          const component_el = getElementById1('component-element')
-          const newEl2 = component_el.cloneNode(true)
-          newEl2.id = idFromQuery + '-tree'
-          compTree.append(newEl2)
-
-          const builderElement = getElementById1('63ae5927-390f-4391-993d-b25ab09c8ada');
-          if (builderElement) {
-            builderElement.id = idFromQuery;
-          }
-
-          // Change the text content of the button with data-element "code-tree-tag-name-button"
-          const componentNameButton = document.querySelector('[data-element="code-tree-tag-name-button"]');
-          if (componentNameButton) {
-            componentNameButton.innerText = `🧩${idFromQuery}`;
-          }
-        }
-        await loadFromDb()
-        if (updateComponentsMap) {
-          const componentsIds = Object.keys(cache)
-          const response1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ id: idFromQuery, sk: 'componentsMap', items: componentsIds }),
-          });
-
-        }
-        await handleHead()
-        await handleSelectedDependeeChange()
-        await handleDependency()
-        await handleWebPageMenu()
-        await handleTableGeneration()
-        await handleBreadCrumbStatus()
-        await handleItemLink()
-        //dispatch event
-        await handleImportMenu()
-
-        setHubItems()
-
-
-        document.querySelectorAll('[data-file-name-show]').forEach(
-          element => {
-            const p = element.getAttribute('data-file-name-show')
-            if (pathItemPath.split(';')[0].includes(p)) {
-              element.removeAttribute('hidden')
-            }
-          }
-        )
-
-        if (toPublish == "1" || republish) {
-          await publish()
-        }
-        if (generatetable) {
-          await generateTable(generatetable)
-        }
-        if (generatebreadcrumb) {
-          await generateBreadCrumb()
-        }
-        if (importAttribute) {
-          await handleImportGpt(importValue, importAttribute)
-        }
-
-        const event = new CustomEvent("pageloaded")
-        document.dispatchEvent(event)
-
-
-        //first menu
-        let buttons = querySelectorAll1('button[data-element="code-tree-tag-name-button"]');
-        /*
-        buttons.forEach(function (button) {
-          button.addEventListener('click', e => loader(e, handleComponentClick));
-        });*/
-        clearInterval(interval);
-        console.log(timerElement.textContent)
-        if (localStorage.getItem('visualOn')) {
-
-          getElementById1('transform').click()
-        }
-        lastActionTime.textContent = timerElement.textContent;
-        loadingScreen.style.display = 'none';
-
-      }
-
     const save = async (event) => {
       const parent = event.target.parentNode
       const { id } = parent
