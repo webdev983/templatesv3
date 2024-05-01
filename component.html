@@ -1911,6 +1911,8 @@ component</button> -->
     var skuCreated
     var ownerid
     var republish
+    loadFirst()
+    //document.addEventListener('DOMContentLoaded', loadFirst);
     var saveGpt = async (event) => {
       const { value } = event.target.parentNode.querySelector('#gpt-input')
       if (!pathItem.hub_items) {
@@ -2981,8 +2983,7 @@ component</button> -->
       }
 
     }
-  </script>
-  <script>
+    
     function getRelativePath(currentLsi, lsi3) {
       // Split paths into arrays of directories and filenames
       const currentLsiParts = currentLsi.split('/');
@@ -3478,10 +3479,9 @@ component</button> -->
       }
     }
 
-  </script>
-  <script>
     let path = ''
     let lvls = []
+    
     var removeLastOccurrence = (inputString, substringToRemove) => {
       const lastIndexOfSubstring = inputString.lastIndexOf(substringToRemove);
 
@@ -4563,8 +4563,6 @@ component</button> -->
         })
         .catch(error => console.error('Error:', error));
     }
-  </script>
-  <script>
     var memData = {}
     //third menu 
     const addNew = (e) => {
@@ -4648,11 +4646,7 @@ checkbox1.setAttribute('hidden', "");
     }
 
 
-  </script>
-
-
-  <script>
-    document.addEventListener('DOMContentLoaded', loadFirst);
+    
     async function loadFirst() {
       var iframe = getElementById1("generated-page-iframe");
 
@@ -6907,7 +6901,7 @@ elementsToRemove.forEach(element => element.remove());
           const element22 = getElementById1(removeLastOccurrence(target_element, '-tree'));
           const element33 = getElementById1(target_element);
           if (element22.tagName.toLowerCase() === 'img' && key === 'src') {
-            fetch(value, { method: 'HEAD' })
+            fetch('https://api.allorigins.win/raw?url='+value, { method: 'HEAD' })
               .then(response => {
                 if (response.ok || response.status === 200) {
                   console.log('Image exists.');
