@@ -6903,9 +6903,17 @@ elementsToRemove.forEach(element => element.remove());
           const element33 = getElementById1(target_element);
           if (element22.tagName.toLowerCase() === 'img' && key === 'src') {
             fetch('https://api.allorigins.win/raw?url='+value, { method: 'HEAD' })
-              .then(response => {
-                if (response.ok || response.status === 200) {
-                  console.log('Image exists.');
+              .then(async response => {
+                if (response.ok || response.status === 200 ) {
+                  const t = await response.text()
+                  if(t.includes('404')){
+                    console.log('image doesnt exist')
+                    republish = true
+                  }
+                  else{
+                    console.log('Image exists.');
+                  }
+                  
                 } else {
                   console.log('image doesnt exist')
                   republish = true
@@ -6913,6 +6921,7 @@ elementsToRemove.forEach(element => element.remove());
               })
               .catch(error => {
                 console.error('Error checking image existence:', error);
+                republish = true
               });
           }
           const attributeButton = element33.querySelector('[data-element="code-tree-attributes-button"]');
