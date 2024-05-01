@@ -2589,28 +2589,43 @@
         const items = [...data.items, ...data2.items]
         const all = await Promise.all(items.map(async item => {
 
-          const { id,  } = item;
+          const { id, } = item;
           const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=path&startsWith=true`).then(e => e.json())
           let item1 = response.items.find(e => e.sk === 'path')
           if (item1.protected) {
             console.log('protected el ' + id)
             return true
           }
-          const trashLsi = 'trash/' + d.toISOString().slice(0, -5) + '-replace/' + item1.lsi1
-          await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(
-              {
-                ...item1,
-                lsi1: trashLsi,
+          if (item1.lsi1.startsWith('trash')) {
+            for (const item of response.items) {
+              const { id, sk } = item
+              const deleteResponse = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:${sk}`, {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  // Add any additional headers if needed
+                },
+              });
 
-              }
-            ),
-          })
-          await createFolders(convertToOldPath(trashLsi))
+            }
+          }
+          else {
+            const trashLsi = 'trash/' + d.toISOString().slice(0, -5) + '-replace/' + item1.lsi1
+            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(
+                {
+                  ...item1,
+                  lsi1: trashLsi,
+
+                }
+              ),
+            })
+            await createFolders(convertToOldPath(trashLsi))
+          }
 
 
 
@@ -2654,29 +2669,38 @@
         }
 
         // Step 2: Iterate through the items and send a DELETE request for each
-        for (const item of data.items) {
-          const { id, sk } = item;
-          if (sk === 'path') {
-            const trashLsi = 'trash/' + d.toISOString().slice(0, -5) + '-replace/' + item.lsi1
-            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-              method: 'POST',
+        const pathI = data.items.find(i => i.sk === 'path')
+        if (pathI.startsWith('trash')) {
+          for (const item of data.items) {
+            const { id, sk } = item
+            const deleteResponse = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:${sk}`, {
+              method: 'DELETE',
               headers: {
                 'Content-Type': 'application/json',
+                // Add any additional headers if needed
               },
-              body: JSON.stringify(
-                {
-                  ...item,
-                  lsi1: trashLsi,
+            });
 
-                }
-              ),
-            })
-            await createFolders(convertToOldPath(trashLsi))
           }
-
-
-
         }
+        else {
+          const trashLsi = 'trash/' + d.toISOString().slice(0, -5) + '-replace/' + pathI.lsi1
+          await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+              {
+                ...pathI,
+                lsi1: trashLsi,
+
+              }
+            ),
+          })
+          await createFolders(convertToOldPath(trashLsi))
+        }
+
       } catch (error) {
         console.error('Error:', error);
       }
