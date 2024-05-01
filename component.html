@@ -408,13 +408,13 @@
     IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
 
   -->
-    <iframe id="generated-page-iframe" src="./iframe.html"
-      style="width:100%; height:20000px; border:none; margin-bottom: 200px;" allowfullscreen="true" allow="
+      <iframe id="generated-page-iframe" src="./iframe.html"
+        style="width:100%; height:20000px; border:none; margin-bottom: 200px;" allowfullscreen="true" allow="
       
       display-capture;
       geolocation; 
       microphone; " class="horizontal-area">
-    </iframe>
+      </iframe>
     <!--
         IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
       IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
@@ -1577,14 +1577,14 @@ component</button> -->
       if (!s) {
 
         getElementById1("sku-list").removeAttribute('hidden')
-        getElementById1('generated-page').removeAttribute('hidden')
+        getElementById1('iframe-container').removeAttribute('hidden')
         getElementById1('generated-page-menu').removeAttribute('hidden')
         getElementById1('toggle-generated-page').classList.add('b-selected')
         localStorage.setItem('generatedPageToggle', 'true')
       }
       else {
         getElementById1("sku-list").setAttribute('hidden', '')
-        getElementById1('generated-page').setAttribute('hidden', '')
+        getElementById1('iframe-container').setAttribute('hidden', '')
         getElementById1('generated-page-menu').setAttribute('hidden', '')
         getElementById1('toggle-generated-page').classList.remove('b-selected')
         localStorage.removeItem('generatedPageToggle')
@@ -1858,7 +1858,7 @@ component</button> -->
           getElementById1('toggle-generated-page').classList.add('b-selected');
         } else {
           getElementById1('generated-page-menu').setAttribute('hidden', '');
-          getElementById1('generated-page').setAttribute('hidden', '');
+          getElementById1('iframe-container').setAttribute('hidden', '');
         }
       }
 
@@ -4650,6 +4650,125 @@ checkbox1.setAttribute('hidden', "");
 
 
   <script>
+    document.addEventListener('DOMContentLoaded', loadFirst);
+    async function loadFirst() {
+      var iframe = getElementById1("generated-page-iframe");
+
+      // Wait for the iframe to load completely
+      await new Promise(resolve => {
+        iframe.addEventListener("load", resolve);
+
+      });
+      var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+      const lastActionTime = getElementById1('last-action-time');
+      lastActionTime.addEventListener('dblclick', function () {
+        // Handle double-click event here
+        console.log('Double-clicked on the button');
+        // Add your custom logic for double-click handling
+      });
+      const loadingScreen = getElementById1('loading');
+      loadingScreen.style.display = 'flex';
+      const timerElement = getElementById1('timer');
+      let tenthsOfSeconds = 0;
+      const interval = setInterval(function () {
+        tenthsOfSeconds++;
+        timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
+      }, 100);
+      const urlParams = new URLSearchParams(window.location.search);
+      const idFromQuery = urlParams.get('id');
+      const toPublish = urlParams.get('publish')
+      const generatetable = urlParams.get('generatetable')
+      const generatebreadcrumb = urlParams.get('generatebreadcrumb')
+      const importAttribute = urlParams.get('attr')
+      const importValue = urlParams.get('val')
+      ownerid = localStorage.getItem('ownerid') || urlParams.get('ownerid')
+      if (idFromQuery) {
+        // Change the id of the element with id "component-element"
+        const compTree = getElementById1('components-tree')
+        const component_el = getElementById1('component-element')
+        const newEl2 = component_el.cloneNode(true)
+        newEl2.id = idFromQuery + '-tree'
+        compTree.append(newEl2)
+
+        const builderElement = getElementById1('63ae5927-390f-4391-993d-b25ab09c8ada');
+        if (builderElement) {
+          builderElement.id = idFromQuery;
+        }
+
+        // Change the text content of the button with data-element "code-tree-tag-name-button"
+        const componentNameButton = document.querySelector('[data-element="code-tree-tag-name-button"]');
+        if (componentNameButton) {
+          componentNameButton.innerText = `🧩${idFromQuery}`;
+        }
+      }
+      await loadFromDb()
+      if (updateComponentsMap) {
+        const componentsIds = Object.keys(cache)
+        const response1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id: idFromQuery, sk: 'componentsMap', items: componentsIds }),
+        });
+
+      }
+      await handleHead()
+      await handleSelectedDependeeChange()
+      await handleDependency()
+      await handleWebPageMenu()
+      await handleTableGeneration()
+      await handleBreadCrumbStatus()
+      await handleItemLink()
+      //dispatch event
+      await handleImportMenu()
+
+      setHubItems()
+
+
+      document.querySelectorAll('[data-file-name-show]').forEach(
+        element => {
+          const p = element.getAttribute('data-file-name-show')
+          if (pathItemPath.split(';')[0].includes(p)) {
+            element.removeAttribute('hidden')
+          }
+        }
+      )
+
+      if (toPublish == "1" || republish) {
+        await publish()
+      }
+      if (generatetable) {
+        await generateTable(generatetable)
+      }
+      if (generatebreadcrumb) {
+        await generateBreadCrumb()
+      }
+      if (importAttribute) {
+        await handleImportGpt(importValue, importAttribute)
+      }
+
+      const event = new CustomEvent("pageloaded")
+      document.dispatchEvent(event)
+
+
+      //first menu
+      let buttons = querySelectorAll1('button[data-element="code-tree-tag-name-button"]');
+      /*
+      buttons.forEach(function (button) {
+        button.addEventListener('click', e => loader(e, handleComponentClick));
+      });*/
+      clearInterval(interval);
+      console.log(timerElement.textContent)
+      if (localStorage.getItem('visualOn')) {
+
+        getElementById1('transform').click()
+      }
+      lastActionTime.textContent = timerElement.textContent;
+      loadingScreen.style.display = 'none';
+
+    }
+
     var actionLog = []
     var selected = []
     var components = []
@@ -8488,7 +8607,6 @@ elementsToRemove.forEach(element => element.remove());
               method: 'POST',
               body: JSON.stringify(body),
             });
-            // You may want to handle the response here
           }
         }
         if (foundE.set === false) {
@@ -9212,124 +9330,7 @@ elementsToRemove.forEach(element => element.remove());
         }
       }
     }
-    document.addEventListener('DOMContentLoaded', loadFirst);
-    async function loadFirst() {
-      var iframe = getElementById1("generated-page-iframe");
 
-      // Wait for the iframe to load completely
-      await new Promise(resolve => {
-        iframe.addEventListener("load", resolve);
-
-      });
-      var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-      const lastActionTime = getElementById1('last-action-time');
-      lastActionTime.addEventListener('dblclick', function () {
-        // Handle double-click event here
-        console.log('Double-clicked on the button');
-        // Add your custom logic for double-click handling
-      });
-      const loadingScreen = getElementById1('loading');
-      loadingScreen.style.display = 'flex';
-      const timerElement = getElementById1('timer');
-      let tenthsOfSeconds = 0;
-      const interval = setInterval(function () {
-        tenthsOfSeconds++;
-        timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
-      }, 100);
-      const urlParams = new URLSearchParams(window.location.search);
-      const idFromQuery = urlParams.get('id');
-      const toPublish = urlParams.get('publish')
-      const generatetable = urlParams.get('generatetable')
-      const generatebreadcrumb = urlParams.get('generatebreadcrumb')
-      const importAttribute = urlParams.get('attr')
-      const importValue = urlParams.get('val')
-      ownerid = localStorage.getItem('ownerid') || urlParams.get('ownerid')
-      if (idFromQuery) {
-        // Change the id of the element with id "component-element"
-        const compTree = getElementById1('components-tree')
-        const component_el = getElementById1('component-element')
-        const newEl2 = component_el.cloneNode(true)
-        newEl2.id = idFromQuery + '-tree'
-        compTree.append(newEl2)
-
-        const builderElement = getElementById1('63ae5927-390f-4391-993d-b25ab09c8ada');
-        if (builderElement) {
-          builderElement.id = idFromQuery;
-        }
-
-        // Change the text content of the button with data-element "code-tree-tag-name-button"
-        const componentNameButton = document.querySelector('[data-element="code-tree-tag-name-button"]');
-        if (componentNameButton) {
-          componentNameButton.innerText = `🧩${idFromQuery}`;
-        }
-      }
-      await loadFromDb()
-      if (updateComponentsMap) {
-        const componentsIds = Object.keys(cache)
-        const response1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ id: idFromQuery, sk: 'componentsMap', items: componentsIds }),
-        });
-
-      }
-      await handleHead()
-      await handleSelectedDependeeChange()
-      await handleDependency()
-      await handleWebPageMenu()
-      await handleTableGeneration()
-      await handleBreadCrumbStatus()
-      await handleItemLink()
-      //dispatch event
-      await handleImportMenu()
-
-      setHubItems()
-
-
-      document.querySelectorAll('[data-file-name-show]').forEach(
-        element => {
-          const p = element.getAttribute('data-file-name-show')
-          if (pathItemPath.split(';')[0].includes(p)) {
-            element.removeAttribute('hidden')
-          }
-        }
-      )
-
-      if (toPublish == "1" || republish) {
-        await publish()
-      }
-      if (generatetable) {
-        await generateTable(generatetable)
-      }
-      if (generatebreadcrumb) {
-        await generateBreadCrumb()
-      }
-      if (importAttribute) {
-        await handleImportGpt(importValue, importAttribute)
-      }
-
-      const event = new CustomEvent("pageloaded")
-      document.dispatchEvent(event)
-
-
-      //first menu
-      let buttons = querySelectorAll1('button[data-element="code-tree-tag-name-button"]');
-      /*
-      buttons.forEach(function (button) {
-        button.addEventListener('click', e => loader(e, handleComponentClick));
-      });*/
-      clearInterval(interval);
-      console.log(timerElement.textContent)
-      if (localStorage.getItem('visualOn')) {
-
-        getElementById1('transform').click()
-      }
-      lastActionTime.textContent = timerElement.textContent;
-      loadingScreen.style.display = 'none';
-
-    }
     function generateCombinations(data) {
       const combinations = [];
 
