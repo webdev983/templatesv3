@@ -3708,10 +3708,25 @@ component</button> -->
 
             }
           }
-          const editAlt = (target)=>{
-            menu.setAttribute('hidden','')
+          const editAlt = (target) => {
+            menu.setAttribute('hidden', '')
             const altElement = parentMenu.querySelector('#add_alt')
             altElement.removeAttribute('hidden')
+            
+            const saveButton = altElement.querySelector("editHrefButton")
+            saveButton.onclick = () => {
+              const input = altElement.querySelector('editHrefInput')
+              const el = {
+                time: (new Date()).getTime(),
+                action: 'setAttribute',
+                target_element: item.id + '-tree',
+                key: 'alt',
+                value: input.value,
+
+              }
+              pushAction(el)
+              
+            }
           }
           if (e.target.tagName.toLowerCase() === 'img') {
             addMenuEntry(menu, `🖼️ Edit image`, () => {
@@ -3863,7 +3878,7 @@ component</button> -->
           parentMenu.style.top = `${offsetY}px`;
 
           // Hide the menu when clicking the left mouse button
-          
+
           addMenuEntry(menu, `🗑️️ Remove element`, async () => {
             if (findRelatedElements(e.target.id) > 1) {
               await pushAction({
@@ -4754,12 +4769,12 @@ checkbox1.setAttribute('hidden', "");
 
 
 
-      const imagePs = imagesIds.map(async(imageId) => {
+      const imagePs = imagesIds.map(async (imageId) => {
         const element = getElementById1(imageId)
         if (!element) {
           return
         }
-        if (pathItemPath.split(';')[0].endsWith('/Main-Content' )&& !element.hasAttribute('srcset') && element.hasAttribute('data-src')) {
+        if (pathItemPath.split(';')[0].endsWith('/Main-Content') && !element.hasAttribute('srcset') && element.hasAttribute('data-src')) {
           setSrcSet(element)
         }
         const flag = await fetch('https://api.allorigins.win/raw?url=' + element.getAttribute('src'))
