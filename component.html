@@ -3647,7 +3647,8 @@ component</button> -->
         if (e.target.hasAttribute('data-visual-element')) {
           e.preventDefault(); // Prevent the default context menu from opening
           console.log('in11');
-          const menu = getElementById1('right-click-menu'); // Use # for ID selector
+          const parentMenu = getElementById1('right-click-menu'); // Use # for ID selector
+          const menu = parentMenu.querySelector('#options')
           menu.innerHTML = '';
           let siblingsWithDuplicate
           let fieldsetSiblings
@@ -3707,9 +3708,17 @@ component</button> -->
 
             }
           }
+          const editAlt = (target)=>{
+            menu.setAttribute('hidden','')
+            const altElement = parentMenu.querySelector('#add_alt')
+            altElement.removeAttribute('hidden')
+          }
           if (e.target.tagName.toLowerCase() === 'img') {
             addMenuEntry(menu, `🖼️ Edit image`, () => {
               redirectToImgPage(e.target.id, e.target.getAttribute('data-builder-image-source'))
+            });
+            addMenuEntry(menu, `🖼️ Edit Alt`, () => {
+              editAlt(e.target)
             });
           }
           if (e.target.hasAttribute('data-visual-href')) {
