@@ -8455,6 +8455,36 @@ elementsToRemove.forEach(element => element.remove());
         }
       }
     }
+    const setSrcSet =async (imageElement) => {
+      const data_src = imageElement.getAttribute('data-src')
+      if (data_src) {
+        const resolutions = data_src.split(',').map(e => e.split('.')[0])
+        const src = imageElement.getAttribute('src')
+        const splited = src.split('/')
+        const fName = splited.pop()
+        const [name, ext] = fName.split('.')
+        const splitedName = name.split('_')
+        splitedName.pop()
+        const pref = splitedName.join('_')
+        const srcSet = resolutions.map(
+          res => {
+            const newFName = `${pref}_${res}w.${ext} ${res}w`
+            return [...splited, newFName].join('/')
+          }
+        ).join(',')
+        const payload = {
+
+          time: (new Date()).getTime().toString(),
+          action: 'setAttribute',
+          target_element: imageElement.id + '-tree',
+          key: 'srcset',
+          value: srcSet,
+
+        }
+        await pushAction(payload)
+      }
+
+    }
     async function selectImage1(imgId, imageSrc, imageUUID) {
 
       const imageElement = getElementById1(removeLastOccurrence(imgId, '-tree'))
