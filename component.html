@@ -4743,68 +4743,71 @@ checkbox1.setAttribute('hidden', "");
           }
         }
       )
-      if (republish) {
-        for (const imageId of imagesIds) {
-          const element = getElementById1(imageId)
-          if (!element) {
-            continue
-          }
-          const flag = await fetch('https://api.allorigins.win/raw?url=' + value)
-            .then(async response => {
-              if (response.ok || response.status === 200) {
-                const t = await response.text()
-                if (t.includes('404')) {
-                  console.log('image doesnt exist')
-                  republish = true
-                  return true
-                }
-                else {
-                  console.log('Image exists.');
-                }
 
-              } else {
+      for (const imageId of imagesIds) {
+        const element = getElementById1(imageId)
+        if (!element) {
+          continue
+        }
+        if(!element.hasAttribute('srcset') && element.hasAttribute('data-src')){
+          setSrcSet(element)
+        }
+        const flag = await fetch('https://api.allorigins.win/raw?url=' + value)
+          .then(async response => {
+            if (response.ok || response.status === 200) {
+              const t = await response.text()
+              if (t.includes('404')) {
                 console.log('image doesnt exist')
                 republish = true
                 return true
               }
-            })
-            .catch(error => {
-              console.error('Error checking image existence:', error);
+              else {
+                console.log('Image exists.');
+              }
 
+            } else {
+              console.log('image doesnt exist')
               republish = true
               return true
-            });
-          if (!flag) {
-            continue
-          }
-          const site = pathItemPath.split('/')[0]
+            }
+          })
+          .catch(error => {
+            console.error('Error checking image existence:', error);
 
-          const nsrc = element.getAttribute('src')
-          const splited = nsrc.split('/')
-          const last = splited[splited.length - 1]
-          const [name, ext] = last.split('.')
-          const splited2 = name.split('_')
-          const randomString = splited2.shift
-          const res = splited2.pop()
-          const uuid = element.getAttribute('data-builder-image-source')
-          const panelSrc = `https://s3.amazonaws.com/checkout-admin-panel/pics${uuid}.${ext}`
-          const defaultRes = element.getAttribute('data-builder-image-default')
-          splited.splice(0, 3)
-          splited.pop()
-          const body = {
-            site,
-
-            name: randomString + '_' + splited2.join('_'),
-            imageSrc: panelSrc,
-            defaultRes,
-            pagePath: splited.join('/')
-          }
-          const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/resize', {
-            method: 'POST',
-            body: JSON.stringify(body),
+            republish = true
+            return true
           });
+        if (!flag) {
+          continue
         }
+        const site = pathItemPath.split('/')[0]
+
+        const nsrc = element.getAttribute('src')
+        const splited = nsrc.split('/')
+        const last = splited[splited.length - 1]
+        const [name, ext] = last.split('.')
+        const splited2 = name.split('_')
+        const randomString = splited2.shift
+        const res = splited2.pop()
+        const uuid = element.getAttribute('data-builder-image-source')
+        const panelSrc = `https://s3.amazonaws.com/checkout-admin-panel/pics${uuid}.${ext}`
+        const defaultRes = element.getAttribute('data-builder-image-default')
+        splited.splice(0, 3)
+        splited.pop()
+        const body = {
+          site,
+
+          name: randomString + '_' + splited2.join('_'),
+          imageSrc: panelSrc,
+          defaultRes,
+          pagePath: splited.join('/')
+        }
+        const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/resize', {
+          method: 'POST',
+          body: JSON.stringify(body),
+        });
       }
+
       if (toPublish == "1" || republish) {
         console.log('publishing')
         await publish()
@@ -4993,12 +4996,12 @@ checkbox1.setAttribute('hidden', "");
       }
     }
     function insertAfter(newNode, referenceNode) {
-            if (referenceNode.nextSibling) {
-              referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
-            } else {
-              referenceNode.parentNode.appendChild(newNode);
-            }
-          }
+      if (referenceNode.nextSibling) {
+        referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+      } else {
+        referenceNode.parentNode.appendChild(newNode);
+      }
+    }
     const pushAction = async (element, firstLoad, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative) => {
       console.log('pushed' + JSON.stringify(element))
       const time = element.time
@@ -5717,7 +5720,7 @@ checkbox1.setAttribute('hidden', "");
             await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev })
             break;
           }
-          
+
 
           //case duplicate insert after  
           if (inserted_element?.originalId) {
@@ -5843,8 +5846,8 @@ checkbox1.setAttribute('hidden', "");
                 newEl.id = splited[0] + ';' + newEl.id
                 newEl2.id = splited[0] + ';' + newEl2.id
               }
-              insertAfter(newEl,componentElement)
-              insertAfter(newEl2,treeElement)
+              insertAfter(newEl, componentElement)
+              insertAfter(newEl2, treeElement)
               //componentElement.parentNode.insertBefore(newEl, componentElement)
               //treeElement.parentNode.insertBefore(newEl2, treeElement)
             }
@@ -5887,7 +5890,7 @@ checkbox1.setAttribute('hidden', "");
             break;
 
           }
-          
+
           if (target_element?.length) {
             const afterId = target_element[0].id;
             const id = target_element[1].id;
@@ -8455,6 +8458,36 @@ elementsToRemove.forEach(element => element.remove());
         }
       }
     }
+    const setSrcSet = (imageElement) => {
+      const data_src = imageElement.getAttribute('data-src')
+      if (data_src) {
+        const resolutions = data_src.split(',').map(e => e.split('.')[0])
+        const src = imageElement.getAttribute('src')
+        const splited = src.split('/')
+        const fName = splited.pop()
+        const [name, ext] = fName.split('.')
+        const splitedName = name.split('_')
+        splitedName.pop()
+        const pref = splitedName.join('_')
+        const srcSet = resolutions.map(
+          res => {
+            const newFName = `${pref}_${res}w.${ext} ${res}w`
+            return [...splited, newFName].join('/')
+          }
+        ).join(',')
+        const payload = {
+
+          time: (new Date()).getTime().toString(),
+          action: 'setAttribute',
+          target_element: imageElement.id + '-tree',
+          key: 'srcset',
+          value: srcSet,
+
+        }
+        await pushAction(payload)
+      }
+
+    }
     async function selectImage1(imgId, imageSrc, imageUUID) {
 
       const imageElement = getElementById1(removeLastOccurrence(imgId, '-tree'))
@@ -8527,7 +8560,7 @@ elementsToRemove.forEach(element => element.remove());
       }
       await pushAction(payload4)
       // Add your logic for selecting the image here
-
+      setSrcSet(imageElement)
 
 
       // Add a "selected" label to the selected image
