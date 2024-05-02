@@ -716,7 +716,7 @@ component</button> -->
 
       <button style="margin:5px; margin-left: 0px; background-color: #f0f0f0;" class="b-3"
         id="code-tree-click-tag-insert-before" onclick="insertB(event)">⬅️ insertBefore</button>
-        <button style="margin:5px; margin-left: 0px; background-color: #f0f0f0;" class="b-3"
+      <button style="margin:5px; margin-left: 0px; background-color: #f0f0f0;" class="b-3"
         id="code-tree-click-tag-insert-before" onclick="insertA(event)"> insertAfter ➡️</button>
 
 
@@ -1118,7 +1118,7 @@ component</button> -->
       menu.style.display = 'block';
     }
     async function removeImage(event, src) {
-      const img =event.target.closest('tr').querySelector('img')
+      const img = event.target.closest('tr').querySelector('img')
       const id = img.getAttribute('cid')
       const imageSrc = img.src;
       console.log('Removing Image Src:', imageSrc);
@@ -4746,7 +4746,7 @@ checkbox1.setAttribute('hidden', "");
       if (republish) {
         for (const imageId of imagesIds) {
           const element = getElementById1(imageId)
-          if(!element){
+          if (!element) {
             continue
           }
           const flag = await fetch('https://api.allorigins.win/raw?url=' + value)
@@ -4770,15 +4770,15 @@ checkbox1.setAttribute('hidden', "");
             })
             .catch(error => {
               console.error('Error checking image existence:', error);
-             
+
               republish = true
               return true
             });
-          if(!flag){
+          if (!flag) {
             continue
           }
           const site = pathItemPath.split('/')[0]
-          
+
           const nsrc = element.getAttribute('src')
           const splited = nsrc.split('/')
           const last = splited[splited.length - 1]
@@ -10222,6 +10222,25 @@ element.setAttribute('data-product', [first, name].join(';'))
 
         clonedFieldset.id = clonedFieldset.id + ';' + parentId;
         clonedFieldset.setAttribute('action', 'InsertBefore')
+        checked && clonedFieldset.setAttribute('copiesOfInserting', "true")
+        e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+        e.target.parentNode.remove()
+      }
+
+    }
+    const insertA = (e) => {
+
+
+      const splited = e.target.parentNode.id.split(';')
+      const [toRemove, ...rest] = splited
+      const parentId = rest.join(';');
+      const fieldset = getElementById1('code-tree-add-tag-step-1');
+      const checked = e.target.parentNode.querySelector('#applyToCopies').checked
+      if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-add-tag-step-1')) {
+        const clonedFieldset = fieldset.cloneNode(true);
+
+        clonedFieldset.id = clonedFieldset.id + ';' + parentId;
+        clonedFieldset.setAttribute('action', 'InsertAfter')
         checked && clonedFieldset.setAttribute('copiesOfInserting', "true")
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
         e.target.parentNode.remove()
