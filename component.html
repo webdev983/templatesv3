@@ -3712,10 +3712,11 @@ component</button> -->
             menu.setAttribute('hidden', '')
             const altElement = parentMenu.querySelector('#add_alt')
             altElement.removeAttribute('hidden')
-
+            const input = altElement.querySelector('editHrefInput')
             const saveButton = altElement.querySelector("editHrefButton")
-            saveButton.onclick = () => {
-              const input = altElement.querySelector('editHrefInput')
+            input.onclick =e=>e.stopPropagation()
+            saveButton.onclick = (e) => {
+              e.stopPropagation()
               const el = {
                 time: (new Date()).getTime(),
                 action: 'setAttribute',
@@ -4123,7 +4124,11 @@ component</button> -->
         const entry = document.createElement('div');
         entry.className = 'menu-option';
         entry.innerHTML = text;
-        entry.onclick = async (e) => {e.stopPropagation(); await clickHandler(e); menu.parentNode.style.display = 'none' };
+        entry.onclick = async (e) => {
+          e.stopPropagation(); 
+          await clickHandler(e); 
+          menu.parentNode.style.display = 'none' 
+        };
         menu.appendChild(entry);
       }
       function saveT(event, previousValue) {
