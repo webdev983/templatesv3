@@ -4992,6 +4992,13 @@ checkbox1.setAttribute('hidden', "");
         }
       }
     }
+    function insertAfter(newNode, referenceNode) {
+            if (referenceNode.nextSibling) {
+              referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+            } else {
+              referenceNode.parentNode.appendChild(newNode);
+            }
+          }
     const pushAction = async (element, firstLoad, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative) => {
       console.log('pushed' + JSON.stringify(element))
       const time = element.time
@@ -5710,13 +5717,7 @@ checkbox1.setAttribute('hidden', "");
             await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev })
             break;
           }
-          function insertAfter(newNode, referenceNode) {
-            if (referenceNode.nextSibling) {
-              referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
-            } else {
-              referenceNode.parentNode.appendChild(newNode);
-            }
-          }
+          
 
           //case duplicate insert after  
           if (inserted_element?.originalId) {
@@ -5805,6 +5806,88 @@ checkbox1.setAttribute('hidden', "");
 
             break;
           }
+          if (inserted_element?.tagName) {
+            const handleInsert = (treeElement, componentElement, replaceCopyId) => {
+              console.log('handling' + treeElement + ' ' + componentElement + ' ' + replaceCopyId)
+              const newEl = document.createElement(inserted_element.tagName)
+
+              const attr1 = componentElement.getAttribute('data-replaceID')
+              if (attr1) {
+                newEl.setAttribute('data-replaceID', attr1)
+              }
+              if (noComp || noComp1) {
+                newEl.setAttribute('data-replaceID', replaceId)
+              }
+
+              const splited = componentElement.id.split(';')
+
+
+
+
+
+
+              newEl.id = replaceCopyId ? inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') : inserted_element.id
+
+              console.log(newEl.id)
+
+              const component_el = getElementById1('tree-element')
+              const newEl2 = component_el.cloneNode(true)
+              const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
+              button2.textContent = '🏷️' + inserted_element.tagName;
+              const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
+              button.addEventListener('mouseover', mouseOverTree);
+
+              button.addEventListener('mouseout', mouseOutTree);
+              newEl2.id = replaceCopyId ? inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') + '-tree' : inserted_element.id + '-tree'
+              if (splited.length > 1) {
+                newEl.id = splited[0] + ';' + newEl.id
+                newEl2.id = splited[0] + ';' + newEl2.id
+              }
+              insertAfter(componentElement,newEl)
+              insertAfter(treeElement,newEl2)
+              //componentElement.parentNode.insertBefore(newEl, componentElement)
+              //treeElement.parentNode.insertBefore(newEl2, treeElement)
+            }
+            treeElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
+              getElementById1('code-tree')
+              : getElementById1(target_element)
+            //component
+            componentElement = components.find(i => i === removeLastOccurrence(target_element, '-tree')) ?
+              getElementById1('generated-page')
+              :
+              getElementById1(removeLastOccurrence(target_element, '-tree'));
+            if (!componentElement) {
+              console.log('comp not found')
+              const mId = target_element.replace('-tree', '').split(':')[0]
+              const treeEls = []
+              const compEls = []
+              const existing = []
+              const elementsWithIdAndAttribute = querySelectorAll1('[id^="' + mId + '"][data-replaceid]')
+                .forEach(
+                  el => {
+                    console.log('ffooound152 ' + el.id)
+                    if (!existing.includes(el.getAttribute('data-replaceid'))) {
+                      existing.push(el.getAttribute('data-replaceid'))
+                      treeEls.push(getElementById1(el.id + '-tree'));
+                      compEls.push(el)
+                    }
+
+                  }
+                );
+
+              for (let i = 0; i < treeEls.length; i++) {
+                handleInsert(treeEls[i], compEls[i], true)
+              }
+              break;
+            }
+            console.log('handling insert')
+            handleInsert(treeElement, componentElement)
+
+
+            break;
+
+          }
+          
           if (target_element?.length) {
             const afterId = target_element[0].id;
             const id = target_element[1].id;
