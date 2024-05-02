@@ -3712,7 +3712,7 @@ component</button> -->
             menu.setAttribute('hidden', '')
             const altElement = parentMenu.querySelector('#add_alt')
             altElement.removeAttribute('hidden')
-            
+
             const saveButton = altElement.querySelector("editHrefButton")
             saveButton.onclick = () => {
               const input = altElement.querySelector('editHrefInput')
@@ -3876,7 +3876,14 @@ component</button> -->
           parentMenu.style.display = 'block';
           parentMenu.style.left = `${offsetX}px`;
           parentMenu.style.top = `${offsetY}px`;
-
+          const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+          iframeDocument.addEventListener('click', function () {
+            const parentMenu = document.getElementById('right-click-menu')
+            parentMenu.style.display = 'none';
+            parentMenu.querySelector('#options').removeAttribute('hidden')
+            parentMenu.querySelector('#add_alt').setAttribute('hidden', "")
+            parentMenu.querySelector('#editHrefInput').value = ""
+          });
           // Hide the menu when clicking the left mouse button
 
           addMenuEntry(menu, `🗑️️ Remove element`, async () => {
