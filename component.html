@@ -4744,12 +4744,14 @@ checkbox1.setAttribute('hidden', "");
         }
       )
 
-      for (const imageId of imagesIds) {
+
+
+      const imagePs = imageIds.map((imageId) => {
         const element = getElementById1(imageId)
         if (!element) {
           continue
         }
-        if(!element.hasAttribute('srcset') && element.hasAttribute('data-src')){
+        if (!element.hasAttribute('srcset') && element.hasAttribute('data-src')) {
           setSrcSet(element)
         }
         const flag = await fetch('https://api.allorigins.win/raw?url=' + element.getAttribute('src'))
@@ -4807,7 +4809,8 @@ checkbox1.setAttribute('hidden', "");
           body: JSON.stringify(body),
         });
       }
-
+      )
+      await Promise.all(imagePs)
       if (toPublish == "1" || republish) {
         console.log('publishing')
         await publish()
