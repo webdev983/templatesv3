@@ -31,6 +31,11 @@ document.getElementById('log-open').addEventListener('click', function() {
     bottomButton.removeAttribute('hidden');
 
   } else {
+    document.getElementById('toggle-component-tree').removeAttribute('hidden');
+    document.getElementById('toggle-code-tree').removeAttribute('hidden');
+    document.getElementById('toggle-head').removeAttribute('hidden');
+    document.getElementById('toggle-generated-page').removeAttribute('hidden');
+  
     logOpenButton.setAttribute('data-log-opened', '');
     bottomButton.setAttribute('hidden','');
     logOpenButton.classList.add('b-selected');
