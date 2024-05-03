@@ -16,12 +16,25 @@ document.getElementById('log-open').addEventListener('click', function() {
     console.log('222');
 
     leftElement.style.width = '60px';
+    console.log('333');
+
     logOpenButton.removeAttribute('data-log-opened');
+    console.log('444');
+
     logOpenButton.classList.remove('b-selected');
+    console.log('55555');
+
     refreshPage.setAttribute('hidden', '');
+    console.log('6666');
+
     codeLog.setAttribute('hidden','');
+    console.log('777');
     searchActions.setAttribute('hidden','');
+    console.log('888');
+
     refreshPageButton.setAttribute('hidden','');
+    console.log('999');
+
     bottomButton.removeAttribute('hidden');
   };
   
