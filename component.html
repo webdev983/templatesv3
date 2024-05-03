@@ -3735,7 +3735,7 @@ component</button> -->
             });
             addMenuEntry(menu, `🖼️ Edit Alt`, () => {
               editAlt(e.target)
-            });
+            },true);
           }
           if (e.target.hasAttribute('data-visual-href')) {
             addMenuEntry(menu, `🔗 Edit href`, () => {
@@ -4120,14 +4120,14 @@ component</button> -->
 
         return Array.from(filteredElements).length
       }
-      function addMenuEntry(menu, text, clickHandler) {
+      function addMenuEntry(menu, text, clickHandler,flag) {
         const entry = document.createElement('div');
         entry.className = 'menu-option';
         entry.innerHTML = text;
         entry.onclick = async (e) => {
           e.stopPropagation(); 
           await clickHandler(e); 
-          menu.parentNode.style.display = 'none' 
+          !flag && menu.parentNode.style.display = 'none' 
         };
         menu.appendChild(entry);
       }
