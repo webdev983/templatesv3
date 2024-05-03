@@ -1,8 +1,14 @@
 document.getElementById('log-open').addEventListener('click', function() {
+
+
+  var logOpenButton = document.getElementById('log-open'); 
+
+
+
+  
   var asideElement = document.querySelector('.aside');
   var leftElement = document.querySelector('.left');
   var bottomButton = document.getElementById('bottom-buttons'); 
-  var logOpenButton = document.getElementById('log-open'); 
   var refreshPageButton = document.getElementById('refresh-page'); 
   var codeLog = document.getElementById('code-log');
   var searchActions = document.getElementById('search-actions');
