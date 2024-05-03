@@ -13,6 +13,40 @@
 </head>
 
 <body class="body">
+  <script>
+    // Функция для получения значения параметра из строки запроса
+function getParameterValue(parameterName) {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    return urlSearchParams.get(parameterName);
+}
+
+// Функция для проверки наличия куки с заданным именем
+function checkCookie(name) {
+    return document.cookie.split(';').some((cookie) => {
+        return cookie.trim().startsWith(name + '=');
+    });
+}
+
+// Функция для установки куки с указанным временем жизни в секундах
+function setCookie(name, value, seconds) {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + (seconds * 1000));
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()}`;
+}
+
+// Получение id из строки запроса
+const id = getParameterValue('id');
+
+// Проверка наличия куки с этим id
+if (!checkCookie(id)) {
+    // Если куки отсутствуют, перезагрузить страницу
+    location.reload();
+    // Установка куки с id и временем жизни 3 секунды
+    setCookie(id, id, 3);
+}
+
+
+  </script>
   <aside class="aside">
     <div class="panel top">
       <button disabled class="b-1" id="last-action-time"
