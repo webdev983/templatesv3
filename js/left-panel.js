@@ -3,7 +3,7 @@ document.getElementById('log-open').addEventListener('click', function() {
   var asideElement = document.querySelector('.aside');
   var leftElement = document.querySelector('.left');
   var bottomButton = document.getElementById('bottom-buttons'); // Get the button element
-  var myButton = document.getElementById('log-open'); 
+  var logOpenButton = document.getElementById('log-open'); 
   var myButton2 = document.getElementById('refresh-page'); 
   var codeLog = document.getElementById('code-log');
   var search_actions = document.getElementById('search-actions');
@@ -20,9 +20,9 @@ document.getElementById('log-open').addEventListener('click', function() {
     refresh_page.removeAttribute('hidden');
     codeLog.removeAttribute('hidden');
     bottomButton.setAttribute('hidden', '');
-    myButton.classList.add('b-selected'); 
+    logOpenButton.classList.add('b-selected'); 
+    logOpenButton.setAttribute('data-log-opened', '');
     myButton2.removeAttribute('hidden');
-    myButton.setAttribute('data-log-opened', '');
 
 }
 
