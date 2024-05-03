@@ -25,7 +25,7 @@ document.getElementById('log-open').addEventListener('click', function() {
     logOpenButton.setAttribute('data-log-opened', '');
     console.log('111111');
 
-    //bottomButton.setAttribute('hidden','');
+    bottomButton.setAttribute('hidden','');
     console.log('2222222');
 
     logOpenButton.classList.add('b-selected');
