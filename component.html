@@ -16,10 +16,10 @@
   <aside class="aside">
     <div class="panel top">
       <button disabled class="b-1" id="last-action-time"
-        style="color: black;z-index:1; position: absolute;top: 50%;left: 50%; transform: translate(-50%, -50%);" >⏳</button>
+        style="color: black;z-index:1; position: absolute;top: 50%;left: 50%; transform: translate(-50%, -50%);">⏳</button>
     </div>
 
-    <div class="panel left" style="overflow-y: auto; height: 80vh;  margin-top: 5px; margin-left: 5px;position: relative;">
+    <div class="panel left" style="overflow-y: auto; height: 80vh;  margin-top: 5px; position: relative;">
       <div id="nav-buttons" hidden>
         <a href="https://webdev983.github.io/templatesv3/"><button class="b-1">📂</button></a>
       </div>
@@ -33,12 +33,12 @@
       <div id="logs-menu">
         <button hidden id="refresh-page" class="b-1" onclick="reloadPage(event)">🔄</button>
         
-          <input hidden id="search-actions" type="text" placeholder="🔎 Search actions" style="padding: 5px; 
+          <input hidden id="search-actions" type="text" placeholder="🔎 Search actions" style="  padding: 5px; 
           border: 2px solid #4A90E2;   
           border-radius: 5px;   
           font-size: 18px; margin-bottom: 7px; margin-top: 10px;  margin-left: 5px; min-width: 300px;">
       </div>
-      <table id="code-log" class="table-1" hidden >
+      <table id="code-log" class="table-1" hidden style="margin-bottom: 100px;">
         <thead>
           <tr>
             <th style="text-align: left;">🕓time</th>
@@ -67,17 +67,25 @@
         </tbody>
       </table>
 
-  <button id="bottom-buttons" class="b-1" onclick="removeTokenAndReload()"  style=" position: absolute; bottom: 0;">📴</button>
-  <script>function removeTokenAndReload() {
-    // Удаляем 'token' из localStorage
-    localStorage.removeItem('token');
-    localStorage.removeItem('ownerid');
-    localStorage.removeItem('helperid');
+        <script>function removeTokenAndReload() {
+            // Удаляем 'token' из localStorage
+            localStorage.removeItem('token');
+            localStorage.removeItem('ownerid');
+            localStorage.removeItem('helperid');
+  
+            // Перезагружаем страницу
+            window.location.href = '/templatesv3/';
+          }
+        </script>
+      <!-- <div id="bottom-buttons" class="panel bottom" >
 
-    // Перезагружаем страницу
-    window.location.href = '/templatesv3/';
-  }
-</script>
+      </div>
+  -->
+  <button id="bottom-buttons" class="b-1" onclick="removeTokenAndReload()" >📴</button>
+
+  <button id="bottom-buttons" class="b-1" onclick="removeTokenAndReload()" style="position: fixed; bottom: 0; left: 0;">📴</button>
+
+  <button id="bottom-buttons" class="b-1" onclick="removeTokenAndReload()" style="position: fixed; bottom: 0; left: 0;">📴</button>
 
     </div>
 
