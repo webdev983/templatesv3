@@ -20,7 +20,9 @@ document.getElementById('log-open').addEventListener('click', function() {
     bottomButton.removeAttribute('hidden');
     logOpenButton.removeAttribute('data-log-opened');
 
-  } else {
+  };
+  
+  if (!logOpenButton.hasAttribute('data-log-opened')) {
     asideElement.style.width = '525px';
     leftElement.style.width = '515px';
     refreshPage.removeAttribute('hidden');
