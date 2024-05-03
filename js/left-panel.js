@@ -8,7 +8,18 @@ document.getElementById('log-open').addEventListener('click', function() {
   var searchActions = document.getElementById('search-actions');
   var refreshPage = document.getElementById('refresh-page');
 
+
+
+
+
+
+
   if (logOpenButton.hasAttribute('data-log-opened')) {
+    document.getElementById('toggle-component-tree').hidden = true;
+    document.getElementById('toggle-code-tree').hidden = true;
+    document.getElementById('toggle-head').hidden = true;
+    document.getElementById('toggle-generated-page').hidden = true;
+  
     asideElement.style.width = '70px';
     leftElement.style.width = '60px';
     logOpenButton.removeAttribute('data-log-opened');
@@ -18,6 +29,7 @@ document.getElementById('log-open').addEventListener('click', function() {
     searchActions.setAttribute('hidden','');
     refreshPageButton.setAttribute('hidden','');
     bottomButton.removeAttribute('hidden');
+
   } else {
     logOpenButton.setAttribute('data-log-opened', '');
     bottomButton.setAttribute('hidden','');
