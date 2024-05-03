@@ -12,7 +12,6 @@ document.getElementById('log-open').addEventListener('click', function() {
   if (logOpenButton.hasAttribute('data-log-opened')) {
     asideElement.style.width = '70px';
     leftElement.style.width = '60px';
-
     logOpenButton.removeAttribute('data-log-opened');
     logOpenButton.classList.remove('b-selected');
     refreshPage.setAttribute('hidden', '');
@@ -20,21 +19,19 @@ document.getElementById('log-open').addEventListener('click', function() {
     searchActions.setAttribute('hidden','');
     refreshPageButton.setAttribute('hidden','');
     bottomButton.removeAttribute('hidden');
-
-
   };
   
   if (!logOpenButton.hasAttribute('data-log-opened')) {
     logOpenButton.setAttribute('data-log-opened', '');
-    logOpenButton.classList.add('b-selected'); 
+    bottomButton.hidden = true;
+    logOpenButton.classList.add('b-selected');
     refreshPage.removeAttribute('hidden');
     codeLog.removeAttribute('hidden');
     searchActions.removeAttribute('hidden');
     refreshPageButton.removeAttribute('hidden');
-    bottomButton.setAttribute('hidden', '');
     asideElement.style.width = '525px';
     leftElement.style.width = '515px';
-
+    
   }
 });
 
