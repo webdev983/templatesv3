@@ -9,7 +9,7 @@ document.getElementById('log-open').addEventListener('click', function() {
   var search_actions = document.getElementById('search-actions');
   var refresh_page = document.getElementById('refresh-page');
 
-  if (myButton.hasAttribute('data-log-opened')) {
+  if (logOpenButton.hasAttribute('data-log-opened')) {
 
     console.log('Element nie ma atrybutu data-log-opened.');
 
