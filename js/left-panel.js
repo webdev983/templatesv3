@@ -4,7 +4,7 @@ document.getElementById('log-open').addEventListener('click', function() {
   var leftElement = document.querySelector('.left');
   var bottomButton = document.getElementById('bottom-buttons'); // Get the button element
   var logOpenButton = document.getElementById('log-open'); 
-  var myButton2 = document.getElementById('refresh-page'); 
+  var RefreshPageButton = document.getElementById('refresh-page'); 
   var codeLog = document.getElementById('code-log');
   var search_actions = document.getElementById('search-actions');
   var refresh_page = document.getElementById('refresh-page');
@@ -16,13 +16,13 @@ document.getElementById('log-open').addEventListener('click', function() {
   } else {
     asideElement.style.width = '525px';
     leftElement.style.width = '515px';
-    search_actions.removeAttribute('hidden');
     refresh_page.removeAttribute('hidden');
     codeLog.removeAttribute('hidden');
     bottomButton.setAttribute('hidden', '');
     logOpenButton.classList.add('b-selected'); 
     logOpenButton.setAttribute('data-log-opened', '');
-    myButton2.removeAttribute('hidden');
+    RefreshPageButton.removeAttribute('hidden');
+    search_actions.removeAttribute('hidden');
 
 }
 
