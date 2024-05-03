@@ -10,7 +10,8 @@ document.getElementById('log-open').addEventListener('click', function() {
   const refreshPage = document.getElementById('refresh-page');
 
   if (logOpenButton.hasAttribute('data-log-opened')) {
-
+    logOpenButton.removeAttribute('data-log-opened');
+    logOpenButton.classList.remove('b-selected');
     asideElement.style.width = '70px';
     leftElement.style.width = '60px';
     refreshPage.setAttribute('hidden', '');
@@ -18,8 +19,6 @@ document.getElementById('log-open').addEventListener('click', function() {
     searchActions.setAttribute('hidden','');
     refreshPageButton.setAttribute('hidden','');
     bottomButton.removeAttribute('hidden');
-    logOpenButton.removeAttribute('data-log-opened');
-    logOpenButton.classList.remove('b-selected');
 
 
   };
