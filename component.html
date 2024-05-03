@@ -906,7 +906,7 @@ component</button> -->
         onclick="switchSelected(event)">📂Absolute</button>
       <button class="b-3" id="file-list-link-by-name" style="margin-top: 5px;"
         onclick="switchSelected(event)">🗂️Relative</button>
-      <label class="l-3"><input type="checkbox">Self use</label>
+      <label class="l-3"><input id="selfuse" type="checkbox">Self use</label>
       <br>
       <button style="margin-top: 5px;" class="b-4" onclick="cancelAddComponent(event)">❌Cancel</button>
       <button style="margin-top: 5px;" class="b-4" onclick="approveAddComponent(event)">✅ Approve</button>
@@ -2331,14 +2331,18 @@ component</button> -->
       updatePathItem()
     }
     //not used
-    const addComponent1 = async (id) => {
+    const addComponent1 = async (id,selfuse) => {
       //getElementById1('file-list-attach-component-options;').remove()
       const actionObject = {
         time: (new Date()).getTime(),
         action: 'Add_Component',
         target_element: page_id + '-tree',
         inserted_component: { componentId: id, id: generateUUID() },
+        
       };
+      if(selfuse){
+        actionObject.options = {selfuse}
+      }
       await pushAction(actionObject);
     }
     var loadUsingPath2 = (path1, filePathList, optionList) => {
@@ -3044,6 +3048,7 @@ component</button> -->
       const ids = Array.from(m1.children).map(e => e.id)
       const optionList = getElementById1('file-list-attach-component-options;')
       let flag
+      const selfuse = optionList.querySelector('#selfuse').checked
       for (const id of ids) {
         const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/' + id + ':path')
           .then(response => response.json())
@@ -3057,17 +3062,17 @@ component</button> -->
           if (p.length) {
             r = '/' + p.join('/')
           }
-          addComponent1("*" + r + '|' + fileName)
+          addComponent1("*" + r + '|' + fileName,selfuse)
         }
         else if (optionList.querySelector('#file-list-link-by-name').classList.contains('b-selected')) {
           const currentLsi = pathItemPath.replace(';publish:published', "")
           const relativePath = getRelativePath(currentLsi, convertToOldPath(data.lsi1.replace(';publish:published', "")));
 
-          await addComponent1("#" + relativePath).catch(e => console.log(e))
+          await addComponent1("#" + relativePath,selfuse).catch(e => console.log(e))
           flag = true
         }
         else {
-          addComponent1(id)
+          addComponent1(id,selfuse)
         }
 
       }
@@ -5135,6 +5140,7 @@ checkbox1.setAttribute('hidden', "");
           options.apply_to_copies && optionsStrings.push('✅⧉ Apply to copies')
           options.insert_copies && optionsStrings.push('🚂⧉ Insert Copies')
           options.dub_target && optionsStrings.push('🎯⧉ Dup Target')
+          options.selfuse && optionsStrings.push('🎯⧉ Self use')
           const optionString = optionsStrings.join('&#013;&#010;')
           clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionString)
           let emoji = "1️⃣"
@@ -5543,7 +5549,10 @@ checkbox1.setAttribute('hidden', "");
       switch (action) {
 
         case 'Add_Component':
-
+          const level = lvl ? lvl + 1 : 1;
+          if(lvl>1 && options.selfuse){
+            return
+          }
           if (inserted_component.componentId.startsWith('*')) {
             const site = pathItemPath.split('/')[0]
             const modId = inserted_component.componentId.replace('*', '')
@@ -5626,7 +5635,7 @@ checkbox1.setAttribute('hidden', "");
 
           console.log('prob' + inserted_component.componentId)
           components.push(inserted_component.id)
-          const level = lvl ? lvl + 1 : 1;
+          
           console.log('foundlvl ' + lvl)
           if (replaceAction) {
             await insertDataIntoCodeLog(replaceAction.sk, replaceAction.action, replaceAction.options)
