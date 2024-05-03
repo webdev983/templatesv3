@@ -25,7 +25,6 @@ document.getElementById('log-open').addEventListener('click', function() {
   if (!logOpenButton.hasAttribute('data-log-opened')) {
     logOpenButton.setAttribute('data-log-opened', '');
     logOpenButton.classList.add('b-selected'); 
-
     asideElement.style.width = '525px';
     leftElement.style.width = '515px';
     refreshPage.removeAttribute('hidden');
