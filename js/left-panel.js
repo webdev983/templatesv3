@@ -15,10 +15,12 @@ document.getElementById('log-open').addEventListener('click', function() {
 
 
   if (logOpenButton.hasAttribute('data-log-opened')) {
-    document.getElementById('toggle-component-tree').hidden = true;
-    document.getElementById('toggle-code-tree').hidden = true;
-    document.getElementById('toggle-head').hidden = true;
-    document.getElementById('toggle-generated-page').hidden = true;
+
+    document.getElementById('toggle-component-tree').removeAttribute('hidden');
+    document.getElementById('toggle-code-tree').removeAttribute('hidden');
+    document.getElementById('toggle-head').removeAttribute('hidden');
+    document.getElementById('toggle-generated-page').removeAttribute('hidden');
+
   
     asideElement.style.width = '70px';
     leftElement.style.width = '60px';
@@ -31,11 +33,12 @@ document.getElementById('log-open').addEventListener('click', function() {
     bottomButton.removeAttribute('hidden');
 
   } else {
-    document.getElementById('toggle-component-tree').removeAttribute('hidden');
-    document.getElementById('toggle-code-tree').removeAttribute('hidden');
-    document.getElementById('toggle-head').removeAttribute('hidden');
-    document.getElementById('toggle-generated-page').removeAttribute('hidden');
   
+    document.getElementById('toggle-component-tree').hidden = true;
+    document.getElementById('toggle-code-tree').hidden = true;
+    document.getElementById('toggle-head').hidden = true;
+    document.getElementById('toggle-generated-page').hidden = true;
+
     logOpenButton.setAttribute('data-log-opened', '');
     bottomButton.setAttribute('hidden','');
     logOpenButton.classList.add('b-selected');
