@@ -19,6 +19,8 @@ document.getElementById('log-open').addEventListener('click', function() {
     refreshPageButton.setAttribute('hidden','');
     bottomButton.removeAttribute('hidden');
     logOpenButton.removeAttribute('data-log-opened');
+    logOpenButton.classList.remove('b-selected');
+
 
   };
   
