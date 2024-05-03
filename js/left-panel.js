@@ -11,6 +11,11 @@ document.getElementById('log-open').addEventListener('click', function() {
   var myButton = document.getElementById('log-open'); 
   var myButton2 = document.getElementById('refresh-page'); 
   var codeLog = document.getElementById('code-log');
+  var search_actions = document.getElementById('search-actions');
+  var refresh_page = document.getElementById('refresh-page');
+
+  search_actions.removeAttribute('hidden');
+  refresh_page.removeAttribute('hidden');
   codeLog.removeAttribute('hidden');
   bottomButton.setAttribute('hidden', '');
   myButton.classList.add('b-selected'); 
