@@ -1,13 +1,13 @@
 document.getElementById('log-open').addEventListener('click', function() {
 
-  const asideElement = document.querySelector('.aside');
-  const leftElement = document.querySelector('.left');
-  const bottomButton = document.getElementById('bottom-buttons'); 
-  const logOpenButton = document.getElementById('log-open'); 
-  const refreshPageButton = document.getElementById('refresh-page'); 
-  const codeLog = document.getElementById('code-log');
-  const searchActions = document.getElementById('search-actions');
-  const refreshPage = document.getElementById('refresh-page');
+  var asideElement = document.querySelector('.aside');
+  var leftElement = document.querySelector('.left');
+  var bottomButton = document.getElementById('bottom-buttons'); 
+  var logOpenButton = document.getElementById('log-open'); 
+  var refreshPageButton = document.getElementById('refresh-page'); 
+  var codeLog = document.getElementById('code-log');
+  var searchActions = document.getElementById('search-actions');
+  var refreshPage = document.getElementById('refresh-page');
 
   if (logOpenButton.hasAttribute('data-log-opened')) {
     console.log('1111');
