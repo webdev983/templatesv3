@@ -20,6 +20,8 @@ document.getElementById('log-open').addEventListener('click', function() {
   bottomButton.setAttribute('hidden', '');
   myButton.classList.add('b-selected'); 
   myButton2.removeAttribute('hidden');
+  codeLog.setAttribute('data-log-opened', '');
+
 
 
 /*
