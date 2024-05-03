@@ -3,7 +3,7 @@ document.getElementById('log-open').addEventListener('click', function() {
   const asideElement = document.querySelector('.aside');
   const leftElement = document.querySelector('.left');
   const bottomButton = document.getElementById('bottom-buttons'); 
-  const logOpenButton = document.getElementById('log-open'); 
+  const logOpenButton = document.getElementById1('log-open'); 
   const refreshPageButton = document.getElementById('refresh-page'); 
   const codeLog = document.getElementById('code-log');
   const searchActions = document.getElementById('search-actions');
