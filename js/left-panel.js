@@ -11,16 +11,13 @@ document.getElementById('log-open').addEventListener('click', function() {
 
   if (logOpenButton.hasAttribute('data-log-opened')) {
     console.log('1111');
-
     asideElement.style.width = '70px';
     console.log('222');
-
     leftElement.style.width = '60px';
     console.log('333');
 
     logOpenButton.removeAttribute('data-log-opened');
     console.log('444');
-
     logOpenButton.classList.remove('b-selected');
     console.log('55555');
 
@@ -33,7 +30,7 @@ document.getElementById('log-open').addEventListener('click', function() {
     console.log('888');
 
     refreshPageButton.setAttribute('hidden','');
-    console.log('999');
+    console.log('999zzz');
 
     bottomButton.removeAttribute('hidden');
   };
