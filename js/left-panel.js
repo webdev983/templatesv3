@@ -26,8 +26,11 @@ document.getElementById('log-open').addEventListener('click', function() {
     document.getElementById('toggle-code-tree').removeAttribute('hidden');
     document.getElementById('toggle-head').removeAttribute('hidden');
     document.getElementById('toggle-generated-page').removeAttribute('hidden');
+    document.getElementById('remove-duplicate-actions').removeAttribute('hidden');
 
   
+
+    
     asideElement.style.width = '70px';
     leftElement.style.width = '60px';
     logOpenButton.removeAttribute('data-log-opened');
@@ -44,6 +47,7 @@ document.getElementById('log-open').addEventListener('click', function() {
     document.getElementById('toggle-code-tree').hidden = true;
     document.getElementById('toggle-head').hidden = true;
     document.getElementById('toggle-generated-page').hidden = true;
+    document.getElementById('remove-duplicate-actions').hidden = true;
 
     logOpenButton.setAttribute('data-log-opened', '');
     bottomButton.setAttribute('hidden','');
