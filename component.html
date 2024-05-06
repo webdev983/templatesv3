@@ -14,36 +14,36 @@
 
 <body class="body">
   <script>
-// Function to get the value of a parameter from the URL query string
-function getParameterValue(parameterName) {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    return urlSearchParams.get(parameterName);
-}
+    // Function to get the value of a parameter from the URL query string
+    function getParameterValue(parameterName) {
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      return urlSearchParams.get(parameterName);
+    }
 
-// Function to check if a cookie with the specified name exists
-function checkCookie(name) {
-    return document.cookie.split(';').some((cookie) => {
+    // Function to check if a cookie with the specified name exists
+    function checkCookie(name) {
+      return document.cookie.split(';').some((cookie) => {
         return cookie.trim().startsWith(name + '=');
-    });
-}
+      });
+    }
 
-// Function to set a cookie with the specified name, value, and expiry time in seconds
-function setCookie(name, value, seconds) {
-    const expires = new Date();
-    expires.setTime(expires.getTime() + (seconds * 1000));
-    document.cookie = `${name}=${value};expires=${expires.toUTCString()}`;
-}
+    // Function to set a cookie with the specified name, value, and expiry time in seconds
+    function setCookie(name, value, seconds) {
+      const expires = new Date();
+      expires.setTime(expires.getTime() + (seconds * 1000));
+      document.cookie = `${name}=${value};expires=${expires.toUTCString()}`;
+    }
 
-// Getting the id from the URL query string
-const id = getParameterValue('id');
+    // Getting the id from the URL query string
+    const id = getParameterValue('id');
 
-// Checking if a cookie with this id exists
-if (!checkCookie(id)) {
-    // If the cookie does not exist, reload the page
-    location.reload();
-    // Set a cookie with the id and a lifetime of 3 seconds
-    setCookie(id, id, 3);
-}
+    // Checking if a cookie with this id exists
+    if (!checkCookie(id)) {
+      // If the cookie does not exist, reload the page
+      location.reload();
+      // Set a cookie with the id and a lifetime of 3 seconds
+      setCookie(id, id, 3);
+    }
 
   </script>
   <aside class="aside">
@@ -66,7 +66,7 @@ if (!checkCookie(id)) {
         <button hidden id="refresh-page" class="b-1" onclick="reloadPage(event)">🔄</button>
         <button hidden id="remove-duplicate-actions" class="b-1">🧹</button>
 
-        
+
         <input hidden id="search-actions" type="text" placeholder="🔎 Search actions" style="  padding: 5px; 
         border: 2px solid #4A90E2;   
         border-radius: 5px;   
@@ -74,15 +74,16 @@ if (!checkCookie(id)) {
 
       </div>
       <div id="logs-menu">
-  
+
       </div>
-      <table id="code-log" class="table-1" style="margin-left: auto; margin-right: auto" hidden style="margin-bottom: 100px;">
+      <table id="code-log" class="table-1" style="margin-left: auto; margin-right: auto" hidden
+        style="margin-bottom: 100px;">
         <tbody id="code-log-body">
           <!--NUMBERS!! 1️⃣ 2️⃣ 3️⃣ 4️⃣-->
           <tr hidden id="code-log-element">
-            <td data-type-code-log="action-time"><span id="code-log-action-time" style="margin-left: 10px;">1703707728031</span></td>
-            <td data-type-code-log="action-name"><span id="code-log-action" class="tooltip"
-                data-tooltip="
+            <td data-type-code-log="action-time"><span id="code-log-action-time"
+                style="margin-left: 10px;">1703707728031</span></td>
+            <td data-type-code-log="action-name"><span id="code-log-action" class="tooltip" data-tooltip="
                 👶 child 1-start$ &#10; 
                 🧩 {component name} &#10; 
                 🏷️ {tag name} &#10; 
@@ -808,11 +809,12 @@ component</button> -->
       <button class="b-4" id="code-tree-click-tag-approve" onclick="approve(event)"> ✅ Approve</button>
 
       <br>
-      <label class="l-3"><input type="checkbox">🎯 Position</label>
-      <label class="l-3"><input type="number" value="1"></label>
-      <label class="l-3"><input type="radio" checked name="position-start-end-existed">start</label>
-      <label class="l-3"><input type="radio" name="position-start-end-existed">end</label>
-      
+      <label class="l-3"><input type="checkbox" id="position-checkbox">🎯 Position</label>
+      <label class="l-3"><input type="number" value="1" id="position-number"></label>
+      <label class="l-3"><input type="radio" checked name="position-start-end-existed"
+          id="position-start-checkbox">start</label>
+      <label class="l-3"><input type="radio" name="position-start-end-existed" id="position-end-checkbox">end</label>
+
       <br>
       <label><input type="checkbox" id="code-tree-menu-copies-too"><span class="l-3">🚂⧉ Insert Copies
           too</span></label>
@@ -900,14 +902,15 @@ component</button> -->
     <fieldset id="tag-table" style="border-width: 0px; margin-bottom: 30px; " data-menu>
       <button onclick="cancel(event)" class="b-3" style="margin-top: 5px; margin-bottom: 5px;">❌</button></legend>
       <br>
-      <label class="l-3"><input type="checkbox">🎯 Position</label>
-      <label class="l-3"><input type="number" value="1"></label>
-      <label class="l-3" ><input type="radio" name="position-start-end-new" checked>start</label>
-      <label class="l-3"><input type="radio" name="position-start-end-new">end</label>
+      <label class="l-3"><input type="checkbox" id="position-checkbox">🎯 Position</label>
+      <label class="l-3"><input type="number" value="1" id="position-number"></label>
+      <label class="l-3"><input type="radio" name="position-start-end-new" checked
+          id="position-start-checkbox">start</label>
+      <label class="l-3"><input type="radio" name="position-start-end-new" id="position-end-checkbox">end</label>
 
 
       <br>
-     
+
       <label class="l-3">
         <input type="checkbox" id="applyForCopies2">
         ⧉ InsertToCopies+
@@ -2401,17 +2404,17 @@ component</button> -->
       updatePathItem()
     }
     //not used
-    const addComponent1 = async (id,selfuse) => {
+    const addComponent1 = async (id, selfuse) => {
       //getElementById1('file-list-attach-component-options;').remove()
       const actionObject = {
         time: (new Date()).getTime(),
         action: 'Add_Component',
         target_element: page_id + '-tree',
         inserted_component: { componentId: id, id: generateUUID() },
-        
+
       };
-      if(selfuse){
-        actionObject.options = {selfuse}
+      if (selfuse) {
+        actionObject.options = { selfuse }
       }
       await pushAction(actionObject);
     }
@@ -3132,17 +3135,17 @@ component</button> -->
           if (p.length) {
             r = '/' + p.join('/')
           }
-          addComponent1("*" + r + '|' + fileName,selfuse)
+          addComponent1("*" + r + '|' + fileName, selfuse)
         }
         else if (optionList.querySelector('#file-list-link-by-name').classList.contains('b-selected')) {
           const currentLsi = pathItemPath.replace(';publish:published', "")
           const relativePath = getRelativePath(currentLsi, convertToOldPath(data.lsi1.replace(';publish:published', "")));
 
-          await addComponent1("#" + relativePath,selfuse).catch(e => console.log(e))
+          await addComponent1("#" + relativePath, selfuse).catch(e => console.log(e))
           flag = true
         }
         else {
-          addComponent1(id,selfuse)
+          addComponent1(id, selfuse)
         }
 
       }
@@ -3786,7 +3789,7 @@ component</button> -->
           }
           const editAlt = (target) => {
             const alt = target.getAttribute('alt')
-           
+
             const altElement = parentMenu.querySelector('#add_alt')
             altElement.removeAttribute('hidden')
             menu.setAttribute('hidden', '')
@@ -3794,7 +3797,7 @@ component</button> -->
             const input = altElement.querySelector('#editHrefInput')
             input.value = alt
             saveButton.onclick = (e) => {
-              
+
               const el = {
                 time: (new Date()).getTime(),
                 action: 'setAttribute',
@@ -3813,7 +3816,7 @@ component</button> -->
             });
             addMenuEntry(menu, `🖼️ Edit Alt`, () => {
               editAlt(e.target)
-            },true);
+            }, true);
           }
           if (e.target.hasAttribute('data-visual-href')) {
             addMenuEntry(menu, `🔗 Edit href`, () => {
@@ -4198,14 +4201,14 @@ component</button> -->
 
         return Array.from(filteredElements).length
       }
-      function addMenuEntry(menu, text, clickHandler,flag) {
+      function addMenuEntry(menu, text, clickHandler, flag) {
         const entry = document.createElement('div');
         entry.className = 'menu-option';
         entry.innerHTML = text;
         entry.onclick = async (e) => {
-          e.stopPropagation(); 
-          await clickHandler(e); 
-          !flag && (menu.parentNode.style.display = 'none' )
+          e.stopPropagation();
+          await clickHandler(e);
+          !flag && (menu.parentNode.style.display = 'none')
         };
         menu.appendChild(entry);
       }
@@ -5211,6 +5214,7 @@ checkbox1.setAttribute('hidden', "");
           options.insert_copies && optionsStrings.push('🚂⧉ Insert Copies')
           options.dub_target && optionsStrings.push('🎯⧉ Dup Target')
           options.selfuse && optionsStrings.push('🎯⧉ Self use')
+          options.position && optionsStrings.push('🎯 child '+options.position)
           const optionString = optionsStrings.join('&#013;&#010;')
           clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionString)
           let emoji = "1️⃣"
@@ -5304,7 +5308,7 @@ checkbox1.setAttribute('hidden', "");
         }
         console.log(JSON.stringify(restOfElements))
         //test
-        restOfElements.filter(z=>z)
+        restOfElements.filter(z => z)
         restOfElements.sort(sortByPlace);
         if (!move && !insert_copies) {
           restOfElements = restOfElements.map(el => removeLastOccurrence(el, '-tree')).map(el =>
@@ -5622,7 +5626,7 @@ checkbox1.setAttribute('hidden', "");
 
         case 'Add_Component':
           const level = lvl ? lvl + 1 : 1;
-          if(level>1 && options?.selfuse){
+          if (level > 1 && options?.selfuse) {
             return
           }
           if (inserted_component.componentId.startsWith('*')) {
@@ -5707,7 +5711,7 @@ checkbox1.setAttribute('hidden', "");
 
           console.log('prob' + inserted_component.componentId)
           components.push(inserted_component.id)
-          
+
           console.log('foundlvl ' + lvl)
           if (replaceAction) {
             await insertDataIntoCodeLog(replaceAction.sk, replaceAction.action, replaceAction.options)
@@ -10628,12 +10632,19 @@ element.setAttribute('data-product', [first, name].join(';'))
       const splited = fieldsetId.split(';')
       splited.shift()
       const id = splited.join(';')
+      const positionChecked = fieldset.querySelector('#position-checkbox').checked
+      let position
+      if (positionChecked) {
+        const positionV = fieldset.querySelector('#position-number').value
+        const start = fieldset.querySelector('#position-start-checkbox').checked
+        position = start ? 'start-' + positionV : 'end-' + positionV
 
+      }
       if (isDuplicateWithParent) {
         pushAction({
           time: (new Date()).getTime(),
           action: fieldsetAction,
-          options: { dub_target: true, insert_copies: true },
+          options: { dub_target: true, insert_copies: true,position  },
           target_element: [{ type: 'tag', id, }, ...selected.map(id => {
             return { type: 'tag', id }
           })],
@@ -10645,7 +10656,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         pushAction({
           time: (new Date()).getTime(),
           action: fieldsetAction,
-          options: { insert_copies: true },
+          options: { insert_copies: true ,position },
           target_element: [{ type: 'tag', id, }, ...selected.map(id => {
             return { type: 'tag', id }
           })],
@@ -10655,6 +10666,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         let el2 = {
           time: (new Date()).getTime(),
           action: fieldsetAction,
+          options:{position},
           target_element: [{ type: 'tag', id, }, ...selected.map(id => {
             return { type: 'tag', id }
           })],
@@ -11426,6 +11438,13 @@ element.setAttribute('data-product', [first, name].join(';'))
         const applyToCopies2 = fieldset.querySelector('#applyForCopies2').checked
         if (applyToCopies2) {
           el.options = { apply_to_copies: true }
+        }
+        const positionChecked = fieldset.querySelector('#position-checkbox').checked
+        if (positionChecked) {
+          const positionV = fieldset.querySelector('#position-number').value
+          const start = fieldset.querySelector('#position-start-checkbox').checked
+          const position = start ? 'start-' + positionV : 'end-' + positionV
+          el.options ? (el.options.position = position) : (el.options = { position })
         }
         if (fieldsetAction === 'ChangeTag') {
           el.tag_change = chosenTag.tagName
