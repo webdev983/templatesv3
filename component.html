@@ -3190,6 +3190,7 @@ component</button> -->
       const parentEl = getElementById1(parentId)
       const replacedString = parentEl.getAttribute('replaced')
       const replaced = replacedString ? JSON.parse(replacedString) : []
+     
       const arr = m1.map(el => {
         const element = getElementById1(el.id);
         return {
@@ -3562,6 +3563,8 @@ component</button> -->
       const path = e.target.parentNode.getAttribute('path')
       const replacedString = e.target.parentNode.getAttribute('replaced')
       const replaced = replacedString ? JSON.parse(replacedString) : undefined
+      const replacedFoldersString = parentEl.getAttribute('replacedFolders')
+      const replacedFolders = replacedFoldersString ? JSON.parse(replacedFoldersString) : undefined
       const [toRemove, ...rest] = splited
       const parentId = splited.length === 1 ? e.target.parentNode.id : rest.join(';')
       const fieldset = getElementById1('filePathList');
@@ -3594,7 +3597,7 @@ component</button> -->
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset2);
         !flag && e.target.parentNode.remove()
-        if (!replaced) {
+        if (!replaced && !replacedFolders) {
           var clonedItem = getElementById1('item').cloneNode(true);
           clonedItem.setAttribute('alreadyReplaced', true)
           clonedItem.id = parentId;
@@ -3618,6 +3621,18 @@ component</button> -->
             clonedFieldset2.appendChild(clonedItem)
             clonedItem.onclick = (e) => { e.target.closest('li').remove(); selected.filter(el => el !== el.id) }
           }
+          for (const el of replacedFolders) {
+            var clonedItem = getElementById1('item').cloneNode(true);
+            clonedItem.setAttribute('alreadyReplaced', true)
+            clonedItem.id = el;
+            selected.push(el)
+            const file_path = clonedItem.querySelector('[data-value="file-path"]')
+            file_path.textContent = el;
+            clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
+            clonedFieldset2.appendChild(clonedItem)
+            clonedItem.onclick = (e) => { e.target.closest('li').remove(); selected.filter(el => el !== el.id) }
+          }
+
         }
 
         loadFileList1(parentId)
@@ -5827,6 +5842,7 @@ checkbox1.setAttribute('hidden', "");
             }*/
             const el = getElementById1(toReplace)
             el.setAttribute('replaced', JSON.stringify(replaceAction.target_element))
+            el.setAttribute('replacedFolders', JSON.stringify(replaceAction.folders))
             const el2 = el.querySelector('[data-element="optional-script"]')
             el2.removeAttribute('hidden')
             el2.innerHTML = `🔄${replaceAction.target_element.length}`;
@@ -7669,6 +7685,7 @@ elementsToRemove.forEach(element => element.remove());
           clonedFieldset.id = 'code-tree-click-component;' + parentId;
           clonedFieldset.setAttribute('path', button.getAttribute('path'))
           clonedFieldset.setAttribute('replaced', button.parentNode.getAttribute('replaced'))
+          clonedFieldset.setAttribute('replacedFolders', button.parentNode.getAttribute('replacedFolders'))
           // Find the position to insert the cloned fieldset
           const insertAfterElement = textContentButton || button;
           if (pathItemPath.split(';')[0].endsWith('Hub')) {
