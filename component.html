@@ -4845,19 +4845,22 @@ checkbox1.setAttribute('hidden', "");
 
 
     const generateReview =async (heading, date, name, stars, ip, message) => {
-      const h = querySelectorAll1('[data-builder-review-heading]')
+      const h = querySelectorAll1('[data-builder-review-heading]')[0]
       h.textContent = heading
-      const d = querySelectorAll1('[data-builder-review-time]')
+      const d = querySelectorAll1('[data-builder-review-time]')[0]
       d.textContent = date
-      const n = querySelectorAll1('[data-builder-review-author]')
+      const n = querySelectorAll1('[data-builder-review-author]')[0]
       n.textContent = name
-      const s = querySelectorAll1('[data-builder-review-rating]')
+      const s = querySelectorAll1('[data-builder-review-rating]')[0]
       s.textContent =stars
-      const i = querySelectorAll1('[data-builder-review-heading]')
+      const i = querySelectorAll1('[data-builder-review-heading]')[0]
       i.textContent =ip
-      const m = querySelectorAll1('[data-builder-review-author-ip]')
+      const m = querySelectorAll1('[data-builder-review-author-ip]')[0]
       m.textContent = message
       for (const e of [h, d, n, s, i, m]){
+        if(!e){
+          continue
+        }
         const el = {
           time: (new Date()).getTime(),
           action: 'textContent',
