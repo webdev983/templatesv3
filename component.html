@@ -3326,9 +3326,10 @@ component</button> -->
               // Set file path and emoji
               const file_path = clonedItem.querySelector('[data-value="file-path"]')
               file_path.textContent = item;
-              const folderChecked = getElementById1('selectedFilePathList;' + id).querySelector('#attach-folder').checked
-              
-              clonedItem.onclick = folderChecked ? (e)=> setFolder(path1 + item,id) : setPath
+              clonedItem.onclick = (e)=>{
+                  const folderChecked = getElementById1('selectedFilePathList;' + id).querySelector('#attach-folder').checked
+                  folderChecked ?  setFolder(item,id) : setPath()
+                }
               let icon = '📂';
 
               clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
@@ -3461,8 +3462,10 @@ component</button> -->
                 // Set file path and emoji
                 const file_path = clonedItem.querySelector('[data-value="file-path"]')
                 file_path.textContent = item;
-                const folderChecked = getElementById1('selectedFilePathList;' + id).querySelector('#attach-folder').checked
-                clonedItem.onclick = folderChecked ? (e)=> setFolder(item,id) : setPath
+                clonedItem.onclick = (e)=>{
+                  const folderChecked = getElementById1('selectedFilePathList;' + id).querySelector('#attach-folder').checked
+                  folderChecked ?  setFolder(item,id) : setPath()
+                }
                 let icon = '📂';
 
                 clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
