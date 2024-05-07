@@ -6475,12 +6475,12 @@ checkbox1.setAttribute('hidden', "");
                   // Insert newEl at the specified index from the start
                   componentElement.insertBefore(newEl, componentElement.children[index]);
                   // Insert newEl2 at the same position in treeElement
-                  treeElement.insertBefore(newEl2, fieldsets[index]);
+                  treeElement.insertBefore(newEl2, fieldsets[index -1]);
                 } else if (options.position.startsWith("end-")) {
                   // Extract the number after "end-"
                   const index = parseInt(options.position.slice(4));
                   // Calculate the index from the end
-                  const endIndex = componentElement.children.length - index;
+                  const endIndex = fieldsets.length - index;
                   // Insert newEl at the calculated index from the end
                   componentElement.insertBefore(newEl, componentElement.children[endIndex]);
                   // Insert newEl2 at the same position in treeElement
