@@ -3223,7 +3223,7 @@ component</button> -->
         console.log(JSON.stringify(selected))
 
       }
-      var setFolder = (path) => {
+      var setFolder = (path,id) => {
         const clonedFieldset2 = getElementById1('selectedFilePathList;' + id)
         if (Array.from(clonedFieldset2.children).find(el => el.id === path)) {
           return
@@ -3328,7 +3328,7 @@ component</button> -->
               file_path.textContent = item;
               const folderChecked = getElementById1('selectedFilePathList;' + id).querySelector('#attach-folder').checked
               
-              clonedItem.onclick = folderChecked ? (e)=> setFolder(path1 + item) : setPath
+              clonedItem.onclick = folderChecked ? (e)=> setFolder(path1 + item,id) : setPath
               let icon = '📂';
 
               clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
@@ -3462,7 +3462,7 @@ component</button> -->
                 const file_path = clonedItem.querySelector('[data-value="file-path"]')
                 file_path.textContent = item;
                 const folderChecked = getElementById1('selectedFilePathList;' + id).querySelector('#attach-folder').checked
-                clonedItem.onclick = folderChecked ? (e)=> setFolder(item) : setPath
+                clonedItem.onclick = folderChecked ? (e)=> setFolder(item,id) : setPath
                 let icon = '📂';
 
                 clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
