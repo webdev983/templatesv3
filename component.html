@@ -3179,6 +3179,7 @@ component</button> -->
     }
     var approveReplace = async (e) => {
       const m1 = Array.from(e.target.parentNode.children).filter(i => i.id)
+      const folderChecked = e.target.parentNode.querySelector('#attach-folder').checked
       const parentId = e.target.parentNode.id.replace('file-path-list;', '')
       if (!parentId) {
         alert('no target id')
@@ -3214,6 +3215,23 @@ component</button> -->
         var clonedItem = getElementById1('item').cloneNode(true);
         selected.push(itemId)
         clonedItem.id = itemId;
+        const file_path = clonedItem.querySelector('[data-value="file-path"]')
+        file_path.textContent = path;
+        clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
+        clonedItem.onclick = (e) => { e.target.closest('li').remove(); selected.filter(el => el !== itemId) }
+        clonedFieldset2.appendChild(clonedItem)
+        console.log(JSON.stringify(selected))
+
+      }
+      var setFolder = (path) => {
+        const clonedFieldset2 = getElementById1('selectedFilePathList;' + id)
+        if (Array.from(clonedFieldset2.children).find(el => el.id === path)) {
+          return
+        }
+        var clonedItem = getElementById1('item').cloneNode(true);
+        selected.push(path)
+        clonedItem.id = path;
+        clonedItem.setAttribute('folder',true)
         const file_path = clonedItem.querySelector('[data-value="file-path"]')
         file_path.textContent = path;
         clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
@@ -3308,7 +3326,9 @@ component</button> -->
               // Set file path and emoji
               const file_path = clonedItem.querySelector('[data-value="file-path"]')
               file_path.textContent = item;
-              clonedItem.onclick = setPath
+              const folderChecked = getElementById1('selectedFilePathList;' + id).querySelector('#attach-folder').checked
+              
+              clonedItem.onclick = folderChecked ? (e)=> setFolder(path1 + item) : setPath
               let icon = '📂';
 
               clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
@@ -3441,7 +3461,7 @@ component</button> -->
                 // Set file path and emoji
                 const file_path = clonedItem.querySelector('[data-value="file-path"]')
                 file_path.textContent = item;
-                clonedItem.onclick = setPath
+                clonedItem.onclick = folderChecked ? (e)=> setFolder(item) : setPath
                 let icon = '📂';
 
                 clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
