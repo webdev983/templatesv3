@@ -3179,7 +3179,7 @@ component</button> -->
     }
     var approveReplace = async (e) => {
       const m1 = Array.from(e.target.parentNode.children).filter(i => i.id)
-      const folderChecked = e.target.parentNode.querySelector('#attach-folder').checked
+      //const folderChecked = e.target.parentNode.querySelector('#attach-folder').checked
       const parentId = e.target.parentNode.id.replace('file-path-list;', '')
       if (!parentId) {
         alert('no target id')
@@ -3188,16 +3188,17 @@ component</button> -->
       const parentEl = getElementById1(parentId)
       const replacedString = parentEl.getAttribute('replaced')
       const replaced = replacedString ? JSON.parse(replacedString) : []
-      const el = {
-        time: (new Date()).getTime(),
-        action: 'Replace_Component',
-        target_element: [parentId.replace('selectedFilePathList;', ''), ...m1.map(el => {
+      const arr = m1.map(el => {
           const element = getElementById1(el.id);
           return {
 
-            componentId: el.id, id: el.newId || generateUUID(), path: element.querySelector('[data-value="file-path"]').textContent, already: element.getAttribute('alreadyReplaced')
+            componentId: el.id, id: el.newId || generateUUID(), path: element.querySelector('[data-value="file-path"]').textContent, already: element.getAttribute('alreadyReplaced'),folder:element.hasAttribute('folder')
           }
-        })],
+        })
+      const el = {
+        time: (new Date()).getTime(),
+        action: 'Replace_Component',
+        target_element: [parentId.replace('selectedFilePathList;', ''), ...arr],
       };
 
       await pushAction(el)
