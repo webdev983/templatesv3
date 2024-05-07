@@ -3178,7 +3178,9 @@ component</button> -->
       getElementById1('selectedFilePathList;').remove()
     }
     var approveReplace = async (e) => {
-      const m1 = Array.from(e.target.parentNode.children).filter(i => i.id)
+      const m = Array.from(e.target.parentNode.children).filter(i => i.id)
+      const m1 = m.filter(e=>!e.hasAttribute('folder'))
+      const m2 = m.filter(e=>e.hasAttribute('folder'))
       //const folderChecked = e.target.parentNode.querySelector('#attach-folder').checked
       const parentId = e.target.parentNode.id.replace('file-path-list;', '')
       if (!parentId) {
@@ -3192,7 +3194,7 @@ component</button> -->
           const element = getElementById1(el.id);
           return {
 
-            componentId: el.id, id: el.newId || generateUUID(), path: element.querySelector('[data-value="file-path"]').textContent, already: element.getAttribute('alreadyReplaced'),folder:element.hasAttribute('folder')
+            componentId: el.id, id: el.newId || generateUUID(), path: element.querySelector('[data-value="file-path"]').textContent, already: element.getAttribute('alreadyReplaced')
           }
         })
       const el = {
@@ -3200,7 +3202,9 @@ component</button> -->
         action: 'Replace_Component',
         target_element: [parentId.replace('selectedFilePathList;', ''), ...arr],
       };
-
+      if(m2.length){
+        el.folders = m2.map(e=>e.id)
+      }
       await pushAction(el)
       location.reload()
     }
