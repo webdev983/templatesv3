@@ -3239,6 +3239,7 @@ component</button> -->
         clonedItem.id = path;
         clonedItem.setAttribute('folder', true)
         const file_path = clonedItem.querySelector('[data-value="file-path"]')
+        clonedItem.querySelector('[data-value="file-emoji"]').textContent ='📂'
         file_path.textContent = path;
         clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
         clonedItem.onclick = (e) => { e.target.closest('li').remove(); selected.filter(el => el !== itemId) }
@@ -3609,6 +3610,18 @@ component</button> -->
           clonedItem.onclick = (e) => { e.target.closest('li').remove(); selected.filter(el => el !== parentId) }
         }
         else {
+          for (const el of replacedFolders) {
+            var clonedItem = getElementById1('item').cloneNode(true);
+            clonedItem.setAttribute('alreadyReplaced', true)
+            clonedItem.id = el;
+            selected.push(el)
+            const file_path = clonedItem.querySelector('[data-value="file-path"]')
+            clonedItem.querySelector('[data-value="file-emoji"]').textContent ='📂'
+            file_path.textContent = el;
+            clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
+            clonedFieldset2.appendChild(clonedItem)
+            clonedItem.onclick = (e) => { e.target.closest('li').remove(); selected.filter(el => el !== el.id) }
+          }
           for (const el of replaced) {
             var clonedItem = getElementById1('item').cloneNode(true);
             clonedItem.setAttribute('alreadyReplaced', true)
@@ -3621,17 +3634,7 @@ component</button> -->
             clonedFieldset2.appendChild(clonedItem)
             clonedItem.onclick = (e) => { e.target.closest('li').remove(); selected.filter(el => el !== el.id) }
           }
-          for (const el of replacedFolders) {
-            var clonedItem = getElementById1('item').cloneNode(true);
-            clonedItem.setAttribute('alreadyReplaced', true)
-            clonedItem.id = el;
-            selected.push(el)
-            const file_path = clonedItem.querySelector('[data-value="file-path"]')
-            file_path.textContent = el;
-            clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
-            clonedFieldset2.appendChild(clonedItem)
-            clonedItem.onclick = (e) => { e.target.closest('li').remove(); selected.filter(el => el !== el.id) }
-          }
+          
 
         }
 
