@@ -5790,7 +5790,8 @@ checkbox1.setAttribute('hidden', "");
 
             if (replaceAction.folders) {
               const promises = replaceAction.folders.map(async folder => {
-                const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${folder}|`;
+                const folderEncoded = encodeURIComponent(folder+'|');
+                const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&lsi1=${folderEncoded}&gsi1lsi1=true`;
                 console.log('furl '+url)
                 const data = await fetch(url).then(e => e.json())
                 console.log('r items '+ JSON.stringify(data))
