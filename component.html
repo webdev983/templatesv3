@@ -817,11 +817,11 @@ component</button> -->
       <button class="b-4" id="code-tree-click-tag-approve" onclick="approve(event)"> ✅ Approve</button>
 
       <br>
-      <label class="l-3"><input type="checkbox" id="position-checkbox">🎯 Position</label>
-      <label class="l-3"><input type="number" value="1" id="position-number"></label>
-      <label class="l-3"><input type="radio" checked name="position-start-end-existed"
+      <label class="l-3"><input type="checkbox" onchange="switchPosition(event)" id="position-checkbox">🎯 Position</label>
+      <label class="l-3" hidden><input type="number" value="1" id="position-number"></label>
+      <label class="l-3" hidden><input type="radio" checked name="position-start-end-existed"
           id="position-start-checkbox">start</label>
-      <label class="l-3"><input type="radio" name="position-start-end-existed" id="position-end-checkbox">end</label>
+      <label class="l-3" hidden><input type="radio" name="position-start-end-existed" id="position-end-checkbox">end</label>
 
       <br>
       <label><input type="checkbox" id="code-tree-menu-copies-too"><span class="l-3">🚂⧉ Insert Copies
@@ -910,7 +910,7 @@ component</button> -->
     <fieldset id="tag-table" style="border-width: 0px; margin-bottom: 30px; " data-menu>
       <button onclick="cancel(event)" class="b-3" style="margin-top: 5px; margin-bottom: 5px;">❌</button></legend>
       <br>
-      <label class="l-3"><input type="checkbox" id="position-checkbox">🎯 Position</label>
+      <label class="l-3"><input type="checkbox" id="position-checkbox" onchange="switchPosition(event)">🎯 Position</label>
       <label class="l-3"><input type="number" value="1" id="position-number"></label>
       <label class="l-3"><input type="radio" name="position-start-end-new" checked
           id="position-start-checkbox">start</label>
@@ -1013,7 +1013,19 @@ component</button> -->
       const fileName = splited.pop()
       return splited.join('/') + '|' + fileName
     }
-
+    const switchPosition = (event)=>{
+      const fieldset = event.target.parentNode
+      const checked = event.target.checked
+      const number = fieldset.querySelector('#position-number')
+      const start = fieldset.querySelector('#"position-start-checkbox')
+      const end = fieldset.querySelector('#position-end-checkbox')
+      if(checked){
+        [number,start,end].forEach(e=>e.parentNode.removeAttribute('hidden'))
+      }
+      else{
+        [number,start,end].forEach(e=>e.parentNode.setAttribute('hidden',''))
+      }
+    }
 
     //label click scripts
     function loadRoot() {
