@@ -3179,8 +3179,8 @@ component</button> -->
     }
     var approveReplace = async (e) => {
       const m = Array.from(e.target.parentNode.children).filter(i => i.id)
-      const m1 = m.filter(e=>!e.hasAttribute('folder'))
-      const m2 = m.filter(e=>e.hasAttribute('folder'))
+      const m1 = m.filter(e => !e.hasAttribute('folder'))
+      const m2 = m.filter(e => e.hasAttribute('folder'))
       //const folderChecked = e.target.parentNode.querySelector('#attach-folder').checked
       const parentId = e.target.parentNode.id.replace('file-path-list;', '')
       if (!parentId) {
@@ -3191,19 +3191,19 @@ component</button> -->
       const replacedString = parentEl.getAttribute('replaced')
       const replaced = replacedString ? JSON.parse(replacedString) : []
       const arr = m1.map(el => {
-          const element = getElementById1(el.id);
-          return {
+        const element = getElementById1(el.id);
+        return {
 
-            componentId: el.id, id: el.newId || generateUUID(), path: element.querySelector('[data-value="file-path"]').textContent, already: element.getAttribute('alreadyReplaced')
-          }
-        })
+          componentId: el.id, id: el.newId || generateUUID(), path: element.querySelector('[data-value="file-path"]').textContent, already: element.getAttribute('alreadyReplaced')
+        }
+      })
       const el = {
         time: (new Date()).getTime(),
         action: 'Replace_Component',
         target_element: [parentId.replace('selectedFilePathList;', ''), ...arr],
       };
-      if(m2.length){
-        el.folders = m2.map(e=>e.id)
+      if (m2.length) {
+        el.folders = m2.map(e => e.id)
       }
       await pushAction(el)
       location.reload()
@@ -3228,7 +3228,7 @@ component</button> -->
         console.log(JSON.stringify(selected))
 
       }
-      var setFolder = (path,id) => {
+      var setFolder = (path, id) => {
         const clonedFieldset2 = getElementById1('selectedFilePathList;' + id)
         if (Array.from(clonedFieldset2.children).find(el => el.id === path)) {
           return
@@ -3236,7 +3236,7 @@ component</button> -->
         var clonedItem = getElementById1('item').cloneNode(true);
         selected.push(path)
         clonedItem.id = path;
-        clonedItem.setAttribute('folder',true)
+        clonedItem.setAttribute('folder', true)
         const file_path = clonedItem.querySelector('[data-value="file-path"]')
         file_path.textContent = path;
         clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
@@ -3331,10 +3331,10 @@ component</button> -->
               // Set file path and emoji
               const file_path = clonedItem.querySelector('[data-value="file-path"]')
               file_path.textContent = item;
-              clonedItem.onclick = (e)=>{
-                  const folderChecked = getElementById1('selectedFilePathList;' + id).querySelector('#attach-folder').checked
-                  folderChecked ?  setFolder(path1 + item,id) : setPath()
-                }
+              clonedItem.onclick = (e) => {
+                const folderChecked = getElementById1('selectedFilePathList;' + id).querySelector('#attach-folder').checked
+                folderChecked ? setFolder(path1 + item, id) : setPath()
+              }
               let icon = '📂';
 
               clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
@@ -3467,9 +3467,9 @@ component</button> -->
                 // Set file path and emoji
                 const file_path = clonedItem.querySelector('[data-value="file-path"]')
                 file_path.textContent = item;
-                clonedItem.onclick = (e)=>{
+                clonedItem.onclick = (e) => {
                   const folderChecked = getElementById1('selectedFilePathList;' + id).querySelector('#attach-folder').checked
-                  folderChecked ?  setFolder(item,id) : setPath()
+                  folderChecked ? setFolder(item, id) : setPath()
                 }
                 let icon = '📂';
 
@@ -5772,9 +5772,39 @@ checkbox1.setAttribute('hidden', "");
             replaceAction.target_element.shift()
             const dontReplaceIndex = replaceAction.target_element.findIndex(e => e.componentId === toReplace)
 
+
+            if (replaceAction.folders) {
+              const promises = replaceAction.folders.map(async folder => {
+                const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${folder}|`;
+                let { items } = await fetch(url).then(e => e.json())
+                return items
+              })
+              const allItems = await Promise.all(promises)
+              let updateAction
+              for (const arr of allItems) {
+                for (const item of arr) {
+                  if (item.lsi1.split(';')[0].endsWith('0-Content') || l.find(e => e.componentId === item.id)) {
+                    continue
+                  }
+                  const newReplaceItem = {
+                    componentId: item.id, id: generateUUID(), path: item.lsi1.split(';')[0]
+                  }
+                  replaceAction.target_element.push(newReplaceItem)
+                  updateAction = true
+                }
+              }
+              if (updateAction) {
+                const response1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(replaceAction),
+                });
+              }
+            }
             let l = replaceAction.target_element.filter(e => e.componentId !== toReplace);
             let i = false;
-
             console.log('solving ' + JSON.stringify(l))
             for (const el of l) {
 
@@ -6497,14 +6527,14 @@ checkbox1.setAttribute('hidden', "");
               }
               console.log(newEl.id)
               if (options?.position) {
-                const fieldsets = Array.from(treeElement.children).filter(e=>e.tagName.toLowerCase() ==='fieldset')
+                const fieldsets = Array.from(treeElement.children).filter(e => e.tagName.toLowerCase() === 'fieldset')
                 if (options.position.startsWith("start-")) {
                   // Extract the number after "start-"
                   const index = parseInt(options.position.slice(6));
                   // Insert newEl at the specified index from the start
-                  componentElement.insertBefore(newEl, componentElement.children[index -1]);
+                  componentElement.insertBefore(newEl, componentElement.children[index - 1]);
                   // Insert newEl2 at the same position in treeElement
-                  treeElement.insertBefore(newEl2, fieldsets[index -1]);
+                  treeElement.insertBefore(newEl2, fieldsets[index - 1]);
                 } else if (options.position.startsWith("end-")) {
                   // Extract the number after "end-"
                   const index = parseInt(options.position.slice(4));
@@ -6583,7 +6613,7 @@ checkbox1.setAttribute('hidden', "");
           }
           if (target_element.length) {
             console.log('movestat ' + move)
-            handleAppendOrInsert('Append', target_element.map(i => i.id), move,undefined)
+            handleAppendOrInsert('Append', target_element.map(i => i.id), move, undefined)
           }
           break;
 
