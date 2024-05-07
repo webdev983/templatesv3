@@ -6468,28 +6468,24 @@ checkbox1.setAttribute('hidden', "");
               }
               console.log(newEl.id)
               if (options?.position) {
+                const fieldsets = Array.from(treeElement.children).filter(e=>e.tagName.toLowerCase() ==='fieldset')
                 if (options.position.startsWith("start-")) {
+                  // Extract the number after "start-"
                   const index = parseInt(options.position.slice(6));
                   // Insert newEl at the specified index from the start
                   componentElement.insertBefore(newEl, componentElement.children[index]);
-
-                  // Insert newEl2 before the fieldset at the same index
-                  const fieldsets = Array.from(treeElement.querySelectorAll("> fieldset"));
-                  if (index < fieldsets.length) {
-                    treeElement.insertBefore(newEl2, fieldsets[index]);
-                  } else {
-                    treeElement.appendChild(newEl2);
-                  }
+                  // Insert newEl2 at the same position in treeElement
+                  treeElement.insertBefore(newEl2, fieldsets[index]);
                 } else if (options.position.startsWith("end-")) {
+                  // Extract the number after "end-"
                   const index = parseInt(options.position.slice(4));
+                  // Calculate the index from the end
                   const endIndex = componentElement.children.length - index;
                   // Insert newEl at the calculated index from the end
                   componentElement.insertBefore(newEl, componentElement.children[endIndex]);
+                  // Insert newEl2 at the same position in treeElement
 
-                  // Insert newEl2 before the fieldset at the same index from the end
-                  const fieldsets = Array.from(treeElement.querySelectorAll("> fieldset"));
-                  const fieldsetIndex = Math.min(index, fieldsets.length);
-                  treeElement.insertBefore(newEl2, fieldsets[fieldsetIndex]);
+                  treeElement.insertBefore(newEl2, fieldsets[endIndex]);
                 } else {
                   // Invalid position format
                   console.error("Invalid position format");
