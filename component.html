@@ -3190,7 +3190,7 @@ component</button> -->
       const parentEl = getElementById1(parentId)
       const replacedString = parentEl.getAttribute('replaced')
       const replaced = replacedString ? JSON.parse(replacedString) : []
-     
+
       const arr = m1.map(el => {
         const element = getElementById1(el.id);
         return {
@@ -3239,7 +3239,7 @@ component</button> -->
         clonedItem.id = path;
         clonedItem.setAttribute('folder', true)
         const file_path = clonedItem.querySelector('[data-value="file-path"]')
-        clonedItem.querySelector('[data-value="file-emoji"]').textContent ='📂'
+        clonedItem.querySelector('[data-value="file-emoji"]').textContent = '📂'
         file_path.textContent = path;
         clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
         clonedItem.onclick = (e) => { e.target.closest('li').remove(); selected.filter(el => el !== itemId) }
@@ -3616,7 +3616,7 @@ component</button> -->
             clonedItem.id = el;
             selected.push(el)
             const file_path = clonedItem.querySelector('[data-value="file-path"]')
-            clonedItem.querySelector('[data-value="file-emoji"]').textContent ='📂'
+            clonedItem.querySelector('[data-value="file-emoji"]').textContent = '📂'
             file_path.textContent = el;
             clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
             clonedFieldset2.appendChild(clonedItem)
@@ -3634,7 +3634,7 @@ component</button> -->
             clonedFieldset2.appendChild(clonedItem)
             clonedItem.onclick = (e) => { e.target.closest('li').remove(); selected.filter(el => el !== el.id) }
           }
-          
+
 
         }
 
@@ -4844,7 +4844,31 @@ checkbox1.setAttribute('hidden', "");
     }
 
 
+    const generateReview =async (heading, date, name, stars, ip, message) => {
+      const h = querySelectorAll1('[data-builder-review-heading]')
+      h.textContent = heading
+      const d = querySelectorAll1('[data-builder-review-time]')
+      d.textContent = date
+      const n = querySelectorAll1('[data-builder-review-author]')
+      n.textContent = name
+      const s = querySelectorAll1('[data-builder-review-rating]')
+      s.textContent =stars
+      const i = querySelectorAll1('[data-builder-review-heading]')
+      i.textContent =ip
+      const m = querySelectorAll1('[data-builder-review-author-ip]')
+      m.textContent = message
+      [h, d, n, s, i, m].forEach(e => {
+        const el = {
+          time: (new Date()).getTime(),
+          action: 'textContent',
+          target_element: e.id + '-tree',
+          value: e.textContent,
 
+        }
+
+        await pushAction(el)
+      })
+    }
     async function loadFirst() {
       var iframe = getElementById1("generated-page-iframe");
 
@@ -4875,6 +4899,7 @@ checkbox1.setAttribute('hidden', "");
       const generatebreadcrumb = urlParams.get('generatebreadcrumb')
       const importAttribute = urlParams.get('attr')
       const importValue = urlParams.get('val')
+      const message = urlParams.get('message')
       ownerid = localStorage.getItem('ownerid') || urlParams.get('ownerid')
       if (idFromQuery) {
         // Change the id of the element with id "component-element"
@@ -5009,7 +5034,14 @@ checkbox1.setAttribute('hidden', "");
       if (importAttribute) {
         await handleImportGpt(importValue, importAttribute)
       }
-
+      if (message) {
+        const ip = urlParams.get('ip')
+        const stars = urlParams.get('stars')
+        const name = urlParams.get('name')
+        const date = urlParams.get('date')
+        const heading = urlParams.get('heading')
+        await generateReview(heading, date, name, stars, ip, message)
+      }
       const event = new CustomEvent("pageloaded")
       document.dispatchEvent(event)
 
@@ -5793,11 +5825,11 @@ checkbox1.setAttribute('hidden', "");
 
             if (replaceAction.folders) {
               const promises = replaceAction.folders.map(async folder => {
-                const folderEncoded = encodeURIComponent(folder+'|');
+                const folderEncoded = encodeURIComponent(folder + '|');
                 const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&lsi1=${folderEncoded}&gsi1lsi1=true`;
-                console.log('furl '+url)
+                console.log('furl ' + url)
                 const data = await fetch(url).then(e => e.json())
-                console.log('r items '+ JSON.stringify(data))
+                console.log('r items ' + JSON.stringify(data))
                 return data.items
               })
               const allItems = await Promise.all(promises)
@@ -5816,8 +5848,8 @@ checkbox1.setAttribute('hidden', "");
                 }
               }
               if (updateAction) {
-                const rToPush = {...replaceAction}
-                rToPush.target_element = [toReplace,...replaceAction.target_element]
+                const rToPush = { ...replaceAction }
+                rToPush.target_element = [toReplace, ...replaceAction.target_element]
                 const response1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                   method: 'POST',
                   headers: {
