@@ -319,7 +319,7 @@
       </details>
 
 
-      <details  id="product-table-specification" style="margin-bottom: 7px;">
+      <details id="product-table-specification" style="margin-bottom: 7px;">
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">🗂️ Table spec 🔴</span>
         </summary>
         <button class="b-3" onclick="generateBreadCrumbApi(event)"> Generate</button>
@@ -817,11 +817,13 @@ component</button> -->
       <button class="b-4" id="code-tree-click-tag-approve" onclick="approve(event)"> ✅ Approve</button>
 
       <br>
-      <label class="l-3"><input type="checkbox" onchange="switchPosition(event)" id="position-checkbox">🎯 Position</label>
+      <label class="l-3"><input type="checkbox" onchange="switchPosition(event)" id="position-checkbox">🎯
+        Position</label>
       <label class="l-3" hidden><input type="number" value="1" id="position-number"></label>
       <label class="l-3" hidden><input type="radio" checked name="position-start-end-existed"
           id="position-start-checkbox">start</label>
-      <label class="l-3" hidden><input type="radio" name="position-start-end-existed" id="position-end-checkbox">end</label>
+      <label class="l-3" hidden><input type="radio" name="position-start-end-existed"
+          id="position-end-checkbox">end</label>
 
       <br>
       <label><input type="checkbox" id="code-tree-menu-copies-too"><span class="l-3">🚂⧉ Insert Copies
@@ -910,7 +912,8 @@ component</button> -->
     <fieldset id="tag-table" style="border-width: 0px; margin-bottom: 30px; " data-menu>
       <button onclick="cancel(event)" class="b-3" style="margin-top: 5px; margin-bottom: 5px;">❌</button></legend>
       <br>
-      <label class="l-3"><input type="checkbox" id="position-checkbox" onchange="switchPosition(event)">🎯 Position</label>
+      <label class="l-3"><input type="checkbox" id="position-checkbox" onchange="switchPosition(event)">🎯
+        Position</label>
       <label class="l-3" hidden><input type="number" value="1" id="position-number"></label>
       <label class="l-3" hidden><input type="radio" name="position-start-end-new" checked
           id="position-start-checkbox">start</label>
@@ -1013,17 +1016,17 @@ component</button> -->
       const fileName = splited.pop()
       return splited.join('/') + '|' + fileName
     }
-    const switchPosition = (event)=>{
+    const switchPosition = (event) => {
       const fieldset = event.target.closest('fieldset')
       const checked = event.target.checked
       const number = fieldset.querySelector('#position-number')
       const start = fieldset.querySelector('#position-start-checkbox')
       const end = fieldset.querySelector('#position-end-checkbox')
-      if(checked){
-        [number,start,end].forEach(e=>e.parentNode.removeAttribute('hidden'))
+      if (checked) {
+        [number, start, end].forEach(e => e.parentNode.removeAttribute('hidden'))
       }
-      else{
-        [number,start,end].forEach(e=>e.parentNode.setAttribute('hidden',''))
+      else {
+        [number, start, end].forEach(e => e.parentNode.setAttribute('hidden', ''))
       }
     }
 
@@ -5234,7 +5237,7 @@ checkbox1.setAttribute('hidden', "");
           options.insert_copies && optionsStrings.push('🚂⧉ Insert Copies')
           options.dub_target && optionsStrings.push('🎯⧉ Dup Target')
           options.selfuse && optionsStrings.push('🎯⧉ Self use')
-          options.position && optionsStrings.push('🎯 child '+options.position)
+          options.position && optionsStrings.push('🎯 child ' + options.position)
           const optionString = optionsStrings.join('&#013;&#010;')
           clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionString)
           let emoji = "1️⃣"
@@ -6422,8 +6425,27 @@ checkbox1.setAttribute('hidden', "");
             const handleInsert = (treeElement, componentElement, replaceCopyId) => {
               console.log('handling' + treeElement + ' ' + componentElement + ' ' + replaceCopyId)
               const newEl = document.createElement(inserted_element.tagName)
+              if (options?.position) {
+                if (options.position.startsWith("start-")) {
+                  // Extract the number after "start-"
+                  const index = parseInt(options.position.slice(6));
+                  // Insert at the specified index from the start
+                  componentElement.insertBefore(newEl, componentElement.children[index]);
+                } else if (options.position.startsWith("end-")) {
+                  // Extract the number after "end-"
+                  const index = parseInt(options.position.slice(4));
+                  // Calculate the index from the end
+                  const endIndex = componentElement.children.length - index;
+                  // Insert at the calculated index from the end
+                  componentElement.insertBefore(newEl, componentElement.children[endIndex]);
+                } else {
+                  // Invalid position format
+                  console.error("Invalid position format");
+                }
+              } else {
+                componentElement.appendChild(newEl)
+              }
 
-              componentElement.appendChild(newEl)
 
               const attr1 = componentElement.getAttribute('data-replaceID')
               if (attr1) {
@@ -10664,7 +10686,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         pushAction({
           time: (new Date()).getTime(),
           action: fieldsetAction,
-          options: { dub_target: true, insert_copies: true,position  },
+          options: { dub_target: true, insert_copies: true, position },
           target_element: [{ type: 'tag', id, }, ...selected.map(id => {
             return { type: 'tag', id }
           })],
@@ -10676,7 +10698,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         pushAction({
           time: (new Date()).getTime(),
           action: fieldsetAction,
-          options: { insert_copies: true ,position },
+          options: { insert_copies: true, position },
           target_element: [{ type: 'tag', id, }, ...selected.map(id => {
             return { type: 'tag', id }
           })],
@@ -10686,7 +10708,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         let el2 = {
           time: (new Date()).getTime(),
           action: fieldsetAction,
-          options:{position},
+          options: { position },
           target_element: [{ type: 'tag', id, }, ...selected.map(id => {
             return { type: 'tag', id }
           })],
