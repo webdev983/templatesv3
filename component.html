@@ -6425,26 +6425,7 @@ checkbox1.setAttribute('hidden', "");
             const handleInsert = (treeElement, componentElement, replaceCopyId) => {
               console.log('handling' + treeElement + ' ' + componentElement + ' ' + replaceCopyId)
               const newEl = document.createElement(inserted_element.tagName)
-              if (options?.position) {
-                if (options.position.startsWith("start-")) {
-                  // Extract the number after "start-"
-                  const index = parseInt(options.position.slice(6));
-                  // Insert at the specified index from the start
-                  componentElement.insertBefore(newEl, componentElement.children[index]);
-                } else if (options.position.startsWith("end-")) {
-                  // Extract the number after "end-"
-                  const index = parseInt(options.position.slice(4));
-                  // Calculate the index from the end
-                  const endIndex = componentElement.children.length - index;
-                  // Insert at the calculated index from the end
-                  componentElement.insertBefore(newEl, componentElement.children[endIndex]);
-                } else {
-                  // Invalid position format
-                  console.error("Invalid position format");
-                }
-              } else {
-                componentElement.appendChild(newEl)
-              }
+
 
 
               const attr1 = componentElement.getAttribute('data-replaceID')
@@ -6486,7 +6467,33 @@ checkbox1.setAttribute('hidden', "");
                 newEl2.id = splited[0] + ';' + newEl2.id
               }
               console.log(newEl.id)
-              treeElement.appendChild(newEl2)
+              if (options?.position) {
+                if (options.position.startsWith("start-")) {
+                  // Extract the number after "start-"
+                  const index = parseInt(options.position.slice(6));
+                  // Insert newEl at the specified index from the start
+                  componentElement.insertBefore(newEl, componentElement.children[index]);
+                  // Insert newEl2 at the same position in treeElement
+                  treeElement.insertBefore(newEl2, treeElement.children[index]);
+                } else if (options.position.startsWith("end-")) {
+                  // Extract the number after "end-"
+                  const index = parseInt(options.position.slice(4));
+                  // Calculate the index from the end
+                  const endIndex = componentElement.children.length - index;
+                  // Insert newEl at the calculated index from the end
+                  componentElement.insertBefore(newEl, componentElement.children[endIndex]);
+                  // Insert newEl2 at the same position in treeElement
+                  treeElement.insertBefore(newEl2, treeElement.children[endIndex]);
+                } else {
+                  // Invalid position format
+                  console.error("Invalid position format");
+                }
+              } else {
+                // If position is not specified, append both newEl and newEl2
+                componentElement.appendChild(newEl);
+                treeElement.appendChild(newEl2);
+              }
+
               const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
               button.addEventListener('mouseover', mouseOverTree);
 
