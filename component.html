@@ -5792,7 +5792,7 @@ checkbox1.setAttribute('hidden', "");
               const promises = replaceAction.folders.map(async folder => {
                 const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${folder}|`;
                 console.log('furl '+url)
-                let { items } = await fetch(url).then(e => e.json())
+                const { items } = await fetch(url).then(e => e.json())
                 return items
               })
               const allItems = await Promise.all(promises)
