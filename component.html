@@ -4924,6 +4924,12 @@ checkbox1.setAttribute('hidden', "");
         await pushAction(el)
       }
     }
+    const runScripts = ()=>{
+        const scripts = querySelectorAll1("[data-builder-scripts]")
+        for (const script of scripts){
+          eval(script.innerHTML)
+        }
+    }
     async function loadFirst() {
       var iframe = getElementById1("generated-page-iframe");
 
@@ -5097,6 +5103,8 @@ checkbox1.setAttribute('hidden', "");
         const heading = urlParams.get('heading')
         await generateReview(heading, date, name, stars, ip, message)
       }
+      await runScripts()
+
       const event = new CustomEvent("pageloaded")
       document.dispatchEvent(event)
 
