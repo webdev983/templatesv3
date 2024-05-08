@@ -5934,7 +5934,7 @@ checkbox1.setAttribute('hidden', "");
                 });
               }
             }
-            let l = replaceAction.target_element//.filter(e => e.componentId !== toReplace);
+            let l = replaceAction.target_element.filter(e => e.componentId !== toReplace);
             let i = false;
             console.log('solving ' + JSON.stringify(l))
             for (const el of l) {
@@ -5963,7 +5963,7 @@ checkbox1.setAttribute('hidden', "");
             el2.innerHTML = `🔄${replaceAction.target_element.length}`;
           }
           console.log('calling path for relative ' + pathForRelative)
-          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions, replaceId, pathForRelative, newEl2)
+          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction.target_element.find(e => e.componentId === replaceAction.target_element[0]), noComp1 || noComp, noSubComp1, level, removeActions, replaceId, pathForRelative, newEl2)
 
 
           break;
