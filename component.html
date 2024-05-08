@@ -1582,6 +1582,26 @@ component</button> -->
 
       // Convert the date to ISO 8601 format (required by DynamoDB)
       const ttl = tomorrow.getTime();
+      const { items } = await fetch(`${backend_url}?id=${items[0].id}&startsWith=true`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(e => e.json())
+      const promises = items.map(async item=>{
+        if(item.action && item.action !=='Add_Component'){
+          const deleteUrl = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id}:${item.sk}`;
+          await fetch(deleteUrl, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              // Add any additional headers if needed
+            },
+            // You can include a request body if necessary
+            // body: JSON.stringify({ action: actionName }),
+          });
+        }
+      })
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         body: JSON.stringify({ id: specid, sk: 'specs', data; ttl }),
@@ -1604,6 +1624,7 @@ component</button> -->
       spec.textContent = '🗂️ Table spec 🟢'
     }
     const generateTableSpec = async(specid) => {
+      
       const { data } = await fetch(`${backend_url}/${specid}:specs`, {
         method: 'GET',
         headers: {
