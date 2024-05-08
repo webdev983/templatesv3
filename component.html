@@ -3265,20 +3265,19 @@ component</button> -->
       var setFolder = (path, id) => {
         const relative = getElementById1('relative-input')
         const absolute = getElementById1('absolute-input')
-        if(relative.checked){
+        if (relative.checked) {
           const currentLsi = pathItemPath.split(';')[0]
-          const relativePath = getRelativePath(currentLsi, convertToOldPath(path));
+          const relativePath = getRelativePath(currentLsi, path);
           path = relativePath
         }
-        else if(absolute.checked){
-          const p = convertToOldPath(path).split('/')
+        else if (absolute.checked) {
+          const p = path.split('/')
           p.shift()
-          const fileName = p.pop()
           let r = ''
           if (p.length) {
             r = '/' + p.join('/')
           }
-           path = "*" + r + '|' + fileName
+          path = "*" + r
         }
         const clonedFieldset2 = getElementById1('selectedFilePathList;' + id)
         if (Array.from(clonedFieldset2.children).find(el => el.id === path)) {
@@ -5878,6 +5877,25 @@ checkbox1.setAttribute('hidden', "");
 
             if (replaceAction.folders) {
               const promises = replaceAction.folders.map(async folder => {
+                if (folder.startsWith('*')) {
+                  const site = pathItemPath.split('/')[0]
+                  const modId = folder.replace('*', '')
+                  folder = site + modId
+                  
+                }
+                else if (inserted_component.componentId.startsWith('#')) {
+                  let cPath = pathForRelative.current || pathItemPath
+                  cPath = cPath.replace(';publish:published', "")
+                  console.log('cpath ' + cPath)
+
+
+                  const relative = folder.replace('#', '')
+                  folder = getAbsolutePath(cPath, relative);
+
+
+                 
+                }
+
                 const folderEncoded = encodeURIComponent(folder + '|');
                 const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&lsi1=${folderEncoded}&gsi1lsi1=true`;
                 console.log('furl ' + url)
