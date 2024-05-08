@@ -1588,9 +1588,11 @@ component</button> -->
           'Content-Type': 'application/json',
         },
       }).then(e => e.json())
+      console.log('all '+ JSON.stringify(d.items))
       const promises = d.items.map(async item=>{
         if(item.action && item.action !=='Add_Component'){
           const deleteUrl = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id}:${item.sk}`;
+          console.log('delete' + deleteUrl)
           await fetch(deleteUrl, {
             method: 'DELETE',
             headers: {
