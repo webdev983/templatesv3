@@ -102,21 +102,21 @@
           </tr>
         </tbody>
       </table>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
     </div>
 
     <div class="panel bottom" style="position: fixed; bottom: 0; left: 0;">
@@ -930,8 +930,8 @@ component</button> -->
       <label class="l-3"><input type="checkbox" id="position-checkbox" onchange="switchPosition(event)">🎯
         Position</label>
       <label class="l-3" hidden><input type="number" value="1" id="position-number"></label>
-      <label class="l-3" hidden><input type="radio" name="position-start-end-new" 
-          id="position-start-checkbox" checked>start</label>
+      <label class="l-3" hidden><input type="radio" name="position-start-end-new" id="position-start-checkbox"
+          checked>start</label>
       <label class="l-3" hidden><input type="radio" name="position-start-end-new" id="position-end-checkbox">end</label>
 
 
@@ -980,17 +980,16 @@ component</button> -->
 
     <ol data-element="file-path-list" id="selectedFilePathList" class="list-1"
       style="margin-left: -10px; margin-bottom: 30px; " data-menu>
-      <button style="margin-bottom: 8px; margin-left: -10px;" class="b-4"
-        onclick="cancelReplace(event)">❌</button> 
-        <br>
+      <button style="margin-bottom: 8px; margin-left: -10px;" class="b-4" onclick="cancelReplace(event)">❌</button>
+      <br>
       <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" onclick="approveReplace(event)">✅
         Approve</button>
       <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" data-action="moveBack">⤴️ Up</button>
       <label class="l-3"><input onchange="switchFolder(event)" id="attach-folder" type="checkbox">📂Folder</label>
-        <label class="l-3" id="relative-label" hidden><input type="radio" id="choose-relative " name="relative-absolute-choose"
-          id="">🗂️Relative</label>
-      <label class="l-3" id="absolute-label" hidden><input type="radio" id="choose-absolute" name="relative-absolute-choose"
-        id="">📂Absolute</label>
+      <label class="l-3" id="relative-label" hidden><input type="radio" id="choose-relative "
+          name="relative-absolute-choose" id="relative-input">🗂️Relative</label>
+      <label class="l-3" id="absolute-label" hidden><input type="radio" id="choose-absolute"
+          name="relative-absolute-choose" id="absolute-input">📂Absolute</label>
 
     </ol>
 
@@ -1026,18 +1025,18 @@ component</button> -->
     <button style="font-size: 30px;" id="remove-loading">❌</button>
   </div>
   <script>
-    const switchFolder =(event)=>{
-      const relative =getElementById1('relative-label')
+    const switchFolder = (event) => {
+      const relative = getElementById1('relative-label')
       const absolute = getElementById1('absolute-label')
-      if(event.target.checked){
+      if (event.target.checked) {
         relative.removeAttribute('hidden')
         absolute.removeAttribute('hidden')
       }
-      else{
-        relative.setAttribute('hidden','')
-        relative.querySelector('input').checked=false
-        absolute.setAttribute('hidden','')
-        absolute.querySelector('input').checked=false
+      else {
+        relative.setAttribute('hidden', '')
+        relative.querySelector('input').checked = false
+        absolute.setAttribute('hidden', '')
+        absolute.querySelector('input').checked = false
       }
     }
     var convertToOldPath = (path) => {
@@ -3264,6 +3263,23 @@ component</button> -->
 
       }
       var setFolder = (path, id) => {
+        const relative = getElementById1('relative-input')
+        const absolute = getElementById1('absolute-input')
+        if(relative.checked){
+          const currentLsi = pathItemPath.split(';')[0]
+          const relativePath = getRelativePath(currentLsi, convertToOldPath(path));
+          path = relativePath
+        }
+        else if(absolute.checked){
+          const p = convertToOldPath(path).split('/')
+          p.shift()
+          const fileName = p.pop()
+          let r = ''
+          if (p.length) {
+            r = '/' + p.join('/')
+          }
+           path = "*" + r + '|' + fileName
+        }
         const clonedFieldset2 = getElementById1('selectedFilePathList;' + id)
         if (Array.from(clonedFieldset2.children).find(el => el.id === path)) {
           return
@@ -4878,7 +4894,7 @@ checkbox1.setAttribute('hidden', "");
     }
 
 
-    const generateReview =async (heading, date, name, stars, ip, message) => {
+    const generateReview = async (heading, date, name, stars, ip, message) => {
       const h = querySelectorAll1('[data-builder-review-heading]')[0]
       h.textContent = heading
       const d = querySelectorAll1('[data-builder-review-time]')[0]
@@ -4886,13 +4902,13 @@ checkbox1.setAttribute('hidden', "");
       const n = querySelectorAll1('[data-builder-review-author]')[0]
       n.textContent = name
       const s = querySelectorAll1('[data-builder-review-rating]')[0]
-      s.textContent =stars
+      s.textContent = stars
       const i = querySelectorAll1('[data-builder-review-author-ip]')[0]
-      i.textContent =ip
+      i.textContent = ip
       const m = querySelectorAll1('[data-builder-review-message]')[0]
       m.textContent = message
-      for (const e of [h, d, n, s, i, m]){
-        if(!e){
+      for (const e of [h, d, n, s, i, m]) {
+        if (!e) {
           continue
         }
         const el = {
