@@ -1602,12 +1602,13 @@ component</button> -->
           });
         }
       })
+      await Promise.all(promises)
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         body: JSON.stringify({ id: specid, sk: 'specs', data, ttl }),
       });
       const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&generatespec=${specid}&ownerid=${localStorage.getItem('ownerid')}` };
-
+      console.log(eventData.url)
       // Fetch options
       const options = {
         method: 'POST',
