@@ -3212,8 +3212,9 @@ component</button> -->
     }
     var approveReplace = async (e) => {
       const m = Array.from(e.target.parentNode.children).filter(i => i.id)
-      const m1 = m.filter(e => !e.hasAttribute('folder'))
+      const m1 = m.filter(e => e.hasAttribute('component'))
       const m2 = m.filter(e => e.hasAttribute('folder'))
+      co
       //const folderChecked = e.target.parentNode.querySelector('#attach-folder').checked
       const parentId = e.target.parentNode.id.replace('file-path-list;', '')
       if (!parentId) {
@@ -3254,6 +3255,7 @@ component</button> -->
         var clonedItem = getElementById1('item').cloneNode(true);
         selected.push(itemId)
         clonedItem.id = itemId;
+        clonedItem.setAttribute('component',true)
         const file_path = clonedItem.querySelector('[data-value="file-path"]')
         file_path.textContent = path;
         clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
