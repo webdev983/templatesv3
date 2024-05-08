@@ -335,9 +335,9 @@
 
 
       <details id="product-table-specification" style="margin-bottom: 7px;">
-        <summary class="summary-L-3"><span class="l-3 b-dark-blue">🗂️ Table spec 🔴</span>
+        <summary class="summary-L-3"><span class="l-3 b-dark-blue" id='spec-status'>🗂️ Table spec 🔴</span>
         </summary>
-        <button class="b-3" onclick="generateBreadCrumbApi(event)"> Generate</button>
+        <button class="b-3" onclick="generateTableSpecApi(event)"> Generate</button>
       </details>
 
 
@@ -986,10 +986,10 @@ component</button> -->
         Approve</button>
       <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" data-action="moveBack">⤴️ Up</button>
       <label class="l-3"><input onchange="switchFolder(event)" id="attach-folder" type="checkbox">📂Folder</label>
-      <label class="l-3" id="relative-label" hidden><input type="radio" 
-          name="relative-absolute-choose" id="relative-input">🗂️Relative</label>
-      <label class="l-3" id="absolute-label" hidden><input type="radio" 
-          name="relative-absolute-choose" id="absolute-input">📂Absolute</label>
+      <label class="l-3" id="relative-label" hidden><input type="radio" name="relative-absolute-choose"
+          id="relative-input">🗂️Relative</label>
+      <label class="l-3" id="absolute-label" hidden><input type="radio" name="relative-absolute-choose"
+          id="absolute-input">📂Absolute</label>
 
     </ol>
 
@@ -1565,6 +1565,98 @@ component</button> -->
 
       return capitalizedString;
     }
+
+
+
+    const generateTableSpecApi = async () => {
+      const spec = document.getElementById('spec-status')
+      spec.textContent = '🗂️ Table spec 🟠'
+      const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Specification-Table-Content'
+      console.log(tableLsi)
+      url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
+      const { items } = await fetch(url).then(e => e.json())
+      const specid = generateUUID()
+      const data = getFromProductSpecs()
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        body: JSON.stringify({ id: specid, sk: 'specs', data }),
+      });
+      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&generatespec=${specid}&ownerid=${localStorage.getItem('ownerid')}` };
+
+      // Fetch options
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData)
+      };
+      const response = await fetch(pup_url, options);
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        body: JSON.stringify({ id: headContentItem.id, sk: 'generated-tablespec' }),
+      });
+      spec.textContent = '🗂️ Table spec 🟢'
+    }
+    const generateTableSpec = (specid) => {
+      const { data } = await fetch(`${backend_url}/${specid}:specs`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(e => e.json())
+      const original = querySelectorAll1('[data-builder-specification-row]')[0]
+      let last = original.id + '-tree'
+      const th = original.querySelector('th')
+      const td = original.querySelector('td')
+      const el1 = {
+        time: (new Date()).getTime(),
+        action: 'textContent',
+        target_element: th.id + '-tree',
+        value: data[0].key,
+
+      }
+      await pushAction(el1)
+      const el2 = {
+        time: (new Date()).getTime(),
+        action: 'textContent',
+        target_element: td.id + '-tree',
+        value: data[0].value,
+
+      }
+      await pushAction(el2)
+      for (let i = 1; i < data.length; i++) {
+        const id = duplicateId(original.id).id
+        actionObject = {
+          time: (new Date()).getTime(),
+          action: 'InsertAfter',
+          target_element: last,
+          inserted_element: { originalId: original.id + '-tree', id },
+        };
+        await pushAction(actionObject)
+        const clonedT = getElementById1(removeLastOccurrence(id))
+        const th = clonedT.querySelector('th')
+        const td = clonedT.querySelector('td')
+        const el1 = {
+          time: (new Date()).getTime(),
+          action: 'textContent',
+          target_element: th.id + '-tree',
+          value: data[i].key,
+
+        }
+        await pushAction(el1)
+        const el2 = {
+          time: (new Date()).getTime(),
+          action: 'textContent',
+          target_element: td.id + '-tree',
+          value: data[i].value,
+
+        }
+        await pushAction(el2)
+        last = id
+      }
+
+    }
     const generateBreadCrumbApi = async () => {
       const breadcrumb = document.getElementById('breadcrumb-status')
       breadcrumb.textContent = '🥖 BreadCrumb Menu 🟠'
@@ -2100,6 +2192,7 @@ component</button> -->
       for (const list of parsedLists['data-lists']) {
         const cloned = list1.cloneNode(true)
         cloned.removeAttribute('hidden')
+        cloned.setAttribute('data-list', list.name)
         const storage = list.data_storage
         let storageId = storageId1 ?? ((storage === 'sku') ? (pathItemSku || selectedSku) : headContentItem.id)
         cloned.querySelector('[data-list-emoji]').textContent = list.emoji
@@ -3214,7 +3307,7 @@ component</button> -->
       const m = Array.from(e.target.parentNode.children).filter(i => i.id)
       const m1 = m.filter(e => e.hasAttribute('component'))
       const m2 = m.filter(e => e.hasAttribute('folder'))
-      
+
       //const folderChecked = e.target.parentNode.querySelector('#attach-folder').checked
       const parentId = e.target.parentNode.id.replace('file-path-list;', '')
       if (!parentId) {
@@ -3255,7 +3348,7 @@ component</button> -->
         var clonedItem = getElementById1('item').cloneNode(true);
         selected.push(itemId)
         clonedItem.id = itemId;
-        clonedItem.setAttribute('component',true)
+        clonedItem.setAttribute('component', true)
         const file_path = clonedItem.querySelector('[data-value="file-path"]')
         file_path.textContent = path;
         clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
@@ -3270,7 +3363,7 @@ component</button> -->
         if (relative.checked) {
           const currentLsi = pathItemPath.split(';')[0]
           const relativePath = getRelativePath(currentLsi, path);
-          path ='#'+ relativePath
+          path = '#' + relativePath
         }
         else if (absolute.checked) {
           const p = path.split('/')
@@ -3653,7 +3746,7 @@ component</button> -->
           var clonedItem = getElementById1('item').cloneNode(true);
           clonedItem.setAttribute('alreadyReplaced', true)
           clonedItem.id = parentId;
-          clonedItem.setAttribute('component',true)
+          clonedItem.setAttribute('component', true)
           selected.push(parentId)
           const file_path = clonedItem.querySelector('[data-value="file-path"]')
           file_path.textContent = path;
@@ -4924,11 +5017,11 @@ checkbox1.setAttribute('hidden', "");
         await pushAction(el)
       }
     }
-    const runScripts = ()=>{
-        const scripts = querySelectorAll1("[data-builder-script]")
-        for (const script of scripts){
-          eval(script.innerHTML)
-        }
+    const runScripts = () => {
+      const scripts = querySelectorAll1("[data-builder-script]")
+      for (const script of scripts) {
+        eval(script.innerHTML)
+      }
     }
     async function loadFirst() {
       var iframe = getElementById1("generated-page-iframe");
@@ -4958,6 +5051,7 @@ checkbox1.setAttribute('hidden', "");
       const toPublish = urlParams.get('publish')
       const generatetable = urlParams.get('generatetable')
       const generatebreadcrumb = urlParams.get('generatebreadcrumb')
+      const generateSpec = urlParams.get('generatespec')
       const importAttribute = urlParams.get('attr')
       const importValue = urlParams.get('val')
       const message = urlParams.get('message')
@@ -4999,6 +5093,7 @@ checkbox1.setAttribute('hidden', "");
       await handleWebPageMenu()
       await handleTableGeneration()
       await handleBreadCrumbStatus()
+      await handleSpecStatus()
       await handleItemLink()
       //dispatch event
       await handleImportMenu()
@@ -5091,6 +5186,9 @@ checkbox1.setAttribute('hidden', "");
       }
       if (generatebreadcrumb) {
         await generateBreadCrumb()
+      }
+      f(generateSpec) {
+        await generateTableSpecApi(generateSpec)
       }
       if (importAttribute) {
         await handleImportGpt(importValue, importAttribute)
@@ -5888,12 +5986,12 @@ checkbox1.setAttribute('hidden', "");
 
             if (replaceAction.folders) {
               const promises = replaceAction.folders.map(async folder1 => {
-                let folder =folder1
+                let folder = folder1
                 if (folder1.startsWith('*')) {
                   const site = pathItemPath.split('/')[0]
                   const modId = folder.replace('*', '')
                   folder = site + modId
-                  
+
                 }
                 else if (folder1.startsWith('#')) {
                   let cPath = pathItemPath
@@ -5902,12 +6000,12 @@ checkbox1.setAttribute('hidden', "");
 
 
                   const relative = folder.replace('#', '')
-                  folder =convertToOldPath(getAbsolutePath(cPath, relative));
+                  folder = convertToOldPath(getAbsolutePath(cPath, relative));
 
 
-                 
+
                 }
-                console.log('folder is '+ folder)
+                console.log('folder is ' + folder)
                 const folderEncoded = encodeURIComponent(folder + '|');
                 const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&lsi1=${folderEncoded}&gsi1lsi1=true`;
                 console.log('furl ' + url)
@@ -5930,7 +6028,7 @@ checkbox1.setAttribute('hidden', "");
                   updateAction = true
                 }
               }
-              if (updateAction && replaceAction.id ===pathItem.id) {
+              if (updateAction && replaceAction.id === pathItem.id) {
                 const rToPush = { ...replaceAction }
                 rToPush.target_element = [toReplace, ...replaceAction.target_element]
                 const response1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -8620,6 +8718,19 @@ elementsToRemove.forEach(element => element.remove());
         }
       }
     }
+    const getFromProductSpecs = () => {
+      const all = document.querySelectorAll('[data-list="product_spec"])')
+      const map = []
+      const el = all[0]
+      const rows = el.querySelectorAll('[data-lists-element]')
+      for (const row of rows) {
+        const key = row.querySelector('[data-lists-element-key]').textContent
+        const value = row.querySelector('[data-list-element-selection]')?.value || row.querySelector('[data-lists-element-value]').textContent || ''
+        map.push({ key, value })
+      }
+      return map
+
+    }
     const replacePlaceHolders = (html) => {
       const all = document.querySelectorAll('[data-list]:not([hidden])')
       const checked = {}
@@ -9855,6 +9966,18 @@ elementsToRemove.forEach(element => element.remove());
       if (exisitingValue) {
         const breadcrumb = document.getElementById('breadcrumb-status')
         breadcrumb.textContent = '🥖 BreadCrumb Menu 🟢'
+      }
+    }
+    const handleSpecStatus = async () => {
+      let exisitingValue = headContentItem && await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${headContentItem.id}:generated-tablespec`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(e => e.json())
+      if (exisitingValue) {
+        const breadcrumb = document.getElementById('breadcrumb-status')
+        breadcrumb.textContent = '🗂️ Table spec 🟢'
       }
     }
     const handleTableGeneration = async () => {
