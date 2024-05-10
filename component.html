@@ -8447,7 +8447,7 @@ elementsToRemove.forEach(element => element.remove());
               clonerAttributes.forEach(clonerAttribute => {
                 if (typeof json[key][0] === 'string') {
                   if (clonerAttribute.hasAttribute('data-transfer-sender')) {
-                    arrayOfObjects.push(clonerAttribute.textContent);
+                    arrayOfObjects.push(clonerAttribute.innerText);
                   }
                   else if (clonerAttribute.hasAttribute('data-transfer-sender-href')) {
                     arrayOfObjects.push(clonerAttribute.getAttribute('href'));
@@ -8463,10 +8463,10 @@ elementsToRemove.forEach(element => element.remove());
                   if (clonerAttribute.hasAttribute('data-transfer-sender')) {
                     const attributeKey = clonerAttribute.getAttribute('data-transfer-sender').split('.').pop();
                     if (objectFromClonedElements[attributeKey] === null) {
-                      objectFromClonedElements[attributeKey] = parseInt(clonerAttribute.textContent);
+                      objectFromClonedElements[attributeKey] = parseInt(clonerAttribute.innerText);
                     }
                     else {
-                      objectFromClonedElements[attributeKey] = clonerAttribute.textContent;
+                      objectFromClonedElements[attributeKey] = clonerAttribute.innerText;
                     }
 
                   }
@@ -8484,10 +8484,10 @@ elementsToRemove.forEach(element => element.remove());
                     clonerAttribute.querySelectorAll('[data-transfer-sender]:not([data-b-value=""]').forEach(element => {
                       const attributeKey = element.getAttribute('data-transfer-sender').split('.').pop();
                       if (objectFromClonedElements[attributeKey] === null) {
-                        objectFromClonedElements[attributeKey] = parseInt(clonerAttribute.textContent);
+                        objectFromClonedElements[attributeKey] = parseInt(clonerAttribute.innerText);
                       }
                       else {
-                        objectFromClonedElements[attributeKey] = clonerAttribute.textContent;
+                        objectFromClonedElements[attributeKey] = clonerAttribute.innerText;
                       }
                     });
                     clonerAttribute.querySelectorAll('[data-transfer-sender-href]:not([data-b-value=""]').forEach(element => {
@@ -8526,10 +8526,10 @@ elementsToRemove.forEach(element => element.remove());
 
             if (senderAttribute.length) {
               if (json[key] === null) {
-                json[key] = parseInt(senderAttribute[0].textContent) || null;
+                json[key] = parseInt(senderAttribute[0].innerText) || null;
               }
               else {
-                json[key] = senderAttribute[0].textContent || "";
+                json[key] = senderAttribute[0].innerText || "";
               }
 
             }
