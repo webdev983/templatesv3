@@ -5233,6 +5233,11 @@ checkbox1.setAttribute('hidden', "");
         const heading = urlParams.get('heading')
         await generateReview(heading, date, name, stars, ip, message)
       }
+      const pagePathContent = getElementById1('page-path').textContent;
+
+      // Use the textContent as needed, for example, log it to the console
+      console.log('Publishing:', pagePathContent);
+      generateSchema(pagePathContent.split(';')[0], date)
      
 
       const event = new CustomEvent("pageloaded")
@@ -8925,12 +8930,13 @@ elementsToRemove.forEach(element => element.remove());
 
 
 
+
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      let idFromLink = urlSearchParams.get('id');
       const pagePathContent = getElementById1('page-path').textContent;
 
       // Use the textContent as needed, for example, log it to the console
       console.log('Publishing:', pagePathContent);
-      const urlSearchParams = new URLSearchParams(window.location.search);
-      let idFromLink = urlSearchParams.get('id');
       generateSchema(pagePathContent.split(';')[0], date)
       var iframe = document.getElementById("generated-page-iframe");
 
