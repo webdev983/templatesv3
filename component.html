@@ -5517,7 +5517,7 @@ checkbox1.setAttribute('hidden', "");
           options.dub_target && optionsStrings.push('🎯⧉ Dup Target')
           options.selfuse && optionsStrings.push('🎯⧉ Self use')
           options.position && optionsStrings.push('🎯 child ' + options.position)
-          optionString = optionsStrings.join('&#013;&#010;')
+          
          
           let emoji = "1️⃣"
           if (optionsStrings.length === 2) {
@@ -5533,19 +5533,19 @@ checkbox1.setAttribute('hidden', "");
           clonedElement.querySelector("#code-log-action").textContent = actionName;
         }
         if(element?.inserted_element?.tagName){
-          optionString += `🏷️ ${element?.inserted_element?.tagName}`
+          optionStrings.push( `🏷️ ${element?.inserted_element?.tagName}`)
         }
         if(element?.key){
-          optionString += `🔑 ${element?.key} &#013;&#010; `
+          optionStrings.push(`🔑 ${element?.key} `)
         }
         if(element?.value){
-          optionString += `🪣 ${element?.value} &#013;&#010; `
+          optionStrings.push(`🪣 ${element?.value} `)
         }
         if(element?.insertedCode){
-          optionString += `🪣 ${element?.insertedCode} &#013;&#010; `
+          optionStrings.push( `🪣 ${element?.insertedCode}  `)
         }
         
-        clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionString)
+        clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionsStrings.join('&#013;&#010;'))
 
       }
 
