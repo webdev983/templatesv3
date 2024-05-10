@@ -8455,6 +8455,9 @@ elementsToRemove.forEach(element => element.remove());
                   else if (clonerAttribute.hasAttribute('data-transfer-sender-src')) {
                     arrayOfObjects.push(clonerAttribute.getAttribute('src'));
                   }
+                  else if (clonerAttribute.hasAttribute('data-transfer-sender-innerhtml')) {
+                    arrayOfObjects.push(clonerAttribute.innerHTML);
+                  }
 
                 }
                 else {
@@ -8481,6 +8484,11 @@ elementsToRemove.forEach(element => element.remove());
 
                     objectFromClonedElements[attributeKey] = clonerAttribute.getAttribute('src');
                   }
+                  else if (clonerAttribute.hasAttribute('data-transfer-sender-innerhtml')) {
+                    const attributeKey = clonerAttribute.getAttribute('data-transfer-sender-innerhtml').split('.').pop();
+
+                    objectFromClonedElements[attributeKey] = clonerAttribute.innerHTML
+                  }
                   else {
                     clonerAttribute.querySelectorAll('[data-transfer-sender]:not([data-b-value=""]').forEach(element => {
                       const attributeKey = element.getAttribute('data-transfer-sender').split('.').pop();
@@ -8498,6 +8506,10 @@ elementsToRemove.forEach(element => element.remove());
                     clonerAttribute.querySelectorAll('[data-transfer-sender-src]:not([data-b-value=""]').forEach(element => {
                       const attributeKey = element.getAttribute('data-transfer-sender-src').split('.').pop();
                       objectFromClonedElements[attributeKey] = element.getAttribute('src');
+                    });
+                    clonerAttribute.querySelectorAll('[data-transfer-sender-innerhtml]:not([data-b-value=""]').forEach(element => {
+                      const attributeKey = element.getAttribute('data-transfer-sender-html').split('.').pop();
+                      objectFromClonedElements[attributeKey] = element.innerHTML
                     });
                   }
                   // Push the created object to the array of objects
