@@ -5434,7 +5434,7 @@ checkbox1.setAttribute('hidden', "");
             ac = "Add_Component_Id"
           }
         }
-        await insertDataIntoCodeLog(time, ac, element.options)
+        await insertDataIntoCodeLog(time, ac, element.options,undefined,element)
       }
 
 
@@ -5483,7 +5483,7 @@ checkbox1.setAttribute('hidden', "");
       return formattedDate;
     }
 
-    function insertDataIntoCodeLog(actionTime, actionName, options, inserted_component) {
+    function insertDataIntoCodeLog(actionTime, actionName, options, inserted_component,element) {
       const originalElement = getElementById1("code-log-element");
       const clonedElement = originalElement.cloneNode(true);
       clonedElement.removeAttribute('hidden')
@@ -5500,9 +5500,11 @@ checkbox1.setAttribute('hidden', "");
       if (inserted_component) {
         console.log('iiiiiiiiiiin0')
         clonedElement.querySelector("#code-log-action").textContent = '🧩' + inserted_component.name;
+        const optionString = `🧩 ${inserted_component.name} &#10;🆔 ${inserted_component.componentId} &#10;  `
+        clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionString)
       }
       else {
-
+        let optionString
         if (options) {
           const optionsStrings = []
           options.apply_to_copies && optionsStrings.push('✅⧉ Apply to copies')
@@ -5510,8 +5512,8 @@ checkbox1.setAttribute('hidden', "");
           options.dub_target && optionsStrings.push('🎯⧉ Dup Target')
           options.selfuse && optionsStrings.push('🎯⧉ Self use')
           options.position && optionsStrings.push('🎯 child ' + options.position)
-          const optionString = optionsStrings.join('&#013;&#010;')
-          clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionString)
+          optionString = optionsStrings.join('&#013;&#010;')
+         
           let emoji = "1️⃣"
           if (optionsStrings.length === 2) {
             emoji = '2️⃣'
@@ -5522,9 +5524,17 @@ checkbox1.setAttribute('hidden', "");
           clonedElement.querySelector("#code-log-action").textContent = actionName + emoji;
         }
         else {
-          clonedElement.querySelector("#code-log-action").removeAttribute('data-tooltip')
+          //clonedElement.querySelector("#code-log-action").removeAttribute('data-tooltip')
           clonedElement.querySelector("#code-log-action").textContent = actionName;
         }
+        if(element?.inserted_element?.tagName){
+          optionString += `&#013;&#010;🏷️ ${element?.inserted_element?.tagName}`
+        }
+        if(element?.value){
+
+        }
+        clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionString)
+
       }
 
       // Get the parent of the original element
@@ -8684,6 +8694,7 @@ elementsToRemove.forEach(element => element.remove());
           const senders = querySelectorAll1(`[data-transfer-sender^="${receiver}."]`);
           const senders2 = querySelectorAll1(`[data-transfer-sender-href^="${receiver}."]`);
           const senders3 = querySelectorAll1(`[data-transfer-sender-src^="${receiver}."]`);
+          const senders4 = querySelectorAll1(`[data-transfer-sender-innerhtml^="${receiver}."]`);
           if (senders.length) {
             for (const sender of senders) {
               const textContent = sender.textContent;
@@ -8727,6 +8738,15 @@ elementsToRemove.forEach(element => element.remove());
               } else {
                 tag.setAttribute(attr, textContent);
               }
+
+            }
+
+          }
+          if (senders4.length) {
+            for (const sender of senders4) {
+              const html = sender.innerHTML;
+              console.log('sender4')
+              tag.innerHTML = html
 
             }
 
