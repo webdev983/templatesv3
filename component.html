@@ -8489,7 +8489,10 @@ elementsToRemove.forEach(element => element.remove());
                       }
                       else {
                         console.log('inner '+ clonerAttribute.innerText)
-                        objectFromClonedElements[attributeKey] = clonerAttribute.innerText;
+                        objectFromClonedElements[attributeKey] = Array.from(clonerAttribute.childNodes)
+    .filter(node => node.nodeType === Node.TEXT_NODE)
+    .map(node => node.textContent.trim())
+    .join('');
                       }
                     });
                     clonerAttribute.querySelectorAll('[data-transfer-sender-href]:not([data-b-value=""]').forEach(element => {
