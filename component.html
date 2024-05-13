@@ -10287,7 +10287,7 @@ headers: {
       for (const combination of combinations) {
         const item = {
           id: value,
-          sk: 'qty;' + combination,
+          sk: 'qty;' + combination.toLowerCase(),
           qty: 0
         }
         
@@ -10641,16 +10641,23 @@ headers: {
       const parent = cloned1.querySelector('#sku-attribute-list')
       //if (items.length > 1) {
 
-      for (const item of items) {
+      const p = items.map(async item=>{
 
         const cloned = el[0].cloneNode(true)
-        cloned.querySelector('#sku-attribute-value').textContent = item.sk.replace('qty;', '')
-
+        const v = item.sk.replace('qty;', '')
+        cloned.querySelector('#sku-attribute-value').textContent = v
+        const psk = `price;${pathItemPath.split('/')[0].toLowerCase()};${v}`
+        const d = await fetch(`${backend_url}?id=${sku}&sk=${psk}&startsWith=true`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(e => e.json()).then({items}=>items[0])
         cloned.querySelector('#sku-qty').textContent = item.qty || 0
         parent.appendChild(cloned)
         cloned.addEventListener('click', e => handleSkuItemClick(cloned, item))
-      }
-
+      } )
+      await Promise.all(p)
       /*
            }
           
