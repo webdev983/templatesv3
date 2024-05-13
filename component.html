@@ -6067,7 +6067,7 @@ checkbox1.setAttribute('hidden', "");
             })
             await Promise.all(p)
             replaceAction.target_element = newArr
-            console.log('new arr'+JSON.stringify(newArr))
+            console.log('new arr' + JSON.stringify(newArr))
 
             //replace folders
             if (replaceAction.folders) {
@@ -7582,8 +7582,8 @@ elementsToRemove.forEach(element => element.remove());
               allTargets.forEach(element => element.setAttribute(key, value))
               break;
             }
-            allTargets.forEach(element => getElementById1(element.id+'-tree').querySelector('[data-element="code-tree-attributes-button"]').removeAttribute('hidden'));
-           
+            allTargets.forEach(element => getElementById1(element.id + '-tree').querySelector('[data-element="code-tree-attributes-button"]').removeAttribute('hidden'));
+
             for (const element22 of allTargets) {
               const element33 = getElementById1(element22.id + 'tree');
 
@@ -8547,11 +8547,23 @@ elementsToRemove.forEach(element => element.remove());
                   }
                   else {
                     clonerAttribute.querySelectorAll('[data-transfer-sender]:not([data-b-value=""]').forEach(element => {
-                      const attributeKey = element.getAttribute('data-transfer-sender').replace(`${sender}.${currentPath}.`,'');
+                      const attributeKey = element.getAttribute('data-transfer-sender').replace(`${sender}.${currentPath}.`, '');
                       if (objectFromClonedElements[attributeKey] === null) {
-                        objectFromClonedElements[attributeKey] = parseInt(element.innerText);
-                      }
-                      else {
+                        // If the attribute key contains dots indicating sub-objects
+                        if (attributeKey.includes('.')) {
+                          const keys = attributeKey.split('.');
+                          let nestedObject = objectFromClonedElements;
+                          for (let i = 0; i < keys.length - 1; i++) {
+                            const key = keys[i];
+                            nestedObject[key] = nestedObject[key] || {};
+                            nestedObject = nestedObject[key];
+                          }
+                          // Assign the value to the nested property
+                          nestedObject[keys[keys.length - 1]] = parseInt(element.innerText);
+                        } else {
+                          objectFromClonedElements[attributeKey] = parseInt(element.innerText);
+                        }
+                      } else {
                         objectFromClonedElements[attributeKey] = element.innerText;
                       }
                     });
@@ -8590,7 +8602,7 @@ elementsToRemove.forEach(element => element.remove());
           else {
             // If the current value is a string, check for the data-transfer-sender attribute
             const senderPath = sender ? `${sender}.${currentPath}` : currentPath;
-            console.log('sender path '+ senderPath)
+            console.log('sender path ' + senderPath)
             let senderAttribute = querySelectorAll1(`[data-transfer-sender="${senderPath}"]:not([data-b-value=""]`);
 
 
@@ -8697,7 +8709,7 @@ elementsToRemove.forEach(element => element.remove());
     }
 
     const generateSchema = (url, date) => {
-      if(url.startsWith('Core.SeoSitesHome.com')){
+      if (url.startsWith('Core.SeoSitesHome.com')) {
         return
       }
       const generatedPage = getElementById1('generated-page')
@@ -8712,7 +8724,7 @@ elementsToRemove.forEach(element => element.remove());
       for (const schema of schemas) {
         const receiverName = schema.getAttribute('data-transfer-receiver')
         let json = JSON.parse(schema.textContent)
-        console.log('INPUT SCHEMA '+schema.textContent)
+        console.log('INPUT SCHEMA ' + schema.textContent)
         // Start traversing the JSON object
 
         if (combinations === 1 || forms.length === 1) {
@@ -10658,35 +10670,35 @@ headers: {
             'Content-Type': 'application/json',
           },
         }).then(e => e.json()).then(({ items }) => items[0])
-        
+
         cloned.querySelector('#sku-qty').textContent = item.qty || 0
         const oldEl = cloned.querySelector('[data-price_old_value]')
         const pEl = cloned.querySelector('[data-price_value]')
         oldEl.textContent = pItem?.oldprice || 0
         pEl.textContent = pItem?.price || 0
         pEl.addEventListener('blur', async function () {
-          let value =-1
-          try{
+          let value = -1
+          try {
             value = parseFloat(pEl.textContent)
           }
-          catch(e){
-            
+          catch (e) {
+
           }
-          if(value<0){
+          if (value < 0) {
             value = 0
             pEl.textContent = 0
           }
 
-          
+
           let nV = pItem
-          if(nV){
+          if (nV) {
             nV.price = value
           }
-          else{
+          else {
             nV = {
-              id:sku,
-              sk:psk,
-              price:value
+              id: sku,
+              sk: psk,
+              price: value
             }
           }
           await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -10695,28 +10707,28 @@ headers: {
           });
         });
         oldEl.addEventListener('blur', async function () {
-          let value =-1
-          try{
+          let value = -1
+          try {
             value = parseFloat(oldEl.textContent)
           }
-          catch(e){
-            
+          catch (e) {
+
           }
-          if(value<0){
+          if (value < 0) {
             value = 0
             oldEl.textContent = 0
           }
 
-          
+
           let nV = pItem
-          if(nV){
+          if (nV) {
             nV.oldprice = value
           }
-          else{
+          else {
             nV = {
-              id:sku,
-              sk:psk,
-              oldprice:value
+              id: sku,
+              sk: psk,
+              oldprice: value
             }
           }
           await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
