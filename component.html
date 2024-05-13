@@ -8682,6 +8682,23 @@ elementsToRemove.forEach(element => element.remove());
       const key = rest.join('/').toLowerCase()
       return 'https://' + s.toLowerCase() + '/' + key
     }
+    function removeAttributesStartingWith(node, prefixes) {
+      for (let i = 0; i < node.attributes.length; i++) {
+        const attributeName = node.attributes[i].name;
+        for (const prefix of prefixes) {
+          if (attributeName.startsWith(prefix)) {
+            node.removeAttribute(attributeName);
+          }
+        }
+      }
+
+      for (const childNode of node.childNodes) {
+        if (childNode.nodeType === Node.ELEMENT_NODE) {
+          removeAttributesStartingWith(childNode, prefixes);
+        }
+      }
+    }
+
     const generateSchema = (url, date) => {
       const generatedPage = getElementById1('generated-page')
       const schemas = querySelectorAll1('script[data-transfer-receiver]')
@@ -8797,7 +8814,7 @@ elementsToRemove.forEach(element => element.remove());
               const html = sender.innerHTML;
               console.log('sender4')
               tag.innerHTML = html
-
+              tag.childNodes.forEach(child=>removeAttributesStartingWith(child,toRemove.removeAttributesStartWith))
             }
 
           }
@@ -8893,6 +8910,11 @@ elementsToRemove.forEach(element => element.remove());
       const formattedDate = date.toLocaleDateString('en-US', options);
       return formattedDate;
     }
+    var toRemove = {
+      attributesStartWith: ["data-remove"],
+      attributesEqual: ["data-remove"],
+      removeAttributesStartWith: ["data-visual", "data-builder", "data-replaceid", "data-transfer"]
+    }
     const publish = async (e) => {
       const date = new Date()
       if (visualOn) {
@@ -8914,11 +8936,7 @@ elementsToRemove.forEach(element => element.remove());
       el5.setAttribute('hidden', '')
 
       //to remove list
-      const toRemove = {
-        attributesStartWith: ["data-remove"],
-        attributesEqual: ["data-remove"],
-        removeAttributesStartWith: ["data-visual", "data-builder", "data-replaceid", "data-transfer"]
-      }
+
 
       const robotsTxt = `
       User-agent: *
