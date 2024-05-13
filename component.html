@@ -10689,6 +10689,30 @@ headers: {
             body: JSON.stringify(nv),
           });
         });
+        opEl.addEventListener('blur', async function () {
+          let value = parseFloat(opEl.textContent)
+          if(value<0){
+            value = 0
+            opEl.textContent = 0
+          }
+
+          
+          let nV = opItem
+          if(nv){
+            nv.price = value
+          }
+          else{
+            nv = {
+              id:sku,
+              sk:opsk,
+              price:value
+            }
+          }
+          await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            body: JSON.stringify(nv),
+          });
+        });
         parent.appendChild(cloned)
         cloned.addEventListener('click', e => handleSkuItemClick(cloned, item))
       })
