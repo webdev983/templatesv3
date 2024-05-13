@@ -10243,7 +10243,7 @@ headers: {
       pathItemSku = value
     }
     const addSku = async (event) => {
-      const value = getElementById1('input-sku').value
+      const value = getElementById1('input-sku').value.toLowerCase()
       const resultList = await getProductAttributes(true)
       const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${value}&sk=created:&startsWith=true`)
         .then(response => response.json())
@@ -10661,8 +10661,34 @@ headers: {
           },
         }).then(e => e.json()).then(({ items }) => items[0])
         cloned.querySelector('#sku-qty').textContent = item.qty || 0
-        cloned.querySelector('[data-price_old_value]').textContent = opItem?.price || 0
-        cloned.querySelector('[data-price_value]').textContent = pItem?.price || 0
+        const oldEl = cloned.querySelector('[data-price_old_value]')
+        const pEl = cloned.querySelector('[data-price_value]')
+        oldEl.textContent = opItem?.price || 0
+        pEl.textContent = pItem?.price || 0
+        pEl.addEventListener('blur', async function () {
+          let value = parseFloat(pEl.textContent)
+          if(value<0){
+            value = 0
+            pEl.textContent = 0
+          }
+
+          
+          let nV = pItem
+          if(nv){
+            nv.price = value
+          }
+          else{
+            nv = {
+              id:sku,
+              sk:psk,
+              price:value
+            }
+          }
+          await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            body: JSON.stringify(nv),
+          });
+        });
         parent.appendChild(cloned)
         cloned.addEventListener('click', e => handleSkuItemClick(cloned, item))
       })
