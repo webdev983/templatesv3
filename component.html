@@ -1587,7 +1587,7 @@ component</button> -->
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
       const { items } = await fetch(url).then(e => e.json())
       const specid = generateUUID()
-      const data = getFromProductSpecs().filter(i=>!i.value.includes('{'))
+      const data = getFromProductSpecs().filter(i => !i.value.includes('{'))
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
 
@@ -1599,9 +1599,9 @@ component</button> -->
           'Content-Type': 'application/json',
         },
       }).then(e => e.json())
-      console.log('all '+ JSON.stringify(d.items))
-      const promises = d.items.map(async item=>{
-        if(item.action && item.action !=='Add_Component'){
+      console.log('all ' + JSON.stringify(d.items))
+      const promises = d.items.map(async item => {
+        if (item.action && item.action !== 'Add_Component') {
           const deleteUrl = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id}:${item.sk}`;
           console.log('delete' + deleteUrl)
           await fetch(deleteUrl, {
@@ -1637,8 +1637,8 @@ component</button> -->
       });
       spec.textContent = '🗂️ Table spec 🟢'
     }
-    const generateTableSpec = async(specid) => {
-      
+    const generateTableSpec = async (specid) => {
+
       const { data } = await fetch(`${backend_url}/${specid}:specs`, {
         method: 'GET',
         headers: {
@@ -1674,7 +1674,7 @@ component</button> -->
           inserted_element: { originalId: original.id + '-tree', id },
         };
         await pushAction(actionObject)
-        const clonedT = getElementById1(removeLastOccurrence(id,'-tree'))
+        const clonedT = getElementById1(removeLastOccurrence(id, '-tree'))
         const th = clonedT.querySelector('th')
         const td = clonedT.querySelector('td')
         const el1 = {
@@ -2314,7 +2314,7 @@ component</button> -->
             }
             exisitingValue.value && (select.value = exisitingValue.value)
             select.addEventListener('change', async function () {
-              if(select.value ===option.name){
+              if (select.value === option.name) {
                 return
               }
               exisitingValue = {
@@ -5230,7 +5230,7 @@ checkbox1.setAttribute('hidden', "");
       if (generatebreadcrumb) {
         await generateBreadCrumb()
       }
-      if(generateSpec) {
+      if (generateSpec) {
         await generateTableSpec(generateSpec)
       }
       if (importAttribute) {
@@ -5249,7 +5249,7 @@ checkbox1.setAttribute('hidden', "");
       // Use the textContent as needed, for example, log it to the console
       console.log('Publishing:', pagePathContent);
       generateSchema(pagePathContent.split(';')[0], new Date())
-     
+
 
       const event = new CustomEvent("pageloaded")
       document.dispatchEvent(event)
@@ -5450,7 +5450,7 @@ checkbox1.setAttribute('hidden', "");
             ac = "Add_Component_Id"
           }
         }
-        await insertDataIntoCodeLog(time, ac, element.options,undefined,element)
+        await insertDataIntoCodeLog(time, ac, element.options, undefined, element)
       }
 
 
@@ -5499,7 +5499,7 @@ checkbox1.setAttribute('hidden', "");
       return formattedDate;
     }
 
-    function insertDataIntoCodeLog(actionTime, actionName, options, inserted_component,element) {
+    function insertDataIntoCodeLog(actionTime, actionName, options, inserted_component, element) {
       const originalElement = getElementById1("code-log-element");
       const clonedElement = originalElement.cloneNode(true);
       clonedElement.removeAttribute('hidden')
@@ -5522,14 +5522,14 @@ checkbox1.setAttribute('hidden', "");
       else {
         const optionsStrings = []
         if (options) {
-          
+
           options.apply_to_copies && optionsStrings.push('✅⧉ Apply to copies')
           options.insert_copies && optionsStrings.push('🚂⧉ Insert Copies')
           options.dub_target && optionsStrings.push('🎯⧉ Dup Target')
           options.selfuse && optionsStrings.push('🎯⧉ Self use')
           options.position && optionsStrings.push('🎯 child ' + options.position)
-          
-         
+
+
           let emoji = "1️⃣"
           if (optionsStrings.length === 2) {
             emoji = '2️⃣'
@@ -5543,20 +5543,20 @@ checkbox1.setAttribute('hidden', "");
           //clonedElement.querySelector("#code-log-action").removeAttribute('data-tooltip')
           clonedElement.querySelector("#code-log-action").textContent = actionName;
         }
-        if(element?.inserted_element?.tagName){
+        if (element?.inserted_element?.tagName) {
           optionsStrings.push(` 🆔 ${element.id} `)
-          optionsStrings.push( ` 🏷️ ${element?.inserted_element?.tagName} `)
+          optionsStrings.push(` 🏷️ ${element?.inserted_element?.tagName} `)
         }
-        if(element?.key){
+        if (element?.key) {
           optionsStrings.push(` 🔑 ${element?.key} `)
         }
-        if(element?.value){
+        if (element?.value) {
           optionsStrings.push(` 🪣 ${element?.value} `)
         }
-        if(element?.insertedCode){
-          optionsStrings.push( ` 🪣 ${element?.insertedCode}  `)
+        if (element?.insertedCode) {
+          optionsStrings.push(` 🪣 ${element?.insertedCode}  `)
         }
-        
+
         clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionsStrings.join('&#013;&#010;'))
 
       }
@@ -6049,7 +6049,36 @@ checkbox1.setAttribute('hidden', "");
             replaceAction.target_element.shift()
             const dontReplaceIndex = replaceAction.target_element.findIndex(e => e.componentId === toReplace)
 
-
+            //remove unfound replace
+            const newArr = [toReplace]
+            const shouldUpdate
+            const p = replaceAction.target_element.map(async el => {
+              const d = await fetch(`${backend_url}?id=${el.componentId}&sk=path&startsWith=true`, {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              }).then(e => e.json())
+              if(d){
+                newArr.push(el)
+              }
+              else{
+                shouldUpdate = true
+                
+              }
+            })
+            await Promise.all(p)
+            replaceAction.target_element = newArr
+            if(shouldUpdate){
+                await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(replaceAction),
+                });
+            }
+            //replace folders
             if (replaceAction.folders) {
               const promises = replaceAction.folders.map(async folder1 => {
                 let folder = folder1
@@ -8503,7 +8532,7 @@ elementsToRemove.forEach(element => element.remove());
                       objectFromClonedElements[attributeKey] = parseInt(clonerAttribute.innerText);
                     }
                     else {
-                      console.log('inner '+clonerAttribute.innerText)
+                      console.log('inner ' + clonerAttribute.innerText)
                       objectFromClonedElements[attributeKey] = clonerAttribute.innerText;
                     }
 
