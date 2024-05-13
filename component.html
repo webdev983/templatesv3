@@ -422,8 +422,9 @@
                 <span class="l-4">🔖</span><span class="l-4" id="sku-attribute-value">Solo</span>
                 <span style="margin-left: 10px;" class="l-4">📦</span>
                 <span class="l-4" id="sku-qty">10</span>
-               <del class="l-4" style="margin-left: 10px; margin-right: 10px;" contenteditable data-price_old_value>0</del>
-              <ins class="l-4" contenteditable data-price_value>0</ins>
+                <del class="l-4" style="margin-left: 10px; margin-right: 10px;" contenteditable
+                  data-price_old_value>0</del>
+                <ins class="l-4" contenteditable data-price_value>0</ins>
               </li>
             </div>
           </ul>
@@ -6044,7 +6045,7 @@ checkbox1.setAttribute('hidden', "");
             const dontReplaceIndex = replaceAction.target_element.findIndex(e => e.componentId === toReplace)
 
             //remove unfound replace
-            const newArr = [toReplace]
+            const newArr = []
             let shouldUpdate
             const p = replaceAction.target_element.map(async el => {
               const d = await fetch(`${backend_url}?id=${el.componentId}&sk=path&startsWith=true`, {
@@ -6053,24 +6054,26 @@ checkbox1.setAttribute('hidden', "");
                   'Content-Type': 'application/json',
                 },
               }).then(e => e.json())
-              if(d){
+              if (d) {
                 newArr.push(el)
               }
-              else{
+              else {
                 shouldUpdate = true
-                
+
               }
             })
             await Promise.all(p)
             replaceAction.target_element = newArr
-            if(shouldUpdate){
-                await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify(replaceAction),
-                });
+            if (shouldUpdate) {
+              const rToPush = { ...replaceAction }
+              rToPush.target_element = [toReplace, ...replaceAction.target_element]
+              await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(rToPush),
+              });
             }
             //replace folders
             if (replaceAction.folders) {
