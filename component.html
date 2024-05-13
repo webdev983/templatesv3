@@ -2284,11 +2284,10 @@ component</button> -->
           const select = clonedListElement.querySelector('[data-list-element-selection]')
           span.addEventListener('blur', async function () {
             const value = span.textContent
-            console.log('select '+select.value)
-              console.log('option '+ '{'+ option.name+'}')
-              if (value ==='{'+ option.name+'}' || value ==='') {
-                return
-              }
+
+            if (value === '{' + option.name + '}' || value === '') {
+              return
+            }
             exisitingValue = {
               ...exisitingValue,
               value
@@ -2314,9 +2313,9 @@ component</button> -->
             }
             exisitingValue.value && (select.value = exisitingValue.value)
             select.addEventListener('change', async function () {
-              console.log('select '+select.value)
-              console.log('option '+ '{'+ option.name+'}')
-              if (select.value ==='{'+ option.name+'}' || select.value ==='') {
+              console.log('select ' + select.value)
+              console.log('option ' + '{' + option.name + '}')
+              if (select.value === '{' + option.name + '}' || select.value === '') {
                 return
               }
               exisitingValue = {
@@ -6064,11 +6063,11 @@ checkbox1.setAttribute('hidden', "");
               if (d.items.length) {
                 newArr.push(el)
               }
-              
+
             })
             await Promise.all(p)
             replaceAction.target_element = newArr
-            
+
             //replace folders
             if (replaceAction.folders) {
               const promises = replaceAction.folders.map(async folder1 => {
@@ -8203,24 +8202,27 @@ elementsToRemove.forEach(element => element.remove());
           .then(response => response.json())
         const el = cloned1.querySelectorAll('#sku-item')
         const parent = cloned1.querySelector('#sku-attribute-list')
-        if (items.length > 1) {
+        //if (items.length > 1) {
 
-          for (const item of items) {
-            const cloned = el[0].cloneNode(true)
-            cloned.querySelector('#sku-attribute-value').textContent = item.sk.replace('qty;', '')
-            parent.appendChild(cloned)
-            cloned.addEventListener('click', e => handleSkuItemClick(cloned, item))
-          }
+        for (const item of items) {
+          const cloned = el[0].cloneNode(true)
+          cloned.querySelector('#sku-attribute-value').textContent = item.sk.replace('qty;', '')
 
 
+          parent.appendChild(cloned)
+          cloned.addEventListener('click', e => handleSkuItemClick(cloned, item))
         }
+
+        /*
+        }
+
         else {
           const cloned = el[0].cloneNode(true)
           cloned.querySelector('#sku-attribute-value').textContent = 'Solo'
           cloned.querySelector('#sku-qty').textContent = items[0].qty || 0
           parent.appendChild(cloned)
           cloned.addEventListener('click', e => handleSkuItemClick(cloned, items[0], sku))
-        }
+        }*/
         getElementById1("sku-list").appendChild(cloned1)
         el.forEach(e => e.remove())
       }
@@ -8808,9 +8810,9 @@ elementsToRemove.forEach(element => element.remove());
               const html = sender.innerHTML;
               console.log('sender4')
               tag.innerHTML = html
-              tag.querySelectorAll('[data-b=""]').forEach(e=>e.remove())
-              tag.querySelectorAll('[data-b-value=""]').forEach(e=>e.remove())
-              tag.childNodes.forEach(child=>removeAttributesStartingWith(child,toRemove.removeAttributesStartWith))
+              tag.querySelectorAll('[data-b=""]').forEach(e => e.remove())
+              tag.querySelectorAll('[data-b-value=""]').forEach(e => e.remove())
+              tag.childNodes.forEach(child => removeAttributesStartingWith(child, toRemove.removeAttributesStartWith))
             }
 
           }
@@ -10288,9 +10290,7 @@ headers: {
           sk: 'qty;' + combination,
           qty: 0
         }
-        if (combinations.length === 1) {
-          item.sk = "qty;solo"
-        }
+        
         const existing = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/' + value + ':' + item.sk)
           .then(response => response.json())
         if (!existing) {
@@ -10639,28 +10639,29 @@ headers: {
         .then(response => response.json())
       const el = cloned1.querySelectorAll('#sku-item')
       const parent = cloned1.querySelector('#sku-attribute-list')
-      if (items.length > 1) {
+      //if (items.length > 1) {
 
-        for (const item of items) {
+      for (const item of items) {
 
-          const cloned = el[0].cloneNode(true)
-          cloned.querySelector('#sku-attribute-value').textContent = item.sk.replace('qty;', '')
-          cloned.querySelector('#sku-qty').textContent = item.qty || 0
-          parent.appendChild(cloned)
-          cloned.addEventListener('click', e => handleSkuItemClick(cloned, item))
-        }
-
-
-      }
-
-      else if (items.length === 1) {
-        console.log('showing sku')
         const cloned = el[0].cloneNode(true)
-        cloned.querySelector('#sku-attribute-value').textContent = 'Solo'
-        cloned.querySelector('#sku-qty').textContent = items[0].qty || 0
+        cloned.querySelector('#sku-attribute-value').textContent = item.sk.replace('qty;', '')
+
+        cloned.querySelector('#sku-qty').textContent = item.qty || 0
         parent.appendChild(cloned)
-        cloned.addEventListener('click', e => handleSkuItemClick(cloned, items[0], sku))
+        cloned.addEventListener('click', e => handleSkuItemClick(cloned, item))
       }
+
+      /*
+           }
+          
+           else if (items.length === 1) {
+             console.log('showing sku')
+             const cloned = el[0].cloneNode(true)
+             cloned.querySelector('#sku-attribute-value').textContent = 'Solo'
+             cloned.querySelector('#sku-qty').textContent = items[0].qty || 0
+             parent.appendChild(cloned)
+             cloned.addEventListener('click', e => handleSkuItemClick(cloned, items[0], sku))
+           }*/
       getElementById1("sku-list").appendChild(cloned1)
       el.forEach(e => e.remove())
     }
