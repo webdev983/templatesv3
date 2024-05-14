@@ -10339,7 +10339,7 @@ headers: {
       pathItemSku = value
     }
     const addSku = async (event) => {
-      const value = getElementById1('input-sku').value.toLowerCase()
+      const value = getElementById1('input-sku').value.trim().toLowerCase()
       const resultList = await getProductAttributes(true)
       const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${value}&sk=created:&startsWith=true`)
         .then(response => response.json())
