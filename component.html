@@ -8798,14 +8798,14 @@ elementsToRemove.forEach(element => element.remove());
 
       const combinations = pathItem.combinations
       const forms = querySelectorAll1('[data-product-attribute-form]');
-      const priceItems = querySelectorAll1('[data-builder-cart="price"]')
+      //const priceItems = querySelectorAll1('[data-builder-cart="price"]')
 
       for (const schema of schemas) {
         const receiverName = schema.getAttribute('data-transfer-receiver')
         let json = JSON.parse(schema.textContent)
         console.log('INPUT SCHEMA ' + schema.textContent)
         // Start traversing the JSON object
-
+        /*
         if (combinations === 1 || forms.length === 1) {
           const prices = Array.from(priceItems[0].children).map(e => parseInt(e.textContent)).filter(e => e)
           delete json['offers-aggregate']
@@ -8823,7 +8823,7 @@ elementsToRemove.forEach(element => element.remove());
           json['offers-aggregate'] && (json.offers = { ...json['offers-aggregate'], lowPrice: Math.min(...prices), highPrice: Math.max(...prices), offerCount: combinations, url: getPageUrl(url) })
           delete json['offers-aggregate']
 
-        }
+        }*/
         traverseJSONAndUpdate(json, '', receiverName, date);
 
         json = cleanJson(json)
