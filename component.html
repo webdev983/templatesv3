@@ -81,40 +81,49 @@
           .action-data-tooltip {
             display: none;
             position: absolute;
-            background-color: #333; /* Темный фон */
-            color: #fff; /* Белый текст */
+            background-color: #333;
+            /* Темный фон */
+            color: #fff;
+            /* Белый текст */
             padding: 10px;
             border-radius: 4px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-            max-height: 200px; /* Максимальная высота перед добавлением прокрутки */
-            overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-            width: 410px; /* или задайте конкретную ширину */
-            top: calc(100% + 3px); /* Разместить под элементом на 3px ниже */
-            left: 10px; /* Сместить вправо на 50px от начала родительского элемента */
+            z-index: 1000;
+            /* Убедитесь, что tooltip отображается над другими элементами */
+            max-height: 200px;
+            /* Максимальная высота перед добавлением прокрутки */
+            overflow-y: auto;
+            /* Вертикальная прокрутка при переполнении */
+            width: 410px;
+            /* или задайте конкретную ширину */
+            top: calc(100% + 3px);
+            /* Разместить под элементом на 3px ниже */
+            left: 10px;
+            /* Сместить вправо на 50px от начала родительского элемента */
           }
-          
+
           /* Показываем tooltip при наведении на элемент строки таблицы */
           #code-log-element:hover .action-data-tooltip {
             display: block;
           }
-          
+
           td {
-            position: relative; /* Необходимо для корректной работы позиционирования tooltip */
+            position: relative;
+            /* Необходимо для корректной работы позиционирования tooltip */
           }
-                  </style>
-           <tbody id="code-log-body">
+        </style>
+        <tbody id="code-log-body">
           <!--NUMBERS!! 1️⃣ 2️⃣ 3️⃣ 4️⃣-->
           <tr hidden id="code-log-element">
 
             <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
                 style="margin-left: 10px;">1703707728031</span>
 
-                <div class="action-data-tooltip" data-action-data>
-                  empty
-                </div>
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action"  data-tooltip="
+              <div class="action-data-tooltip" data-action-data>
+                empty
+              </div>
+            </td>
+            <td data-type-code-log="action-name"><span id="code-log-action" data-tooltip="
                 👶 child 1-start$ &#10; 
                 🧩 {component name} &#10; 
                 🏷️ {tag name} &#10; 
@@ -267,8 +276,8 @@
         <textarea class="text1"></textarea>
       </details>
 
-      
-      
+
+
       <details style="margin-bottom: 7px; " data-list hidden>
         <summary class="summary-L-3"><span class="l-3" data-list-emoji>📣</span><span> </span><span
             class="l-3 b-dark-blue" data-list-name>
@@ -313,23 +322,23 @@
 
       <details style="margin-bottom: 7px;" id="scripts" data-file-name-show="Hub">
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">⚙️ Scripts</span></summary>
-        <table class="table-1"  style="margin-left: 30px;">
+        <table class="table-1" style="margin-left: 30px;">
           <tr data-script-item>
             <td>
-                <label data-script-status class="l-3">🔴</label>
-                <label data-script-name="head-transfer"  class="l-3"  style="margin: 10px;">head transfer</label>
+              <label data-script-status class="l-3">🔴</label>
+              <label data-script-name="head-transfer" class="l-3" style="margin: 10px;">head transfer</label>
             </td>
           </tr>
           <tr data-script-item>
             <td>
-                <label data-script-status class="l-3">🔴</label>
-                <label data-script-name="eval"  class="l-3"  style="margin: 10px;">eval</label>
+              <label data-script-status class="l-3">🔴</label>
+              <label data-script-name="eval" class="l-3" style="margin: 10px;">eval</label>
             </td>
           </tr>
           <tr data-script-item>
             <td>
-                <label data-script-status class="l-3">🔴</label>
-                <label data-script-name="transfer"  class="l-3"  style="margin: 10px;">transfer</label>
+              <label data-script-status class="l-3">🔴</label>
+              <label data-script-name="transfer" class="l-3" style="margin: 10px;">transfer</label>
             </td>
           </tr>
 
@@ -5540,10 +5549,11 @@ checkbox1.setAttribute('hidden', "");
       if (inserted_component) {
         console.log('iiiiiiiiiiin0')
         clonedElement.querySelector("#code-log-action").textContent = '🧩' + inserted_component.name;
-        const optionString = `🧩 ${inserted_component.name}<br> 🆔 ${inserted_component.componentId}<br>Inserted Id ${inserted_component.id}`
-        clonedElement.querySelector("[data-action-data]").innerHTML = optionString
-        
-        
+        const optionString = `🧩 ${inserted_component.name}<p> 🆔 ${inserted_component.componentId}</p><p>Inserted Id ${inserted_component.id}</p>`;
+       
+        clonedElement.querySelector('[data-action-data]').innerHTML = optionString;
+
+
       }
       else {
         const optionsStrings = []
@@ -8215,7 +8225,7 @@ elementsToRemove.forEach(element => element.remove());
       let idFromLink = urlSearchParams.get('id');
       let responseData
       const showSku = async (sku) => {
-        console.log('showing sku '+ sku)
+        console.log('showing sku ' + sku)
         getElementById1("input-sku").setAttribute('hidden', '')
         getElementById1("create-sku").setAttribute('hidden', '')
         const item1 = getElementById1("sku-item-1")
@@ -9142,7 +9152,7 @@ elementsToRemove.forEach(element => element.remove());
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: idFromLink, html, path: pagePathContent, toRemove, robotsTxt, siteMapPriority, siteMapNotDefiniedPriorities, date: date.getTime(),sku:pathItemSku  }),
+        body: JSON.stringify({ id: idFromLink, html, path: pagePathContent, toRemove, robotsTxt, siteMapPriority, siteMapNotDefiniedPriorities, date: date.getTime(), sku: pathItemSku }),
       });
       const r = await response.json()
       console.log('link: ' + r.link)
@@ -10755,7 +10765,7 @@ headers: {
     }
 
     const showSku = async (sku) => {
-      console.log('showing sku original '+ sku)
+      console.log('showing sku original ' + sku)
       const item1 = getElementById1("sku-item-1")
       getElementById1("input-sku").setAttribute('hidden', '')
       getElementById1("create-sku").setAttribute('hidden', '')
@@ -10775,7 +10785,7 @@ headers: {
 
         const cloned = el[0].cloneNode(true)
         const v = item.sk.replace('qty;', '')
-        console.log("sku i is "+ JSON.stringify(item))
+        console.log("sku i is " + JSON.stringify(item))
         cloned.querySelector('#sku-attribute-value').textContent = v
         const psk = `price;${pathItemPath.split('/')[0].toLowerCase()};${v}price`
         const pItem = await fetch(`${backend_url}?id=${sku}&sk=${psk}&startsWith=true`, {
