@@ -7850,7 +7850,10 @@ elementsToRemove.forEach(element => element.remove());
       const button = event.target.closest('button[data-element="code-tree-attributes-button"]');
       const checked = event.target.parentNode.querySelector('#applyToCopies')?.checked || false
       if (button) {
-        const parentId = button.parentNode.id.split(';')[1] || button.parentNode.id;
+        
+        const s= button.parentNode.id.split(';')
+        s.shift()
+        const parentId = s.join(';') || button.parentNode.id;
         const generatedId = removeLastOccurrence(parentId, '-tree')
         const textContentButton = button.parentNode.querySelector('[data-element="code-tree-attributes-button]');
 
