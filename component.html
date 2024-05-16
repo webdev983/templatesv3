@@ -5546,39 +5546,42 @@ checkbox1.setAttribute('hidden', "");
       clonedElement.removeAttribute("hidden");
       clonedElement.querySelector("#code-log-action-time").textContent = formatEpochTime(actionTime);
       clonedElement.querySelector("#code-log-action-time").setAttribute('sk', actionTime)
+      let emoji = ""
+      const optionsStrings = []
+      if (options) {
+
+        options.apply_to_copies && optionsStrings.push('✅⧉ Apply to copies')
+        options.insert_copies && optionsStrings.push('🚂⧉ Insert Copies')
+        options.dub_target && optionsStrings.push('🎯⧉ Dup Target')
+        options.selfuse && optionsStrings.push('🎯⧉ Self use')
+        options.position && optionsStrings.push('🎯 child ' + options.position)
+
+
+
+        if (optionsStrings.length === 2) {
+          emoji = '2️⃣'
+        }
+        else if (optionsStrings.length === 3) {
+          emoji = '3️⃣'
+        } else if (optionsStrings.length === 1) {
+          emoji = '1️⃣'
+        }
+
+      }
       if (element.inserted_component) {
         console.log('iiiiiiiiiiin0')
-        clonedElement.querySelector("#code-log-action").textContent = '🧩' + element.inserted_component.name;
-        const optionString = `🧩 ${element.inserted_component.name}<p> 🆔 ${element.inserted_component.componentId}</p><p>Inserted Id ${element.inserted_component.id}</p>`;
-       
+        clonedElement.querySelector("#code-log-action").textContent = '🧩' + element.inserted_component.name + emoji;
+        const optionString = ` 🆔 ${element.inserted_component.componentId}<br>Target ${element.target_element.replace('-tree','')}<br>${optionsStrings.join('<br>')}`;
+
         clonedElement.querySelector('[data-action-data]').innerHTML = optionString;
 
 
       }
       else {
-        const optionsStrings = []
-        if (options) {
-
-          options.apply_to_copies && optionsStrings.push('✅⧉ Apply to copies')
-          options.insert_copies && optionsStrings.push('🚂⧉ Insert Copies')
-          options.dub_target && optionsStrings.push('🎯⧉ Dup Target')
-          options.selfuse && optionsStrings.push('🎯⧉ Self use')
-          options.position && optionsStrings.push('🎯 child ' + options.position)
+        
 
 
-          let emoji = "1️⃣"
-          if (optionsStrings.length === 2) {
-            emoji = '2️⃣'
-          }
-          else if (optionsStrings.length === 3) {
-            emoji = '3️⃣'
-          }
-          clonedElement.querySelector("#code-log-action").textContent = actionName + emoji;
-        }
-        else {
-          //clonedElement.querySelector("#code-log-action").removeAttribute('data-tooltip')
-          clonedElement.querySelector("#code-log-action").textContent = actionName;
-        }
+        clonedElement.querySelector("#code-log-action").textContent = actionName + emoji;
         if (element?.inserted_element?.tagName) {
           optionsStrings.push(` 🆔 ${element.id} `)
           optionsStrings.push(` 🏷️ ${element?.inserted_element?.tagName} `)
