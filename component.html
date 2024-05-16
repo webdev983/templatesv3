@@ -5570,7 +5570,9 @@ checkbox1.setAttribute('hidden', "");
       }
       if (element.inserted_component) {
         console.log('iiiiiiiiiiin0')
-        clonedElement.querySelector("#code-log-action").textContent = '🧩' + element.inserted_component.name + emoji;
+        const a = clonedElement.querySelector("#code-log-action")
+        a.textContent = '🧩' + '{name}'+ emoji;
+        a.setAttribute('log-id',element.inserted_component.id)
         const optionString = ` 🆔 ${element.inserted_component.componentId}<br>Target ${element.target_element.replace('-tree','')}<br>${optionsStrings.join('<br>')}`;
 
         clonedElement.querySelector('[data-action-data]').innerHTML = optionString;
@@ -8363,9 +8365,12 @@ elementsToRemove.forEach(element => element.remove());
         }
 
         const el = el1.querySelector("[data-element='code-tree-tag-name-button']")
+
         el.textContent = '🧩' + name
         el.setAttribute('name', name)
         el.setAttribute('path', items.find(e => e.sk === 'path').lsi1)
+        const logE = document.querySelector(`[log-id="${newId}"]`)
+        logE.textContent = logE.textContent.replace('{name}',name)
 
         if (pathItem.hub_items?.main_content) {
           const splited = pathItem.hub_items?.main_content?.split(':')
