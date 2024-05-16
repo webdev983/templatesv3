@@ -5483,7 +5483,7 @@ checkbox1.setAttribute('hidden', "");
             ac = "Add_Component_Id"
           }
         }
-        await insertDataIntoCodeLog(time, ac, element.options, element.inserted_component, element)
+        await insertDataIntoCodeLog(time, ac, element.options, undefined, element)
       }
 
 
@@ -5546,10 +5546,10 @@ checkbox1.setAttribute('hidden', "");
       clonedElement.removeAttribute("hidden");
       clonedElement.querySelector("#code-log-action-time").textContent = formatEpochTime(actionTime);
       clonedElement.querySelector("#code-log-action-time").setAttribute('sk', actionTime)
-      if (inserted_component) {
+      if (element.inserted_component) {
         console.log('iiiiiiiiiiin0')
-        clonedElement.querySelector("#code-log-action").textContent = '🧩' + inserted_component.name;
-        const optionString = `🧩 ${inserted_component.name}<p> 🆔 ${inserted_component.componentId}</p><p>Inserted Id ${inserted_component.id}</p>`;
+        clonedElement.querySelector("#code-log-action").textContent = '🧩' + element.inserted_component.name;
+        const optionString = `🧩 ${element.inserted_component.name}<p> 🆔 ${element.inserted_component.componentId}</p><p>Inserted Id ${element.inserted_component.id}</p>`;
        
         clonedElement.querySelector('[data-action-data]').innerHTML = optionString;
 
