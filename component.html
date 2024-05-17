@@ -5567,14 +5567,14 @@ checkbox1.setAttribute('hidden', "");
       const codeLog = getElementById1("code-log-body");
       const searchCodeLog = getElementById1("code-log-search-body");
       if (value === "") {
-        searchCodeLog.setAttribute('hidden')
+        searchCodeLog.setAttribute('hidden','')
         codeLog.removeAttribute('hidden')
       }
       else if (value.length > 1) {
-        codeLog.setAttribute('hidden')
+        codeLog.setAttribute('hidden','')
         searchCodeLog.removeAttribute('hidden')
         searchCodeLog.querySelectorAll("#code-log-element:not([hidden])").forEach(e => e.remove())
-        const filteredActions = actions.filter(item => item.id.toString().startsWith(value) || item.key?.startsWith(value) || item.value?.startsWith(value))
+        const filteredActions = actions.filter(item =>item.action.startsWith(value) || item.id.toString().startsWith(value) || item.key?.startsWith(value) || item.value?.startsWith(value))
         for (const action of filteredActions) {
           const originalElement = searchCodeLog.querySelector("#code-log-element");
           const actionTime = action.sk
