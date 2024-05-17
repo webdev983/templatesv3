@@ -5563,7 +5563,7 @@ checkbox1.setAttribute('hidden', "");
       return formattedDate;
     }
     const  searchLogs = (event) =>{
-      const value = event.target.value
+      const value = event.target.value.toLowerCase()
       console.log(value)
       const codeLog = getElementById1("code-log-body");
       const searchCodeLog = getElementById1("code-log-search-body");
@@ -5575,7 +5575,7 @@ checkbox1.setAttribute('hidden', "");
         codeLog.setAttribute('hidden','')
         searchCodeLog.removeAttribute('hidden')
         searchCodeLog.querySelectorAll("#code-log-element:not([hidden])").forEach(e => e.remove())
-        const filteredActions = actions.filter(item =>item.action.startsWith(value) || item.id.toString().startsWith(value) || item.key?.startsWith(value) || item.value?.startsWith(value))
+        const filteredActions = actions.filter(item =>item.action.toLowerCase().startsWith(value) || item.id.toString().startsWith(value) || item.key?.toLowerCase().startsWith(value) || item.value?.toLowerCase().startsWith(value))
         for (const action of filteredActions) {
           const originalElement = searchCodeLog.querySelector("#code-log-element");
           const actionTime = action.sk
