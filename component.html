@@ -70,7 +70,8 @@
         <input hidden id="search-actions" type="text" placeholder="🔎 Search actions" style="  padding: 5px; 
         border: 2px solid #4A90E2;   
         border-radius: 5px;   
-        font-size: 18px; margin-bottom: 7px; margin-top: 10px;  margin-left: 5px; min-width: 315px; ">
+        font-size: 18px; margin-bottom: 7px; margin-top: 10px;  margin-left: 5px; min-width: 315px; "
+          onchange="searchLogs(event)">
 
       </div>
       <div id="logs-menu">
@@ -2243,7 +2244,7 @@ component</button> -->
     var ownerid
     var republish
     var imagesIds = []
-    var actions =[]
+    var actions = []
     loadFirst()
     //document.addEventListener('DOMContentLoaded', loadFirst);
     var saveGpt = async (event) => {
@@ -5561,7 +5562,34 @@ checkbox1.setAttribute('hidden', "");
 
       return formattedDate;
     }
+    function searchLogs(event) {
+      const value = event.target.value
+      const codeLog = getElementById1("code-log-body");
+      const searchCodeLog = getElementById1("code-log-search-body");
+      if (value === "") {
+        searchCodeLog.setAttribute('hidden')
+        codeLog.removeAttribute('hidden')
+      }
+      else if (value.length > 1) {
+        codeLog.setAttribute('hidden')
+        searchCodeLog.removeAttribute('hidden')
+        searchCodeLog.querySelectorAll("#code-log-element:not([hidden])").forEach(e => e.remove())
+        const filteredActions = actions.filter(item => item.id.toString().startsWith(value) || item.key?.startsWith(value) || item.value?.startsWith(value))
+        for (const action of filteredActions) {
+          const originalElement = searchCodeLog.querySelector("#code-log-element");
+          const actionTime = action.sk
+          const clonedElement = originalElement.cloneNode(true);
+          clonedElement.removeAttribute('hidden')
+          clonedElement.querySelector("#code-log-action-time").textContent = formatEpochTime(actionTime);
+          clonedElement.querySelector("#code-log-action-time").setAttribute('sk', actionTime)
+          clonedElement.querySelector("#code-log-action").textContent = action.action;
+          const parent = originalElement.parentNode;
 
+          // Insert the cloned element before the original element
+          parent.insertBefore(clonedElement, originalElement);
+        }
+      }
+    }
     function insertDataIntoCodeLog(actionTime, actionName, options, inserted_component, element) {
       const codeLog = getElementById1("code-log-body");
       const originalElement = codeLog.querySelector("#code-log-element");
@@ -5602,16 +5630,16 @@ checkbox1.setAttribute('hidden', "");
       if (element?.inserted_component) {
         console.log('iiiiiiiiiiin0')
         const a = clonedElement.querySelector("#code-log-action")
-        a.textContent = '🧩' + '{name}'+ emoji;
-        a.setAttribute('log-id',element.inserted_component.id)
-        const optionString = ` 🆔 ${element.inserted_component.componentId}<br>Target ${element.target_element.replace('-tree','')}<br>${optionsStrings.join('<br>')}`;
+        a.textContent = '🧩' + '{name}' + emoji;
+        a.setAttribute('log-id', element.inserted_component.id)
+        const optionString = ` 🆔 ${element.inserted_component.componentId}<br>Target ${element.target_element.replace('-tree', '')}<br>${optionsStrings.join('<br>')}`;
 
         clonedElement.querySelector('[data-action-data]').innerHTML = optionString;
 
 
       }
       else {
-        
+
 
 
         clonedElement.querySelector("#code-log-action").textContent = actionName + emoji;
@@ -7851,10 +7879,10 @@ elementsToRemove.forEach(element => element.remove());
       const button = event.target.closest('button[data-element="code-tree-attributes-button"]');
       const checked = event.target.parentNode.querySelector('#applyToCopies')?.checked || false
       if (button) {
-        
-        const s= button.parentNode.id.split(';')
-        
-        const parentId =  button.parentNode.id.replace('code-tree-click-tag;','');
+
+        const s = button.parentNode.id.split(';')
+
+        const parentId = button.parentNode.id.replace('code-tree-click-tag;', '');
         const generatedId = removeLastOccurrence(parentId, '-tree')
         const textContentButton = button.parentNode.querySelector('[data-element="code-tree-attributes-button]');
 
@@ -7910,7 +7938,7 @@ elementsToRemove.forEach(element => element.remove());
       const button = event.target.closest('button[data-element="code-tree-text-content-button"]');
 
       if (button) {
-        const parentId = button.parentNode.id.replace('code-tree-click-tag;','')
+        const parentId = button.parentNode.id.replace('code-tree-click-tag;', '')
         const textContentButton = button.parentNode.querySelector('[data-element="code-tree-text-content-button"]');
 
         const existingClonedFieldset = button.parentNode.querySelector('[id^="code-tree-tag-text-content-form"]');
@@ -7936,7 +7964,7 @@ elementsToRemove.forEach(element => element.remove());
       const button = event.target.closest('button[data-element="code-tree-inner-html-button"]');
 
       if (button) {
-        const parentId = button.parentNode.id.replace('code-tree-click-tag;','')
+        const parentId = button.parentNode.id.replace('code-tree-click-tag;', '')
         const textContentButton = button.parentNode.querySelector('[data-element="code-tree-inner-html-button"]');
 
         const existingClonedFieldset = button.parentNode.querySelector('[id^="code-tree-tag-html-content-form"]');
@@ -8254,7 +8282,7 @@ elementsToRemove.forEach(element => element.remove());
       LinkBP && switchLinkBP(false)
     }
     let foundMainContent
-    
+
     const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative, treeElement) => {
       console.log('load from db' + id)
       console.log('err2 ' + p)
@@ -8406,7 +8434,7 @@ elementsToRemove.forEach(element => element.remove());
         el.setAttribute('name', name)
         el.setAttribute('path', items.find(e => e.sk === 'path').lsi1)
         const logE = document.querySelector(`[log-id="${newId}"]`)
-        logE &&(logE.textContent = logE.textContent.replace('{name}',name))
+        logE && (logE.textContent = logE.textContent.replace('{name}', name))
 
         if (pathItem.hub_items?.main_content) {
           const splited = pathItem.hub_items?.main_content?.split(':')
@@ -8434,7 +8462,7 @@ elementsToRemove.forEach(element => element.remove());
         responseData = await getRes(idFromLink, true)
         const { items } = responseData
         const map = items.find(e => e.sk === 'componentsMap')
-        actions = items.filter(i=>i.action)
+        actions = items.filter(i => i.action)
         let r;
         if (map) {
           r = Promise.all(map.items.map(id => getRes(id, false, true)))
