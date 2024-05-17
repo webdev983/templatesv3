@@ -5607,18 +5607,21 @@ checkbox1.setAttribute('hidden', "");
           clonedElement.querySelector("#code-log-action-time").setAttribute('sk', actionTime)
           clonedElement.querySelector("#code-log-action").textContent = action.action + emoji;
           const parent = originalElement.parentNode;
-          if (element?.inserted_element?.tagName) {
+          if (action?.inserted_element?.tagName) {
             optionsStrings.push(` 🆔 ${element.id} `)
             optionsStrings.push(` 🏷️ ${element?.inserted_element?.tagName} `)
           }
-          if (element?.key) {
+          if (action?.key) {
             optionsStrings.push(` 🔑 ${element?.key} `)
           }
-          if (element?.value) {
+          if (action?.value) {
             optionsStrings.push(` 🪣 ${element?.value} `)
           }
-          if (element?.insertedCode) {
+          if (action?.insertedCode) {
             optionsStrings.push(` 🪣 ${element?.insertedCode}  `)
+          }
+          if (action?.inserted_component) {
+            optionsStrings.push(` 🆔 ${element.inserted_component.componentId}<br>Target ${element.target_element.replace('-tree', '')}<br>${optionsStrings.join('<br>')}`)
           }
 
           //clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionsStrings.join('&#013;&#010;'))
