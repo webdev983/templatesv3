@@ -5562,29 +5562,67 @@ checkbox1.setAttribute('hidden', "");
 
       return formattedDate;
     }
-    const  searchLogs = (event) =>{
+    const searchLogs = (event) => {
       const value = event.target.value.toLowerCase()
       console.log(value)
       const codeLog = getElementById1("code-log-body");
       const searchCodeLog = getElementById1("code-log-search-body");
       if (value === "") {
-        searchCodeLog.setAttribute('hidden','')
+        searchCodeLog.setAttribute('hidden', '')
         codeLog.removeAttribute('hidden')
       }
       else if (value.length > 1) {
-        codeLog.setAttribute('hidden','')
+        codeLog.setAttribute('hidden', '')
         searchCodeLog.removeAttribute('hidden')
         searchCodeLog.querySelectorAll("#code-log-element:not([hidden])").forEach(e => e.remove())
-        const filteredActions = actions.filter(item =>item.action.toLowerCase().startsWith(value) || item.id.toString().startsWith(value) || item.key?.toLowerCase().startsWith(value) || item.value?.toLowerCase().startsWith(value))
+        const filteredActions = actions.filter(item => item.action.toLowerCase().startsWith(value) || item.id.toString().startsWith(value) || item.key?.toLowerCase().startsWith(value) || item.value?.toLowerCase().startsWith(value))
         for (const action of filteredActions) {
           const originalElement = searchCodeLog.querySelector("#code-log-element");
           const actionTime = action.sk
+          let emoji = ""
+          const optionsStrings = []
+          if (action.options) {
+
+            options.apply_to_copies && optionsStrings.push('✅⧉ Apply to copies')
+            options.insert_copies && optionsStrings.push('🚂⧉ Insert Copies')
+            options.dub_target && optionsStrings.push('🎯⧉ Dup Target')
+            options.selfuse && optionsStrings.push('🎯⧉ Self use')
+            options.position && optionsStrings.push('🎯 child ' + options.position)
+
+
+
+            if (optionsStrings.length === 2) {
+              emoji = '2️⃣'
+            }
+            else if (optionsStrings.length === 3) {
+              emoji = '3️⃣'
+            } else if (optionsStrings.length === 1) {
+              emoji = '1️⃣'
+            }
+
+          }
           const clonedElement = originalElement.cloneNode(true);
           clonedElement.removeAttribute('hidden')
           clonedElement.querySelector("#code-log-action-time").textContent = formatEpochTime(actionTime);
           clonedElement.querySelector("#code-log-action-time").setAttribute('sk', actionTime)
-          clonedElement.querySelector("#code-log-action").textContent = action.action;
+          clonedElement.querySelector("#code-log-action").textContent = action.action + emoji;
           const parent = originalElement.parentNode;
+          if (element?.inserted_element?.tagName) {
+            optionsStrings.push(` 🆔 ${element.id} `)
+            optionsStrings.push(` 🏷️ ${element?.inserted_element?.tagName} `)
+          }
+          if (element?.key) {
+            optionsStrings.push(` 🔑 ${element?.key} `)
+          }
+          if (element?.value) {
+            optionsStrings.push(` 🪣 ${element?.value} `)
+          }
+          if (element?.insertedCode) {
+            optionsStrings.push(` 🪣 ${element?.insertedCode}  `)
+          }
+
+          //clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionsStrings.join('&#013;&#010;'))
+          clonedElement.querySelector("[data-action-data]").innerHTML = optionsStrings.join('<br>')
 
           // Insert the cloned element before the original element
           parent.insertBefore(clonedElement, originalElement);
