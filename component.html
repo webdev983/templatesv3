@@ -5614,14 +5614,17 @@ checkbox1.setAttribute('hidden', "");
           if (action?.key) {
             optionsStrings.push(` 🔑 ${action?.key} `)
           }
-          if (action?.value) {
-            optionsStrings.push(` 🪣 ${action?.value} `)
+          if (action?.value || action?.insertedCode) {
+            optionsStrings.push(` 🪣 ${action?.value || action?.insertedCode} `)
           }
           if (action?.insertedCode) {
             optionsStrings.push(` 🪣 ${action?.insertedCode}  `)
           }
           if (action?.inserted_component) {
             optionsStrings.push(` 🆔 ${action.inserted_component.componentId}`)
+          }
+          if (action?.tag_change) {
+            optionsStrings.push(`New Tag: ${action?.tag_change}  `)
           }
           if (action?.target_element) {
             if (typeof action.target_element === 'string') {
@@ -5703,11 +5706,14 @@ checkbox1.setAttribute('hidden', "");
         if (element?.key) {
           optionsStrings.push(` 🔑 ${element?.key} `)
         }
-        if (element?.value) {
-          optionsStrings.push(` 🪣 ${element?.value} `)
-        }
+        if (element?.value || element?.insertedCode) {
+            optionsStrings.push(` 🪣 ${element?.value || element?.insertedCode} `)
+          }
         if (element?.insertedCode) {
           optionsStrings.push(` 🪣 ${element?.insertedCode}  `)
+        }
+        if (element?.tag_change) {
+          optionsStrings.push(`New Tag: ${element?.tag_change}  `)
         }
         if (element?.target_element) {
           if (typeof element.target_element === 'string') {
