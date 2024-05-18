@@ -5621,7 +5621,10 @@ checkbox1.setAttribute('hidden', "");
             optionsStrings.push(` 🪣 ${action?.insertedCode}  `)
           }
           if (action?.inserted_component) {
-            optionsStrings.push(` 🆔 ${action.inserted_component.componentId}<br>Target ${action.target_element.replace('-tree', '')}<br>${optionsStrings.join('<br>')}`)
+            optionsStrings.push(` 🆔 ${action.inserted_component.componentId}`)
+          }
+          if(action?.target_element){
+            optionsStrings.push(` Target ${action.target_element.replace('-tree', '')}`)
           }
 
           //clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionsStrings.join('&#013;&#010;'))
