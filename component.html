@@ -5623,16 +5623,16 @@ checkbox1.setAttribute('hidden', "");
           if (action?.inserted_component) {
             optionsStrings.push(` 🆔 ${action.inserted_component.componentId}`)
           }
-          if(action?.target_element ){
-            if(typeof action.target_element === 'string' ){
+          if (action?.target_element) {
+            if (typeof action.target_element === 'string') {
               optionsStrings.push(` Target ${action.target_element.replace('-tree', '')}`)
             }
-            else{
-              const e = action.target_element.map(el=>el.id)
+            else {
+              const e = action.target_element.map(el => el.id)
               e.shift()
               optionsStrings.push(` Target ${action.target_element[0].id.replace('-tree', '')},Elements: ${e.join(',')}`)
             }
-           
+
           }
 
           //clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionsStrings.join('&#013;&#010;'))
@@ -5709,17 +5709,17 @@ checkbox1.setAttribute('hidden', "");
         if (element?.insertedCode) {
           optionsStrings.push(` 🪣 ${element?.insertedCode}  `)
         }
-        if(element?.target_element ){
-            if(typeof element.target_element === 'string' ){
-              optionsStrings.push(` Target ${element.target_element.replace('-tree', '')}`)
-            }
-            else{
-              const e = element.target_element.map(el=>el.id)
-              e.shift()
-              optionsStrings.push(` Target ${element.target_element[0].id.replace('-tree', '')},Elements: ${e.join(',')}`)
-            }
-           
+        if (element?.target_element) {
+          if (typeof element.target_element === 'string') {
+            optionsStrings.push(` Target ${element.target_element.replace('-tree', '')}`)
           }
+          else {
+            const e = element.target_element.map(el => el.id)
+            e.shift()
+            optionsStrings.push(` Target ${element.target_element[0].id.replace('-tree', '')},Elements: ${e.join(',')}`)
+          }
+
+        }
 
         //clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionsStrings.join('&#013;&#010;'))
         clonedElement.querySelector("[data-action-data]").innerHTML = optionsStrings.join('<br>')
