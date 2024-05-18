@@ -5623,8 +5623,16 @@ checkbox1.setAttribute('hidden', "");
           if (action?.inserted_component) {
             optionsStrings.push(` 🆔 ${action.inserted_component.componentId}`)
           }
-          if(action?.target_element && typeof action.target_element === 'string' ){
-            optionsStrings.push(` Target ${action.target_element.replace('-tree', '')}`)
+          if(action?.target_element ){
+            if(typeof action.target_element === 'string' ){
+              optionsStrings.push(` Target ${action.target_element.replace('-tree', '')}`)
+            }
+            else{
+              const e = action.target_element
+              e.shift()
+              optionsStrings.push(` Target ${action.target_element[0].replace('-tree', '')},Elements: ${e.join(',')}`)
+            }
+           
           }
 
           //clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionsStrings.join('&#013;&#010;'))
