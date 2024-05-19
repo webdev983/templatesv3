@@ -6156,8 +6156,11 @@ checkbox1.setAttribute('hidden', "");
             const item1 = items.find(i => i.lsi1.replace(';publish:published', '') === lsi)
             inserted_component.componentId = item1.id
           }
-          else if (inserted_component.componentId.startsWith('#')) {
+          else if (inserted_component.componentId.startsWith('#') || inserted_component.componentId.startsWith('$')) {
             let cPath = pathForRelative.current || pathItemPath
+            if(inserted_component.componentId.startsWith('$')){
+              cPath = pathItemPath
+            }
             cPath = cPath.replace(';publish:published', "")
             console.log('cpath ' + cPath)
 
