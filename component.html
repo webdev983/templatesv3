@@ -6161,15 +6161,20 @@ checkbox1.setAttribute('hidden', "");
           }
           else if (inserted_component.componentId.startsWith('#') || inserted_component.componentId.startsWith('$')) {
             let cPath = pathForRelative.current || pathItemPath
+            let relative = inserted_component.componentId.replace('#', '').replace('$',"")
             if(inserted_component.componentId.startsWith('$') && componentPath.split('/')[0] !== site1){
               console.log('cpath diff')
               cPath = pathItemPath
+              if(relative.startsWith('../')){
+                relative ='./'+ relative.replaceAll('../',"")
+              }
+              
             }
             cPath = cPath.replace(';publish:published', "")
             console.log('cpath ' + cPath + ' relative' + inserted_component.componentId)
 
 
-            const relative = inserted_component.componentId.replace('#', '').replace('$',"")
+            
             const absolutePath = getAbsolutePath(cPath, relative);
             console.log('cpath ' + cPath + ' relative' + inserted_component.componentId + ' absolute '+absolutePath)
 
