@@ -6120,15 +6120,16 @@ checkbox1.setAttribute('hidden', "");
         // Extract filename from the relative path
         const relativeFilename = relativePathParts.pop();
         currentPathParts.pop()
-        // Handle "./" in relative path
-        if (relativePathParts[0] === '.') {
-          relativePathParts.shift(); // Remove the first element (".")
-        }
+        
 
         // Handle "../" in relative path
         while (relativePathParts[0] === '..') {
           currentPathParts.pop(); // Remove the last element from the current path
           relativePathParts.shift(); // Remove the first element ("..")
+        }
+        // Handle "./" in relative path
+        if (relativePathParts[0] === '.') {
+          relativePathParts.shift(); // Remove the first element (".")
         }
 
         // Combine current path and relative path parts
