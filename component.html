@@ -2244,6 +2244,7 @@ component</button> -->
     var backend_url = 'https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2'
     var pathItem
     var pathItemPath
+    var site1
     var pathItemSku
     var headContentItem
     var selectedSku
@@ -6159,7 +6160,7 @@ checkbox1.setAttribute('hidden', "");
           }
           else if (inserted_component.componentId.startsWith('#') || inserted_component.componentId.startsWith('$')) {
             let cPath = pathForRelative.current || pathItemPath
-            if(inserted_component.componentId.startsWith('$')){
+            if(inserted_component.componentId.startsWith('$') && componentPath.split('/')[0] !== site1){
               cPath = pathItemPath
             }
             cPath = cPath.replace(';publish:published', "")
@@ -8563,6 +8564,7 @@ elementsToRemove.forEach(element => element.remove());
         }
         //converst lsi1 to old
         pathItemPath = convertToOldPath(pathItem.lsi1)
+        site1 = pathItemPath.split('/')[0]
         //get head content
         if (!pathItemPath.split('/').includes('Stock')) {
           const headLsi = pathItem.lsi1.split(';')[0].split('|')[0].split('/').slice(0, 3).join('/') + '/Content/Page|Head-Content'
