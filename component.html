@@ -3402,13 +3402,14 @@ component</button> -->
           }
           addComponent1("*" + r + '|' + fileName, selfuse)
         }
-        else if (optionList.querySelector('#file-list-link-by-name').classList.contains('b-selected')) {
+        else if (optionList.querySelector('#file-list-link-by-name').classList.contains('b-selected') || optionList.querySelector('#file-list-link-by-content-name').classList.contains('b-selected')) {
           const currentLsi = pathItemPath.replace(';publish:published', "")
           const relativePath = getRelativePath(currentLsi, convertToOldPath(data.lsi1.replace(';publish:published', "")));
-
-          await addComponent1("#" + relativePath, selfuse).catch(e => console.log(e))
+          let prefix = optionList.querySelector('#file-list-link-by-content-name').classList.contains('b-selected') ? '$' : '#'
+          await addComponent1(prefix+ relativePath, selfuse).catch(e => console.log(e))
           flag = true
         }
+        
         else {
           addComponent1(id, selfuse)
         }
