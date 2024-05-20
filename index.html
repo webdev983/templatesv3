@@ -592,16 +592,16 @@
           
 
           <script>
-            document.addEventListener("DOMContentLoaded", function() {
-    var updateOption = document.getElementById("update");
+document.addEventListener("DOMContentLoaded", function() {
+    var selectElement = document.getElementById("choose_link_type");
     var updateComponents = document.getElementById("update-components");
 
-    updateOption.addEventListener("click", function() {
-        if (updateOption.selected) {
+    selectElement.addEventListener("change", function() {
+        var selectedOption = selectElement.options[selectElement.selectedIndex];
+        if (selectedOption.id === "update") {
             updateComponents.hidden = false;
         } else {
             updateComponents.hidden = true;
-            document.querySelector("#update-components input[type='checkbox']").checked = false;
         }
     });
 
@@ -611,7 +611,6 @@
         }
     });
 });
-
           </script>
 
         <details style="margin-bottom: 7px;">
