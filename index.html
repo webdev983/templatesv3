@@ -1688,7 +1688,7 @@
           const input = cloned.querySelector('[data-input="copy-file-path-input"]');
           const name = fieldset.querySelector('[data-value="file-path"]').textContent;
 
-          input.value = path;
+          input.value = path.endsWith('/') ? path : path+'/';
           input.onclick = (event) => {
             event.stopPropagation()
           }
