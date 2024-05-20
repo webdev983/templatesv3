@@ -6183,8 +6183,16 @@ checkbox1.setAttribute('hidden', "");
             console.log('lsi' + absolutePath)
             console.log(JSON.stringify(items))
             console.log(absolutePath)
-            const item1 = items.find(i => i.lsi1.replace(';publish:published', '') === absolutePath)
+            let item1 = items.find(i => i.lsi1.replace(';publish:published', '') === absolutePath)
             console.log(JSON.stringify(item1))
+            let i = 0
+            while(!item1){
+              cPath = pathForRelative.next[i].replace(';publish:published', "")
+              const absolutePath = getAbsolutePath(cPath, relative);
+              const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:' + ownerid + '&gsi1lsi1=true&lsi1=' + absolutePath)
+              .then(response => response.json())
+              item1 = items.find(i => i.lsi1.replace(';publish:published', '') === absolutePath)
+            }
             inserted_component.componentId = item1.id
           }
 
@@ -8386,6 +8394,7 @@ elementsToRemove.forEach(element => element.remove());
       console.log('err2 ' + p)
       console.log('path for relative ' + pathForRelative?.current)
       let newPathForRelative = pathForRelative?.current
+      let next = pathForRelative?.next
       let path = ""
       p && (path = p)
       const urlSearchParams = new URLSearchParams(window.location.search);
@@ -8638,9 +8647,11 @@ elementsToRemove.forEach(element => element.remove());
           const relativecomponentFileName = pathForRelative.current.split('/')[pathForRelative.current.split('/').length - 1]
           if (componentFileName !== relativecomponentFileName) {
             newPathForRelative = componentPath
+            next = []
             console.log('test relative different ' + componentFileName + 'diff ' + relativecomponentFileName + ' path ' + newPathForRelative)
           }
           else {
+            next.push(componentPath)
             console.log('test relative same ' + componentFileName + ' path ' + newPathForRelative)
           }
         }
@@ -8753,13 +8764,13 @@ elementsToRemove.forEach(element => element.remove());
               }
 
               //insertDataIntoCodeLog(item.sk, item.action)
-              await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: newPathForRelative, prev: pathForRelative.current })
+              await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: newPathForRelative, prev: pathForRelative.current,next })
 
               continue
             }
 
 
-            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: componentPath, prev: componentPath })
+            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: componentPath, prev: componentPath,next:[] })
           }
 
         }
