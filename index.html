@@ -1285,7 +1285,7 @@
       });
 
     }
-    const updateFolder = async (path, new_value, last, d) => {
+    const updateFolder = async (path, new_value, last, d,htmlStructChecked) => {
 
       const response1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}`);
       //list of sub paths
@@ -1304,7 +1304,7 @@
       console.log('path ' + path)
       for (const item of items1) {
         item.lsi1 = item.lsi1.replace(';publish:published', '')
-        if (item.lsi1.endsWith('Script') || item.lsi1.endsWith('Style') || item.lsi1.endsWith('Structure') || item.lsi1.endsWith('|Hub') || item.lsi1.endsWith('-Seed')) {
+        if (item.lsi1.endsWith('Script') || item.lsi1.endsWith('Style') || (item.lsi1.endsWith('Html-Structure') && htmlStructChecked) || item.lsi1.endsWith('|Hub') || item.lsi1.endsWith('-Seed')) {
           replaceByIditems.push(item)
         }
         else if (item.lsi1.endsWith('-Content')) {
@@ -1922,7 +1922,8 @@
 
 
             if (update) {
-              await updateFolder(path, new_value, last, d)
+              const htmlStructChecked = cloned.querySelector('#html-structure-label').querySelector('input').checked
+              await updateFolder(path, new_value, last, d,htmlStructChecked)
             }
             else {
               await copyToTarget(path, new_value, backupCheck)
