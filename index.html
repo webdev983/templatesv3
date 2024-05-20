@@ -578,18 +578,20 @@
           style="margin-top: 7px;">
         <details style="margin-bottom: 7px;">
           <summary class="summary-L-3"><span class="l-3 b-dark-blue"> 🔗 Link Type (Optional)</span></summary>
-          <select  class="select-1" style="display: inline-block; margin-bottom: 7px; margin-left: 18px;" id="choose_link_type">
+          <select class="select-1" style="display: inline-block; margin-bottom: 7px; margin-left: 18px;"
+            id="choose_link_type">
             <option> ⬇️ Select</option>
             <option id="update"> 🌐 Update</option>
             <option id="byId"> 🆔 Id</option>
             <option id="absolute"> 📂 Absolute</option>
             <option id="relative"> 🗂️ Relative</option>
           </select>
-          <span  id="update-components">
-          <label style="display: inline" class="l-3"><input type="checkbox">html structure</label>
+          <span id="update-components">
+            <label hidden id="html-structure-label" style="display: inline" class="l-3"><input type="checkbox">html
+              structure</label>
           </span>
-          </details>
-          
+        </details>
+
 
         <details style="margin-bottom: 7px;">
           <summary class="summary-L-3"><span class="l-3 b-dark-blue"> 🌐 File Type (Optional)</span></summary>
@@ -1667,6 +1669,16 @@
         if (editArea && fieldset) {
           console.log('editing')
           const cloned = editArea.cloneNode(true);
+          cloned.getElementById('choose_link_type').addEventListener('change', function () {
+            var select = document.getElementById('choose_link_type');
+            var selectedOption = select.options[select.selectedIndex].id;
+
+            if (selectedOption === 'update') {
+              document.getElementById('html-structure-label').style.display = 'inline';
+            } else {
+              document.getElementById('html-structure-label').style.display = 'none';
+            }
+          });
           const saveButton = cloned.querySelector('[data-action="copy-file-path-save"]');
           const cancelButton = cloned.querySelector('[data-action="copy-file-path-cancel"]');
           cancelButton.onclick = (e) => {
