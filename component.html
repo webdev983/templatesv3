@@ -1060,7 +1060,7 @@ component</button> -->
           id="absolute-input">📂Absolute</label>
       <label class="l-3" id="content-label" hidden><input type="radio" name="relative-absolute-choose"
           id="content-input"></label>
-  
+
     </ol>
 
 
@@ -1076,7 +1076,7 @@ component</button> -->
       <button class="b-3" id="file-list-link-by-name" style="margin-top: 5px;"
         onclick="switchSelected(event)">🗂️Relative</button>
 
-        <button class="b-3" id="file-list-link-by-content-name" style="margin-top: 5px;"
+      <button class="b-3" id="file-list-link-by-content-name" style="margin-top: 5px;"
         onclick="switchSelected(event)">🔗Folder-Content</button>
 
 
@@ -3407,10 +3407,10 @@ component</button> -->
           const currentLsi = pathItemPath.replace(';publish:published', "")
           const relativePath = getRelativePath(currentLsi, convertToOldPath(data.lsi1.replace(';publish:published', "")));
           let prefix = optionList.querySelector('#file-list-link-by-content-name').classList.contains('b-selected') ? '$' : '#'
-          await addComponent1(prefix+ relativePath, selfuse).catch(e => console.log(e))
+          await addComponent1(prefix + relativePath, selfuse).catch(e => console.log(e))
           flag = true
         }
-        
+
         else {
           addComponent1(id, selfuse)
         }
@@ -6120,7 +6120,7 @@ checkbox1.setAttribute('hidden', "");
         // Extract filename from the relative path
         const relativeFilename = relativePathParts.pop();
         currentPathParts.pop()
-        
+
         // Handle "./" in relative path
         if (relativePathParts[0] === '.') {
           relativePathParts.shift(); // Remove the first element (".")
@@ -6130,7 +6130,7 @@ checkbox1.setAttribute('hidden', "");
           currentPathParts.pop(); // Remove the last element from the current path
           relativePathParts.shift(); // Remove the first element ("..")
         }
-        
+
 
         // Combine current path and relative path parts
         const combinedPath = currentPathParts.concat(relativePathParts).join('/');
@@ -6161,22 +6161,22 @@ checkbox1.setAttribute('hidden', "");
           }
           else if (inserted_component.componentId.startsWith('#') || inserted_component.componentId.startsWith('$')) {
             let cPath = pathForRelative.current || pathItemPath
-            let relative = inserted_component.componentId.replace('#', '').replace('$',"")
-            if(inserted_component.componentId.startsWith('$') && componentPath.split('/')[0] !== site1){
+            let relative = inserted_component.componentId.replace('#', '').replace('$', "")
+            if (inserted_component.componentId.startsWith('$') && componentPath.split('/')[0] !== site1) {
               console.log('cpath diff')
               cPath = pathItemPath
-              if(relative.startsWith('../')){
-                relative ='./'+ relative.replaceAll('../',"")
+              if (relative.startsWith('../')) {
+                relative = './' + relative.replaceAll('../', "")
               }
-              
+
             }
             cPath = cPath.replace(';publish:published', "")
             console.log('cpath ' + cPath + ' relative' + inserted_component.componentId)
 
 
-            
+
             const absolutePath = getAbsolutePath(cPath, relative);
-            console.log('cpath ' + cPath + ' relative' + inserted_component.componentId + ' absolute '+absolutePath)
+            console.log('cpath ' + cPath + ' relative' + inserted_component.componentId + ' absolute ' + absolutePath)
 
             const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:' + ownerid + '&gsi1lsi1=true&lsi1=' + absolutePath)
               .then(response => response.json())
@@ -6186,13 +6186,16 @@ checkbox1.setAttribute('hidden', "");
             let item1 = items.find(i => i.lsi1.replace(';publish:published', '') === absolutePath)
             console.log(JSON.stringify(item1))
             let i = 0
-            while(!item1){
-              cPath = pathForRelative.next[i].replace(';publish:published', "")
-              const absolutePath = getAbsolutePath(cPath, relative);
-              const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:' + ownerid + '&gsi1lsi1=true&lsi1=' + absolutePath)
-              .then(response => response.json())
-              item1 = items.find(i => i.lsi1.replace(';publish:published', '') === absolutePath)
+            if (pathForRelative.next.length) {
+              while (!item1) {
+                cPath = pathForRelative.next[i].replace(';publish:published', "")
+                const absolutePath = getAbsolutePath(cPath, relative);
+                const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:' + ownerid + '&gsi1lsi1=true&lsi1=' + absolutePath)
+                  .then(response => response.json())
+                item1 = items.find(i => i.lsi1.replace(';publish:published', '') === absolutePath)
+              }
             }
+
             inserted_component.componentId = item1.id
           }
 
@@ -8764,13 +8767,13 @@ elementsToRemove.forEach(element => element.remove());
               }
 
               //insertDataIntoCodeLog(item.sk, item.action)
-              await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: newPathForRelative, prev: pathForRelative.current,next })
+              await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: newPathForRelative, prev: pathForRelative.current, next })
 
               continue
             }
 
 
-            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: componentPath, prev: componentPath,next:[] })
+            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: componentPath, prev: componentPath, next: [] })
           }
 
         }
