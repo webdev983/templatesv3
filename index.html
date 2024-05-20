@@ -2553,7 +2553,8 @@
         const copyFrom = style + '/Blog/Seed-Article/'
         const splitedPath = copyFrom.replace('|', "/").split('/')
         const last = splitedPath[splitedPath.length - 2]
-        await updateFolder(copyFrom, path, last, new Date())
+        const p = path.endsWith('/') ? path : path + '/'
+        await updateFolder(copyFrom, p, last, new Date())
         path ? loadUsingPath() : loadFileList()
         return
       }
