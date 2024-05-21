@@ -8774,7 +8774,7 @@ elementsToRemove.forEach(element => element.remove());
           if (item.action) {
             if (id) {
 
-
+              const reusableId1 = reusableId ? reusableId+';' : ''
               const replaceWithNewId = (s) => {
                 if (s.startsWith('3bf8d522-9423-4818-ad91-d8dfcda1f425')) {
                   console.log('fouuund ' + s + '  replace  ' + replaceId)
@@ -8788,18 +8788,18 @@ elementsToRemove.forEach(element => element.remove());
               }
               if (item.target_element === id + '-tree') {
 
-                item.target_element = reusableId + newId + '-tree'
+                item.target_element = reusableId1 + newId + '-tree'
                 if (item.inserted_element?.id) {
-                  item.inserted_element.id.split(':').length === 1 && (item.inserted_element.id = reusableId + replaceWithNewId(item.inserted_element.id, newId))
+                  item.inserted_element.id.split(':').length === 1 && (item.inserted_element.id = reusableId1 + replaceWithNewId(item.inserted_element.id, newId))
                 }
                 if(item.inserted_element?.originalId){
-                  item.inserted_element.originalId  = reusableId + item.inserted_element?.originalId
+                  item.inserted_element.originalId  = reusableId1 + item.inserted_element?.originalId
                   item.inserted_element?.originalId.split(':').length === 1 && (item.inserted_element.originalId = replaceWithNewId(item.inserted_element.originalId, newId))
                 }
                 
               }
               else if (components.includes(removeLastOccurrence(item.target_element, '-tree'))) {
-                item.target_element = reusableId + item.target_element
+                item.target_element = reusableId1 + item.target_element
                 console.log('case2')
                 console.log('in')
               }
@@ -8808,29 +8808,29 @@ elementsToRemove.forEach(element => element.remove());
                 item.target_element = item.target_element.filter(e => e).map(i => {
                   console.log('prob666' + JSON.stringify(i))
                   if (i.id === id + '-tree') {
-                    return { ...i, id: reusableId + newId + '-tree' }
+                    return { ...i, id: reusableId1 + newId + '-tree' }
                   }
                   if (i.id?.split(':').length === 1) {
-                    return { ...i, id: reusableId + replaceWithNewId(i.id, newId) }
+                    return { ...i, id: reusableId1 + replaceWithNewId(i.id, newId) }
                   }
-                  return { ...i, id: reusableId + i.id }
+                  return { ...i, id: reusableId1 + i.id }
                 })
 
               }
               else {
                 const s= item.target_element 
                 if(!(s === 'body-tree' || s === 'body' || s === 'head-tree' | s === 'head')){
-                  item.target_element = reusableId + item.target_element
+                  item.target_element = reusableId1 + item.target_element
                 }
                 
                 item.target_element.split(':').length === 1 && (item.target_element = replaceWithNewId(item.target_element, newId))
                 if (item.inserted_element?.id) {
-                  item.inserted_element.id = reusableId + item.inserted_element.id
+                  item.inserted_element.id = reusableId1 + item.inserted_element.id
                   item.inserted_element?.id.split(':').length === 1 && (item.inserted_element.id = replaceWithNewId(item.inserted_element.id, newId))
 
                 }
                 if (item.inserted_element?.originalId) {
-                  item.inserted_element.originalId = reusableId + item.inserted_element?.originalId
+                  item.inserted_element.originalId = reusableId1 + item.inserted_element?.originalId
                   item.inserted_element?.originalId.split(':').length === 1 && (item.inserted_element.originalId = replaceWithNewId(item.inserted_element.originalId, newId))
                 }
 
