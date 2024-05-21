@@ -5819,7 +5819,7 @@ checkbox1.setAttribute('hidden', "");
     }
     let pauseExecution = false
 
-    const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative) => {
+    const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId) => {
 
       if (pauseExecution) {
         return
@@ -6402,7 +6402,7 @@ checkbox1.setAttribute('hidden', "");
                 inserted_component: el,
                 noComp: true,
                 noSubComp: i
-              }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions, el.id, undefined, pathForRelative)
+              }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions, el.id, undefined, pathForRelative, options.reusable || reusableId)
               i = true
 
             }
@@ -6419,7 +6419,7 @@ checkbox1.setAttribute('hidden', "");
             el2.innerHTML = `🔄${replaceAction.target_element.length}`;
           }
           console.log('calling path for relative ' + pathForRelative)
-          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions, replaceId, pathForRelative, newEl2)
+          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions, replaceId, pathForRelative, newEl2, reusableId + options.reusable || '')
 
 
           break;
@@ -6512,7 +6512,7 @@ checkbox1.setAttribute('hidden', "");
             components.push(inserted_component.id)
             console.log(inserted_component.componentId)
             console.log('insert before replace id ' + replaceId)
-            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev })
+            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev }, reusableId)
             break;
           }
 
@@ -7380,7 +7380,7 @@ checkbox1.setAttribute('hidden', "");
             components.push(inserted_component.id)
             console.log(inserted_component.componentId)
             console.log('insert before replace id ' + replaceId)
-            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev })
+            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev }, reusableId)
             break;
           }
           //case duplicate insert before
@@ -8447,7 +8447,7 @@ elementsToRemove.forEach(element => element.remove());
     }
     let foundMainContent
 
-    const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative, treeElement) => {
+    const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative, treeElement, reusableId) => {
       console.log('load from db' + id)
       console.log('err2 ' + p)
       console.log('path for relative ' + pathForRelative?.current)
@@ -8788,47 +8788,58 @@ elementsToRemove.forEach(element => element.remove());
               }
               if (item.target_element === id + '-tree') {
 
-                item.target_element = newId + '-tree'
+                item.target_element = reusableId + newId + '-tree'
                 if (item.inserted_element?.id) {
-                  item.inserted_element.id.split(':').length === 1 && (item.inserted_element.id = replaceWithNewId(item.inserted_element.id, newId))
+                  item.inserted_element.id.split(':').length === 1 && (item.inserted_element.id = reusableId + replaceWithNewId(item.inserted_element.id, newId))
                 }
+                item.inserted_element?.originalId = reusableId + item.inserted_element?.originalId
                 item.inserted_element?.originalId && item.inserted_element?.originalId.split(':').length === 1 && (item.inserted_element.originalId = replaceWithNewId(item.inserted_element.originalId, newId))
               }
               else if (components.includes(removeLastOccurrence(item.target_element, '-tree'))) {
-
+                item.target_element = reusableId + item.target_element
+                console.log('case2')
+                console.log('in')
               }
               else if (Array.isArray(item.target_element)) {
                 console.log('array of targter ' + JSON.stringify(item.target_element))
                 item.target_element = item.target_element.filter(e => e).map(i => {
                   console.log('prob666' + JSON.stringify(i))
                   if (i.id === id + '-tree') {
-                    return { ...i, id: newId + '-tree' }
+                    return { ...i, id: reusableId + newId + '-tree' }
                   }
                   if (i.id?.split(':').length === 1) {
-                    return { ...i, id: replaceWithNewId(i.id, newId) }
+                    return { ...i, id: reusableId + replaceWithNewId(i.id, newId) }
                   }
-                  return { ...i, id: i.id }
+                  return { ...i, id: reusableId + i.id }
                 })
 
               }
               else {
-
+                item.target_element = reusableId + item.target_element
                 item.target_element.split(':').length === 1 && (item.target_element = replaceWithNewId(item.target_element, newId))
-                item.inserted_element?.id && item.inserted_element?.id.split(':').length === 1 && (item.inserted_element.id = replaceWithNewId(item.inserted_element.id, newId))
-                item.inserted_element?.originalId && item.inserted_element?.originalId.split(':').length === 1 && (item.inserted_element.originalId = replaceWithNewId(item.inserted_element.originalId, newId))
+                if (item.inserted_element?.id) {
+                  item.inserted_element.id = reusableId + item.inserted_element.id
+                  item.inserted_element?.id.split(':').length === 1 && (item.inserted_element.id = replaceWithNewId(item.inserted_element.id, newId))
+
+                }
+                if (item.inserted_element?.originalId) {
+                  item.inserted_element?.originalId = reusableId + item.inserted_element?.originalId
+                  item.inserted_element?.originalId.split(':').length === 1 && (item.inserted_element.originalId = replaceWithNewId(item.inserted_element.originalId, newId))
+                }
+
 
 
 
               }
 
               //insertDataIntoCodeLog(item.sk, item.action)
-              await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: newPathForRelative, prev: pathForRelative.current, next })
+              await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: newPathForRelative, prev: pathForRelative.current, next }, reusableId)
 
               continue
             }
 
 
-            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: componentPath, prev: componentPath, next: [] })
+            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: componentPath, prev: componentPath, next: [] }, "")
           }
 
         }
