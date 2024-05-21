@@ -5577,7 +5577,7 @@ checkbox1.setAttribute('hidden', "");
             ac = "Add_Component_Id"
           }
         }
-        await insertDataIntoCodeLog(time, ac, element.options, undefined, element)
+        await insertDataIntoCodeLog(time, ac, element.options, undefined, element,reusableId)
       }
 
 
@@ -5713,7 +5713,7 @@ checkbox1.setAttribute('hidden', "");
         }
       }
     }
-    function insertDataIntoCodeLog(actionTime, actionName, options, inserted_component, element) {
+    function insertDataIntoCodeLog(actionTime, actionName, options, inserted_component, element,reusableId) {
       const codeLog = getElementById1("code-log-body");
       const originalElement = codeLog.querySelector("#code-log-element");
       const clonedElement = originalElement.cloneNode(true);
@@ -5751,11 +5751,12 @@ checkbox1.setAttribute('hidden', "");
         }
 
       }
+      const r = reusableId ? reusableId+'|' : ''
       if (element?.inserted_component) {
         console.log('iiiiiiiiiiin0')
         const a = clonedElement.querySelector("#code-log-action")
         a.textContent = '🧩' + '{name}' + emoji;
-        a.setAttribute('log-id', element.inserted_component.id)
+        a.setAttribute('log-id', reusableId+element.inserted_component.id)
         const optionString = ` 🆔 ${element.inserted_component.componentId}<br>Target ${element.target_element.replace('-tree', '')}<br>${optionsStrings.join('<br>')}`;
 
         clonedElement.querySelector('[data-action-data]').innerHTML = optionString;
