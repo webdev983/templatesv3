@@ -5558,7 +5558,7 @@ checkbox1.setAttribute('hidden', "");
         referenceNode.parentNode.appendChild(newNode);
       }
     }
-    const pushAction = async (element, firstLoad, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative,reusableId) => {
+    const pushAction = async (element, firstLoad, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId) => {
       console.log('pushed' + JSON.stringify(element))
       const time = element.time
       console.log('time' + time)
@@ -5581,7 +5581,7 @@ checkbox1.setAttribute('hidden', "");
       }
 
 
-      await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative,reusableId)
+      await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId)
     }
     const pushActionToDb = async (action) => {
       const urlSearchParams = new URLSearchParams(window.location.search);
@@ -5827,7 +5827,7 @@ checkbox1.setAttribute('hidden', "");
       let treeElement
       let componentElement
 
-      console.log('command is ' + JSON.stringify(command) + ' replace id ' + replaceId + 'pathForRelative ' + pathForRelative?.current + 'reusable '+reusableId)
+      console.log('command is ' + JSON.stringify(command) + ' replace id ' + replaceId + 'pathForRelative ' + pathForRelative?.current + 'reusable ' + reusableId)
       function handleAppendOrInsert(action, selectedArrayNotSorted, move, insert_copies) {
         // Sort
 
@@ -6401,7 +6401,7 @@ checkbox1.setAttribute('hidden', "");
                 inserted_component: el,
                 noComp: true,
                 noSubComp: i
-              }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions, el.id, undefined, pathForRelative,  reusableId + (options?.reusable || ''))
+              }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions, el.id, undefined, pathForRelative, reusableId + (options?.reusable || ''))
               i = true
 
             }
@@ -6511,7 +6511,7 @@ checkbox1.setAttribute('hidden', "");
             components.push(inserted_component.id)
             console.log(inserted_component.componentId)
             console.log('insert after reusableid' + reusableId)
-            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev },undefined, reusableId)
+            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev }, undefined, reusableId)
             break;
           }
 
@@ -8447,7 +8447,7 @@ elementsToRemove.forEach(element => element.remove());
     let foundMainContent
 
     const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative, treeElement, reusableId) => {
-      console.log('load from db' + id +'reusable'+ reusableId)
+      console.log('load from db' + id + 'reusable' + reusableId)
       console.log('err2 ' + p)
       console.log('path for relative ' + pathForRelative?.current)
       let newPathForRelative = pathForRelative?.current
@@ -8773,7 +8773,7 @@ elementsToRemove.forEach(element => element.remove());
           if (item.action) {
             if (id) {
 
-              const reusableId1 = reusableId ? reusableId+';' : ''
+              const reusableId1 = reusableId ? reusableId + ';' : ''
               const replaceWithNewId = (s) => {
                 if (s.startsWith('3bf8d522-9423-4818-ad91-d8dfcda1f425')) {
                   console.log('fouuund ' + s + '  replace  ' + replaceId)
@@ -8791,11 +8791,14 @@ elementsToRemove.forEach(element => element.remove());
                 if (item.inserted_element?.id) {
                   item.inserted_element.id.split(':').length === 1 && (item.inserted_element.id = reusableId1 + replaceWithNewId(item.inserted_element.id, newId))
                 }
-                if(item.inserted_element?.originalId){
-                  item.inserted_element.originalId  = reusableId1 + item.inserted_element?.originalId
+                if (item.inserted_element?.originalId) {
+                  item.inserted_element.originalId = reusableId1 + item.inserted_element?.originalId
                   item.inserted_element?.originalId.split(':').length === 1 && (item.inserted_element.originalId = replaceWithNewId(item.inserted_element.originalId, newId))
                 }
-                
+
+              }
+              else if (item.inserted_component?.id) {
+                item.inserted_component.id = reusableId1 + item.inserted_component.id
               }
               else if (components.includes(removeLastOccurrence(item.target_element, '-tree'))) {
                 item.target_element = reusableId1 + item.target_element
@@ -8817,11 +8820,11 @@ elementsToRemove.forEach(element => element.remove());
 
               }
               else {
-                const s= item.target_element 
-                if(!(s === 'body-tree' || s === 'body' || s === 'head-tree' | s === 'head')){
+                const s = item.target_element
+                if (!(s === 'body-tree' || s === 'body' || s === 'head-tree' | s === 'head')) {
                   item.target_element = reusableId1 + item.target_element
                 }
-                
+
                 item.target_element.split(':').length === 1 && (item.target_element = replaceWithNewId(item.target_element, newId))
                 if (item.inserted_element?.id) {
                   item.inserted_element.id = reusableId1 + item.inserted_element.id
@@ -8832,9 +8835,7 @@ elementsToRemove.forEach(element => element.remove());
                   item.inserted_element.originalId = reusableId1 + item.inserted_element?.originalId
                   item.inserted_element?.originalId.split(':').length === 1 && (item.inserted_element.originalId = replaceWithNewId(item.inserted_element.originalId, newId))
                 }
-                if(item.inserted_component?.id){
-                  item.inserted_component.id =reusableId1 + item.inserted_component.id
-                }
+
 
 
 
