@@ -6250,14 +6250,14 @@ checkbox1.setAttribute('hidden', "");
 
             inserted_component.componentId = item1.id
           }
-          let rT 
-          if(options?.reusable && reusableId){
-            rT =reusableId +'|'+ options?.reusable
+          let rT
+          if (options?.reusable && reusableId) {
+            rT = reusableId + '|' + options?.reusable
           }
-          else{
-            rT =options?.reusable || reusableId
+          else {
+            rT = options?.reusable || reusableId
           }
-          const processedId =(rT ? rT+'|' : '')+ inserted_component.id + '-tree'
+          const processedId = (rT ? rT + '|' : '') + inserted_component.id + '-tree'
           const removeAction = removeActions?.find(e => e.target_element === processedId)
           if (removeAction) {
             console.log('found 115')
@@ -6292,8 +6292,8 @@ checkbox1.setAttribute('hidden', "");
           button.addEventListener('mouseover', mouseOverTree);
 
           button.addEventListener('mouseout', mouseOutTree);
-          
-          newEl2.id =processedId
+
+          newEl2.id = processedId
           newEl2.setAttribute('cid', inserted_component.componentId)
           if (noSubComp1 || noComp || noComp1) {
             newEl2.setAttribute('hidden', '')
@@ -6311,7 +6311,7 @@ checkbox1.setAttribute('hidden', "");
           components.push(inserted_component.id)
 
           console.log('foundlvl ' + lvl)
-          
+
           if (replaceAction) {
             await insertDataIntoCodeLog(replaceAction.sk, replaceAction.action, replaceAction.options)
             console.log('replace action in')
@@ -6409,7 +6409,7 @@ checkbox1.setAttribute('hidden', "");
                 inserted_component: el,
                 noComp: true,
                 noSubComp: i
-              }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions, el.id, undefined, pathForRelative, rT,reusableId)
+              }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions, el.id, undefined, pathForRelative, rT, reusableId)
               i = true
 
             }
@@ -6492,6 +6492,14 @@ checkbox1.setAttribute('hidden', "");
               console.log(JSON.stringify(item1))
               inserted_component.componentId = item1.id
             }
+            let rT
+            if (options?.reusable && reusableId) {
+              rT = reusableId + '|' + options?.reusable
+            }
+            else {
+              rT = options?.reusable || reusableId
+            }
+            const processedId = (rT ? rT + '|' : '') + inserted_component.id + '-tree'
             console.log('in')
             console.log(target_element)
             treeElement = getElementById1(target_element);
@@ -6510,7 +6518,7 @@ checkbox1.setAttribute('hidden', "");
 
             button.addEventListener('mouseout', mouseOutTree);
 
-            newEl2.id = inserted_component.id + '-tree'
+            newEl2.id = processedId
             if (noComp || noComp1) {
               console.log('no comp true')
               newEl2.setAttribute('hidden', '')
@@ -7108,7 +7116,7 @@ checkbox1.setAttribute('hidden', "");
               button2.textContent = '🏷️' + inserted_element.tagName;
 
               newEl2.id = replaceCopyId ? inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') + '-tree' : inserted_element.id + '-tree'
-              
+
               if (componentElement.hasAttribute('data-parentid')) {
                 console.log('in12')
 
@@ -8783,8 +8791,8 @@ elementsToRemove.forEach(element => element.remove());
             if (id) {
 
               const reusableId1 = reusableId ? reusableId + '|' : ''
-              
-              
+
+
               const replaceWithNewId = (s) => {
                 if (s.startsWith('3bf8d522-9423-4818-ad91-d8dfcda1f425')) {
                   console.log('fouuund ' + s + '  replace  ' + replaceId)
@@ -8806,10 +8814,10 @@ elementsToRemove.forEach(element => element.remove());
                   item.inserted_element.originalId = reusableId1 + item.inserted_element?.originalId
                   item.inserted_element?.originalId.split(':').length === 1 && (item.inserted_element.originalId = replaceWithNewId(item.inserted_element.originalId, newId))
                 }
-                
+
 
               }
-              
+
               else if (components.includes(removeLastOccurrence(item.target_element, '-tree'))) {
                 item.target_element = reusableId1 + item.target_element
                 console.log('case2')
@@ -8859,7 +8867,7 @@ elementsToRemove.forEach(element => element.remove());
             }
 
 
-            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: componentPath, prev: componentPath, next: [] }, "",'')
+            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: componentPath, prev: componentPath, next: [] }, "", '')
           }
 
         }
