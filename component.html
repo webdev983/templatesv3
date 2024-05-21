@@ -6418,7 +6418,7 @@ checkbox1.setAttribute('hidden', "");
             el2.innerHTML = `🔄${replaceAction.target_element.length}`;
           }
           console.log('calling path for relative ' + pathForRelative)
-          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions, replaceId, pathForRelative, newEl2, reusableId + (options?.reusable || ''))
+          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions, replaceId, pathForRelative, newEl2, reusableId + (options?.reusable || ''),reusableId)
 
 
           break;
@@ -8446,7 +8446,7 @@ elementsToRemove.forEach(element => element.remove());
     }
     let foundMainContent
 
-    const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative, treeElement, reusableId) => {
+    const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative, treeElement, reusableId,compReuse) => {
       console.log('load from db' + id + 'reusable' + reusableId)
       console.log('err2 ' + p)
       console.log('path for relative ' + pathForRelative?.current)
@@ -8787,7 +8787,7 @@ elementsToRemove.forEach(element => element.remove());
               }
               if (item.target_element === id + '-tree') {
 
-                item.target_element =  newId + '-tree'
+                item.target_element = reusableId1 + newId + '-tree'
                 if (item.inserted_element?.id) {
                   item.inserted_element.id.split(':').length === 1 && (item.inserted_element.id = reusableId1 + replaceWithNewId(item.inserted_element.id, newId))
                 }
@@ -8800,7 +8800,7 @@ elementsToRemove.forEach(element => element.remove());
               }
               
               else if (components.includes(removeLastOccurrence(item.target_element, '-tree'))) {
-                //item.target_element = reusableId1 + item.target_element
+                item.target_element = compReuse + item.target_element
                 console.log('case2')
                 console.log('in')
               }
