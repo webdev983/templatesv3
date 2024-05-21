@@ -1081,10 +1081,10 @@ component</button> -->
 
       <button class="b-3" id="file-list-link-by-content-name" style="margin-top: 5px;"
         onclick="switchSelected(event)">🔗Folder-Content</button>
-        <label class="l-3"><input id="selfuse" type="checkbox">Self use</label>
-        <label class="l-3"><input id="reusable" type="checkbox">Re-usable</label>
-  
-<br>
+      <label class="l-3"><input id="selfuse" type="checkbox">Self use</label>
+      <label class="l-3"><input id="reusable" type="checkbox">Re-usable</label>
+
+      <br>
 
       <button style="margin-top: 5px;" class="b-4" onclick="cancelAddComponent(event)">❌Cancel</button>
       <button style="margin-top: 5px;" class="b-4" onclick="approveAddComponent(event)">✅ Approve</button>
@@ -2671,7 +2671,7 @@ component</button> -->
       updatePathItem()
     }
     //not used
-    const addComponent1 = async (id, selfuse,reusable) => {
+    const addComponent1 = async (id, selfuse, reusable) => {
       //getElementById1('file-list-attach-component-options;').remove()
       const actionObject = {
         time: (new Date()).getTime(),
@@ -2680,8 +2680,8 @@ component</button> -->
         inserted_component: { componentId: id, id: generateUUID() },
 
       };
-      actionObject.options = { selfuse,reusable }
-      
+      actionObject.options = { selfuse, reusable }
+
       await pushAction(actionObject);
     }
     var loadUsingPath2 = (path1, filePathList, optionList) => {
@@ -3381,6 +3381,33 @@ component</button> -->
 
       return relativePath;
     }
+    function getNextCounter(counter) {
+      let prefix = counter.substring(0, counter.length - 1);
+      let lastChar = counter[counter.length - 1];
+
+      if (lastChar === 'Z') {
+        if (prefix === 'A') {
+          return 'A0';
+        } else {
+          let prefixCharCode = prefix.charCodeAt(0);
+          let nextPrefix = String.fromCharCode(prefixCharCode + 1);
+          return nextPrefix + 'A';
+        }
+      } else if (/\d/.test(lastChar)) {
+        let num = parseInt(lastChar);
+        if (num < 9) {
+          return prefix + (num + 1);
+        } else {
+          let prefixCharCode = prefix.charCodeAt(0);
+          let nextPrefix = String.fromCharCode(prefixCharCode + 1);
+          return nextPrefix + 'A';
+        }
+      } else {
+        let nextChar = String.fromCharCode(lastChar.charCodeAt(0) + 1);
+        return prefix + nextChar;
+      }
+    }
+
     var approveAddComponent = async (e) => {
       const m1 = document.getElementById('selectedFilePathList;')
 
@@ -3389,7 +3416,29 @@ component</button> -->
       const optionList = getElementById1('file-list-attach-component-options;')
       let flag
       const selfuse = optionList.querySelector('#selfuse').checked
-      const reusable = optionList.querySelector('#reusable').checked
+      const reusableC = optionList.querySelector('#reusable').checked
+      let reusable
+      if (reusableC) {
+        const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/re_use_counter:counter')
+          .then(response => response.json())
+        let newCounter = 'AA'
+        if (data) {
+          const prevCounter = data.value
+          newCounter = getNextCounter(prevCounter)
+
+        }
+        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(
+            { id: 're_use_counter', sk: 'counter', value: newCounter }
+          ),
+        });
+        reusable = newCounter
+      }
+
       for (const id of ids) {
         const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/' + id + ':path')
           .then(response => response.json())
@@ -3403,18 +3452,18 @@ component</button> -->
           if (p.length) {
             r = '/' + p.join('/')
           }
-          addComponent1("*" + r + '|' + fileName, selfuse,reusable)
+          addComponent1("*" + r + '|' + fileName, selfuse, reusable)
         }
         else if (optionList.querySelector('#file-list-link-by-name').classList.contains('b-selected') || optionList.querySelector('#file-list-link-by-content-name').classList.contains('b-selected')) {
           const currentLsi = pathItemPath.replace(';publish:published', "")
           const relativePath = getRelativePath(currentLsi, convertToOldPath(data.lsi1.replace(';publish:published', "")));
           let prefix = optionList.querySelector('#file-list-link-by-content-name').classList.contains('b-selected') ? '$' : '#'
-          await addComponent1(prefix + relativePath, selfuse,reusable).catch(e => console.log(e))
+          await addComponent1(prefix + relativePath, selfuse, reusable).catch(e => console.log(e))
           flag = true
         }
 
         else {
-          addComponent1(id, selfuse,reusable)
+          addComponent1(id, selfuse, reusable)
         }
 
       }
@@ -5601,7 +5650,7 @@ checkbox1.setAttribute('hidden', "");
             options.insert_copies && optionsStrings.push('🚂⧉ Insert Copies')
             options.dub_target && optionsStrings.push('🎯⧉ Dup Target')
             options.selfuse && optionsStrings.push('🎯⧉ Self use')
-            options.reusable && optionsStrings.push('🎯⧉ Reusable')
+            options.reusable && optionsStrings.push('🎯⧉ Reusable id:' + options.reusable)
             options.position && optionsStrings.push('🎯 child ' + options.position)
 
 
