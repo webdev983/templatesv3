@@ -3409,12 +3409,12 @@ component</button> -->
           const currentLsi = pathItemPath.replace(';publish:published', "")
           const relativePath = getRelativePath(currentLsi, convertToOldPath(data.lsi1.replace(';publish:published', "")));
           let prefix = optionList.querySelector('#file-list-link-by-content-name').classList.contains('b-selected') ? '$' : '#'
-          await addComponent1(prefix + relativePath, selfuse).catch(e => console.log(e))
+          await addComponent1(prefix + relativePath, selfuse,reusable).catch(e => console.log(e))
           flag = true
         }
 
         else {
-          addComponent1(id, selfuse)
+          addComponent1(id, selfuse,reusable)
         }
 
       }
@@ -5601,6 +5601,7 @@ checkbox1.setAttribute('hidden', "");
             options.insert_copies && optionsStrings.push('🚂⧉ Insert Copies')
             options.dub_target && optionsStrings.push('🎯⧉ Dup Target')
             options.selfuse && optionsStrings.push('🎯⧉ Self use')
+            options.reusable && optionsStrings.push('🎯⧉ Reusable')
             options.position && optionsStrings.push('🎯 child ' + options.position)
 
 
@@ -5686,6 +5687,7 @@ checkbox1.setAttribute('hidden', "");
         options.insert_copies && optionsStrings.push('🚂⧉ Insert Copies')
         options.dub_target && optionsStrings.push('🎯⧉ Dup Target')
         options.selfuse && optionsStrings.push('🎯⧉ Self use')
+        options.reusable && optionsStrings.push('🎯⧉ Reusable')
         options.position && optionsStrings.push('🎯 child ' + options.position)
 
 
