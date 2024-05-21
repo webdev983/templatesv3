@@ -8617,8 +8617,8 @@ elementsToRemove.forEach(element => element.remove());
         el.setAttribute('path', items.find(e => e.sk === 'path').lsi1)
         const logSearch = reusableId1+newId
         console.log('searching log '+ logSearch)
-        const logE = document.querySelector(`[log-id="${logSearch}"]`)
-        logE && (logE.textContent = logE.textContent.replace('{name}', name))
+        const logE = document.querySelectorAll(`[log-id="${logSearch}"]`).forEach(e=>e.textContent = e.textContent.replace('{name}', name))
+        
 
         if (pathItem.hub_items?.main_content) {
           const splited = pathItem.hub_items?.main_content?.split(':')
