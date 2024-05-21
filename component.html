@@ -8590,14 +8590,14 @@ elementsToRemove.forEach(element => element.remove());
       if (id) {
 
         responseData = await getRes(id)
-
+        const reusableId1 = reusableId ? reusableId + '|' : ''
         const { items } = responseData
         console.log('iteeems ' + JSON.stringify(items))
         //change component 
         const splited = convertToOldPath(items.find(e => e.sk === 'path').lsi1.split(';')[0]).split('/')
         const name = splited[splited.length - 1]
         const { testPage, optionalScript } = items.find(e => e.sk === 'path')
-        const el1 = treeElement || getElementById1(newId + '-tree')
+        const el1 = treeElement || getElementById1(reusableId1 + newId + '-tree')
 
         if ((testPage && lvl > 2) || (optionalScript && localStorage.getItem('visualOn'))) {
           el1.remove()
