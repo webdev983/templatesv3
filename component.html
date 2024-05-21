@@ -6257,13 +6257,13 @@ checkbox1.setAttribute('hidden', "");
           else{
             rT =options?.reusable || reusableId
           }
-          inserted_component.id = (rT ? rT+'|' : '')+ inserted_component.id + '-tree'
-          const removeAction = removeActions?.find(e => e.target_element === inserted_component.id + '-tree')
+          const processedId =(rT ? rT+'|' : '')+ inserted_component.id + '-tree'
+          const removeAction = removeActions?.find(e => e.target_element === processedId)
           if (removeAction) {
             console.log('found 115')
             return
           }
-          const replaceAction = replaceActions?.findLast(e => e.target_element[0] === inserted_component.id + '-tree')
+          const replaceAction = replaceActions?.findLast(e => e.target_element[0] === processedId)
 
           //replace
           console.log('selected Actions' + JSON.stringify(replaceAction))
@@ -6293,8 +6293,7 @@ checkbox1.setAttribute('hidden', "");
 
           button.addEventListener('mouseout', mouseOutTree);
           
-          
-          newEl2.id =inserted_component.id
+          newEl2.id =processedId
           newEl2.setAttribute('cid', inserted_component.componentId)
           if (noSubComp1 || noComp || noComp1) {
             newEl2.setAttribute('hidden', '')
