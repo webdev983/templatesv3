@@ -8795,17 +8795,15 @@ elementsToRemove.forEach(element => element.remove());
                   item.inserted_element.originalId = reusableId1 + item.inserted_element?.originalId
                   item.inserted_element?.originalId.split(':').length === 1 && (item.inserted_element.originalId = replaceWithNewId(item.inserted_element.originalId, newId))
                 }
-                if (item.inserted_component?.id) {
-                  item.inserted_component.id = reusableId1 + item.inserted_component.id
-                }
+                
 
               }
-
+              /*
               else if (components.includes(removeLastOccurrence(item.target_element, '-tree'))) {
-                item.target_element = reusableId1 + item.target_element
+                //item.target_element = reusableId1 + item.target_element
                 console.log('case2')
                 console.log('in')
-              }
+              }*/
               else if (Array.isArray(item.target_element)) {
                 console.log('array of targter ' + JSON.stringify(item.target_element))
                 item.target_element = item.target_element.filter(e => e).map(i => {
@@ -8835,9 +8833,6 @@ elementsToRemove.forEach(element => element.remove());
                 if (item.inserted_element?.originalId) {
                   item.inserted_element.originalId = reusableId1 + item.inserted_element?.originalId
                   item.inserted_element?.originalId.split(':').length === 1 && (item.inserted_element.originalId = replaceWithNewId(item.inserted_element.originalId, newId))
-                }
-                if (item.inserted_component?.id) {
-                  item.inserted_component.id = reusableId1 + item.inserted_component.id
                 }
 
 
