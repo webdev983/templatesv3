@@ -6285,8 +6285,8 @@ checkbox1.setAttribute('hidden', "");
           button.addEventListener('mouseover', mouseOverTree);
 
           button.addEventListener('mouseout', mouseOutTree);
-
-          newEl2.id =(reusableId ? reusableId+';' :'')+ inserted_component.id + '-tree'
+          const rT =(reusableId ? reusableId +'|' :'' )+ (options?.reusable || '')
+          newEl2.id =rT+ inserted_component.id + '-tree'
           newEl2.setAttribute('cid', inserted_component.componentId)
           if (noSubComp1 || noComp || noComp1) {
             newEl2.setAttribute('hidden', '')
@@ -6304,7 +6304,7 @@ checkbox1.setAttribute('hidden', "");
           components.push(inserted_component.id)
 
           console.log('foundlvl ' + lvl)
-          const rT =(reusableId ? reusableId +'|' :'' )+ (options?.reusable || '')
+          
           if (replaceAction) {
             await insertDataIntoCodeLog(replaceAction.sk, replaceAction.action, replaceAction.options)
             console.log('replace action in')
