@@ -8818,7 +8818,11 @@ elementsToRemove.forEach(element => element.remove());
 
               }
               else {
-                item.target_element = reusableId + item.target_element
+                const s= item.target_element 
+                if(!(s === 'body-tree' || s === 'body' || s === 'head-tree' | s === 'head')){
+                  item.target_element = reusableId + item.target_element
+                }
+                
                 item.target_element.split(':').length === 1 && (item.target_element = replaceWithNewId(item.target_element, newId))
                 if (item.inserted_element?.id) {
                   item.inserted_element.id = reusableId + item.inserted_element.id
