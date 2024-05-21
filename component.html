@@ -1082,7 +1082,7 @@ component</button> -->
       <button class="b-3" id="file-list-link-by-content-name" style="margin-top: 5px;"
         onclick="switchSelected(event)">🔗Folder-Content</button>
         <label class="l-3"><input id="selfuse" type="checkbox">Self use</label>
-        <label class="l-3"><input id="selfuse" type="checkbox">Re-usable</label>
+        <label class="l-3"><input id="reusable" type="checkbox">Re-usable</label>
   
 <br>
 
@@ -2671,7 +2671,7 @@ component</button> -->
       updatePathItem()
     }
     //not used
-    const addComponent1 = async (id, selfuse) => {
+    const addComponent1 = async (id, selfuse,reusable) => {
       //getElementById1('file-list-attach-component-options;').remove()
       const actionObject = {
         time: (new Date()).getTime(),
@@ -2680,9 +2680,8 @@ component</button> -->
         inserted_component: { componentId: id, id: generateUUID() },
 
       };
-      if (selfuse) {
-        actionObject.options = { selfuse }
-      }
+      actionObject.options = { selfuse,reusable }
+      
       await pushAction(actionObject);
     }
     var loadUsingPath2 = (path1, filePathList, optionList) => {
@@ -3390,6 +3389,7 @@ component</button> -->
       const optionList = getElementById1('file-list-attach-component-options;')
       let flag
       const selfuse = optionList.querySelector('#selfuse').checked
+      const reusable = optionList.querySelector('#reusable').checked
       for (const id of ids) {
         const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/' + id + ':path')
           .then(response => response.json())
@@ -3403,7 +3403,7 @@ component</button> -->
           if (p.length) {
             r = '/' + p.join('/')
           }
-          addComponent1("*" + r + '|' + fileName, selfuse)
+          addComponent1("*" + r + '|' + fileName, selfuse,reusable)
         }
         else if (optionList.querySelector('#file-list-link-by-name').classList.contains('b-selected') || optionList.querySelector('#file-list-link-by-content-name').classList.contains('b-selected')) {
           const currentLsi = pathItemPath.replace(';publish:published', "")
