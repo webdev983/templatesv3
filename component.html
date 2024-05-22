@@ -248,7 +248,7 @@
     <div id="code-tree-menu" class="panel horizontal-menu">
       <label class="l-1" style="margin-right: 10px; user-select: none;">🏷️</label>
       <button class="b-1" onclick="addTreeElement(event)">➕</button>
-      <button class="b-1">🎨</button>
+      <button class="b-1" onclick="showClasses(event)">🎨</button>
 
     </div>
     <div id="code-tree" class="horizontal-area" style="position: relative;">
@@ -1107,6 +1107,26 @@ component</button> -->
     <button style="font-size: 30px;" id="remove-loading">❌</button>
   </div>
   <script>
+    const showClasses = (event)=>{
+      const target = event.target
+      if(target.classList.includes('b-selected')){
+        //hide*
+        target.classList.remove('b-selected')
+      }
+      else{
+        //show
+        target.classList.add('b-selected')
+        document.querySelectorAll('[data-element="class"]').forEach(element=>{
+          const id = element.parentNode.id
+          const generated = getElementById1(removeLastOccurrence(id,'-tree'))
+          const class1 = generated.getAttribute('class')
+          if(class1){
+            element.removeAttribute('hidden')
+            element.textContent = '🎨'+class1
+          }
+        })
+      }
+    }
     const switchFolder = (event) => {
       const relative = getElementById1('relative-label')
       const absolute = getElementById1('absolute-label')
