@@ -62,6 +62,8 @@ document.getElementById('log-open').addEventListener('click', function() {
 });
 
 
+
+
 function reloadPage(event) {
   event.preventDefault(); // Эта строка предотвращает выполнение действия по умолчанию для события (например, перезагрузка страницы)
   window.location.reload(); // Эта строка перезагружает текущую страницу
