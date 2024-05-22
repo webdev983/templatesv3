@@ -3242,13 +3242,21 @@
         data1 = await data1
         let elements = data1.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace(spath, '').split(';')[0] } });
         elements.sort((a, b) => a.name.localeCompare(b.name));
-        for (const el1 of elements) {
+        const promise = elements.map(el1=>fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${el1.id}:${el1.sk}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(el => el.json()).then(el2 => { return { ...el2, ...el1 } }))
+        const elements1 = await Promise.all(elements)
+        for (const item of elements1) {
+          /*
           const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${el1.id}:${el1.sk}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
             },
-          }).then(el => el.json()).then(el2 => { return { ...el2, ...el1 } });
+          }).then(el => el.json()).then(el2 => { return { ...el2, ...el1 } });*/
           if (i < 1000) {
             i++;
             // Clone the fieldset
