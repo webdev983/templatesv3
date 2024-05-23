@@ -1251,11 +1251,10 @@
       }
       const storedPath = localStorage.getItem('storedPath')
       const openNewTab = (id) => {
-        const redirectURL = `component.html?id=${id}&rand=${Math.random()}`;
-        const newTab = window.open();
-        newTab.opener = null;
-        newTab.location.href = redirectURL;
-      }
+    const redirectURL = `component.html?id=${id}&rand=${Math.random()}`;
+    const newWindow = window.open('', '_blank');
+    newWindow.document.write(`<script>window.location='${redirectURL}';<\/script>`);
+}
 
       addMenuEntry(menu, '➡️ Open', (e) => openNewTab(id))
       addMenuEntry(menu, 'ℹ️ Info', (e) => showId1(id))
