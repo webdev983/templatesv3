@@ -1959,6 +1959,12 @@ component</button> -->
       // Convert the grouped object to an array of arrays
       const listOfLists = Object.values(groupedItems);
       console.log(JSON.stringify(listOfLists))
+      listOfLists.map(list => {
+        const innerHtmlActions = list.filter(e => e.action === 'innerHtml')
+        const textActions = list.filter(e => e.action === 'textContent')
+        const setAttributeActions = list.filter(e => e.action === 'setAttribute')
+        const commentActions = list.filter(e => e.action === 'Add_Comment')
+      })
     }
     const toggleGeneratedPage = () => {
       const s = localStorage.getItem('generatedPageToggle')
@@ -3132,7 +3138,7 @@ component</button> -->
           }).then(el => el.json()).then(el2 => { return { ...el2, ...el1 } }))
           const elements1 = await Promise.all(elements)
           for (const item of elements1) {
-            
+
             if (i < 1000) {
               i++
               // Clone the fieldset
@@ -3470,32 +3476,27 @@ component</button> -->
       let flag
       const selfuse = optionList.querySelector('#selfuse').checked
       const reusableC = optionList.querySelector('#reusable').checked
-      let reusable
+      let newCounter 
       if (reusableC) {
+        newCounter = 'AA'
         const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/re_use_counter:counter')
           .then(response => response.json())
-        let newCounter = 'AA'
+
         if (data) {
           const prevCounter = data.value
-          newCounter = getNextCounter(prevCounter)
+          newCounter = prevCounter
 
         }
-        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(
-            { id: 're_use_counter', sk: 'counter', value: newCounter }
-          ),
-        });
-        reusable = newCounter
       }
+
+
+      
+
 
       for (const id of ids) {
         const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/' + id + ':path')
           .then(response => response.json())
-
+        newCounter && (newCounter = getNextCounter(newCounter))
         if (data.LinkBP || optionList.querySelector('#file-list-link-by-path').classList.contains('b-selected')) {
 
           const p = convertToOldPath(data.lsi1.split(';')[0]).split('/')
@@ -3505,20 +3506,31 @@ component</button> -->
           if (p.length) {
             r = '/' + p.join('/')
           }
-          addComponent1("*" + r + '|' + fileName, selfuse, reusable)
+          addComponent1("*" + r + '|' + fileName, selfuse, newCounter)
         }
         else if (optionList.querySelector('#file-list-link-by-name').classList.contains('b-selected') || optionList.querySelector('#file-list-link-by-content-name').classList.contains('b-selected')) {
           const currentLsi = pathItemPath.replace(';publish:published', "")
           const relativePath = getRelativePath(currentLsi, convertToOldPath(data.lsi1.replace(';publish:published', "")));
           let prefix = optionList.querySelector('#file-list-link-by-content-name').classList.contains('b-selected') ? '$' : '#'
-          await addComponent1(prefix + relativePath, selfuse, reusable).catch(e => console.log(e))
+          await addComponent1(prefix + relativePath, selfuse, newCounter).catch(e => console.log(e))
           flag = true
         }
 
         else {
-          addComponent1(id, selfuse, reusable)
+          addComponent1(id, selfuse, newCounter)
         }
 
+      }
+      if(newCounter){
+        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+          { id: 're_use_counter', sk: 'counter', value: newCounter }
+        ),
+      });
       }
       flag && location.reload()
       getElementById1('file-list-attach-component-options;').remove()
