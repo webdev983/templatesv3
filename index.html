@@ -1252,8 +1252,15 @@
       const storedPath = localStorage.getItem('storedPath')
       const openNewTab = (id) => {
     const redirectURL = `component.html?id=${id}&rand=${Math.random()}`;
-    const newWindow = window.open('', '_blank');
-    newWindow.document.write(`<script>window.location='${redirectURL}';<\/script>`);
+    const openNewTab = (id) => {
+    const redirectURL = `component.html?id=${id}&rand=${Math.random()}`;
+    const newWindow = window.open(redirectURL, '_blank', 'noopener,noreferrer');
+    if (newWindow) {
+        newWindow.blur(); // Сбрасываем фокус с новой вкладки
+        window.focus(); // Переключаем фокус обратно на текущую вкладку
+    } else {
+        alert("Ваш браузер заблокировал открытие новой вкладки. Пожалуйста, разрешите всплывающие окна для этого сайта.");
+    }
 }
 
       addMenuEntry(menu, '➡️ Open', (e) => openNewTab(id))
