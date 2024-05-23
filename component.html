@@ -5669,7 +5669,12 @@ checkbox1.setAttribute('hidden', "");
         codeLog.setAttribute('hidden', '')
         searchCodeLog.removeAttribute('hidden')
         searchCodeLog.querySelectorAll("#code-log-element:not([hidden])").forEach(e => e.remove())
-        const filteredActions = actions.filter(item => item.action.toLowerCase().includes(value) || item.id.toString().includes(value) || item.key?.toLowerCase().includes(value) || item.value?.toLowerCase().includes(value))
+        const filteredActions = actions.filter(item => item.action.toLowerCase().includes(value) || 
+        item.id.toString().includes(value) || 
+        item.key?.toLowerCase().includes(value) ||
+        item.value?.toLowerCase().includes(value) ||
+        item.target_element?.toLowerCase().includes(value) ||
+        item.inserted_element?.id.toLowerCase().includes(value))
         for (const action of filteredActions) {
           const originalElement = searchCodeLog.querySelector("#code-log-element");
           const actionTime = action.sk
