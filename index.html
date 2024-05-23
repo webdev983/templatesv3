@@ -1255,13 +1255,9 @@
     const openNewTab = (id) => {
     const redirectURL = `component.html?id=${id}&rand=${Math.random()}`;
     const newWindow = window.open(redirectURL, '_blank', 'noopener,noreferrer');
-    if (newWindow) {
-        newWindow.blur(); // Сбрасываем фокус с новой вкладки
-        window.focus(); // Переключаем фокус обратно на текущую вкладку
-    } else {
-        alert("Ваш браузер заблокировал открытие новой вкладки. Пожалуйста, разрешите всплывающие окна для этого сайта.");
-    }
-
+    newWindow.blur(); // Сбрасываем фокус с новой вкладки
+    window.focus(); // Переключаем фокус обратно на текущую вкладку
+}
 
       addMenuEntry(menu, '➡️ Open', (e) => openNewTab(id))
       addMenuEntry(menu, 'ℹ️ Info', (e) => showId1(id))
