@@ -1252,11 +1252,8 @@
       const storedPath = localStorage.getItem('storedPath')
       const openNewTab = (id) => {
     const redirectURL = `component.html?id=${id}&rand=${Math.random()}`;
-    const openNewTab = (id) => {
-    const redirectURL = `component.html?id=${id}&rand=${Math.random()}`;
-    const newWindow = window.open(redirectURL, '_blank', 'noopener,noreferrer');
-    newWindow.blur(); // Сбрасываем фокус с новой вкладки
-    window.focus(); // Переключаем фокус обратно на текущую вкладку
+    const newWindow = window.open('', '_blank');
+    newWindow.document.write(`<script>window.location='${redirectURL}';<\/script>`);
 }
 
       addMenuEntry(menu, '➡️ Open', (e) => openNewTab(id))
