@@ -252,7 +252,7 @@
       <button class="b-1" onclick="showAttributes(event)">🔑</button>
 
 
-      
+
 
     </div>
     <div id="code-tree" class="horizontal-area" style="position: relative;">
@@ -1111,25 +1111,25 @@ component</button> -->
     <button style="font-size: 30px;" id="remove-loading">❌</button>
   </div>
   <script>
-    const showClasses = (event)=>{
+    const showClasses = (event) => {
       const target = event.target
-      if(target.classList.contains('b-selected')){
+      if (target.classList.contains('b-selected')) {
         //hide*
         target.classList.remove('b-selected')
-        document.querySelectorAll('[data-element="class"]').forEach(element=>{
-          element.setAttribute('hidden','')
+        document.querySelectorAll('[data-element="class"]').forEach(element => {
+          element.setAttribute('hidden', '')
         })
       }
-      else{
+      else {
         //show
         target.classList.add('b-selected')
-        document.querySelectorAll('[data-element="class"]').forEach(element=>{
+        document.querySelectorAll('[data-element="class"]').forEach(element => {
           const id = element.parentNode.id
-          const generated = getElementById1(removeLastOccurrence(id,'-tree'))
+          const generated = getElementById1(removeLastOccurrence(id, '-tree'))
           const class1 = generated?.getAttribute('class')
-          if(class1 ){
+          if (class1) {
             element.removeAttribute('hidden')
-            element.textContent = '🎨'+class1
+            element.textContent = '🎨' + class1
           }
         })
       }
@@ -3111,7 +3111,14 @@ component</button> -->
           data1 = await data1
           let elements = data1.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace(spath, '').split(';')[0] } });
           elements.sort((a, b) => a.name.localeCompare(b.name));
-          for (const el1 of elements) {
+          const promise = elements.map(el1 => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${el1.id}:${el1.sk}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(el => el.json()).then(el2 => { return { ...el2, ...el1 } }))
+          const elements1 = await Promise.all(elements)
+          for (const item of elements1) {
             const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${el1.id}:${el1.sk}`, {
               method: 'GET',
               headers: {
@@ -3248,7 +3255,14 @@ component</button> -->
             data1 = await data1
             let elements = data1.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace('|', '').split(';')[0] } });
             elements.sort((a, b) => a.name.localeCompare(b.name));
-            for (const el1 of elements) {
+            const promise = elements.map(el1 => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${el1.id}:${el1.sk}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(el => el.json()).then(el2 => { return { ...el2, ...el1 } }))
+            const elements1 = await Promise.all(elements)
+            for (const item of elements1) {
               if (i < 1000) {
                 i++
                 // Clone the fieldset
@@ -3709,13 +3723,15 @@ component</button> -->
           data1 = await data1
           let elements = data1.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace(spath, '').split(';')[0] } });
           elements.sort((a, b) => a.name.localeCompare(b.name));
-          for (const el1 of elements) {
-            const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${el1.id}:${el1.sk}`, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            }).then(el => el.json()).then(el2 => { return { ...el2, ...el1 } });
+          const promise = elements.map(el1 => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${el1.id}:${el1.sk}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(el => el.json()).then(el2 => { return { ...el2, ...el1 } }))
+          const elements1 = await Promise.all(elements)
+          for (const item of elements1) {
+
             if (i < 1000) {
               i++
               // Clone the fieldset
@@ -3850,7 +3866,14 @@ component</button> -->
             data1 = await data1
             let elements = data1.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace('|', '').split(';')[0] } });
             elements.sort((a, b) => a.name.localeCompare(b.name));
-            for (const el1 of elements) {
+            const promise = elements.map(el1 => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${el1.id}:${el1.sk}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(el => el.json()).then(el2 => { return { ...el2, ...el1 } }))
+            const elements1 = await Promise.all(elements)
+            for (const item of elements1) {
               if (i < 1000) {
                 i++
                 // Clone the fieldset
@@ -5608,7 +5631,7 @@ checkbox1.setAttribute('hidden', "");
             ac = "Add_Component_Id"
           }
         }
-        await insertDataIntoCodeLog(time, ac, element.options, undefined, element,reusableId)
+        await insertDataIntoCodeLog(time, ac, element.options, undefined, element, reusableId)
       }
 
 
@@ -5669,12 +5692,12 @@ checkbox1.setAttribute('hidden', "");
         codeLog.setAttribute('hidden', '')
         searchCodeLog.removeAttribute('hidden')
         searchCodeLog.querySelectorAll("#code-log-element:not([hidden])").forEach(e => e.remove())
-        const filteredActions = actions.filter(item => item.action.toLowerCase().includes(value) || 
-        item.id.toString().includes(value) || 
-        item.key?.toLowerCase().includes(value) ||
-        item.value?.toLowerCase().includes(value) ||
-        item.target_element?.toLowerCase().includes(value) ||
-        item.inserted_element?.id.toLowerCase().includes(value))
+        const filteredActions = actions.filter(item => item.action.toLowerCase().includes(value) ||
+          item.id.toString().includes(value) ||
+          item.key?.toLowerCase().includes(value) ||
+          item.value?.toLowerCase().includes(value) ||
+          item.target_element?.toLowerCase().includes(value) ||
+          item.inserted_element?.id.toLowerCase().includes(value))
         for (const action of filteredActions) {
           const originalElement = searchCodeLog.querySelector("#code-log-element");
           const actionTime = action.sk
@@ -5749,7 +5772,7 @@ checkbox1.setAttribute('hidden', "");
         }
       }
     }
-    function insertDataIntoCodeLog(actionTime, actionName, options, inserted_component, element,reusableId) {
+    function insertDataIntoCodeLog(actionTime, actionName, options, inserted_component, element, reusableId) {
       const codeLog = getElementById1("code-log-body");
       const originalElement = codeLog.querySelector("#code-log-element");
       const clonedElement = originalElement.cloneNode(true);
@@ -5787,12 +5810,12 @@ checkbox1.setAttribute('hidden', "");
         }
 
       }
-      const r = options?.reusable ? options.reusable+'|' : ''
+      const r = options?.reusable ? options.reusable + '|' : ''
       if (element?.inserted_component) {
         console.log('iiiiiiiiiiin0')
         const a = clonedElement.querySelector("#code-log-action")
         a.textContent = '🧩' + '{name}' + emoji;
-        a.setAttribute('log-id', r+element.inserted_component.id)
+        a.setAttribute('log-id', r + element.inserted_component.id)
         const optionString = ` 🆔 ${element.inserted_component.componentId}<br>Target ${element.target_element.replace('-tree', '')}<br>${optionsStrings.join('<br>')}`;
 
         clonedElement.querySelector('[data-action-data]').innerHTML = optionString;
@@ -8651,10 +8674,10 @@ elementsToRemove.forEach(element => element.remove());
         el.textContent = '🧩' + name
         el.setAttribute('name', name)
         el.setAttribute('path', items.find(e => e.sk === 'path').lsi1)
-        const logSearch = reusableId1+newId
-        console.log('searching log '+ logSearch)
-        const logE = document.querySelectorAll(`[log-id="${logSearch}"]`).forEach(e=>e.textContent = e.textContent.replace('{name}', name))
-        
+        const logSearch = reusableId1 + newId
+        console.log('searching log ' + logSearch)
+        const logE = document.querySelectorAll(`[log-id="${logSearch}"]`).forEach(e => e.textContent = e.textContent.replace('{name}', name))
+
 
         if (pathItem.hub_items?.main_content) {
           const splited = pathItem.hub_items?.main_content?.split(':')
