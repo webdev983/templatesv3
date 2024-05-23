@@ -1250,15 +1250,10 @@
         original.parentElement.append(cloned)
       }
       const storedPath = localStorage.getItem('storedPath')
-      const openNewTab = (id) => {
-    const redirectURL = `component.html?id=${id}&rand=${Math.random()}`;
-    const openNewTab = (param) => {
-    const redirectURL = `component.html?param=${param}&rand=${Math.random()}`;
-    const newWindow = window.open(redirectURL, '_blank', 'noopener,noreferrer');
-    newWindow.blur(); // Сбрасываем фокус с новой вкладки
-    window.focus(); // Переключаем фокус обратно на текущую вкладку
-}
-
+      const openNewTab = (id)=>{
+        const redirectURL = `component.html?id=${id}&rand=${Math.random()}`;
+        window.open(redirectURL, '_blank');
+      }
       addMenuEntry(menu, '➡️ Open', (e) => openNewTab(id))
       addMenuEntry(menu, 'ℹ️ Info', (e) => showId1(id))
       addMenuEntry(menu, '✏️ Edit', (e) => edit(id))
