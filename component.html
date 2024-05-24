@@ -3560,9 +3560,9 @@ component</button> -->
         });
       }
       flag && location.reload()
-      getElementById1('file-list-attach-component-options;'+pId).remove()
-      getElementById1('filePathList;'+pId).remove()
-      getElementById1('selectedFilePathList;'+pId).remove()
+      getElementById1('file-list-attach-component-options;' + pId).remove()
+      getElementById1('filePathList;' + pId).remove()
+      getElementById1('selectedFilePathList;' + pId).remove()
     }
     var approveReplace = async (e) => {
       const m = Array.from(e.target.parentNode.children).filter(i => i.id)
@@ -5926,6 +5926,7 @@ checkbox1.setAttribute('hidden', "");
     }
     let pauseExecution = false
     const fixCommand = async (command,) => {
+      let newCommand 
       console.log('wrong append')
       const missing = getElementById1('target_element_missing')
       const cloned = missing.cloneNode(true)
@@ -5949,7 +5950,32 @@ checkbox1.setAttribute('hidden', "");
             // Add any additional headers if needed
           },
         });
+
         location.reload()
+      }
+      const newTarget = cloned.querySelector('#set-new-target')
+      newTarget.onclick = (e) => {
+        const codeTreeTagFieldsets = querySelectorAll1('fieldset[data-element="code-tree-tag"]');
+        codeTreeTagFieldsets.forEach(function (fieldset) {
+          var checkbox = fieldset.querySelector('input[type="checkbox"]');
+          if (checkbox) {
+            checkbox.removeAttribute('hidden');
+            checkbox.onchange = (event) => {
+              event.preventDefault()
+              const id = checkbox.closest('fieldset').id
+              command.target_element = id
+              newCommand = command
+              codeTreeTagFieldsets.forEach(function (fieldset) {
+                var checkbox = fieldset.querySelector('input[type="checkbox"]');
+                if (checkbox) {
+                  checkbox.setAttribute('hidden', 'true');
+                }
+              });
+            }
+          }
+
+        });
+
       }
       const loadingScreen = getElementById1('loading');
 
@@ -6451,7 +6477,16 @@ checkbox1.setAttribute('hidden', "");
           components.push(inserted_component.id)
 
           console.log('foundlvl ' + lvl)
+          let attachId 
+          if(options?.attachId ){
+            if(reusableId){
+              attachId = reusableId +'|'+ options?.attachId
+            }
+            else{
+              attachId = options?.attachId
+            }
 
+          }
           if (replaceAction) {
             await insertDataIntoCodeLog(replaceAction.sk, replaceAction.action, replaceAction.options)
             console.log('replace action in')
@@ -6549,7 +6584,7 @@ checkbox1.setAttribute('hidden', "");
                 inserted_component: el,
                 noComp: true,
                 noSubComp: i
-              }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions, el.id, undefined, pathForRelative, rT, reusableId, options?.attachId)
+              }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions, el.id, undefined, pathForRelative, rT, reusableId, attachId)
               i = true
 
             }
@@ -6566,7 +6601,7 @@ checkbox1.setAttribute('hidden', "");
             el2.innerHTML = `🔄${replaceAction.target_element.length}`;
           }
           console.log('calling path for relative ' + pathForRelative)
-          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions, replaceId, pathForRelative, newEl2, rT, options?.attachId)
+          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions, replaceId, pathForRelative, newEl2, rT, attachId)
 
 
           break;
@@ -7342,10 +7377,13 @@ checkbox1.setAttribute('hidden', "");
 
                 await fixCommand(command)
               }
-              for (let i = 0; i < treeEls.length; i++) {
-                handleInsert(treeEls[i], compEls[i], true)
+              else {
+                for (let i = 0; i < treeEls.length; i++) {
+                  handleInsert(treeEls[i], compEls[i], true)
+                }
+                break;
               }
-              break;
+
             }
             console.log('handling insert')
 
@@ -11534,10 +11572,10 @@ element.setAttribute('data-product', [first, name].join(';'))
       event.target.parentNode.remove()
     }
     const cancelAddComponent = (event) => {
-      const pid = event.target.parentNode.id.replace('file-list-attach-component-options;','')
-      document.getElementById('file-list-attach-component-options;'+pid).remove()
-      document.getElementById('selectedFilePathList;'+pid).remove()
-      document.getElementById('filePathList;'+pid).remove()
+      const pid = event.target.parentNode.id.replace('file-list-attach-component-options;', '')
+      document.getElementById('file-list-attach-component-options;' + pid).remove()
+      document.getElementById('selectedFilePathList;' + pid).remove()
+      document.getElementById('filePathList;' + pid).remove()
     }
     const cancel = (e) => {
 
