@@ -3013,13 +3013,11 @@ component</button> -->
       if (isTree) {
         pId = e.target.closest('fieldset').id.replace('code-tree-add-tag-step-1;', '')
       }
-      if(isTree){
-        e.target.parentNode.remove()
-      }
+
       let selected = []
       let path1 = ''
-      
-      
+
+
       var addSelected = (itemId, path) => {
         const clonedFieldset2 = getElementById1('selectedFilePathList;' + pId)
         if (Array.from(clonedFieldset2.children).find(el => el.id === itemId)) {
@@ -3403,6 +3401,9 @@ component</button> -->
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset3);
 
         loadFileList1()
+        if (isTree) {
+          e.target.parentNode.remove()
+        }
 
       }
 
