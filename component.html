@@ -2737,7 +2737,7 @@ component</button> -->
       updatePathItem()
     }
     //not used
-    const addComponent1 = async (id, selfuse, reusable) => {
+    const addComponent1 = async (id, selfuse, reusable,pId) => {
       //getElementById1('file-list-attach-component-options;').remove()
       const actionObject = {
         time: (new Date()).getTime(),
@@ -2746,7 +2746,7 @@ component</button> -->
         inserted_component: { componentId: id, id: generateUUID() },
 
       };
-      actionObject.options = { selfuse, reusable }
+      actionObject.options = { selfuse, reusable,attachId:pId }
 
       await pushAction(actionObject);
     }
@@ -3489,11 +3489,12 @@ component</button> -->
     }
 
     var approveAddComponent = async (e) => {
-      const m1 = document.getElementById('selectedFilePathList;')
+      const m1 = e.target.parentNode.nextElementSibling
 
 
       const ids = Array.from(m1.children).map(e => e.id)
-      const optionList = getElementById1('file-list-attach-component-options;')
+      const optionList = e.target.parentNode
+      const pId = optionList.id.replace('file-list-attach-component-options;','')
       let flag
       const selfuse = optionList.querySelector('#selfuse').checked
       const reusableC = optionList.querySelector('#reusable').checked
@@ -3527,18 +3528,18 @@ component</button> -->
           if (p.length) {
             r = '/' + p.join('/')
           }
-          addComponent1("*" + r + '|' + fileName, selfuse, newCounter)
+          addComponent1("*" + r + '|' + fileName, selfuse, newCounter,pId)
         }
         else if (optionList.querySelector('#file-list-link-by-name').classList.contains('b-selected') || optionList.querySelector('#file-list-link-by-content-name').classList.contains('b-selected')) {
           const currentLsi = pathItemPath.replace(';publish:published', "")
           const relativePath = getRelativePath(currentLsi, convertToOldPath(data.lsi1.replace(';publish:published', "")));
           let prefix = optionList.querySelector('#file-list-link-by-content-name').classList.contains('b-selected') ? '$' : '#'
-          await addComponent1(prefix + relativePath, selfuse, newCounter).catch(e => console.log(e))
+          await addComponent1(prefix + relativePath, selfuse, newCounter,pId).catch(e => console.log(e))
           flag = true
         }
 
         else {
-          addComponent1(id, selfuse, newCounter)
+          addComponent1(id, selfuse, newCounter,pId)
         }
 
       }
