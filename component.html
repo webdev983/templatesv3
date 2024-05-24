@@ -1056,9 +1056,9 @@ component</button> -->
       <span class="l-1">⚠️</span><span class="l-2">Target element missing</span>
       <br>
       <div id="error_action_info"></div>
-      <button class="b-2">🧩 fix in component</button>
-      <button class="b-2">🆕 new target</button>
-      <button class="b-2">🗑 remove</button>
+      <button id='fix-in-component' class="b-2">🧩 fix in component</button>
+      <button id='set-new-target' class="b-2">🆕 new target</button>
+      <button id='remove-command' class="b-2">🗑 remove</button>
     </div>
 
     <!-- file path-->
@@ -2737,7 +2737,7 @@ component</button> -->
       updatePathItem()
     }
     //not used
-    const addComponent1 = async (id, selfuse, reusable,pId) => {
+    const addComponent1 = async (id, selfuse, reusable, pId) => {
       //getElementById1('file-list-attach-component-options;').remove()
       const actionObject = {
         time: (new Date()).getTime(),
@@ -2746,7 +2746,7 @@ component</button> -->
         inserted_component: { componentId: id, id: generateUUID() },
 
       };
-      actionObject.options = { selfuse, reusable,attachId:pId }
+      actionObject.options = { selfuse, reusable, attachId: pId }
 
       await pushAction(actionObject);
     }
@@ -3017,7 +3017,7 @@ component</button> -->
         pId = e.target.closest('fieldset').id.replace('code-tree-add-tag-step-1;', '')
       }
       var addSelected = (itemId, path) => {
-        const clonedFieldset2 = getElementById1('selectedFilePathList;'+pId)
+        const clonedFieldset2 = getElementById1('selectedFilePathList;' + pId)
         if (Array.from(clonedFieldset2.children).find(el => el.id === itemId)) {
           return
         }
@@ -3046,7 +3046,7 @@ component</button> -->
           let url
           const helperid = localStorage.getItem('helperid')
 
-          var filePathList = getElementById1('filePathList;'+pId);
+          var filePathList = getElementById1('filePathList;' + pId);
           filePathList.innerHTML = '';
           let lvls = [];
           let i = 0;
@@ -3210,7 +3210,7 @@ component</button> -->
         console.log(url)
 
 
-        var filePathList = document.getElementById('filePathList;'+pId);
+        var filePathList = document.getElementById('filePathList;' + pId);
         filePathList.innerHTML = '';
 
         if (helperid) {
@@ -3494,7 +3494,7 @@ component</button> -->
 
       const ids = Array.from(m1.children).map(e => e.id)
       const optionList = e.target.parentNode
-      const pId = optionList.id.replace('file-list-attach-component-options;','')
+      const pId = optionList.id.replace('file-list-attach-component-options;', '')
       let flag
       const selfuse = optionList.querySelector('#selfuse').checked
       const reusableC = optionList.querySelector('#reusable').checked
@@ -3528,18 +3528,18 @@ component</button> -->
           if (p.length) {
             r = '/' + p.join('/')
           }
-          addComponent1("*" + r + '|' + fileName, selfuse, newCounter,pId)
+          addComponent1("*" + r + '|' + fileName, selfuse, newCounter, pId)
         }
         else if (optionList.querySelector('#file-list-link-by-name').classList.contains('b-selected') || optionList.querySelector('#file-list-link-by-content-name').classList.contains('b-selected')) {
           const currentLsi = pathItemPath.replace(';publish:published', "")
           const relativePath = getRelativePath(currentLsi, convertToOldPath(data.lsi1.replace(';publish:published', "")));
           let prefix = optionList.querySelector('#file-list-link-by-content-name').classList.contains('b-selected') ? '$' : '#'
-          await addComponent1(prefix + relativePath, selfuse, newCounter,pId).catch(e => console.log(e))
+          await addComponent1(prefix + relativePath, selfuse, newCounter, pId).catch(e => console.log(e))
           flag = true
         }
 
         else {
-          addComponent1(id, selfuse, newCounter,pId)
+          addComponent1(id, selfuse, newCounter, pId)
         }
 
       }
@@ -5801,7 +5801,7 @@ checkbox1.setAttribute('hidden', "");
             else {
               const e = action.target_element.map(el => el.id)
               e.shift()
-              optionsStrings.push(` Target ${ action.target_element[0].id.replace('-tree', '')},Elements: ${e.join(',')}`)
+              optionsStrings.push(` Target ${action.target_element[0].id.replace('-tree', '')},Elements: ${e.join(',')}`)
             }
 
           }
@@ -5858,7 +5858,7 @@ checkbox1.setAttribute('hidden', "");
         const a = clonedElement.querySelector("#code-log-action")
         a.textContent = '🧩' + '{name}' + emoji;
         a.setAttribute('log-id', r + element.inserted_component.id)
-        const optionString = ` 🆔 ${element.inserted_component.componentId}<br>Target ${options?.attachId ||element.target_element.replace('-tree', '')}<br>${optionsStrings.join('<br>')}`;
+        const optionString = ` 🆔 ${element.inserted_component.componentId}<br>Target ${options?.attachId || element.target_element.replace('-tree', '')}<br>${optionsStrings.join('<br>')}`;
 
         clonedElement.querySelector('[data-action-data]').innerHTML = optionString;
 
@@ -5890,7 +5890,7 @@ checkbox1.setAttribute('hidden', "");
         }
         if (element?.target_element) {
           if (typeof element.target_element === 'string') {
-            optionsStrings.push(` Target ${ options?.attachId || element.target_element.replace('-tree', '')}`)
+            optionsStrings.push(` Target ${options?.attachId || element.target_element.replace('-tree', '')}`)
           }
           else {
             const e = element.target_element.map(el => el.id)
@@ -5920,20 +5920,41 @@ checkbox1.setAttribute('hidden', "");
       }
     }
     let pauseExecution = false
-    const fixCommand =async (command,)=>{
+    const fixCommand = async (command,) => {
       console.log('wrong append')
       const missing = getElementById1('target_element_missing')
       const cloned = missing.cloneNode(true)
       getElementById1('code-tree').append(cloned)
+      const fixIn = cloned.querySelector('fix-in-component')
+      if (command.id === pathItem.id) {
+        fixIn.setAttribute('hidden', '')
+      }
+      else {
+        fixIn.onclick = (e) => {
+          const redirectURL = `component.html?id=${command.id}&rand=${Math.random()}`;
+          window.open(redirectURL, '_blank');
+        }
+      }
+      const remove = cloned.querySelector('remove-command')
+      remove.onclick = async (e) => {
+        await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${command.id}:${command.sk}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            // Add any additional headers if needed
+          },
+        });
+        location.reload()
+      }
       const loadingScreen = getElementById1('loading');
-      
+
       loadingScreen.style.display = 'none';
 
 
 
       //loadingScreen.style.display = 'flex';
     }
-    const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId,attachId) => {
+    const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId, attachId) => {
       if (pauseExecution) {
         return
       }
@@ -6523,7 +6544,7 @@ checkbox1.setAttribute('hidden', "");
                 inserted_component: el,
                 noComp: true,
                 noSubComp: i
-              }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions, el.id, undefined, pathForRelative, rT, reusableId,options?.attachId )
+              }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions, el.id, undefined, pathForRelative, rT, reusableId, options?.attachId)
               i = true
 
             }
@@ -6540,7 +6561,7 @@ checkbox1.setAttribute('hidden', "");
             el2.innerHTML = `🔄${replaceAction.target_element.length}`;
           }
           console.log('calling path for relative ' + pathForRelative)
-          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions, replaceId, pathForRelative, newEl2, rT,options?.attachId)
+          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions, replaceId, pathForRelative, newEl2, rT, options?.attachId)
 
 
           break;
@@ -6641,7 +6662,7 @@ checkbox1.setAttribute('hidden', "");
             components.push(inserted_component.id)
             console.log(inserted_component.componentId)
             console.log('insert after reusableid' + reusableId)
-            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev }, undefined, reusableId,attachId)
+            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev }, undefined, reusableId, attachId)
             break;
           }
 
@@ -7302,18 +7323,18 @@ checkbox1.setAttribute('hidden', "");
               const existing = []
               const elementsWithIdAndAttribute = querySelectorAll1('[id^="' + mId + '"][data-replaceid]')
               elementsWithIdAndAttribute.forEach(
-                  el => {
-                    console.log('ffooound152 ' + el.id)
-                    if (!existing.includes(el.getAttribute('data-replaceid'))) {
-                      existing.push(el.getAttribute('data-replaceid'))
-                      treeEls.push(getElementById1(el.id + '-tree'));
-                      compEls.push(el)
-                    }
-
+                el => {
+                  console.log('ffooound152 ' + el.id)
+                  if (!existing.includes(el.getAttribute('data-replaceid'))) {
+                    existing.push(el.getAttribute('data-replaceid'))
+                    treeEls.push(getElementById1(el.id + '-tree'));
+                    compEls.push(el)
                   }
-                );
-              if(!elementsWithIdAndAttribute.length){
-                
+
+                }
+              );
+              if (!elementsWithIdAndAttribute.length) {
+
                 await fixCommand(command)
               }
               for (let i = 0; i < treeEls.length; i++) {
@@ -8580,7 +8601,7 @@ elementsToRemove.forEach(element => element.remove());
     }
     let foundMainContent
 
-    const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative, treeElement, reusableId,attachId) => {
+    const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative, treeElement, reusableId, attachId) => {
       console.log('load from db' + id + 'reusable' + reusableId)
       console.log('err2 ' + p)
       console.log('path for relative ' + pathForRelative?.current)
@@ -8961,8 +8982,8 @@ elementsToRemove.forEach(element => element.remove());
                 if (!(s === 'body-tree' || s === 'body' || s === 'head-tree' | s === 'head')) {
                   item.target_element = reusableId1 + item.target_element
                 }
-                else if(s==='body-tree' && attachId){
-                  item.target_element =attachId
+                else if (s === 'body-tree' && attachId) {
+                  item.target_element = attachId
                 }
 
                 item.target_element.split(':').length === 1 && (item.target_element = replaceWithNewId(item.target_element, newId))
