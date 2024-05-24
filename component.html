@@ -3365,10 +3365,14 @@ component</button> -->
         const clonedFieldset2 = fieldset.cloneNode(true);
         const clonedFieldset3 = getElementById1('file-list-attach-component-options').cloneNode(true);
         clonedFieldset3.removeAttribute('hidden')
-        clonedFieldset3.id = 'file-list-attach-component-options;'
+        let pId= ''
+        if(isTree){
+          pId = e.target.closest('fieldset').id.replace('code-tree-add-tag-step-1;','')
+        }
+        clonedFieldset3.id = 'file-list-attach-component-options;'+pId
 
-        clonedFieldset.id = clonedFieldset.id + ';';
-        clonedFieldset2.id = 'selectedFilePathList;';
+        clonedFieldset.id = clonedFieldset.id + ';' +pId;
+        clonedFieldset2.id = 'selectedFilePathList;'+pId;
         clonedFieldset.setAttribute('action', 'Add_Component')
         clonedFieldset3.querySelector('[data-action="moveBack"]').onclick = (e) => {
           const splited = path1.split('/')
