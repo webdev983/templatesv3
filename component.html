@@ -5921,7 +5921,7 @@ checkbox1.setAttribute('hidden', "");
     }
     let pauseExecution = false
 
-    const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId) => {
+    const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId,attachId) => {
       if (pauseExecution) {
         return
       }
@@ -6511,7 +6511,7 @@ checkbox1.setAttribute('hidden', "");
                 inserted_component: el,
                 noComp: true,
                 noSubComp: i
-              }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions, el.id, undefined, pathForRelative, rT, reusableId)
+              }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions, el.id, undefined, pathForRelative, rT, reusableId,options?.attachId )
               i = true
 
             }
@@ -6528,7 +6528,7 @@ checkbox1.setAttribute('hidden', "");
             el2.innerHTML = `🔄${replaceAction.target_element.length}`;
           }
           console.log('calling path for relative ' + pathForRelative)
-          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions, replaceId, pathForRelative, newEl2, rT)
+          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions, replaceId, pathForRelative, newEl2, rT,options?.attachId)
 
 
           break;
@@ -6629,7 +6629,7 @@ checkbox1.setAttribute('hidden', "");
             components.push(inserted_component.id)
             console.log(inserted_component.componentId)
             console.log('insert after reusableid' + reusableId)
-            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev }, undefined, reusableId)
+            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev }, undefined, reusableId,attachId)
             break;
           }
 
@@ -8565,7 +8565,7 @@ elementsToRemove.forEach(element => element.remove());
     }
     let foundMainContent
 
-    const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative, treeElement, reusableId) => {
+    const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative, treeElement, reusableId,attachId) => {
       console.log('load from db' + id + 'reusable' + reusableId)
       console.log('err2 ' + p)
       console.log('path for relative ' + pathForRelative?.current)
@@ -8945,6 +8945,9 @@ elementsToRemove.forEach(element => element.remove());
                 const s = item.target_element
                 if (!(s === 'body-tree' || s === 'body' || s === 'head-tree' | s === 'head')) {
                   item.target_element = reusableId1 + item.target_element
+                }
+                else if(s==='body-tree' && attachId){
+                  item.target_element =attachId
                 }
 
                 item.target_element.split(':').length === 1 && (item.target_element = replaceWithNewId(item.target_element, newId))
