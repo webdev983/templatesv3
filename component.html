@@ -5659,7 +5659,7 @@ checkbox1.setAttribute('hidden', "");
         referenceNode.parentNode.appendChild(newNode);
       }
     }
-    const pushAction = async (element, firstLoad, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId) => {
+    const pushAction = async (element, firstLoad, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId,attachId) => {
       console.log('pushed' + JSON.stringify(element))
       const time = element.time
       console.log('time' + time)
@@ -5682,7 +5682,7 @@ checkbox1.setAttribute('hidden', "");
       }
 
 
-      await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId)
+      await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId,attachId)
     }
     const pushActionToDb = async (action) => {
       const urlSearchParams = new URLSearchParams(window.location.search);
@@ -6477,7 +6477,7 @@ checkbox1.setAttribute('hidden', "");
           components.push(inserted_component.id)
 
           console.log('foundlvl ' + lvl)
-          let attachId 
+          
           if(options?.attachId ){
             if(reusableId){
               attachId = reusableId +'|'+ options?.attachId
@@ -9047,13 +9047,13 @@ elementsToRemove.forEach(element => element.remove());
               }
 
               //insertDataIntoCodeLog(item.sk, item.action)
-              await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: newPathForRelative, prev: pathForRelative.current, next }, reusableId)
+              await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: newPathForRelative, prev: pathForRelative.current, next }, reusableId,attachId)
 
               continue
             }
 
 
-            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: componentPath, prev: componentPath, next: [] }, "", '')
+            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: componentPath, prev: componentPath, next: [] }, "", '',attachId)
           }
 
         }
