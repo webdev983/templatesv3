@@ -3560,9 +3560,9 @@ component</button> -->
         });
       }
       flag && location.reload()
-      getElementById1('file-list-attach-component-options;').remove()
-      getElementById1('filePathList;').remove()
-      getElementById1('selectedFilePathList;').remove()
+      getElementById1('file-list-attach-component-options;'+pId).remove()
+      getElementById1('filePathList;'+pId).remove()
+      getElementById1('selectedFilePathList;'+pId).remove()
     }
     var approveReplace = async (e) => {
       const m = Array.from(e.target.parentNode.children).filter(i => i.id)
@@ -11534,9 +11534,10 @@ element.setAttribute('data-product', [first, name].join(';'))
       event.target.parentNode.remove()
     }
     const cancelAddComponent = (event) => {
-      document.getElementById('file-list-attach-component-options;').remove()
-      document.getElementById('selectedFilePathList;').remove()
-      document.getElementById('filePathList;').remove()
+      const pid = event.target.parentNode.id.replace('file-list-attach-component-options;','')
+      document.getElementById('file-list-attach-component-options;'+pid).remove()
+      document.getElementById('selectedFilePathList;'+pid).remove()
+      document.getElementById('filePathList;'+pid).remove()
     }
     const cancel = (e) => {
 
