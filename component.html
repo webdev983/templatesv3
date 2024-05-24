@@ -3009,15 +3009,17 @@ component</button> -->
     }
     //end not used
     var addComponent = (e, isTree) => {
+      let pId = ''
+      if (isTree) {
+        pId = e.target.closest('fieldset').id.replace('code-tree-add-tag-step-1;', '')
+      }
       if(isTree){
         e.target.parentNode.remove()
       }
       let selected = []
       let path1 = ''
-      let pId = ''
-      if (isTree) {
-        pId = e.target.closest('fieldset').id.replace('code-tree-add-tag-step-1;', '')
-      }
+      
+      
       var addSelected = (itemId, path) => {
         const clonedFieldset2 = getElementById1('selectedFilePathList;' + pId)
         if (Array.from(clonedFieldset2.children).find(el => el.id === itemId)) {
