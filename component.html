@@ -5796,12 +5796,12 @@ checkbox1.setAttribute('hidden', "");
           }
           if (action?.target_element) {
             if (typeof action.target_element === 'string') {
-              optionsStrings.push(` Target ${action.target_element.replace('-tree', '')}`)
+              optionsStrings.push(` Target ${action.options?.attachId || action.target_element.replace('-tree', '')}`)
             }
             else {
               const e = action.target_element.map(el => el.id)
               e.shift()
-              optionsStrings.push(` Target ${action.target_element[0].id.replace('-tree', '')},Elements: ${e.join(',')}`)
+              optionsStrings.push(` Target ${ action.target_element[0].id.replace('-tree', '')},Elements: ${e.join(',')}`)
             }
 
           }
@@ -5890,7 +5890,7 @@ checkbox1.setAttribute('hidden', "");
         }
         if (element?.target_element) {
           if (typeof element.target_element === 'string') {
-            optionsStrings.push(` Target ${element.target_element.replace('-tree', '')}`)
+            optionsStrings.push(` Target ${ action.options?.attachId || element.target_element.replace('-tree', '')}`)
           }
           else {
             const e = element.target_element.map(el => el.id)
