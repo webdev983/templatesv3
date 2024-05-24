@@ -5920,7 +5920,17 @@ checkbox1.setAttribute('hidden', "");
       }
     }
     let pauseExecution = false
+    const fixCommand =async (command,)=>{
+      const missing = getElementById1('target_element_missing')
+      missing.removeAttribute('hidden')
+      const loadingScreen = getElementById1('loading');
+      
+      loadingScreen.style.display = 'none';
 
+
+
+      //loadingScreen.style.display = 'flex';
+    }
     const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId,attachId) => {
       if (pauseExecution) {
         return
@@ -7289,7 +7299,7 @@ checkbox1.setAttribute('hidden', "");
               const compEls = []
               const existing = []
               const elementsWithIdAndAttribute = querySelectorAll1('[id^="' + mId + '"][data-replaceid]')
-                .forEach(
+              elementsWithIdAndAttribute.forEach(
                   el => {
                     console.log('ffooound152 ' + el.id)
                     if (!existing.includes(el.getAttribute('data-replaceid'))) {
@@ -7300,7 +7310,10 @@ checkbox1.setAttribute('hidden', "");
 
                   }
                 );
-
+              if(!elementsWithIdAndAttribute.length){
+                
+                await fixCommand(command)
+              }
               for (let i = 0; i < treeEls.length; i++) {
                 handleInsert(treeEls[i], compEls[i], true)
               }
