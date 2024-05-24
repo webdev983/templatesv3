@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="css/right-click-menu.css" media="all">
   <link rel="stylesheet" href="css/buttons-and-menus.css" media="all">
   <link rel="stylesheet" href="css/panels.css" media="all">
+  <link rel="icon" type="image/png" href="favicon.png">
 
   <script>
     // Function to get the value of a parameter from the URL query string
@@ -64,13 +65,14 @@
         <button class="b-1 " id="toggle-head" onclick="toggleHead()">🗿</button>
         <button class="b-1 " id="toggle-generated-page" onclick="toggleGeneratedPage()">👁️</button>
         <button hidden id="refresh-page" class="b-1" onclick="reloadPage(event)">🔄</button>
-        <button hidden id="remove-duplicate-actions" class="b-1">🧹</button>
+        <button hidden id="remove-duplicate-actions" onclick="removeDuplicatedActions(event)" class="b-1">🧹</button>
 
 
         <input hidden id="search-actions" type="text" placeholder="🔎 Search actions" style="  padding: 5px; 
         border: 2px solid #4A90E2;   
         border-radius: 5px;   
-        font-size: 18px; margin-bottom: 7px; margin-top: 10px;  margin-left: 5px; min-width: 315px; ">
+        font-size: 18px; margin-bottom: 7px; margin-top: 10px;  margin-left: 5px; min-width: 315px; "
+          oninput="searchLogs(event)">
 
       </div>
       <div id="logs-menu">
@@ -78,875 +80,93 @@
       <table id="code-log" class="table-1" style="margin-left: auto; margin-right: auto" hidden
         style="margin-bottom: 100px;">
         <style>
-.action-data-tooltip {
-  display: none;
-  position: absolute;
-  background-color: #333; /* Темный фон */
-  color: #fff; /* Белый текст */
-  padding: 10px;
-  border-radius: 4px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-  max-height: 200px; /* Максимальная высота перед добавлением прокрутки */
-  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-  width: 410px; /* или задайте конкретную ширину */
-  top: calc(100% + 3px); /* Разместить под элементом на 3px ниже */
-  left: 50px; /* Сместить вправо на 50px от начала родительского элемента */
-}
+          .action-data-tooltip {
+            display: none;
+            position: absolute;
+            background-color: #333;
+            /* Темный фон */
+            color: #fff;
+            /* Белый текст */
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            /* Убедитесь, что tooltip отображается над другими элементами */
+            max-height: 200px;
+            /* Максимальная высота перед добавлением прокрутки */
+            overflow-y: auto;
+            /* Вертикальная прокрутка при переполнении */
+            width: 410px;
+            /* или задайте конкретную ширину */
+            top: calc(100% + 0px);
+            /* Разместить под элементом на 3px ниже */
+            left: 10px;
+            /* Сместить вправо на 50px от начала родительского элемента */
+          }
 
-/* Показываем tooltip при наведении на элемент строки таблицы */
-#code-log-element:hover .action-data-tooltip {
-  display: block;
-}
+          /* Показываем tooltip при наведении на элемент строки таблицы */
+          #code-log-element:hover .action-data-tooltip {
+            display: block;
+          }
 
-td {
-  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-}
+          td {
+            position: relative;
+            /* Необходимо для корректной работы позиционирования tooltip */
+          }
         </style>
         <tbody id="code-log-body">
           <!--NUMBERS!! 1️⃣ 2️⃣ 3️⃣ 4️⃣-->
-          <tr  id="code-log-element">
-        
+          <tr hidden id="code-log-element">
+
             <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
                 style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
 
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
-            </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>
-          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
-
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
-            </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td  style="position: relative;" data-type-code-log="action-name"><span id="code-log-action">append child</span>
               <div class="action-data-tooltip" data-action-data>
-                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                width: 410px; /* или задайте конкретную ширину */
-                top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                left: 0; /* Алигн по левому краю, можно настроить */
-          
-              
-              /* Показываем tooltip при наведении на элемент строки таблицы */
-              #code-log-element:hover .action-data-tooltip {
-                display: block;
-              }
-              
-              td
-                position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-              
+                empty
               </div>
-  
             </td>
+            <td data-type-code-log="action-name"><span id="code-log-action" data-tooltip="
+                👶 child 1-start$ &#10; 
+                🧩 {component name} &#10; 
+                🏷️ {tag name} &#10; 
+                💬 {comment} &#10; 
 
-
-            <td  data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-
-              </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
-
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
-            </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
-
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
-            </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
-
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
+                🆔 {id} &#10; 
+                🔑 {key} &#10; 
+                🪣 {value} &#10; 
+                ✅⧉ Apply to copies  &#10; 
+                🚂⧉ Insert Copies  &#10;  
+                🎯⧉ Dup Target  &#10; 
+                ">append child</span>
             </td>
             <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
             </td>
           </tr>
-          <tr  id="code-log-element">
-        
+        </tbody>
+        <tbody id="code-log-search-body">
+          <!--NUMBERS!! 1️⃣ 2️⃣ 3️⃣ 4️⃣-->
+          <tr hidden id="code-log-element">
+
             <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
                 style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
 
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
+              <div class="action-data-tooltip" data-action-data>
+                empty
+              </div>
             </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
+            <td data-type-code-log="action-name"><span id="code-log-action" data-tooltip="
+                👶 child 1-start$ &#10; 
+                🧩 {component name} &#10; 
+                🏷️ {tag name} &#10; 
+                💬 {comment} &#10; 
 
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
-            </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
-
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
-            </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
-
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
-            </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
-
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
-            </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
-
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
-            </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
-
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
-            </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
-
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
-            </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
-
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
-            </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
-
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
-            </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
-
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
-            </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
-
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
-            </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
-
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
-            </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
-
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
-            </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
-
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
-            </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
-
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
-            </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
-
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
-            </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
-
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
-            </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
-
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
-            </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
-
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
-            </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
-
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
-            </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
-            </td>
-          </tr>          <tr  id="code-log-element">
-        
-            <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
-                style="margin-left: 10px;">1703707728031</span>
-              
-                <div class="action-data-tooltip" data-action-data>
-                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                  z-index: 1000; /* Убедитесь, что tooltip отображается над другими элементами */
-                  max-height: auto; /* Максимальная высота перед добавлением прокрутки */
-                  overflow-y: auto; /* Вертикальная прокрутка при переполнении */
-                  width: 410px; /* или задайте конкретную ширину */
-                  top: 100%; /* Разместить под элементом, можно настроить по необходимости */
-                  left: 0; /* Алигн по левому краю, можно настроить */
-            
-                
-                /* Показываем tooltip при наведении на элемент строки таблицы */
-                #code-log-element:hover .action-data-tooltip {
-                  display: block;
-                }
-                
-                td
-                  position: relative; /* Необходимо для корректной работы позиционирования tooltip */
-                
-                </div>
-
-              </td>
-            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
+                🆔 {id} &#10; 
+                🔑 {key} &#10; 
+                🪣 {value} &#10; 
+                ✅⧉ Apply to copies  &#10; 
+                🚂⧉ Insert Copies  &#10;  
+                🎯⧉ Dup Target  &#10; 
+                ">append child</span>
             </td>
             <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
             </td>
@@ -1028,6 +248,12 @@ td {
     <div id="code-tree-menu" class="panel horizontal-menu">
       <label class="l-1" style="margin-right: 10px; user-select: none;">🏷️</label>
       <button class="b-1" onclick="addTreeElement(event)">➕</button>
+      <button class="b-1" onclick="showClasses(event)">🎨</button>
+      <button class="b-1" onclick="showAttributes(event)">🔑</button>
+
+
+
+
     </div>
     <div id="code-tree" class="horizontal-area" style="position: relative;">
       <fieldset id="head-tree" data-element="code-tree-tag" class="tree-element">
@@ -1043,6 +269,7 @@ td {
         <button class="b-3 t" hidden data-element="code-tree-text-content-button"
           onclick="openTextContent(event)">📄</button>
         <span data-element="comment" hidden class="l-3 t b-dark-blue">💬</span>
+        <span data-element="class" hidden class="l-3 t b-dark-green">🎨</span>
         <div data-open-menu></div>
       </fieldset>
 
@@ -1059,7 +286,7 @@ td {
         <button class="b-3 t b-dark-blue" data-element="code-tree-text-content-button" hidden
           onclick="openTextContent(event)">📄</button>
         <span data-element="comment" hidden class="l-3 t b-dark-blue">💬</span>
-
+        <span data-element="class" hidden class="l-3 t b-dark-green">🎨</span>
         <div data-open-menu></div>
       </fieldset>
 
@@ -1087,8 +314,8 @@ td {
         <textarea class="text1"></textarea>
       </details>
 
-      
-      
+
+
       <details style="margin-bottom: 7px; " data-list hidden>
         <summary class="summary-L-3"><span class="l-3" data-list-emoji>📣</span><span> </span><span
             class="l-3 b-dark-blue" data-list-name>
@@ -1133,23 +360,23 @@ td {
 
       <details style="margin-bottom: 7px;" id="scripts" data-file-name-show="Hub">
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">⚙️ Scripts</span></summary>
-        <table class="table-1"  style="margin-left: 30px;">
+        <table class="table-1" style="margin-left: 30px;">
           <tr data-script-item>
             <td>
-                <label data-script-status class="l-3">🔴</label>
-                <label data-script-name="head-transfer"  class="l-3"  style="margin: 10px;">head transfer</label>
+              <label data-script-status class="l-3">🔴</label>
+              <label data-script-name="head-transfer" class="l-3" style="margin: 10px;">head transfer</label>
             </td>
           </tr>
           <tr data-script-item>
             <td>
-                <label data-script-status class="l-3">🔴</label>
-                <label data-script-name="eval"  class="l-3"  style="margin: 10px;">eval</label>
+              <label data-script-status class="l-3">🔴</label>
+              <label data-script-name="eval" class="l-3" style="margin: 10px;">eval</label>
             </td>
           </tr>
           <tr data-script-item>
             <td>
-                <label data-script-status class="l-3">🔴</label>
-                <label data-script-name="transfer"  class="l-3"  style="margin: 10px;">transfer</label>
+              <label data-script-status class="l-3">🔴</label>
+              <label data-script-name="transfer" class="l-3" style="margin: 10px;">transfer</label>
             </td>
           </tr>
 
@@ -1331,6 +558,18 @@ td {
 
   -->
     <div id="iframe-container">
+      <div id="target_element_missing">
+
+        <span class="l-1">⚠️</span><span class="l-2">Target element missing</span>
+        <br>
+        <div id="error_action_info"></div>
+        <button class="b-2">🆕 new target</button>
+        <button class="b-2">🗑 remove</button>
+
+    
+      </div>
+    
+    
       <iframe id="generated-page-iframe" src="./iframe.html"
         style="width:100%; height:20000px; border:none; margin-bottom: 200px;" allowfullscreen="true" allow="
       
@@ -1566,6 +805,7 @@ td {
       <button class="b-3 t" data-element="code-tree-text-content-button" hidden
         onclick="openTextContent(event)">📄</button>
       <span data-element="comment" hidden class="l-3 t b-dark-blue">💬</span>
+      <span data-element="class" hidden class="l-3 t b-dark-green">🎨</span>
       <span data-open-menu></button>
     </fieldset>
 
@@ -1669,6 +909,8 @@ component</button> -->
       <br>
       <button class="b-4" id="code-tree-add-tag-choose-new" onclick="addNew(event)"> ➕ New</button>
       <button class="b-4" id="code-tree-add-tag-choose-existed" onclick="addExisting(event)"> ✔️ Existed</button>
+      <button class="b-4" id="code-tree-add-tag-choose-existed"> 🧩Component</button>
+      ✔️ Existed
     </div>
 
 
@@ -1817,6 +1059,9 @@ component</button> -->
 
 
     <!--files menus-->
+
+    <!-- missing target -->
+
     <!-- file path-->
     <li data-element="file-path" id="item">
       <label hidden class="l-3" style="margin-right: 3px;" id="Pushpin">📌</label>
@@ -1839,6 +1084,8 @@ component</button> -->
           id="relative-input">🗂️Relative</label>
       <label class="l-3" id="absolute-label" hidden><input type="radio" name="relative-absolute-choose"
           id="absolute-input">📂Absolute</label>
+      <label class="l-3" id="content-label" hidden><input type="radio" name="relative-absolute-choose"
+          id="content-input"></label>
 
     </ol>
 
@@ -1850,13 +1097,20 @@ component</button> -->
     <div hidden id="file-list-attach-component-options" style="padding: 5px; margin-left: 10px; margin-bottom: 30px; "
       data-menu>
 
+      <br>
+
       <button class="b-3" id="file-list-link-by-path" style="margin-top: 5px;"
         onclick="switchSelected(event)">📂Absolute</button>
       <button class="b-3" id="file-list-link-by-name" style="margin-top: 5px;"
         onclick="switchSelected(event)">🗂️Relative</button>
+
+      <button class="b-3" id="file-list-link-by-content-name" style="margin-top: 5px;"
+        onclick="switchSelected(event)">🔗Folder-Content</button>
       <label class="l-3"><input id="selfuse" type="checkbox">Self use</label>
+      <label class="l-3"><input id="reusable" type="checkbox">Re-usable</label>
 
       <br>
+
       <button style="margin-top: 5px;" class="b-4" onclick="cancelAddComponent(event)">❌Cancel</button>
       <button style="margin-top: 5px;" class="b-4" onclick="approveAddComponent(event)">✅ Approve</button>
       <button style="margin-top: 5px;" class="b-4" data-action="moveBack">⤴️ Up</button>
@@ -1874,6 +1128,29 @@ component</button> -->
     <button style="font-size: 30px;" id="remove-loading">❌</button>
   </div>
   <script>
+    const showClasses = (event) => {
+      const target = event.target
+      if (target.classList.contains('b-selected')) {
+        //hide*
+        target.classList.remove('b-selected')
+        document.querySelectorAll('[data-element="class"]').forEach(element => {
+          element.setAttribute('hidden', '')
+        })
+      }
+      else {
+        //show
+        target.classList.add('b-selected')
+        document.querySelectorAll('[data-element="class"]').forEach(element => {
+          const id = element.parentNode.id
+          const generated = getElementById1(removeLastOccurrence(id, '-tree'))
+          const class1 = generated?.getAttribute('class')
+          if (class1) {
+            element.removeAttribute('hidden')
+            element.textContent = '🎨' + class1
+          }
+        })
+      }
+    }
     const switchFolder = (event) => {
       const relative = getElementById1('relative-label')
       const absolute = getElementById1('absolute-label')
@@ -2687,6 +1964,25 @@ component</button> -->
       }
     }
     //toggle menu button scripts
+    const removeDuplicatedActions = (event) => {
+      const groupedItems = actions.reduce((acc, item) => {
+        if (!acc[item.target_element]) {
+          acc[item.target_element] = [];
+        }
+        acc[item.target_element].push(item);
+        return acc;
+      }, {});
+
+      // Convert the grouped object to an array of arrays
+      const listOfLists = Object.values(groupedItems);
+      console.log(JSON.stringify(listOfLists))
+      listOfLists.map(list => {
+        const innerHtmlActions = list.filter(e => e.action === 'innerHtml')
+        const textActions = list.filter(e => e.action === 'textContent')
+        const setAttributeActions = list.filter(e => e.action === 'setAttribute')
+        const commentActions = list.filter(e => e.action === 'Add_Comment')
+      })
+    }
     const toggleGeneratedPage = () => {
       const s = localStorage.getItem('generatedPageToggle')
       if (!s) {
@@ -3017,6 +2313,7 @@ component</button> -->
     var backend_url = 'https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2'
     var pathItem
     var pathItemPath
+    var site1
     var pathItemSku
     var headContentItem
     var selectedSku
@@ -3025,6 +2322,7 @@ component</button> -->
     var ownerid
     var republish
     var imagesIds = []
+    var actions = []
     loadFirst()
     //document.addEventListener('DOMContentLoaded', loadFirst);
     var saveGpt = async (event) => {
@@ -3440,7 +2738,7 @@ component</button> -->
       updatePathItem()
     }
     //not used
-    const addComponent1 = async (id, selfuse) => {
+    const addComponent1 = async (id, selfuse, reusable) => {
       //getElementById1('file-list-attach-component-options;').remove()
       const actionObject = {
         time: (new Date()).getTime(),
@@ -3449,9 +2747,8 @@ component</button> -->
         inserted_component: { componentId: id, id: generateUUID() },
 
       };
-      if (selfuse) {
-        actionObject.options = { selfuse }
-      }
+      actionObject.options = { selfuse, reusable }
+
       await pushAction(actionObject);
     }
     var loadUsingPath2 = (path1, filePathList, optionList) => {
@@ -3731,7 +3028,8 @@ component</button> -->
         var firstChild = clonedFieldset2.firstChild;
 
         // Insert clonedItem before the first child
-        clonedFieldset2.insertBefore(clonedItem, firstChild);
+        //clonedFieldset2.insertBefore(clonedItem, firstChild);
+        clonedFieldset2.append(clonedItem)
         console.log(JSON.stringify(selected))
 
       }
@@ -3849,13 +3147,15 @@ component</button> -->
           data1 = await data1
           let elements = data1.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace(spath, '').split(';')[0] } });
           elements.sort((a, b) => a.name.localeCompare(b.name));
-          for (const el1 of elements) {
-            const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${el1.id}:${el1.sk}`, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            }).then(el => el.json()).then(el2 => { return { ...el2, ...el1 } });
+          const promise = elements.map(el1 => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${el1.id}:${el1.sk}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(el => el.json()).then(el2 => { return { ...el2, ...el1 } }))
+          const elements1 = await Promise.all(elements)
+          for (const item of elements1) {
+
             if (i < 1000) {
               i++
               // Clone the fieldset
@@ -3986,7 +3286,14 @@ component</button> -->
             data1 = await data1
             let elements = data1.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace('|', '').split(';')[0] } });
             elements.sort((a, b) => a.name.localeCompare(b.name));
-            for (const el1 of elements) {
+            const promise = elements.map(el1 => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${el1.id}:${el1.sk}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(el => el.json()).then(el2 => { return { ...el2, ...el1 } }))
+            const elements1 = await Promise.all(elements)
+            for (const item of elements1) {
               if (i < 1000) {
                 i++
                 // Clone the fieldset
@@ -4150,6 +3457,33 @@ component</button> -->
 
       return relativePath;
     }
+    function getNextCounter(counter) {
+      let prefix = counter.substring(0, counter.length - 1);
+      let lastChar = counter[counter.length - 1];
+
+      if (lastChar === 'Z') {
+        if (prefix === 'A') {
+          return 'A0';
+        } else {
+          let prefixCharCode = prefix.charCodeAt(0);
+          let nextPrefix = String.fromCharCode(prefixCharCode + 1);
+          return nextPrefix + 'A';
+        }
+      } else if (/\d/.test(lastChar)) {
+        let num = parseInt(lastChar);
+        if (num < 9) {
+          return prefix + (num + 1);
+        } else {
+          let prefixCharCode = prefix.charCodeAt(0);
+          let nextPrefix = String.fromCharCode(prefixCharCode + 1);
+          return nextPrefix + 'A';
+        }
+      } else {
+        let nextChar = String.fromCharCode(lastChar.charCodeAt(0) + 1);
+        return prefix + nextChar;
+      }
+    }
+
     var approveAddComponent = async (e) => {
       const m1 = document.getElementById('selectedFilePathList;')
 
@@ -4158,10 +3492,28 @@ component</button> -->
       const optionList = getElementById1('file-list-attach-component-options;')
       let flag
       const selfuse = optionList.querySelector('#selfuse').checked
+      const reusableC = optionList.querySelector('#reusable').checked
+      let newCounter 
+      if (reusableC) {
+        newCounter = 'AA'
+        const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/re_use_counter:counter')
+          .then(response => response.json())
+
+        if (data) {
+          const prevCounter = data.value
+          newCounter = prevCounter
+
+        }
+      }
+
+
+      
+
+
       for (const id of ids) {
         const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/' + id + ':path')
           .then(response => response.json())
-
+        newCounter && (newCounter = getNextCounter(newCounter))
         if (data.LinkBP || optionList.querySelector('#file-list-link-by-path').classList.contains('b-selected')) {
 
           const p = convertToOldPath(data.lsi1.split(';')[0]).split('/')
@@ -4171,19 +3523,31 @@ component</button> -->
           if (p.length) {
             r = '/' + p.join('/')
           }
-          addComponent1("*" + r + '|' + fileName, selfuse)
+          addComponent1("*" + r + '|' + fileName, selfuse, newCounter)
         }
-        else if (optionList.querySelector('#file-list-link-by-name').classList.contains('b-selected')) {
+        else if (optionList.querySelector('#file-list-link-by-name').classList.contains('b-selected') || optionList.querySelector('#file-list-link-by-content-name').classList.contains('b-selected')) {
           const currentLsi = pathItemPath.replace(';publish:published', "")
           const relativePath = getRelativePath(currentLsi, convertToOldPath(data.lsi1.replace(';publish:published', "")));
-
-          await addComponent1("#" + relativePath, selfuse).catch(e => console.log(e))
+          let prefix = optionList.querySelector('#file-list-link-by-content-name').classList.contains('b-selected') ? '$' : '#'
+          await addComponent1(prefix + relativePath, selfuse, newCounter).catch(e => console.log(e))
           flag = true
         }
+
         else {
-          addComponent1(id, selfuse)
+          addComponent1(id, selfuse, newCounter)
         }
 
+      }
+      if(newCounter){
+        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+          { id: 're_use_counter', sk: 'counter', value: newCounter }
+        ),
+      });
       }
       flag && location.reload()
       getElementById1('file-list-attach-component-options;').remove()
@@ -4247,6 +3611,7 @@ component</button> -->
       var setFolder = (path, id) => {
         const relative = getElementById1('relative-input')
         const absolute = getElementById1('absolute-input')
+
         if (relative.checked) {
           const currentLsi = pathItemPath.split(';')[0]
           const relativePath = getRelativePath(currentLsi, path);
@@ -4395,13 +3760,15 @@ component</button> -->
           data1 = await data1
           let elements = data1.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace(spath, '').split(';')[0] } });
           elements.sort((a, b) => a.name.localeCompare(b.name));
-          for (const el1 of elements) {
-            const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${el1.id}:${el1.sk}`, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            }).then(el => el.json()).then(el2 => { return { ...el2, ...el1 } });
+          const promise = elements.map(el1 => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${el1.id}:${el1.sk}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(el => el.json()).then(el2 => { return { ...el2, ...el1 } }))
+          const elements1 = await Promise.all(elements)
+          for (const item of elements1) {
+
             if (i < 1000) {
               i++
               // Clone the fieldset
@@ -4536,7 +3903,14 @@ component</button> -->
             data1 = await data1
             let elements = data1.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace('|', '').split(';')[0] } });
             elements.sort((a, b) => a.name.localeCompare(b.name));
-            for (const el1 of elements) {
+            const promise = elements.map(el1 => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${el1.id}:${el1.sk}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(el => el.json()).then(el2 => { return { ...el2, ...el1 } }))
+            const elements1 = await Promise.all(elements)
+            for (const item of elements1) {
               if (i < 1000) {
                 i++
                 // Clone the fieldset
@@ -6275,7 +5649,7 @@ checkbox1.setAttribute('hidden', "");
         referenceNode.parentNode.appendChild(newNode);
       }
     }
-    const pushAction = async (element, firstLoad, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative) => {
+    const pushAction = async (element, firstLoad, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId) => {
       console.log('pushed' + JSON.stringify(element))
       const time = element.time
       console.log('time' + time)
@@ -6294,11 +5668,11 @@ checkbox1.setAttribute('hidden', "");
             ac = "Add_Component_Id"
           }
         }
-        await insertDataIntoCodeLog(time, ac, element.options, undefined, element)
+        await insertDataIntoCodeLog(time, ac, element.options, undefined, element, reusableId)
       }
 
 
-      await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative)
+      await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId)
     }
     const pushActionToDb = async (action) => {
       const urlSearchParams = new URLSearchParams(window.location.search);
@@ -6308,7 +5682,7 @@ checkbox1.setAttribute('hidden', "");
       const payload = { ...action, sk, id };
 
 
-
+      actions.push(payload)
       // Send a POST request using fetch
       const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
@@ -6342,9 +5716,102 @@ checkbox1.setAttribute('hidden', "");
 
       return formattedDate;
     }
+    const searchLogs = (event) => {
+      const value = event.target.value.toLowerCase()
+      console.log(value)
+      const codeLog = getElementById1("code-log-body");
+      const searchCodeLog = getElementById1("code-log-search-body");
+      if (value === "") {
+        searchCodeLog.setAttribute('hidden', '')
+        codeLog.removeAttribute('hidden')
+      }
+      else if (value.length > 1) {
+        codeLog.setAttribute('hidden', '')
+        searchCodeLog.removeAttribute('hidden')
+        searchCodeLog.querySelectorAll("#code-log-element:not([hidden])").forEach(e => e.remove())
+        const filteredActions = actions.filter(item => item.action.toLowerCase().includes(value) ||
+          item.id.toString().includes(value) ||
+          item.key?.toLowerCase().includes(value) ||
+          item.value?.toLowerCase().includes(value) ||
+          item.target_element?.toLowerCase().includes(value) ||
+          item.inserted_element?.id.toLowerCase().includes(value))
+        for (const action of filteredActions) {
+          const originalElement = searchCodeLog.querySelector("#code-log-element");
+          const actionTime = action.sk
+          let emoji = ""
+          const optionsStrings = []
+          if (action.options) {
 
-    function insertDataIntoCodeLog(actionTime, actionName, options, inserted_component, element) {
-      const originalElement = getElementById1("code-log-element");
+            options.apply_to_copies && optionsStrings.push('✅⧉ Apply to copies')
+            options.insert_copies && optionsStrings.push('🚂⧉ Insert Copies')
+            options.dub_target && optionsStrings.push('🎯⧉ Dup Target')
+            options.selfuse && optionsStrings.push('🎯⧉ Self use')
+            options.reusable && optionsStrings.push('🎯⧉ Reuse id:' + options.reusable)
+            options.position && optionsStrings.push('🎯 child ' + options.position)
+
+
+
+            if (optionsStrings.length === 2) {
+              emoji = '2️⃣'
+            }
+            else if (optionsStrings.length === 3) {
+              emoji = '3️⃣'
+            } else if (optionsStrings.length === 1) {
+              emoji = '1️⃣'
+            }
+
+          }
+          const clonedElement = originalElement.cloneNode(true);
+          clonedElement.removeAttribute('hidden')
+          clonedElement.querySelector("#code-log-action-time").textContent = formatEpochTime(actionTime);
+          clonedElement.querySelector("#code-log-action-time").setAttribute('sk', actionTime)
+          clonedElement.querySelector("#code-log-action").textContent = action.action + emoji;
+          const parent = originalElement.parentNode;
+          if (action?.inserted_element?.tagName) {
+            optionsStrings.push(` 🆔 ${action.inserted_element?.id} `)
+            optionsStrings.push(` 🏷️ ${action?.inserted_element?.tagName} `)
+          }
+          if (action?.key) {
+            optionsStrings.push(` 🔑 ${action?.key} `)
+          }
+          if (action?.value || action?.insertedCode) {
+            optionsStrings.push(` 🪣 ${action?.value || action?.insertedCode} `)
+          }
+          if (action?.insertedCode) {
+            optionsStrings.push(` 🪣 ${action?.insertedCode}  `)
+          }
+          if (action?.inserted_component) {
+            optionsStrings.push(` 🆔 ${action.inserted_component.componentId}`)
+          }
+          if (action?.tag_change) {
+            optionsStrings.push(`🪣 ${action?.tag_change}  `)
+          }
+          if (action?.tagName) {
+            optionsStrings.push(`🪣 ${action?.tagName}  `)
+          }
+          if (action?.target_element) {
+            if (typeof action.target_element === 'string') {
+              optionsStrings.push(` Target ${action.target_element.replace('-tree', '')}`)
+            }
+            else {
+              const e = action.target_element.map(el => el.id)
+              e.shift()
+              optionsStrings.push(` Target ${action.target_element[0].id.replace('-tree', '')},Elements: ${e.join(',')}`)
+            }
+
+          }
+
+          //clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionsStrings.join('&#013;&#010;'))
+          clonedElement.querySelector("[data-action-data]").innerHTML = optionsStrings.join('<br>')
+
+          // Insert the cloned element before the original element
+          parent.insertBefore(clonedElement, originalElement);
+        }
+      }
+    }
+    function insertDataIntoCodeLog(actionTime, actionName, options, inserted_component, element, reusableId) {
+      const codeLog = getElementById1("code-log-body");
+      const originalElement = codeLog.querySelector("#code-log-element");
       const clonedElement = originalElement.cloneNode(true);
       clonedElement.removeAttribute('hidden')
       // Remove the unwanted button from the cloned element
@@ -6357,51 +5824,79 @@ checkbox1.setAttribute('hidden', "");
       clonedElement.removeAttribute("hidden");
       clonedElement.querySelector("#code-log-action-time").textContent = formatEpochTime(actionTime);
       clonedElement.querySelector("#code-log-action-time").setAttribute('sk', actionTime)
-      if (inserted_component) {
+      let emoji = ""
+      const optionsStrings = []
+      if (options) {
+
+        options.apply_to_copies && optionsStrings.push('✅⧉ Apply to copies')
+        options.insert_copies && optionsStrings.push('🚂⧉ Insert Copies')
+        options.dub_target && optionsStrings.push('🎯⧉ Dup Target')
+        options.selfuse && optionsStrings.push('🎯⧉ Self use')
+        options.reusable && optionsStrings.push('🎯⧉ Reuse id:' + options.reusable)
+        options.position && optionsStrings.push('🎯 child ' + options.position)
+
+
+
+        if (optionsStrings.length === 2) {
+          emoji = '2️⃣'
+        }
+        else if (optionsStrings.length === 3) {
+          emoji = '3️⃣'
+        } else if (optionsStrings.length === 1) {
+          emoji = '1️⃣'
+        }
+
+      }
+      const r = options?.reusable ? options.reusable + '|' : ''
+      if (element?.inserted_component) {
         console.log('iiiiiiiiiiin0')
-        clonedElement.querySelector("#code-log-action").textContent = '🧩' + inserted_component.name;
-        const optionString = `🧩 ${inserted_component.name} &#10;🆔 ${inserted_component.componentId} &#10;  `
-        clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionString)
+        const a = clonedElement.querySelector("#code-log-action")
+        a.textContent = '🧩' + '{name}' + emoji;
+        a.setAttribute('log-id', r + element.inserted_component.id)
+        const optionString = ` 🆔 ${element.inserted_component.componentId}<br>Target ${element.target_element.replace('-tree', '')}<br>${optionsStrings.join('<br>')}`;
+
+        clonedElement.querySelector('[data-action-data]').innerHTML = optionString;
+
+
       }
       else {
-        const optionsStrings = []
-        if (options) {
-
-          options.apply_to_copies && optionsStrings.push('✅⧉ Apply to copies')
-          options.insert_copies && optionsStrings.push('🚂⧉ Insert Copies')
-          options.dub_target && optionsStrings.push('🎯⧉ Dup Target')
-          options.selfuse && optionsStrings.push('🎯⧉ Self use')
-          options.position && optionsStrings.push('🎯 child ' + options.position)
 
 
-          let emoji = "1️⃣"
-          if (optionsStrings.length === 2) {
-            emoji = '2️⃣'
-          }
-          else if (optionsStrings.length === 3) {
-            emoji = '3️⃣'
-          }
-          clonedElement.querySelector("#code-log-action").textContent = actionName + emoji;
-        }
-        else {
-          //clonedElement.querySelector("#code-log-action").removeAttribute('data-tooltip')
-          clonedElement.querySelector("#code-log-action").textContent = actionName;
-        }
+
+        clonedElement.querySelector("#code-log-action").textContent = actionName + emoji;
         if (element?.inserted_element?.tagName) {
-          optionsStrings.push(` 🆔 ${element.id} `)
+          optionsStrings.push(` 🆔 ${element.inserted_element?.id} `)
           optionsStrings.push(` 🏷️ ${element?.inserted_element?.tagName} `)
         }
         if (element?.key) {
           optionsStrings.push(` 🔑 ${element?.key} `)
         }
-        if (element?.value) {
-          optionsStrings.push(` 🪣 ${element?.value} `)
+        if (element?.value || element?.insertedCode) {
+          optionsStrings.push(` 🪣 ${element?.value || element?.insertedCode} `)
         }
         if (element?.insertedCode) {
           optionsStrings.push(` 🪣 ${element?.insertedCode}  `)
         }
+        if (element?.tag_change) {
+          optionsStrings.push(`🪣 ${element?.tag_change}  `)
+        }
+        if (element?.tagName) {
+          optionsStrings.push(`🪣 ${element?.tagName}  `)
+        }
+        if (element?.target_element) {
+          if (typeof element.target_element === 'string') {
+            optionsStrings.push(` Target ${element.target_element.replace('-tree', '')}`)
+          }
+          else {
+            const e = element.target_element.map(el => el.id)
+            e.shift()
+            optionsStrings.push(` Target ${element.target_element[0].id.replace('-tree', '')},Elements: ${e.join(',')}`)
+          }
 
-        clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionsStrings.join('&#013;&#010;'))
+        }
+
+        //clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionsStrings.join('&#013;&#010;'))
+        clonedElement.querySelector("[data-action-data]").innerHTML = optionsStrings.join('<br>')
 
       }
 
@@ -6421,8 +5916,7 @@ checkbox1.setAttribute('hidden', "");
     }
     let pauseExecution = false
 
-    const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative) => {
-
+    const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId) => {
       if (pauseExecution) {
         return
       }
@@ -6430,7 +5924,7 @@ checkbox1.setAttribute('hidden', "");
       let treeElement
       let componentElement
 
-      console.log('command is ' + JSON.stringify(command) + ' replace id ' + replaceId + 'pathForRelative ' + pathForRelative?.current)
+      console.log('command is ' + JSON.stringify(command) + ' replace id ' + replaceId + 'pathForRelative ' + pathForRelative?.current + 'reusable ' + reusableId)
       function handleAppendOrInsert(action, selectedArrayNotSorted, move, insert_copies) {
         // Sort
 
@@ -6775,16 +6269,17 @@ checkbox1.setAttribute('hidden', "");
         // Extract filename from the relative path
         const relativeFilename = relativePathParts.pop();
         currentPathParts.pop()
+
         // Handle "./" in relative path
         if (relativePathParts[0] === '.') {
           relativePathParts.shift(); // Remove the first element (".")
         }
-
         // Handle "../" in relative path
         while (relativePathParts[0] === '..') {
           currentPathParts.pop(); // Remove the last element from the current path
           relativePathParts.shift(); // Remove the first element ("..")
         }
+
 
         // Combine current path and relative path parts
         const combinedPath = currentPathParts.concat(relativePathParts).join('/');
@@ -6813,32 +6308,59 @@ checkbox1.setAttribute('hidden', "");
             const item1 = items.find(i => i.lsi1.replace(';publish:published', '') === lsi)
             inserted_component.componentId = item1.id
           }
-          else if (inserted_component.componentId.startsWith('#')) {
+          else if (inserted_component.componentId.startsWith('#') || inserted_component.componentId.startsWith('$')) {
             let cPath = pathForRelative.current || pathItemPath
+            let relative = inserted_component.componentId.replace('#', '').replace('$', "")
+            if (inserted_component.componentId.startsWith('$') && componentPath.split('/')[0] !== site1) {
+              console.log('cpath diff')
+              cPath = pathItemPath
+              if (relative.startsWith('../')) {
+                relative = './' + relative.replaceAll('../', "")
+              }
+
+            }
             cPath = cPath.replace(';publish:published', "")
-            console.log('cpath ' + cPath)
+            console.log('cpath ' + cPath + ' relative' + inserted_component.componentId)
 
 
-            const relative = inserted_component.componentId.replace('#', '')
+
             const absolutePath = getAbsolutePath(cPath, relative);
-
+            console.log('cpath ' + cPath + ' relative' + inserted_component.componentId + ' absolute ' + absolutePath)
 
             const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:' + ownerid + '&gsi1lsi1=true&lsi1=' + absolutePath)
               .then(response => response.json())
             console.log('lsi' + absolutePath)
             console.log(JSON.stringify(items))
             console.log(absolutePath)
-            const item1 = items.find(i => i.lsi1.replace(';publish:published', '') === absolutePath)
+            let item1 = items.find(i => i.lsi1.replace(';publish:published', '') === absolutePath)
             console.log(JSON.stringify(item1))
+            let i = 0
+            if (pathForRelative.next.length) {
+              while (!item1) {
+                cPath = pathForRelative.next[i].replace(';publish:published', "")
+                const absolutePath = getAbsolutePath(cPath, relative);
+                const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:' + ownerid + '&gsi1lsi1=true&lsi1=' + absolutePath)
+                  .then(response => response.json())
+                item1 = items.find(i => i.lsi1.replace(';publish:published', '') === absolutePath)
+              }
+            }
+
             inserted_component.componentId = item1.id
           }
-
-          const removeAction = removeActions?.find(e => e.target_element === inserted_component.id + '-tree')
+          let rT
+          if (options?.reusable && reusableId) {
+            rT = reusableId + '|' + options?.reusable
+          }
+          else {
+            rT = options?.reusable || reusableId
+          }
+          const processedId = (rT ? rT + '|' : '') + inserted_component.id + '-tree'
+          const removeAction = removeActions?.find(e => e.target_element === processedId)
           if (removeAction) {
             console.log('found 115')
             return
           }
-          const replaceAction = replaceActions?.findLast(e => e.target_element[0] === inserted_component.id + '-tree')
+          const replaceAction = replaceActions?.findLast(e => e.target_element[0] === processedId)
 
           //replace
           console.log('selected Actions' + JSON.stringify(replaceAction))
@@ -6868,7 +6390,7 @@ checkbox1.setAttribute('hidden', "");
 
           button.addEventListener('mouseout', mouseOutTree);
 
-          newEl2.id = inserted_component.id + '-tree'
+          newEl2.id = processedId
           newEl2.setAttribute('cid', inserted_component.componentId)
           if (noSubComp1 || noComp || noComp1) {
             newEl2.setAttribute('hidden', '')
@@ -6886,6 +6408,7 @@ checkbox1.setAttribute('hidden', "");
           components.push(inserted_component.id)
 
           console.log('foundlvl ' + lvl)
+
           if (replaceAction) {
             await insertDataIntoCodeLog(replaceAction.sk, replaceAction.action, replaceAction.options)
             console.log('replace action in')
@@ -6942,7 +6465,8 @@ checkbox1.setAttribute('hidden', "");
                 console.log('r items ' + JSON.stringify(data))
                 return data.items
               })
-              const allItems = await Promise.all(promises)
+              let allItems = await Promise.all(promises)
+              allItems.sort((a, b) => a.lsi1.localeCompare(b.lsi1));
               console.log('all Items' + JSON.stringify(allItems))
               let updateAction
               for (const arr of allItems) {
@@ -6970,6 +6494,7 @@ checkbox1.setAttribute('hidden', "");
               }
             }
             let l = replaceAction.target_element.filter(e => e.componentId !== toReplace);
+            l.sort((a, b) => b.path.localeCompare(a.path));
             let i = false;
             console.log('solving ' + JSON.stringify(l))
             for (const el of l) {
@@ -6981,7 +6506,7 @@ checkbox1.setAttribute('hidden', "");
                 inserted_component: el,
                 noComp: true,
                 noSubComp: i
-              }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions, el.id, undefined, pathForRelative)
+              }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions, el.id, undefined, pathForRelative, rT, reusableId)
               i = true
 
             }
@@ -6998,7 +6523,7 @@ checkbox1.setAttribute('hidden', "");
             el2.innerHTML = `🔄${replaceAction.target_element.length}`;
           }
           console.log('calling path for relative ' + pathForRelative)
-          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions, replaceId, pathForRelative, newEl2)
+          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions, replaceId, pathForRelative, newEl2, rT)
 
 
           break;
@@ -7064,6 +6589,14 @@ checkbox1.setAttribute('hidden', "");
               console.log(JSON.stringify(item1))
               inserted_component.componentId = item1.id
             }
+            let rT
+            if (options?.reusable && reusableId) {
+              rT = reusableId + '|' + options?.reusable
+            }
+            else {
+              rT = options?.reusable || reusableId
+            }
+            const processedId = (rT ? rT + '|' : '') + inserted_component.id + '-tree'
             console.log('in')
             console.log(target_element)
             treeElement = getElementById1(target_element);
@@ -7082,7 +6615,7 @@ checkbox1.setAttribute('hidden', "");
 
             button.addEventListener('mouseout', mouseOutTree);
 
-            newEl2.id = inserted_component.id + '-tree'
+            newEl2.id = processedId
             if (noComp || noComp1) {
               console.log('no comp true')
               newEl2.setAttribute('hidden', '')
@@ -7090,8 +6623,8 @@ checkbox1.setAttribute('hidden', "");
             treeElement.insertAdjacentElement('afterend', newEl2);
             components.push(inserted_component.id)
             console.log(inserted_component.componentId)
-            console.log('insert before replace id ' + replaceId)
-            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev })
+            console.log('insert after reusableid' + reusableId)
+            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev }, undefined, reusableId)
             break;
           }
 
@@ -7680,6 +7213,7 @@ checkbox1.setAttribute('hidden', "");
               button2.textContent = '🏷️' + inserted_element.tagName;
 
               newEl2.id = replaceCopyId ? inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') + '-tree' : inserted_element.id + '-tree'
+
               if (componentElement.hasAttribute('data-parentid')) {
                 console.log('in12')
 
@@ -7959,7 +7493,7 @@ checkbox1.setAttribute('hidden', "");
             components.push(inserted_component.id)
             console.log(inserted_component.componentId)
             console.log('insert before replace id ' + replaceId)
-            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev })
+            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev }, reusableId)
             break;
           }
           //case duplicate insert before
@@ -8425,7 +7959,7 @@ elementsToRemove.forEach(element => element.remove());
               allTargets.forEach(element => element.setAttribute(key, value))
               break;
             }
-            allTargets.forEach(element => getElementById1(element.id + '-tree').querySelector('[data-element="code-tree-attributes-button"]').removeAttribute('hidden'));
+            //allTargets.forEach(element => getElementById1(element.id + '-tree').querySelector('[data-element="code-tree-attributes-button"]').removeAttribute('hidden'));
 
             for (const element22 of allTargets) {
               const element33 = getElementById1(element22.id + 'tree');
@@ -8453,12 +7987,13 @@ elementsToRemove.forEach(element => element.remove());
           target_element = target_element.endsWith('-tree') ? target_element : target_element + '-tree'
 
           // component
-
+          /*
           if (key === 'style' || key === 'class') {
             const selector = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
             querySelectorAll1(selector).forEach(element => !element.id.endsWith('-fieldset') && !element.id.endsWith('-tree') && element.setAttribute(key, value))
             break;
           }
+          */
 
           const element22 = getElementById1(removeLastOccurrence(target_element, '-tree'));
           const element33 = getElementById1(target_element);
@@ -8621,7 +8156,10 @@ elementsToRemove.forEach(element => element.remove());
       const button = event.target.closest('button[data-element="code-tree-attributes-button"]');
       const checked = event.target.parentNode.querySelector('#applyToCopies')?.checked || false
       if (button) {
-        const parentId = button.parentNode.id.split(';')[1] || button.parentNode.id;
+
+        const s = button.parentNode.id.split(';')
+
+        const parentId = button.parentNode.id.replace('code-tree-click-tag;', '');
         const generatedId = removeLastOccurrence(parentId, '-tree')
         const textContentButton = button.parentNode.querySelector('[data-element="code-tree-attributes-button]');
 
@@ -8677,7 +8215,7 @@ elementsToRemove.forEach(element => element.remove());
       const button = event.target.closest('button[data-element="code-tree-text-content-button"]');
 
       if (button) {
-        const parentId = button.parentNode.id.split(';')[1] || button.parentNode.id
+        const parentId = button.parentNode.id.replace('code-tree-click-tag;', '')
         const textContentButton = button.parentNode.querySelector('[data-element="code-tree-text-content-button"]');
 
         const existingClonedFieldset = button.parentNode.querySelector('[id^="code-tree-tag-text-content-form"]');
@@ -8703,7 +8241,7 @@ elementsToRemove.forEach(element => element.remove());
       const button = event.target.closest('button[data-element="code-tree-inner-html-button"]');
 
       if (button) {
-        const parentId = button.parentNode.id.split(';')[1] || button.parentNode.id
+        const parentId = button.parentNode.id.replace('code-tree-click-tag;', '')
         const textContentButton = button.parentNode.querySelector('[data-element="code-tree-inner-html-button"]');
 
         const existingClonedFieldset = button.parentNode.querySelector('[id^="code-tree-tag-html-content-form"]');
@@ -9021,18 +8559,20 @@ elementsToRemove.forEach(element => element.remove());
       LinkBP && switchLinkBP(false)
     }
     let foundMainContent
-    const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative, treeElement) => {
-      console.log('load from db' + id)
+
+    const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative, treeElement, reusableId) => {
+      console.log('load from db' + id + 'reusable' + reusableId)
       console.log('err2 ' + p)
       console.log('path for relative ' + pathForRelative?.current)
       let newPathForRelative = pathForRelative?.current
+      let next = pathForRelative?.next
       let path = ""
       p && (path = p)
       const urlSearchParams = new URLSearchParams(window.location.search);
       let idFromLink = urlSearchParams.get('id');
       let responseData
       const showSku = async (sku) => {
-        console.log('showing sku '+ sku)
+        console.log('showing sku ' + sku)
         getElementById1("input-sku").setAttribute('hidden', '')
         getElementById1("create-sku").setAttribute('hidden', '')
         const item1 = getElementById1("sku-item-1")
@@ -9147,14 +8687,14 @@ elementsToRemove.forEach(element => element.remove());
       if (id) {
 
         responseData = await getRes(id)
-
+        const reusableId1 = reusableId ? reusableId + '|' : ''
         const { items } = responseData
         console.log('iteeems ' + JSON.stringify(items))
         //change component 
         const splited = convertToOldPath(items.find(e => e.sk === 'path').lsi1.split(';')[0]).split('/')
         const name = splited[splited.length - 1]
         const { testPage, optionalScript } = items.find(e => e.sk === 'path')
-        const el1 = treeElement || getElementById1(newId + '-tree')
+        const el1 = treeElement || getElementById1(reusableId1 + newId + '-tree')
 
         if ((testPage && lvl > 2) || (optionalScript && localStorage.getItem('visualOn'))) {
           el1.remove()
@@ -9167,9 +8707,14 @@ elementsToRemove.forEach(element => element.remove());
         }
 
         const el = el1.querySelector("[data-element='code-tree-tag-name-button']")
+
         el.textContent = '🧩' + name
         el.setAttribute('name', name)
         el.setAttribute('path', items.find(e => e.sk === 'path').lsi1)
+        const logSearch = reusableId1 + newId
+        console.log('searching log ' + logSearch)
+        const logE = document.querySelectorAll(`[log-id="${logSearch}"]`).forEach(e => e.textContent = e.textContent.replace('{name}', name))
+
 
         if (pathItem.hub_items?.main_content) {
           const splited = pathItem.hub_items?.main_content?.split(':')
@@ -9197,6 +8742,7 @@ elementsToRemove.forEach(element => element.remove());
         responseData = await getRes(idFromLink, true)
         const { items } = responseData
         const map = items.find(e => e.sk === 'componentsMap')
+        actions = items.filter(i => i.action)
         let r;
         if (map) {
           r = Promise.all(map.items.map(id => getRes(id, false, true)))
@@ -9207,6 +8753,7 @@ elementsToRemove.forEach(element => element.remove());
         }
         //converst lsi1 to old
         pathItemPath = convertToOldPath(pathItem.lsi1)
+        site1 = pathItemPath.split('/')[0]
         //get head content
         if (!pathItemPath.split('/').includes('Stock')) {
           const headLsi = pathItem.lsi1.split(';')[0].split('|')[0].split('/').slice(0, 3).join('/') + '/Content/Page|Head-Content'
@@ -9273,9 +8820,11 @@ elementsToRemove.forEach(element => element.remove());
           const relativecomponentFileName = pathForRelative.current.split('/')[pathForRelative.current.split('/').length - 1]
           if (componentFileName !== relativecomponentFileName) {
             newPathForRelative = componentPath
+            next = []
             console.log('test relative different ' + componentFileName + 'diff ' + relativecomponentFileName + ' path ' + newPathForRelative)
           }
           else {
+            next.push(componentPath)
             console.log('test relative same ' + componentFileName + ' path ' + newPathForRelative)
           }
         }
@@ -9340,6 +8889,8 @@ elementsToRemove.forEach(element => element.remove());
           if (item.action) {
             if (id) {
 
+              const reusableId1 = reusableId ? reusableId + '|' : ''
+
 
               const replaceWithNewId = (s) => {
                 if (s.startsWith('3bf8d522-9423-4818-ad91-d8dfcda1f425')) {
@@ -9354,47 +8905,68 @@ elementsToRemove.forEach(element => element.remove());
               }
               if (item.target_element === id + '-tree') {
 
-                item.target_element = newId + '-tree'
+                item.target_element = reusableId1 + newId + '-tree'
                 if (item.inserted_element?.id) {
-                  item.inserted_element.id.split(':').length === 1 && (item.inserted_element.id = replaceWithNewId(item.inserted_element.id, newId))
+                  item.inserted_element.id.split(':').length === 1 && (item.inserted_element.id = reusableId1 + replaceWithNewId(item.inserted_element.id, newId))
                 }
-                item.inserted_element?.originalId && item.inserted_element?.originalId.split(':').length === 1 && (item.inserted_element.originalId = replaceWithNewId(item.inserted_element.originalId, newId))
-              }
-              else if (components.includes(removeLastOccurrence(item.target_element, '-tree'))) {
+                if (item.inserted_element?.originalId) {
+                  item.inserted_element.originalId = reusableId1 + item.inserted_element?.originalId
+                  item.inserted_element?.originalId.split(':').length === 1 && (item.inserted_element.originalId = replaceWithNewId(item.inserted_element.originalId, newId))
+                }
 
+
+              }
+
+              else if (components.includes(removeLastOccurrence(item.target_element, '-tree'))) {
+                item.target_element = reusableId1 + item.target_element
+                console.log('case2')
+                console.log('in')
               }
               else if (Array.isArray(item.target_element)) {
                 console.log('array of targter ' + JSON.stringify(item.target_element))
                 item.target_element = item.target_element.filter(e => e).map(i => {
                   console.log('prob666' + JSON.stringify(i))
                   if (i.id === id + '-tree') {
-                    return { ...i, id: newId + '-tree' }
+                    return { ...i, id: reusableId1 + newId + '-tree' }
                   }
                   if (i.id?.split(':').length === 1) {
-                    return { ...i, id: replaceWithNewId(i.id, newId) }
+                    return { ...i, id: reusableId1 + replaceWithNewId(i.id, newId) }
                   }
-                  return { ...i, id: i.id }
+                  return { ...i, id: reusableId1 + i.id }
                 })
 
               }
               else {
+                const s = item.target_element
+                if (!(s === 'body-tree' || s === 'body' || s === 'head-tree' | s === 'head')) {
+                  item.target_element = reusableId1 + item.target_element
+                }
 
                 item.target_element.split(':').length === 1 && (item.target_element = replaceWithNewId(item.target_element, newId))
-                item.inserted_element?.id && item.inserted_element?.id.split(':').length === 1 && (item.inserted_element.id = replaceWithNewId(item.inserted_element.id, newId))
-                item.inserted_element?.originalId && item.inserted_element?.originalId.split(':').length === 1 && (item.inserted_element.originalId = replaceWithNewId(item.inserted_element.originalId, newId))
+                if (item.inserted_element?.id) {
+                  item.inserted_element.id = reusableId1 + item.inserted_element.id
+                  item.inserted_element?.id.split(':').length === 1 && (item.inserted_element.id = replaceWithNewId(item.inserted_element.id, newId))
+
+                }
+                if (item.inserted_element?.originalId) {
+                  item.inserted_element.originalId = reusableId1 + item.inserted_element?.originalId
+                  item.inserted_element?.originalId.split(':').length === 1 && (item.inserted_element.originalId = replaceWithNewId(item.inserted_element.originalId, newId))
+                }
+
+
 
 
 
               }
 
               //insertDataIntoCodeLog(item.sk, item.action)
-              await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: newPathForRelative, prev: pathForRelative.current })
+              await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: newPathForRelative, prev: pathForRelative.current, next }, reusableId)
 
               continue
             }
 
 
-            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: componentPath, prev: componentPath })
+            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: componentPath, prev: componentPath, next: [] }, "", '')
           }
 
         }
@@ -9959,7 +9531,7 @@ elementsToRemove.forEach(element => element.remove());
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: idFromLink, html, path: pagePathContent, toRemove, robotsTxt, siteMapPriority, siteMapNotDefiniedPriorities, date: date.getTime(),sku:pathItemSku  }),
+        body: JSON.stringify({ id: idFromLink, html, path: pagePathContent, toRemove, robotsTxt, siteMapPriority, siteMapNotDefiniedPriorities, date: date.getTime(), sku: pathItemSku }),
       });
       const r = await response.json()
       console.log('link: ' + r.link)
@@ -11572,7 +11144,7 @@ headers: {
     }
 
     const showSku = async (sku) => {
-      console.log('showing sku original '+ sku)
+      console.log('showing sku original ' + sku)
       const item1 = getElementById1("sku-item-1")
       getElementById1("input-sku").setAttribute('hidden', '')
       getElementById1("create-sku").setAttribute('hidden', '')
@@ -11592,7 +11164,7 @@ headers: {
 
         const cloned = el[0].cloneNode(true)
         const v = item.sk.replace('qty;', '')
-        console.log("sku i is "+ JSON.stringify(item))
+        console.log("sku i is " + JSON.stringify(item))
         cloned.querySelector('#sku-attribute-value').textContent = v
         const psk = `price;${pathItemPath.split('/')[0].toLowerCase()};${v}price`
         const pItem = await fetch(`${backend_url}?id=${sku}&sk=${psk}&startsWith=true`, {
