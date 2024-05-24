@@ -897,7 +897,8 @@ component</button> -->
       <br>
       <button class="b-4" id="code-tree-add-tag-choose-new" onclick="addNew(event)"> ➕ New</button>
       <button class="b-4" id="code-tree-add-tag-choose-existed" onclick="addExisting(event)"> ✔️ Existed</button>
-      <button class="b-4" id="code-tree-add-tag-choose-component" onclick="addComponent(event,true)"> 🧩Component</button>
+      <button class="b-4" id="code-tree-add-tag-choose-component" onclick="addComponent(event,true)">
+        🧩Component</button>
       ✔️ Existed
     </div>
 
@@ -1059,8 +1060,8 @@ component</button> -->
       <button class="b-2">🆕 new target</button>
       <button class="b-2">🗑 remove</button>
     </div>
-  
-      <!-- file path-->
+
+    <!-- file path-->
     <li data-element="file-path" id="item">
       <label hidden class="l-3" style="margin-right: 3px;" id="Pushpin">📌</label>
       <label data-value="file-path" class="l-3">universal/blablabla/blablabla/coolcss</label>
@@ -3007,12 +3008,16 @@ component</button> -->
 
     }
     //end not used
-    var addComponent = (e,isTree) => {
+    var addComponent = (e, isTree) => {
 
       let selected = []
       let path1 = ''
+      let pId = ''
+      if (isTree) {
+        pId = e.target.closest('fieldset').id.replace('code-tree-add-tag-step-1;', '')
+      }
       var addSelected = (itemId, path) => {
-        const clonedFieldset2 = getElementById1('selectedFilePathList;')
+        const clonedFieldset2 = getElementById1('selectedFilePathList;'+pId)
         if (Array.from(clonedFieldset2.children).find(el => el.id === itemId)) {
           return
         }
@@ -3041,7 +3046,7 @@ component</button> -->
           let url
           const helperid = localStorage.getItem('helperid')
 
-          var filePathList = getElementById1('filePathList;');
+          var filePathList = getElementById1('filePathList;'+pId);
           filePathList.innerHTML = '';
           let lvls = [];
           let i = 0;
@@ -3205,7 +3210,7 @@ component</button> -->
         console.log(url)
 
 
-        var filePathList = document.getElementById('filePathList;');
+        var filePathList = document.getElementById('filePathList;'+pId);
         filePathList.innerHTML = '';
 
         if (helperid) {
@@ -3365,14 +3370,11 @@ component</button> -->
         const clonedFieldset2 = fieldset.cloneNode(true);
         const clonedFieldset3 = getElementById1('file-list-attach-component-options').cloneNode(true);
         clonedFieldset3.removeAttribute('hidden')
-        let pId= ''
-        if(isTree){
-          pId = e.target.closest('fieldset').id.replace('code-tree-add-tag-step-1;','')
-        }
-        clonedFieldset3.id = 'file-list-attach-component-options;'+pId
 
-        clonedFieldset.id = clonedFieldset.id + ';' +pId;
-        clonedFieldset2.id = 'selectedFilePathList;'+pId;
+        clonedFieldset3.id = 'file-list-attach-component-options;' + pId
+
+        clonedFieldset.id = clonedFieldset.id + ';' + pId;
+        clonedFieldset2.id = 'selectedFilePathList;' + pId;
         clonedFieldset.setAttribute('action', 'Add_Component')
         clonedFieldset3.querySelector('[data-action="moveBack"]').onclick = (e) => {
           const splited = path1.split('/')
@@ -3495,7 +3497,7 @@ component</button> -->
       let flag
       const selfuse = optionList.querySelector('#selfuse').checked
       const reusableC = optionList.querySelector('#reusable').checked
-      let newCounter 
+      let newCounter
       if (reusableC) {
         newCounter = 'AA'
         const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/re_use_counter:counter')
@@ -3509,7 +3511,7 @@ component</button> -->
       }
 
 
-      
+
 
 
       for (const id of ids) {
@@ -3540,16 +3542,16 @@ component</button> -->
         }
 
       }
-      if(newCounter){
+      if (newCounter) {
         await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(
-          { id: 're_use_counter', sk: 'counter', value: newCounter }
-        ),
-      });
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(
+            { id: 're_use_counter', sk: 'counter', value: newCounter }
+          ),
+        });
       }
       flag && location.reload()
       getElementById1('file-list-attach-component-options;').remove()
