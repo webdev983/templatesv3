@@ -116,7 +116,65 @@
         </style>
         <tbody id="code-log-body">
           <!--NUMBERS!! 1️⃣ 2️⃣ 3️⃣ 4️⃣-->
-          <tr hidden id="code-log-element">
+          <tr  id="code-log-element">
+            <td  data-type-code-log="action-time">
+              <button  class="b-5" style="margin-right: -15px;">↕️</button>    
+              <span id="code-log-action-time"
+                style="margin-left: 10px; position: relative;">1703707728031</span>
+
+              <div class="action-data-tooltip" data-action-data>
+                empty
+              </div>
+            </td>
+            <td data-type-code-log="action-name"><span id="code-log-action" data-tooltip="
+                👶 child 1-start$ &#10; 
+                🧩 {component name} &#10; 
+                🏷️ {tag name} &#10; 
+                💬 {comment} &#10; 
+
+                🆔 {id} &#10; 
+                🔑 {key} &#10; 
+                🪣 {value} &#10; 
+                ✅⧉ Apply to copies  &#10; 
+                🚂⧉ Insert Copies  &#10;  
+                🎯⧉ Dup Target  &#10; 
+                ">append child</span>
+            </td>
+            <td>
+              <button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
+            </td>
+          </tr>
+          <tr  id="code-log-element">
+            <td >
+              <button  class="b-5">⬇️</button>
+              <button  class="b-5" style="margin-left: -7px; margin-right: -15px;">⬆️</button>
+              <span id="code-log-action-time" style="position: relative;" data-type-code-log="action-time"
+                style="margin-left: 10px;">89999</span>
+
+              <div class="action-data-tooltip" data-action-data>
+                empty
+              </div>
+            </td>
+            <td data-type-code-log="action-name"><span id="code-log-action" data-tooltip="
+                👶 child 1-start$ &#10; 
+                🧩 {component name} &#10; 
+                🏷️ {tag name} &#10; 
+                💬 {comment} &#10; 
+
+                🆔 {id} &#10; 
+                🔑 {key} &#10; 
+                🪣 {value} &#10; 
+                ✅⧉ Apply to copies  &#10; 
+                🚂⧉ Insert Copies  &#10;  
+                🎯⧉ Dup Target  &#10; 
+                ">append child</span>
+            </td>
+            <td>
+              <button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
+            </td>
+          </tr>
+
+          <tr  id="code-log-element">
 
             <td style="position: relative;" data-type-code-log="action-time"><span id="code-log-action-time"
                 style="margin-left: 10px;">1703707728031</span>
@@ -139,9 +197,13 @@
                 🎯⧉ Dup Target  &#10; 
                 ">append child</span>
             </td>
-            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
+            <td>
+              <button data-type-code-log="action-remove"  class="b-5">&#128465;</button>
+              <button data-type-code-log="action-remove"  class="b-5">↕️</button>
+
             </td>
           </tr>
+
         </tbody>
         <tbody id="code-log-search-body">
           <!--NUMBERS!! 1️⃣ 2️⃣ 3️⃣ 4️⃣-->
@@ -558,18 +620,6 @@
 
   -->
     <div id="iframe-container">
-      <div id="target_element_missing">
-
-        <span class="l-1">⚠️</span><span class="l-2">Target element missing</span>
-        <br>
-        <div id="error_action_info"></div>
-        <button class="b-2">🆕 new target</button>
-        <button class="b-2">🗑 remove</button>
-
-    
-      </div>
-    
-    
       <iframe id="generated-page-iframe" src="./iframe.html"
         style="width:100%; height:20000px; border:none; margin-bottom: 200px;" allowfullscreen="true" allow="
       
@@ -780,8 +830,8 @@
     <fieldset id="component-element" data-element="code-tree-tag" class="tree-element tree-element-1">
       <legend></legend>
       <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
-      <button hidden class="b-3 arrow" data-element="code-tree-show-hide-button"
-        onclick="toggleSubFields(event)"></button>
+      <button  class="b-3 arrow" data-element="code-tree-show-hide-button"
+        onclick="toggleSubFields(event)">&#8594;</button>
       <button class="b-3 t" data-element="code-tree-tag-name-button"
         onclick="loader(event, handleComponentClick)">🏷️component</button>
       <button hidden class="b-3 t" data-element="code-tree-attributes-button"
@@ -820,6 +870,15 @@
       <br>
       <button style="margin-right: 5px; margin-top: 5px;" class="b-3" onclick="replaceComponent(event)">🔄
         Replace</button>
+      <div id="components-actions">
+        <button style="margin:5px; margin-left: 0px; background-color: #f0f0f0;" class="b-3"
+        id="code-tree-click-tag-insert-before" onclick="insertB(event)">⬅️ insertBefore</button>
+      <button style="margin:5px; margin-left: 0px; background-color: #f0f0f0;" class="b-3"
+        id="code-tree-click-tag-insert-before" onclick="insertA(event)"> insertAfter ➡️</button>
+      <br>
+        <button style="margin:5px; margin-left: 0px; background-color: #f0f0f0;" class="b-3"
+        id="code-tree-click-tag-insert-before" onclick="insertA(event)"> 🎯target</button>
+      </div>
       <br>
       <div hidden id="content-type">
         <label hidden class="l-3"><input type="radio" name="main-content-type" data-content-type="none" checked
@@ -909,7 +968,8 @@ component</button> -->
       <br>
       <button class="b-4" id="code-tree-add-tag-choose-new" onclick="addNew(event)"> ➕ New</button>
       <button class="b-4" id="code-tree-add-tag-choose-existed" onclick="addExisting(event)"> ✔️ Existed</button>
-      <button class="b-4" id="code-tree-add-tag-choose-existed"> 🧩Component</button>
+      <button class="b-4" id="code-tree-add-tag-choose-component" onclick="addComponent(event,true)">
+        🧩Component</button>
       ✔️ Existed
     </div>
 
@@ -1061,6 +1121,16 @@ component</button> -->
     <!--files menus-->
 
     <!-- missing target -->
+
+    <div id="target_element_missing">
+
+      <span class="l-1">⚠️</span><span class="l-2">Target element missing</span>
+      <br>
+      <div id="error_action_info"></div>
+      <button id='fix-in-component' class="b-2">🧩 fix in component</button>
+      <button id='set-new-target' class="b-2">🆕 new target</button>
+      <button id='remove-command' class="b-2">🗑 remove</button>
+    </div>
 
     <!-- file path-->
     <li data-element="file-path" id="item">
@@ -2738,7 +2808,7 @@ component</button> -->
       updatePathItem()
     }
     //not used
-    const addComponent1 = async (id, selfuse, reusable) => {
+    const addComponent1 = async (id, selfuse, reusable, pId) => {
       //getElementById1('file-list-attach-component-options;').remove()
       const actionObject = {
         time: (new Date()).getTime(),
@@ -2747,7 +2817,7 @@ component</button> -->
         inserted_component: { componentId: id, id: generateUUID() },
 
       };
-      actionObject.options = { selfuse, reusable }
+      actionObject.options = { selfuse, reusable, attachId: pId }
 
       await pushAction(actionObject);
     }
@@ -3009,12 +3079,18 @@ component</button> -->
 
     }
     //end not used
-    var addComponent = (e) => {
+    var addComponent = (e, isTree) => {
+      let pId = ''
+      if (isTree) {
+        pId = e.target.closest('fieldset').id.replace('code-tree-add-tag-step-1;', '')
+      }
 
       let selected = []
       let path1 = ''
+
+
       var addSelected = (itemId, path) => {
-        const clonedFieldset2 = getElementById1('selectedFilePathList;')
+        const clonedFieldset2 = getElementById1('selectedFilePathList;' + pId)
         if (Array.from(clonedFieldset2.children).find(el => el.id === itemId)) {
           return
         }
@@ -3043,7 +3119,7 @@ component</button> -->
           let url
           const helperid = localStorage.getItem('helperid')
 
-          var filePathList = getElementById1('filePathList;');
+          var filePathList = getElementById1('filePathList;' + pId);
           filePathList.innerHTML = '';
           let lvls = [];
           let i = 0;
@@ -3207,7 +3283,7 @@ component</button> -->
         console.log(url)
 
 
-        var filePathList = document.getElementById('filePathList;');
+        var filePathList = document.getElementById('filePathList;' + pId);
         filePathList.innerHTML = '';
 
         if (helperid) {
@@ -3367,10 +3443,11 @@ component</button> -->
         const clonedFieldset2 = fieldset.cloneNode(true);
         const clonedFieldset3 = getElementById1('file-list-attach-component-options').cloneNode(true);
         clonedFieldset3.removeAttribute('hidden')
-        clonedFieldset3.id = 'file-list-attach-component-options;'
 
-        clonedFieldset.id = clonedFieldset.id + ';';
-        clonedFieldset2.id = 'selectedFilePathList;';
+        clonedFieldset3.id = 'file-list-attach-component-options;' + pId
+
+        clonedFieldset.id = clonedFieldset.id + ';' + pId;
+        clonedFieldset2.id = 'selectedFilePathList;' + pId;
         clonedFieldset.setAttribute('action', 'Add_Component')
         clonedFieldset3.querySelector('[data-action="moveBack"]').onclick = (e) => {
           const splited = path1.split('/')
@@ -3395,6 +3472,9 @@ component</button> -->
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset3);
 
         loadFileList1()
+        if (isTree) {
+          e.target.parentNode.remove()
+        }
 
       }
 
@@ -3485,15 +3565,16 @@ component</button> -->
     }
 
     var approveAddComponent = async (e) => {
-      const m1 = document.getElementById('selectedFilePathList;')
+      const m1 = e.target.parentNode.nextElementSibling
 
 
       const ids = Array.from(m1.children).map(e => e.id)
-      const optionList = getElementById1('file-list-attach-component-options;')
+      const optionList = e.target.parentNode
+      const pId = optionList.id.replace('file-list-attach-component-options;', '')
       let flag
       const selfuse = optionList.querySelector('#selfuse').checked
       const reusableC = optionList.querySelector('#reusable').checked
-      let newCounter 
+      let newCounter
       if (reusableC) {
         newCounter = 'AA'
         const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/re_use_counter:counter')
@@ -3507,7 +3588,7 @@ component</button> -->
       }
 
 
-      
+
 
 
       for (const id of ids) {
@@ -3523,36 +3604,36 @@ component</button> -->
           if (p.length) {
             r = '/' + p.join('/')
           }
-          addComponent1("*" + r + '|' + fileName, selfuse, newCounter)
+          addComponent1("*" + r + '|' + fileName, selfuse, newCounter, pId)
         }
         else if (optionList.querySelector('#file-list-link-by-name').classList.contains('b-selected') || optionList.querySelector('#file-list-link-by-content-name').classList.contains('b-selected')) {
           const currentLsi = pathItemPath.replace(';publish:published', "")
           const relativePath = getRelativePath(currentLsi, convertToOldPath(data.lsi1.replace(';publish:published', "")));
           let prefix = optionList.querySelector('#file-list-link-by-content-name').classList.contains('b-selected') ? '$' : '#'
-          await addComponent1(prefix + relativePath, selfuse, newCounter).catch(e => console.log(e))
+          await addComponent1(prefix + relativePath, selfuse, newCounter, pId).catch(e => console.log(e))
           flag = true
         }
 
         else {
-          addComponent1(id, selfuse, newCounter)
+          addComponent1(id, selfuse, newCounter, pId)
         }
 
       }
-      if(newCounter){
+      if (newCounter) {
         await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(
-          { id: 're_use_counter', sk: 'counter', value: newCounter }
-        ),
-      });
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(
+            { id: 're_use_counter', sk: 'counter', value: newCounter }
+          ),
+        });
       }
       flag && location.reload()
-      getElementById1('file-list-attach-component-options;').remove()
-      getElementById1('filePathList;').remove()
-      getElementById1('selectedFilePathList;').remove()
+      getElementById1('file-list-attach-component-options;' + pId).remove()
+      getElementById1('filePathList;' + pId).remove()
+      getElementById1('selectedFilePathList;' + pId).remove()
     }
     var approveReplace = async (e) => {
       const m = Array.from(e.target.parentNode.children).filter(i => i.id)
@@ -5649,7 +5730,7 @@ checkbox1.setAttribute('hidden', "");
         referenceNode.parentNode.appendChild(newNode);
       }
     }
-    const pushAction = async (element, firstLoad, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId) => {
+    const pushAction = async (element, firstLoad, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId,attachId) => {
       console.log('pushed' + JSON.stringify(element))
       const time = element.time
       console.log('time' + time)
@@ -5672,7 +5753,7 @@ checkbox1.setAttribute('hidden', "");
       }
 
 
-      await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId)
+      await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId,attachId)
     }
     const pushActionToDb = async (action) => {
       const urlSearchParams = new URLSearchParams(window.location.search);
@@ -5791,7 +5872,7 @@ checkbox1.setAttribute('hidden', "");
           }
           if (action?.target_element) {
             if (typeof action.target_element === 'string') {
-              optionsStrings.push(` Target ${action.target_element.replace('-tree', '')}`)
+              optionsStrings.push(` Target ${action.options?.attachId || action.target_element.replace('-tree', '')}`)
             }
             else {
               const e = action.target_element.map(el => el.id)
@@ -5853,7 +5934,7 @@ checkbox1.setAttribute('hidden', "");
         const a = clonedElement.querySelector("#code-log-action")
         a.textContent = '🧩' + '{name}' + emoji;
         a.setAttribute('log-id', r + element.inserted_component.id)
-        const optionString = ` 🆔 ${element.inserted_component.componentId}<br>Target ${element.target_element.replace('-tree', '')}<br>${optionsStrings.join('<br>')}`;
+        const optionString = ` 🆔 ${element.inserted_component.componentId}<br>Target ${options?.attachId || element.target_element.replace('-tree', '')}<br>${optionsStrings.join('<br>')}`;
 
         clonedElement.querySelector('[data-action-data]').innerHTML = optionString;
 
@@ -5885,7 +5966,7 @@ checkbox1.setAttribute('hidden', "");
         }
         if (element?.target_element) {
           if (typeof element.target_element === 'string') {
-            optionsStrings.push(` Target ${element.target_element.replace('-tree', '')}`)
+            optionsStrings.push(` Target ${options?.attachId || element.target_element.replace('-tree', '')}`)
           }
           else {
             const e = element.target_element.map(el => el.id)
@@ -5915,8 +5996,67 @@ checkbox1.setAttribute('hidden', "");
       }
     }
     let pauseExecution = false
+    const fixCommand = async (command,) => {
+      let newCommand 
+      console.log('wrong append')
+      const missing = getElementById1('target_element_missing')
+      const cloned = missing.cloneNode(true)
+      getElementById1('code-tree').append(cloned)
+      const fixIn = cloned.querySelector('#fix-in-component')
+      if (command.id === pathItem.id) {
+        fixIn.setAttribute('hidden', '')
+      }
+      else {
+        fixIn.onclick = (e) => {
+          const redirectURL = `component.html?id=${command.id}&rand=${Math.random()}`;
+          window.open(redirectURL, '_blank');
+        }
+      }
+      const remove = cloned.querySelector('#remove-command')
+      remove.onclick = async (e) => {
+        await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${command.id}:${command.sk}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            // Add any additional headers if needed
+          },
+        });
 
-    const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId) => {
+        location.reload()
+      }
+      const newTarget = cloned.querySelector('#set-new-target')
+      newTarget.onclick = (e) => {
+        const codeTreeTagFieldsets = querySelectorAll1('fieldset[data-element="code-tree-tag"]');
+        codeTreeTagFieldsets.forEach(function (fieldset) {
+          var checkbox = fieldset.querySelector('input[type="checkbox"]');
+          if (checkbox) {
+            checkbox.removeAttribute('hidden');
+            checkbox.onchange = (event) => {
+              event.preventDefault()
+              const id = checkbox.closest('fieldset').id
+              command.target_element = id
+              newCommand = command
+              codeTreeTagFieldsets.forEach(function (fieldset) {
+                var checkbox = fieldset.querySelector('input[type="checkbox"]');
+                if (checkbox) {
+                  checkbox.setAttribute('hidden', 'true');
+                }
+              });
+            }
+          }
+
+        });
+
+      }
+      const loadingScreen = getElementById1('loading');
+
+      loadingScreen.style.display = 'none';
+
+
+
+      //loadingScreen.style.display = 'flex';
+    }
+    const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId, attachId) => {
       if (pauseExecution) {
         return
       }
@@ -6408,7 +6548,16 @@ checkbox1.setAttribute('hidden', "");
           components.push(inserted_component.id)
 
           console.log('foundlvl ' + lvl)
+          
+          if(options?.attachId ){
+            if(reusableId){
+              attachId = reusableId +'|'+ options?.attachId
+            }
+            else{
+              attachId = options?.attachId
+            }
 
+          }
           if (replaceAction) {
             await insertDataIntoCodeLog(replaceAction.sk, replaceAction.action, replaceAction.options)
             console.log('replace action in')
@@ -6506,7 +6655,7 @@ checkbox1.setAttribute('hidden', "");
                 inserted_component: el,
                 noComp: true,
                 noSubComp: i
-              }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions, el.id, undefined, pathForRelative, rT, reusableId)
+              }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions, el.id, undefined, pathForRelative, rT, reusableId, attachId)
               i = true
 
             }
@@ -6523,7 +6672,7 @@ checkbox1.setAttribute('hidden', "");
             el2.innerHTML = `🔄${replaceAction.target_element.length}`;
           }
           console.log('calling path for relative ' + pathForRelative)
-          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions, replaceId, pathForRelative, newEl2, rT)
+          await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions, replaceId, pathForRelative, newEl2, rT, attachId)
 
 
           break;
@@ -6624,7 +6773,7 @@ checkbox1.setAttribute('hidden', "");
             components.push(inserted_component.id)
             console.log(inserted_component.componentId)
             console.log('insert after reusableid' + reusableId)
-            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev }, undefined, reusableId)
+            await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev }, undefined, reusableId, attachId)
             break;
           }
 
@@ -7284,22 +7433,28 @@ checkbox1.setAttribute('hidden', "");
               const compEls = []
               const existing = []
               const elementsWithIdAndAttribute = querySelectorAll1('[id^="' + mId + '"][data-replaceid]')
-                .forEach(
-                  el => {
-                    console.log('ffooound152 ' + el.id)
-                    if (!existing.includes(el.getAttribute('data-replaceid'))) {
-                      existing.push(el.getAttribute('data-replaceid'))
-                      treeEls.push(getElementById1(el.id + '-tree'));
-                      compEls.push(el)
-                    }
-
+              elementsWithIdAndAttribute.forEach(
+                el => {
+                  console.log('ffooound152 ' + el.id)
+                  if (!existing.includes(el.getAttribute('data-replaceid'))) {
+                    existing.push(el.getAttribute('data-replaceid'))
+                    treeEls.push(getElementById1(el.id + '-tree'));
+                    compEls.push(el)
                   }
-                );
 
-              for (let i = 0; i < treeEls.length; i++) {
-                handleInsert(treeEls[i], compEls[i], true)
+                }
+              );
+              if (!elementsWithIdAndAttribute.length) {
+
+                await fixCommand(command)
               }
-              break;
+              else {
+                for (let i = 0; i < treeEls.length; i++) {
+                  handleInsert(treeEls[i], compEls[i], true)
+                }
+                break;
+              }
+
             }
             console.log('handling insert')
 
@@ -8560,7 +8715,7 @@ elementsToRemove.forEach(element => element.remove());
     }
     let foundMainContent
 
-    const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative, treeElement, reusableId) => {
+    const loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative, treeElement, reusableId, attachId) => {
       console.log('load from db' + id + 'reusable' + reusableId)
       console.log('err2 ' + p)
       console.log('path for relative ' + pathForRelative?.current)
@@ -8941,6 +9096,9 @@ elementsToRemove.forEach(element => element.remove());
                 if (!(s === 'body-tree' || s === 'body' || s === 'head-tree' | s === 'head')) {
                   item.target_element = reusableId1 + item.target_element
                 }
+                else if (s === 'body-tree' && attachId) {
+                  item.target_element = attachId
+                }
 
                 item.target_element.split(':').length === 1 && (item.target_element = replaceWithNewId(item.target_element, newId))
                 if (item.inserted_element?.id) {
@@ -8960,13 +9118,13 @@ elementsToRemove.forEach(element => element.remove());
               }
 
               //insertDataIntoCodeLog(item.sk, item.action)
-              await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: newPathForRelative, prev: pathForRelative.current, next }, reusableId)
+              await executeCommand({ ...item, time: item.sk }, undefined, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: newPathForRelative, prev: pathForRelative.current, next }, reusableId,attachId)
 
               continue
             }
 
 
-            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: componentPath, prev: componentPath, next: [] }, "", '')
+            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: componentPath, prev: componentPath, next: [] }, "", '',attachId)
           }
 
         }
@@ -11485,9 +11643,10 @@ element.setAttribute('data-product', [first, name].join(';'))
       event.target.parentNode.remove()
     }
     const cancelAddComponent = (event) => {
-      document.getElementById('file-list-attach-component-options;').remove()
-      document.getElementById('selectedFilePathList;').remove()
-      document.getElementById('filePathList;').remove()
+      const pid = event.target.parentNode.id.replace('file-list-attach-component-options;', '')
+      document.getElementById('file-list-attach-component-options;' + pid).remove()
+      document.getElementById('selectedFilePathList;' + pid).remove()
+      document.getElementById('filePathList;' + pid).remove()
     }
     const cancel = (e) => {
 
