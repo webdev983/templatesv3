@@ -5923,6 +5923,15 @@ checkbox1.setAttribute('hidden', "");
       const remove = cloned.querySelector('#remove-command')
       if (command.id === pathItem.id) {
         fixIn.setAttribute('hidden', '')
+        const codeTreeTagFieldsets = querySelectorAll1('fieldset[data-element="code-tree-tag"]');
+        codeTreeTagFieldsets.forEach(function (fieldset) {
+          var checkbox = fieldset.querySelector('input[type="checkbox"]');
+          if (checkbox) {
+            checkbox.removeAttribute('hidden');
+
+          }
+
+        });
       }
       else {
         remove.setAttribute('hidden', '')
@@ -5944,16 +5953,8 @@ checkbox1.setAttribute('hidden', "");
 
         location.reload()
       }
-      const codeTreeTagFieldsets = querySelectorAll1('fieldset[data-element="code-tree-tag"]');
-      codeTreeTagFieldsets.forEach(function (fieldset) {
-        var checkbox = fieldset.querySelector('input[type="checkbox"]');
-        if (checkbox) {
-          checkbox.removeAttribute('hidden');
 
-        }
-
-      });
-      newTarget.onclick = async(e) => {
+      newTarget.onclick = async (e) => {
         let checked
         codeTreeTagFieldsets.forEach(function (fieldset) {
           var checkbox = fieldset.querySelector('input[type="checkbox"]');
