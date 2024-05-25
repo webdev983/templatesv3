@@ -6448,12 +6448,15 @@ checkbox1.setAttribute('hidden', "");
           if (noSubComp1 || noComp || noComp1) {
             newEl2.setAttribute('hidden', '')
           }
+          if(removeLastOccurrence(targetElement,'-tree') ===pathItem.id){
+            newEl2.setAttribute('data-first-child','')
+          }
           if (subAction === 'Append') {
             treeElement.append(newEl2);
           } else if (subAction === 'InsertBefore') {
             treeElement.parentNode.insertBefore(newEl2, treeElement)
           } else {
-            newEl2.setAttribute('data-first-child','')
+            
             treeElement.append(newEl2);
           }
 
