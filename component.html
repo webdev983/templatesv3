@@ -8490,7 +8490,8 @@ elementsToRemove.forEach(element => element.remove());
             const changeTargetButton = clonedFieldset.querySelector('#target-button')
             changeTargetButton.removeAttribute('hidden')
             const codeTreeTagFieldsets = querySelectorAll1('fieldset[data-element="code-tree-tag"]');
-            codeTreeTagFieldsets.forEach((fieldset) => {
+            changeTargetButton.onclick = (e)=>{
+              codeTreeTagFieldsets.forEach((fieldset) => {
               var checkbox = fieldset.querySelector('input[type="checkbox"]');
               if (checkbox) {
                 checkbox.removeAttribute('hidden');
@@ -8520,6 +8521,8 @@ elementsToRemove.forEach(element => element.remove());
               }
 
             });
+            }
+            
           }
           if (pathItemPath.split(';')[0].endsWith('Hub')) {
             const contentEl = clonedFieldset.querySelector('#content-type')
