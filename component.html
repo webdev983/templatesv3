@@ -791,7 +791,7 @@
       <button class="b-3" onclick="cancel(event)" style="margin-right:5px; margin-top: 5px;">❌</button>
       <br>
       <button class="b-3" style="margin-right: 5px; margin-top: 5px;"  onclick="replaceComponent(event)">🔄 Replace</button>
-      <button class="b-3" style="margin:5px; margin-left: 5px;" >🎯 target</button>
+      <button class="b-3" style="margin:5px; margin-left: 5px;" id="target-button" hidden>🎯 target</button>
       <br>
       <div hidden id="content-type">
         <label hidden class="l-3"><input type="radio" name="main-content-type" data-content-type="none" checked
@@ -8428,7 +8428,7 @@ elementsToRemove.forEach(element => element.remove());
     function handleComponentClick(event) {
       const button = event.target.closest('button[data-element="code-tree-tag-name-button"]');
       console.log('in111')
-      if (button) {
+      if (button ) {
         const parentId = button.parentNode.id;
         const textContentButton = button.parentNode.querySelector('[data-element="code-tree-text-content-button"]');
 
@@ -8447,7 +8447,11 @@ elementsToRemove.forEach(element => element.remove());
           clonedFieldset.setAttribute('replacedFolders', button.parentNode.getAttribute('replacedFolders'))
           // Find the position to insert the cloned fieldset
           const insertAfterElement = textContentButton || button;
-          if (pathItemPath.split(';')[0].endsWith('Hub')) {
+          if(button.parentNode.hasAttribute('data-first-child')){
+            const changeTargetButton = clonedFieldset.querySelector('#target-button')
+            changeTargetButton.removeAttribute('hidden')
+          }
+          if (pathItemPath.split(';')[0].endsWith('Hub') ) {
             const contentEl = clonedFieldset.querySelector('#content-type')
             const catWeight = contentEl.querySelector('#catalog-weight')
             const catFolder = contentEl.querySelector('#catalog-folder')
