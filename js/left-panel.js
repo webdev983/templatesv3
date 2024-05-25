@@ -56,8 +56,8 @@ document.getElementById('log-open').addEventListener('click', function() {
     codeLog.removeAttribute('hidden');
     searchActions.removeAttribute('hidden');
     refreshPageButton.removeAttribute('hidden');
-    asideElement.style.width = '625px';
-    leftElement.style.width = '615px';
+    asideElement.style.width = '725px';
+    leftElement.style.width = '715px';
   }
 });
 
