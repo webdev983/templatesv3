@@ -745,7 +745,7 @@
       <input id="editHrefInput" style="width: 500px" placeholder="🔗 edit href" type="text">
       <button id="editHrefButton">💾</button>
     </fieldset>
-<!--
+    <!--
     <fieldset id="component-element" data-element="code-tree-tag" class="tree-element tree-element-1">
 -->
 
@@ -5913,21 +5913,26 @@ checkbox1.setAttribute('hidden', "");
     let pauseExecution = false
     const fixCommand = async (command,) => {
       let newCommand
+      let fixed
       console.log('wrong append')
       const missing = getElementById1('target_element_missing')
       const cloned = missing.cloneNode(true)
       getElementById1('code-tree').append(cloned)
       const fixIn = cloned.querySelector('#fix-in-component')
+      const newTarget = cloned.querySelector('#set-new-target')
+      const remove = cloned.querySelector('#remove-command')
       if (command.id === pathItem.id) {
         fixIn.setAttribute('hidden', '')
       }
       else {
+        remove.setAttribute('hidden', '')
+        newTarget.setAttribute('hidden', '')
         fixIn.onclick = (e) => {
           const redirectURL = `component.html?id=${command.id}&rand=${Math.random()}`;
           window.open(redirectURL, '_blank');
         }
       }
-      const remove = cloned.querySelector('#remove-command')
+      
       remove.onclick = async (e) => {
         await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${command.id}:${command.sk}`, {
           method: 'DELETE',
@@ -5939,7 +5944,7 @@ checkbox1.setAttribute('hidden', "");
 
         location.reload()
       }
-      const newTarget = cloned.querySelector('#set-new-target')
+      
       newTarget.onclick = (e) => {
         const codeTreeTagFieldsets = querySelectorAll1('fieldset[data-element="code-tree-tag"]');
         codeTreeTagFieldsets.forEach(function (fieldset) {
@@ -5966,10 +5971,26 @@ checkbox1.setAttribute('hidden', "");
       const loadingScreen = getElementById1('loading');
 
       loadingScreen.style.display = 'none';
+      function checkFixed() {
+        return new Promise(resolve => {
+          // Check if fixed is already true
+          if (fixed) {
+            resolve();
+          } else {
+            // If not true, listen for changes to the variable
+            const interval = setInterval(() => {
+              if (fixed) {
+                clearInterval(interval);
+                resolve();
+              }
+            }, 100); // Check every 100 milliseconds
+          }
+        });
+      }
 
 
-
-      //loadingScreen.style.display = 'flex';
+      await checkFixed()
+      loadingScreen.style.display = 'flex';
     }
     const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId, attachId) => {
       if (pauseExecution) {
@@ -8453,20 +8474,20 @@ elementsToRemove.forEach(element => element.remove());
             const changeTargetButton = clonedFieldset.querySelector('#target-button')
             changeTargetButton.removeAttribute('hidden')
             const codeTreeTagFieldsets = querySelectorAll1('fieldset[data-element="code-tree-tag"]');
-            codeTreeTagFieldsets.forEach( (fieldset)=> {
+            codeTreeTagFieldsets.forEach((fieldset) => {
               var checkbox = fieldset.querySelector('input[type="checkbox"]');
               if (checkbox) {
                 checkbox.removeAttribute('hidden');
-                checkbox.onchange = async(event) => {
+                checkbox.onchange = async (event) => {
                   event.preventDefault()
                   const id = checkbox.closest('fieldset').id
                   //set action target
                   const foundAction = actions.find(action => action.inserted_component.id === parentId)
-                  if(foundAction.options){
+                  if (foundAction.options) {
                     foundAction.options.attachId = id
                   }
-                  else{
-                    foundAction.options = {attachId:id}
+                  else {
+                    foundAction.options = { attachId: id }
 
                   }
                   await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
