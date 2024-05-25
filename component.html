@@ -5951,7 +5951,7 @@ checkbox1.setAttribute('hidden', "");
           },
         });
 
-        location.reload()
+        fixed = 1
       }
 
       newTarget.onclick = async (e) => {
@@ -7397,7 +7397,10 @@ checkbox1.setAttribute('hidden', "");
               );
               if (!elementsWithIdAndAttribute.length) {
 
-                await fixCommand(command)
+                target_element = await fixCommand(command)
+                if(target_element ===1){
+                  break;
+                }
               }
               else {
                 for (let i = 0; i < treeEls.length; i++) {
