@@ -5932,7 +5932,7 @@ checkbox1.setAttribute('hidden', "");
           window.open(redirectURL, '_blank');
         }
       }
-      
+
       remove.onclick = async (e) => {
         await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${command.id}:${command.sk}`, {
           method: 'DELETE',
@@ -5944,28 +5944,37 @@ checkbox1.setAttribute('hidden', "");
 
         location.reload()
       }
-      
-      newTarget.onclick = (e) => {
-        const codeTreeTagFieldsets = querySelectorAll1('fieldset[data-element="code-tree-tag"]');
+      const codeTreeTagFieldsets = querySelectorAll1('fieldset[data-element="code-tree-tag"]');
+      codeTreeTagFieldsets.forEach(function (fieldset) {
+        var checkbox = fieldset.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+          checkbox.removeAttribute('hidden');
+
+        }
+
+      });
+      newTarget.onclick = async(e) => {
+        let checked
         codeTreeTagFieldsets.forEach(function (fieldset) {
           var checkbox = fieldset.querySelector('input[type="checkbox"]');
           if (checkbox) {
-            checkbox.removeAttribute('hidden');
-            checkbox.onchange = (event) => {
-              event.preventDefault()
-              const id = checkbox.closest('fieldset').id
-              command.target_element = id
-              newCommand = command
-              codeTreeTagFieldsets.forEach(function (fieldset) {
-                var checkbox = fieldset.querySelector('input[type="checkbox"]');
-                if (checkbox) {
-                  checkbox.setAttribute('hidden', 'true');
-                }
-              });
+            checkbox.setAttribute('hidden', 'true');
+            if (checkbox.checked) {
+              checked = checkbox.parentNode.id
             }
           }
-
         });
+        command.target_element = checked
+        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(
+            command
+          ),
+        });
+        fixed = checked
 
       }
       const loadingScreen = getElementById1('loading');
@@ -5991,6 +6000,7 @@ checkbox1.setAttribute('hidden', "");
 
       await checkFixed()
       loadingScreen.style.display = 'flex';
+      return fixed
     }
     const executeCommand = async (command, path, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId, attachId) => {
       if (pauseExecution) {
