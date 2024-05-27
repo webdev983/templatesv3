@@ -342,6 +342,32 @@ details > summary::-webkit-details-marker {
     transition: background-color 0.3s; /* Smooth transition for hover effect */
 }
 
+
+
+.table-files  {
+  counter-reset: rowNumber; /* Инициализация счетчика */
+}
+
+.table-files tr {
+  counter-increment: rowNumber; /* Увеличение счетчика для каждой строки */
+}
+
+.table-files tr td:first-child {
+  position: relative; /* Делаем первую ячейку каждой строки относительно позиционированной */
+}
+
+.table-files tr td:firow-number tbodyrst-child::before {
+  content: counter(rowNumber) "."; /* Добавление номера строки */
+  position: absolute; /* Абсолютное позиционирование */
+  left: -20px; /* Сдвигаем влево от начала ячейки */
+  top: 50%; /* Выравнивание по центру ячейки */
+  transform: translateY(-50%); /* Центрирование относительно высоты ячейки */
+  font-size: 18px; /* Размер шрифта номера */
+}
+
+
+
+
 .table-row-number tbody {
   counter-reset: rowNumber; /* Инициализация счетчика */
 }
