@@ -2,10 +2,6 @@ document.getElementById('log-open').addEventListener('click', function() {
 
 
   var logOpenButton = document.getElementById('log-open'); 
-
-
-
-  
   var asideElement = document.querySelector('.aside');
   var leftElement = document.querySelector('.left');
   var bottomButton = document.getElementById('bottom-buttons'); 
@@ -61,10 +57,27 @@ document.getElementById('log-open').addEventListener('click', function() {
   }
 });
 
-
-
-
 function reloadPage(event) {
   event.preventDefault(); // Эта строка предотвращает выполнение действия по умолчанию для события (например, перезагрузка страницы)
   window.location.reload(); // Эта строка перезагружает текущую страницу
 }
+
+
+
+
+document.getElementById('columns_selector_open').addEventListener('click', function() {
+
+  if (document.getElementById('columns_selector_open').classList.contains('b-selected')) { 
+    document.getElementById('columns_selector').hidden = true;
+    document.getElementById('columns_selector_open').classList.remove('b-selected');
+    document.querySelector('.aside').style.width = '70px';
+    document.querySelector('.left').style.width = '60px';
+    
+  } else {
+  
+    document.getElementById('columns_selector').removeAttribute('hidden');
+    document.getElementById('columns_selector_open').classList.add('b-selected');
+    asideElement.style.width = '225px';
+    leftElement.style.width = '215px';
+  }
+});
