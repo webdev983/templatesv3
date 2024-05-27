@@ -289,78 +289,44 @@ details > summary::-webkit-details-marker {
     user-select: none;
   }
 
-
-.table-1 {
+  .table-files {
     max-width: 100%;
-    width: auto;
+    width: 100%;
     border-collapse: collapse;
     border-radius: 10px; /* Rounded corners */
 }
-.table-1 th, td {
-    text-align: left;
-    padding-right: 50px;
-
-}
-
-.table-1 tbody tr:nth-child(odd) {
-    background-color:  #ffffff; 
-}
-
-.table-1 tbody tr:nth-child(even) {
-    background-color: #f0f0f0;
-}
-
-.table-1 tbody tr:hover {
-    background-color:  #dddddd; /* A darker color on hover */
-    transition: background-color 0.3s; /* Smooth transition for hover effect */
-}
-
-/* table files */
-
-.table-files {
-  max-width: 100%;
-  width: 100%;
-  border-collapse: collapse;
-  border-radius: 10px; /* Rounded corners */
-}
 
 .table-files th, .table-files td {
-  text-align: left;
-  padding-right: 50px;
+    text-align: left;
+    padding-right: 50px;
+    position: relative; /* Добавлено */
 }
 
 .table-files tr:nth-child(odd) {
-  background-color:  #ffffff; 
+    background-color: #ffffff; 
 }
 
 .table-files tr:nth-child(even) {
-  background-color: #f0f0f0;
+    background-color: #f0f0f0;
 }
 
 .table-files tr:hover {
-  background-color:  #dddddd; /* A darker color on hover */
-  transition: background-color 0.3s; /* Smooth transition for hover effect */
+    background-color: #dddddd;
+    transition: background-color 0.3s;
+}
+
+.table-files td:first-child::before {
+    content: counter(rowNumber) ".";
+    position: absolute;
+    left: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    counter-increment: rowNumber; /* Перенесено сюда */
 }
 
 .table-files {
-  counter-reset: rowNumber; /* Инициализация счетчика */
-}
-
-.table-files tr {
-  counter-increment: rowNumber; /* Увеличение счетчика для каждой строки */
-}
-
-.table-files tr td:first-child {
-  position: relative; /* Делаем первую ячейку каждой строки относительно позиционированной */
-}
-
-.table-files tr td:first-child::before {
-  content: counter(rowNumber) "."; /* Добавление номера строки */
-  position: absolute; /* Абсолютное позиционирование */
-  left: -20px; /* Сдвигаем влево от начала ячейки */
-  top: 50%; /* Выравнивание по центру ячейки */
-  transform: translateY(-50%); /* Центрирование относительно высоты ячейки */
-  font-size: 18px; /* Размер шрифта номера */
+    counter-reset: rowNumber;
 }
 
 
