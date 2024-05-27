@@ -66,15 +66,18 @@ function reloadPage(event) {
 
 
 document.getElementById('columns_selector_open').addEventListener('click', function() {
-
+  console.log("1")
   if (document.getElementById('columns_selector_open').classList.contains('b-selected')) { 
+    console.log("2")
+
     document.getElementById('columns_selector').hidden = true;
     document.getElementById('columns_selector_open').classList.remove('b-selected');
     document.querySelector('.aside').style.width = '70px';
     document.querySelector('.left').style.width = '60px';
     
   } else {
-  
+    console.log("3")
+
     document.getElementById('columns_selector').removeAttribute('hidden');
     document.getElementById('columns_selector_open').classList.add('b-selected');
     asideElement.style.width = '225px';
