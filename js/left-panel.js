@@ -65,7 +65,7 @@ function reloadPage(event) {
 
 
 
-document.getElementById('columns_selector_open').addEventListener('click', function() {
+function openColumnsSelector (event) {
   console.log("1")
   if (document.getElementById('columns_selector_open').classList.contains('b-selected')) { 
     console.log("2")
