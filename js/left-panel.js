@@ -64,23 +64,26 @@ function reloadPage(event) {
 
 
 
+function openColumnsSelector(event) {
+  console.log("1");
 
-function openColumnsSelector (event) {
-  console.log("1")
-  if (document.getElementById('columns_selector_open').classList.contains('b-selected')) { 
-    console.log("2")
+  if (event.target.classList.contains('b-selected')) { 
+    console.log("2");
 
     document.getElementById('columns_selector').hidden = true;
-    document.getElementById('columns_selector_open').classList.remove('b-selected');
+    event.target.classList.remove('b-selected');
     document.querySelector('.aside').style.width = '70px';
     document.querySelector('.left').style.width = '60px';
     
   } else {
-    console.log("3")
+    console.log("3");
 
     document.getElementById('columns_selector').removeAttribute('hidden');
-    document.getElementById('columns_selector_open').classList.add('b-selected');
-    asideElement.style.width = '225px';
-    leftElement.style.width = '215px';
+    event.target.classList.add('b-selected');
+    document.querySelector('.aside').style.width = '225px';
+    document.querySelector('.left').style.width = '215px';
   }
-});
+}
+
+document.getElementById('columns_selector_open').addEventListener('click', openColumnsSelector);
+
