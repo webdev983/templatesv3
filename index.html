@@ -70,51 +70,57 @@
 
       <div data-section-aside="files" class="local-buttons" style="margin-top: 30px;">
         <button class="b-1" onclick="createNew()">➕</button>
-        <button class="b-1" onclick="openColumnsSelector()"  id="columns_selector_open">📊</button>
+        <button class="b-1" onclick="openColumnsSelector()" id="columns_selector_open">📊</button>
         <div id="columns_selector" hidden>
           <div>
             <label class="l-3"><input type="checkbox"> 📰 published</label>
           </div>
           <div>
             <label class="l-3"><input type="checkbox"> 🆕 created</label>
-          </div>          <div>
+          </div>
+          <div>
             <label class="l-3"><input type="checkbox"> 🔄 updated</label>
-          </div>          <div>
+          </div>
+          <div>
             <label class="l-3"><input type="checkbox"> 🗞 content udpated</label>
-          </div>          <div>
+          </div>
+          <div>
             <label class="l-3"><input type="checkbox"> 🚮 removed</label>
-          </div>            
+          </div>
+          <div>
             <label class="l-3"><input type="checkbox"> </label>
             <label class="l-3"><input type="checkbox"> </label>
             <label class="l-3"><input type="checkbox"> </label>
             <label class="l-3"><input type="checkbox"> </label>
+          </div>
         </div>
-      </div>
+        
+        <script>
+          function openColumnsSelector() {
+            console.log("1");
+            var columnsSelector = document.getElementById('columns_selector');
+            var columnsSelectorOpen = document.getElementById('columns_selector_open');
+        
+            if (columnsSelectorOpen.classList.contains('b-selected')) {
+              console.log("2");
+        
+              columnsSelector.hidden = true;
+              columnsSelectorOpen.classList.remove('b-selected');
+              document.querySelector('.aside').style.width = '70px';
+              document.querySelector('.left').style.width = '60px';
+        
+            } else {
+              console.log("3");
+        
+              columnsSelector.removeAttribute('hidden');
+              columnsSelectorOpen.classList.add('b-selected');
+              document.querySelector('.aside').style.width = '225px';
+              document.querySelector('.left').style.width = '215px';
+            }
+          }
+        </script>
 
-      <script>
-        function openColumnsSelector(event) {
-  console.log("1");
 
-  if (event.target.classList.contains('b-selected')) { 
-    console.log("2");
-
-    document.getElementById('columns_selector').hidden = true;
-    event.target.classList.remove('b-selected');
-    document.querySelector('.aside').style.width = '70px';
-    document.querySelector('.left').style.width = '60px';
-    
-  } else {
-    console.log("3");
-    document.getElementById('columns_selector').removeAttribute('hidden');
-    event.target.classList.add('b-selected');
-    document.querySelector('.aside').style.width = '225px';
-    document.querySelector('.left').style.width = '215px';
-  }
-}
-
-
-
-      </script>
       <div hidden data-section-aside="brains" class="local-buttons" style="margin-top: 30px;">
 
         <div data-section-aside="helpers" class="local-buttons" style="margin-top: 30px;">
