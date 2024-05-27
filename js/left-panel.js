@@ -77,7 +77,6 @@ function openColumnsSelector(event) {
     
   } else {
     console.log("3");
-
     document.getElementById('columns_selector').removeAttribute('hidden');
     event.target.classList.add('b-selected');
     document.querySelector('.aside').style.width = '225px';
