@@ -252,17 +252,17 @@
 
           <label id="change-tag-action" class="action-single-label"><span class="action-icon">🆕</span><span
               id="change-tag-action-value">div</span></label>
-              <div class="action-data-group" id="tag-action">
-                <label class="action-group-label" id="tag-action-created" hidden><span class="action-icon">🆕
-                    created</span></label>
-                <label class="action-group-label" id="tag-action-moved"><span class="action-icon">➡️ moved</span></label>
-                <div class="action-data-group" id="moved-tag">
-                <label class="action-label"> <span class="action-icon">🏷️</span><span
-                    id="tag-action-tag-name">div</span></label>
-                <label class="action-label"> <span class="action-icon">🆔</span><span
-                    id="tag-action-tag-id">61453686-ff1b-4a8b-bc37-66f63857f621</span></label>
-                </div>
-              </div>
+          <div class="action-data-group" id="tag-action">
+            <label class="action-group-label" id="tag-action-created" hidden><span class="action-icon">🆕
+                created</span></label>
+            <label class="action-group-label" id="tag-action-moved"><span class="action-icon">➡️ moved</span></label>
+            <div class="action-data-group" id="moved-tag">
+              <label class="action-label"> <span class="action-icon">🏷️</span><span
+                  id="tag-action-tag-name">div</span></label>
+              <label class="action-label"> <span class="action-icon">🆔</span><span
+                  id="tag-action-tag-id">61453686-ff1b-4a8b-bc37-66f63857f621</span></label>
+            </div>
+          </div>
 
 
 
@@ -6084,91 +6084,94 @@ checkbox1.setAttribute('hidden', "");
         if (actionName === "Replace_Component") {
           const originalReplace = document.getElementById('replace-action')
         }
-        else if (element?.target_element) {
+        else {
+          if (element?.key) {
+            //optionsStrings.push(` 🔑 ${element?.key} `)
+            let cloned
+            if (element.key === 'class') {
+              const classItem = document.getElementById('class-action')
+              cloned = classItem.cloneNode(true)
+              cloned.querySelector('#class-action-value').textContent = `${element.key}="${element.value}"`
 
-          const cloned = originalTargetElement.cloneNode(true)
-          if (typeof element.target_element === 'string') {
-            //optionsStrings.push(` Target ${options?.attachId || element.target_element.replace('-tree', '')}`)
-            const id1 = element.target_element.replace('-tree', '')
-            cloned.querySelector('#action-target-tag-id-value').textContent = id1
-            cloned.querySelector('#action-target-tag-name-value').textContent = getElementById1(id1).tagName.toLowerCase()
-          }
-          else {
-            const e = element.target_element.map(el => el.id)
-            e.shift()
-            const id1 = element.target_element[0].id.replace('-tree', '')
-            cloned.querySelector('#action-target-tag-id-value').textContent = id1
-            cloned.querySelector('#action-target-tag-name-value').textContent = getElementById1(id1).tagName.toLowerCase()
-
-
-            const cloned2 = tagAction.cloneNode(true)
-
-            cloned2.querySelector('#tag-action-tag-id').textContent = e.join(',')
-            cloned2.querySelector('#tag-action-created').remove()
-            actionData.append(cloned2)
-          }
-          actionData.append(cloned)
-        }
-        
-
-
-        if (element?.inserted_element?.tagName) {
-          const cloned = tagAction.cloneNode(true)
-          cloned.querySelector('#tag-action-tag-name').textContent = element?.inserted_element.tagName.toLowerCase()
-          cloned.querySelector('#tag-action-tag-id').textContent = element.inserted_element?.id
-          cloned.querySelector('#tag-action-created').removeAttribute('hidden')
-          cloned.querySelector('#tag-action-moved').remove()
-          actionData.append(cloned)
-        }
-        if (element?.key) {
-          //optionsStrings.push(` 🔑 ${element?.key} `)
-          let cloned
-          if (element.key === 'class') {
-            const classItem = document.getElementById('class-action')
-            cloned = classItem.cloneNode(true)
-            cloned.querySelector('#class-action-value').textContent = `${element.key}="${element.value}"`
-
-          }
-          else {
-            const attItem = document.getElementById('attriute-action')
-            cloned = attItem.cloneNode(true)
-            const v = cloned.querySelector('#attriute-action-value')
-            if (element.value) {
-              v.textContent = `${element.key}="${element.value}"`
             }
             else {
-              v.textContent = element.key
+              const attItem = document.getElementById('attriute-action')
+              cloned = attItem.cloneNode(true)
+              const v = cloned.querySelector('#attriute-action-value')
+              if (element.value) {
+                v.textContent = `${element.key}="${element.value}"`
+              }
+              else {
+                v.textContent = element.key
+              }
+
             }
+            actionData.append(cloned)
+          }
+          if (element?.target_element) {
+
+            const cloned = originalTargetElement.cloneNode(true)
+            if (typeof element.target_element === 'string') {
+              //optionsStrings.push(` Target ${options?.attachId || element.target_element.replace('-tree', '')}`)
+              const id1 = element.target_element.replace('-tree', '')
+              cloned.querySelector('#action-target-tag-id-value').textContent = id1
+              cloned.querySelector('#action-target-tag-name-value').textContent = getElementById1(id1).tagName.toLowerCase()
+            }
+            else {
+              const e = element.target_element.map(el => el.id)
+              e.shift()
+              const id1 = element.target_element[0].id.replace('-tree', '')
+              cloned.querySelector('#action-target-tag-id-value').textContent = id1
+              cloned.querySelector('#action-target-tag-name-value').textContent = getElementById1(id1).tagName.toLowerCase()
+
+
+              const cloned2 = tagAction.cloneNode(true)
+
+              cloned2.querySelector('#tag-action-tag-id').textContent = e.join(',')
+              cloned2.querySelector('#tag-action-created').remove()
+              actionData.append(cloned2)
+            }
+            actionData.append(cloned)
+          }
+
+
+
+          if (element?.inserted_element?.tagName) {
+            const cloned = tagAction.cloneNode(true)
+            cloned.querySelector('#tag-action-tag-name').textContent = element?.inserted_element.tagName.toLowerCase()
+            cloned.querySelector('#tag-action-tag-id').textContent = element.inserted_element?.id
+            cloned.querySelector('#tag-action-created').removeAttribute('hidden')
+            cloned.querySelector('#tag-action-moved').remove()
+            actionData.append(cloned)
+          }
+          
+          if (element?.value && !element?.key) {
+            //optionsStrings.push(` 🪣 ${element?.value || element?.insertedCode} `)
+            const tc = document.getElementById('tc-action')
+            const cloned = tc.cloneNode(true)
+            actionData.insertBefore(cloned,actionData.firstChild)
+            const v = document.getElementById('innerhtml-textcontent-action-content')
+            const cloned2 = v.cloneNode(true)
+            cloned2.querySelector('#innerhtml-textcontent-action-content-value').textContent = element?.value
+            actionData.append(cloned2)
 
           }
-          actionData.append(cloned)
-        }
-        if (element?.value && !element?.key) {
-          //optionsStrings.push(` 🪣 ${element?.value || element?.insertedCode} `)
-          const tc = document.getElementById('tc-action')
-          const cloned = tc.cloneNode(true)
-          actionData.append(cloned)
-          const v = document.getElementById('innerhtml-textcontent-action-content')
-          const cloned2 = v.cloneNode(true)
-          cloned2.querySelector('#innerhtml-textcontent-action-content-value').textContent = element?.value
-          actionData.append(cloned2)
+          if (element?.insertedCode) {
+            const tc = document.getElementById('innerhtml-action')
+            const cloned = tc.cloneNode(true)
+            actionData.insertBefore(cloned,actionData.firstChild)
+            const v = document.getElementById('innerhtml-textcontent-action-content')
+            const cloned2 = v.cloneNode(true)
+            cloned2.querySelector('#innerhtml-textcontent-action-content-value').textContent = element?.insertedCode
+            actionData.append(cloned2)
+          }
+          if (element?.tag_change) {
+            const ct = document.getElementById('change-tag-action')
+            const cloned = ct.cloneNode(true)
+            cloned.querySelector('#change-tag-action-value').textContent = element.tag_change
+            actionData.append(cloned)
 
-        }
-        if (element?.insertedCode) {
-          const tc = document.getElementById('innerhtml-action')
-          const cloned = tc.cloneNode(true)
-          actionData.append(cloned)
-          const v = document.getElementById('innerhtml-textcontent-action-content')
-          const cloned2 = v.cloneNode(true)
-          cloned2.querySelector('#innerhtml-textcontent-action-content-value').textContent = element?.insertedCode
-          actionData.append(cloned2)
-        }
-        if (element?.tag_change) {
-          const ct = document.getElementById('change-tag-action')
-          const cloned = ct.cloneNode(true)
-          cloned.querySelector('#change-tag-action-value').textContent = element.tag_change
-          actionData.append(cloned)
-
+          }
         }
         /*
         if (element?.tagName) {
