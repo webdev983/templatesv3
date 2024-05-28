@@ -6020,6 +6020,7 @@ checkbox1.setAttribute('hidden', "");
       let emoji = ""
       const optionsStrings = []
       const actionData = clonedElement.querySelector("[data-action-data]")
+      actionData.id = actionData.id+';'+element.id
       if (options) {
 
         options.apply_to_copies && optionsStrings.push('✅⧉ Apply to copies')
@@ -6056,6 +6057,7 @@ checkbox1.setAttribute('hidden', "");
         actionData.append(cloned)
         actionData.setAttribute('data-log-id',r + element.inserted_component.id)
         const cloned2 = originalTargetElement.cloneNode(true)
+        
         cloned2.querySelector('#action-target-tag-id-value').textContent = options?.attachId || element.target_element.replace('-tree', '')
         //cloned2.querySelector('#action-target-tag-name-value').textContent = 
         actionData.append(cloned2)
