@@ -6087,7 +6087,27 @@ checkbox1.setAttribute('hidden', "");
           actionData.append(cloned)
         }
         if (element?.key) {
-          optionsStrings.push(` 🔑 ${element?.key} `)
+          //optionsStrings.push(` 🔑 ${element?.key} `)
+          let cloned
+          if( element.key ==='class'){
+            const classItem = document.getElementById('class-action')
+            cloned = classItem.cloneNode(true)
+            cloned.querySelector('#class-action-value').textContent = `${element.key}="${element.value}"`
+            
+          }
+          else{
+            const attItem = document.getElementById('attriute-action')
+            cloned = attItem.cloneNode(true)
+            const v = cloned.querySelector('#attriute-action-value')
+            if(element.value){
+              v.textContent = `${element.key}="${element.value}"`
+            }
+            else{
+              v.textContent = element.key
+            }
+            
+          }
+          actionData.append(cloned)
         }
         if (element?.value && !element?.key) {
           //optionsStrings.push(` 🪣 ${element?.value || element?.insertedCode} `)
