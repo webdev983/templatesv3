@@ -6105,85 +6105,86 @@ checkbox1.setAttribute('hidden', "");
             cloned2.querySelector('#tag-action-created').remove()
             actionData.append(cloned2)
           }
+          actionData.append(cloned)
         }
-        actionData.append(cloned)
+        
 
-      
-      if (element?.inserted_element?.tagName) {
-        const cloned = tagAction.cloneNode(true)
-        cloned.querySelector('#tag-action-tag-name').textContent = element?.inserted_element.tagName.toLowerCase()
-        cloned.querySelector('#tag-action-tag-id').textContent = element.inserted_element?.id
-        cloned.querySelector('#tag-action-created').removeAttribute('hidden')
-        cloned.querySelector('#tag-action-moved').remove()
-        actionData.append(cloned)
-      }
-      if (element?.key) {
-        //optionsStrings.push(` 🔑 ${element?.key} `)
-        let cloned
-        if (element.key === 'class') {
-          const classItem = document.getElementById('class-action')
-          cloned = classItem.cloneNode(true)
-          cloned.querySelector('#class-action-value').textContent = `${element.key}="${element.value}"`
 
+        if (element?.inserted_element?.tagName) {
+          const cloned = tagAction.cloneNode(true)
+          cloned.querySelector('#tag-action-tag-name').textContent = element?.inserted_element.tagName.toLowerCase()
+          cloned.querySelector('#tag-action-tag-id').textContent = element.inserted_element?.id
+          cloned.querySelector('#tag-action-created').removeAttribute('hidden')
+          cloned.querySelector('#tag-action-moved').remove()
+          actionData.append(cloned)
         }
-        else {
-          const attItem = document.getElementById('attriute-action')
-          cloned = attItem.cloneNode(true)
-          const v = cloned.querySelector('#attriute-action-value')
-          if (element.value) {
-            v.textContent = `${element.key}="${element.value}"`
+        if (element?.key) {
+          //optionsStrings.push(` 🔑 ${element?.key} `)
+          let cloned
+          if (element.key === 'class') {
+            const classItem = document.getElementById('class-action')
+            cloned = classItem.cloneNode(true)
+            cloned.querySelector('#class-action-value').textContent = `${element.key}="${element.value}"`
+
           }
           else {
-            v.textContent = element.key
+            const attItem = document.getElementById('attriute-action')
+            cloned = attItem.cloneNode(true)
+            const v = cloned.querySelector('#attriute-action-value')
+            if (element.value) {
+              v.textContent = `${element.key}="${element.value}"`
+            }
+            else {
+              v.textContent = element.key
+            }
+
           }
+          actionData.append(cloned)
+        }
+        if (element?.value && !element?.key) {
+          //optionsStrings.push(` 🪣 ${element?.value || element?.insertedCode} `)
+          const tc = document.getElementById('tc-action')
+          const cloned = tc.cloneNode(true)
+          actionData.append(cloned)
+          const v = document.getElementById('innerhtml-textcontent-action-content')
+          const cloned2 = v.cloneNode(true)
+          cloned2.querySelector('#innerhtml-textcontent-action-content-value').textContent = element?.value
+          actionData.append(cloned2)
 
         }
-        actionData.append(cloned)
-      }
-      if (element?.value && !element?.key) {
-        //optionsStrings.push(` 🪣 ${element?.value || element?.insertedCode} `)
-        const tc = document.getElementById('tc-action')
-        const cloned = tc.cloneNode(true)
-        actionData.append(cloned)
-        const v = document.getElementById('innerhtml-textcontent-action-content')
-        const cloned2 = v.cloneNode(true)
-        cloned2.querySelector('#innerhtml-textcontent-action-content-value').textContent = element?.value
-        actionData.append(cloned2)
+        if (element?.insertedCode) {
+          const tc = document.getElementById('innerhtml-action')
+          const cloned = tc.cloneNode(true)
+          actionData.append(cloned)
+          const v = document.getElementById('innerhtml-textcontent-action-content')
+          const cloned2 = v.cloneNode(true)
+          cloned2.querySelector('#innerhtml-textcontent-action-content-value').textContent = element?.insertedCode
+          actionData.append(cloned2)
+        }
+        if (element?.tag_change) {
+          const ct = document.getElementById('change-tag-action')
+          const cloned = ct.cloneNode(true)
+          cloned.querySelector('#change-tag-action-value').textContent = element.tag_change
+          actionData.append(cloned)
+
+        }
+        /*
+        if (element?.tagName) {
+          optionsStrings.push(`🪣 ${element?.tagName}  `)
+        }*/
+
+
+        //clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionsStrings.join('&#013;&#010;'))
+        //clonedElement.querySelector("[data-action-data]").innerHTML = optionsStrings.join('<br>')
 
       }
-      if (element?.insertedCode) {
-        const tc = document.getElementById('innerhtml-action')
-        const cloned = tc.cloneNode(true)
-        actionData.append(cloned)
-        const v = document.getElementById('innerhtml-textcontent-action-content')
-        const cloned2 = v.cloneNode(true)
-        cloned2.querySelector('#innerhtml-textcontent-action-content-value').textContent = element?.insertedCode
-        actionData.append(cloned2)
-      }
-      if (element?.tag_change) {
-        const ct = document.getElementById('change-tag-action')
-        const cloned = ct.cloneNode(true)
-        cloned.querySelector('#change-tag-action-value').textContent = element.tag_change
-        actionData.append(cloned)
 
-      }
-      /*
-      if (element?.tagName) {
-        optionsStrings.push(`🪣 ${element?.tagName}  `)
-      }*/
+      // Get the parent of the original element
+      const parent = originalElement.parentNode;
 
-
-      //clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionsStrings.join('&#013;&#010;'))
-      //clonedElement.querySelector("[data-action-data]").innerHTML = optionsStrings.join('<br>')
-
+      // Insert the cloned element before the original element
+      parent.insertBefore(clonedElement, originalElement);
     }
-
-    // Get the parent of the original element
-    const parent = originalElement.parentNode;
-
-    // Insert the cloned element before the original element
-    parent.insertBefore(clonedElement, originalElement);
-  }
     function removeTextNodes(element) {
       for (let i = 0; i < element.childNodes.length; i++) {
         const node = element.childNodes[i];
