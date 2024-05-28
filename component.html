@@ -250,7 +250,8 @@
 
 
 
-          <label id="change-tag-action" class="action-single-label"><span class="action-icon">🆕</span><span  id="change-tag-action-value">div</span></label>
+          <label id="change-tag-action" class="action-single-label"><span class="action-icon">🆕</span><span
+              id="change-tag-action-value">div</span></label>
           <div class="action-data-group" id="tag-action">
             <label class="action-group-label" id="tag-action-created" hidden><span class="action-icon">🆕
                 created</span></label>
@@ -6002,7 +6003,7 @@ checkbox1.setAttribute('hidden', "");
         }
       }
     }
-    function insertDataIntoCodeLog(actionTime, actionName, options, inserted_component, element, reusableId){
+    function insertDataIntoCodeLog(actionTime, actionName, options, inserted_component, element, reusableId) {
       const codeLog = getElementById1("code-log-body");
       const originalElement = codeLog.querySelector("#code-log-element[hidden]");
       const clonedElement = originalElement.cloneNode(true);
@@ -6021,7 +6022,7 @@ checkbox1.setAttribute('hidden', "");
       let emoji = ""
       const optionsStrings = []
       const actionData = clonedElement.querySelector("[data-action-data]")
-      actionData.innerHTML =''
+      actionData.innerHTML = ''
       if (options) {
 
         options.apply_to_copies && optionsStrings.push('✅⧉ Apply to copies')
@@ -6056,14 +6057,14 @@ checkbox1.setAttribute('hidden', "");
         cloned.querySelector('#action-add-component-link-type').textContent = element.inserted_component.componentId
 
         actionData.append(cloned)
-        actionData.setAttribute('data-log-id',r + element.inserted_component.id)
+        actionData.setAttribute('data-log-id', r + element.inserted_component.id)
         const cloned2 = originalTargetElement.cloneNode(true)
-        
-        
-        if( options?.attachId){
-          cloned2.querySelector('#action-target-tag-id-value').textContent =removeLastOccurrence(options.attachId,'-tree')
+
+
+        if (options?.attachId) {
+          cloned2.querySelector('#action-target-tag-id-value').textContent = removeLastOccurrence(options.attachId, '-tree')
           cloned2.querySelector('#action-target-tag-name-value').textContent = getElementById1(options.attachId).tagName
-        }else{
+        } else {
           cloned2.querySelector('#action-target-tag-id').remove()
         }
         //cloned2.querySelector('#action-target-tag-name-value').textContent = 
@@ -6079,7 +6080,7 @@ checkbox1.setAttribute('hidden', "");
         clonedElement.querySelector("#code-log-action").textContent = actionName + emoji;
         const tagAction = document.getElementById('tag-action')
         if (element?.target_element) {
-          
+
           const cloned = originalTargetElement.cloneNode(true)
           if (typeof element.target_element === 'string') {
             //optionsStrings.push(` Target ${options?.attachId || element.target_element.replace('-tree', '')}`)
@@ -6090,86 +6091,95 @@ checkbox1.setAttribute('hidden', "");
           else {
             const e = element.target_element.map(el => el.id)
             e.shift()
-            optionsStrings.push(` Target ${element.target_element[0].id.replace('-tree', '')},Elements: ${e.join(',')}`)
-            cloned.querySelector('#action-target-tag-id-value').textContent = element.target_element[0].id.replace('-tree', '')
-          }
-          actionData.append(cloned)
+            const id1 = element.target_element[0].id.replace('-tree', '')
+            cloned.querySelector('#action-target-tag-id-value').textContent = id1
+            cloned.querySelector('#action-target-tag-name-value').textContent = getElementById1(id1).tagName.toLowerCase()
 
-        }
-        if (element?.inserted_element?.tagName) {
-          const cloned = tagAction.cloneNode(true)
-          cloned.querySelector('#tag-action-tag-name').textContent =element?.inserted_element.tagName.toLowerCase()
-          cloned.querySelector('#tag-action-tag-id').textContent =element.inserted_element?.id
-          cloned.querySelector('#tag-action-created').removeAttribute('hidden')
-          cloned.querySelector('#tag-action-moved').remove()
-          actionData.append(cloned)
-        }
-        if (element?.key) {
-          //optionsStrings.push(` 🔑 ${element?.key} `)
-          let cloned
-          if( element.key ==='class'){
-            const classItem = document.getElementById('class-action')
-            cloned = classItem.cloneNode(true)
-            cloned.querySelector('#class-action-value').textContent = `${element.key}="${element.value}"`
+
+            const cloned2 = tagAction.cloneNode(true)
             
+            cloned2.querySelector('#tag-action-tag-id').textContent = e.join(',')
+            cloned2.querySelector('#tag-action-created').remove()
+            actionData.append(cloned2)
           }
-          else{
-            const attItem = document.getElementById('attriute-action')
-            cloned = attItem.cloneNode(true)
-            const v = cloned.querySelector('#attriute-action-value')
-            if(element.value){
-              v.textContent = `${element.key}="${element.value}"`
-            }
-            else{
-              v.textContent = element.key
-            }
-            
-          }
-          actionData.append(cloned)
         }
-        if (element?.value && !element?.key) {
-          //optionsStrings.push(` 🪣 ${element?.value || element?.insertedCode} `)
-          const tc = document.getElementById('tc-action')
-          const cloned = tc.cloneNode(true)
-          actionData.append(cloned)
-          const v = document.getElementById('innerhtml-textcontent-action-content')
-          const cloned2 = v.cloneNode(true)
-          cloned2.querySelector('#innerhtml-textcontent-action-content-value').textContent = element?.value 
-          actionData.append(cloned2)
-
-        }
-        if (element?.insertedCode) {
-          const tc = document.getElementById('innerhtml-action')
-          const cloned = tc.cloneNode(true)
-          actionData.append(cloned)
-          const v = document.getElementById('innerhtml-textcontent-action-content')
-          const cloned2 = v.cloneNode(true)
-          cloned2.querySelector('#innerhtml-textcontent-action-content-value').textContent = element?.insertedCode 
-          actionData.append(cloned2)
-        }
-        if (element?.tag_change) {
-          const ct = document.getElementById('change-tag-action')
-          const cloned = ct.cloneNode(true)
-          cloned.querySelector('#change-tag-action-value').textContent = element.tag_change
-          actionData.append(cloned)
-          
-        }
-        /*
-        if (element?.tagName) {
-          optionsStrings.push(`🪣 ${element?.tagName}  `)
-        }*/
-        
-
-        //clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionsStrings.join('&#013;&#010;'))
-        //clonedElement.querySelector("[data-action-data]").innerHTML = optionsStrings.join('<br>')
+        actionData.append(cloned)
 
       }
+      if (element?.inserted_element?.tagName) {
+        const cloned = tagAction.cloneNode(true)
+        cloned.querySelector('#tag-action-tag-name').textContent = element?.inserted_element.tagName.toLowerCase()
+        cloned.querySelector('#tag-action-tag-id').textContent = element.inserted_element?.id
+        cloned.querySelector('#tag-action-created').removeAttribute('hidden')
+        cloned.querySelector('#tag-action-moved').remove()
+        actionData.append(cloned)
+      }
+      if (element?.key) {
+        //optionsStrings.push(` 🔑 ${element?.key} `)
+        let cloned
+        if (element.key === 'class') {
+          const classItem = document.getElementById('class-action')
+          cloned = classItem.cloneNode(true)
+          cloned.querySelector('#class-action-value').textContent = `${element.key}="${element.value}"`
 
-      // Get the parent of the original element
-      const parent = originalElement.parentNode;
+        }
+        else {
+          const attItem = document.getElementById('attriute-action')
+          cloned = attItem.cloneNode(true)
+          const v = cloned.querySelector('#attriute-action-value')
+          if (element.value) {
+            v.textContent = `${element.key}="${element.value}"`
+          }
+          else {
+            v.textContent = element.key
+          }
 
-      // Insert the cloned element before the original element
-      parent.insertBefore(clonedElement, originalElement);
+        }
+        actionData.append(cloned)
+      }
+      if (element?.value && !element?.key) {
+        //optionsStrings.push(` 🪣 ${element?.value || element?.insertedCode} `)
+        const tc = document.getElementById('tc-action')
+        const cloned = tc.cloneNode(true)
+        actionData.append(cloned)
+        const v = document.getElementById('innerhtml-textcontent-action-content')
+        const cloned2 = v.cloneNode(true)
+        cloned2.querySelector('#innerhtml-textcontent-action-content-value').textContent = element?.value
+        actionData.append(cloned2)
+
+      }
+      if (element?.insertedCode) {
+        const tc = document.getElementById('innerhtml-action')
+        const cloned = tc.cloneNode(true)
+        actionData.append(cloned)
+        const v = document.getElementById('innerhtml-textcontent-action-content')
+        const cloned2 = v.cloneNode(true)
+        cloned2.querySelector('#innerhtml-textcontent-action-content-value').textContent = element?.insertedCode
+        actionData.append(cloned2)
+      }
+      if (element?.tag_change) {
+        const ct = document.getElementById('change-tag-action')
+        const cloned = ct.cloneNode(true)
+        cloned.querySelector('#change-tag-action-value').textContent = element.tag_change
+        actionData.append(cloned)
+
+      }
+      /*
+      if (element?.tagName) {
+        optionsStrings.push(`🪣 ${element?.tagName}  `)
+      }*/
+
+
+      //clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionsStrings.join('&#013;&#010;'))
+      //clonedElement.querySelector("[data-action-data]").innerHTML = optionsStrings.join('<br>')
+
+    }
+
+    // Get the parent of the original element
+    const parent = originalElement.parentNode;
+
+    // Insert the cloned element before the original element
+    parent.insertBefore(clonedElement, originalElement);
     }
     function removeTextNodes(element) {
       for (let i = 0; i < element.childNodes.length; i++) {
@@ -6781,7 +6791,7 @@ checkbox1.setAttribute('hidden', "");
 
           }
           if (replaceAction) {
-            await insertDataIntoCodeLog(replaceAction.sk, replaceAction.action, replaceAction.options,undefined,replaceAction)
+            await insertDataIntoCodeLog(replaceAction.sk, replaceAction.action, replaceAction.options, undefined, replaceAction)
             console.log('replace action in')
             const toReplace = replaceAction.target_element[0]
             replaceAction.target_element.shift()
@@ -9109,8 +9119,8 @@ elementsToRemove.forEach(element => element.remove());
         const { items } = responseData
         console.log('iteeems ' + JSON.stringify(items))
         //change component 
-        const subPath =convertToOldPath(items.find(e => e.sk === 'path').lsi1.split(';')[0])
-        const splited =subPath.split('/')
+        const subPath = convertToOldPath(items.find(e => e.sk === 'path').lsi1.split(';')[0])
+        const splited = subPath.split('/')
         const name = splited[splited.length - 1]
         const { testPage, optionalScript } = items.find(e => e.sk === 'path')
         const el1 = treeElement || getElementById1(reusableId1 + newId + '-tree')
