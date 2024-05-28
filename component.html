@@ -6041,7 +6041,7 @@ checkbox1.setAttribute('hidden', "");
 
       }
       const r = options?.reusable ? options.reusable + '|' : ''
-      const actionData = clonedElement.querySelector('[data-action-data]')
+      
       if (element?.inserted_component) {
         console.log('iiiiiiiiiiin0')
         const a = clonedElement.querySelector("#code-log-action")
@@ -6053,6 +6053,7 @@ checkbox1.setAttribute('hidden', "");
         cloned.querySelector('#action-add-component-link-type').textContent = element.inserted_component.componentId
 
         actionData.append(cloned)
+        actionData.setAttribute('data-log-id',r + element.inserted_component.i)
         //clonedElement.querySelector('[data-action-data]').innerHTML = optionString;
 
 
@@ -6099,7 +6100,7 @@ checkbox1.setAttribute('hidden', "");
         }
 
         //clonedElement.querySelector("#code-log-action").setAttribute('data-tooltip', optionsStrings.join('&#013;&#010;'))
-        clonedElement.querySelector("[data-action-data]").innerHTML = optionsStrings.join('<br>')
+        //clonedElement.querySelector("[data-action-data]").innerHTML = optionsStrings.join('<br>')
 
       }
 
@@ -9047,7 +9048,8 @@ elementsToRemove.forEach(element => element.remove());
         const { items } = responseData
         console.log('iteeems ' + JSON.stringify(items))
         //change component 
-        const splited = convertToOldPath(items.find(e => e.sk === 'path').lsi1.split(';')[0]).split('/')
+        const subPath =convertToOldPath(items.find(e => e.sk === 'path').lsi1.split(';')[0])
+        const splited =subPath.split('/')
         const name = splited[splited.length - 1]
         const { testPage, optionalScript } = items.find(e => e.sk === 'path')
         const el1 = treeElement || getElementById1(reusableId1 + newId + '-tree')
@@ -9070,7 +9072,12 @@ elementsToRemove.forEach(element => element.remove());
         const logSearch = reusableId1 + newId
         console.log('searching log ' + logSearch)
         const logE = document.querySelectorAll(`[log-id="${logSearch}"]`).forEach(e => e.textContent = e.textContent.replace('{name}', name))
+        document.querySelectorAll(`[data-log-id="${logSearch}"]`).forEach(e => {
+          e.querySelector("#action-add-component-name") = name
+          e.querySelector("#action-add-component-id") = id
+          e.querySelector("#action-add-component-path") = subPath
 
+        })
 
         if (pathItem.hub_items?.main_content) {
           const splited = pathItem.hub_items?.main_content?.split(':')
