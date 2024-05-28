@@ -6185,7 +6185,13 @@ checkbox1.setAttribute('hidden', "");
 
               const cloned2 = tagAction.cloneNode(true)
 
-              cloned2.querySelector('#tag-action-tag-id').textContent = e.join(',')
+              cloned2.querySelector('#tag-action-tag-id').textContent = e[0]
+              for(let i=1;i<e.length;i++){
+                const group = cloned2.querySelector('#moved-tag')
+                const cloned3 = group.cloneNode(true)
+                cloned3.querySelector('#tag-action-tag-id').textContent = e[i]
+                group.parentNode.append(cloned3)
+              }
               cloned2.querySelector('#tag-action-created').remove()
               actionData.append(cloned2)
             }
