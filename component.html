@@ -274,12 +274,12 @@
             <label class="action-label"></label>
             <label hidden class="action-label" id="action-option-free"><span
                 class="action-icon">🥶</span><span>freeze</span></label>
-            <label hidden class="action-label" id="action-dub-target"><span class="action-icon">⧉</span><span>dub target</span></label>
-            <label hidden class="action-label" id="action-apply-target-copies"><span class="action-icon">⧉</span><span>apply to target copies</span></label>
-            <label hidden class="action-label" id="action-apply-moving-copies"><span class="action-icon">⧉</span><span>apply to moving copies</span></label>
-            <label hidden class="action-label" id="action-append-position"><span class="action-icon">📍 append position: </span><span id="action-append-position-value">1</span></label>
-            <label hidden class="action-label" id="action-reuse-id"><span class="action-icon">♻️ reuse id:  </span><span id="action-reuse-id-value">AC</span></label>
-            <label hidden class="action-label" id="action-self-use-component"><span class="action-icon">🪞</span><span>self use</span></label>
+            <label class="action-label" id="action-dub-target"><span class="action-icon">⧉</span><span>dub target</span></label>
+            <label class="action-label" id="action-apply-target-copies"><span class="action-icon">⧉</span><span>apply to target copies</span></label>
+            <label class="action-label" id="action-apply-moving-copies"><span class="action-icon">⧉</span><span>apply to moving copies</span></label>
+            <label class="action-label" id="action-append-position"><span class="action-icon">📍 append position: </span><span id="action-append-position-value">1</span></label>
+            <label class="action-label" id="action-reuse-id"><span class="action-icon">♻️ reuse id:  </span><span id="action-reuse-id-value">AC</span></label>
+            <label class="action-label" id="action-self-use-component"><span class="action-icon">🪞</span><span>self use</span></label>
 
           </div>
 
@@ -6031,27 +6031,35 @@ checkbox1.setAttribute('hidden', "");
       if (options) {
         const originalOptionsEl = getElementById1('action-options')
         const cloned = originalOptionsEl.cloneNode(true)
-        if (options.apply_to_copies) {
-          cloned.querySelector('#action-apply-target-copies').removeAttribute('hidden')
+        if (!options.apply_to_copies) {
+          cloned.querySelector('#action-apply-target-copies').remove()
         }
-        if (options.insert_copies) {
-          cloned.querySelector('#action-apply-moving-copies')?.removeAttribute('hidden')
+        if (!options.insert_copies) {
+          cloned.querySelector('#action-apply-moving-copies').remove()
         }
-        if (options.dub_target) {
-          cloned.querySelector('#action-dub-target').removeAttribute('hidden')
+        if (!options.dub_target) {
+          cloned.querySelector('#action-dub-target').remove()
         }
-        if (options.selfuse) {
-          cloned.querySelector('#action-self-use-component').removeAttribute('hidden')
+        if (!options.selfuse) {
+          cloned.querySelector('#action-self-use-component').remove()
         }
+        const reuseItem =cloned.querySelector('#action-self-use-component')
         if (options.reusable) {
-          const reuseItem =cloned.querySelector('#action-self-use-component')
+          
           reuseItem.querySelector('#action-reuse-id-value').textContent = options.reusable
-          reuseItem.removeAttribute('hidden')
+          
         }
+        else{
+          reuseItem.remove()
+        }
+        const positionItem =cloned.querySelector('#action-append-position')
         if (options.position) {
-          const positionItem =cloned.querySelector('#action-append-position')
+          
           positionItem.querySelector('#action-append-position-value').textContent =options.position
-          positionItem.removeAttribute('hidden')
+          
+        }
+        else{
+          positionItem.remove()
         }
 
         actionData.append(cloned)
