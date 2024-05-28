@@ -6125,7 +6125,9 @@ checkbox1.setAttribute('hidden', "");
           const cloned = originalTargetElement.cloneNode(true)
           if (typeof element.target_element === 'string') {
             //optionsStrings.push(` Target ${options?.attachId || element.target_element.replace('-tree', '')}`)
-            cloned.querySelector('#action-target-tag-id-value').textContent = options?.attachId || element.target_element.replace('-tree', '')
+            const id1 = element.target_element.replace('-tree', '')
+            cloned.querySelector('#action-target-tag-id-value').textContent = id1
+            cloned.querySelector('#action-target-tag-name-value').textContent = getElementById1(id1).tagName
           }
           else {
             const e = element.target_element.map(el => el.id)
