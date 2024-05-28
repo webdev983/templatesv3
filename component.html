@@ -6168,6 +6168,14 @@ checkbox1.setAttribute('hidden', "");
             cloned.querySelector('#tag-action-moved').remove()
             actionData.append(cloned)
           }
+          if (element?.inserted_element?.originalId) {
+            const cloned = tagAction.cloneNode(true)
+            cloned.querySelector('#tag-action-tag-name').textContent = element?.inserted_element.tagName.toLowerCase()
+            cloned.querySelector('#tag-action-tag-id').textContent = element.inserted_element?.id
+            cloned.querySelector('#tag-action-created').removeAttribute('hidden')
+            cloned.querySelector('#tag-action-moved').remove()
+            actionData.append(cloned)
+          }
           if (element?.target_element) {
 
             const cloned = originalTargetElement.cloneNode(true)
