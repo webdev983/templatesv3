@@ -6058,7 +6058,15 @@ checkbox1.setAttribute('hidden', "");
         //const optionString = ` 🆔 ${element.inserted_component.componentId}<br>Target ${options?.attachId || element.target_element.replace('-tree', '')}<br>${optionsStrings.join('<br>')}`;
         const addAction = document.getElementById('component-action-add')
         const cloned = addAction.cloneNode(true)
-        cloned.querySelector('#action-add-component-link-type').textContent = element.inserted_component.componentId
+        const linkType = cloned.querySelector('#action-add-component-link-type')
+        const cId = element.inserted_component.componentId
+        if(cId.startsWith('#') || cId.startsWith('*') || cId.startsWith('$') ){
+          linkType.textContent = element.inserted_component.componentId
+        }
+        else{
+          linkType.textContent = 'id'
+        }
+        
 
         actionData.append(cloned)
         actionData.setAttribute('data-log-id', r + element.inserted_component.id)
