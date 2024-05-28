@@ -5861,7 +5861,7 @@ checkbox1.setAttribute('hidden', "");
             ac = "Add_Component_Id"
           }
         }
-        await insertDataIntoCodeLog(time, ac, element.options, undefined, element, reusableId)
+        await insertDataIntoCodeLog(time, ac, element.options, undefined, element, reusableId,attachId)
       }
 
 
@@ -6002,7 +6002,7 @@ checkbox1.setAttribute('hidden', "");
         }
       }
     }
-    function insertDataIntoCodeLog(actionTime, actionName, options, inserted_component, element, reusableId) {
+    function insertDataIntoCodeLog(actionTime, actionName, options, inserted_component, element, reusableId,attachId){
       const codeLog = getElementById1("code-log-body");
       const originalElement = codeLog.querySelector("#code-log-element[hidden]");
       const clonedElement = originalElement.cloneNode(true);
@@ -6059,7 +6059,12 @@ checkbox1.setAttribute('hidden', "");
         actionData.setAttribute('data-log-id',r + element.inserted_component.id)
         const cloned2 = originalTargetElement.cloneNode(true)
         
-        cloned2.querySelector('#action-target-tag-id-value').textContent = options?.attachId || element.target_element.replace('-tree', '')
+        
+        if(attachId || options?.attachId){
+          cloned2.querySelector('#action-target-tag-id-value').textContent = options?.attachId || element.target_element.replace('-tree', '')
+        }else{
+          cloned2.querySelector('#action-target-tag-id-value').remove()
+        }
         //cloned2.querySelector('#action-target-tag-name-value').textContent = 
         actionData.append(cloned2)
         //clonedElement.querySelector('[data-action-data]').innerHTML = optionString;
