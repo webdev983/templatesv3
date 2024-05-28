@@ -6026,11 +6026,12 @@ checkbox1.setAttribute('hidden', "");
       clonedElement.querySelector("#code-log-action-time").textContent = formatEpochTime(actionTime);
       clonedElement.querySelector("#code-log-action-time").setAttribute('sk', actionTime)
       let emoji = ""
-      const optionsStrings = []
+      
       const actionData = clonedElement.querySelector("[data-action-data]")
       actionData.innerHTML = ''
+      let optionEl
       if (options) {
-        
+        let optionNumber = 0
         const cloned = originalOptionsEl.cloneNode(true)
         cloned.removeAttribute('original')
         const freeze = cloned.querySelector('#action-option-free')
@@ -6038,18 +6039,27 @@ checkbox1.setAttribute('hidden', "");
         if (!options.apply_to_copies) {
           cloned.querySelector('#action-apply-target-copies').remove()
         }
+        else{
+          optionNumber++
+        }
         if (!options.insert_copies) {
           cloned.querySelector('#action-apply-moving-copies').remove()
+        }else{
+          optionNumber++
         }
         if (!options.dub_target) {
           cloned.querySelector('#action-dub-target').remove()
+        }else{
+          optionNumber++
         }
         if (!options.selfuse) {
           cloned.querySelector('#action-self-use-component').remove()
+        }else{
+          optionNumber++
         }
         const reuseItem =cloned.querySelector('#action-reuse-id')
         if (options.reusable) {
-          
+          optionNumber++
           reuseItem.querySelector('#action-reuse-id-value').textContent = options.reusable
           
         }
@@ -6058,7 +6068,7 @@ checkbox1.setAttribute('hidden', "");
         }
         const positionItem =cloned.querySelector('#action-append-position')
         if (options.position) {
-          
+          optionNumber++
           positionItem.querySelector('#action-append-position-value').textContent =options.position
           
         }
@@ -6066,14 +6076,14 @@ checkbox1.setAttribute('hidden', "");
           positionItem.remove()
         }
 
-        actionData.append(cloned)
+        optionEl = cloned
 
-        if (optionsStrings.length === 2) {
+        if (optionNumber === 2) {
           emoji = '2️⃣'
         }
-        else if (optionsStrings.length === 3) {
+        else if (optionNumber === 3) {
           emoji = '3️⃣'
-        } else if (optionsStrings.length === 1) {
+        } else if (optionNumber === 1) {
           emoji = '1️⃣'
         }
 
@@ -6148,6 +6158,14 @@ checkbox1.setAttribute('hidden', "");
             }
             actionData.append(cloned)
           }
+          if (element?.inserted_element?.tagName) {
+            const cloned = tagAction.cloneNode(true)
+            cloned.querySelector('#tag-action-tag-name').textContent = element?.inserted_element.tagName.toLowerCase()
+            cloned.querySelector('#tag-action-tag-id').textContent = element.inserted_element?.id
+            cloned.querySelector('#tag-action-created').removeAttribute('hidden')
+            cloned.querySelector('#tag-action-moved').remove()
+            actionData.append(cloned)
+          }
           if (element?.target_element) {
 
             const cloned = originalTargetElement.cloneNode(true)
@@ -6176,14 +6194,7 @@ checkbox1.setAttribute('hidden', "");
 
 
 
-          if (element?.inserted_element?.tagName) {
-            const cloned = tagAction.cloneNode(true)
-            cloned.querySelector('#tag-action-tag-name').textContent = element?.inserted_element.tagName.toLowerCase()
-            cloned.querySelector('#tag-action-tag-id').textContent = element.inserted_element?.id
-            cloned.querySelector('#tag-action-created').removeAttribute('hidden')
-            cloned.querySelector('#tag-action-moved').remove()
-            actionData.append(cloned)
-          }
+          
 
           if (element?.value && !element?.key) {
             //optionsStrings.push(` 🪣 ${element?.value || element?.insertedCode} `)
@@ -6223,7 +6234,7 @@ checkbox1.setAttribute('hidden', "");
         //clonedElement.querySelector("[data-action-data]").innerHTML = optionsStrings.join('<br>')
 
       }
-
+      optionEl && actionData.append(optionEl)
       // Get the parent of the original element
       const parent = originalElement.parentNode;
 
