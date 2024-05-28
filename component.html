@@ -6041,7 +6041,7 @@ checkbox1.setAttribute('hidden', "");
 
       }
       const r = options?.reusable ? options.reusable + '|' : ''
-      
+      const originalTargetElement = document.getElementById('action-target')
       if (element?.inserted_component) {
         console.log('iiiiiiiiiiin0')
         const a = clonedElement.querySelector("#code-log-action")
@@ -6054,6 +6054,9 @@ checkbox1.setAttribute('hidden', "");
 
         actionData.append(cloned)
         actionData.setAttribute('data-log-id',r + element.inserted_component.id)
+        const cloned2 = originalTargetElement.cloneNode(true)
+        cloned2.querySelector('#action-target-tag-id-value').textContent = options?.attachId || element.target_element.replace('-tree', '')
+        actionData.append(cloned2)
         //clonedElement.querySelector('[data-action-data]').innerHTML = optionString;
 
 
@@ -6083,8 +6086,8 @@ checkbox1.setAttribute('hidden', "");
           optionsStrings.push(`🪣 ${element?.tagName}  `)
         }
         if (element?.target_element) {
-          const t = document.getElementById('action-target')
-          const cloned = t.cloneNode(true)
+          
+          const cloned = originalTargetElement.cloneNode(true)
           if (typeof element.target_element === 'string') {
             //optionsStrings.push(` Target ${options?.attachId || element.target_element.replace('-tree', '')}`)
             cloned.querySelector('#action-target-tag-id-value').textContent = options?.attachId || element.target_element.replace('-tree', '')
