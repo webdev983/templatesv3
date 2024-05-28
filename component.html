@@ -6085,7 +6085,7 @@ checkbox1.setAttribute('hidden', "");
             //optionsStrings.push(` Target ${options?.attachId || element.target_element.replace('-tree', '')}`)
             const id1 = element.target_element.replace('-tree', '')
             cloned.querySelector('#action-target-tag-id-value').textContent = id1
-            cloned.querySelector('#action-target-tag-name-value').textContent = getElementById1(id1).tagName
+            cloned.querySelector('#action-target-tag-name-value').textContent = getElementById1(id1).tagName.toLowerCase()
           }
           else {
             const e = element.target_element.map(el => el.id)
@@ -6098,7 +6098,7 @@ checkbox1.setAttribute('hidden', "");
         }
         if (element?.inserted_element?.tagName) {
           const cloned = tagAction.cloneNode(true)
-          cloned.querySelector('#tag-action-tag-name').textContent =element?.inserted_element.tagName
+          cloned.querySelector('#tag-action-tag-name').textContent =element?.inserted_element.tagName.toLowerCase()
           cloned.querySelector('#tag-action-tag-id').textContent =element.inserted_element?.id
           cloned.querySelector('#tag-action-created').removeAttribute('hidden')
           cloned.querySelector('#tag-action-moved').remove()
