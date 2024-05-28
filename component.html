@@ -6083,18 +6083,33 @@ checkbox1.setAttribute('hidden', "");
         if (element?.key) {
           optionsStrings.push(` 🔑 ${element?.key} `)
         }
-        if (element?.value || element?.insertedCode) {
-          optionsStrings.push(` 🪣 ${element?.value || element?.insertedCode} `)
+        if (element?.value ) {
+          //optionsStrings.push(` 🪣 ${element?.value || element?.insertedCode} `)
+          const tc = document.getElementById('tc-action')
+          const cloned = tc.cloneNode(true)
+          actionData.append(cloned)
+          const v = document.getElementById('innerhtml-textcontent-action-content')
+          const cloned2 = v.cloneNode(true)
+          cloned2.querySelector('#innerhtml-textcontent-action-content-value').textContent = element?.value 
+          actionData.append(cloned2)
+
         }
         if (element?.insertedCode) {
-          optionsStrings.push(` 🪣 ${element?.insertedCode}  `)
+          const tc = document.getElementById('innerhtml-action')
+          const cloned = tc.cloneNode(true)
+          actionData.append(cloned)
+          const v = document.getElementById('innerhtml-textcontent-action-content')
+          const cloned2 = v.cloneNode(true)
+          cloned2.querySelector('#innerhtml-textcontent-action-content-value').textContent = element?.insertedCode 
+          actionData.append(cloned2)
         }
         if (element?.tag_change) {
           optionsStrings.push(`🪣 ${element?.tag_change}  `)
         }
+        /*
         if (element?.tagName) {
           optionsStrings.push(`🪣 ${element?.tagName}  `)
-        }
+        }*/
         if (element?.target_element) {
           
           const cloned = originalTargetElement.cloneNode(true)
