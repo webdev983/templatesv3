@@ -268,7 +268,7 @@
 
 
 
-          <div class="action-data-group" id="action-options">
+          <div class="action-data-group" id="action-options" hidden>
             <label class="action-group-label"> <span class="action-icon"
                 id="action-options-amount">2️⃣</span><span>options</span></label>
             <label class="action-label"></label>
@@ -6029,8 +6029,9 @@ checkbox1.setAttribute('hidden', "");
       const actionData = clonedElement.querySelector("[data-action-data]")
       actionData.innerHTML = ''
       if (options) {
-        const originalOptionsEl = getElementById1('action-options')
+        const originalOptionsEl = getElementById1('action-options[hidden]')
         const cloned = originalOptionsEl.cloneNode(true)
+        cloned.removeAttribute('hidden')
         if (!options.apply_to_copies) {
           cloned.querySelector('#action-apply-target-copies').remove()
         }
