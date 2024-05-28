@@ -6176,7 +6176,7 @@ checkbox1.setAttribute('hidden', "");
               cloned.querySelector('#action-target-tag-name-value').textContent = getElementById1(id1)?.tagName.toLowerCase()
             }
             else {
-              const e = element.target_element.map(el => el.id)
+              const e = element.target_element.map(el =>removeLastOccurrence(el.id,'-tree'))
               e.shift()
               const id1 = element.target_element[0].id.replace('-tree', '')
               cloned.querySelector('#action-target-tag-id-value').textContent = id1
@@ -6186,10 +6186,12 @@ checkbox1.setAttribute('hidden', "");
               const cloned2 = tagAction.cloneNode(true)
 
               cloned2.querySelector('#tag-action-tag-id').textContent = e[0]
+              cloned2.querySelector('#tag-action-tag-name').textContent = getElementById1(e[0])?.tagName.toLowerCase()
               for(let i=1;i<e.length;i++){
                 const group = cloned2.querySelector('#moved-tag')
                 const cloned3 = group.cloneNode(true)
                 cloned3.querySelector('#tag-action-tag-id').textContent = e[i]
+                cloned3.querySelector('#tag-action-tag-name').textContent = getElementById1(e[i])?.tagName.toLowerCase()
                 group.parentNode.append(cloned3)
               }
               cloned2.querySelector('#tag-action-created').remove()
