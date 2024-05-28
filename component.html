@@ -6110,7 +6110,11 @@ checkbox1.setAttribute('hidden', "");
           actionData.append(cloned2)
         }
         if (element?.tag_change) {
-          optionsStrings.push(`🪣 ${element?.tag_change}  `)
+          const ct = document.getElementById('change-tag-action')
+          const cloned = ct.cloneNode(true)
+          cloned.querySelector('#change-tag-action-value').textContent = element.tag_change
+          actionData.append(cloned)
+          
         }
         /*
         if (element?.tagName) {
