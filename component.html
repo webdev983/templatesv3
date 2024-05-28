@@ -272,7 +272,7 @@
             <label class="action-group-label"> <span class="action-icon"
                 id="action-options-amount">2️⃣</span><span>options</span></label>
             <label class="action-label"></label>
-            <label class="action-label" id="action-option-free"><span
+            <label hidden class="action-label" id="action-option-free"><span
                 class="action-icon">🥶</span><span>freeze</span></label>
             <label class="action-label" id="action-dub-target"><span class="action-icon">⧉</span><span>dub target</span></label>
             <label class="action-label" id="action-apply-copies"><span class="action-icon">⧉</span><span>apply copies</span></label>
@@ -6028,15 +6028,32 @@ checkbox1.setAttribute('hidden', "");
       const actionData = clonedElement.querySelector("[data-action-data]")
       actionData.innerHTML = ''
       if (options) {
+        const originalOptionsEl = getElementById1('action-options')
+        const cloned = originalOptionsEl.cloneNode(true)
+        if (options.apply_to_copies) {
+          cloned.querySelector('#action-apply-copies').removeAttribute('hidden')
+        }
+        if (options.insert_copies) {
+          cloned.querySelector('#action-insert-copies').removeAttribute('hidden')
+        }
+        if (options.dub_target) {
+          cloned.querySelector('#action-dub-target').removeAttribute('hidden')
+        }
+        if (options.selfuse) {
+          cloned.querySelector('#action-self-use-component').removeAttribute('hidden')
+        }
+        if (options.reusable) {
+          const reuseItem =cloned.querySelector('#action-self-use-component')
+          reuseItem.querySelector('#action-reuse-id-value').textContent = options.reusable
+          reuseItem.removeAttribute('hidden')
+        }
+        if (options.position) {
+          const positionItem =cloned.querySelector('#action-append-position')
+          positionItem.querySelector('#action-append-position-value').textContent =options.position
+          reuseItem.removeAttribute('hidden')
+        }
 
-        options.apply_to_copies && optionsStrings.push('✅⧉ Apply to copies')
-        options.insert_copies && optionsStrings.push('🚂⧉ Insert Copies')
-        options.dub_target && optionsStrings.push('🎯⧉ Dup Target')
-        options.selfuse && optionsStrings.push('🎯⧉ Self use')
-        options.reusable && optionsStrings.push('🎯⧉ Reuse id:' + options.reusable)
-        options.position && optionsStrings.push('🎯 child ' + options.position)
-
-
+        actionData.append(cloned2)
 
         if (optionsStrings.length === 2) {
           emoji = '2️⃣'
@@ -6060,13 +6077,13 @@ checkbox1.setAttribute('hidden', "");
         const cloned = addAction.cloneNode(true)
         const linkType = cloned.querySelector('#action-add-component-link-type')
         const cId = element.inserted_component.componentId
-        if(cId.startsWith('#') || cId.startsWith('*') || cId.startsWith('$') ){
+        if (cId.startsWith('#') || cId.startsWith('*') || cId.startsWith('$')) {
           linkType.textContent = element.inserted_component.componentId
         }
-        else{
+        else {
           linkType.textContent = 'id'
         }
-        
+
 
         actionData.append(cloned)
         actionData.setAttribute('data-log-id', r + element.inserted_component.id)
@@ -6154,12 +6171,12 @@ checkbox1.setAttribute('hidden', "");
             cloned.querySelector('#tag-action-moved').remove()
             actionData.append(cloned)
           }
-          
+
           if (element?.value && !element?.key) {
             //optionsStrings.push(` 🪣 ${element?.value || element?.insertedCode} `)
             const tc = document.getElementById('tc-action')
             const cloned = tc.cloneNode(true)
-            actionData.insertBefore(cloned,actionData.firstChild)
+            actionData.insertBefore(cloned, actionData.firstChild)
             const v = document.getElementById('innerhtml-textcontent-action-content')
             const cloned2 = v.cloneNode(true)
             cloned2.querySelector('#innerhtml-textcontent-action-content-value').textContent = element?.value
@@ -6169,7 +6186,7 @@ checkbox1.setAttribute('hidden', "");
           if (element?.insertedCode) {
             const tc = document.getElementById('innerhtml-action')
             const cloned = tc.cloneNode(true)
-            actionData.insertBefore(cloned,actionData.firstChild)
+            actionData.insertBefore(cloned, actionData.firstChild)
             const v = document.getElementById('innerhtml-textcontent-action-content')
             const cloned2 = v.cloneNode(true)
             cloned2.querySelector('#innerhtml-textcontent-action-content-value').textContent = element?.insertedCode
