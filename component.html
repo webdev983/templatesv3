@@ -520,13 +520,52 @@
 
           </tr>
 
+          <tr  id="script-item">
+            <td>
+              <label data-script-status class="l-3">🔴</label>
+              <label data-script-name="article-table-of-content-menu" class="l-3" style="margin: 10px;">article table of contents</label>
+            </td>
+            <td type=""><span class="l-3">💻menu</span></td>
+
+            <td type=""><span class="l-3">🔀</span><span class="l-3" id="queue_number"></span></td>
+          </tr>
+
+          <tr  id="script-item">
+            <td>
+              <label data-script-status class="l-3">🔴</label>
+              <label data-script-name="ai-logs" class="l-3" style="margin: 10px;">AI logs</label>
+            </td>
+            <td type=""><span class="l-3">💻menu</span></td>
+            <td type=""><span class="l-3">🔀</span><span class="l-3" id="queue_number"></span></td>
+          </tr>
+          <tr  id="script-item">
+            <td>
+              <label data-script-status class="l-3">🔴</label>
+              <label data-script-name="chatgpt-task-json" class="l-3" style="margin: 10px;">chatgpt task json</label>
+            </td>
+            <td type=""><span class="l-3">💻menu</span></td>
+            <td type=""><span class="l-3">🔀</span><span class="l-3" id="queue_number"></span></td>
+          </tr>
+          <tr  id="script-item">
+            <td>
+              <label data-script-status class="l-3">🔴</label>
+              <label data-script-name="breadCrumb-menu" class="l-3" style="margin: 10px;">breadCrumb menu</label>
+            </td>
+            <td type=""><span class="l-3">💻menu</span></td>
+            <td type=""><span class="l-3">🔀</span><span class="l-3" id="queue_number"></span></td>
+          </tr>
+
+
+
+          
+        
         </table>
 
 
       </details>
 
 
-          <div id="head-menus"></div>
+      <div id="head-menus">
       <details style="margin-bottom: 7px; " id="article-table-of-content-menu" hidden>
         <summary class="summary-L-3"><span class="l-3">📑 Table of contents 🔴</span></summary>
         <div style="margin-left: 30px;">
@@ -534,17 +573,48 @@
         </div>
       </details>
 
+
+      <details hidden id="breadCrumb-menu" style="margin-bottom: 7px;" data-file-name-show="Hub">
+        <summary class="summary-L-3"><span class="l-3 b-dark-blue" id='breadcrumb-status'>🥖 BreadCrumb Menu 🔴</span>
+        </summary>
+        <button class="b-3" onclick="generateBreadCrumbApi(event)"> Generate</button>
+      </details>
+
+
       <details hidden style="margin-bottom: 7px; " id="ai-logs">
         <summary class="summary-L-3"><span class="l-3">🪵 AI logs</span></summary>
         <textarea class="text1"></textarea>
       </details>
 
+      <details hidden style="margin-bottom: 7px;" id="chatgpt-task-json">
+        <summary class="summary-L-3"><span class="l-3 b-dark-blue">⚙️ ChatGPT</span></summary>
+        <textarea id="gpt-input" class="text1" style="width: 50vw" placeholder=" 🤖 AI tasks"></textarea>
+        <button onclick="saveGpt(event)" data-save class="b-4">💾 Save</button>
+      </details>
+
+      <details hidden style="margin-bottom: 7px;" id="lists-task-json">
+        <summary class="summary-L-3"><span class="l-3 b-dark-blue">⚙️ ChatGPT</span></summary>
+        <textarea id="gpt-input" class="text1" style="width: 50vw" placeholder=" 🤖 AI tasks"></textarea>
+        <button onclick="saveGpt(event)" data-save class="b-4">💾 Save</button>
+      </details>
 
 
-      <details style="margin-bottom: 7px; " data-list hidden>
+      <details id="lists-task-json" hidden style="margin-bottom: 7px;" data-file-name-show="Hub">
+        <summary class="summary-L-3"><span class="l-3 b-dark-blue">⚙️ List</span></summary>
+        <textarea id="list-input" class="text1" style="width: 50vw" placeholder=" 📍 List tasks"></textarea>
+        <button onclick="saveList(event)" data-save class="b-4">💾 Save</button>
+      </details>
+
+
+
+    </div>
+
+
+
+  
+      <details style="margin-bottom: 7px;" data-list hidden>
         <summary class="summary-L-3"><span class="l-3" data-list-emoji>📣</span><span> </span><span
-            class="l-3 b-dark-blue" data-list-name>
-            Meta</span></summary>
+            class="l-3 b-dark-blue" data-list-name>  Meta</span></summary>
         <table class="table-1" style="margin-left: 30px;">
           <tr data-lists-element>
             <td class="l-3"><label class="l-3" style="margin-right: 5px;" data-lists-element-status>🔴</label>
@@ -576,30 +646,15 @@
       </details>
 
 
-      <details hidden style="margin-bottom: 7px;" data-file-name-show="Hub">
-        <summary class="summary-L-3"><span class="l-3 b-dark-blue">⚙️ ChatGPT</span></summary>
-        <textarea id="gpt-input" class="text1" style="width: 50vw" placeholder=" 🤖 AI tasks"></textarea>
-        <button onclick="saveGpt(event)" data-save class="b-4">💾 Save</button>
-      </details>
-
-
-
-      <details id="lists-details" hidden style="margin-bottom: 7px;" data-file-name-show="Hub">
-        <summary class="summary-L-3"><span class="l-3 b-dark-blue">⚙️ List</span></summary>
-        <textarea id="list-input" class="text1" style="width: 50vw" placeholder=" 📍 List tasks"></textarea>
-        <button onclick="saveList(event)" data-save class="b-4">💾 Save</button>
-      </details>
 
 
 
 
 
 
-      <details hidden id="breadCrumb-menu" style="margin-bottom: 7px;" data-file-name-show="Hub">
-        <summary class="summary-L-3"><span class="l-3 b-dark-blue" id='breadcrumb-status'>🥖 BreadCrumb Menu 🔴</span>
-        </summary>
-        <button class="b-3" onclick="generateBreadCrumbApi(event)"> Generate</button>
-      </details>
+
+
+
 
 
       <details id="product-table-specification" style="margin-bottom: 7px;">
