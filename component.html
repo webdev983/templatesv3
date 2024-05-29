@@ -1107,7 +1107,7 @@ component</button> -->
 
 
       <label><input type="checkbox" id="applyToCopies"><span class="l-3">⧉ Apply to Copies</span></label>
-      <label><input type="checkbox" id="applyToCopies"><span class="l-3">🔄 action in replace</span></label>
+      <label><input type="checkbox" id="actionInReplace"><span class="l-3">🔄 action in replace</span></label>
 
       <br>
 
@@ -5497,9 +5497,10 @@ component</button> -->
       const parentId = rest.join(';');
       const fieldset = getElementById1('code-tree-append-or-insert-approv-menu');
       const checked = e.target.parentNode.getAttribute('copiesOfInserting')
+      const actionInReplace = e.target.parentNode.getAttribute('actionInReplace')
       if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-append-or-insert-approv-menu')) {
         const clonedFieldset = fieldset.cloneNode(true);
-
+        actionInReplace && (clonedFieldset.setAttribute('actionInReplace','true'))
         clonedFieldset.id = clonedFieldset.id + ';' + parentId;
         const action = e.target.parentNode.getAttribute('action')
         clonedFieldset.setAttribute('action', action)
@@ -12129,12 +12130,14 @@ element.setAttribute('data-product', [first, name].join(';'))
       const parentId = rest.join(';');
       const fieldset = getElementById1('code-tree-add-tag-step-1');
       const checked = e.target.parentNode.querySelector('#applyToCopies').checked
+      const actionInReplace = e.target.parentNode.querySelector('#actionInReplace').checked
       if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-add-tag-step-1')) {
         const clonedFieldset = fieldset.cloneNode(true);
 
         clonedFieldset.id = clonedFieldset.id + ';' + parentId;
         clonedFieldset.setAttribute('action', 'Append')
         checked && clonedFieldset.setAttribute('copiesOfInserting', "true")
+        actionInReplace && clonedFieldset.setAttribute('actionInReplace', "true")
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
         e.target.parentNode.remove()
       }
@@ -12314,7 +12317,7 @@ element.setAttribute('data-product', [first, name].join(';'))
     }
     const approve = async (event) => {
       var checkbox = event.target;
-
+      const actionInReplace = e.target.parentNode.hasAttribute('actionInReplace')
       // Get the parent fieldset
       var fieldset = checkbox.closest('fieldset');
 
@@ -12361,7 +12364,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         pushAction({
           time: (new Date()).getTime(),
           action: fieldsetAction,
-          options: { dub_target: true, insert_copies: true, position },
+          options: { dub_target: true, insert_copies: true, position,actionInReplace },
           target_element: [{ type: 'tag', id, }, ...selected.map(id => {
             return { type: 'tag', id }
           })],
@@ -12373,7 +12376,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         pushAction({
           time: (new Date()).getTime(),
           action: fieldsetAction,
-          options: { insert_copies: true, position },
+          options: { insert_copies: true, position,actionInReplace },
           target_element: [{ type: 'tag', id, }, ...selected.map(id => {
             return { type: 'tag', id }
           })],
@@ -12383,7 +12386,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         let el2 = {
           time: (new Date()).getTime(),
           action: fieldsetAction,
-          options: { position },
+          options: { position ,actionInReplace},
           target_element: [{ type: 'tag', id, }, ...selected.map(id => {
             return { type: 'tag', id }
           })],
