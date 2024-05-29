@@ -6310,7 +6310,13 @@ checkbox1.setAttribute('hidden', "");
               cloned.querySelector('#action-target-tag-name-value').textContent = getElementById1(id1)?.tagName.toLowerCase()
             }
             else {
-              const e = element.target_element.map(el => removeLastOccurrence(el.id, '-tree'))
+              const e = element.target_element.map(el => {
+                if (el.replaced) {
+                  const id = removeLastOccurrence(el.id, '-tree')
+                  return id.split(':')[0]
+                }
+                return removeLastOccurrence(el.id, '-tree')
+              })
               e.shift()
               const id1 = element.target_element[0].id.replace('-tree', '')
               cloned.querySelector('#action-target-tag-id-value').textContent = id1
@@ -6496,38 +6502,103 @@ checkbox1.setAttribute('hidden', "");
 
       console.log('command is ' + JSON.stringify(command) + ' replace id ' + replaceId + 'pathForRelative ' + pathForRelative?.current + 'reusable ' + reusableId)
       const removeSelected = (arr) => {
-          for (const el of arr) {
-            console.log('1- ' + el)
-            const treeEl = getElementById1(el)
-            const box = treeEl?.querySelector('#selectedCheckbox')
-            if (box) {
-              console.log('d55')
-              box.checked = false
-            }
+        for (const el of arr) {
+          console.log('1- ' + el)
+          const treeEl = getElementById1(el)
+          const box = treeEl?.querySelector('#selectedCheckbox')
+          if (box) {
+            console.log('d55')
+            box.checked = false
           }
         }
-        function sortByPlace(a, b) {
-          var elementA = getElementById1(a);
-          var elementB = getElementById1(b);
-          console.log('prob66 ' + a)
-          return Array.from(elementA.parentElement.children).indexOf(elementA) -
-            Array.from(elementB.parentElement.children).indexOf(elementB);
-        }
-        function sortByPlace1(a, b) {
-          var elementA = a
-          var elementB = b
+      }
+      function sortByPlace(a, b) {
+        var elementA = getElementById1(a);
+        var elementB = getElementById1(b);
+        console.log('prob66 ' + a)
+        return Array.from(elementA.parentElement.children).indexOf(elementA) -
+          Array.from(elementB.parentElement.children).indexOf(elementB);
+      }
+      function sortByPlace1(a, b) {
+        var elementA = a
+        var elementB = b
 
-          return Array.from(elementA.parentElement.children).indexOf(elementA) -
-            Array.from(elementB.parentElement.children).indexOf(elementB);
-        }
-      function handleAppendOrInsertReplace(actions,selectedArrayNotSorted){
+        return Array.from(elementA.parentElement.children).indexOf(elementA) -
+          Array.from(elementB.parentElement.children).indexOf(elementB);
+      }
+      function handleAppendOrInsertReplace(actions, selectedArrayNotSorted) {
         console.log('start')
         var firstElementId = selectedArrayNotSorted[0];
         var restOfElements = selectedArrayNotSorted.slice(1);
         removeSelected(restOfElements)
         restOfElements.sort(sortByPlace);
-        const firstElement = getElementById1(firstElementId.replace('-tree'),'')
-        if(firstElement)
+        const firstElement = getElementById1(firstElementId.replace('-tree'), '')
+        //var selectedArray = [firstElementId, ...restOfElements];
+        const targetMid = firstElement.id
+        const treeFirstElement = getElementById1(firstElementId)
+        if (!firstElement.hasAttribute('data-replaceID')) {
+          let prev = [firstElement, treeFirstElement]
+          for (let i = 0; i < replaceIds.length; i++) {
+            const mId = targetMid
+
+            if (i === 0) {
+
+              treeFirstElement.id = mId + ':' + replaceIds[0] + '-tree'
+              firstElement.id = mId + ':' + replaceIds[0]
+              continue
+            }
+            const cloned = cloneWithDescendants(firstElement)
+            const cloned2 = cloneWithDescendants(treeFirstElement)
+            cloned2.id = mId + ':' + replaceIds[i] + '-tree'
+            cloned.id = mId + ':' + replaceIds[0]
+            insertAfter(cloned, prev[0])
+            insertAfter(cloned2, prev[1])
+            prev = [cloned, cloned2]
+            i++
+
+          }
+        }
+        for (const element of restOfElements) {
+          const compEl = getElementById1(element.replace('-tree', ''))
+          const treeEl = getElementById1(element)
+          if (!compEl.hasAttribute('data-replaceID')) {
+            let prev = [compEl, treeEl]
+            for (let i = 0; i < replaceIds.length; i++) {
+              const mId = compEl.id
+
+              if (i === 0) {
+
+                treeEl.id = mId + ':' + replaceIds[0] + '-tree'
+                compEl.id = mId + ':' + replaceIds[0]
+                continue
+              }
+              const cloned = cloneWithDescendants(compEl)
+              const cloned2 = cloneWithDescendants(treeEl)
+              cloned2.id = mId + ':' + replaceIds[i] + '-tree'
+              cloned.id = mId + ':' + replaceIds[0]
+              insertAfter(cloned, prev[0])
+              insertAfter(cloned2, prev[1])
+              prev = [cloned, cloned2]
+              i++
+
+            }
+          }
+
+        }
+        for (let i = 0; i < replaceIds.length; i++) {
+
+
+          const targetTreeEl = getElementById1(targetMid + ':' + replaceId[i] + '-tree')
+          const targetCompEl = getElementById1(targetMid + ':' + replaceId[i])
+          for (const element of restOfElements) {
+            const mId = restOfElements.split(':')[0].replace('-tree', '')
+            const treeEl = getElementById1(mId + ':' + replaceId[i] + '-tree')
+            const compEl = getElementById1(mId + ':' + replaceId[i])
+            targetTreeEl.append(treeEl)
+            targetCompEl.append(compEl)
+          }
+          i++
+        }
       }
       function handleAppendOrInsert(action, selectedArrayNotSorted, move, insert_copies) {
         // Sort
@@ -6535,7 +6606,7 @@ checkbox1.setAttribute('hidden', "");
         console.log('start')
         var firstElementId = selectedArrayNotSorted[0];
         var restOfElements = selectedArrayNotSorted.slice(1);
-        
+
         removeSelected(restOfElements)
         if (components.includes(firstElementId.replace('-tree', ''))) {
           console.log('in555')
@@ -6553,7 +6624,7 @@ checkbox1.setAttribute('hidden', "");
 
         }
         // Sort the rest of the elements by their order in the DOM
-        
+
         console.log(JSON.stringify(restOfElements))
         //test
         restOfElements.filter(z => z)
@@ -7930,13 +8001,13 @@ checkbox1.setAttribute('hidden', "");
           }
           if (target_element.length) {
             console.log('movestat ' + move)
-            if(options?.actionInReplace){
+            if (options?.actionInReplace) {
               handleAppendOrInsertReplace('Append', target_element.map(i => i.id))
             }
-            else{
+            else {
               handleAppendOrInsert('Append', target_element.map(i => i.id), move, options?.insert_copies)
             }
-           
+
           }
           break;
 
