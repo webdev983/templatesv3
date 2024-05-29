@@ -486,7 +486,7 @@
 
     </div>
     <div id="head-1" class="horizontal-area">
-      
+      <!-- head control-->
       <details style="margin-bottom: 7px;" id="scripts" data-file-name-show="Hub">
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">🧱 scripts</span></summary>
         <table class="table-1" style="margin-left: 30px;">
@@ -526,8 +526,8 @@
       </details>
 
 
-
-      <details style="margin-bottom: 7px; " id="table-generation" hidden>
+          <div id="head-menus"></div>
+      <details style="margin-bottom: 7px; " id="article-table-of-content-menu" hidden>
         <summary class="summary-L-3"><span class="l-3">📑 Table of contents 🔴</span></summary>
         <div style="margin-left: 30px;">
           <button class="b-3" id="generate-table-button"> Generate</button>
@@ -11189,7 +11189,7 @@ elementsToRemove.forEach(element => element.remove());
     const handleTableGeneration = async () => {
       const tableContentElements1 = querySelectorAll1('[data-table-of-contents-element]')
       if (tableContentElements1.length) {
-        const tableElement = getElementById1('table-generation')
+        const tableElement = getElementById1('article-table-of-content-menu')
         tableElement.removeAttribute('hidden')
         let exisitingValue = headContentItem && await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${headContentItem.id}:generated-table`, {
           method: 'GET',
