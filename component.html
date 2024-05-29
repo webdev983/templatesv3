@@ -7842,7 +7842,16 @@ checkbox1.setAttribute('hidden', "");
               getElementById1('generated-page')
               :
               getElementById1(removeLastOccurrence(target_element, '-tree'));
-            if (!componentElement) {
+            if(options?.actionInReplace){
+              const mId = target_element.replace('-tree', '').split(':')[0]
+              replaceIds.forEach(replaceId=>{
+                const treeEl = getElementById1(mId+replaceId)
+                const compEl = getElementById1(mId+replaceId.replace('-tree',''))
+                handleInsert(treeEl, compEl, true)
+              })
+              break;
+            }
+            if (!componentElement ) {
               console.log('comp not found')
               const mId = target_element.replace('-tree', '').split(':')[0]
               const treeEls = []
