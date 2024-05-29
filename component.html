@@ -1199,7 +1199,7 @@ component</button> -->
       <button class="b-4" id="code-tree-click-tag-approve" onclick="approve(event)"> ✅ Approve</button>
       <br>
 
-      <label><input type="checkbox"><span class="l-3">🔄 action in replace</span></label>
+      <label><input type="checkbox" id="actionInReplaceExisting"><span class="l-3">🔄 action in replace</span></label>
 
       <br>
       <label class="l-3" hidden><input type="checkbox" onchange="switchPosition(event)" id="position-checkbox">🎯
@@ -12436,7 +12436,7 @@ element.setAttribute('data-product', [first, name].join(';'))
     }
     const approve = async (event) => {
       var checkbox = event.target;
-      const actionInReplace = e.target.parentNode.hasAttribute('actionInReplace')
+      const actionInReplace = event.target.parentNode.querySelector('#actionInReplaceExisting').checked
       // Get the parent fieldset
       var fieldset = checkbox.closest('fieldset');
 
