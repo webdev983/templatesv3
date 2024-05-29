@@ -2611,6 +2611,7 @@ component</button> -->
     var republish
     var imagesIds = []
     var actions = []
+    var replaceIds = []
     loadFirst()
     //document.addEventListener('DOMContentLoaded', loadFirst);
     var saveGpt = async (event) => {
@@ -7059,6 +7060,7 @@ checkbox1.setAttribute('hidden', "");
             l.sort((a, b) => b.path.localeCompare(a.path));
             let i = false;
             console.log('solving ' + JSON.stringify(l))
+            replaceIds = l.map(e=>e.id)
             for (const el of l) {
 
               await executeCommand({
