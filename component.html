@@ -6542,12 +6542,14 @@ checkbox1.setAttribute('hidden', "");
 
               treeFirstElement.id = targetMid + ':' + replaceIds[0] + '-tree'
               firstElement.id = targetMid + ':' + replaceIds[0]
+              firstElement.setAttribute('data-replaceID',replaceIds[0])
               continue
             }
             const cloned = cloneWithDescendants(firstElement)
             const cloned2 = cloneWithDescendants(treeFirstElement)
             cloned2.id = targetMid + ':' + replaceIds[i] + '-tree'
             cloned.id = targetMid + ':' + replaceIds[i]
+            cloned.setAttribute('data-replaceID',replaceIds[i])
             insertAfter(cloned, prev[0])
             insertAfter(cloned2, prev[1])
             prev = [cloned, cloned2]
@@ -6568,12 +6570,14 @@ checkbox1.setAttribute('hidden', "");
 
                 treeEl.id = mId + ':' + replaceIds[0] + '-tree'
                 compEl.id = mId + ':' + replaceIds[0]
+                compEl.setAttribute('data-replaceID',replaceIds[0])
                 continue
               }
               const cloned = cloneWithDescendants(compEl)
               const cloned2 = cloneWithDescendants(treeEl)
               cloned2.id = mId + ':' + replaceIds[i] + '-tree'
               cloned.id = mId + ':' + replaceIds[i]
+              cloned.setAttribute('data-replaceID',replaceIds[i])
               insertAfter(cloned, prev[0])
               insertAfter(cloned2, prev[1])
               prev = [cloned, cloned2]
