@@ -6495,13 +6495,7 @@ checkbox1.setAttribute('hidden', "");
       let componentElement
 
       console.log('command is ' + JSON.stringify(command) + ' replace id ' + replaceId + 'pathForRelative ' + pathForRelative?.current + 'reusable ' + reusableId)
-      function handleAppendOrInsert(action, selectedArrayNotSorted, move, insert_copies) {
-        // Sort
-
-        console.log('start')
-        var firstElementId = selectedArrayNotSorted[0];
-        var restOfElements = selectedArrayNotSorted.slice(1);
-        const removeSelected = (arr) => {
+      const removeSelected = (arr) => {
           for (const el of arr) {
             console.log('1- ' + el)
             const treeEl = getElementById1(el)
@@ -6512,6 +6506,36 @@ checkbox1.setAttribute('hidden', "");
             }
           }
         }
+        function sortByPlace(a, b) {
+          var elementA = getElementById1(a);
+          var elementB = getElementById1(b);
+          console.log('prob66 ' + a)
+          return Array.from(elementA.parentElement.children).indexOf(elementA) -
+            Array.from(elementB.parentElement.children).indexOf(elementB);
+        }
+        function sortByPlace1(a, b) {
+          var elementA = a
+          var elementB = b
+
+          return Array.from(elementA.parentElement.children).indexOf(elementA) -
+            Array.from(elementB.parentElement.children).indexOf(elementB);
+        }
+      function handleAppendOrInsertReplace(actions,selectedArrayNotSorted){
+        console.log('start')
+        var firstElementId = selectedArrayNotSorted[0];
+        var restOfElements = selectedArrayNotSorted.slice(1);
+        removeSelected(restOfElements)
+        restOfElements.sort(sortByPlace);
+        const firstElement = getElementById1(firstElementId.replace('-tree'),'')
+        if(firstElement)
+      }
+      function handleAppendOrInsert(action, selectedArrayNotSorted, move, insert_copies) {
+        // Sort
+
+        console.log('start')
+        var firstElementId = selectedArrayNotSorted[0];
+        var restOfElements = selectedArrayNotSorted.slice(1);
+        
         removeSelected(restOfElements)
         if (components.includes(firstElementId.replace('-tree', ''))) {
           console.log('in555')
@@ -6529,20 +6553,7 @@ checkbox1.setAttribute('hidden', "");
 
         }
         // Sort the rest of the elements by their order in the DOM
-        function sortByPlace(a, b) {
-          var elementA = getElementById1(a);
-          var elementB = getElementById1(b);
-          console.log('prob66 ' + a)
-          return Array.from(elementA.parentElement.children).indexOf(elementA) -
-            Array.from(elementB.parentElement.children).indexOf(elementB);
-        }
-        function sortByPlace1(a, b) {
-          var elementA = a
-          var elementB = b
-
-          return Array.from(elementA.parentElement.children).indexOf(elementA) -
-            Array.from(elementB.parentElement.children).indexOf(elementB);
-        }
+        
         console.log(JSON.stringify(restOfElements))
         //test
         restOfElements.filter(z => z)
@@ -7919,7 +7930,13 @@ checkbox1.setAttribute('hidden', "");
           }
           if (target_element.length) {
             console.log('movestat ' + move)
-            handleAppendOrInsert('Append', target_element.map(i => i.id), move, undefined)
+            if(options?.actionInReplace){
+              handleAppendOrInsertReplace('Append', target_element.map(i => i.id))
+            }
+            else{
+              handleAppendOrInsert('Append', target_element.map(i => i.id), move, options?.insert_copies)
+            }
+           
           }
           break;
 
@@ -12398,7 +12415,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         target_element = target_element.map(el => {
           const rId = getElementById1(el.id.replace('-tree', '').getAttribute('data-replaceID'))
           if (el.id.split(':')[1] && (el.id.split(':')[1].replace('-tree', '') === rId)) {
-            el.id = el.id.replace(rId, '')
+            el.replaced = true
 
           }
           return el
