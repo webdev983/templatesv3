@@ -423,7 +423,7 @@
         style="margin-right: 5px;">🗑️️</button>
 
       <button id="published-update-content" class="b-1"
-        style="margin-right: 5px; position: absolute; right: 20px;">🗞️</button>
+        style="margin-right: 5px; position: absolute; right: 20px;"  onclick="publish(event,true)">🗞️</button>
 
     </div>
 
@@ -1965,12 +1965,13 @@ component</button> -->
       const el3 = getElementById1("published-label")
       const el4 = getElementById1("published-invalidate")
       const el5 = getElementById1("published-remove")
-
+      const pSiteLabel = getElementById1("published-site-label")
       el3.setAttribute('hidden', '')
       el4.setAttribute('hidden', '')
       el5.setAttribute('hidden', '')
-
+      pSiteLabel.setAttribute('hidden', '')
       el3.removeAttribute('href')
+      pSiteLabel.removeAttribute('href')
     }
     const invalidate = async (e) => {
       const site = pathItemPath.split('/')[0]
@@ -9609,12 +9610,14 @@ elementsToRemove.forEach(element => element.remove());
                 const el3 = getElementById1("published-label")
                 const el4 = getElementById1("published-invalidate")
                 const el5 = getElementById1("published-remove")
-
+                const pSiteLabel = getElementById1("published-site-label")
                 el3.removeAttribute('hidden')
+                pSiteLabel.removeAttribute('hidden')
                 el4.removeAttribute('hidden')
                 el5.removeAttribute('hidden')
 
                 el3.setAttribute('href', item.href)
+                pSiteLabel.setAttribute('href', r.link.replace('s3.amazonaws.com/','').replace('index.html'),'')
               }
             }
 
@@ -10200,7 +10203,7 @@ elementsToRemove.forEach(element => element.remove());
       attributesEqual: ["data-remove"],
       removeAttributesStartWith: ["data-visual", "data-builder", "data-replaceid", "data-transfer"]
     }
-    const publish = async (e) => {
+    const publish = async (e,updateContent) => {
       const date = new Date()
       if (visualOn) {
         localStorage.removeItem('visualOn')
@@ -10215,10 +10218,12 @@ elementsToRemove.forEach(element => element.remove());
       const el3 = getElementById1("published-label")
       const el4 = getElementById1("published-invalidate")
       const el5 = getElementById1("published-remove")
+      const pSiteLabel = getElementById1("published-site-label")
 
       el3.setAttribute('hidden', '')
       el4.setAttribute('hidden', '')
       el5.setAttribute('hidden', '')
+      pSiteLabel.setAttribute('hidden', '')
 
       //to remove list
 
@@ -10299,7 +10304,7 @@ elementsToRemove.forEach(element => element.remove());
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: idFromLink, html, path: pagePathContent, toRemove, robotsTxt, siteMapPriority, siteMapNotDefiniedPriorities, date: date.getTime(), sku: pathItemSku }),
+        body: JSON.stringify({ id: idFromLink, html, path: pagePathContent, toRemove, robotsTxt, siteMapPriority, siteMapNotDefiniedPriorities, date: date.getTime(), sku: pathItemSku,updateContent }),
       });
       const r = await response.json()
       console.log('link: ' + r.link)
@@ -10312,6 +10317,8 @@ elementsToRemove.forEach(element => element.remove());
       el2.classList.add('b-selected');
       el3.removeAttribute('hidden')
       el3.setAttribute('href', r.link)
+      pSiteLabel.removeAttribute('hidden')
+      pSiteLabel.setAttribute('href', r.link.replace('s3.amazonaws.com/','').replace('index.html'),'')
 
       el4.removeAttribute('hidden', '')
       el5.removeAttribute('hidden', '')
