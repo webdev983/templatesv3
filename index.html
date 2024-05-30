@@ -88,30 +88,30 @@
             <label class="l-3"><input type="checkbox" id="columns_selector_removed"> 🚮 removed</label>
           </div>
         </div>
-        
 
 
-      <div hidden data-section-aside="brains" class="local-buttons" style="margin-top: 30px;">
 
-        <div data-section-aside="helpers" class="local-buttons" style="margin-top: 30px;">
-          <button class="b-1" onclick="createNewHelper()">➕</button>
+        <div hidden data-section-aside="brains" class="local-buttons" style="margin-top: 30px;">
+
+          <div data-section-aside="helpers" class="local-buttons" style="margin-top: 30px;">
+            <button class="b-1" onclick="createNewHelper()">➕</button>
+          </div>
+
         </div>
 
       </div>
 
-    </div>
+      <div class="panel bottom">
+        <button class="b-1" onclick="removeTokenAndReload()">📴</button>
+        <script>function removeTokenAndReload() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('ownerid');
+            localStorage.removeItem('helperid');
 
-    <div class="panel bottom">
-      <button class="b-1" onclick="removeTokenAndReload()">📴</button>
-      <script>function removeTokenAndReload() {
-          localStorage.removeItem('token');
-          localStorage.removeItem('ownerid');
-          localStorage.removeItem('helperid');
-
-          window.location.href = '/templatesv3/';
-        }
-      </script>
-    </div>
+            window.location.href = '/templatesv3/';
+          }
+        </script>
+      </div>
   </aside>
 
 
@@ -546,7 +546,8 @@
       </div>
 
       <!-- current file-->
-      <table data-element="file-path-list" id="filePathList" class="table-files" style="margin-left: 30px; margin-top: 20px;">
+      <table data-element="file-path-list" id="filePathList" class="table-files"
+        style="margin-left: 30px; margin-top: 20px;">
       </table>
       <table>
         <tr hidden data-element="file-path" id="item">
@@ -560,7 +561,7 @@
           </td>
           <td hidden data-column-published>
             <span class="l-3">📰 </span>
-            <span  data-column-published-value class="l-3">29 jul 2024</span>
+            <span data-column-published-value class="l-3">29 jul 2024</span>
           </td>
           <td hidden data-column-updated>
             <span class="l-3">🔄 </span>
@@ -965,6 +966,9 @@
                 id: uuid,
                 lsi1: new_value,
                 protected: false
+              }
+              if (new_value.endsWith('Head-Content')) {
+                pLoad.hosting_time = { created: new Date().getTime() }
               }
               console.log('menu item ' + JSON.stringify(menuItem))
               delete pLoad.href
@@ -1658,16 +1662,16 @@
             }
           }
           const pLoad = {
-              ...pathI,
-              id: newId,
-              sk: 'path',
-              lsi1: newLSI,
-              protected: false,
-              href: undefined,
-              hosting_time: undefined
-            }
-          if(newLSI.endsWith('Head-Content')){
-            pLoad.hosting_time = {created:new Date().getTime()}
+            ...pathI,
+            id: newId,
+            sk: 'path',
+            lsi1: newLSI,
+            protected: false,
+            href: undefined,
+            hosting_time: undefined
+          }
+          if (newLSI.endsWith('Head-Content')) {
+            pLoad.hosting_time = { created: new Date().getTime() }
           }
           const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
             method: 'POST',
@@ -1896,19 +1900,24 @@
                     }))
                   }
                 }
+                const pLoad = {
+                  ...pathI,
+                  id: newId,
+                  sk: 'path',
+                  lsi1: newLSI,
+                  protected: false,
+                  hosting_time: undefined
+                }
                 const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
                   },
-                  body: JSON.stringify({
-                    ...pathI,
-                    id: newId,
-                    sk: 'path',
-                    lsi1: newLSI,
-                    protected: false
-                  }),
+                  body: JSON.stringify(pLoad),
                 })
+                if (newLSI.endsWith('Head-Content')) {
+                  pLoad.hosting_time = { created: new Date().getTime() }
+                }
                 console.log('putting ' + newId)
                 console.log('res ' + JSON.stringify(data))
                 if (byId || absolute || relative) {
@@ -3520,29 +3529,29 @@
 
 
   </script>
-        <script>
-          function openColumnsSelector() {
-            console.log("1");
-            var columnsSelector = document.getElementById('columns_selector');
-            var columnsSelectorOpen = document.getElementById('columns_selector_open');
-        
-            if (columnsSelectorOpen.classList.contains('b-selected')) {
-              console.log("2");
-        
-              columnsSelector.hidden = true;
-              columnsSelectorOpen.classList.remove('b-selected');
-              document.querySelector('.aside').style.width = '70px';
-              document.querySelector('.left').style.width = '60px';
-        
-            } else {
-              console.log("3");
-        
-              columnsSelector.removeAttribute('hidden');
-              columnsSelectorOpen.classList.add('b-selected');
-              document.querySelector('.aside').style.width = '215px';
-              document.querySelector('.left').style.width = '205px';
-            }
-          }
-        </script>
+  <script>
+    function openColumnsSelector() {
+      console.log("1");
+      var columnsSelector = document.getElementById('columns_selector');
+      var columnsSelectorOpen = document.getElementById('columns_selector_open');
+
+      if (columnsSelectorOpen.classList.contains('b-selected')) {
+        console.log("2");
+
+        columnsSelector.hidden = true;
+        columnsSelectorOpen.classList.remove('b-selected');
+        document.querySelector('.aside').style.width = '70px';
+        document.querySelector('.left').style.width = '60px';
+
+      } else {
+        console.log("3");
+
+        columnsSelector.removeAttribute('hidden');
+        columnsSelectorOpen.classList.add('b-selected');
+        document.querySelector('.aside').style.width = '215px';
+        document.querySelector('.left').style.width = '205px';
+      }
+    }
+  </script>
 
 </body>
