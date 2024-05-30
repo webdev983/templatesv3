@@ -1657,12 +1657,7 @@
 
             }
           }
-          const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
+          const pLoad = {
               ...pathI,
               id: newId,
               sk: 'path',
@@ -1670,7 +1665,16 @@
               protected: false,
               href: undefined,
               hosting_time: undefined
-            }),
+            }
+          if(newLSI.endsWith('Head-Content')){
+            pLoad.hosting_time = {created:new Date().getTime()}
+          }
+          const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(pLoad),
           })
           console.log('created ' + newLSI)
           await createFolders(convertToOldPath(newLSI))
