@@ -1908,6 +1908,9 @@
                   protected: false,
                   hosting_time: undefined
                 }
+                if (newLSI.endsWith('Head-Content')) {
+                  pLoad.hosting_time = { created: new Date().getTime() }
+                }
                 const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                   method: 'POST',
                   headers: {
@@ -1915,9 +1918,7 @@
                   },
                   body: JSON.stringify(pLoad),
                 })
-                if (newLSI.endsWith('Head-Content')) {
-                  pLoad.hosting_time = { created: new Date().getTime() }
-                }
+                
                 console.log('putting ' + newId)
                 console.log('res ' + JSON.stringify(data))
                 if (byId || absolute || relative) {
