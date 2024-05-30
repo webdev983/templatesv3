@@ -6327,7 +6327,7 @@ checkbox1.setAttribute('hidden', "");
               for (let i = 1; i < e.length; i++) {
                 const group = cloned2.querySelector('#moved-tag')
                 const cloned3 = group.cloneNode(true)
-                cloned3.querySelector('#tag-action-tag-id').textContent = e[i]
+                cloned3.querySelector('#tag-action-tag-id').textContent =element.target_element[i].replaced ?  e[i].split(':')[0] : e[i]
                 cloned3.querySelector('#tag-action-tag-name').textContent = getElementById1(e[i])?.tagName.toLowerCase()
                 group.parentNode.append(cloned3)
               }
@@ -8362,8 +8362,12 @@ checkbox1.setAttribute('hidden', "");
           }
           if (target_element.length) {
             console.log(JSON.stringify(target_element))
-            handleAppendOrInsert('InsertBefore', target_element.map(i => i.id), move, options?.insert_copies)
-
+            if (options?.actionInReplace) {
+              handleAppendOrInsertReplace('InsertBefore', target_element.map(i => i.id))
+            }
+            else {
+              handleAppendOrInsert('InsertBefore', target_element.map(i => i.id), move, undefined)
+            }
           }
           break;
 
