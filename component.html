@@ -6599,9 +6599,15 @@ checkbox1.setAttribute('hidden', "");
             const compEl = getElementById1(mId + ':' + replaceIds[i])
             console.log('targetAppend' + targetTreeEl.id)
             console.log('appending ' + treeEl.id)
+            if (action === 'Append') {
+              targetTreeEl.append(treeEl)
+              targetCompEl.append(compEl)
+            }
+            else{
+              targetTreeEl.parentNode.insertBefore(treeEl,targetTreeEl)
+              targetCompEl.parentNode.insertBefore(compEl,targetCompEl)
+            }
 
-            targetTreeEl.append(treeEl)
-            targetCompEl.append(compEl)
           }
 
         }
