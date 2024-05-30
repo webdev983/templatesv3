@@ -6635,7 +6635,7 @@ checkbox1.setAttribute('hidden', "");
         //test
         restOfElements.filter(z => z)
         restOfElements.sort(sortByPlace);
-        if (!move && insert_copies) {
+        if (!move && !insert_copies) {
           restOfElements = restOfElements.map(el => removeLastOccurrence(el, '-tree')).map(el =>
             getWithoutCopyId1(el)
           )
@@ -6671,7 +6671,7 @@ checkbox1.setAttribute('hidden', "");
             var selectedId = selectedArray[i].id;
             var originalId = selectedArray[i].originalId
             console.log(JSON.stringify(selectedArray[i]))
-            if (!move && insert_copies) {
+            if (!move && !insert_copies) {
               console.log('not moving' + JSON.stringify(selectedArrayNotSorted))
               const attr = data_replaceid
               const l = selectedId.split(';').length
@@ -6749,7 +6749,7 @@ checkbox1.setAttribute('hidden', "");
             }
           }
           console.log('eels12' + JSON.stringify(treeEls.map(e => e.id)))
-          if (!move && insert_copies) {
+          if (!move && !insert_copies) {
             if (treeEls.length) {
               treeEls.sort(sortByPlace1)
               compEls.sort(sortByPlace1)
@@ -8011,7 +8011,7 @@ checkbox1.setAttribute('hidden', "");
               handleAppendOrInsertReplace('Append', target_element.map(i => i.id))
             }
             else {
-              handleAppendOrInsert('Append', target_element.map(i => i.id), move, options?.insert_copies)
+              handleAppendOrInsert('Append', target_element.map(i => i.id), move, undefined)
             }
 
           }
