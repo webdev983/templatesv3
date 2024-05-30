@@ -6311,7 +6311,7 @@ checkbox1.setAttribute('hidden', "");
             }
             else {
               const e = element.target_element.map(el => {
-                
+
                 return removeLastOccurrence(el.id, '-tree')
               })
               e.shift()
@@ -6321,13 +6321,13 @@ checkbox1.setAttribute('hidden', "");
 
 
               const cloned2 = tagAction.cloneNode(true)
-              console.log('prob545 '+ element.target_element[0].replaced )
-              cloned2.querySelector('#tag-action-tag-id').textContent =element.target_element[1].replaced ? e[0].split(':')[0] : e[0]
+              console.log('prob545 ' + element.target_element[0].replaced)
+              cloned2.querySelector('#tag-action-tag-id').textContent = element.target_element[1].replaced ? e[0].split(':')[0] : e[0]
               cloned2.querySelector('#tag-action-tag-name').textContent = getElementById1(e[0])?.tagName.toLowerCase()
               for (let i = 1; i < e.length; i++) {
                 const group = cloned2.querySelector('#moved-tag')
                 const cloned3 = group.cloneNode(true)
-                cloned3.querySelector('#tag-action-tag-id').textContent =element.target_element[i+1].replaced ?  e[i].split(':')[0] : e[i]
+                cloned3.querySelector('#tag-action-tag-id').textContent = element.target_element[i + 1].replaced ? e[i].split(':')[0] : e[i]
                 cloned3.querySelector('#tag-action-tag-name').textContent = getElementById1(e[i])?.tagName.toLowerCase()
                 group.parentNode.append(cloned3)
               }
@@ -6542,25 +6542,25 @@ checkbox1.setAttribute('hidden', "");
 
               treeFirstElement.id = targetMid + ':' + replaceIds[0] + '-tree'
               firstElement.id = targetMid + ':' + replaceIds[0]
-              firstElement.setAttribute('data-replaceID',replaceIds[0])
+              firstElement.setAttribute('data-replaceID', replaceIds[0])
               continue
             }
             const cloned = cloneWithDescendants(firstElement)
             const cloned2 = cloneWithDescendants(treeFirstElement)
             cloned2.id = targetMid + ':' + replaceIds[i] + '-tree'
             cloned.id = targetMid + ':' + replaceIds[i]
-            cloned.setAttribute('data-replaceID',replaceIds[i])
+            cloned.setAttribute('data-replaceID', replaceIds[i])
             insertAfter(cloned, prev[0])
             insertAfter(cloned2, prev[1])
             prev = [cloned, cloned2]
-            
+
 
           }
         }
         for (const element of restOfElements) {
           const compEl = getElementById1(element.replace('-tree', ''))
           const treeEl = getElementById1(element)
-          
+
           if (!compEl.hasAttribute('data-replaceID')) {
             let prev = [compEl, treeEl]
             for (let i = 0; i < replaceIds.length; i++) {
@@ -6570,18 +6570,18 @@ checkbox1.setAttribute('hidden', "");
 
                 treeEl.id = mId + ':' + replaceIds[0] + '-tree'
                 compEl.id = mId + ':' + replaceIds[0]
-                compEl.setAttribute('data-replaceID',replaceIds[0])
+                compEl.setAttribute('data-replaceID', replaceIds[0])
                 continue
               }
               const cloned = cloneWithDescendants(compEl)
               const cloned2 = cloneWithDescendants(treeEl)
               cloned2.id = mId + ':' + replaceIds[i] + '-tree'
               cloned.id = mId + ':' + replaceIds[i]
-              cloned.setAttribute('data-replaceID',replaceIds[i])
+              cloned.setAttribute('data-replaceID', replaceIds[i])
               insertAfter(cloned, prev[0])
               insertAfter(cloned2, prev[1])
               prev = [cloned, cloned2]
-              
+
 
             }
           }
@@ -6592,18 +6592,18 @@ checkbox1.setAttribute('hidden', "");
 
           const targetTreeEl = getElementById1(targetMid + ':' + replaceIds[i] + '-tree')
           const targetCompEl = getElementById1(targetMid + ':' + replaceIds[i])
-          console.log('tree el id'+ targetTreeEl.id)
+          console.log('tree el id' + targetTreeEl.id)
           for (const element of restOfElements) {
-            const mId = element.replace('-tree','').split(':')[0]
+            const mId = element.replace('-tree', '').split(':')[0]
             const treeEl = getElementById1(mId + ':' + replaceIds[i] + '-tree')
             const compEl = getElementById1(mId + ':' + replaceIds[i])
-            console.log('targetAppend'+targetTreeEl.id )
-            console.log('appending '+ treeEl.id )
-            
+            console.log('targetAppend' + targetTreeEl.id)
+            console.log('appending ' + treeEl.id)
+
             targetTreeEl.append(treeEl)
             targetCompEl.append(compEl)
           }
-          
+
         }
       }
       function handleAppendOrInsert(action, selectedArrayNotSorted, move, insert_copies) {
@@ -8329,6 +8329,18 @@ checkbox1.setAttribute('hidden', "");
               getElementById1('generated-page')
               :
               getElementById1(removeLastOccurrence(target_element, '-tree'));
+            if (options?.actionInReplace) {
+              const mId = target_element.replace('-tree', '').split(':')[0]
+              console.log('replaceIds' + JSON.stringify(replaceIds))
+              replaceIds.forEach(replaceId => {
+                console.log(mId)
+                console.log(replaceId)
+                const treeEl = getElementById1(mId + ':' + replaceId + '-tree')
+                const compEl = getElementById1(mId + ':' + replaceId)
+                handleInsert(treeEl, compEl, true)
+              })
+              break;
+            }
             if (!componentElement) {
               console.log('comp not found')
               const mId = target_element.replace('-tree', '').split(':')[0]
