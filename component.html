@@ -422,8 +422,8 @@
       <button onclick="removeAndInvalidate(event)" hidden id="published-remove" class="b-1"
         style="margin-right: 5px;">🗑️️</button>
 
-      <button id="published-update-content" class="b-1"
-        style="margin-right: 5px; position: absolute; right: 20px;"  onclick="publish(event,true)">🗞️</button>
+      <button id="published-update-content" class="b-1" style="margin-right: 5px; position: absolute; right: 20px;"
+        onclick="publish(event,true)">🗞️</button>
 
     </div>
 
@@ -1094,9 +1094,12 @@
       <button class="b-3" style="margin:5px; margin-left: 5px;" id="target-button" hidden>🎯 target</button>
       <br>
       <div hidden id="content-type">
-        <label  class="b-3"><input type="radio" name="main-content-type" data-content-type="none" checked value="none" />🗅  None</label>
-        <label class="b-3"><input type="radio" name="main-content-type" data-content-type="article" value="article" />⭐ Article</label>
-        <label class="b-3"><input type="radio" name="main-content-type" data-content-type="catalog" value="catalog" />✨ Catalog</label>
+        <label class="b-3"><input type="radio" name="main-content-type" data-content-type="none" checked
+            value="none" />🗅 None</label>
+        <label class="b-3"><input type="radio" name="main-content-type" data-content-type="article" value="article" />⭐
+          Article</label>
+        <label class="b-3"><input type="radio" name="main-content-type" data-content-type="catalog" value="catalog" />✨
+          Catalog</label>
 
         <div hidden id="catalog-folder">
           <button class="b-4">💾 Update</button>
@@ -6297,6 +6300,14 @@ checkbox1.setAttribute('hidden', "");
 
             actionData.append(cloned)
           }
+          const getTagName = (element)=>{
+            const id = element.id.replace('-tree','')
+            if(element.replaced){
+              const first = querySelectorAll1(`[id^="${id}"]`)[0]
+              return first.tagName.toLowerCase()
+            }
+            return getElementById1(id)?.tagName.toLowerCase()
+          }
           if (element?.target_element) {
 
             const cloned = originalTargetElement.cloneNode(true)
@@ -6312,20 +6323,20 @@ checkbox1.setAttribute('hidden', "");
                 return removeLastOccurrence(el.id, '-tree')
               })
               e.shift()
-              const id1 = element.target_element[0].replaced ? element.target_element[0].id.split(':')[0] : element.target_element[0].id.replace('-tree', '')
+              const id1 = element.target_element[0].id.replace('-tree', '')
               cloned.querySelector('#action-target-tag-id-value').textContent = id1
-              cloned.querySelector('#action-target-tag-name-value').textContent = getElementById1(id1)?.tagName.toLowerCase()
+              cloned.querySelector('#action-target-tag-name-value').textContent = getTagName(element.target_element[0])
 
 
               const cloned2 = tagAction.cloneNode(true)
               console.log('prob545 ' + element.target_element[0].replaced)
-              cloned2.querySelector('#tag-action-tag-id').textContent = element.target_element[1].replaced ? e[0].split(':')[0] : e[0]
-              cloned2.querySelector('#tag-action-tag-name').textContent = getElementById1(e[0])?.tagName.toLowerCase()
+              cloned2.querySelector('#tag-action-tag-id').textContent = e[0]
+              cloned2.querySelector('#tag-action-tag-name').textContent = getTagName(element.target_element[1])
               for (let i = 1; i < e.length; i++) {
                 const group = cloned2.querySelector('#moved-tag')
                 const cloned3 = group.cloneNode(true)
-                cloned3.querySelector('#tag-action-tag-id').textContent = element.target_element[i + 1].replaced ? e[i].split(':')[0] : e[i]
-                cloned3.querySelector('#tag-action-tag-name').textContent = getElementById1(e[i])?.tagName.toLowerCase()
+                cloned3.querySelector('#tag-action-tag-id').textContent = e[i]
+                cloned3.querySelector('#tag-action-tag-name').textContent = getTagName(element.target_element[i+1])
                 group.parentNode.append(cloned3)
               }
               cloned2.querySelector('#tag-action-created').remove()
@@ -6522,15 +6533,17 @@ checkbox1.setAttribute('hidden', "");
       }
       function handleAppendOrInsertReplace(actions, selectedArrayNotSorted) {
         console.log('start')
-        var firstElementId = selectedArrayNotSorted[0];
+        var firstElementId = selectedArrayNotSorted[0].id;
         var restOfElements = selectedArrayNotSorted.slice(1);
-        removeSelected(restOfElements)
+        removeSelected(restOfElements.map(e => e.id))
         restOfElements.sort(sortByPlace);
-        const firstElement = getElementById1(firstElementId.replace('-tree', ''))
+
         //var selectedArray = [firstElementId, ...restOfElements];
         const targetMid = firstElementId.replace('-tree', '').split(':')[0]
-        const treeFirstElement = getElementById1(firstElementId)
-        if (firstElement && !firstElement.hasAttribute('data-replaceID')) {
+
+        if (!selectedArrayNotSorted[0].replaced) {
+          const firstElement = getElementById1(firstElementId.replace('-tree', ''))
+          const treeFirstElement = getElementById1(firstElementId)
           let prev = [firstElement, treeFirstElement]
           for (let i = 0; i < replaceIds.length; i++) {
             const mId = targetMid
@@ -6555,10 +6568,11 @@ checkbox1.setAttribute('hidden', "");
           }
         }
         for (const element of restOfElements) {
-          const compEl = getElementById1(element.replace('-tree', ''))
-          const treeEl = getElementById1(element)
 
-          if (compEl && !compEl.hasAttribute('data-replaceID')) {
+          if (!element.replaced) {
+            const compEl = getElementById1(element.id.replace('-tree', ''))
+            const treeEl = getElementById1(element.id)
+
             let prev = [compEl, treeEl]
             for (let i = 0; i < replaceIds.length; i++) {
               const mId = compEl.id.split(':')[0]
@@ -6591,7 +6605,7 @@ checkbox1.setAttribute('hidden', "");
           const targetCompEl = getElementById1(targetMid + ':' + replaceIds[i])
           console.log('tree el id' + targetTreeEl.id)
           for (const element of restOfElements) {
-            const mId = element.replace('-tree', '').split(':')[0]
+            const mId = element.id.replace('-tree', '').split(':')[0]
             const treeEl = getElementById1(mId + ':' + replaceIds[i] + '-tree')
             const compEl = getElementById1(mId + ':' + replaceIds[i])
             console.log('targetAppend' + targetTreeEl.id)
@@ -6600,9 +6614,9 @@ checkbox1.setAttribute('hidden', "");
               targetTreeEl.append(treeEl)
               targetCompEl.append(compEl)
             }
-            else{
-              targetTreeEl.parentNode.insertBefore(treeEl,targetTreeEl)
-              targetCompEl.parentNode.insertBefore(compEl,targetCompEl)
+            else {
+              targetTreeEl.parentNode.insertBefore(treeEl, targetTreeEl)
+              targetCompEl.parentNode.insertBefore(compEl, targetCompEl)
             }
 
           }
@@ -8011,7 +8025,7 @@ checkbox1.setAttribute('hidden', "");
           if (target_element.length) {
             console.log('movestat ' + move)
             if (options?.actionInReplace) {
-              handleAppendOrInsertReplace('Append', target_element.map(i => i.id))
+              handleAppendOrInsertReplace('Append', target_element)
             }
             else {
               handleAppendOrInsert('Append', target_element.map(i => i.id), move, undefined)
@@ -9613,7 +9627,7 @@ elementsToRemove.forEach(element => element.remove());
                 el5.removeAttribute('hidden')
 
                 el3.setAttribute('href', item.href)
-                pSiteLabel.setAttribute('href', item.href?.replace('s3.amazonaws.com/','').replace('index.html',''),'')
+                pSiteLabel.setAttribute('href', item.href?.replace('s3.amazonaws.com/', '').replace('index.html', ''), '')
               }
             }
 
@@ -10199,7 +10213,7 @@ elementsToRemove.forEach(element => element.remove());
       attributesEqual: ["data-remove"],
       removeAttributesStartWith: ["data-visual", "data-builder", "data-replaceid", "data-transfer", "data-b", "data-import"]
     }
-    const publish = async (e,updateContent) => {
+    const publish = async (e, updateContent) => {
       const date = new Date()
       if (visualOn) {
         localStorage.removeItem('visualOn')
@@ -10300,7 +10314,7 @@ elementsToRemove.forEach(element => element.remove());
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: idFromLink, html, path: pagePathContent, toRemove, robotsTxt, siteMapPriority, siteMapNotDefiniedPriorities, date: date.getTime(), sku: pathItemSku,updateContent }),
+        body: JSON.stringify({ id: idFromLink, html, path: pagePathContent, toRemove, robotsTxt, siteMapPriority, siteMapNotDefiniedPriorities, date: date.getTime(), sku: pathItemSku, updateContent }),
       });
       const r = await response.json()
       console.log('link: ' + r.link)
@@ -10314,7 +10328,7 @@ elementsToRemove.forEach(element => element.remove());
       el3.removeAttribute('hidden')
       el3.setAttribute('href', r.link)
       pSiteLabel.removeAttribute('hidden')
-      pSiteLabel.setAttribute('href', r.link.replace('s3.amazonaws.com/','').replace('index.html',''))
+      pSiteLabel.setAttribute('href', r.link.replace('s3.amazonaws.com/', '').replace('index.html', ''))
 
       el4.removeAttribute('hidden', '')
       el5.removeAttribute('hidden', '')
@@ -12518,6 +12532,7 @@ element.setAttribute('data-product', [first, name].join(';'))
           const rId = getElementById1(el.id.replace('-tree', '')).getAttribute('data-replaceID')
           if (el.id.split(':')[1] && (el.id.split(':')[1].replace('-tree', '') === rId)) {
             el.replaced = true
+            el.id = el.id.split(':')[0] + '-tree'
 
           }
           return el
