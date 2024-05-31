@@ -1918,7 +1918,7 @@
                   },
                   body: JSON.stringify(pLoad),
                 })
-                
+
                 console.log('putting ' + newId)
                 console.log('res ' + JSON.stringify(data))
                 if (byId || absolute || relative) {
@@ -3198,6 +3198,7 @@
       try {
         //get files
         let url
+        let headUrl
         const helperid = localStorage.getItem('helperid')
         const ownerid = localStorage.getItem('ownerid')
 
@@ -3209,14 +3210,44 @@
 
         //get files
         const spath = path.slice(0, -1) + '|';
+        const headPath = path + 'Content/Page|Head-Content'
 
         if (helperid) {
           url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${helperid}&ownerUUID=${ownerid}&helperlsi1=true&lsi1=${spath}&token=${localStorage.getItem('token')}`;
+          headUrl = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${helperid}&ownerUUID=${ownerid}&helperlsi1=true&lsi1=${headPath}&token=${localStorage.getItem('token')}`;
         }
         else {
           url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${spath}&token=${localStorage.getItem('token')}`;
+          headUrl = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headPath}&token=${localStorage.getItem('token')}`;
         }
         let data1 = fetch(url).then(e => e.json())
+        const setHeadDates = async () => {
+          const { items } = await fetch(headUrl).then(e => e.json())
+          if (items.length) {
+            const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${items[0].id}:${items[0].sk}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(el => el.json())
+            const { hosting_time } = item
+            const { created, published, updated, content_updated, removed } = hosting_time
+            function formatDate(timestamp) {
+              if(!timestamp){
+                return ""
+              }
+              const date = new Date(timestamp)
+              const options = { day: '2-digit', month: 'long', year: 'numeric' };
+              const formattedDate = date.toLocaleDateString('en-US', options);
+              return formattedDate;
+            }
+            document.querySelector('[data-column-created_value]') = formatDate(created)
+            document.querySelector('[data-column-published-value]') = formatDate(published)
+            document.querySelector('[data-column-updated-value]') = formatDate(updated)
+            document.querySelector('[data-column-content-updated-value]') = formatDate(content_updated)
+            document.querySelector('[data-column-removed-value]') = formatDate(removed)
+          }
+        }
         //get folders
         if (path.split('/').length > 3) {
           //normal
