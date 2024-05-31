@@ -289,8 +289,9 @@
                 id="action-reuse-id-value">AC</span></label>
             <label class="action-label" id="action-self-use-component"><span class="action-icon">🪞</span><span>self
                 use</span></label>
-            <label class="action-label" id="action-in-replace"><span class="action-icon">🔄</span><span>in repalce</span></label>
-  
+            <label class="action-label" id="action-in-replace"><span class="action-icon">🔄</span><span>in
+                replace</span></label>
+
 
           </div>
 
@@ -4421,6 +4422,7 @@ component</button> -->
       };
       if (checked) {
         el.options = { apply_to_copies: true }
+        el.target_element = el.target_element.split(':')[0] + '-tree'
       }
       tr.remove();
       console.log(JSON.stringify(el));
@@ -6185,6 +6187,11 @@ checkbox1.setAttribute('hidden', "");
         } else {
           optionNumber++
         }
+        if (!options.actionInReplace) {
+          cloned.querySelector('#action-in-replace').remove()
+        } else {
+          optionNumber++
+        }
         const reuseItem = cloned.querySelector('#action-reuse-id')
         if (options.reusable) {
           optionNumber++
@@ -6302,9 +6309,9 @@ checkbox1.setAttribute('hidden', "");
 
             actionData.append(cloned)
           }
-          const getTagName = (element)=>{
-            const id = element.id.replace('-tree','')
-            if(element.replaced){
+          const getTagName = (element) => {
+            const id = element.id.replace('-tree', '')
+            if (element.replaced) {
               const first = querySelectorAll1(`[id^="${id}"]`)[0]
               return first.tagName.toLowerCase()
             }
@@ -6338,7 +6345,7 @@ checkbox1.setAttribute('hidden', "");
                 const group = cloned2.querySelector('#moved-tag')
                 const cloned3 = group.cloneNode(true)
                 cloned3.querySelector('#tag-action-tag-id').textContent = e[i]
-                cloned3.querySelector('#tag-action-tag-name').textContent = getTagName(element.target_element[i+1])
+                cloned3.querySelector('#tag-action-tag-name').textContent = getTagName(element.target_element[i + 1])
                 group.parentNode.append(cloned3)
               }
               cloned2.querySelector('#tag-action-created').remove()
@@ -12248,7 +12255,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         }
         if (checked) {
           el.options = { apply_to_copies: true }
-          el.target_element = el.target_element.split(':')[0] +'-tree'
+          el.target_element = el.target_element.split(':')[0] + '-tree'
         }
         await pushAction(el)
 
@@ -12461,7 +12468,7 @@ element.setAttribute('data-product', [first, name].join(';'))
       }
       if (checked) {
         el.options = { apply_to_copies: true }
-        el.target_element =  el.target_element.split(':')[0]+'-tree'
+        el.target_element = el.target_element.split(':')[0] + '-tree'
       }
       pushAction(el)
       e.target.parentNode.remove()
@@ -13334,6 +13341,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         const applyToCopies2 = fieldset.querySelector('#applyForCopies2').checked
         if (applyToCopies2) {
           el.options = { apply_to_copies: true }
+          el.target_element = el.target_element.split(':')[0] + '-tree'
         }
         const actionInReplace2 = fieldset.querySelector('#actionInReplace2').checked
         if (actionInReplace2) {
