@@ -556,23 +556,23 @@
               data-value="file-emoji" style="user-select: none; margin-left: 5px;" class="l-3"> 🧩</label>
           </td>
           <td hidden data-column-created>
-            <span hidden data-date-label class="l-3">🆕 </span>
+            <span hidden data-date-created-label class="l-3">🆕 </span>
             <span hidden data-column-created_value class="l-3"></span>
           </td>
           <td hidden data-column-published>
-            <span hidden data-date-label class="l-3">📰 </span>
+            <span hidden data-date-published-label class="l-3">📰 </span>
             <span hidden data-column-published-value class="l-3"></span>
           </td>
           <td hidden data-column-updated>
-            <span hidden data-date-label class="l-3">🔄 </span>
+            <span hidden data-date-updated-label class="l-3">🔄 </span>
             <span hidden data-column-updated-value class="l-3"></span>
           </td>
           <td hidden data-column-content-updated>
-            <span hidden data-date-label class="l-3">🗞 </span>
+            <span hidden data-date-content-updated-label class="l-3">🗞 </span>
             <span hidden data-column-content-updated-value class="l-3"></span>
           </td>
           <td hidden data-column-removed>
-            <span hidden data-date-label class="l-3">🚮 </span>
+            <span hidden data-date-removed-label class="l-3">🚮 </span>
             <span hidden data-column-removed-value class="l-3"></span>
           </td>
         </tr>
@@ -3256,29 +3256,32 @@
 
             }
             if (created) {
-              element.querySelector('[data-column-created-value]').textContent = formatDate(created);
-              
+              element.querySelector('[data-column-created_value]').textContent = formatDate(created);
+              element.querySelector('[data-date-created-label]').removeAttribute('hidden');
             }
 
             // Update published date
             if (published) {
               element.querySelector('[data-column-published-value]').textContent = formatDate(published);
-              
+              element.querySelector('[data-date-published-label]').removeAttribute('hidden');
             }
 
             // Update updated date
             if (updated) {
               element.querySelector('[data-column-updated-value]').textContent = formatDate(updated);
+              element.querySelector('[data-date-updated-label]').removeAttribute('hidden');
             }
 
             // Update content_updated date
             if (content_updated) {
               element.querySelector('[data-column-content-updated-value]').textContent = formatDate(content_updated);
+              element.querySelector('[data-column-content-updated-value]').removeAttribute('hidden');
             }
 
             // Update removed date
             if (removed) {
               element.querySelector('[data-column-removed-value]').textContent = formatDate(removed);
+              element.querySelector('[data-column-removed-value]').removeAttribute('hidden');
             }
           }
         }
