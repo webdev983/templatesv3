@@ -3236,7 +3236,7 @@
             const { hosting_time } = item
             const { created, published, updated, content_updated, removed } = hosting_time || {}
             function formatDate(timestamp) {
-              if(!timestamp){
+              if (!timestamp) {
                 return ""
               }
               const date = new Date(timestamp)
@@ -3244,14 +3244,37 @@
               const formattedDate = date.toLocaleDateString('en-US', options);
               return formattedDate;
             }
-            element.querySelector('[data-column-created_value]').textContent = formatDate(created)
-            element.querySelector('[data-column-published-value]').textContent  = formatDate(published)
-            element.querySelector('[data-column-updated-value]').textContent  = formatDate(updated)
-            element.querySelector('[data-column-content-updated-value]').textContent  = formatDate(content_updated)
-            element.querySelector('[data-column-removed-value]').textContent  = formatDate(removed)
+            if (created) {
+              element.querySelector('[data-column-created-value]').textContent = formatDate(created);
+              element.querySelector('[data-column-created-value]').removeAttribute('hidden');
+            }
+
+            // Update published date
+            if (published) {
+              element.querySelector('[data-column-published-value]').textContent = formatDate(published);
+              element.querySelector('[data-column-published-value]').removeAttribute('hidden');
+            }
+
+            // Update updated date
+            if (updated) {
+              element.querySelector('[data-column-updated-value]').textContent = formatDate(updated);
+              element.querySelector('[data-column-updated-value]').removeAttribute('hidden');
+            }
+
+            // Update content_updated date
+            if (content_updated) {
+              element.querySelector('[data-column-content-updated-value]').textContent = formatDate(content_updated);
+              element.querySelector('[data-column-content-updated-value]').removeAttribute('hidden');
+            }
+
+            // Update removed date
+            if (removed) {
+              element.querySelector('[data-column-removed-value]').textContent = formatDate(removed);
+              element.querySelector('[data-column-removed-value]').removeAttribute('hidden');
+            }
           }
         }
-        
+
         //get folders
         if (path.split('/').length > 3) {
           //normal
@@ -3399,7 +3422,7 @@
               icon = '💻';
             }
             clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
-            if(item.name ==='Hub'){
+            if (item.name === 'Hub') {
               setHeadDates(clonedItem)
             }
             // Append the cloned item to the filePathList
