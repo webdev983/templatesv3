@@ -6312,7 +6312,7 @@ checkbox1.setAttribute('hidden', "");
           const getTagName = (element) => {
             const id = element.id.replace('-tree', '')
             if (element.replaced) {
-              const first = querySelectorAll1(`[id^="${id}"]`)[0]
+              const first = querySelectorAll1(`[id^="${id}"]`).find(e=> !e.id.endsWith('-tree') )
               return first.tagName.toLowerCase()
             }
             return getElementById1(id)?.tagName.toLowerCase()
