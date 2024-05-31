@@ -73,19 +73,34 @@
         <button class="b-1" onclick="openColumnsSelector()" id="columns_selector_open">📊</button>
         <div id="columns_selector" style="margin-left: 10px; margin-top: 5px" hidden>
           <div>
-            <label class="l-3"><input type="checkbox" id="columns_selector_created"> 🆕 created</label>
+            <label class="l-3">
+              <input type="checkbox" id="columns_selector_created" onchange="setChecked(event, 'created-column')"> 🆕
+              created
+            </label>
           </div>
           <div>
-            <label class="l-3"><input type="checkbox" checked id="columns_selector_published"> 📰 published</label>
+            <label class="l-3">
+              <input type="checkbox" id="columns_selector_published" onchange="setChecked(event, 'published-column')"
+                checked> 📰 published
+            </label>
           </div>
           <div>
-            <label class="l-3"><input type="checkbox" id="columns_selector_content_updated"> 🔄 updated</label>
+            <label class="l-3">
+              <input type="checkbox" id="columns_selector_content_updated"
+                onchange="setChecked(event, 'content-updated')"> 🔄 updated
+            </label>
           </div>
           <div>
-            <label class="l-3"><input type="checkbox" id="columns_selector_updated"> 🗞 content udpated</label>
+            <label class="l-3">
+              <input type="checkbox" id="columns_selector_updated" onchange="setChecked(event, 'updated-column')"> 🗞
+              content updated
+            </label>
           </div>
           <div>
-            <label class="l-3"><input type="checkbox" id="columns_selector_removed"> 🚮 removed</label>
+            <label class="l-3">
+              <input type="checkbox" id="columns_selector_removed" onchange="setChecked(event, 'removed-column')"> 🚮
+              removed
+            </label>
           </div>
         </div>
 
@@ -3198,7 +3213,7 @@
       try {
         //get files
         let url
-        
+
         const helperid = localStorage.getItem('helperid')
         const ownerid = localStorage.getItem('ownerid')
 
@@ -3210,7 +3225,7 @@
 
         //get files
         const spath = path.slice(0, -1) + '|';
-        
+
 
         if (helperid) {
           url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${helperid}&ownerUUID=${ownerid}&helperlsi1=true&lsi1=${spath}&token=${localStorage.getItem('token')}`;
@@ -3219,7 +3234,7 @@
           url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${spath}&token=${localStorage.getItem('token')}`;
         }
         let data1 = fetch(url).then(e => e.json())
-        const setHeadDates = async (element,path) => {
+        const setHeadDates = async (element, path) => {
           const headPath = path + 'Content/Page|Head-Content'
           let headUrl = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headPath}&token=${localStorage.getItem('token')}`;
 
@@ -3245,7 +3260,7 @@
               const formattedDate = date.toLocaleDateString('en-US', options);
               return formattedDate;
             }
-            if(hosting_time){
+            if (hosting_time) {
               element.querySelector('[data-column-created]').removeAttribute('hidden');
               element.querySelector('[data-column-published]').removeAttribute('hidden');
               element.querySelector('[data-column-updated]').removeAttribute('hidden');
@@ -3434,7 +3449,7 @@
               icon = '💻';
             }
             clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
-            
+
             // Append the cloned item to the filePathList
             filePathList.appendChild(clonedItem);
           }
@@ -3475,7 +3490,37 @@
         console.error('Error:', error);
       }
     };
-
+    const setColumnSelectors = () => {
+      const created = localStorage.getItem('created-column')
+      const published = localStorage.getItem('published-column')
+      const updated = localStorage.getItem('updated-column')
+      const content_updated = localStorage.getItem('content-updated')
+      const removed = localStorage.getItem('removed-column')
+      if (created) {
+        document.getElementById('columns_selector_created').checked = true;
+      }
+      if (published) {
+        document.getElementById('columns_selector_published').checked = true;
+      }
+      if (updated) {
+        document.getElementById('columns_selector_updated').checked = true;
+      }
+      if (content_updated) {
+        document.getElementById('columns_selector_content_updated').checked = true;
+      }
+      if (removed) {
+        document.getElementById('columns_selector_removed').checked = true;
+      }
+    }
+    const setChecked = (event, lsItem) => {
+      const checked = event.target.checked
+      if (checked) {
+        localStorage.setItem(lsItem, true)
+      }
+      else {
+        localStorage.removeItem(lsItem)
+      }
+    }
     document.addEventListener('DOMContentLoaded', async function () {
       /*
       const loadingScreen = document.getElementById('loading');
@@ -3512,6 +3557,7 @@
         document.getElementById('aside_element').setAttribute('hidden', '')
         document.getElementById('main_element').setAttribute('hidden', '')
       }
+      setColumnSelectors()
       //clearInterval(interval);
       //console.log(timerElement.textContent)
       //const lastActionTime = document.getElementById('last-action-time');
