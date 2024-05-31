@@ -3198,7 +3198,7 @@
       try {
         //get files
         let url
-        let headUrl
+        
         const helperid = localStorage.getItem('helperid')
         const ownerid = localStorage.getItem('ownerid')
 
@@ -3210,18 +3210,19 @@
 
         //get files
         const spath = path.slice(0, -1) + '|';
-        const headPath = path + 'Content/Page|Head-Content'
+        
 
         if (helperid) {
           url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${helperid}&ownerUUID=${ownerid}&helperlsi1=true&lsi1=${spath}&token=${localStorage.getItem('token')}`;
-          headUrl = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${helperid}&ownerUUID=${ownerid}&helperlsi1=true&lsi1=${headPath}&token=${localStorage.getItem('token')}`;
         }
         else {
           url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${spath}&token=${localStorage.getItem('token')}`;
-          headUrl = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headPath}&token=${localStorage.getItem('token')}`;
         }
         let data1 = fetch(url).then(e => e.json())
-        const setHeadDates = async (element) => {
+        const setHeadDates = async (element,path) => {
+          const headPath = path + 'Content/Page|Head-Content'
+          let headUrl = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headPath}&token=${localStorage.getItem('token')}`;
+
           const { items } = await fetch(headUrl).then(e => e.json())
           console.log(headUrl)
           console.log(JSON.stringify(items))
@@ -3372,6 +3373,7 @@
               openPath();
             };
             clonedItem.addEventListener('contextmenu', (e) => addDirectoryMenu(e, path + item + '/', item));
+            setHeadDates(clonedItem, path + item + '/')
 
             // Append the cloned item to the filePathList
             filePathList.appendChild(clonedItem);
@@ -3422,9 +3424,7 @@
               icon = '💻';
             }
             clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
-            if (item.name === 'Hub') {
-              setHeadDates(clonedItem)
-            }
+            
             // Append the cloned item to the filePathList
             filePathList.appendChild(clonedItem);
           }
