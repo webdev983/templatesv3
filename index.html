@@ -3260,16 +3260,7 @@
               const formattedDate = date.toLocaleDateString('en-US', options);
               return formattedDate;
             }
-            if (hosting_time) {
-              element.querySelector('[data-column-created]').removeAttribute('hidden');
-              element.querySelector('[data-column-published]').removeAttribute('hidden');
-              element.querySelector('[data-column-updated]').removeAttribute('hidden');
-              element.querySelector('[data-column-content-updated]').removeAttribute('hidden');
-              element.querySelector('[data-column-removed]').removeAttribute('hidden');
-
-
-
-            }
+            
             if (created) {
               element.querySelector('[data-column-created_value]').textContent = formatDate(created);
               element.querySelector('[data-date-created-label]').removeAttribute('hidden');
@@ -3503,18 +3494,23 @@
       const removed = localStorage.getItem('removed-column')
       if (created) {
         document.getElementById('columns_selector_created').checked = true;
+        document.querySelectorAll('[data-column-created]').forEach(e=>e.removeAttribute('hidden'))
       }
       if (published) {
         document.getElementById('columns_selector_published').checked = true;
+        document.querySelectorAll('[data-column-published]').forEach(e=>e.removeAttribute('hidden'))
       }
       if (updated) {
         document.getElementById('columns_selector_updated').checked = true;
+        document.querySelectorAll('[data-column-updated]').forEach(e=>e.removeAttribute('hidden'))
       }
       if (content_updated) {
         document.getElementById('columns_selector_content_updated').checked = true;
+        document.querySelectorAll('[data-column-content-updated]').forEach(e=>e.removeAttribute('hidden'))
       }
       if (removed) {
         document.getElementById('columns_selector_removed').checked = true;
+        document.querySelectorAll('[data-column-removed]').forEach(e=>e.removeAttribute('hidden'))
       }
     }
     const setChecked = (event, lsItem) => {
