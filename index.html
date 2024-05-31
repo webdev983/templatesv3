@@ -3245,33 +3245,40 @@
               const formattedDate = date.toLocaleDateString('en-US', options);
               return formattedDate;
             }
+            if(hosting_time){
+              element.querySelector('[data-column-created]').removeAttribute('hidden');
+              element.querySelector('[data-column-published]').removeAttribute('hidden');
+              element.querySelector('[data-column-updated]').removeAttribute('hidden');
+              element.querySelector('[data-column-content-updated]').removeAttribute('hidden');
+              element.querySelector('[data-column-removed]').removeAttribute('hidden');
+
+
+
+            }
             if (created) {
               element.querySelector('[data-column-created-value]').textContent = formatDate(created);
-              element.querySelector('[data-column-created]').removeAttribute('hidden');
+              
             }
 
             // Update published date
             if (published) {
               element.querySelector('[data-column-published-value]').textContent = formatDate(published);
-              element.querySelector('[data-column-published]').removeAttribute('hidden');
+              
             }
 
             // Update updated date
             if (updated) {
               element.querySelector('[data-column-updated-value]').textContent = formatDate(updated);
-              element.querySelector('[data-column-updated]').removeAttribute('hidden');
             }
 
             // Update content_updated date
             if (content_updated) {
               element.querySelector('[data-column-content-updated-value]').textContent = formatDate(content_updated);
-              element.querySelector('[data-column-content-updated]').removeAttribute('hidden');
             }
 
             // Update removed date
             if (removed) {
               element.querySelector('[data-column-removed-value]').textContent = formatDate(removed);
-              element.querySelector('[data-column-removed]').removeAttribute('hidden');
             }
           }
         }
