@@ -3221,8 +3221,10 @@
           headUrl = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headPath}&token=${localStorage.getItem('token')}`;
         }
         let data1 = fetch(url).then(e => e.json())
-        const setHeadDates = async () => {
+        const setHeadDates = async (element) => {
           const { items } = await fetch(headUrl).then(e => e.json())
+          console.log(headUrl)
+          console.log(JSON.stringify(items))
           if (items.length) {
             const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${items[0].id}:${items[0].sk}`, {
               method: 'GET',
@@ -3241,14 +3243,14 @@
               const formattedDate = date.toLocaleDateString('en-US', options);
               return formattedDate;
             }
-            document.querySelector('[data-column-created_value]') = formatDate(created)
-            document.querySelector('[data-column-published-value]') = formatDate(published)
-            document.querySelector('[data-column-updated-value]') = formatDate(updated)
-            document.querySelector('[data-column-content-updated-value]') = formatDate(content_updated)
-            document.querySelector('[data-column-removed-value]') = formatDate(removed)
+            element.querySelector('[data-column-created_value]') = formatDate(created)
+            element.querySelector('[data-column-published-value]') = formatDate(published)
+            element.querySelector('[data-column-updated-value]') = formatDate(updated)
+            element.querySelector('[data-column-content-updated-value]') = formatDate(content_updated)
+            element.querySelector('[data-column-removed-value]') = formatDate(removed)
           }
         }
-        setHeadDates()
+        
         //get folders
         if (path.split('/').length > 3) {
           //normal
@@ -3396,7 +3398,9 @@
               icon = '💻';
             }
             clonedItem.querySelector('[data-value="file-emoji"]').textContent = icon;
-
+            if(item.name ==='Hub'){
+              setHeadDates(clonedItem)
+            }
             // Append the cloned item to the filePathList
             filePathList.appendChild(clonedItem);
           }
