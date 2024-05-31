@@ -6324,7 +6324,14 @@ checkbox1.setAttribute('hidden', "");
               //optionsStrings.push(` Target ${options?.attachId || element.target_element.replace('-tree', '')}`)
               const id1 = element.target_element.replace('-tree', '')
               cloned.querySelector('#action-target-tag-id-value').textContent = id1
-              cloned.querySelector('#action-target-tag-name-value').textContent = getElementById1(id1)?.tagName.toLowerCase()
+              let tag
+              if(options?.apply_to_copies){
+                
+                tag =querySelectorAll1(`[id^="${id1}"]`).find(e=> !e.id.endsWith('-tree') ).tagName.toLowerCase()
+              }else {
+                tag = getElementById1(id1)?.tagName.toLowerCase()
+              }
+              cloned.querySelector('#action-target-tag-name-value').textContent = tag
             }
             else {
               const e = element.target_element.map(el => {
