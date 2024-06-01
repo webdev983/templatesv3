@@ -140,7 +140,7 @@
                   <span class="l-4" data-error-message>missing target</span>
                 </div>
                 <div data-action-buttons="" style="position: relative;">
-                  <button class="b-3">↕️</button>
+                  <button class="b-3" id="move-button">↕️</button>
                   <button id="change-target" class="b-3">🎯</button>
                   <button id="freeze" class="b-3">🥶</button>
                   <button hidden id="change-target" hidden class="b-3">🆔</button>
@@ -1430,13 +1430,13 @@ component</button> -->
 
   <div id="loading">
 
-  <span hidden style="font-size: 1; color: white;"></span>
-  <div hidden id="timer" style="font-size: 2em; color: white;">1.12</div>
-  <button  hidden style="font-size: 30px;" id="remove-loading">❌</button>
-</div>
+    <span hidden style="font-size: 1; color: white;"></span>
+    <div hidden id="timer" style="font-size: 2em; color: white;">1.12</div>
+    <button hidden style="font-size: 30px;" id="remove-loading">❌</button>
+  </div>
 
 
-<!--
+  <!--
   <div id="loading"
     style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 2;">
 
@@ -2633,6 +2633,7 @@ component</button> -->
     var backend_url = 'https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2'
     var pathItem
     var pathItemPath
+    var positionItem
     var site1
     var pathItemSku
     var headContentItem
@@ -4432,7 +4433,7 @@ component</button> -->
       };
       if (checked) {
         el.options = { apply_to_copies: true }
-        el.target_element = el.target_element.split(':')[0].replace('-tree','') + '-tree'
+        el.target_element = el.target_element.split(':')[0].replace('-tree', '') + '-tree'
       }
       tr.remove();
       console.log(JSON.stringify(el));
@@ -6154,6 +6155,7 @@ checkbox1.setAttribute('hidden', "");
       const originalElement = codeLog.querySelector("#code-log-element[hidden]");
       const clonedElement = originalElement.cloneNode(true);
       clonedElement.removeAttribute('hidden')
+      clonedElement.setAttribute('sk', actionTime)
       //clonedElement.id = 'code-log-element;'+ actionTime
       // Remove the unwanted button from the cloned element
       const removeButtonCell = originalElement.querySelector("[data-type-code-log='action-remove']");
@@ -6166,7 +6168,15 @@ checkbox1.setAttribute('hidden', "");
       clonedElement.querySelector("#code-log-action-time").textContent = formatEpochTime(actionTime);
       clonedElement.querySelector("#code-log-action-time").setAttribute('sk', actionTime)
       let emoji = ""
+      clonedElement.querySelector('#move-button').onclick = (e) => {
+        document.querySelectorAll('[#code-log-element]').forEach(element => {
+          if (element.getAttribute('sk') !== actionTime.toString()) {
+            const move = element.querySelector('[data-move-actions]')
+            move.removeAttribute('hidden')
 
+          }
+        })
+      }
       const actionData = clonedElement.querySelector("[data-action-data]")
       actionData.innerHTML = ''
       let optionEl
@@ -6284,17 +6294,17 @@ checkbox1.setAttribute('hidden', "");
           const targetId = element.target_element[0]
           const target = cloned.querySelector('[data-target]')
           target.querySelector('#replaced-component-id-value').textContent = targetId
-          target.setAttribute('replace-names',targetId)
+          target.setAttribute('replace-names', targetId)
           const folder = cloned.querySelector('#replace-action-folder')
-          if(element.folders?.length){
+          if (element.folders?.length) {
             folder.querySelector('#replace-action-folder-link-value').textContent = element.folders[0]
           }
-          else{
+          else {
             folder.remove()
           }
           const comps = cloned.querySelector('#new-replace-components-list')
           const comp1 = comps.querySelector('#new-replace-component')
-          for (let i=1;i<element.target_element.length;i++){
+          for (let i = 1; i < element.target_element.length; i++) {
             const cloned1 = comp1.cloneNode(true)
             cloned1.querySelector('#new-replace-component-name-value').textContent = element.target_element[i].path.split('|')[1]
             cloned1.querySelector('#new-replace-component-path-value').textContent = element.target_element[i].path
@@ -6302,7 +6312,7 @@ checkbox1.setAttribute('hidden', "");
             comps.append(cloned1)
           }
           comp1.remove()
-          
+
         }
         else {
           if (element?.key) {
@@ -6346,7 +6356,7 @@ checkbox1.setAttribute('hidden', "");
           const getTagName = (element) => {
             const id = element.id.replace('-tree', '')
             if (element.replaced) {
-              const first = querySelectorAll1(`[id^="${id}"]`).find(e=> !e.id.endsWith('-tree') )
+              const first = querySelectorAll1(`[id^="${id}"]`).find(e => !e.id.endsWith('-tree'))
               return first.tagName.toLowerCase()
             }
             return getElementById1(id)?.tagName.toLowerCase()
@@ -6359,10 +6369,10 @@ checkbox1.setAttribute('hidden', "");
               const id1 = element.target_element.replace('-tree', '')
               cloned.querySelector('#action-target-tag-id-value').textContent = id1
               let tag
-              if(options?.apply_to_copies){
-                
-                tag =querySelectorAll1(`[id^="${id1}"]`).find(e=> !e.id.endsWith('-tree') ).tagName.toLowerCase()
-              }else {
+              if (options?.apply_to_copies) {
+
+                tag = querySelectorAll1(`[id^="${id1}"]`).find(e => !e.id.endsWith('-tree')).tagName.toLowerCase()
+              } else {
                 tag = getElementById1(id1)?.tagName.toLowerCase()
               }
               cloned.querySelector('#action-target-tag-name-value').textContent = tag
@@ -7148,10 +7158,10 @@ checkbox1.setAttribute('hidden', "");
 
           }
           if (replaceAction) {
-            if(replaceAction.id ===pathItem.id){
+            if (replaceAction.id === pathItem.id) {
               await insertDataIntoCodeLog(replaceAction.sk, replaceAction.action, replaceAction.options, undefined, replaceAction)
             }
-            
+
             console.log('replace action in')
             const toReplace = replaceAction.target_element[0]
             replaceAction.target_element.shift()
@@ -9544,7 +9554,7 @@ elementsToRemove.forEach(element => element.remove());
           e.querySelector("#action-add-component-path").textContent = subPath
 
         })
-        console.log('sId '+id)
+        console.log('sId ' + id)
         document.querySelectorAll(`[replace-names="${newId}-tree"]`).forEach(e => {
           e.querySelector("#replaced-component-name-value").textContent = name
           e.querySelector("#replaced-component-path-value").textContent = subPath
@@ -9663,8 +9673,29 @@ elementsToRemove.forEach(element => element.remove());
             console.log('test relative same ' + componentFileName + ' path ' + newPathForRelative)
           }
         }
-
-
+        const sortItems = async (items) => {
+          const position = items.find(e => e.sk === 'positions')
+          if (!positions) {
+            const positions = {
+              id: id || idFromLink,
+              sk: 'positions',
+              positions: items.filter(e => e.action).map(e => e.sk)
+            }
+            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+              method: 'POST',
+              body: JSON.stringify(positions),
+            });
+            return [...items,positions]
+          }
+          const actionItems = items.filter(a=>a.action)
+          const nonActionItems = items.filter(a=>!a.action)
+          const newActionItems = []
+          for(const timestamp of position.positions){
+            newActionItems.push(actionItems.find(item=>item.sk ===timestamp))
+          }
+          return [...nonActionItems,...newActionItems]
+        }
+        responseData.items =await sortItems(responseData.items)
         for (const item of responseData.items) {
           if (!id) {
             if (item.sk === 'path') {
@@ -9688,6 +9719,9 @@ elementsToRemove.forEach(element => element.remove());
                 el3.setAttribute('href', item.href)
                 pSiteLabel.setAttribute('href', item.href?.replace('s3.amazonaws.com/', '').replace('index.html', ''), '')
               }
+            }
+            else if(item.sk ==='positions'){
+              positionItem = item
             }
 
           }
@@ -12305,7 +12339,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         }
         if (checked) {
           el.options = { apply_to_copies: true }
-          el.target_element = el.target_element.split(':')[0].replace('-tree','') + '-tree'
+          el.target_element = el.target_element.split(':')[0].replace('-tree', '') + '-tree'
         }
         await pushAction(el)
 
@@ -12518,7 +12552,7 @@ element.setAttribute('data-product', [first, name].join(';'))
       }
       if (checked) {
         el.options = { apply_to_copies: true }
-        el.target_element = el.target_element.split(':')[0].replace('-tree','') + '-tree'
+        el.target_element = el.target_element.split(':')[0].replace('-tree', '') + '-tree'
       }
       pushAction(el)
       e.target.parentNode.remove()
@@ -13391,7 +13425,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         const applyToCopies2 = fieldset.querySelector('#applyForCopies2').checked
         if (applyToCopies2) {
           el.options = { apply_to_copies: true }
-          el.target_element = el.target_element.split(':')[0].replace('-tree','') + '-tree'
+          el.target_element = el.target_element.split(':')[0].replace('-tree', '') + '-tree'
         }
         const actionInReplace2 = fieldset.querySelector('#actionInReplace2').checked
         if (actionInReplace2) {
