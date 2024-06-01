@@ -130,8 +130,8 @@
           <tr hidden id="code-log-element">
             <td style="position: relative; padding: 4px;" data-type-code-log="action-time">
               <span data-move-actions hidden>
-                <button class="b-5">⬇️</button>
-                <button class="b-5" style="margin-left: -7px; margin-right: -10px;">⬆️</button>
+                <button class="b-5" data-move-after>⬇️</button>
+                <button class="b-5" data-move-before style="margin-left: -7px; margin-right: -10px;">⬆️</button>
               </span>
               <span class="l-4" id="code-log-action-time" style="margin-left: 10px;">1703707728031</span>
               <div class="action-data-tooltip">
@@ -6173,6 +6173,12 @@ checkbox1.setAttribute('hidden', "");
           if (element.getAttribute('sk') !== actionTime.toString()) {
             const move = element.querySelector('[data-move-actions]')
             move.removeAttribute('hidden')
+            move.querySelector('[data-move-after]').onclick = (e) => {
+
+            }
+            move.querySelector('[data-move-before]').onclick = (e) => {
+
+            }
 
           }
         })
@@ -9685,17 +9691,17 @@ elementsToRemove.forEach(element => element.remove());
               method: 'POST',
               body: JSON.stringify(positions),
             });
-            return [...items,positions]
+            return [...items, positions]
           }
-          const actionItems = items.filter(a=>a.action)
-          const nonActionItems = items.filter(a=>!a.action)
+          const actionItems = items.filter(a => a.action)
+          const nonActionItems = items.filter(a => !a.action)
           const newActionItems = []
-          for(const timestamp of position.positions){
-            newActionItems.push(actionItems.find(item=>item.sk ===timestamp))
+          for (const timestamp of position.positions) {
+            newActionItems.push(actionItems.find(item => item.sk === timestamp))
           }
-          return [...nonActionItems,...newActionItems]
+          return [...nonActionItems, ...newActionItems]
         }
-        responseData.items =await sortItems(responseData.items)
+        responseData.items = await sortItems(responseData.items)
         for (const item of responseData.items) {
           if (!id) {
             if (item.sk === 'path') {
@@ -9720,7 +9726,7 @@ elementsToRemove.forEach(element => element.remove());
                 pSiteLabel.setAttribute('href', item.href?.replace('s3.amazonaws.com/', '').replace('index.html', ''), '')
               }
             }
-            else if(item.sk ==='positions'){
+            else if (item.sk === 'positions') {
               positionItem = item
             }
 
