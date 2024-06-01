@@ -5971,6 +5971,14 @@ checkbox1.setAttribute('hidden', "");
 
           if (response.ok) {
             // Delete was successful, you can handle the response or perform additional actions
+            positionItem.positions = positionItem.positions.filter(e=>e!==actionTime)
+            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(positionItem),
+            });
             console.log('Action deleted successfully');
           } else {
             // Delete request failed, handle the error
@@ -6226,9 +6234,9 @@ checkbox1.setAttribute('hidden', "");
           const anchor = element.getAttribute('sk')
           if (anchor !== actionTime.toString()) {
             const move = element.querySelector('[data-move-actions]')
-            if(!move.hasAttribute('hidden')){
-              move.setAttribute('hidden','')
-              moveOn =false
+            if (!move.hasAttribute('hidden')) {
+              move.setAttribute('hidden', '')
+              moveOn = false
               return
             }
             move.removeAttribute('hidden')
@@ -6245,9 +6253,9 @@ checkbox1.setAttribute('hidden', "");
                 ),
               });
               //document.querySelectorAll('[data-move-actions]').forEach(e=>e.setAttribute('hidden',''))
-              insertAfter(clonedElement,element)
+              insertAfter(clonedElement, element)
             }
-            move.querySelector('[data-move-before]').onclick =async (e) => {
+            move.querySelector('[data-move-before]').onclick = async (e) => {
               positionItem.positions = moveStringBefore(positionItem.positions, actionTime, anchor)
               await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                 method: 'POST',
@@ -6259,7 +6267,7 @@ checkbox1.setAttribute('hidden', "");
                 ),
               });
               //document.querySelectorAll('[data-move-actions]').forEach(e=>e.setAttribute('hidden',''))
-              clonedElement.parentNode.insertBefore(clonedElement,element)
+              clonedElement.parentNode.insertBefore(clonedElement, element)
             }
 
           }
@@ -9779,12 +9787,13 @@ elementsToRemove.forEach(element => element.remove());
           const nonActionItems = items.filter(a => !a.action)
           const newActionItems = []
           for (const timestamp of position.positions) {
-            newActionItems.push(actionItems.find(item => item.sk === timestamp))
+            const toP = actionItems.find(item => item.sk === timestamp)
+            toP && newActionItems.push(toP)
           }
           return [...nonActionItems, ...newActionItems]
         }
         responseData.items = await sortItems(responseData.items)
-        console.log('err789'+JSON.stringify(responseData.items))
+        console.log('err789' + JSON.stringify(responseData.items))
         for (const item of responseData.items) {
           if (!id) {
             if (item.sk === 'path') {
