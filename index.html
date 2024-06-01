@@ -1393,7 +1393,7 @@
       });
 
     }
-    const updateFolder = async (path, new_value, last, d, htmlStructChecked) => {
+    const updateFolder = async (path, new_value, last, d, htmlStructChecked,allStructurs) => {
 
       const response1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}`);
       //list of sub paths
@@ -1412,7 +1412,7 @@
       console.log('path ' + path)
       for (const item of items1) {
         item.lsi1 = item.lsi1.replace(';publish:published', '')
-        if (item.lsi1.endsWith('Script') || item.lsi1.endsWith('Style') || (item.lsi1.endsWith('Html-Structure') && htmlStructChecked) || item.lsi1.endsWith('|Hub') || item.lsi1.endsWith('-Seed')) {
+        if (item.lsi1.endsWith('Script') || item.lsi1.endsWith('Style')|| (item.lsi1.endsWith('Structure') && allStructurs) || (item.lsi1.endsWith('Html-Structure') && htmlStructChecked) || item.lsi1.endsWith('|Hub') || item.lsi1.endsWith('-Seed')) {
           replaceByIditems.push(item)
         }
         else if (item.lsi1.endsWith('-Content')) {
@@ -1791,6 +1791,7 @@
 
             } else {
               document.getElementById('html-structure-label').style.display = 'none';
+              document.getElementById('all-structure-label').style.display = 'none';
             }
           });
           const saveButton = cloned.querySelector('[data-action="copy-file-path-save"]');
@@ -2043,7 +2044,8 @@
 
             if (update) {
               const htmlStructChecked = cloned.querySelector('#html-structure-label').querySelector('input').checked
-              await updateFolder(path, new_value, last, d, htmlStructChecked)
+              const allStructurs = cloned.querySelector('#all-structure-label').querySelector('input').checked
+              await updateFolder(path, new_value, last, d, htmlStructChecked,allStructurs)
             }
             else {
               await copyToTarget(path, new_value, backupCheck)
