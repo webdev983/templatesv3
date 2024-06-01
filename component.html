@@ -6284,6 +6284,7 @@ checkbox1.setAttribute('hidden', "");
           const targetId = element.target_element[0]
           const target = cloned.querySelector('[data-target]')
           target.querySelector('#replaced-component-id-value').textContent = targetId
+          target.setAttribute('replace-names',targetId)
           const folder = cloned.querySelector('#replace-action-folder')
           if(element.folders?.length){
             folder.querySelector('#replace-action-folder-link-value').textContent = element.folders[0]
@@ -9541,6 +9542,11 @@ elementsToRemove.forEach(element => element.remove());
           e.querySelector("#action-add-component-name").textContent = name
           e.querySelector("#action-add-component-id").textContent = id
           e.querySelector("#action-add-component-path").textContent = subPath
+
+        })
+        document.querySelectorAll(`[replace-names"${id}"]`).forEach(e => {
+          e.querySelector("#replaced-component-name-value").textContent = name
+          e.querySelector("#replaced-component-path-value").textContent = subPath
 
         })
 
