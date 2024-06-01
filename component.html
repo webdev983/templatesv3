@@ -2633,7 +2633,7 @@ component</button> -->
     var backend_url = 'https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2'
     var pathItem
     var pathItemPath
-    var positionItem
+    var positionItem =[]
     var site1
     var pathItemSku
     var headContentItem
@@ -6020,7 +6020,7 @@ checkbox1.setAttribute('hidden', "");
       const sk = action.time.toString()
       delete action.time
       const payload = { ...action, sk, id };
-
+      positionItem.push(payload)
 
       actions.push(payload)
       // Send a POST request using fetch
@@ -6030,6 +6030,13 @@ checkbox1.setAttribute('hidden', "");
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
+      });
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(positionItem),
       });
 
       // Ensure the request was successful (status code 2xx)
