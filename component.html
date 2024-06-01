@@ -6157,6 +6157,52 @@ checkbox1.setAttribute('hidden', "");
       }
     }
     const originalOptionsEl = document.querySelector('#action-options[original=""]')
+    function moveStringAfter(array, stringToMove, afterString) {
+      const currentIndex = array.indexOf(stringToMove);
+      const afterIndex = array.indexOf(afterString);
+
+      // If any of the strings are not found, or if the afterString is not found, return the original array
+      if (currentIndex === -1 || afterIndex === -1) {
+        return array;
+      }
+
+      // Remove the string to move from the array
+      const removedString = array.splice(currentIndex, 1)[0];
+
+      // Find the new index to insert the string after the specified string
+      const insertIndex = afterIndex + 1;
+
+      // Insert the string after the specified string
+      array.splice(insertIndex, 0, removedString);
+
+      return array;
+    }
+    function moveStringBefore(array, stringToMove, beforeString) {
+      const currentIndex = array.indexOf(stringToMove);
+      const beforeIndex = array.indexOf(beforeString);
+
+      // If any of the strings are not found, or if the beforeString is not found, return the original array
+      if (currentIndex === -1 || beforeIndex === -1) {
+        return array;
+      }
+
+      // Remove the string to move from the array
+      const removedString = array.splice(currentIndex, 1)[0];
+
+      // Find the new index to insert the string before the specified string
+      const insertIndex = beforeIndex;
+
+      // Insert the string before the specified string
+      array.splice(insertIndex, 0, removedString);
+
+      return array;
+    }
+
+    // Example usage:
+    const positions = ["string1", "string2", "string3", "string4"];
+    const updatedPositions = moveStringBefore(positions, "string4", "string2");
+    console.log(updatedPositions); // Output: ["string1", "string4", "string2", "string3"]
+
     function insertDataIntoCodeLog(actionTime, actionName, options, inserted_component, element, reusableId) {
       const codeLog = getElementById1("code-log-body");
       const originalElement = codeLog.querySelector("#code-log-element[hidden]");
@@ -6177,14 +6223,37 @@ checkbox1.setAttribute('hidden', "");
       let emoji = ""
       clonedElement.querySelector('#move-button').onclick = (e) => {
         document.querySelectorAll('#code-log-element').forEach(element => {
-          if (element.getAttribute('sk') !== actionTime.toString()) {
+          const anchor = element.getAttribute('sk')
+          if (anchor !== actionTime.toString()) {
             const move = element.querySelector('[data-move-actions]')
             move.removeAttribute('hidden')
-            move.querySelector('[data-move-after]').onclick = (e) => {
-
+            move.querySelector('[data-move-after]').onclick = async (e) => {
+              positionItem.positions = moveStringBefore(positionItem.positions, actionTime, anchor)
+              await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(
+                  positionItem
+                ),
+              });
+              document.querySelectorAll('[data-move-actions]').forEach(e=>e.setAttribute('hidden',''))
+              insertAfter(clonedElement,element)
             }
-            move.querySelector('[data-move-before]').onclick = (e) => {
-
+            move.querySelector('[data-move-before]').onclick =async (e) => {
+              positionItem.positions = moveStringBefore(positionItem.positions, actionTime, anchor)
+              await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(
+                  positionItem
+                ),
+              });
+              document.querySelectorAll('[data-move-actions]').forEach(e=>e.setAttribute('hidden',''))
+              clonedElement.parentNode.insertBefore(clonedElement,element)
             }
 
           }
