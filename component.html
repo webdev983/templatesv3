@@ -178,7 +178,7 @@
 
           <div id="replace-action">
             <label class="action-label"><span class="action-icon">🔄 Replace</span></label>
-            <div class="action-data-group">
+            <div class="action-data-group" data-target>
               <label class="action-group-label"><span class="action-icon">🎯 Target</span></label>
               <label class="action-label"><span class="action-icon">🧩</span><span
                   id="replaced-component-name-value">product-name</span></label>
@@ -6281,7 +6281,25 @@ checkbox1.setAttribute('hidden', "");
           const originalReplace = document.getElementById('replace-action')
           const cloned = originalReplace.cloneNode(true)
           actionData.append(cloned)
-
+          const targetId = element.target_element[0]
+          const target = cloned.querySelector('[data-target]')
+          target.querySelector('#replaced-component-id-value').textContent = targetId
+          const folder = cloned.querySelector('#replace-action-folder')
+          if(element.folders?.length){
+            folder.querySelector('#replace-action-folder-link-value').textContent = element.folders[0]
+          }
+          else{
+            folder.remove()
+          }
+          const comps = cloned.querySelector('#new-replace-components-list')
+          const comp1 = comps.querySelector('#new-replace-component')
+          for (let i=1;i<element.target_element.length;i++){
+            const cloned1 = comp1.cloneNode(true)
+            cloned1.querySelector('#new-replace-component-name-value').textContent = element.target_element[i].path.split('|')[1]
+            cloned1.querySelector('#new-replace-component-path-value').textContent = element.target_element[i].path
+            cloned1.querySelector('#new-replace-component-id-value').textContent = element.target_element[i].componentId
+            comps.append(cloned1)
+          }
         }
         else {
           if (element?.key) {
