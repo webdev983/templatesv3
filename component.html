@@ -6380,7 +6380,10 @@ checkbox1.setAttribute('hidden', "");
           const cloned = originalChangeMenu.cloneNode(true)
           cloned.removeAttribute('hidden')
           const menu = buttonsContainer.querySelector('[data-action-button-menu]')
-          menu.append(cloned)
+          if(!menu.children.length){
+            menu.append(cloned)
+          }
+          
         }
         buttonsContainer.append(clonedChangeComponent)
         //clonedElement.querySelector('[data-action-data]').innerHTML = optionString;
