@@ -6399,7 +6399,7 @@ checkbox1.setAttribute('hidden', "");
             const initialValue = element.inserted_component.componentId;
 
             // Set the value of cloned.querySelector('#new-component-input')
-            cloned.querySelector('#new-component-input').value = initialValue.substring(1); // Remove the prefix
+            
 
             // Set the selected option of cloned.querySelector('#change_link_type')
             let selectedOptionValue = '';
@@ -6409,6 +6409,7 @@ checkbox1.setAttribute('hidden', "");
               case '$': selectedOptionValue = 'content'; break;
               default: selectedOptionValue = ''; break;
             }
+            cloned.querySelector('#new-component-input').value = selectedOptionValue ? initialValue.substring(1) :initialValue // Remove the prefix
 
             // Set the selected option in the dropdown
             const selectElement = cloned.querySelector('#change_link_type');
