@@ -1388,13 +1388,27 @@
       addMenuEntry(menu, '⧉ Copy', (e) => copy(id))
       addMenuEntry(menu, '👤 User', (e) => changeOwner(id))
       storedPath.startsWith('Stock') && product && addMenuEntry(menu, '📦 Product +', (e) => addProduct(id))
+      const addAditionalOptions = async(id)=>{
+        console.log('event' + JSON.stringify(event.target.target))
+        // Get the parent fieldset of the clicked button
+        var fieldset = document.getElementById(id);
 
+        // Get the file ID element within the fieldset
+        var additional = document.getElementById('additional-options')
+        const cloned = additional.cloneNode(true)
+        cloned.removeAttribute('hidden')
+
+
+        // Toggle the visibility of the file ID element
+        fieldset.insertAdjacentElement('afterend', cloned);
+      }
       if (protected) {
         addMenuEntry(menu, '❌ Protection -', (e) => setProtected(id, false))
       }
       else {
         addMenuEntry(menu, '✅ Protection +', (e) => setProtected(id, true))
       }
+      addMenuEntry(menu, 'Additional options', (e) => addAditionalOptions(id))
 
       const setProtected = async (id, protected) => {
         const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=path&startsWith=true`, {
@@ -2317,6 +2331,20 @@
 
       }
       const storedPath = localStorage.getItem('storedPath')
+      const addAditionalOptions = async(id,path)=>{
+        console.log('event' + JSON.stringify(event.target.target))
+        // Get the parent fieldset of the clicked button
+        var fieldset = document.getElementById(id);
+
+        // Get the file ID element within the fieldset
+        var additional = document.getElementById('additional-options')
+        const cloned = additional.cloneNode(true)
+        cloned.removeAttribute('hidden')
+
+
+        // Toggle the visibility of the file ID element
+        fieldset.insertAdjacentElement('afterend', cloned);
+      }
       addMenuEntry(menu, '✏️ Edit', (e) => edit(id, path))
       addMenuEntry(menu, '🗑️ Delete', (e) => openRemove1(id, path))
       addMenuEntry(menu, '⧉ Copy', (e) => copy(id, path))
@@ -2325,6 +2353,7 @@
       addMenuEntry(menu, '✅ Protection +', (e) => setProtected(id, path, true))
       addMenuEntry(menu, '❌ Protection -', (e) => setProtected(id, path, false))
       addMenuEntry(menu, '🗑️ Remove Except content', (e) => removeButContent(e, id, path))
+      addMenuEntry(menu, 'Additional options', (e) => addAditionalOptions(id, path))
 
       const publishFolder = async (id, path) => {
         const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}`);
