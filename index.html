@@ -784,6 +784,20 @@
 
 
   <script>
+    const switchFolder = (event) => {
+      const relative = getElementById1('relative-label')
+      const absolute = getElementById1('absolute-label')
+      if (event.target.checked) {
+        relative.removeAttribute('hidden')
+        absolute.removeAttribute('hidden')
+      }
+      else {
+        relative.setAttribute('hidden', '')
+        relative.querySelector('input').checked = false
+        absolute.setAttribute('hidden', '')
+        absolute.querySelector('input').checked = false
+      }
+    }
     let backend_url = 'https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2'
     var convertToOldPath = (path) => {
       const splited = path.split('|')
@@ -1807,6 +1821,43 @@
 
 
 
+    }
+    const cancelReplace = (event) => {
+
+      event.target.parentNode.parentNode.remove()
+    }
+    var approveReplace = async (e) => {
+      const m = Array.from(e.target.parentNode.children).filter(i => i.id)
+      const m1 = m.filter(e => e.hasAttribute('component'))
+      const m2 = m.filter(e => e.hasAttribute('folder'))
+
+      //const folderChecked = e.target.parentNode.querySelector('#attach-folder').checked
+      const parentId = e.target.parentNode.id.replace('file-path-list;', '')
+      if (!parentId) {
+        alert('no target id')
+        return
+      }
+      const parentEl = getElementById1(parentId)
+      const replacedString = parentEl.getAttribute('replaced')
+      const replaced = replacedString ? JSON.parse(replacedString) : []
+
+      const arr = m1.map(el => {
+        const element = getElementById1(el.id);
+        return {
+
+          componentId: el.id, id: el.newId || generateUUID(), path: element.querySelector('[data-value="file-path"]').textContent, already: element.getAttribute('alreadyReplaced')
+        }
+      })
+      const el = {
+        time: (new Date()).getTime(),
+        action: 'Replace_Component',
+        target_element: [parentId.replace('selectedFilePathList;', ''), ...arr],
+      };
+      if (m2.length) {
+        el.folders = m2.map(e => e.id)
+      }
+      await pushAction(el)
+      location.reload()
     }
     var replaceComponent = (path, cloned2) => {
       const helperid = localStorage.getItem('helperid')
