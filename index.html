@@ -785,8 +785,8 @@
 
   <script>
     const switchFolder = (event) => {
-      const relative = getElementById1('relative-label')
-      const absolute = getElementById1('absolute-label')
+      const relative = document.getElementById('relative-label')
+      const absolute = document.getElementById('absolute-label')
       if (event.target.checked) {
         relative.removeAttribute('hidden')
         absolute.removeAttribute('hidden')
@@ -1837,12 +1837,12 @@
         alert('no target id')
         return
       }
-      const parentEl = getElementById1(parentId)
+      const parentEl = document.getElementById(parentId)
       const replacedString = parentEl.getAttribute('replaced')
       const replaced = replacedString ? JSON.parse(replacedString) : []
 
       const arr = m1.map(el => {
-        const element = getElementById1(el.id);
+        const element = document.getElementById(el.id);
         return {
 
           componentId: el.id, id: el.newId || generateUUID(), path: element.querySelector('[data-value="file-path"]').textContent, already: element.getAttribute('alreadyReplaced')
