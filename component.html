@@ -6015,7 +6015,7 @@ checkbox1.setAttribute('hidden', "");
         }
         await insertDataIntoCodeLog(time, ac, element.options, undefined, element, reusableId)
       }
-      if(element.options?.frozen){
+      if (element.options?.frozen) {
         frozen = true
       }
 
@@ -6288,7 +6288,7 @@ checkbox1.setAttribute('hidden', "");
         else {
           optionNumber++
         }
-        if(options.frozen){
+        if (options.frozen) {
           actionTimeEl.classList.add('action-frozen')
           optionNumber++
         }
@@ -6394,6 +6394,30 @@ checkbox1.setAttribute('hidden', "");
             const cloned = originalChangeMenu.cloneNode(true)
             cloned.removeAttribute('hidden')
             menu.append(cloned)
+
+
+            const initialValue = element.inserted_component.componentId;
+
+            // Set the value of cloned.querySelector('#new-component-input')
+            cloned.querySelector('#new-component-input').value = initialValue.substring(1); // Remove the prefix
+
+            // Set the selected option of cloned.querySelector('#change_link_type')
+            let selectedOptionValue = '';
+            switch (initialValue[0]) {
+              case '*': selectedOptionValue = 'absolute'; break;
+              case '#': selectedOptionValue = 'relative'; break;
+              case '$': selectedOptionValue = 'content'; break;
+              default: selectedOptionValue = ''; break;
+            }
+
+            // Set the selected option in the dropdown
+            const selectElement = cloned.querySelector('#change_link_type');
+            for (let i = 0; i < selectElement.options.length; i++) {
+              if (selectElement.options[i].id === selectedOptionValue) {
+                selectElement.selectedIndex = i;
+                break;
+              }
+            }
             cloned.querySelector('#save-new-component').onclick = async (e) => {
               const value = cloned.querySelector('#new-component-input').value
               const selectElement = cloned.querySelector('#change_link_type')
@@ -6604,6 +6628,14 @@ checkbox1.setAttribute('hidden', "");
           const original = document.getElementById('change-target-id-menu')
           const cloned = original.cloneNode(true)
           cloned.removeAttribute('hidden')
+          let current
+          if (typeof element.target_element === "string") {
+            current = element.target_element.replace('-tree', '')
+          }
+          else {
+            current = element.target_element[0].replace('-tree', '')
+          }
+          cloned.querySelector('#save-new-target-input').textContent = current
           cloned.querySelector('#save-new-target').onclick = async (e) => {
             const t = cloned.querySelector('#save-new-target-input').value
             if (typeof element.target_element === "string") {
@@ -6631,11 +6663,11 @@ checkbox1.setAttribute('hidden', "");
       buttonsContainer.querySelector('#freeze').onclick = async (e) => {
         const payload = { ...element }
         delete payload.time
-        if(payload.options){
-          payload.options.frozen = !payload.options.frozen 
+        if (payload.options) {
+          payload.options.frozen = !payload.options.frozen
         }
-        else{
-          payload.options = {frozen:true}
+        else {
+          payload.options = { frozen: true }
         }
         await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
           method: 'POST',
