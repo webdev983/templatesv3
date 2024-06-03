@@ -6376,16 +6376,17 @@ checkbox1.setAttribute('hidden', "");
         clonedChangeComponent.removeAttribute('hidden')
         const buttonsContainer = clonedElement.querySelector('[data-action-buttons]')
         const originalChangeMenu = document.getElementById('change-adding-component')
+        const menu = buttonsContainer.querySelector('[data-action-button-menu]')
         clonedChangeComponent.onclick = (e) => {
           const cloned = originalChangeMenu.cloneNode(true)
           cloned.removeAttribute('hidden')
-          const menu = buttonsContainer.querySelector('[data-action-button-menu]')
+          
           if(!menu.children.length){
             menu.append(cloned)
           }
           
         }
-        buttonsContainer.append(clonedChangeComponent)
+        buttonsContainer.insertBefore(clonedChangeComponent,menu)
         //clonedElement.querySelector('[data-action-data]').innerHTML = optionString;
 
 
