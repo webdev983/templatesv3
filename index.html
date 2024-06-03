@@ -2360,11 +2360,11 @@
             let selected = []
             let path1 = ''
             var addSelected = (id, itemId, path) => {
-              const clonedFieldset2 = getElementById1('selectedFilePathList;' + id)
+              const clonedFieldset2 = document.getElementById('selectedFilePathList;' + id)
               if (Array.from(clonedFieldset2.children).find(el => el.id === itemId)) {
                 return
               }
-              var clonedItem = getElementById1('item').cloneNode(true);
+              var clonedItem = document.getElementById('item').cloneNode(true);
               selected.push(itemId)
               clonedItem.id = itemId;
               clonedItem.setAttribute('component', true)
@@ -2377,8 +2377,8 @@
 
             }
             var setFolder = (path, id) => {
-              const relative = getElementById1('relative-input')
-              const absolute = getElementById1('absolute-input')
+              const relative = document.getElementById('relative-input')
+              const absolute = document.getElementById('absolute-input')
 
               if (relative.checked) {
                 const currentLsi = pathItemPath.split(';')[0]
@@ -2394,11 +2394,11 @@
                 }
                 path = "*" + r
               }
-              const clonedFieldset2 = getElementById1('selectedFilePathList;' + id)
+              const clonedFieldset2 = document.getElementById('selectedFilePathList;' + id)
               if (Array.from(clonedFieldset2.children).find(el => el.id === path)) {
                 return
               }
-              var clonedItem = getElementById1('item').cloneNode(true);
+              var clonedItem = document.getElementById('item').cloneNode(true);
               selected.push(path)
               clonedItem.id = path;
               clonedItem.setAttribute('folder', true)
@@ -2421,7 +2421,7 @@
                 let url
                 const helperid = localStorage.getItem('helperid')
 
-                var filePathList = getElementById1('filePathList;' + id);
+                var filePathList = document.getElementById('filePathList;' + id);
                 filePathList.innerHTML = '';
                 let lvls = [];
                 let i = 0;
@@ -2489,7 +2489,7 @@
                   if (i < 1000) {
                     i++
                     // Clone the fieldset
-                    var clonedItem = getElementById1('item').cloneNode(true);
+                    var clonedItem = document.getElementById('item').cloneNode(true);
 
                     // Set unique ID for the cloned item
                     clonedItem.id = item;
@@ -2498,7 +2498,7 @@
                     const file_path = clonedItem.querySelector('[data-value="file-path"]')
                     file_path.textContent = item;
                     clonedItem.onclick = (e) => {
-                      const folderChecked = getElementById1('selectedFilePathList;' + id).querySelector('#attach-folder').checked
+                      const folderChecked = document.getElementById('selectedFilePathList;' + id).querySelector('#attach-folder').checked
                       folderChecked ? setFolder(path1 + item, id) : setPath()
                     }
                     let icon = '📂';
@@ -2540,7 +2540,7 @@
                   if (i < 1000) {
                     i++
                     // Clone the fieldset
-                    var clonedItem = getElementById1('item').cloneNode(true);
+                    var clonedItem = document.getElementById('item').cloneNode(true);
 
                     // Set unique ID for the cloned item
                     clonedItem.id = item.id;
@@ -2589,7 +2589,7 @@
               console.log(url)
 
 
-              var filePathList = getElementById1('filePathList;' + id);
+              var filePathList = document.getElementById('filePathList;' + id);
               filePathList.innerHTML = '';
 
               if (helperid) {
@@ -2627,7 +2627,7 @@
                     if (i < 1000) {
                       i++
                       // Clone the fieldset
-                      var clonedItem = getElementById1('item').cloneNode(true);
+                      var clonedItem = document.getElementById('item').cloneNode(true);
 
                       // Set unique ID for the cloned item
                       clonedItem.id = item;
@@ -2636,7 +2636,7 @@
                       const file_path = clonedItem.querySelector('[data-value="file-path"]')
                       file_path.textContent = item;
                       clonedItem.onclick = (e) => {
-                        const folderChecked = getElementById1('selectedFilePathList;' + id).querySelector('#attach-folder').checked
+                        const folderChecked = document.getElementById('selectedFilePathList;' + id).querySelector('#attach-folder').checked
                         folderChecked ? setFolder(item, id) : setPath()
                       }
                       let icon = '📂';
@@ -2682,7 +2682,7 @@
                     if (i < 1000) {
                       i++
                       // Clone the fieldset
-                      var clonedItem = getElementById1('item').cloneNode(true);
+                      var clonedItem = document.getElementById('item').cloneNode(true);
 
                       // Set unique ID for the cloned item
                       clonedItem.id = item.id;
@@ -2734,8 +2734,8 @@
 
             }
             
-            const fieldset = getElementById1('filePathList');
-            const fieldset2 = getElementById1('selectedFilePathList');
+            const fieldset = document.getElementById('filePathList');
+            const fieldset2 = document.getElementById('selectedFilePathList');
             const clonedFieldset = fieldset.cloneNode(true);
             const clonedFieldset2 = fieldset2.cloneNode(true);
             clonedFieldset2.id = clonedFieldset2.id + ';' + path;
