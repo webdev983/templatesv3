@@ -145,15 +145,15 @@
                   <button id="freeze" class="b-3">🥶</button>
                   <button style="position: absolute; right: 3px;" onclick="deleteAction(event)"
                     class="b-3">&#128465;</button>
-            
+
                   <div data-action-button-menu data-menu>
-          
+
                   </div>
                 </div>
                 <hr style="border-bottom: 1px solid #ffcc81;">
                 <div data-action-data>
 
-          
+
                 </div>
 
 
@@ -169,34 +169,33 @@
 
 
 
-<!-- action buttons menus-->
-              <div hidden action-buttons-menus-storage>
-                      <button hidden id="change-component" class="b-3" class="b-3">🧩</button>
-                      <div hidden id="change-adding-component" style="margin-top: 5px;">
-                        <label>
-                          <span class="l-4">🔗</span><span class="l-4"> attach by: </span>
-                          <select class="select-1" style="display: inline-block; margin-bottom: 2px;"
-                          id="change_link_type">
-                          <option id="byId">🆔 id</option>
-                          <option id="relative">✳️ absolute</option>
-                          <option id="id">#️⃣ relative</option>
-                          <option id="absolute">💲content folder</option>
-                        </select>
-                          <input type="text" class="input-actions" style="margin-top:5px;">
-                          <button class="b-4" style="margin-left: -1px;">💾 Save</button>
-                          <button onclick="cancel(event)" class="b-4" style="margin-left: -3px;">❌ Cancel</button>
-                        </label>
-                      </div>
+        <!-- action buttons menus-->
+        <div hidden action-buttons-menus-storage>
+          <button hidden id="change-component" class="b-3" class="b-3">🧩</button>
+          <div hidden id="change-adding-component" style="margin-top: 5px;">
+            <label>
+              <span class="l-4">🔗</span><span class="l-4"> attach by: </span>
+              <select class="select-1" style="display: inline-block; margin-bottom: 2px;" id="change_link_type">
+                <option id="byId">🆔 id</option>
+                <option id="relative">✳️ absolute</option>
+                <option id="id">#️⃣ relative</option>
+                <option id="absolute">💲content folder</option>
+              </select>
+              <input type="text" class="input-actions" style="margin-top:5px;">
+              <button class="b-4" style="margin-left: -1px;">💾 Save</button>
+              <button onclick="cancel(event)" class="b-4" style="margin-left: -3px;">❌ Cancel</button>
+            </label>
+          </div>
 
 
-                          <div  id="change-target-id-menu" style="margin-top: 5px;">
-                                    <label><span class="l-4">🎯</span><span class="l-4"> Change target id: </span>
-                                      <input type="text" class="input-actions" style="margin-top:5px;">
-                                      <button class="b-4" style="margin-left: -1px;">💾 Save</button>
-                                      <button onclick="cancel(event)" class="b-4" style="margin-left: -3px;">❌ Cancel</button>
-                                    </label>
-                          </div>
-               </div>
+          <div id="change-target-id-menu" style="margin-top: 5px;">
+            <label><span class="l-4">🎯</span><span class="l-4"> Change target id: </span>
+              <input type="text" class="input-actions" style="margin-top:5px;">
+              <button class="b-4" style="margin-left: -1px;">💾 Save</button>
+              <button onclick="cancel(event)" class="b-4" style="margin-left: -3px;">❌ Cancel</button>
+            </label>
+          </div>
+        </div>
         <!-- actions menus-->
 
         <div hidden id="actions-containers">
@@ -256,14 +255,14 @@
                 id="action-add-component-name">Hub</span></label>
             <label class="action-single-label"> <span class="action-icon">🆔</span><span
                 id="action-add-component-id">61453686-ff1b-4a8b-bc37-66f63857f621</span>
-              </label>
+            </label>
             <label class="action-single-label" id="action-component-link"><span class="action-icon"
                 style=" background-color: white;">👣</span><span
                 id="action-add-component-path">site.com/path/blablabla/blablabla</span>
-                <button >↗️</button>
-              
-              </label>
-                
+              <button id="action-component-redirect">↗️</button>
+
+            </label>
+
             <label class="action-single-label"> <span class="action-icon"
                 style="user-select: none; background-color: white; margin-top: 3px;">➕</span><span
                 id="action-add-component-link-type">$../blabla/blabla</span></label>
@@ -329,7 +328,7 @@
 
 
 
-<!-- actions menus-->
+        <!-- actions menus-->
 
 
 
@@ -5968,7 +5967,7 @@ checkbox1.setAttribute('hidden', "");
 
           if (response.ok) {
             // Delete was successful, you can handle the response or perform additional actions
-            positionItem.positions = positionItem.positions.filter(e=>e!==actionTime)
+            positionItem.positions = positionItem.positions.filter(e => e !== actionTime)
             await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
               method: 'POST',
               headers: {
@@ -9645,6 +9644,10 @@ elementsToRemove.forEach(element => element.remove());
           e.querySelector("#action-add-component-name").textContent = name
           e.querySelector("#action-add-component-id").textContent = id
           e.querySelector("#action-add-component-path").textContent = subPath
+          e.querySelector("#action-component-redirect").onclick = (e) => {
+            const redirectURL = `component.html?id=${id}&rand=${Math.random()}`;
+            window.open(redirectURL, '_blank');
+          }
 
         })
         console.log('sId ' + id)
