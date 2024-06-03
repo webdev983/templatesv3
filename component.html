@@ -5993,6 +5993,7 @@ checkbox1.setAttribute('hidden', "");
         referenceNode.parentNode.appendChild(newNode);
       }
     }
+    let frozen = false
     const pushAction = async (element, firstLoad, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId, attachId) => {
       console.log('pushed' + JSON.stringify(element))
       const time = element.time
@@ -6014,9 +6015,11 @@ checkbox1.setAttribute('hidden', "");
         }
         await insertDataIntoCodeLog(time, ac, element.options, undefined, element, reusableId)
       }
+      if(element.options?.frozen){
+        frozen = true
+      }
 
-
-      await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId, attachId)
+      !frozen && await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId, attachId)
     }
     const pushActionToDb = async (action) => {
       const urlSearchParams = new URLSearchParams(window.location.search);
@@ -6222,8 +6225,9 @@ checkbox1.setAttribute('hidden', "");
 
       // Set the content and attributes for the cloned element
       clonedElement.removeAttribute("hidden");
-      clonedElement.querySelector("#code-log-action-time").textContent = formatEpochTime(actionTime);
-      clonedElement.querySelector("#code-log-action-time").setAttribute('sk', actionTime)
+      const actionTimeEl = clonedElement.querySelector("#code-log-action-time")
+      actionTimeEl.textContent = formatEpochTime(actionTime);
+      actionTimeEl.querySelector("#code-log-action-time").setAttribute('sk', actionTime)
       let emoji = ""
       clonedElement.querySelector('#move-button').onclick = (e) => {
         document.querySelectorAll('#code-log-element').forEach(element => {
@@ -6282,6 +6286,10 @@ checkbox1.setAttribute('hidden', "");
           cloned.querySelector('#action-apply-target-copies').remove()
         }
         else {
+          optionNumber++
+        }
+        if(options.frozen){
+          actionTimeEl.classList.add('action-frozen')
           optionNumber++
         }
         if (!options.insert_copies) {
@@ -6596,13 +6604,13 @@ checkbox1.setAttribute('hidden', "");
           const original = document.getElementById('change-target-id-menu')
           const cloned = original.cloneNode(true)
           cloned.removeAttribute('hidden')
-          cloned.querySelector('#save-new-target').onclick = async(e) => {
+          cloned.querySelector('#save-new-target').onclick = async (e) => {
             const t = cloned.querySelector('#save-new-target-input').value
             if (typeof element.target_element === "string") {
-              element.target_element = t +'-tree'
+              element.target_element = t + '-tree'
             }
             else {
-              element.target_element[0] = t+'-tree'
+              element.target_element[0] = t + '-tree'
             }
             const payload = { ...element }
             delete payload.time
@@ -6619,6 +6627,23 @@ checkbox1.setAttribute('hidden', "");
           menu.append(cloned)
         }
 
+      }
+      buttonsContainer.querySelector('#freeze').onclick = async (e) => {
+        const payload = { ...element }
+        delete payload.time
+        if(payload.options){
+          payload.options.frozen = !payload.options.frozen 
+        }
+        else{
+          payload.options = {frozen:true}
+        }
+        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
       }
       // Insert the cloned element before the original element
       parent.insertBefore(clonedElement, originalElement);
