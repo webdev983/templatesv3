@@ -190,8 +190,8 @@
 
           <div id="change-target-id-menu" style="margin-top: 5px;">
             <label><span class="l-4">🎯</span><span class="l-4"> Change target id: </span>
-              <input type="text" class="input-actions" style="margin-top:5px;">
-              <button class="b-4" style="margin-left: -1px;">💾 Save</button>
+              <input id="save-new-target-input" type="text" class="input-actions" style="margin-top:5px;">
+              <button id="save-new-target" class="b-4" style="margin-left: -1px;">💾 Save</button>
               <button onclick="cancel2(event)" class="b-4" style="margin-left: -3px;">❌ Cancel</button>
             </label>
           </div>
@@ -6337,6 +6337,8 @@ checkbox1.setAttribute('hidden', "");
       }
       const r = options?.reusable ? options.reusable + '|' : ''
       const originalTargetElement = document.getElementById('action-target')
+      const buttonsContainer = clonedElement.querySelector('[data-action-buttons]')
+      const menu = buttonsContainer.querySelector('[data-action-button-menu]')
       if (element?.inserted_component) {
         console.log('iiiiiiiiiiin0')
         const a = clonedElement.querySelector("#code-log-action")
@@ -6374,16 +6376,17 @@ checkbox1.setAttribute('hidden', "");
         actionData.append(cloned2)
         const clonedChangeComponent = document.getElementById('change-component').cloneNode(true)
         clonedChangeComponent.removeAttribute('hidden')
-        const buttonsContainer = clonedElement.querySelector('[data-action-buttons]')
+
         const originalChangeMenu = document.getElementById('change-adding-component')
-        const menu = buttonsContainer.querySelector('[data-action-button-menu]')
+
         clonedChangeComponent.onclick = (e) => {
-          const cloned = originalChangeMenu.cloneNode(true)
-          cloned.removeAttribute('hidden')
+
 
           if (!menu.children.length) {
+            const cloned = originalChangeMenu.cloneNode(true)
+            cloned.removeAttribute('hidden')
             menu.append(cloned)
-            cloned.querySelector('#save-new-component').onclick = async(e) => {
+            cloned.querySelector('#save-new-component').onclick = async (e) => {
               const value = cloned.querySelector('#new-component-input').value
               const selectElement = cloned.querySelector('#change_link_type')
 
@@ -6407,6 +6410,7 @@ checkbox1.setAttribute('hidden', "");
                 },
                 body: JSON.stringify(payload),
               });
+              cloned.remove()
 
             }
           }
@@ -6586,7 +6590,36 @@ checkbox1.setAttribute('hidden', "");
       optionEl && actionData.append(optionEl)
       // Get the parent of the original element
       const parent = originalElement.parentNode;
+      //change target
+      buttonsContainer.querySelector('#change-target').onclick = async (e) => {
+        if (!menu.children.length) {
+          const original = document.getElementById('change-target-id-menu')
+          const cloned = original.cloneNode(true)
+          cloned.removeAttribute('hidden')
+          cloned.querySelector('#save-new-target').onclick = async(e) => {
+            const t = cloned.querySelector('#save-new-target-input').value
+            if (typeof element.target_element === "string") {
+              element.target_element = t
+            }
+            else {
+              element.target_element[0] = t
+            }
+            const payload = { ...element }
+            delete payload.time
+            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(payload),
+            });
+            cloned.remove()
 
+          }
+          menu.append(cloned)
+        }
+
+      }
       // Insert the cloned element before the original element
       parent.insertBefore(clonedElement, originalElement);
     }
