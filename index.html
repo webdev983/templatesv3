@@ -501,6 +501,86 @@
           style="cursor: pointer; font:700;" id="path-label" onclick="labelClick(event)"></label>
       </div>
       <div style="position: relative; padding-bottom:4px;">
+        <div hidden id="additional-options" data-menu style="margin-bottom: 30px;">
+          <div id="additional-options-lvl-1">
+            <button class="b-4">🔄🔄 Bulk replace</button>
+            <button class="b-4" data-replace-in-folders>🧩🧩 Bulk rename</button>
+            <button class="b-4">🆔🆔 Bulk change</button>
+          </div>
+        
+          <div id="additional-options-lvl-2" >
+            <button style="margin-bottom: 8px; margin-left: -10px;" class="b-4" onclick="cancelReplace(event)">❌</button>
+        
+            <div id="bulk-rename">
+             <label class="l-3"><input checked id="rename-in-selected-folders-folder" name="rename-in-selected-folders"  type="radio">🧩 Component</label>
+             <label class="l-3"><input id="rename-in-selected-folders-component" name="rename-in-selected-folders"  type="radio">📂Folder</label>
+             <br>
+             <label class="l-3">👴<input type="text"  id="rename-in-selected-folders-old-name" placeholder="old name"  class="input-1"></label>
+             <br>
+             <label class="l-3">🆕<input type="text" id="rename-in-selected-folders-new-name" placeholder="new name" class="input-1"></label>
+            </div>
+            
+            <div id="bulk-update">
+             <br>
+             <span class="l-3">👣</span><span class="l-3" id="bulk-update-source-file-id">
+               <br>
+             <span class="l-3">🆔</span><span class="l-3" id="bulk-update-source-file-path">
+             </div>
+        
+             <div id="bulk-actions-update">
+               <label class="l-3"><input checked  type="radio">🎯 target (just id)</label>
+               <label class="l-3"><input   type="radio">🆔 (just id)</label>
+                 <br>
+        
+                 <label class="l-3"><input type="checkbox">✏️ Change tag</label>
+                 <label class="l-3"><input type="checkbox">🗑️️ Remove  element</label>
+                 <label class="l-3"><input type="checkbox">🔑 Attributes</label>
+                 <br>
+                 <label class="l-3"><input type="checkbox">💬 Comment</label>
+                 <label class="l-3"><input type="checkbox"> ▶️  InnerHtml</label>
+                 <label class="l-3"><input type="checkbox">📄 TextContent</label>
+                 <br>
+        
+                 <label class="l-3"><input type="checkbox">👶 Append</label>
+                 <label class="l-3"><input type="checkbox">👨&zwj;👦️ Add Parent</label>
+                 <label class="l-3"><input type="checkbox">⬅️ insertBefore</label>
+                 <label class="l-3"><input type="checkbox"> insertAfter ➡️</label>
+                         
+                 <br>
+                 <label class="l-3">👴<input type="text"  placeholder="old value"  class="input-1"></label>
+                 <br>
+                 <label class="l-3">🆕<input type="text" placeholder="new value" class="input-1"></label>
+        
+              </div>
+        
+        
+        
+           <div id="additonal-options-file-pathes">
+           <ol id="file-path-list-selected" class="list-1" style="margin-left: -10px; margin-bottom: 30px; " data-menu>
+             <br>
+             <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" onclick="approveReplace(event)">✅
+               Approve</button>
+             <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" data-action="moveBack">⤴️ Up</button>
+             <label class="l-3"><input id="attach-folder" type="checkbox">📂Folder</label>
+           </ol>
+        
+           <ol id="filePathList1" class="list-1" style="margin-left: -10px;">
+           </ol>
+           <li data-element="file-path" id="item1">
+             <label hidden class="l-3" style="margin-right: 3px;" id="Pushpin">📌</label>
+             <label data-value="file-path" class="l-3">universal/blablabla/blablabla/coolcss</label>
+             <label data-value="file-emoji" style="user-select: none; margin-left: 5px;" class="l-3">🧩</label>
+             <div hidden data-value="file-id">for javascript</div>
+             <button hidden data-action="remove-file-confirmation">for javascript</button>
+           </li>
+        
+         </div>
+         </div>
+        
+        </div>
+        
+
+
 
         <div style="position: absolute; right: 10px; ">
           <select style="display: inline">
@@ -730,85 +810,6 @@
 
         <button data-action="copy-file-path-cancel" class="b-4">❌ Cancel</button>
         <button class="b-4" data-action="copy-file-path-save">✅ Copy</button>
-      </div>
-
-
-      <div hidden id="additional-options" data-menu style="margin-bottom: 30px;">
-        <div id="additional-options-lvl-1">
-          <button class="b-4">🔄🔄 Bulk replace</button>
-          <button class="b-4" data-replace-in-folders>🧩🧩 Bulk rename</button>
-          <button class="b-4">🆔🆔 Bulk change</button>
-
-        </div>
-
-      </div>
-        <div id="additional-options-lvl-2" hidden>
-         <button style="margin-bottom: 8px; margin-left: -10px;" class="b-4" onclick="cancelReplace(event)">❌</button>
- 
-         <div id="bulk-rename">
-          <label class="l-3"><input checked id="rename-in-selected-folders-folder" name="rename-in-selected-folders"  type="radio">🧩 Component</label>
-          <label class="l-3"><input id="rename-in-selected-folders-component" name="rename-in-selected-folders"  type="radio">📂Folder</label>
-          <br>
-          <label class="l-3">👴<input type="text"  id="rename-in-selected-folders-old-name" placeholder="old name"  class="input-1"></label>
-          <br>
-          <label class="l-3">🆕<input type="text" id="rename-in-selected-folders-new-name" placeholder="new name" class="input-1"></label>
-         </div>
-         
-         <div id="bulk-update">
-          <br>
-          <span class="l-3">👣</span><span class="l-3" id="bulk-update-source-file-id">
-            <br>
-          <span class="l-3">🆔</span><span class="l-3" id="bulk-update-source-file-path">
-          </div>
-
-          <div id="bulk-actions-update">
-            <label class="l-3"><input checked  type="radio">🎯 target (just id)</label>
-            <label class="l-3"><input   type="radio">🆔 (just id)</label>
-              <br>
-
-              <label class="l-3"><input type="checkbox">✏️ Change tag</label>
-              <label class="l-3"><input type="checkbox">🗑️️ Remove  element</label>
-              <label class="l-3"><input type="checkbox">🔑 Attributes</label>
-              <br>
-              <label class="l-3"><input type="checkbox">💬 Comment</label>
-              <label class="l-3"><input type="checkbox"> ▶️  InnerHtml</label>
-              <label class="l-3"><input type="checkbox">📄 TextContent</label>
-              <br>
-
-              <label class="l-3"><input type="checkbox">👶 Append</label>
-              <label class="l-3"><input type="checkbox">👨&zwj;👦️ Add Parent</label>
-              <label class="l-3"><input type="checkbox">⬅️ insertBefore</label>
-              <label class="l-3"><input type="checkbox"> insertAfter ➡️</label>
-                      
-              <br>
-              <label class="l-3">👴<input type="text"  placeholder="old value"  class="input-1"></label>
-              <br>
-              <label class="l-3">🆕<input type="text" placeholder="new value" class="input-1"></label>
-    
-           </div>
-    
-  
-
-        <div id="additonal-options-file-pathes">
-        <ol id="file-path-list-selected" class="list-1" style="margin-left: -10px; margin-bottom: 30px; " data-menu>
-          <br>
-          <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" onclick="approveReplace(event)">✅
-            Approve</button>
-          <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" data-action="moveBack">⤴️ Up</button>
-          <label class="l-3"><input id="attach-folder" type="checkbox">📂Folder</label>
-        </ol>
-
-        <ol id="filePathList1" class="list-1" style="margin-left: -10px;">
-        </ol>
-        <li data-element="file-path" id="item1">
-          <label hidden class="l-3" style="margin-right: 3px;" id="Pushpin">📌</label>
-          <label data-value="file-path" class="l-3">universal/blablabla/blablabla/coolcss</label>
-          <label data-value="file-emoji" style="user-select: none; margin-left: 5px;" class="l-3">🧩</label>
-          <div hidden data-value="file-id">for javascript</div>
-          <button hidden data-action="remove-file-confirmation">for javascript</button>
-        </li>
-
-      </div>
       </div>
 
     </section>
