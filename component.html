@@ -5989,7 +5989,7 @@ checkbox1.setAttribute('hidden', "");
       console.log('time' + time)
       actionLog.push(element)
       !firstLoad && await pushActionToDb(element)
-      try {
+      
         if (element.action !== 'Replace_Component') {
           let ac = element.action
           if (ac === "Add_Component") {
@@ -6010,6 +6010,7 @@ checkbox1.setAttribute('hidden', "");
         }
 
         !frozen && !errored && await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId, attachId)
+        try {
       }
       catch (e) {
         errored = true
