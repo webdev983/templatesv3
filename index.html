@@ -70,7 +70,7 @@
 
       <div data-section-aside="files" class="local-buttons" style="margin-top: 30px;">
         <button class="b-1" onclick="createNew()">➕</button>
-        <button class="b-1">🚀</button>
+        <button class="b-1" onclick="switchFileList()">🚀</button>
 
         <button class="b-1" onclick="openColumnsSelector()" id="columns_selector_open">📊</button>
         <div id="columns_selector" style="margin-left: 10px; margin-top: 5px" hidden>
@@ -171,6 +171,12 @@
 
 
         <script>
+          const switchFileList = (event)=>{
+            const mainContainer = document.getElementById('main-files-list')
+            mainContainer.setAttribute('hidden','')
+            const additional = document.getElementById('additional-options')
+            additional.removeAttribute('hidden')
+          }
           const removeMenus2 = () => {
             document.querySelectorAll('[data-menu]:not([hidden])').forEach(e => e.remove())
           }
@@ -3549,7 +3555,7 @@
 
       var filePathList = document.getElementById('filePathList');
       filePathList.innerHTML = '';
-
+      document.getElementById('main-files-list').append(filePathList)
       if (helperid) {
         url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${helperid}&ownerUUID=${ownerid}&helperlsi1=true&lsi1=|&token=${localStorage.getItem('token')}`;
       }
@@ -3835,7 +3841,7 @@
 
         //get files
         const spath = path.slice(0, -1) + '|';
-
+        document.getElementById('main-files-list').append(filePathList)
 
         if (helperid) {
           url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${helperid}&ownerUUID=${ownerid}&helperlsi1=true&lsi1=${spath}&token=${localStorage.getItem('token')}`;
