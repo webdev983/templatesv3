@@ -1466,7 +1466,7 @@ component</button> -->
         })
       }
     }
-    
+
     var convertToOldPath = (path) => {
       const splited = path.split('|')
       const fileName = splited.pop()
@@ -6383,26 +6383,29 @@ checkbox1.setAttribute('hidden', "");
             menu.append(cloned)
 
 
-            const initialValue = element.inserted_component.componentId;
-
+            let initialValue = clonedElement.querySelector('#action-add-component-link-type').textContent
+            initialValue === "id" && (initialValue = element.inserted_component.componentId)
             // Set the value of cloned.querySelector('#new-component-input')
-            
+
 
             // Set the selected option of cloned.querySelector('#change_link_type')
             let selectedOptionValue = '';
+            console.log('initial ' + initialValue[0])
             switch (initialValue[0]) {
               case '*': selectedOptionValue = 'absolute'; break;
               case '#': selectedOptionValue = 'relative'; break;
               case '$': selectedOptionValue = 'content'; break;
               default: selectedOptionValue = ''; break;
             }
-            cloned.querySelector('#new-component-input').value = selectedOptionValue ? initialValue.substring(1) :initialValue // Remove the prefix
+            console.log(selectedOptionValue)
+            cloned.querySelector('#new-component-input').value = initialValue
 
             // Set the selected option in the dropdown
             const selectElement = cloned.querySelector('#change_link_type');
             for (let i = 0; i < selectElement.options.length; i++) {
               if (selectElement.options[i].id === selectedOptionValue) {
                 selectElement.selectedIndex = i;
+                console.log('selected index' + i)
                 break;
               }
             }
@@ -6624,7 +6627,10 @@ checkbox1.setAttribute('hidden', "");
             current = element.target_element[0].replace('-tree', '')
           }
           cloned.querySelector('#save-new-target-input').textContent = current
-          cloned.querySelector('#save-new-target').onclick = async (e) => {
+          var codeTreeTagFieldsets = querySelectorAll1('fieldset[data-element="code-tree-tag"]');
+
+
+          const save = async (e) => {
             const t = cloned.querySelector('#save-new-target-input').value
             if (typeof element.target_element === "string") {
               element.target_element = t + '-tree'
@@ -6642,8 +6648,25 @@ checkbox1.setAttribute('hidden', "");
               body: JSON.stringify(payload),
             });
             cloned.remove()
+            codeTreeTagFieldsets.forEach(function (fieldset) {
+              var checkbox = fieldset.querySelector('input[type="checkbox"]');
+              if (checkbox) {
+                checkbox.setAttribute('hidden', 'true');
+              }
+            });
 
           }
+          codeTreeTagFieldsets.forEach(function (fieldset) {
+            var checkbox = fieldset.querySelector('input[type="checkbox"]');
+            if (checkbox) {
+              checkbox.removeAttribute('hidden');
+              checkbox.onclick = (e) => {
+                cloned.querySelector('#save-new-target-input').value = checkbox.parentNode.id.replace('-tree', '')
+                save()
+              }
+            }
+          });
+          cloned.querySelector('#save-new-target').onclick = save
           menu.append(cloned)
         }
 
