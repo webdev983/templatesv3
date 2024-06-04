@@ -6390,8 +6390,22 @@ checkbox1.setAttribute('hidden', "");
         const clonedChangeComponent = document.getElementById('change-component').cloneNode(true)
         clonedChangeComponent.removeAttribute('hidden')
 
-        const originalChangeMenu = document.getElementById('change-adding-component')
+        const clonedChangeSelfUse = document.getElementById('change-self-use').cloneNode(true)
+        clonedChangeSelfUse.removeAttribute('hidden')
 
+        const originalChangeMenu = document.getElementById('change-adding-component')
+        clonedChangeSelfUse.onclick = async(e) => {
+          element.options.selfuse = !element.options.selfuse
+          const payload = { ...element }
+          delete payload.time
+          await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+          });
+        }
         clonedChangeComponent.onclick = (e) => {
 
 
@@ -6458,6 +6472,7 @@ checkbox1.setAttribute('hidden', "");
 
         }
         buttonsContainer.insertBefore(clonedChangeComponent, menu)
+        buttonsContainer.insertBefore(clonedChangeSelfUse, menu)
         //clonedElement.querySelector('[data-action-data]').innerHTML = optionString;
 
 
@@ -6651,7 +6666,7 @@ checkbox1.setAttribute('hidden', "");
 
           const save = async (e) => {
             const t = cloned.querySelector('#save-new-target-input').value
-            if(element?.inserted_component){
+            if (element?.inserted_component) {
               element.options.attachId = t + '-tree'
             }
             else if (typeof element.target_element === "string") {
