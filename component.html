@@ -5989,29 +5989,30 @@ checkbox1.setAttribute('hidden', "");
       console.log('time' + time)
       actionLog.push(element)
       !firstLoad && await pushActionToDb(element)
-      if (element.action !== 'Replace_Component') {
-        let ac = element.action
-        if (ac === "Add_Component") {
-          if (element.inserted_component.componentId.startsWith('*')) {
-            ac = "Add_Component_Absolute"
-          }
-          else if (element.inserted_component.componentId.startsWith('#')) {
-            ac = "Add_Component_Relative"
-          }
-          else {
-            ac = "Add_Component_Id"
-          }
-        }
-        await insertDataIntoCodeLog(time, ac, element.options, undefined, element, reusableId)
-      }
-      if (element.options?.frozen) {
-        frozen = true
-      }
       try {
+        if (element.action !== 'Replace_Component') {
+          let ac = element.action
+          if (ac === "Add_Component") {
+            if (element.inserted_component.componentId.startsWith('*')) {
+              ac = "Add_Component_Absolute"
+            }
+            else if (element.inserted_component.componentId.startsWith('#')) {
+              ac = "Add_Component_Relative"
+            }
+            else {
+              ac = "Add_Component_Id"
+            }
+          }
+          await insertDataIntoCodeLog(time, ac, element.options, undefined, element, reusableId)
+        }
+        if (element.options?.frozen) {
+          frozen = true
+        }
+
         !frozen && !errored && await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId, attachId)
       }
       catch (e) {
-        errored =true
+        errored = true
         const codeLog = getElementById1("code-log-body");
         codeLog.querySelector(`#code-log-element[sk=${time}]`).querySelector("#code-log-action-time").classList.add('action-error');
       }
