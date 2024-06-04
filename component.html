@@ -6651,7 +6651,10 @@ checkbox1.setAttribute('hidden', "");
 
           const save = async (e) => {
             const t = cloned.querySelector('#save-new-target-input').value
-            if (typeof element.target_element === "string") {
+            if(element?.inserted_component){
+              element.options.attachId = t + '-tree'
+            }
+            else if (typeof element.target_element === "string") {
               element.target_element = t + '-tree'
             }
             else {
