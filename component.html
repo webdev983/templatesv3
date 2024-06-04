@@ -6228,6 +6228,7 @@ checkbox1.setAttribute('hidden', "");
       actionTimeEl.textContent = formatEpochTime(actionTime);
       actionTimeEl.setAttribute('sk', actionTime)
       let emoji = ""
+      originalElement.parentNode.insertBefore(clonedElement, originalElement);
       clonedElement.querySelector('#move-button').onclick = (e) => {
         document.querySelectorAll('#code-log-element').forEach(element => {
           const anchor = element.getAttribute('sk')
@@ -6625,7 +6626,7 @@ checkbox1.setAttribute('hidden', "");
       }
       optionEl && actionData.append(optionEl)
       // Get the parent of the original element
-      const parent = originalElement.parentNode;
+      
       //change target
       buttonsContainer.querySelector('#change-target').onclick = async (e) => {
         if (!menu.children.length) {
@@ -6702,7 +6703,7 @@ checkbox1.setAttribute('hidden', "");
         });
       }
       // Insert the cloned element before the original element
-      parent.insertBefore(clonedElement, originalElement);
+     
     }
     function removeTextNodes(element) {
       for (let i = 0; i < element.childNodes.length; i++) {
