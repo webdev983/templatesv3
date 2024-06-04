@@ -5982,6 +5982,7 @@ checkbox1.setAttribute('hidden', "");
       }
     }
     let frozen = false
+    let errored = false
     const pushAction = async (element, firstLoad, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId, attachId) => {
       console.log('pushed' + JSON.stringify(element))
       const time = element.time
@@ -6006,8 +6007,14 @@ checkbox1.setAttribute('hidden', "");
       if (element.options?.frozen) {
         frozen = true
       }
-
-      !frozen && await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId, attachId)
+      try {
+        !frozen && !errored && await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId, attachId)
+      }
+      catch (e) {
+        errored =true
+        const codeLog = getElementById1("code-log-body");
+        codeLog.querySelector(`#code-log-element[sk=${time}]`).querySelector("#code-log-action-time").classList.add('action-error');
+      }
     }
     const pushActionToDb = async (action) => {
       const urlSearchParams = new URLSearchParams(window.location.search);
