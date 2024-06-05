@@ -202,6 +202,10 @@
               const approveReplace = async (e) => {
                 const id = document.getElementById('bulk-update-source-file-id').textContent
                 const path = document.getElementById('bulk-update-source-file-path').textContent
+                if(!id){
+                  alert('component not selected')
+                  return
+                }
                 const { folders, components } = getFoldersAndComponents()
                 const selectedItems = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`).then(e => e.json())
                 const allFoldersPromises = folders.map(
