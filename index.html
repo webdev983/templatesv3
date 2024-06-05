@@ -179,21 +179,25 @@
 
             const lvl1 = additional.querySelector('#additional-options-lvl-1')
             const lvl2 = additional.querySelector('#additional-options-lvl-2')
-            lvl1.querySelector('#bulk-replace').onclick =(e)=>{
+            const show =()=>{
               lvl1.setAttribute('hidden','')
               lvl2.removeAttribute('hidden')
+              const filePath = lvl2.querySelector('#additonal-options-file-pathes')
+              filePath.removeAttribute('hidden')
+              replaceComponent('',filePath)
+            }
+            lvl1.querySelector('#bulk-replace').onclick =(e)=>{
+              show()
               const bulkUpdate =  lvl2.querySelector('#bulk-update')
               bulkUpdate.removeAttribute('hidden')
             }
             lvl1.querySelector('#bulk-rename').onclick =(e)=>{
-              lvl1.setAttribute('hidden','')
-              lvl2.removeAttribute('hidden')
+              show()
               const bulkRename =  lvl2.querySelector('#bulk-rename')
               bulkRename.removeAttribute('hidden')
             }
             lvl1.querySelector('#bulk-change').onclick =(e)=>{
-              lvl1.setAttribute('hidden','')
-              lvl2.removeAttribute('hidden')
+              show()
               const bulkChangeEl =  lvl2.querySelector('#bulk-actions-update')
               bulkChangeEl.removeAttribute('hidden')
 
