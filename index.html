@@ -250,6 +250,7 @@
                     }
                   )
                   await Promise.all(allFoldersPromises)
+                  
                 }
                 else {
                   const allFoldersPromises = folders.map(
@@ -278,6 +279,7 @@
 
 
                 }
+                cancelReplace()
               }
               lvl2.querySelector('#approve').onclick = approveRename
             }
@@ -1998,14 +2000,14 @@
 
 
     }
-    const cancelReplace = (event) => {
+    const cancelReplace = () => {
 
-      event.target.parentNode.parentNode.remove()
       document.getElementById('additional-options-lvl-2').setAttribute('hidden',"")
       document.getElementById('bulk-update').setAttribute('hidden',"")
       document.getElementById('bulk-actions-update').setAttribute('hidden',"")
       document.getElementById('additonal-options-file-pathes').setAttribute('hidden',"")
       document.getElementById('bulk-rename').setAttribute('hidden',"")
+      document.getElementById('main-files-list').removeAttribute('hidden')
       
     }
     var approveReplace = async (e) => {
