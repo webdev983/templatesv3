@@ -5876,6 +5876,9 @@ checkbox1.setAttribute('hidden', "");
         }
       }
       await loadFromDb()
+      clearInterval(interval);
+      lastActionTime.textContent = timerElement.textContent;
+      loadingScreen.style.display = 'none';
       if (updateComponentsMap) {
         const componentsIds = Object.keys(cache)
         const response1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -6018,14 +6021,13 @@ checkbox1.setAttribute('hidden', "");
       buttons.forEach(function (button) {
         button.addEventListener('click', e => loader(e, handleComponentClick));
       });*/
-      clearInterval(interval);
+      
       console.log(timerElement.textContent)
       if (localStorage.getItem('visualOn')) {
 
         getElementById1('transform').click()
       }
-      lastActionTime.textContent = timerElement.textContent;
-      loadingScreen.style.display = 'none';
+      
 
     }
 

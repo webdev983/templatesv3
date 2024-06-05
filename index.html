@@ -202,13 +202,13 @@
               const approveReplace = async (e) => {
                 const id = document.getElementById('bulk-update-source-file-id').textContent
                 const path = document.getElementById('bulk-update-source-file-path').textContent
-                if(!id){
+                if (!id) {
                   alert('component not selected')
                   return
                 }
                 const { folders, components } = getFoldersAndComponents()
                 const selectedItems = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`).then(e => e.json())
-                console.log('selected'+JSON.stringify(selectedItems))
+                console.log('selected' + JSON.stringify(selectedItems))
                 const allFoldersPromises = folders.map(
                   async folder => {
                     const response1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${folder}`).then(e => e.json());
@@ -234,13 +234,13 @@
                           element.protected = false
                           delete element.href
                         }
-                        
-                        if (element.target_element === element.id  + '-tree') {
+
+                        if (element.target_element === element.id + '-tree') {
                           console.log('err1')
                           element.target_element = newId + '-tree'
                         }
                         element.id = newId
-                         return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                        return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                           method: 'POST',
                           headers: {
                             'Content-Type': 'application/json',
@@ -343,8 +343,56 @@
               show()
               const bulkChangeEl = lvl2.querySelector('#bulk-actions-update')
               bulkChangeEl.removeAttribute('hidden')
-              const approveChange = (e) => {
+              const approveChange = async (e) => {
+                const oldValue = bulkChangeEl.querySelector('#old-update-value').textContent.trim()
+                const newValue = bulkChangeEl.querySelector('#new-update-value').textContent.trim()
+                if (!oldValue || !newValue) {
+                  alert('values not selected')
+                  return
+                }
+                const checkboxStatus = {};
 
+                // Get references to all the checkboxes
+                const checkboxes = bulkChangeEl.querySelectorAll('input[type="checkbox"]');
+
+                // Iterate through each checkbox
+                checkboxes.forEach((checkbox) => {
+                  // Get the ID of the checkbox
+                  const id = checkbox.id;
+                  // Get the checked status of the checkbox
+                  const checked = checkbox.checked;
+                  // Assign the checked status to the corresponding property in the checkboxStatus object
+                  checked && checkboxStatus[id];
+                });
+
+                // Log the checkboxStatus object
+                console.log(checkboxStatus);
+                const { folders, components } = getFoldersAndComponents()
+                console.log('selected' + JSON.stringify(selectedItems))
+
+                const justId = bulkChangeEl.querySelector('#just-id').checked
+
+                const allFoldersPromises = folders.map(
+                  async folder => {
+                    const response1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${folder}`).then(e => e.json());
+                    const promises = items.map(async item => {
+                      const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${item.id}&startsWith=true`).then(e => e.json())
+                      const p = response.items.map(entry => {
+                        //filter depending on action
+                        for(const key of Object.keys(checkboxStatus)){
+                          if(entry.action ===key){
+                            
+                          }
+                        }
+                      })
+
+                    })
+                    await Promise.all(promises)
+                  }
+                )
+                await Promise.all(allFoldersPromises)
+
+                cancelReplace()
               }
               lvl2.querySelector('#approve').onclick = approveChange
 
@@ -820,29 +868,33 @@
           </div>
 
           <div id="bulk-actions-update" hidden>
-            <label class="l-3"><input checked type="radio" name="choose-id-type-to-change-in-bulk">🎯 target (just
+            <label class="l-3"><input checked type="radio" name="choose-id-type-to-change-in-bulk" id="target-id">🎯
+              target (just
               id)</label>
-            <label class="l-3"><input type="radio" name="choose-id-type-to-change-in-bulk">🆔 (just id)</label>
+            <label class="l-3"><input type="radio" name="choose-id-type-to-change-in-bulk" id="just-id">🆔 (just
+              id)</label>
             <br>
 
-            <label class="l-3"><input type="checkbox">✏️ Change tag</label>
-            <label class="l-3"><input type="checkbox">🗑️️ Remove element</label>
-            <label class="l-3"><input type="checkbox">🔑 Attributes</label>
+            <label class="l-3"><input type="checkbox" id="ChangeTag">✏️ Change tag</label>
+            <label class="l-3"><input type="checkbox" id="removeTag">🗑️️ Remove element</label>
+            <label class="l-3"><input type="checkbox" id="setAttribute">🔑 Attributes</label>
             <br>
-            <label class="l-3"><input type="checkbox">💬 Comment</label>
-            <label class="l-3"><input type="checkbox"> ▶️ InnerHtml</label>
-            <label class="l-3"><input type="checkbox">📄 TextContent</label>
+            <label class="l-3"><input type="checkbox" id="Add_Comment'">💬 Comment</label>
+            <label class="l-3"><input type="checkbox" id="innerHtml"> ▶️ InnerHtml</label>
+            <label class="l-3"><input type="checkbox" id="textContent">📄 TextContent</label>
             <br>
 
-            <label class="l-3"><input type="checkbox">👶 Append</label>
-            <label class="l-3"><input type="checkbox">👨&zwj;👦️ Add Parent</label>
-            <label class="l-3"><input type="checkbox">⬅️ insertBefore</label>
-            <label class="l-3"><input type="checkbox"> insertAfter ➡️</label>
+            <label class="l-3"><input type="checkbox" id="Append">👶 Append</label>
+            <label class="l-3"><input type="checkbox" id="Add_Parent">👨&zwj;👦️ Add Parent</label>
+            <label class="l-3"><input type="checkbox" id="InsertBefore">⬅️ insertBefore</label>
+            <label class="l-3"><input type="checkbox" id="InsertAfter"> insertAfter ➡️</label>
 
             <br>
-            <label class="l-3">👴<input type="text" placeholder="old value" class="input-1"></label>
+            <label class="l-3">👴<input type="text" id="old-update-value" placeholder="old value"
+                class="input-1"></label>
             <br>
-            <label class="l-3">🆕<input type="text" placeholder="new value" class="input-1"></label>
+            <label class="l-3">🆕<input type="text" id="new-update-value" placeholder="new value"
+                class="input-1"></label>
 
           </div>
 
