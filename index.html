@@ -171,6 +171,14 @@
 
 
         <script>
+          const getFoldersAndComponents = () => {
+            const selectedElement = document.getElementById('file-path-list-selected')
+            const m = Array.from(selectedElement.children).filter(i => i.id)
+            const m1 = m.filter(e => e.hasAttribute('component'))
+            const m2 = m.filter(e => e.hasAttribute('folder'))
+
+            return {folders:m2.map(e=>e.id),components:m1.map(e=>e.id)}
+          }
           const switchFileList = (event) => {
             const mainContainer = document.getElementById('main-files-list')
             mainContainer.setAttribute('hidden', '')
@@ -205,10 +213,11 @@
                 const oldName = bulkRename.querySelector('#rename-in-selected-folders-old-name').value
                 const newName = bulkRename.querySelector('#rename-in-selected-folders-new-name').value
                 const path = bulkRename.querySelector('#rename-in-selected-folders-component').checked
-                if(path){
+                const {folders,components} = getFoldersAndComponents()
+                if (path) {
 
                 }
-                else{
+                else {
 
                 }
               }
@@ -1991,8 +2000,8 @@
 
       }
       var setFolder = (path, id) => {
-        
-        
+
+
         const clonedFieldset2 = document.getElementById('file-path-list-selected')
         if (Array.from(clonedFieldset2.children).find(el => el.id === path)) {
           return
