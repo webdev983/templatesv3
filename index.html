@@ -757,9 +757,9 @@
             <span class="l-3">👣</span><span class="l-3" id="bulk-update-source-file-id"></span>
               <br>
               <span class="l-3">🆔</span><span class="l-3" id="bulk-update-source-file-path"></span>
-              
+
                 <br>
-                <button class="b-4">🔄 select new</button>
+                <button class="b-4" id="select-new">🔄 select new</button>
           </div>
 
           <div id="bulk-actions-update" hidden>
@@ -2043,8 +2043,13 @@
       let selectedReplace
       var addSelected = (id, itemId, path) => {
         if(replace && !selectedReplace ){
-          document.querySelector('#bulk-update-source-file-id').textContent = itemId
-          document.querySelector('#bulk-update-source-file-path').textContent = path
+          document.getElementById('bulk-update-source-file-id').textContent = itemId
+          document.getElementById('bulk-update-source-file-path').textContent = path
+          document.getElementById('select-new').onclick = ()=>{
+            selectedReplace = undefined
+            document.getElementById('bulk-update-source-file-id').textContent = ''
+          document.getElementById('bulk-update-source-file-path').textContent = ''
+          }
           return
         }
         const clonedFieldset2 = document.getElementById('file-path-list-selected')
