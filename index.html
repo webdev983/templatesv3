@@ -176,6 +176,28 @@
             mainContainer.setAttribute('hidden','')
             const additional = document.getElementById('additional-options')
             additional.removeAttribute('hidden')
+
+            const lvl1 = additional.querySelector('#additional-options-lvl-1')
+            lvl1.querySelector('#bulk-replace').onclick =(e)=>{
+              lvl1.setAttribute('hidden','')
+              lvl2.removeAttribute('hidden')
+              const bulkUpdate =  lvl2.querySelector('#bulk-update')
+              bulkUpdate.removeAttribute('hidden')
+            }
+            lvl1.querySelector('#bulk-rename').onclick =(e)=>{
+              lvl1.setAttribute('hidden','')
+              lvl2.removeAttribute('hidden')
+              const bulkRename =  lvl2.querySelector('#bulk-rename')
+              bulkRename.removeAttribute('hidden')
+            }
+            lvl1.querySelector('#bulk-change').onclick =(e)=>{
+              lvl1.setAttribute('hidden','')
+              lvl2.removeAttribute('hidden')
+              const bulkChangeEl =  lvl2.querySelector('#bulk-actions-update')
+              bulkChangeEl.removeAttribute('hidden')
+
+            }
+            const lvl2 = additional.querySelector('#additional-options-lvl-2')
           }
           const removeMenus2 = () => {
             document.querySelectorAll('[data-menu]:not([hidden])').forEach(e => e.remove())
@@ -613,9 +635,9 @@
 
       <div  hidden id="additional-options" data-menu style="margin-bottom: 30px;">
         <div id="additional-options-lvl-1"  >
-          <button class="b-4">🔄🔄 Bulk replace</button>
-          <button class="b-4" data-replace-in-folders>🧩🧩 Bulk rename</button>
-          <button class="b-4">🆔🆔 Bulk change</button>
+          <button id="bulk-replace" class="b-4">🔄🔄 Bulk replace</button>
+          <button id="bulk-rename" class="b-4" data-replace-in-folders>🧩🧩 Bulk rename</button>
+          <button id="bulk-change" class="b-4">🆔🆔 Bulk change</button>
         </div>
       
         <div id="additional-options-lvl-2" hidden >
