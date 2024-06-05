@@ -1945,7 +1945,7 @@
       let selected = []
       let path1 = ''
       var addSelected = (id, itemId, path) => {
-        const clonedFieldset2 = document.getElementById('file-path-list-selected;' + id)
+        const clonedFieldset2 = document.getElementById('file-path-list-selected')
         if (Array.from(clonedFieldset2.children).find(el => el.id === itemId)) {
           return
         }
@@ -1979,7 +1979,7 @@
           }
           path = "*" + r
         }
-        const clonedFieldset2 = document.getElementById('file-path-list-selected;' + id)
+        const clonedFieldset2 = document.getElementById('file-path-list-selected')
         if (Array.from(clonedFieldset2.children).find(el => el.id === path)) {
           return
         }
@@ -2006,7 +2006,7 @@
           let url
           const helperid = localStorage.getItem('helperid')
 
-          var filePathList = document.getElementById('filePathList1;' + id);
+          var filePathList = document.getElementById('filePathList1' );
           filePathList.innerHTML = '';
           let lvls = [];
           let i = 0;
@@ -2083,7 +2083,7 @@
               const file_path = clonedItem.querySelector('[data-value="file-path"]')
               file_path.textContent = item;
               clonedItem.onclick = (e) => {
-                const folderChecked = document.getElementById('file-path-list-selected;' + id).querySelector('#attach-folder').checked
+                const folderChecked = document.getElementById('file-path-list-selected').querySelector('#attach-folder').checked
                 folderChecked ? setFolder(path1 + item, id) : setPath()
               }
               let icon = '📂';
@@ -2174,7 +2174,7 @@
         console.log(url)
 
 
-        var filePathList = document.getElementById('filePathList1;' + id);
+        var filePathList = document.getElementById('filePathList1');
         filePathList.innerHTML = '';
 
         if (helperid) {
@@ -2221,7 +2221,7 @@
                 const file_path = clonedItem.querySelector('[data-value="file-path"]')
                 file_path.textContent = item;
                 clonedItem.onclick = (e) => {
-                  const folderChecked = document.getElementById('file-path-list-selected;' + id).querySelector('#attach-folder').checked
+                  const folderChecked = document.getElementById('file-path-list-selected').querySelector('#attach-folder').checked
                   folderChecked ? setFolder(item, id) : setPath()
                 }
                 let icon = '📂';
@@ -2246,7 +2246,7 @@
             });
 
             // Show the cloned fieldsets
-            document.querySelectorAll('#filePathList fieldset').forEach(fieldset => {
+            document.querySelectorAll('#filePathList1 fieldset').forEach(fieldset => {
               fieldset.id !== 'cancelation' && fieldset.removeAttribute('hidden');
             });
 
@@ -2321,12 +2321,7 @@
 
       const fieldset = document.getElementById('filePathList1');
       const fieldset2 = document.getElementById('file-path-list-selected');
-      const clonedFieldset = fieldset.cloneNode(true);
-      const clonedFieldset2 = fieldset2.cloneNode(true);
-      clonedFieldset2.id = clonedFieldset2.id + ';' + path;
-      clonedFieldset.id = clonedFieldset.id + ';' + path;
-      clonedFieldset.setAttribute('action', 'Replace')
-      clonedFieldset2.setAttribute('action', 'Replace')
+     
       clonedFieldset2.querySelector('[data-action="moveBack"]').onclick = (e) => {
         const splited = path1.split('/')
         if (path1 === '') {
@@ -2345,8 +2340,6 @@
 
         }
       }
-      cloned2.append(clonedFieldset2)
-      cloned2.append(clonedFieldset)
 
 
 
