@@ -9458,21 +9458,26 @@ elementsToRemove.forEach(element => element.remove());
         const elementsToRemove = p.querySelectorAll(`fieldset[id^="${prefix}"]`);
         elementsToRemove.forEach(element => element.remove());
       });
-      const timerElement = document.getElementById('timer');
-let tenthsOfSeconds = 0;
-let lastUpdateTime = Date.now();
 
-const interval = setInterval(function () {
-  const now = Date.now();
-  const elapsed = now - lastUpdateTime;
 
-  tenthsOfSeconds += Math.floor(elapsed / 100);
-  lastUpdateTime = now;
 
-  timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
-}, 100);
+          const timerElement = document.getElementById('timer');
+          let tenthsOfSeconds = 0;
+          let lastUpdateTime = performance.now();
 
-await handler(e);
+          const interval = setInterval(function () {
+            const now = performance.now();
+            const elapsed = now - lastUpdateTime;
+
+            tenthsOfSeconds += Math.floor(elapsed / 100);
+            lastUpdateTime = now;
+
+            timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
+          }, 100);
+
+          await handler(e);
+
+
 
       loadingScreen.style.display = 'none';
       clearInterval(interval);
