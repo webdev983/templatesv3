@@ -5843,12 +5843,6 @@ checkbox1.setAttribute('hidden', "");
               pathItem
             ),
           });
-          if(pathItem.hub_items[id]){
-            status.textContent = '🟢'
-          }
-          else{
-            status.textContent = '🔴'
-          }
         }
 
       })
@@ -9458,29 +9452,14 @@ elementsToRemove.forEach(element => element.remove());
         const elementsToRemove = p.querySelectorAll(`fieldset[id^="${prefix}"]`);
         elementsToRemove.forEach(element => element.remove());
       });
+      const timerElement = getElementById1('timer');
+      let tenthsOfSeconds = 0;
+      const interval = setInterval(function () {
+        tenthsOfSeconds++;
+        timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
+      }, 100);
 
-
-      const timerElement = document.getElementById('timer');
-let tenthsOfSeconds = 0;
-let lastUpdateTime = performance.now();
-
-function updateTimer() {
-  const now = performance.now();
-  const elapsed = now - lastUpdateTime;
-
-  tenthsOfSeconds += Math.floor(elapsed / 100);
-  lastUpdateTime = now;
-
-  timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
-
-  requestAnimationFrame(updateTimer);
-}
-
-requestAnimationFrame(updateTimer);
-
-await handler(e);
-
-
+      await handler(e);
 
       loadingScreen.style.display = 'none';
       clearInterval(interval);
