@@ -171,38 +171,61 @@
 
 
         <script>
-          const switchFileList = (event)=>{
+          const switchFileList = (event) => {
             const mainContainer = document.getElementById('main-files-list')
-            mainContainer.setAttribute('hidden','')
+            mainContainer.setAttribute('hidden', '')
             const additional = document.getElementById('additional-options')
             additional.removeAttribute('hidden')
 
             const lvl1 = additional.querySelector('#additional-options-lvl-1')
             const lvl2 = additional.querySelector('#additional-options-lvl-2')
-            const show =()=>{
-              lvl1.setAttribute('hidden','')
+            const show = () => {
+              lvl1.setAttribute('hidden', '')
               lvl2.removeAttribute('hidden')
               const filePath = lvl2.querySelector('#additonal-options-file-pathes')
               filePath.removeAttribute('hidden')
-              replaceComponent('',filePath)
+              replaceComponent('', filePath)
             }
-            lvl1.querySelector('#bulk-replace').onclick =(e)=>{
+
+            lvl1.querySelector('#bulk-replace').onclick = (e) => {
               show()
-              const bulkUpdate =  lvl2.querySelector('#bulk-update')
+              const bulkUpdate = lvl2.querySelector('#bulk-update')
               bulkUpdate.removeAttribute('hidden')
+              const approveReplace = (e) => {
+
+              }
+              lvl2.querySelector('#approve').onclick = approveReplace
             }
-            lvl1.querySelector('#bulk-rename').onclick =(e)=>{
+
+            lvl1.querySelector('#bulk-rename').onclick = (e) => {
               show()
-              const bulkRename =  lvl2.querySelector('#bulk-rename')
+              const bulkRename = lvl2.querySelector('#bulk-rename')
               bulkRename.removeAttribute('hidden')
+              const approveRename = (e) => {
+                const oldName = bulkRename.querySelector('#rename-in-selected-folders-old-name').value
+                const newName = bulkRename.querySelector('#rename-in-selected-folders-new-name').value
+                const path = bulkRename.querySelector('#rename-in-selected-folders-component').checked
+                if(path){
+
+                }
+                else{
+
+                }
+              }
+              lvl2.querySelector('#approve').onclick = approveRename
             }
-            lvl1.querySelector('#bulk-change').onclick =(e)=>{
+
+            lvl1.querySelector('#bulk-change').onclick = (e) => {
               show()
-              const bulkChangeEl =  lvl2.querySelector('#bulk-actions-update')
+              const bulkChangeEl = lvl2.querySelector('#bulk-actions-update')
               bulkChangeEl.removeAttribute('hidden')
+              const approveChange = (e) => {
+
+              }
+              lvl2.querySelector('#approve').onclick = approveChange
 
             }
-            
+
           }
           const removeMenus2 = () => {
             document.querySelectorAll('[data-menu]:not([hidden])').forEach(e => e.remove())
@@ -534,7 +557,7 @@
           style="cursor: pointer; font:700;" id="path-label" onclick="labelClick(event)"></label>
       </div>
       <div hidden id="pathSelector" onchange="handlePathSelection()">
-  
+
       </div>
 
       <div id="main-files-list">
@@ -567,7 +590,7 @@
         </div>
 
       </div>
-          
+
 
 
 
@@ -638,85 +661,90 @@
 
 
 
-      <div  hidden id="additional-options" data-menu style="margin-bottom: 30px;">
-        <div id="additional-options-lvl-1"  >
+      <div hidden id="additional-options" data-menu style="margin-bottom: 30px;">
+        <div id="additional-options-lvl-1">
           <button id="bulk-replace" class="b-4">🔄🔄 Bulk replace</button>
           <button id="bulk-rename" class="b-4" data-replace-in-folders>🧩🧩 Bulk rename</button>
           <button id="bulk-change" class="b-4">🆔🆔 Bulk change</button>
         </div>
-      
-        <div id="additional-options-lvl-2" hidden >
-          <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" onclick="cancelReplace(event)">❌</button>
-          <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" >✅  Approve</button>
 
-          <div id="bulk-rename" hidden >
-           <label class="l-3"><input checked id="rename-in-selected-folders-folder" name="rename-in-selected-folders"  type="radio">🧩 Component</label>
-           <label class="l-3"><input id="rename-in-selected-folders-component" name="rename-in-selected-folders"  type="radio">📂 Path</label>
-           <br>
-           <label class="l-3">👴<input type="text"  id="rename-in-selected-folders-old-name" placeholder="old name"  class="input-1"></label>
-           <br>
-           <label class="l-3">🆕<input type="text" id="rename-in-selected-folders-new-name" placeholder="new name" class="input-1"></label>
+        <div id="additional-options-lvl-2" hidden>
+          <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" onclick="cancelReplace(event)">❌</button>
+          <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" id="approve">✅ Approve</button>
+
+          <div id="bulk-rename" hidden>
+            <label class="l-3"><input checked id="rename-in-selected-folders-folder" name="rename-in-selected-folders"
+                type="radio">🧩 Component</label>
+            <label class="l-3"><input id="rename-in-selected-folders-component" name="rename-in-selected-folders"
+                type="radio">📂 Path</label>
+            <br>
+            <label class="l-3">👴<input type="text" id="rename-in-selected-folders-old-name" placeholder="old name"
+                class="input-1"></label>
+            <br>
+            <label class="l-3">🆕<input type="text" id="rename-in-selected-folders-new-name" placeholder="new name"
+                class="input-1"></label>
           </div>
-        
-          <div id="bulk-update"  hidden>
+
+          <div id="bulk-update" hidden>
             <br>
             <span class="l-3">👣</span><span class="l-3" id="bulk-update-source-file-id">
               <br>
-            <span class="l-3">🆔</span><span class="l-3" id="bulk-update-source-file-path">
-              <br>
-              <button class="b-4">🔄 select new</button>
-            </div>
+              <span class="l-3">🆔</span><span class="l-3" id="bulk-update-source-file-path">
+                <br>
+                <button class="b-4">🔄 select new</button>
+          </div>
 
-            <div id="bulk-actions-update" hidden >
-             <label class="l-3"><input checked  type="radio" name="choose-id-type-to-change-in-bulk">🎯 target (just id)</label>
-             <label class="l-3"><input          type="radio" name="choose-id-type-to-change-in-bulk">🆔 (just id)</label>
-               <br>
-      
-               <label class="l-3"><input type="checkbox">✏️ Change tag</label>
-               <label class="l-3"><input type="checkbox">🗑️️ Remove  element</label>
-               <label class="l-3"><input type="checkbox">🔑 Attributes</label>
-               <br>
-               <label class="l-3"><input type="checkbox">💬 Comment</label>
-               <label class="l-3"><input type="checkbox"> ▶️  InnerHtml</label>
-               <label class="l-3"><input type="checkbox">📄 TextContent</label>
-               <br>
-      
-               <label class="l-3"><input type="checkbox">👶 Append</label>
-               <label class="l-3"><input type="checkbox">👨&zwj;👦️ Add Parent</label>
-               <label class="l-3"><input type="checkbox">⬅️ insertBefore</label>
-               <label class="l-3"><input type="checkbox"> insertAfter ➡️</label>
-                       
-               <br>
-               <label class="l-3">👴<input type="text"  placeholder="old value"  class="input-1"></label>
-               <br>
-               <label class="l-3">🆕<input type="text" placeholder="new value" class="input-1"></label>
-      
-            </div>
-      
-      
-         <div id="additonal-options-file-pathes" hidden>
-         <ol id="file-path-list-selected" class="list-1" style="margin-left: -10px; margin-bottom: 30px; " data-menu>
-           <br>
-           <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" data-action="moveBack">⤴️ Up</button>
-           <label class="l-3"><input id="attach-folder" type="checkbox">📂Folder</label>
-         </ol>
-      
-         <ol id="filePathList1" class="list-1" style="margin-left: -10px;">
-         </ol>
-         <li data-element="file-path" id="item1" hidden>
-           <label hidden class="l-3" style="margin-right: 3px;" id="Pushpin">📌</label>
-           <label data-value="file-path" class="l-3">universal/blablabla/blablabla/coolcss</label>
-           <label data-value="file-emoji" style="user-select: none; margin-left: 5px;" class="l-3">🧩</label>
-           <div hidden data-value="file-id">for javascript</div>
-           <button hidden data-action="remove-file-confirmation">for javascript</button>
-         </li>
-      
-       </div>
-       </div>
-      
+          <div id="bulk-actions-update" hidden>
+            <label class="l-3"><input checked type="radio" name="choose-id-type-to-change-in-bulk">🎯 target (just
+              id)</label>
+            <label class="l-3"><input type="radio" name="choose-id-type-to-change-in-bulk">🆔 (just id)</label>
+            <br>
+
+            <label class="l-3"><input type="checkbox">✏️ Change tag</label>
+            <label class="l-3"><input type="checkbox">🗑️️ Remove element</label>
+            <label class="l-3"><input type="checkbox">🔑 Attributes</label>
+            <br>
+            <label class="l-3"><input type="checkbox">💬 Comment</label>
+            <label class="l-3"><input type="checkbox"> ▶️ InnerHtml</label>
+            <label class="l-3"><input type="checkbox">📄 TextContent</label>
+            <br>
+
+            <label class="l-3"><input type="checkbox">👶 Append</label>
+            <label class="l-3"><input type="checkbox">👨&zwj;👦️ Add Parent</label>
+            <label class="l-3"><input type="checkbox">⬅️ insertBefore</label>
+            <label class="l-3"><input type="checkbox"> insertAfter ➡️</label>
+
+            <br>
+            <label class="l-3">👴<input type="text" placeholder="old value" class="input-1"></label>
+            <br>
+            <label class="l-3">🆕<input type="text" placeholder="new value" class="input-1"></label>
+
+          </div>
+
+
+          <div id="additonal-options-file-pathes" hidden>
+            <ol id="file-path-list-selected" class="list-1" style="margin-left: -10px; margin-bottom: 30px; " data-menu>
+              <br>
+              <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" data-action="moveBack">⤴️ Up</button>
+              <label class="l-3"><input id="attach-folder" type="checkbox">📂Folder</label>
+            </ol>
+
+            <ol id="filePathList1" class="list-1" style="margin-left: -10px;">
+            </ol>
+            <li data-element="file-path" id="item1" hidden>
+              <label hidden class="l-3" style="margin-right: 3px;" id="Pushpin">📌</label>
+              <label data-value="file-path" class="l-3">universal/blablabla/blablabla/coolcss</label>
+              <label data-value="file-emoji" style="user-select: none; margin-left: 5px;" class="l-3">🧩</label>
+              <div hidden data-value="file-id">for javascript</div>
+              <button hidden data-action="remove-file-confirmation">for javascript</button>
+            </li>
+
+          </div>
+        </div>
+
       </div>
-      
-      
+
+
 
       <select hidden id="amount-of-rows"
         style="margin-top: 10px; min-width: 50px; position: absolute; right: 10px; font-size:20px;">
@@ -1963,23 +1991,8 @@
 
       }
       var setFolder = (path, id) => {
-        const relative = document.getElementById('relative-input')
-        const absolute = document.getElementById('absolute-input')
-
-        if (relative.checked) {
-          const currentLsi = pathItemPath.split(';')[0]
-          const relativePath = getRelativePath(currentLsi, path);
-          path = '#' + relativePath
-        }
-        else if (absolute.checked) {
-          const p = path.split('/')
-          p.shift()
-          let r = ''
-          if (p.length) {
-            r = '/' + p.join('/')
-          }
-          path = "*" + r
-        }
+        
+        
         const clonedFieldset2 = document.getElementById('file-path-list-selected')
         if (Array.from(clonedFieldset2.children).find(el => el.id === path)) {
           return
@@ -2008,7 +2021,7 @@
           let url
           const helperid = localStorage.getItem('helperid')
 
-          var filePathList = document.getElementById('filePathList1' );
+          var filePathList = document.getElementById('filePathList1');
           filePathList.innerHTML = '';
           let lvls = [];
           let i = 0;
@@ -2323,7 +2336,7 @@
 
       const fieldset = document.getElementById('filePathList1');
       const fieldset2 = document.getElementById('file-path-list-selected');
-     
+
       fieldset2.querySelector('[data-action="moveBack"]').onclick = (e) => {
         const splited = path1.split('/')
         if (path1 === '') {
