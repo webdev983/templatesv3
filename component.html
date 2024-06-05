@@ -9460,22 +9460,25 @@ elementsToRemove.forEach(element => element.remove());
       });
 
 
+      const timerElement = document.getElementById('timer');
+let tenthsOfSeconds = 0;
+let lastUpdateTime = performance.now();
 
-          const timerElement = document.getElementById('timer');
-          let tenthsOfSeconds = 0;
-          let lastUpdateTime = performance.now();
+function updateTimer() {
+  const now = performance.now();
+  const elapsed = now - lastUpdateTime;
 
-          const interval = setInterval(function () {
-            const now = performance.now();
-            const elapsed = now - lastUpdateTime;
+  tenthsOfSeconds += Math.floor(elapsed / 100);
+  lastUpdateTime = now;
 
-            tenthsOfSeconds += Math.floor(elapsed / 100);
-            lastUpdateTime = now;
+  timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
 
-            timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
-          }, 100);
+  requestAnimationFrame(updateTimer);
+}
 
-          await handler(e);
+requestAnimationFrame(updateTimer);
+
+await handler(e);
 
 
 
