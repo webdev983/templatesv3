@@ -5813,27 +5813,29 @@ checkbox1.setAttribute('hidden', "");
     }
     const handleMenus = () => {
       const table = document.getElementById('menu_toggle')
-      if(!pathItem.hub_items){
+      if (!pathItem.hub_items) {
         pathItem.hub_items = {}
       }
       table.querySelectorAll('tr').forEach(element => {
         const id = element.id
+        const status = element.querySelector('#menu_toggle_status')
         if (pathItem.hub_items[id]) {
-          const status = element.querySelector('#menu_toggle_status')
+
           status.textContent = '🟢'
-          status.onclick = () => {
-            pathItem.hub_items[id] = pathItem.hub_items[id] ? false : new Date().getTime()
-            fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(
-                pathItem
-              ),
-            });
-          }
         }
+        status.onclick =async () => {
+          pathItem.hub_items[id] = pathItem.hub_items[id] ? false : new Date().getTime()
+          await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+              pathItem
+            ),
+          });
+        }
+
       })
     }
     async function loadFirst() {
