@@ -187,16 +187,16 @@
 
             const lvl1 = additional.querySelector('#additional-options-lvl-1')
             const lvl2 = additional.querySelector('#additional-options-lvl-2')
-            const show = () => {
+            const show = (replace) => {
               lvl1.setAttribute('hidden', '')
               lvl2.removeAttribute('hidden')
               const filePath = lvl2.querySelector('#additonal-options-file-pathes')
               filePath.removeAttribute('hidden')
-              replaceComponent('', filePath)
+              replaceComponent('', filePath,replace)
             }
 
             lvl1.querySelector('#bulk-replace').onclick = (e) => {
-              show()
+              show(true)
               const bulkUpdate = lvl2.querySelector('#bulk-update')
               bulkUpdate.removeAttribute('hidden')
               const approveReplace = (e) => {
@@ -2034,12 +2034,17 @@
       await pushAction(el)
       location.reload()
     }
-    var replaceComponent = (path, cloned2) => {
+    var replaceComponent = (path, cloned2,replace) => {
       const helperid = localStorage.getItem('helperid')
       const ownerid = localStorage.getItem('ownerid')
       let selected = []
       let path1 = ''
+      let selectedReplace
       var addSelected = (id, itemId, path) => {
+        if(replace && !selectedReplace ){
+          document.querySelector('#bulk-update-source-file-id').textContent = itemId
+          document.querySelector('#bulk-update-source-file-path').textContent = path
+        }
         const clonedFieldset2 = document.getElementById('file-path-list-selected')
         if (Array.from(clonedFieldset2.children).find(el => el.id === itemId)) {
           return
