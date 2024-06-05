@@ -177,7 +177,7 @@
             const m1 = m.filter(e => e.hasAttribute('component'))
             const m2 = m.filter(e => e.hasAttribute('folder'))
 
-            return {folders:m2.map(e=>e.id),components:m1.map(e=>e.id)}
+            return { folders: m2.map(e => e.id), components: m1.map(e => e.id) }
           }
           const switchFileList = (event) => {
             const mainContainer = document.getElementById('main-files-list')
@@ -209,15 +209,73 @@
               show()
               const bulkRename = lvl2.querySelector('#bulk-rename')
               bulkRename.removeAttribute('hidden')
-              const approveRename = (e) => {
-                const oldName = bulkRename.querySelector('#rename-in-selected-folders-old-name').value
-                const newName = bulkRename.querySelector('#rename-in-selected-folders-new-name').value
+              const approveRename = async (e) => {
+                let oldName = bulkRename.querySelector('#rename-in-selected-folders-old-name').value.trim()
+                let newName = bulkRename.querySelector('#rename-in-selected-folders-new-name').value.trim()
                 const path = bulkRename.querySelector('#rename-in-selected-folders-component').checked
-                const {folders,components} = getFoldersAndComponents()
+                const { folders, components } = getFoldersAndComponents()
                 if (path) {
-
+                  if (!oldName.startsWith('/')) {
+                    oldName = '/'+oldName
+                  }
+                  if (!oldName.endsWith('/')) {
+                    oldName = oldName+'/'
+                  }
+                  if (!newName.startsWith('/')) {
+                    newName = '/'+newName
+                  }
+                  if (!newName.endsWith('/')) {
+                    newName = newName+'/'
+                  }
+                  const allFoldersPromises = folders.map(
+                    async folder => {
+                      const response1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${folder}`).then(e => e.json());
+                      const items = response1.items.filter(e => e.lsi1.replace(folder, '').split(';')[0].includes(oldName))
+                      const promises = items.map(async item => {
+                        const fullItem = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id}:${item.sk}`)
+                          .then(e => e.json())
+                        fullItem.id = item.id
+                        fullItem.lsi1 = fullItem.lsi1.replace(oldName, newName)
+                        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify(
+                            fullItem
+                          ),
+                        })
+                      })
+                      await Promise.all(promises)
+                    }
+                  )
+                  await Promise.all(allFoldersPromises)
                 }
                 else {
+                  const allFoldersPromises = folders.map(
+                    async folder => {
+                      const response1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${folder}`).then(e => e.json());
+                      const items = response1.items.filter(e => e.lsi1.split(';')[0].endsWith('|' + oldName))
+                      const promises = items.map(async item => {
+                        const fullItem = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id}:${item.sk}`)
+                          .then(e => e.json())
+                        fullItem.id = item.id
+                        fullItem.lsi1 = fullItem.lsi1.replace('|' + oldName, '|' + newName)
+                        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify(
+                            fullItem
+                          ),
+                        })
+                      })
+                      await Promise.all(promises)
+                    }
+                  )
+                  await Promise.all(allFoldersPromises)
+
 
                 }
               }
