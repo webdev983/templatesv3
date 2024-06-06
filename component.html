@@ -6040,6 +6040,16 @@ checkbox1.setAttribute('hidden', "");
         eval(script.innerHTML)
       }
     }
+    const organizeScripts = ()=>{
+      pathItem.hub_items?.scripts
+      for(const key of Object.keys(pathItem.hub_items?.scripts)){
+        const body = document.getElementById(getBodyIdFromType(key))
+        pathItem.hub_items?.scripts.forEach(item=>{
+          const {name} = item
+          body.append(document.getElementById(name))
+        })
+      }
+    }
     const handleMenus = () => {
       const table = document.getElementById('menu_toggle')
       if (!pathItem.hub_items) {
@@ -6050,6 +6060,13 @@ checkbox1.setAttribute('hidden', "");
       }
       const loadStatus = document.getElementById('menus_load_status')
       loadStatus.textContent = '🟠'
+      if (pathItem.hub_items?.menus?.lists_tasks_toggle) {
+        document.getElementById('lists-task-json').removeAttribute('hidden')
+      }
+      if (pathItem.hub_items?.menus?.scripts_menu_toggle) {
+        document.getElementById('scripts-list').removeAttribute('hidden')
+        organizeScripts()
+      }
       table.querySelectorAll('tr').forEach(element => {
         const id = element.id
         const status = element.querySelector('#menu_toggle_status')
@@ -6057,12 +6074,7 @@ checkbox1.setAttribute('hidden', "");
 
           status.textContent = '🟢'
         }
-        if (pathItem.hub_items?.menus?.lists_tasks_toggle) {
-          document.getElementById('lists-task-json').removeAttribute('hidden')
-        }
-        if (pathItem.hub_items?.menus?.scripts_menu_toggle) {
-          document.getElementById('scripts-list').removeAttribute('hidden')
-        }
+
         status.onclick = async () => {
           pathItem.hub_items.menus[id] = pathItem.hub_items.menus[id] ? false : new Date().getTime()
 
@@ -6788,7 +6800,7 @@ checkbox1.setAttribute('hidden', "");
             const existing = checkbox.closest('tr')
             document.getElementById(getBodyIdFromType(scriptClicked)).append(existing)
           }
-          checkbox.setAttribute('hidden','');
+          checkbox.setAttribute('hidden', '');
         });
 
         pathItem.hub_items.scripts = items
