@@ -25,6 +25,7 @@
         <a href="https://webdev983.github.io/templatesv3/"><button class="b-1">📂</button></a>
       </div>
       <div style="margin-top: 3px;">
+        <button class="b-1 " id="execute-commands" onclick="toggleExecution(event)">🪵</button>
         <button class="b-1 b-select" id="log-open">🪵</button>
 
         <button class="b-1 " id="toggle-component-tree" onclick="toggleComponentTree()">🧩</button>
@@ -2877,6 +2878,21 @@
         getElementById1('code-tree-menu').setAttribute('hidden', '')
         getElementById1('toggle-code-tree').classList.remove('b-selected')
         localStorage.removeItem('codeTreeToggle')
+      }
+    }
+    const toggleExecution= (e) => {
+      const s = localStorage.getItem('executionToggle')
+      if (!s) {
+
+       
+        e.target.classList.add('b-selected')
+
+        localStorage.setItem('executionToggle', 'true')
+      }
+      else {
+     
+        e.target.classList.remove('b-selected')
+        localStorage.removeItem('executionToggle')
       }
     }
     const toggleComponentTree = () => {
@@ -6392,8 +6408,10 @@ checkbox1.setAttribute('hidden', "");
         if (element.options?.frozen) {
           frozen = true
         }
+        if(!frozen && !errored && localStorage.getItem('executionToggle')){
+          await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId, attachId)
 
-        !frozen && !errored && await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId, attachId)
+        }
 
       }
       catch (e) {
