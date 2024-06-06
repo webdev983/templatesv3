@@ -3027,7 +3027,7 @@
       showListMenus(value)
       //await showList(value)
     }
-    
+
     var showListMenus = (lists, storageId1, hubItems) => {
       let parsedLists
       try {
@@ -3056,7 +3056,7 @@
         status.onclick = async () => {
           pathItem.hub_items.menus[id] = pathItem.hub_items.menus[id] ? false : new Date().getTime()
 
-          const listName =  list.name
+          const listName = list.name
           /*
           if (listName) {
             const listItem = document.getElementById(listName)
@@ -3064,7 +3064,7 @@
           }*/
           await updatePathItem()
           if (pathItem.hub_items.menus[id]) {
-            showList(JSON.stringify({"data-lists":[list]}), storageId1, hubItems)
+            showList(JSON.stringify({ "data-lists": [list] }), storageId1, hubItems)
             status.textContent = '🟢'
 
           }
@@ -6036,9 +6036,9 @@ checkbox1.setAttribute('hidden', "");
     const handleMenus = () => {
       const table = document.getElementById('menu_toggle')
       if (!pathItem.hub_items) {
-        pathItem.hub_items = {menus:{}}
+        pathItem.hub_items = { menus: {} }
       }
-      if(!pathItem.hub_items.menus){
+      if (!pathItem.hub_items.menus) {
         pathItem.hub_items.menus = {}
       }
       const loadStatus = document.getElementById('menus_load_status')
@@ -12917,11 +12917,10 @@ headers: {
       const splited = pathItemPath.split(';')[0].split('/')
       const name = splited[splited.length - 1]
 
-      showListMenus(pathItem.hub_items?.list,undefined, pathItem.hub_items)
-      if (pathItem.hub_items?.list && pathItem.hub_items?.menus?.lists_tasks_toggle) {
-        
-        await showList(pathItem.hub_items?.list,undefined, pathItem.hub_items)
-      }
+      showListMenus(pathItem.hub_items?.list, undefined, pathItem.hub_items)
+
+      await showList(pathItem.hub_items?.list, undefined, pathItem.hub_items)
+
       if (pathItem.hub_items?.gpt) {
         await showai(pathItem.hub_items?.gpt)
         const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pathItem.id}&sk=ai-logs:&startsWith=true`, {
@@ -12937,7 +12936,7 @@ headers: {
         }
       }
       mainHubLsi = splited[0] + '/Home|Hub'
-      if (pathItem.lsi1.split(';')[0] !== mainHubLsi ) {
+      if (pathItem.lsi1.split(';')[0] !== mainHubLsi) {
         url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${mainHubLsi}`;
         const mainHub = await fetch(url).then(e => e.json()).then(e => e.items[0])
           .then(e => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${e.id}:${e.sk}`))
@@ -12948,7 +12947,7 @@ headers: {
           url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headHubLsi}`;
           const { items } = await fetch(url).then(e => e.json())
           showListMenus(mainHub.hub_items?.list, items[0].id, mainHub.hub_items)
-          pathItem.hub_items?.menus?.lists_tasks_toggle && await showList(mainHub.hub_items?.list, items[0].id, mainHub.hub_items)
+          await showList(mainHub.hub_items?.list, items[0].id, mainHub.hub_items)
         }
       }
 
