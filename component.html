@@ -3043,7 +3043,7 @@
       });
       event.target.parentNode.removeAttribute('open')
       showListMenus(value)
-      await showList(value)
+      //await showList(value)
     }
     var showListMenus = (lists)=>{
       let parsedLists
@@ -3065,7 +3065,7 @@
         list2.parentNode.append(cloned2)
       }
     }
-    var showList = async (lists, storageId1) => {
+    var showList = async (lists, storageId1,hubItems) => {
       let parsedLists
       try {
         parsedLists = JSON.parse(lists)
@@ -3080,6 +3080,9 @@
       !storageId1 && document.querySelectorAll('[data-list]:not([hidden])').forEach(e => e.remove())
       
       for (const list of parsedLists['data-lists']) {
+        if(!hubItems[list.name]){
+          continue
+        }
         const cloned = list1.cloneNode(true)
 
 
@@ -12893,7 +12896,7 @@ headers: {
 
       if (pathItem.hub_items?.list) {
         showListMenus(pathItem.hub_items?.list)
-        await showList(pathItem.hub_items?.list)
+        await showList(pathItem.hub_items?.list,mainHub.hub_items)
       }
       if (pathItem.hub_items?.gpt) {
         await showai(pathItem.hub_items?.gpt)
@@ -12921,7 +12924,7 @@ headers: {
           url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headHubLsi}`;
           const { items } = await fetch(url).then(e => e.json())
           showListMenus(mainHub.hub_items?.list)
-          await showList(mainHub.hub_items?.list, items[0].id)
+          await showList(mainHub.hub_items?.list, items[0].id,mainHub.hub_items)
         }
       }
 
