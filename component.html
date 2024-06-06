@@ -3062,13 +3062,18 @@
       for (const list of parsedLists['data-lists']) {
         const cloned = list1.cloneNode(true)
         const cloned2 = list2.cloneNode(true)
-        cloned.removeAttribute('hidden')
-        cloned2.removeAttribute('hidden')
+
         cloned.setAttribute('data-list', list.name)
         cloned2.setAttribute('data-list-menu', list.name)
         cloned2.id = list.name
         cloned2.querySelector('#list-name').textContent = list.name
         list2.parentNode.append(cloned2)
+        if (pathItem.hub_items[list.name]) {
+          cloned.removeAttribute('hidden')
+        }
+
+
+        cloned2.removeAttribute('hidden')
         const storage = list.data_storage
         let storageId = storageId1 ?? ((storage === 'sku') ? (pathItemSku || selectedSku) : headContentItem.id)
         cloned.querySelector('[data-list-emoji]').textContent = list.emoji
@@ -6011,6 +6016,10 @@ checkbox1.setAttribute('hidden', "");
         }
         status.onclick = async () => {
           pathItem.hub_items[id] = pathItem.hub_items[id] ? false : new Date().getTime()
+          if (pathItem.hub_items[id]) {
+
+            status.textContent = '🟢'
+          }
           await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
             method: 'POST',
             headers: {
