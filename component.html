@@ -3042,9 +3042,29 @@
         body: JSON.stringify(pathItem),
       });
       event.target.parentNode.removeAttribute('open')
+      showListMenus(value)
       await showList(value)
     }
+    var showListMenus = (lists)=>{
+      let parsedLists
+      try {
+        parsedLists = JSON.parse(lists)
+      }
+      catch (e) {
+        const input = document.getElementById('list-input')
+        input.value = 'INCORRECT LIST JSON \n============================\n' + input.value
+        return
+      }
+      const list2 = document.querySelector('#list_menu_toggle[hidden]')
 
+      for (const list of parsedLists['data-lists']) {
+        const cloned2 = list2.cloneNode(true)
+        cloned2.setAttribute('data-list-menu', list.name)
+        cloned2.id = list.name
+        cloned2.querySelector('#list-name').textContent = list.name
+        list2.parentNode.append(cloned2)
+      }
+    }
     var showList = async (lists, storageId1) => {
       let parsedLists
       try {
@@ -3057,20 +3077,18 @@
       }
 
       const list1 = document.querySelector('[data-list][hidden]')
-      const list2 = document.querySelector('#list_menu_toggle[hidden]')
       !storageId1 && document.querySelectorAll('[data-list]:not([hidden])').forEach(e => e.remove())
+      
       for (const list of parsedLists['data-lists']) {
         const cloned = list1.cloneNode(true)
-        const cloned2 = list2.cloneNode(true)
+
 
         cloned.setAttribute('data-list', list.name)
-        cloned2.setAttribute('data-list-menu', list.name)
-        cloned2.id = list.name
-        cloned2.querySelector('#list-name').textContent = list.name
-        list2.parentNode.append(cloned2)
-        if (pathItem.hub_items[list.name]) {
-          cloned.removeAttribute('hidden')
-        }
+
+
+
+        cloned.removeAttribute('hidden')
+
 
 
         cloned2.removeAttribute('hidden')
@@ -6020,6 +6038,12 @@ checkbox1.setAttribute('hidden', "");
 
             status.textContent = '🟢'
           }
+          const listName = element.getAttribute('data-list-menu')
+          /*
+          if (listName) {
+            const listItem = document.getElementById(listName)
+            pathItem.hub_items[id] ? listItem.removeAttribute('hidden') : listItem.setAttribute('hidden')
+          }*/
           await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
             method: 'POST',
             headers: {
@@ -12868,6 +12892,7 @@ headers: {
 
 
       if (pathItem.hub_items?.list) {
+        showListMenus(pathItem.hub_items?.list)
         await showList(pathItem.hub_items?.list)
       }
       if (pathItem.hub_items?.gpt) {
@@ -12895,6 +12920,7 @@ headers: {
           headHubLsi = splited[0] + '/Home/Content/Page|Head-Content'
           url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headHubLsi}`;
           const { items } = await fetch(url).then(e => e.json())
+          showListMenus(mainHub.hub_items?.list)
           await showList(mainHub.hub_items?.list, items[0].id)
         }
       }
