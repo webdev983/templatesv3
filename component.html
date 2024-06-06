@@ -3045,7 +3045,7 @@
         const cloned2 = list2.cloneNode(true)
         cloned2.setAttribute('data-list-menu', list.name)
         cloned2.id = list.name
-        console.log('list '+list.name)
+        console.log('list ' + list.name)
         cloned2.querySelector('#list-name').textContent = list.name
         cloned2.removeAttribute('hidden')
         list2.parentNode.append(cloned2)
@@ -12945,12 +12945,36 @@ headers: {
       }*/
       if (pathItem.lsi1.split(';')[0] !== mainHubLsi) {
         url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${mainHubLsi}`;
-        const mainHub = await fetch(url).then(e => e.json()).then(e => e.items[0])
-          .then(e => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${e.id}:${e.sk}`))
-          .then(e => e.json())
-          .catch(e => e)
+        let mainHub
+        try {
+          const mainHubResponse = await fetch(url);
+          const mainHubData = await mainHubResponse.json();
+          if (mainHubData.items.length) {
+            const mainHubItem = mainHubData.items[0];
+            const templateResponse = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${mainHubItem.id}:${mainHubItem.sk}`);
+            const templateData = await templateResponse.json();
+            mainHub = templateData; // Assuming `templateData` is the desired result
+          }
+          else {
+            mainHubLsi = splited[0] + '/Seed-Home|Hub'
+            url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${mainHubLsi}`;
+            const mainHubResponse = await fetch(url);
+            const mainHubData = await mainHubResponse.json();
+            if (mainHubData.items.length) {
+              const mainHubItem = mainHubData.items[0];
+              const templateResponse = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${mainHubItem.id}:${mainHubItem.sk}`);
+              const templateData = await templateResponse.json();
+              mainHub = templateData; // Assuming `templateData` is the desired result
+            }
+
+          }
+
+          // Use `mainHub` here
+        } catch (error) {
+          // Handle errors
+        }
         if (mainHub?.hub_items?.list) {
-          
+
           url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headHubLsi}`;
           const { items } = await fetch(url).then(e => e.json())
           showListMenus(mainHub.hub_items?.list, items[0].id, pathItem.hub_items)
