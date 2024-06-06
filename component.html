@@ -3027,6 +3027,7 @@
       showListMenus(value)
       //await showList(value)
     }
+    
     var showListMenus = (lists) => {
       let parsedLists
       try {
@@ -3040,12 +3041,37 @@
       const list2 = document.querySelector('#list_menu_toggle[hidden]')
 
       for (const list of parsedLists['data-lists']) {
+        const id = list.name
         const cloned2 = list2.cloneNode(true)
         cloned2.setAttribute('data-list-menu', list.name)
         cloned2.id = list.name
         cloned2.querySelector('#list-name').textContent = list.name
         cloned2.removeAttribute('hidden')
         list2.parentNode.append(cloned2)
+        const status = list2.querySelector('#menu_toggle_status')
+        if (pathItem.hub_items?.menus?.[id]) {
+
+          status.textContent = '🟢'
+        }
+        status.onclick = async () => {
+          pathItem.hub_items.menus[id] = pathItem.hub_items.menus[id] ? false : new Date().getTime()
+
+          const listName = element.getAttribute('data-list-menu')
+          /*
+          if (listName) {
+            const listItem = document.getElementById(listName)
+            pathItem.hub_items[id] ? listItem.removeAttribute('hidden') : listItem.setAttribute('hidden')
+          }*/
+          await updatePathItem()
+          if (pathItem.hub_items.menus[id]) {
+
+            status.textContent = '🟢'
+
+          }
+          else {
+            status.textContent = '🔴'
+          }
+        }
       }
     }
     var showList = async (lists, storageId1, hubItems) => {
