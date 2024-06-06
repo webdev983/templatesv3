@@ -6041,11 +6041,11 @@ checkbox1.setAttribute('hidden', "");
             status.textContent = '🟢'
           }
           const listName = element.getAttribute('data-list-menu')
-          /*
-          if (listName) {
-            const listItem = document.getElementById(listName)
-            pathItem.hub_items[id] ? listItem.removeAttribute('hidden') : listItem.setAttribute('hidden')
-          }*/
+          
+          if (listName && pathItem.hub_items[id]) {
+            const list =JSON.parse(pathItem.hubItems.lists).find(e=>e.name ===listName)
+            showList(JSON.stringify([list],undefined,pathItem.hubItems))
+          }
           await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
             method: 'POST',
             headers: {
@@ -12895,7 +12895,7 @@ headers: {
 
       if (pathItem.hub_items?.list) {
         showListMenus(pathItem.hub_items?.list)
-        await showList(pathItem.hub_items?.list,mainHub.hub_items)
+        await showList(pathItem.hub_items?.list,pathItem.hub_items)
       }
       if (pathItem.hub_items?.gpt) {
         await showai(pathItem.hub_items?.gpt)
