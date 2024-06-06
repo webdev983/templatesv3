@@ -6028,22 +6028,25 @@ checkbox1.setAttribute('hidden', "");
     const handleMenus = () => {
       const table = document.getElementById('menu_toggle')
       if (!pathItem.hub_items) {
-        pathItem.hub_items = {}
+        pathItem.hub_items = {menus:{}}
+      }
+      if(!pathItem.hub_items.menus){
+        pathItem.hub_items.menus = {}
       }
       const loadStatus = document.getElementById('menus_load_status')
       loadStatus.textContent = '🟠'
       table.querySelectorAll('tr').forEach(element => {
         const id = element.id
         const status = element.querySelector('#menu_toggle_status')
-        if (pathItem.hub_items[id]) {
+        if (pathItem.hub_items?.menus?.[id]) {
 
           status.textContent = '🟢'
         }
-        if (pathItem.hub_items.lists_tasks_toggle) {
+        if (pathItem.hub_items?.menus?.lists_tasks_toggle) {
           document.getElementById('lists-task-json').removeAttribute('hidden')
         }
         status.onclick = async () => {
-          pathItem.hub_items[id] = pathItem.hub_items[id] ? false : new Date().getTime()
+          pathItem.hub_items.menus[id] = pathItem.hub_items.menus[id] ? false : new Date().getTime()
 
           const listName = element.getAttribute('data-list-menu')
           /*
@@ -6060,7 +6063,7 @@ checkbox1.setAttribute('hidden', "");
               pathItem
             ),
           });
-          if (pathItem.hub_items[id]) {
+          if (pathItem.hub_items.menus[id]) {
 
             status.textContent = '🟢'
 
