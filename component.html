@@ -1800,92 +1800,6 @@
 
   -->
   <script>
-    let scriptClicked = false
-    function getTypeFromCheckbox(checkbox) {
-      // Get the parent tbody element of the checkbox
-      const tbody = checkbox.closest('tbody');
-
-      // Check if the parent tbody exists
-      if (tbody) {
-        // Get the id of the parent tbody
-        const bodyId = tbody.id;
-
-        // Determine the type based on the body id
-        let type;
-        switch (bodyId) {
-          case 'on_open_body':
-            type = 'onOpen';
-            break;
-          case 'on_load_body':
-            type = 'onLoad';
-            break;
-          case 'on_publish_body':
-            type = 'onPublish';
-            break;
-          case 'on_click_body':
-            type = 'onClick';
-            break;
-          default:
-            console.error('Invalid body id:', bodyId);
-            return null; // Or you can return a default type or throw an error
-        }
-
-        // Return the type
-        return type;
-      } else {
-        // Handle case where parent tbody is not found
-        console.error('Parent tbody not found for checkbox');
-        return null; // Or you can return a default type or throw an error
-      }
-    }
-    function getBodyIdFromType(type) {
-      // Convert the type to lowercase and replace any uppercase characters with underscores
-      const bodyId = type.replace(/[A-Z]/g, match => `_${match.toLowerCase()}`);
-
-      // Append "_body" to the converted type
-      return `${bodyId}_body`;
-    }
-    const addScript = async (event, type) => {
-      const element = document.getElementById('head-menus')
-      element.querySelectorAll('#script_execute_select').forEach(checkbox => {
-        checkbox.removeAttribute('hidden')
-
-      })
-      if (scriptClicked) {
-        let items = pathItem.hub_items?.scripts
-        if (!items) {
-          items = {
-            onOpen: [],
-            onLoad: [],
-            onPublish: [],
-            onClick: [],
-            notActive: [{ "name": "script_head_transfer" }, { "name": "scrip_eval" }, { "name": "script_breadcrumb_generation" }, { "name": "script_transfer" }, { "name": "script_product_spec_table" }, { "name": "script_article_table_of_contents" }, { "name": "script_cleaner" }, { "name": "script_generate_product_json" }, { "name": "script_generate_article_anchor" }, { "name": "script_chatgpt_" }]
-          }
-        }
-        element.querySelectorAll('#script_execute_select').forEach(checkbox => {
-          if (checkbox.checked) {
-            const id = checkbox.closest('tr').id;
-            const type1 = getTypeFromCheckbox(checkbox); // Assuming you have a function to determine the type
-
-            const index = items[type1].findIndex(item => item.name === id);
-            if (index !== -1) {
-              // Remove the item from notActive array and push it to the appropriate type array
-              const removedItem = items.notActive.splice(index, 1)[0];
-              items[scriptClicked].push(removedItem);
-            }
-            const existing = checkbox.closest('tr')
-            document.getElementById(getBodyIdFromType(scriptClicked)).append(existing)
-          }
-          checkbox.setAttribute('hidden');
-        });
-
-        pathItem.hub_items?.scripts = items
-        await updatePathItem()
-      }
-
-
-      scriptClicked = scriptClicked ? false : type
-    }
     const showClasses = (event) => {
       const target = event.target
       if (target.classList.contains('b-selected')) {
@@ -14360,6 +14274,93 @@ element.setAttribute('data-product', [first, name].join(';'))
     }
 
     window.onload = buildTable;    </script>
+    let scriptClicked = false
+    function getTypeFromCheckbox(checkbox) {
+      // Get the parent tbody element of the checkbox
+      const tbody = checkbox.closest('tbody');
+
+      // Check if the parent tbody exists
+      if (tbody) {
+        // Get the id of the parent tbody
+        const bodyId = tbody.id;
+
+        // Determine the type based on the body id
+        let type;
+        switch (bodyId) {
+          case 'on_open_body':
+            type = 'onOpen';
+            break;
+          case 'on_load_body':
+            type = 'onLoad';
+            break;
+          case 'on_publish_body':
+            type = 'onPublish';
+            break;
+          case 'on_click_body':
+            type = 'onClick';
+            break;
+          default:
+            console.error('Invalid body id:', bodyId);
+            return null; // Or you can return a default type or throw an error
+        }
+
+        // Return the type
+        return type;
+      } else {
+        // Handle case where parent tbody is not found
+        console.error('Parent tbody not found for checkbox');
+        return null; // Or you can return a default type or throw an error
+      }
+    }
+    function getBodyIdFromType(type) {
+      // Convert the type to lowercase and replace any uppercase characters with underscores
+      const bodyId = type.replace(/[A-Z]/g, match => `_${match.toLowerCase()}`);
+
+      // Append "_body" to the converted type
+      return `${bodyId}_body`;
+    }
+    const addScript = async (event, type) => {
+      const element = document.getElementById('head-menus')
+      element.querySelectorAll('#script_execute_select').forEach(checkbox => {
+        checkbox.removeAttribute('hidden')
+
+      })
+      if (scriptClicked) {
+        let items = pathItem.hub_items?.scripts
+        if (!items) {
+          items = {
+            onOpen: [],
+            onLoad: [],
+            onPublish: [],
+            onClick: [],
+            notActive: [{ "name": "script_head_transfer" }, { "name": "scrip_eval" }, { "name": "script_breadcrumb_generation" }, { "name": "script_transfer" }, { "name": "script_product_spec_table" }, { "name": "script_article_table_of_contents" }, { "name": "script_cleaner" }, { "name": "script_generate_product_json" }, { "name": "script_generate_article_anchor" }, { "name": "script_chatgpt_" }]
+          }
+        }
+        element.querySelectorAll('#script_execute_select').forEach(checkbox => {
+          if (checkbox.checked) {
+            const id = checkbox.closest('tr').id;
+            const type1 = getTypeFromCheckbox(checkbox); // Assuming you have a function to determine the type
+
+            const index = items[type1].findIndex(item => item.name === id);
+            if (index !== -1) {
+              // Remove the item from notActive array and push it to the appropriate type array
+              const removedItem = items.notActive.splice(index, 1)[0];
+              items[scriptClicked].push(removedItem);
+            }
+            const existing = checkbox.closest('tr')
+            document.getElementById(getBodyIdFromType(scriptClicked)).append(existing)
+          }
+          checkbox.setAttribute('hidden');
+        });
+
+        pathItem.hub_items?.scripts = items
+        await updatePathItem()
+      }
+
+
+      scriptClicked = scriptClicked ? false : type
+    }
+    
 
   <style>
     .highlight-left-border-red {
