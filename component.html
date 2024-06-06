@@ -559,7 +559,7 @@
 
 
       <div id="head-menus">
-        <details style="margin-bottom: 7px;" hidden  id="scripts-list">
+        <details style="margin-bottom: 7px;" hidden>
           <summary class="summary-L-3">
             <span class="l-3 b-dark-blue" id="scripts_menu_load_status">🔴</span>
             <span class="l-3 b-dark-blue">Scripts 🦾</span>
@@ -567,7 +567,7 @@
           <label class="l-3" style="margin-left: 30px;"><input id="scripts-menu-save-head" type="checkbox">save in local
             head🗿</label>
 
-          <table class="table-1" style="margin-left: 30px;" >
+          <table class="table-1" style="margin-left: 30px;" id="scripts-list">
             <tr id="scripts_on_open">
               <td colspan="7" style="text-align: center;">
                 <span class="l-2 b-dark-blue">on open 🚪</span>
@@ -3027,7 +3027,8 @@
       showListMenus(value)
       //await showList(value)
     }
-    var showListMenus = (lists) => {
+
+    var showListMenus = (lists, storageId1, hubItems) => {
       let parsedLists
       try {
         parsedLists = JSON.parse(lists)
@@ -3040,12 +3041,39 @@
       const list2 = document.querySelector('#list_menu_toggle[hidden]')
 
       for (const list of parsedLists['data-lists']) {
+        const id = list.name
         const cloned2 = list2.cloneNode(true)
         cloned2.setAttribute('data-list-menu', list.name)
         cloned2.id = list.name
+        console.log('list ' + list.name)
         cloned2.querySelector('#list-name').textContent = list.name
         cloned2.removeAttribute('hidden')
         list2.parentNode.append(cloned2)
+        const status = cloned2.querySelector('#menu_toggle_status')
+        if (pathItem.hub_items?.menus?.[id]) {
+
+          status.textContent = '🟢'
+        }
+        status.onclick = async () => {
+          pathItem.hub_items.menus[id] = pathItem.hub_items.menus[id] ? false : new Date().getTime()
+
+          const listName = list.name
+          /*
+          if (listName) {
+            const listItem = document.getElementById(listName)
+            pathItem.hub_items[id] ? listItem.removeAttribute('hidden') : listItem.setAttribute('hidden')
+          }*/
+          await updatePathItem()
+          if (pathItem.hub_items.menus[id]) {
+            showList(JSON.stringify({ "data-lists": [list] }), storageId1, hubItems)
+            status.textContent = '🟢'
+
+          }
+          else {
+            status.textContent = '🔴'
+            document.querySelector(`[data-list="${listName}"]`).remove()
+          }
+        }
       }
     }
     var showList = async (lists, storageId1, hubItems) => {
@@ -6009,9 +6037,9 @@ checkbox1.setAttribute('hidden', "");
     const handleMenus = () => {
       const table = document.getElementById('menu_toggle')
       if (!pathItem.hub_items) {
-        pathItem.hub_items = {menus:{}}
+        pathItem.hub_items = { menus: {} }
       }
-      if(!pathItem.hub_items.menus){
+      if (!pathItem.hub_items.menus) {
         pathItem.hub_items.menus = {}
       }
       const loadStatus = document.getElementById('menus_load_status')
@@ -6025,6 +6053,9 @@ checkbox1.setAttribute('hidden', "");
         }
         if (pathItem.hub_items?.menus?.lists_tasks_toggle) {
           document.getElementById('lists-task-json').removeAttribute('hidden')
+        }
+        if (pathItem.hub_items?.menus?.scripts_menu_toggle) {
+          document.getElementById('scripts-menu').removeAttribute('hidden')
         }
         status.onclick = async () => {
           pathItem.hub_items.menus[id] = pathItem.hub_items.menus[id] ? false : new Date().getTime()
@@ -12890,11 +12921,10 @@ headers: {
       const splited = pathItemPath.split(';')[0].split('/')
       const name = splited[splited.length - 1]
 
-      showListMenus(pathItem.hub_items?.list)
-      if (pathItem.hub_items?.list && pathItem.hub_items?.menus?.lists_tasks_toggle) {
-        
-        await showList(pathItem.hub_items?.list, pathItem.hub_items)
-      }
+      showListMenus(pathItem.hub_items?.list, undefined, pathItem.hub_items)
+
+      await showList(pathItem.hub_items?.list, undefined, pathItem.hub_items)
+
       if (pathItem.hub_items?.gpt) {
         await showai(pathItem.hub_items?.gpt)
         const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pathItem.id}&sk=ai-logs:&startsWith=true`, {
@@ -12909,19 +12939,50 @@ headers: {
           element.querySelector('textarea').value = res.items.map(el => JSON.stringify(el.gptResponse, null, 2) + '\n\n' + JSON.stringify(el.content) + '\n\n').join('\n\n=============================================\n\n')
         }
       }
-      mainHubLsi = splited[0] + '/Home|Hub'
-      if (pathItem.lsi1.split(';')[0] !== mainHubLsi ) {
+      let mainHubLsi = splited[0] + '/Home|Hub'
+      let headHubLsi = splited[0] + '/Home/Content/Page|Head-Content'
+      /*
+      if(pathItem.lsi1.startsWith('Style-Green.SeoSitesHome.com')){
+        mainHubLsi = splited[0] + '/Seed-Home|Hub'
+        headHubLsi = splited[0] + '/Seed-Home/Content/Page|Head-Content'
+      }*/
+      if (pathItem.lsi1.split(';')[0] !== mainHubLsi) {
         url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${mainHubLsi}`;
-        const mainHub = await fetch(url).then(e => e.json()).then(e => e.items[0])
-          .then(e => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${e.id}:${e.sk}`))
-          .then(e => e.json())
-          .catch(e => e)
+        let mainHub
+        try {
+          const mainHubResponse = await fetch(url);
+          const mainHubData = await mainHubResponse.json();
+          if (mainHubData.items.length) {
+            const mainHubItem = mainHubData.items[0];
+            const templateResponse = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${mainHubItem.id}:${mainHubItem.sk}`);
+            const templateData = await templateResponse.json();
+            mainHub = templateData; // Assuming `templateData` is the desired result
+          }
+          else {
+            mainHubLsi = splited[0] + '/Seed-Home|Hub'
+            headHubLsi = splited[0] + '/Seed-Home/Content/Page|Head-Content'
+            url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${mainHubLsi}`;
+            const mainHubResponse = await fetch(url);
+            const mainHubData = await mainHubResponse.json();
+            if (mainHubData.items.length) {
+              const mainHubItem = mainHubData.items[0];
+              const templateResponse = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${mainHubItem.id}:${mainHubItem.sk}`);
+              const templateData = await templateResponse.json();
+              mainHub = templateData; // Assuming `templateData` is the desired result
+            }
+
+          }
+
+          // Use `mainHub` here
+        } catch (error) {
+          // Handle errors
+        }
         if (mainHub?.hub_items?.list) {
-          headHubLsi = splited[0] + '/Home/Content/Page|Head-Content'
+
           url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headHubLsi}`;
           const { items } = await fetch(url).then(e => e.json())
-          showListMenus(mainHub.hub_items?.list)
-          pathItem.hub_items?.menus?.lists_tasks_toggle && await showList(mainHub.hub_items?.list, items[0].id, mainHub.hub_items)
+          showListMenus(mainHub.hub_items?.list, items[0].id, pathItem.hub_items)
+          await showList(mainHub.hub_items?.list, items[0].id, pathItem.hub_items)
         }
       }
 
