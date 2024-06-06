@@ -6027,6 +6027,8 @@ checkbox1.setAttribute('hidden', "");
       if (!pathItem.hub_items) {
         pathItem.hub_items = {}
       }
+      const loadStatus = document.getElementById('menus_load_status')
+      loadStatus.textContent = '🟠'
       table.querySelectorAll('tr').forEach(element => {
         const id = element.id
         const status = element.querySelector('#menu_toggle_status')
@@ -6058,6 +6060,7 @@ checkbox1.setAttribute('hidden', "");
         }
 
       })
+      loadStatus.textContent = '🟢'
     }
     async function loadFirst() {
       var iframe = getElementById1("generated-page-iframe");
@@ -12893,9 +12896,9 @@ headers: {
       const name = splited[splited.length - 1]
 
 
-      if (pathItem.hub_items?.list) {
+      if (pathItem.hub_items?.list && pathItem.hub_items?.lists_tasks_toggle) {
         showListMenus(pathItem.hub_items?.list)
-        await showList(pathItem.hub_items?.list,mainHub.hub_items)
+        await showList(pathItem.hub_items?.list,pathItem.hub_items)
       }
       if (pathItem.hub_items?.gpt) {
         await showai(pathItem.hub_items?.gpt)
@@ -12912,7 +12915,7 @@ headers: {
         }
       }
       mainHubLsi = splited[0] + '/Home|Hub'
-      if (pathItem.lsi1.split(';')[0] !== mainHubLsi) {
+      if (pathItem.lsi1.split(';')[0] !== mainHubLsi && pathItem.hub_items?.lists_tasks_toggle) {
         url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${mainHubLsi}`;
         const mainHub = await fetch(url).then(e => e.json()).then(e => e.items[0])
           .then(e => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${e.id}:${e.sk}`))
