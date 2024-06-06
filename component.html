@@ -12920,7 +12920,7 @@ headers: {
         }
       }
       mainHubLsi = splited[0] + '/Home|Hub'
-      if (pathItem.lsi1.split(';')[0] !== mainHubLsi && pathItem.hub_items?.menus?.home_lists_toggle) {
+      if (pathItem.lsi1.split(';')[0] !== mainHubLsi ) {
         url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${mainHubLsi}`;
         const mainHub = await fetch(url).then(e => e.json()).then(e => e.items[0])
           .then(e => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${e.id}:${e.sk}`))
@@ -12931,7 +12931,7 @@ headers: {
           url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headHubLsi}`;
           const { items } = await fetch(url).then(e => e.json())
           showListMenus(mainHub.hub_items?.list)
-          await showList(mainHub.hub_items?.list, items[0].id, mainHub.hub_items)
+          pathItem.hub_items?.menus?.lists_tasks_toggle && await showList(mainHub.hub_items?.list, items[0].id, mainHub.hub_items)
         }
       }
 
