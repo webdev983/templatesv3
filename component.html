@@ -463,7 +463,7 @@
 
 
 
-      <details style="margin-bottom: 7px;"  data-file-name-show="Hub">
+      <details style="margin-bottom: 7px;" data-file-name-show="Hub">
         <summary class="summary-L-3">
           <span class="l-3 b-dark-blue" id="menus_load_status">🔴</span>
           <span class="l-3 b-dark-blue">Menus 🧱</span>
@@ -1004,7 +1004,7 @@
           <button onclick="saveGpt(event)" data-save class="b-4">💾 Save</button>
         </details>
 
-        
+
 
         <details id="lists-task-json" hidden style="margin-bottom: 7px;">
           <summary class="summary-L-3"><span class="l-3 b-dark-blue">⚙️ List</span></summary>
@@ -3048,7 +3048,7 @@
       showListMenus(value)
       //await showList(value)
     }
-    var showListMenus = (lists)=>{
+    var showListMenus = (lists) => {
       let parsedLists
       try {
         parsedLists = JSON.parse(lists)
@@ -3069,7 +3069,7 @@
         list2.parentNode.append(cloned2)
       }
     }
-    var showList = async (lists, storageId1,hubItems) => {
+    var showList = async (lists, storageId1, hubItems) => {
       let parsedLists
       try {
         parsedLists = JSON.parse(lists)
@@ -3082,9 +3082,9 @@
 
       const list1 = document.querySelector('[data-list][hidden]')
       !storageId1 && document.querySelectorAll('[data-list]:not([hidden])').forEach(e => e.remove())
-      
+
       for (const list of parsedLists['data-lists']) {
-        if(!hubItems || !hubItems[list.name]){
+        if (!hubItems || !hubItems[list.name]) {
           continue
         }
         const cloned = list1.cloneNode(true)
@@ -3098,7 +3098,7 @@
 
 
 
-        
+
         const storage = list.data_storage
         let storageId = storageId1 ?? ((storage === 'sku') ? (pathItemSku || selectedSku) : headContentItem.id)
         cloned.querySelector('[data-list-emoji]').textContent = list.emoji
@@ -6041,12 +6041,12 @@ checkbox1.setAttribute('hidden', "");
 
           status.textContent = '🟢'
         }
+        if (pathItem.hub_items.lists_tasks_toggle) {
+          document.getElementById('lists-task-json').removeAttribute('hidden')
+        }
         status.onclick = async () => {
           pathItem.hub_items[id] = pathItem.hub_items[id] ? false : new Date().getTime()
-          if (pathItem.hub_items[id]) {
 
-            status.textContent = '🟢'
-          }
           const listName = element.getAttribute('data-list-menu')
           /*
           if (listName) {
@@ -6062,6 +6062,14 @@ checkbox1.setAttribute('hidden', "");
               pathItem
             ),
           });
+          if (pathItem.hub_items[id]) {
+
+            status.textContent = '🟢'
+
+          }
+          else {
+            status.textContent = '🔴'
+          }
         }
 
       })
@@ -12901,9 +12909,9 @@ headers: {
       const name = splited[splited.length - 1]
 
 
-      if (pathItem.hub_items?.list && pathItem.hub_items?.lists_tasks_toggle) {
+      if (pathItem.hub_items?.list && pathItem.hub_items?.lists_toggle) {
         showListMenus(pathItem.hub_items?.list)
-        await showList(pathItem.hub_items?.list,pathItem.hub_items)
+        await showList(pathItem.hub_items?.list, pathItem.hub_items)
       }
       if (pathItem.hub_items?.gpt) {
         await showai(pathItem.hub_items?.gpt)
@@ -12920,7 +12928,7 @@ headers: {
         }
       }
       mainHubLsi = splited[0] + '/Home|Hub'
-      if (pathItem.lsi1.split(';')[0] !== mainHubLsi && pathItem.hub_items?.lists_tasks_toggle) {
+      if (pathItem.lsi1.split(';')[0] !== mainHubLsi && pathItem.hub_items?.home_lists_toggle) {
         url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${mainHubLsi}`;
         const mainHub = await fetch(url).then(e => e.json()).then(e => e.items[0])
           .then(e => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${e.id}:${e.sk}`))
@@ -12931,7 +12939,7 @@ headers: {
           url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headHubLsi}`;
           const { items } = await fetch(url).then(e => e.json())
           showListMenus(mainHub.hub_items?.list)
-          await showList(mainHub.hub_items?.list, items[0].id,mainHub.hub_items)
+          await showList(mainHub.hub_items?.list, items[0].id, mainHub.hub_items)
         }
       }
 
