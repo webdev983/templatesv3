@@ -6044,18 +6044,7 @@ checkbox1.setAttribute('hidden', "");
         }
         status.onclick = async () => {
           pathItem.hub_items[id] = pathItem.hub_items[id] ? false : new Date().getTime()
-          if (pathItem.hub_items[id]) {
 
-            status.textContent = '🟢'
-            const listValue = pathItem.hub_items?.list
-            if (listValue) {
-              const input = document.getElementById('list-input')
-              input.value = input.value + listValue
-            }
-          }
-          else{
-            status.textContent = '🔴'
-          }
           const listName = element.getAttribute('data-list-menu')
           /*
           if (listName) {
@@ -6071,6 +6060,14 @@ checkbox1.setAttribute('hidden', "");
               pathItem
             ),
           });
+          if (pathItem.hub_items[id]) {
+
+            status.textContent = '🟢'
+
+          }
+          else {
+            status.textContent = '🔴'
+          }
         }
 
       })
@@ -12154,7 +12151,11 @@ elementsToRemove.forEach(element => element.remove());
     }
     const setHubItems = () => {
       const gptValue = pathItem.hub_items?.gpt
-
+      const listValue = pathItem.hub_items?.list
+      if (listValue) {
+        const input = document.getElementById('list-input')
+        input.value = input.value + listValue
+      }
       if (gptValue) {
         document.getElementById('gpt-input').value = gptValue
       }
