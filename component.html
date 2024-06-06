@@ -6043,6 +6043,9 @@ checkbox1.setAttribute('hidden', "");
     const organizeScripts = ()=>{
       pathItem.hub_items?.scripts
       for(const key of Object.keys(pathItem.hub_items?.scripts)){
+        if(!pathItem.hub_items?.scripts[key]){
+          continue
+        }
         const body = document.getElementById(getBodyIdFromType(key))
         pathItem.hub_items?.scripts[key]?.forEach(item=>{
           const {name} = item
