@@ -12937,8 +12937,10 @@ headers: {
         }
       }
       mainHubLsi = splited[0] + '/Home|Hub'
+      headHubLsi = splited[0] + '/Home/Content/Page|Head-Content'
       if(pathItem.lsi1.startsWith('Style-Green.SeoSitesHome.com')){
         mainHubLsi = splited[0] + '/Seed-Home|Hub'
+        headHubLsi = splited[0] + '/Seed-Home/Content/Page|Head-Content'
       }
       if (pathItem.lsi1.split(';')[0] !== mainHubLsi) {
         url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${mainHubLsi}`;
@@ -12947,7 +12949,7 @@ headers: {
           .then(e => e.json())
           .catch(e => e)
         if (mainHub?.hub_items?.list) {
-          headHubLsi = splited[0] + '/Home/Content/Page|Head-Content'
+          
           url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headHubLsi}`;
           const { items } = await fetch(url).then(e => e.json())
           showListMenus(mainHub.hub_items?.list, items[0].id, pathItem.hub_items)
