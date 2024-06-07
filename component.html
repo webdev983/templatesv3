@@ -1427,7 +1427,7 @@
         onclick="openAttributeContent(event)">🔑</button>
       <button class="b-3 t" data-element="code-tree-text-content-button" hidden
         onclick="openTextContent(event)">📄</button>
-        <button class="b-3 t" hidden>↗️</button>
+        <button class="b-3 t" hidden data-element="redirect-to-component">↗️</button>
 
       <span data-element="comment" hidden class="l-3 t b-dark-blue">💬</span>
       <span data-element="class" hidden class="l-3 t b-dark-green">🎨</span>
@@ -8862,7 +8862,14 @@ checkbox1.setAttribute('hidden', "");
               button2.textContent = '🏷️' + inserted_element.tagName;
 
               newEl2.id = replaceCopyId ? inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') + '-tree' : inserted_element.id + '-tree'
-
+              if(inserted_element.tagName ==='script' || inserted_element.tagName ==='style'){
+                const button = newEl2.querySelector('[data-element="redirect-to-component"]')
+                button.removeAttribute('hidden')
+                button.onclick = ()=>{
+                  const redirectURL = `component.html?id=${command.id}&rand=${Math.random()}`;
+                  window.open(redirectURL, '_blank');
+                }
+              }
               if (componentElement.hasAttribute('data-parentid')) {
                 console.log('in12')
 
