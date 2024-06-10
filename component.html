@@ -3056,6 +3056,40 @@
     var replaceIds = []
     var lastCompPath
     loadFirst()
+    const getRes = async (id, main, firstLoad) => {
+      // Check if the response is already in the cache
+
+      if (cache[id]) {
+        return deepCopy(cache[id])
+      }
+      !firstLoad && (updateComponentsMap = true)
+
+      try {
+        // Make a GET request to the API with the 'id' query parameter
+        const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        // Ensure the request was successful (status code 2xx)
+        if (!response.ok) {
+          throw new Error(`Failed to load data from the database. Status: ${response.status}`);
+        }
+
+        // Parse and log the response or handle it as needed
+        const responseData = await response.json();
+
+        // Store the response in the cache for future use
+        !main && (cache[id] = deepCopy(responseData));
+
+        return responseData;
+      } catch (error) {
+        console.error(`Error fetching data for id: ${id}`, error);
+        throw error; // Re-throw the error to let the caller handle it
+      }
+    };
     //document.addEventListener('DOMContentLoaded', loadFirst);
     var saveGpt = async (event) => {
       const { value } = event.target.parentNode.querySelector('#gpt-input')
@@ -10484,40 +10518,7 @@ elementsToRemove.forEach(element => element.remove());
 
       return copied;
     }
-    const getRes = async (id, main, firstLoad) => {
-      // Check if the response is already in the cache
-
-      if (cache[id]) {
-        return deepCopy(cache[id])
-      }
-      !firstLoad && (updateComponentsMap = true)
-
-      try {
-        // Make a GET request to the API with the 'id' query parameter
-        const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        // Ensure the request was successful (status code 2xx)
-        if (!response.ok) {
-          throw new Error(`Failed to load data from the database. Status: ${response.status}`);
-        }
-
-        // Parse and log the response or handle it as needed
-        const responseData = await response.json();
-
-        // Store the response in the cache for future use
-        !main && (cache[id] = deepCopy(responseData));
-
-        return responseData;
-      } catch (error) {
-        console.error(`Error fetching data for id: ${id}`, error);
-        throw error; // Re-throw the error to let the caller handle it
-      }
-    };
+    
     function removeDuplicates(arr) {
       return Array.from(new Set(arr));
     }
