@@ -4143,7 +4143,7 @@
         clonedFieldset.id = clonedFieldset.id + ';' + pId;
         clonedFieldset2.id = 'selectedFilePathList;' + pId;
         clonedFieldset.setAttribute('action', 'Add_Component')
-        clonedFieldset3.querySelector('#root').onclick = (e)=>{
+        const loadRoot = (e)=>{
           if (path1 === '') {
             return
           }
@@ -4152,23 +4152,29 @@
             loadFileList1()
 
           }
+          localStorage.setItem('add-type','root')
         }
-        clonedFieldset3.querySelector('#previous-component').onclick = (e)=>{
+        clonedFieldset3.querySelector('#root').onclick = loadRoot
+        const loadPrev = (e)=>{
           if(lastCompPath){
             console.log(lastCompPath)
             s = lastCompPath.split('/')
             s.pop()
             path1 = s.join('/')+'/'
             loadUsingPath1(path1)
+            localStorage.setItem('add-type','prev')
           }
         }
-        clonedFieldset3.querySelector('#current-component').onclick = (e)=>{
+        clonedFieldset3.querySelector('#previous-component').onclick = loadPrev
+        const loadCurrent =  (e)=>{
           const s =pathItemPath.split('/')
           s.pop()
           path1 = s.join('/')+'/'
           loadUsingPath1(path1)
+          localStorage.setItem('add-type','current')
 
         }
+        clonedFieldset3.querySelector('#current-component').onclick =loadCurrent
         clonedFieldset3.querySelector('[data-action="moveBack"]').onclick = (e) => {
           const splited = path1.split('/')
           if (path1 === '') {
@@ -4190,8 +4196,20 @@
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset2);
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset3);
-
-        loadFileList1()
+        const add_type = localStorage.getItem('add-type')
+        if(!add_type || add_type ==='root'){
+          loadFileList1()
+          clonedFieldset3.querySelector('#root').checked =true
+        }
+        else if(add_type ==="current"){
+          loadCurrent()
+          clonedFieldset3.querySelector('#current-component').checked =true
+        }
+        else{
+          loadPrev()
+          clonedFieldset3.querySelector('#previous-component').checked =true
+        }
+        
         if (isTree) {
           e.target.parentNode.remove()
         }
