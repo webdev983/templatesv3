@@ -1427,7 +1427,7 @@
         onclick="openAttributeContent(event)">🔑</button>
       <button class="b-3 t" data-element="code-tree-text-content-button" hidden
         onclick="openTextContent(event)">📄</button>
-        <button class="b-3 t" hidden data-element="redirect-to-component">↗️</button>
+      <button class="b-3 t" hidden data-element="redirect-to-component">↗️</button>
 
       <span data-element="comment" hidden class="l-3 t b-dark-blue">💬</span>
       <span data-element="class" hidden class="l-3 t b-dark-green">🎨</span>
@@ -1513,7 +1513,7 @@
       <button style="margin:5px; margin-left: 0px; background-color: #f0f0f0;" class="b-3"
         id="code-tree-click-tag-insert-before" onclick="insertA(event)"> insertAfter ➡️</button>
 
-        <button style="margin:5px; margin-left: 0px; background-color: #f0f0f0;" class="b-3"
+      <button style="margin:5px; margin-left: 0px; background-color: #f0f0f0;" class="b-3"
         id="code-tree-click-tag-insert-before">history 🧩</button>
 
       <br>
@@ -1580,17 +1580,17 @@
     <div id="component_history_menu" data-menu style="margin-bottom: 30px; ">
       <button id="code-tree-tag-attributes-form-action-back" class="b-3" onclick="cancel(event)"
         style="margin-bottom:7px; margin-right: 5px;">❌</button>
-        <table class="table-1" id="components_history_table" style="margin-left: 30px;">
-          <tr id="component_history">
-            <td>
-              <span class="l-3"></span>
-              <span class="l-3" id="component-history-value">cool-component</span>
-            </td>
-            <td>
-              <a  href="" class="l-3" id="component-history-anchor">↗️</span>
-            </td>
-          </tr>
-        </table>
+      <table class="table-1" id="components_history_table" style="margin-left: 30px;">
+        <tr id="component_history">
+          <td>
+            <span class="l-3"></span>
+            <span class="l-3" id="component-history-value">cool-component</span>
+          </td>
+          <td>
+            <a href="" class="l-3" id="component-history-anchor">↗️</span>
+          </td>
+        </tr>
+      </table>
     </div>
 
     <!-- menu to receive text area html -->
@@ -4139,42 +4139,42 @@
         clonedFieldset3.removeAttribute('hidden')
 
         clonedFieldset3.id = 'file-list-attach-component-options;' + pId
-        
+
         clonedFieldset.id = clonedFieldset.id + ';' + pId;
         clonedFieldset2.id = 'selectedFilePathList;' + pId;
         clonedFieldset.setAttribute('action', 'Add_Component')
-        const loadRoot = (e)=>{
+        const loadRoot = (e) => {
           if (path1 === '') {
             return
           }
-          else{
+          else {
             path1 === ""
             loadFileList1()
 
           }
-          localStorage.setItem('add-type','root')
+          localStorage.setItem('add-type', 'root')
         }
         clonedFieldset3.querySelector('#root').onclick = loadRoot
-        const loadPrev = (e)=>{
-          if(lastCompPath){
+        const loadPrev = (e) => {
+          if (lastCompPath) {
             console.log(lastCompPath)
             s = lastCompPath.split('/')
             s.pop()
-            path1 = s.join('/')+'/'
+            path1 = s.join('/') + '/'
             loadUsingPath1(path1)
-            localStorage.setItem('add-type','prev')
+            localStorage.setItem('add-type', 'prev')
           }
         }
         clonedFieldset3.querySelector('#previous-component').onclick = loadPrev
-        const loadCurrent =  (e)=>{
-          const s =pathItemPath.split('/')
+        const loadCurrent = (e) => {
+          const s = pathItemPath.split('/')
           s.pop()
-          path1 = s.join('/')+'/'
+          path1 = s.join('/') + '/'
           loadUsingPath1(path1)
-          localStorage.setItem('add-type','current')
+          localStorage.setItem('add-type', 'current')
 
         }
-        clonedFieldset3.querySelector('#current-component').onclick =loadCurrent
+        clonedFieldset3.querySelector('#current-component').onclick = loadCurrent
         clonedFieldset3.querySelector('[data-action="moveBack"]').onclick = (e) => {
           const splited = path1.split('/')
           if (path1 === '') {
@@ -4197,19 +4197,19 @@
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset2);
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset3);
         const add_type = localStorage.getItem('add-type')
-        if(!add_type || add_type ==='root'){
+        if (!add_type || add_type === 'root') {
           loadFileList1()
-          clonedFieldset3.querySelector('#root').checked =true
+          clonedFieldset3.querySelector('#root').checked = true
         }
-        else if(add_type ==="current"){
+        else if (add_type === "current") {
           loadCurrent()
-          clonedFieldset3.querySelector('#current-component').checked =true
+          clonedFieldset3.querySelector('#current-component').checked = true
         }
-        else{
+        else {
           loadPrev()
-          clonedFieldset3.querySelector('#previous-component').checked =true
+          clonedFieldset3.querySelector('#previous-component').checked = true
         }
-        
+
         if (isTree) {
           e.target.parentNode.remove()
         }
@@ -6105,20 +6105,50 @@ checkbox1.setAttribute('hidden', "");
         eval(script.innerHTML)
       }
     }
-    const organizeScripts = ()=>{
-      
-      if(!pathItem.hub_items?.scripts){
+    const organizeScripts = () => {
+
+      if (!pathItem.hub_items?.scripts) {
         return
       }
-      for(const key of Object.keys(pathItem.hub_items?.scripts)){
-        if(!pathItem.hub_items?.scripts[key]){
+      for (const key of Object.keys(pathItem.hub_items?.scripts)) {
+        if (!pathItem.hub_items?.scripts[key]) {
           continue
         }
         const body = document.getElementById(getBodyIdFromType(key))
-        pathItem.hub_items?.scripts[key]?.forEach(item=>{
-          const {name} = item
-          body.append(document.getElementById(name))
-        })
+        for (const item of (pathItem.hub_items?.scripts?.[key] || []) ) {
+          const { name, execute_on_red_checkbox, execute_requires_reload, execute_in_template } = item;
+          const appItem = document.getElementById(name);
+
+          if (appItem) {
+            appItem.querySelector('#execute_on_red_checkbox').checked = !!execute_on_red_checkbox;
+            appItem.querySelector('#execute_requires_reload').checked = !!execute_requires_reload;
+            appItem.querySelector('#execute_in_template').checked = !!execute_in_template;
+
+            appItem.querySelector('#execute_on_red_checkbox').onchange = (e) => {
+              // Handle onchange event for execute_on_red_checkbox
+              const checked = e.target.checked
+              item.execute_on_red_checkbox = checked
+              updatePathItem()
+            };
+
+            appItem.querySelector('#execute_requires_reload').onchange = (e) => {
+              // Handle onchange event for execute_requires_reload
+              const checked = e.target.checked
+              item.execute_requires_reload = checked
+              updatePathItem()
+            };
+
+            appItem.querySelector('#execute_in_template').onchange = (e) => {
+              // Handle onchange event for execute_in_template
+              const checked = e.target.checked
+              item.execute_in_template = checked
+              updatePathItem()
+            };
+
+            document.body.append(appItem);
+          }
+        }
+        
       }
     }
     const handleMenus = () => {
@@ -8907,10 +8937,10 @@ checkbox1.setAttribute('hidden', "");
               button2.textContent = '🏷️' + inserted_element.tagName;
 
               newEl2.id = replaceCopyId ? inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') + '-tree' : inserted_element.id + '-tree'
-              if(inserted_element.tagName ==='script' || inserted_element.tagName ==='style'){
+              if (inserted_element.tagName === 'script' || inserted_element.tagName === 'style') {
                 const button = newEl2.querySelector('[data-element="redirect-to-component"]')
                 button.removeAttribute('hidden')
-                button.onclick = ()=>{
+                button.onclick = () => {
                   const redirectURL = `component.html?id=${command.id}&rand=${Math.random()}`;
                   window.open(redirectURL, '_blank');
                 }
