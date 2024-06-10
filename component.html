@@ -6993,11 +6993,11 @@ checkbox1.setAttribute('hidden', "");
             const move = element.querySelector('[data-move-actions]')
             if (!move.hasAttribute('hidden')) {
               move.setAttribute('hidden', '')
-              moveOn = false
+              
               return
             }
             move.removeAttribute('hidden')
-            moveOn = true
+           
             move.querySelector('[data-move-after]').onclick = async (e) => {
               positionItem.positions = moveStringBefore(positionItem.positions, actionTime, anchor)
               await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -7015,7 +7015,7 @@ checkbox1.setAttribute('hidden', "");
                 const move = element1.querySelector('[data-move-actions]')
                 move.setAttribute('hidden', '')
               })
-              moveOn = false
+             
             }
             move.querySelector('[data-move-before]').onclick = async (e) => {
               positionItem.positions = moveStringBefore(positionItem.positions, actionTime, anchor)
@@ -7034,7 +7034,7 @@ checkbox1.setAttribute('hidden', "");
                 const move = element1.querySelector('[data-move-actions]')
                 move.setAttribute('hidden', '')
               })
-              moveOn = false
+              
             }
 
           }
@@ -8190,6 +8190,9 @@ checkbox1.setAttribute('hidden', "");
             }
             else {
               attachId = options?.attachId
+            }
+            if(!getElementById1(attachId)){
+              attachId = undefined
             }
 
           }
