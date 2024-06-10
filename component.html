@@ -6937,6 +6937,7 @@ checkbox1.setAttribute('hidden', "");
 
         pathItem.hub_items.scripts = items
         await updatePathItem()
+        
       }
 
 
@@ -6988,6 +6989,10 @@ checkbox1.setAttribute('hidden', "");
               });
               //document.querySelectorAll('[data-move-actions]').forEach(e=>e.setAttribute('hidden',''))
               insertAfter(clonedElement, element)
+              document.querySelectorAll('#code-log-element').forEach(element1 => {
+                const move = element1.querySelector('[data-move-actions]')
+                move.setAttribute('hidden', '')
+              })
             }
             move.querySelector('[data-move-before]').onclick = async (e) => {
               positionItem.positions = moveStringBefore(positionItem.positions, actionTime, anchor)
@@ -7002,6 +7007,10 @@ checkbox1.setAttribute('hidden', "");
               });
               //document.querySelectorAll('[data-move-actions]').forEach(e=>e.setAttribute('hidden',''))
               clonedElement.parentNode.insertBefore(clonedElement, element)
+              document.querySelectorAll('#code-log-element').forEach(element1 => {
+                const move = element1.querySelector('[data-move-actions]')
+                move.setAttribute('hidden', '')
+              })
             }
 
           }
