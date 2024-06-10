@@ -6372,6 +6372,9 @@ checkbox1.setAttribute('hidden', "");
         return
       }
       for(const item of onOpen){
+        if(!item.execute_in_template && pathItem.lsi1.toLowerCase().includes('seositeshome.com')){
+          return
+        }
         await funcDictionary[item.name]()
         const item1 = body.querySelector('#'+item.name)
         item1.querySelector('#script_status').textContent = '🟢'
