@@ -6901,6 +6901,27 @@ checkbox1.setAttribute('hidden', "");
       // Append "_body" to the converted type
       return `${bodyId}_body`;
     }
+    function sortQueue(arrayOfObjects) {
+      arrayOfObjects.sort((a, b) => {
+        // If both elements have falsy (except 0) queue_number, retain the original order
+        if (!a.queue_number && a.queue_number !== 0 && !b.queue_number && b.queue_number !== 0) {
+          return 0;
+        }
+        // If a has falsy (except 0) queue_number, place it after b
+        else if (!a.queue_number && a.queue_number !== 0) {
+          return 1;
+        }
+        // If b has falsy (except 0) queue_number, place it after a
+        else if (!b.queue_number && b.queue_number !== 0) {
+          return -1;
+        }
+        // Otherwise, compare numbers
+        else {
+          return a.queue_number - b.queue_number;
+        }
+      });
+    }
+
     async function addScript(event, type) {
       const element = document.getElementById('head-menus')
       element.querySelectorAll('#script_execute_select').forEach(checkbox => {
@@ -6926,8 +6947,9 @@ checkbox1.setAttribute('hidden', "");
             const index = items[type1].findIndex(item => item.name === id);
             if (index !== -1) {
               // Remove the item from notActive array and push it to the appropriate type array
-              const removedItem = items.notActive.splice(index, 1)[0];
+              const removedItem = items[type1].splice(index, 1)[0];
               items[scriptClicked].push(removedItem);
+              sortQueue(items[scriptClicked])
             }
             const existing = checkbox.closest('tr')
             document.getElementById(getBodyIdFromType(scriptClicked)).append(existing)
@@ -6937,7 +6959,7 @@ checkbox1.setAttribute('hidden', "");
 
         pathItem.hub_items.scripts = items
         await updatePathItem()
-        
+
       }
 
 
