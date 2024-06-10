@@ -3056,6 +3056,45 @@
     var replaceIds = []
     var lastCompPath
     loadFirst()
+    const replacePlaceHolders = (html) => {
+      const iframe = document.getElementById("generated-page-iframe");
+
+      // Access the content of the iframe
+      const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+      const all = document.querySelectorAll('[data-list]:not([hidden])')
+      const checked = {}
+      for (const el of all) {
+        const rows = el.querySelectorAll('[data-lists-element]')
+        for (const row of rows) {
+          const key = row.querySelector('[data-lists-element-key]').textContent
+          const value = row.querySelector('[data-list-element-selection]')?.value || row.querySelector('[data-lists-element-value]').textContent || ''
+
+          html = html.replaceAll('{' + key + '}', value)
+          const checkboxs = row.querySelectorAll('[data-list-element-benefit]')
+          for (const checkbox of checkboxs) {
+            if (checkbox.checked) {
+              const name = checkbox.getAttribute('varname').replace('varlist_', '')
+              if (checked[name]) {
+                checked[name].push(key + ': ' + value)
+              }
+              else {
+                checked[name] = [key + ': ' + value]
+              }
+            }
+          }
+        }
+      }
+      for (const key of Object.keys(checked)) {
+        if(html){
+          html = html.replaceAll('{' + key + '}', checked[key].join(','))
+        }
+        else{
+          iframeDocument.innerHTML =iframeDocument.innerHTML.replaceAll('{' + key + '}', checked[key].join(','))
+        }
+        
+      }
+      return html
+    }
     const getRes = async (id, main, firstLoad) => {
       // Check if the response is already in the cache
 
@@ -11399,45 +11438,7 @@ elementsToRemove.forEach(element => element.remove());
       return map
 
     }
-    const replacePlaceHolders = (html) => {
-      const iframe = document.getElementById("generated-page-iframe");
-
-      // Access the content of the iframe
-      const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-      const all = document.querySelectorAll('[data-list]:not([hidden])')
-      const checked = {}
-      for (const el of all) {
-        const rows = el.querySelectorAll('[data-lists-element]')
-        for (const row of rows) {
-          const key = row.querySelector('[data-lists-element-key]').textContent
-          const value = row.querySelector('[data-list-element-selection]')?.value || row.querySelector('[data-lists-element-value]').textContent || ''
-
-          html = html.replaceAll('{' + key + '}', value)
-          const checkboxs = row.querySelectorAll('[data-list-element-benefit]')
-          for (const checkbox of checkboxs) {
-            if (checkbox.checked) {
-              const name = checkbox.getAttribute('varname').replace('varlist_', '')
-              if (checked[name]) {
-                checked[name].push(key + ': ' + value)
-              }
-              else {
-                checked[name] = [key + ': ' + value]
-              }
-            }
-          }
-        }
-      }
-      for (const key of Object.keys(checked)) {
-        if(html){
-          html = html.replaceAll('{' + key + '}', checked[key].join(','))
-        }
-        else{
-          iframeDocument.innerHTML =iframeDocument.innerHTML.replaceAll('{' + key + '}', checked[key].join(','))
-        }
-        
-      }
-      return html
-    }
+    
     const getFromSiteData = (k) => {
       const all = document.querySelectorAll('[data-list]:not([hidden])')
       for (const el of all) {
