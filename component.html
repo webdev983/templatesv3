@@ -6115,40 +6115,55 @@ checkbox1.setAttribute('hidden', "");
           continue
         }
         const body = document.getElementById(getBodyIdFromType(key))
-        for (const item of (pathItem.hub_items?.scripts?.[key] || []) ) {
+        for (const item of (pathItem.hub_items?.scripts?.[key] || [])) {
           const { name, execute_on_red_checkbox, execute_requires_reload, execute_in_template } = item;
           const appItem = document.getElementById(name);
 
           if (appItem) {
-            appItem.querySelector('#execute_on_red_checkbox').checked = !!execute_on_red_checkbox;
-            appItem.querySelector('#execute_requires_reload').checked = !!execute_requires_reload;
-            appItem.querySelector('#execute_in_template').checked = !!execute_in_template;
+            const red = appItem.querySelector('#execute_on_red_checkbox')
+            if (red) {
+              red.checked = !!execute_on_red_checkbox;
+              red.onchange = (e) => {
+                // Handle onchange event for execute_on_red_checkbox
+                const checked = e.target.checked
+                item.execute_on_red_checkbox = checked
+                updatePathItem()
+              };
 
-            appItem.querySelector('#execute_on_red_checkbox').onchange = (e) => {
-              // Handle onchange event for execute_on_red_checkbox
-              const checked = e.target.checked
-              item.execute_on_red_checkbox = checked
-              updatePathItem()
-            };
+            }
 
-            appItem.querySelector('#execute_requires_reload').onchange = (e) => {
-              // Handle onchange event for execute_requires_reload
-              const checked = e.target.checked
-              item.execute_requires_reload = checked
-              updatePathItem()
-            };
+            const rReload = appItem.querySelector('#execute_requires_reload')
+            if (rReload) {
+              rReload.checked = !!execute_requires_reload;
+              rReload.onchange = (e) => {
+                // Handle onchange event for execute_requires_reload
+                const checked = e.target.checked
+                item.execute_requires_reload = checked
+                updatePathItem()
+              };
+            }
 
-            appItem.querySelector('#execute_in_template').onchange = (e) => {
-              // Handle onchange event for execute_in_template
-              const checked = e.target.checked
-              item.execute_in_template = checked
-              updatePathItem()
-            };
+            const inT = appItem.querySelector('#execute_in_template')
+            if (inT) {
+              inT.checked = !!execute_in_template;
+              inT.onchange = (e) => {
+                // Handle onchange event for execute_in_template
+                const checked = e.target.checked
+                item.execute_in_template = checked
+                updatePathItem()
+              };
+            }
+
+
+
+
+
+
 
             document.body.append(appItem);
           }
         }
-        
+
       }
     }
     const handleMenus = () => {
