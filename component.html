@@ -6257,11 +6257,12 @@ checkbox1.setAttribute('hidden', "");
             const inT = appItem.querySelector('#execute_in_template')
             if (inT) {
               inT.checked = !!execute_in_template;
-              inT.onchange = (e) => {
+              inT.onchange = async(e) => {
                 // Handle onchange event for execute_in_template
                 const checked = e.target.checked
                 item.execute_in_template = checked
-                updatePathItem()
+                console.log('updating')
+                await updatePathItem()
               };
             }
             const queueN = appItem.querySelector('#queue_number')
