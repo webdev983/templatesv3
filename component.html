@@ -6116,7 +6116,7 @@ checkbox1.setAttribute('hidden', "");
         }
         const body = document.getElementById(getBodyIdFromType(key))
         for (const item of (pathItem.hub_items?.scripts?.[key] || [])) {
-          const { name, execute_on_red_checkbox, execute_requires_reload, execute_in_template } = item;
+          const { name, execute_on_red_checkbox, execute_requires_reload, execute_in_template ,queue_number} = item;
           const appItem = document.getElementById(name);
 
           if (appItem) {
@@ -6153,7 +6153,16 @@ checkbox1.setAttribute('hidden', "");
                 updatePathItem()
               };
             }
-
+            const queueN = appItem.querySelector('#queue_number')
+            if (queueN) {
+              queueN.textContent = queue_number || '';
+              queueN.onchange = (e) => {
+                // Handle onchange event for execute_in_template
+                const t = e.target.textContent
+                item.queue_number = t
+                updatePathItem()
+              };
+            }
 
 
 
