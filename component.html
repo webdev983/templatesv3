@@ -7145,18 +7145,12 @@ checkbox1.setAttribute('hidden', "");
 
 
         if (options?.attachId) {
-          const id1 = removeLastOccurrence(options.attachId, '-tree')
+          let id1 = removeLastOccurrence(options.attachId, '-tree')
           console.log(id1)
           const el11 = getElementById1(id1)
-          if(el11){
-            cloned2.querySelector('#action-target-tag-id-value').textContent = id1
-            cloned2.querySelector('#action-target-tag-name-value').textContent = el11.tagName.toLowerCase()
-
-          }
-          else{
-            cloned2.querySelector('#action-target-tag-id-value').textContent = 'body'
-            cloned2.querySelector('#action-target-tag-name-value').textContent = 'body'
-          }
+          !el11 && (id1 ='body')
+          cloned2.querySelector('#action-target-tag-id-value').textContent = id1
+          cloned2.querySelector('#action-target-tag-name-value').textContent = getElementById1(id1).tagName.toLowerCase()
         } else {
           cloned2.querySelector('#action-target-tag-id').remove()
         }
