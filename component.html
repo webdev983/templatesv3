@@ -3069,7 +3069,7 @@
           const key = row.querySelector('[data-lists-element-key]').textContent
           const value = row.querySelector('[data-list-element-selection]')?.value || row.querySelector('[data-lists-element-value]').textContent || ''
 
-          html  ? (html = html.replaceAll('{' + key + '}', value)) : iframeDocument.documentElement.outerHTML =iframeDocument.documentElement.outerHTML.replaceAll('{' + key + '}', value)
+          html  ? (html = html.replaceAll('{' + key + '}', value)) : iframeDocument.documentElement.innerHTML =iframeDocument.documentElement.innerHTML.replaceAll('{' + key + '}', value)
           const checkboxs = row.querySelectorAll('[data-list-element-benefit]')
           for (const checkbox of checkboxs) {
             if (checkbox.checked) {
@@ -3089,7 +3089,7 @@
           html = html.replaceAll('{' + key + '}', checked[key].join(','))
         }
         else{
-          iframeDocument.documentElement.outerHTML =iframeDocument.documentElement.outerHTML.replaceAll('{' + key + '}', checked[key].join(','))
+          iframeDocument.documentElement.innerHTML =iframeDocument.documentElement.innerHTML.replaceAll('{' + key + '}', checked[key].join(','))
         }
         
       }
