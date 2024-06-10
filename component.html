@@ -6356,12 +6356,23 @@ checkbox1.setAttribute('hidden', "");
       script_chatgpt_:()=>{},
     }
     const onLoad = async()=>{
+      console.log('onload')
       const onLoad = pathItem.hub_items?.scripts?.onLoad
+      const body = document.getElementById(getBodyIdFromType('onLoad'))
       if(!onLoad){
+        console.log('no onload')
         return
       }
       for(const item of onLoad){
+        if(!item.execute_in_template && pathItem.lsi1.toLowerCase().includes('seositeshome.com')){
+          return
+        }
         await funcDictionary[item.name]()
+        const item1 = body.querySelector('#'+item.name)
+        item1.querySelector('#script_status').textContent = '🟢'
+        const date = new Date()
+        item.runned = date.getTime()
+        item1.querySelector('#last_script_execute_time').textContent = formatDate(date)
       }
 
     }
