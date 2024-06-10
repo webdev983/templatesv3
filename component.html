@@ -6105,16 +6105,16 @@ checkbox1.setAttribute('hidden', "");
         eval(script.innerHTML)
       }
     }
-    const organizeScripts = async() => {
+    const organizeScripts = async () => {
 
       if (!pathItem.hub_items?.scripts) {
-        pathItem.hub_items.scripts =  {
-            onOpen: [],
-            onLoad: [],
-            onPublish: [],
-            onClick: [],
-            notActive: [{ "name": "script_head_transfer" }, { "name": "scrip_eval" }, { "name": "script_breadcrumb_generation" }, { "name": "script_transfer" }, { "name": "script_product_spec_table" }, { "name": "script_article_table_of_contents" }, { "name": "script_cleaner" }, { "name": "script_generate_product_json" }, { "name": "script_generate_article_anchor" }, { "name": "script_chatgpt_" }]
-          }
+        pathItem.hub_items.scripts = {
+          onOpen: [],
+          onLoad: [],
+          onPublish: [],
+          onClick: [],
+          notActive: [{ "name": "script_head_transfer" }, { "name": "scrip_eval" }, { "name": "script_breadcrumb_generation" }, { "name": "script_transfer" }, { "name": "script_product_spec_table" }, { "name": "script_article_table_of_contents" }, { "name": "script_cleaner" }, { "name": "script_generate_product_json" }, { "name": "script_generate_article_anchor" }, { "name": "script_chatgpt_" }]
+        }
         await updatePathItem()
       }
       for (const key of Object.keys(pathItem.hub_items?.scripts)) {
@@ -6123,7 +6123,7 @@ checkbox1.setAttribute('hidden', "");
         }
         const body = document.getElementById(getBodyIdFromType(key))
         for (const item of (pathItem.hub_items?.scripts?.[key] || [])) {
-          const { name, execute_on_red_checkbox, execute_requires_reload, execute_in_template ,queue_number} = item;
+          const { name, execute_on_red_checkbox, execute_requires_reload, execute_in_template, queue_number } = item;
           const appItem = document.getElementById(name);
 
           if (appItem) {
@@ -6163,11 +6163,11 @@ checkbox1.setAttribute('hidden', "");
             const queueN = appItem.querySelector('#queue_number')
             if (queueN) {
               queueN.textContent = queue_number || '1';
-              queueN.onchange = (e) => {
-                // Handle onchange event for execute_in_template
-                const t = e.target.textContent
-                item.queue_number =parseInt(t)
-                updatePathItem()
+              queueN.onblur = (e) => {
+                // Handle onblur event for execute_in_template
+                const t = e.target.textContent;
+                item.queue_number = parseInt(t);
+                updatePathItem();
               };
             }
 
