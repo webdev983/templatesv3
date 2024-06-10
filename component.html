@@ -6367,12 +6367,20 @@ checkbox1.setAttribute('hidden', "");
     }
     const onOpen = async()=>{
       const onOpen = pathItem.hub_items?.scripts?.onOpen
+      const body = document.getElementById(getBodyIdFromType('onOpen'))
       if(!onOpen){
         return
       }
       for(const item of onOpen){
         await funcDictionary[item.name]()
+        const item1 = body.querySelector('#'+item.name)
+        item1.querySelector('#script_status').textContent = '🟢'
+        const date = new Date()
+        item.runned = date.getTime()
+        item1.querySelector('#last_script_execute_time').textContent = formatDate(date)
       }
+      
+      
 
     }
     const onPublish = async()=>{
