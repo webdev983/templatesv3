@@ -1774,9 +1774,9 @@
 
     <div hidden id="file-list-attach-component-options" style="padding: 5px; margin-left: 10px; margin-bottom: 30px; "
       data-menu>
-      <label class="l-3"><input checked type="radio" id="" name="start_path" checked />🫚root</label>
-      <label class="l-3"><input type="radio" id="" name="start_path" checked />⏮️previous</label>
-      <label class="l-3"><input type="radio" id="" name="start_path" checked />🧩component</label>
+      <label class="l-3"><input checked type="radio" id="root" name="start_path" checked />🫚root</label>
+      <label class="l-3"><input type="radio" id="previous-component" name="start_path" checked />⏮️previous</label>
+      <label class="l-3"><input type="radio" id="current-component" name="start_path" checked />🧩component</label>
       <br>
 
 
@@ -3024,6 +3024,7 @@
     var imagesIds = []
     var actions = []
     var replaceIds = []
+    var lastCompPath
     loadFirst()
     //document.addEventListener('DOMContentLoaded', loadFirst);
     var saveGpt = async (event) => {
@@ -4138,10 +4139,33 @@
         clonedFieldset3.removeAttribute('hidden')
 
         clonedFieldset3.id = 'file-list-attach-component-options;' + pId
-
+        
         clonedFieldset.id = clonedFieldset.id + ';' + pId;
         clonedFieldset2.id = 'selectedFilePathList;' + pId;
         clonedFieldset.setAttribute('action', 'Add_Component')
+        clonedFieldset3.querySelector('#root').onclick = (e)=>{
+          if (path1 === '') {
+            return
+          }
+          else{
+            path1 === ""
+            loadFileList1()
+
+          }
+        }
+        clonedFieldset3.querySelector('#previous-component').onclick = (e)=>{
+          if(lastCompPath){
+            const path1 = lastCompPath.split('|')[0]+'/'
+            loadUsingPath1(path1)
+          }
+        }
+        clonedFieldset3.querySelector('#current-component').onclick = (e)=>{
+          const s =pathItemPath.split('/')
+          s.pop()
+          path1 = s.join('/')+'/'
+          loadUsingPath1(path1)
+
+        }
         clonedFieldset3.querySelector('[data-action="moveBack"]').onclick = (e) => {
           const splited = path1.split('/')
           if (path1 === '') {
@@ -10456,6 +10480,7 @@ elementsToRemove.forEach(element => element.remove());
           e.querySelector("#action-add-component-name").textContent = name
           e.querySelector("#action-add-component-id").textContent = id
           e.querySelector("#action-add-component-path").textContent = subPath
+          lastCompPath = subPath
           e.querySelector("#action-component-redirect").onclick = (e) => {
             const redirectURL = `component.html?id=${id}&rand=${Math.random()}`;
             window.open(redirectURL, '_blank');
