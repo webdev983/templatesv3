@@ -3544,7 +3544,8 @@
       originalRow.remove();
 
     }
-    var updatePathItem = () =>
+    var updatePathItem = () =>{
+      console.log(JSON.stringify(pathItem))
       fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
@@ -3552,6 +3553,7 @@
         },
         body: JSON.stringify(pathItem),
       });
+    }
 
     const switchOptionalScript = (updateDb) => {
       const el = getElementById1('optional-script')
@@ -6262,7 +6264,7 @@ checkbox1.setAttribute('hidden', "");
                 const checked = e.target.checked
                 item.execute_in_template = checked
                 console.log('updating')
-                
+
                 await updatePathItem()
               };
             }
