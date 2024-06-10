@@ -6143,7 +6143,7 @@ checkbox1.setAttribute('hidden', "");
           onLoad: [],
           onPublish: [],
           onClick: [],
-          notActive: [{ "name": "script_head_transfer" }, { "name": "scrip_eval" }, { "name": "script_breadcrumb_generation" }, { "name": "script_transfer" }, { "name": "script_product_spec_table" }, { "name": "script_article_table_of_contents" }, { "name": "script_cleaner" }, { "name": "script_generate_product_json" }, { "name": "script_generate_article_anchor" }, { "name": "script_chatgpt_" }]
+          notActive: [{ "name": "script_head_placeholders_transfer" }, { "name": "script_head_transfer" }, { "name": "scrip_eval" }, { "name": "script_breadcrumb_generation" }, { "name": "script_transfer" }, { "name": "script_product_spec_table" }, { "name": "script_article_table_of_contents" }, { "name": "script_cleaner" }, { "name": "script_generate_product_json" }, { "name": "script_generate_article_anchor" }, { "name": "script_chatgpt_" }]
         }
         await updatePathItem()
       }
@@ -6269,6 +6269,48 @@ checkbox1.setAttribute('hidden', "");
       })
       loadStatus.textContent = '🟢'
     }
+    const funcDictionary = {
+      script_head_placeholders_transfer:replacePlaceHolders,
+      script_head_transfer:()=>{},
+      scrip_eval:()=>{},
+      script_breadcrumb_generation:()=>{},
+      script_transfer:()=>{},
+      script_product_spec_table:()=>{},
+      script_article_table_of_contents:()=>{},
+      script_cleaner:()=>{},
+      script_generate_product_json:()=>{},
+      script_generate_article_anchor:()=>{},
+      script_chatgpt_:()=>{},
+    }
+    const onLoad = async()=>{
+      const onLoad = pathItem.hub_items?.scripts?.onLoad
+      for(const item of onLoad){
+        await funcDictionary[item.name]()
+      }
+
+    }
+    const onOpen = async()=>{
+      const onOpen = pathItem.hub_items?.scripts?.onOpen
+      for(const item of onOpen){
+        await funcDictionary[item.name]()
+      }
+
+    }
+    const onPublish = async()=>{
+      const onPublish = pathItem.hub_items?.scripts?.onPublish
+      for(const item of onPublish){
+        await funcDictionary[item.name]()
+      }
+
+    }
+    const onClick = async()=>{
+      const onClick = pathItem.hub_items?.scripts?.onClick
+      for(const item of onClick){
+        await funcDictionary[item.name]()
+      }
+
+    }
+    
     async function loadFirst() {
       var iframe = getElementById1("generated-page-iframe");
 
@@ -6320,9 +6362,16 @@ checkbox1.setAttribute('hidden', "");
         if (componentNameButton) {
           componentNameButton.innerText = `🧩${idFromQuery}`;
         }
+        //get pathItem
+        const responseData = await getRes(idFromQuery, true)
+        const { items } = responseData
+        pathItem = items.find(e => e.sk === 'path')
       }
-      await loadFromDb()
       handleMenus()
+      
+      await onOpen()
+      await loadFromDb()
+      await onLoad()
       clearInterval(interval);
       lastActionTime.textContent = timerElement.textContent;
       loadingScreen.style.display = 'none';
@@ -6969,7 +7018,7 @@ checkbox1.setAttribute('hidden', "");
             onLoad: [],
             onPublish: [],
             onClick: [],
-            notActive: [{ "name": "script_head_transfer" }, { "name": "scrip_eval" }, { "name": "script_breadcrumb_generation" }, { "name": "script_transfer" }, { "name": "script_product_spec_table" }, { "name": "script_article_table_of_contents" }, { "name": "script_cleaner" }, { "name": "script_generate_product_json" }, { "name": "script_generate_article_anchor" }, { "name": "script_chatgpt_" }]
+            notActive: [{ "name": "script_head_placeholders_transfer" }, { "name": "script_head_transfer" }, { "name": "scrip_eval" }, { "name": "script_breadcrumb_generation" }, { "name": "script_transfer" }, { "name": "script_product_spec_table" }, { "name": "script_article_table_of_contents" }, { "name": "script_cleaner" }, { "name": "script_generate_product_json" }, { "name": "script_generate_article_anchor" }, { "name": "script_chatgpt_" }]
           }
         }
         element.querySelectorAll('#script_execute_select').forEach(checkbox => {
@@ -7026,11 +7075,11 @@ checkbox1.setAttribute('hidden', "");
             const move = element.querySelector('[data-move-actions]')
             if (!move.hasAttribute('hidden')) {
               move.setAttribute('hidden', '')
-              
+
               return
             }
             move.removeAttribute('hidden')
-            if(!move){
+            if (!move) {
               console.log(element.getAttribute('sk'))
               return
             }
@@ -7052,10 +7101,10 @@ checkbox1.setAttribute('hidden', "");
                 const move = element1.querySelector('[data-move-actions]')
                 move.setAttribute('hidden', '')
               })
-             
+
             })
             const beforeB = move.querySelector('[data-move-before]')
-            beforeB &&(beforeB.onclick = async (e) => {
+            beforeB && (beforeB.onclick = async (e) => {
               positionItem.positions = moveStringBefore(positionItem.positions, actionTime, anchor)
               await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                 method: 'POST',
@@ -7072,7 +7121,7 @@ checkbox1.setAttribute('hidden', "");
                 const move = element1.querySelector('[data-move-actions]')
                 move.setAttribute('hidden', '')
               })
-              
+
             })
 
           }
@@ -7182,7 +7231,7 @@ checkbox1.setAttribute('hidden', "");
           let id1 = removeLastOccurrence(options.attachId, '-tree')
           console.log(id1)
           const el11 = getElementById1(id1)
-          !el11 && (id1 ='body')
+          !el11 && (id1 = 'body')
           cloned2.querySelector('#action-target-tag-id-value').textContent = id1
           cloned2.querySelector('#action-target-tag-name-value').textContent = getElementById1(id1).tagName.toLowerCase()
         } else {
@@ -8232,7 +8281,7 @@ checkbox1.setAttribute('hidden', "");
             else {
               attachId = options?.attachId
             }
-            if(!getElementById1(attachId)){
+            if (!getElementById1(attachId)) {
               attachId = 'body-tree'
             }
 
@@ -10678,13 +10727,14 @@ elementsToRemove.forEach(element => element.remove());
         components.push(idFromLink)
         responseData = await getRes(idFromLink, true)
         const { items } = responseData
+        pathItem = items.find(e => e.sk === 'path')
         const map = items.find(e => e.sk === 'componentsMap')
         actions = items.filter(i => i.action)
         let r;
         if (map) {
           r = Promise.all(map.items.map(id => getRes(id, false, true)))
         }
-        pathItem = items.find(e => e.sk === 'path')
+
         if (!pathItem) {
           window.location.href = 'index.html'
         }
@@ -11349,6 +11399,10 @@ elementsToRemove.forEach(element => element.remove());
 
     }
     const replacePlaceHolders = (html) => {
+      const iframe = document.getElementById("generated-page-iframe");
+
+      // Access the content of the iframe
+      const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
       const all = document.querySelectorAll('[data-list]:not([hidden])')
       const checked = {}
       for (const el of all) {
@@ -11373,7 +11427,13 @@ elementsToRemove.forEach(element => element.remove());
         }
       }
       for (const key of Object.keys(checked)) {
-        html = html.replaceAll('{' + key + '}', checked[key].join(','))
+        if(html){
+          html = html.replaceAll('{' + key + '}', checked[key].join(','))
+        }
+        else{
+          iframeDocument.innerHTML =iframeDocument.innerHTML.replaceAll('{' + key + '}', checked[key].join(','))
+        }
+        
       }
       return html
     }
