@@ -11613,6 +11613,7 @@ elementsToRemove.forEach(element => element.remove());
 
       // Use the textContent as needed, for example, log it to the console
       console.log('Publishing:', pagePathContent);
+      await onPublish()
       //generateSchema(pagePathContent.split(';')[0], date)
       var iframe = document.getElementById("generated-page-iframe");
 
@@ -11620,8 +11621,9 @@ elementsToRemove.forEach(element => element.remove());
       var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
       let html = '<!DOCTYPE html>' + iframeDocument.documentElement.outerHTML;
 
-      html = replacePlaceHolders(html)
+      //html = replacePlaceHolders(html)
       console.log(html)
+      
       const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/publishv2', {
         method: 'POST',
         headers: {
