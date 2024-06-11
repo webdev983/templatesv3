@@ -668,7 +668,7 @@
 
                   <input type="checkbox" id="script_execute_select" hidden>
                   <label id="script_status" class="l-3">🔴</label>
-                  <label class="l-3" style="margin: 10px;">head  placeholders transfer ✉️</label>
+                  <label class="l-3" style="margin: 10px;">head placeholders transfer ✉️</label>
                 </td>
                 <td>
                   <span class="l-3">🦾</span>
@@ -3069,7 +3069,7 @@
           const key = row.querySelector('[data-lists-element-key]').textContent
           const value = row.querySelector('[data-list-element-selection]')?.value || row.querySelector('[data-lists-element-value]').textContent || ''
 
-          html  ? (html = html.replaceAll('{' + key + '}', value)) : iframeDocument.documentElement.innerHTML =iframeDocument.documentElement.innerHTML.replaceAll('{' + key + '}', value)
+          html ? (html = html.replaceAll('{' + key + '}', value)) : iframeDocument.documentElement.innerHTML = iframeDocument.documentElement.innerHTML.replaceAll('{' + key + '}', value)
           const checkboxs = row.querySelectorAll('[data-list-element-benefit]')
           for (const checkbox of checkboxs) {
             if (checkbox.checked) {
@@ -3085,13 +3085,13 @@
         }
       }
       for (const key of Object.keys(checked)) {
-        if(html){
+        if (html) {
           html = html.replaceAll('{' + key + '}', checked[key].join(','))
         }
-        else{
-          iframeDocument.documentElement.innerHTML =iframeDocument.documentElement.innerHTML.replaceAll('{' + key + '}', checked[key].join(','))
+        else {
+          iframeDocument.documentElement.innerHTML = iframeDocument.documentElement.innerHTML.replaceAll('{' + key + '}', checked[key].join(','))
         }
-        
+
       }
       return html
     }
@@ -3544,7 +3544,7 @@
       originalRow.remove();
 
     }
-    var updatePathItem = () =>{
+    var updatePathItem = () => {
       console.log(JSON.stringify(pathItem))
 
       return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -6230,7 +6230,7 @@ checkbox1.setAttribute('hidden', "");
         sortQueue(pathItem.hub_items?.scripts[key])
         const body = document.getElementById(getBodyIdFromType(key))
         for (const item of (pathItem.hub_items?.scripts?.[key] || [])) {
-          const { name, execute_on_red_checkbox, execute_requires_reload, execute_in_template, queue_number,runned } = item;
+          const { name, execute_on_red_checkbox, execute_requires_reload, execute_in_template, queue_number, runned } = item;
           const appItem = document.getElementById(name);
 
           if (appItem) {
@@ -6260,7 +6260,7 @@ checkbox1.setAttribute('hidden', "");
             const inT = appItem.querySelector('#execute_in_template')
             if (inT) {
               inT.checked = !!execute_in_template;
-              inT.onchange = async(e) => {
+              inT.onchange = async (e) => {
                 // Handle onchange event for execute_in_template
                 const checked = e.target.checked
                 item.execute_in_template = checked
@@ -6279,7 +6279,7 @@ checkbox1.setAttribute('hidden', "");
                 updatePathItem();
               };
             }
-            if(runned){
+            if (runned) {
               appItem.querySelector('#last_script_execute_time').textContent = formatDate(new Date(runned))
             }
 
@@ -6350,32 +6350,32 @@ checkbox1.setAttribute('hidden', "");
       loadStatus.textContent = '🟢'
     }
     const funcDictionary = {
-      script_head_placeholders_transfer:replacePlaceHolders,
-      script_head_transfer:generateSchema,
-      scrip_eval:()=>runScripts,
-      script_breadcrumb_generation:generateBreadCrumb,
-      script_transfer:()=>{},
-      script_product_spec_table:()=>{},
-      script_article_table_of_contents:()=>{},
-      script_cleaner:()=>{},
-      script_generate_product_json:()=>{},
-      script_generate_article_anchor:()=>{},
-      script_chatgpt_:()=>{},
+      script_head_placeholders_transfer: replacePlaceHolders,
+      script_head_transfer: generateSchema,
+      scrip_eval: () => runScripts,
+      script_breadcrumb_generation: generateBreadCrumb,
+      script_transfer: () => { },
+      script_product_spec_table: () => { },
+      script_article_table_of_contents: () => { },
+      script_cleaner: () => { },
+      script_generate_product_json: () => { },
+      script_generate_article_anchor: () => { },
+      script_chatgpt_: () => { },
     }
-    const onLoad = async()=>{
+    const onLoad = async () => {
       console.log('onload')
       const onLoad = pathItem.hub_items?.scripts?.onLoad
       const body = document.getElementById(getBodyIdFromType('onLoad'))
-      if(!onLoad){
+      if (!onLoad) {
         console.log('no onload')
         return
       }
-      for(const item of onLoad){
-        if(!item.execute_in_template && pathItem.lsi1.toLowerCase().includes('seositeshome.com')){
+      for (const item of onLoad) {
+        if (!item.execute_in_template && pathItem.lsi1.toLowerCase().includes('seositeshome.com')) {
           return
         }
         await funcDictionary[item.name]()
-        const item1 = body.querySelector('#'+item.name)
+        const item1 = body.querySelector('#' + item.name)
         item1.querySelector('#script_status').textContent = '🟢'
         const date = new Date()
         item.runned = date.getTime()
@@ -6383,42 +6383,42 @@ checkbox1.setAttribute('hidden', "");
       }
 
     }
-    const onOpen = async()=>{
+    const onOpen = async () => {
       const onOpen = pathItem.hub_items?.scripts?.onOpen
       onOpen && sortQueue(onOpen)
       const body = document.getElementById(getBodyIdFromType('onOpen'))
-      if(!onOpen){
+      if (!onOpen) {
         return
       }
-      for(const item of onOpen){
-        if(!item.execute_in_template && pathItem.lsi1.toLowerCase().includes('seositeshome.com')){
+      for (const item of onOpen) {
+        if (!item.execute_in_template && pathItem.lsi1.toLowerCase().includes('seositeshome.com')) {
           return
         }
         await funcDictionary[item.name]()
-        const item1 = body.querySelector('#'+item.name)
+        const item1 = body.querySelector('#' + item.name)
         item1.querySelector('#script_status').textContent = '🟢'
         const date = new Date()
         item.runned = date.getTime()
         item1.querySelector('#last_script_execute_time').textContent = formatDate(date)
-        
+
       }
       updatePathItem()
-      
-      
+
+
 
     }
-    const onPublish = async()=>{
+    const onPublish = async () => {
       const onPublish = pathItem.hub_items?.scripts?.onPublish
       const body = document.getElementById(getBodyIdFromType('onPublish'))
-      if(!onPublish){
+      if (!onPublish) {
         return
       }
-      for(const item of onPublish){
-        if(!item.execute_in_template && pathItem.lsi1.toLowerCase().includes('seositeshome.com')){
+      for (const item of onPublish) {
+        if (!item.execute_in_template && pathItem.lsi1.toLowerCase().includes('seositeshome.com')) {
           return
         }
         await funcDictionary[item.name]()
-        const item1 = body.querySelector('#'+item.name)
+        const item1 = body.querySelector('#' + item.name)
         item1.querySelector('#script_status').textContent = '🟢'
         const date = new Date()
         item.runned = date.getTime()
@@ -6426,26 +6426,26 @@ checkbox1.setAttribute('hidden', "");
       }
 
     }
-    const onClick = async()=>{
+    const onClick = async (name) => {
       const onClick = pathItem.hub_items?.scripts?.onClick
       const body = document.getElementById(getBodyIdFromType('onClick'))
-      if(!onClick){
+      if (!onClick) {
         return
       }
-      for(const item of onClick){
-        if(!item.execute_in_template && pathItem.lsi1.toLowerCase().includes('seositeshome.com')){
-          return
-        }
-        await funcDictionary[item.name]()
-        const item1 = body.querySelector('#'+item.name)
-        item1.querySelector('#script_status').textContent = '🟢'
-        const date = new Date()
-        item.runned = date.getTime()
-        item1.querySelector('#last_script_execute_time').textContent = formatDate(date)
+      const item = onClick.find(e => e.name === name)
+      if (!item.execute_in_template && pathItem.lsi1.toLowerCase().includes('seositeshome.com')) {
+        return
       }
+      await funcDictionary[item.name]()
+      const item1 = body.querySelector('#' + item.name)
+      item1.querySelector('#script_status').textContent = '🟢'
+      const date = new Date()
+      item.runned = date.getTime()
+      item1.querySelector('#last_script_execute_time').textContent = formatDate(date)
+
 
     }
-    
+
     async function loadFirst() {
       var iframe = getElementById1("generated-page-iframe");
 
@@ -6503,10 +6503,10 @@ checkbox1.setAttribute('hidden', "");
         pathItem = items.find(e => e.sk === 'path')
       }
       handleMenus()
-      
+
       await onOpen()
       await loadFromDb()
-      
+
       clearInterval(interval);
       lastActionTime.textContent = timerElement.textContent;
       loadingScreen.style.display = 'none';
@@ -10619,7 +10619,7 @@ elementsToRemove.forEach(element => element.remove());
 
       return copied;
     }
-    
+
     function removeDuplicates(arr) {
       return Array.from(new Set(arr));
     }
@@ -11331,7 +11331,7 @@ elementsToRemove.forEach(element => element.remove());
     }
 
     const generateSchema = () => {
-      const url = pathItem.split(';')[0].replace('|','/')
+      const url = pathItem.split(';')[0].replace('|', '/')
       const date = new Date()
       if (url.startsWith('Core.SeoSitesHome.com')) {
         return
@@ -11502,7 +11502,7 @@ elementsToRemove.forEach(element => element.remove());
       return map
 
     }
-    
+
     const getFromSiteData = (k) => {
       const all = document.querySelectorAll('[data-list]:not([hidden])')
       for (const el of all) {
@@ -11623,7 +11623,7 @@ elementsToRemove.forEach(element => element.remove());
 
       //html = replacePlaceHolders(html)
       console.log(html)
-      
+
       const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/publishv2', {
         method: 'POST',
         headers: {
