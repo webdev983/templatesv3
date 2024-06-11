@@ -6281,10 +6281,21 @@ checkbox1.setAttribute('hidden', "");
                 updatePathItem();
               };
             }
+            const lastExec = appItem.querySelector('#last_script_execute_time')
             if (runned) {
-              appItem.querySelector('#last_script_execute_time').textContent = formatDate(new Date(runned))
+              lastExec.textContent = formatDate(new Date(runned))
             }
+            if (key === 'onClick') {
+              const scriptS = appItem.querySelector('#script_status')
+              scriptS.onclick = async () => {
+                await funcDictionary[name]()
+                scriptS.textContent = '🟢'
+                const date = new Date()
+                item.runned = date.getTime()
+                lastExec.textContent = formatDate(date)
 
+              }
+            }
 
 
 
@@ -6426,7 +6437,7 @@ checkbox1.setAttribute('hidden', "");
 
       }
     }
-    
+
     const handleMenus = () => {
       const table = document.getElementById('menu_toggle')
       if (!pathItem.hub_items) {
@@ -6486,7 +6497,7 @@ checkbox1.setAttribute('hidden', "");
     const funcDictionary = {
       script_head_placeholders_transfer: replacePlaceHolders,
       script_head_transfer: generateSchema,
-      scrip_eval:  runScripts,
+      scrip_eval: runScripts,
       script_breadcrumb_generation: generateBreadCrumb,
       script_transfer: () => { },
       script_product_spec_table: () => { },
@@ -10733,7 +10744,7 @@ elementsToRemove.forEach(element => element.remove());
         }
       }
     }
-    
+
     var updateComponentsMap = false
 
     function deepCopy(obj) {
