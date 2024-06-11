@@ -6293,7 +6293,7 @@ checkbox1.setAttribute('hidden', "");
                 const date = new Date()
                 item.runned = date.getTime()
                 lastExec.textContent = formatDate(date)
-
+                updatePathItem();
               }
             }
 
@@ -7314,6 +7314,19 @@ checkbox1.setAttribute('hidden', "");
               sortQueue(items[scriptClicked])
             }
             const existing = checkbox.closest('tr')
+            if(type ==='onClick'){
+              existing.querySelector('#script_status').onclick = async()=>{
+                await funcDictionary[id]()
+                existing.querySelector('#script_status') = '🟢'
+                const date = new Date()
+                const l = pathItem.hub_items.scripts.onClick.length
+                pathItem.hub_items.scripts.onClick[l-1].runned = date.getTime()
+                existing.querySelector('#last_script_execute_time').textContent = formatDate(date)
+                updatePathItem()
+              }
+            }else{
+              existing.querySelector('#script_status').onclick = ()=>{}
+            }
             document.getElementById(getBodyIdFromType(scriptClicked)).append(existing)
           }
           checkbox.setAttribute('hidden', '');
