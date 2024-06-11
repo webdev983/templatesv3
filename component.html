@@ -6565,13 +6565,14 @@ checkbox1.setAttribute('hidden', "");
         }
         if(item.name==='script_generate_product_json'){
           generateProductJson = true
-          continue 
+           
         }
-        if(item.name==="script_cleaner"){
+        else if(item.name==="script_cleaner"){
           cleanHtml = true
-          continue
+          
         }
-        await funcDictionary[item.name]()
+        else{await funcDictionary[item.name]()}
+        
         const item1 = body.querySelector('#' + item.name)
         item1.querySelector('#script_status').textContent = '🟢'
         const date = new Date()
