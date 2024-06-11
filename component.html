@@ -6555,12 +6555,21 @@ checkbox1.setAttribute('hidden', "");
     const onPublish = async () => {
       const onPublish = pathItem.hub_items?.scripts?.onPublish
       const body = document.getElementById(getBodyIdFromType('onPublish'))
+      let cleanHtml,generateProductJson
       if (!onPublish) {
         return
       }
       for (const item of onPublish) {
         if (!item.execute_in_template && pathItem.lsi1.toLowerCase().includes('seositeshome.com')) {
-          return
+          continue
+        }
+        if(item.name==='script_generate_product_json'){
+          generateProductJson = true
+          continue 
+        }
+        if(item.name==="script_cleaner"){
+          cleanHtml = true
+          continue
         }
         await funcDictionary[item.name]()
         const item1 = body.querySelector('#' + item.name)
@@ -6569,7 +6578,7 @@ checkbox1.setAttribute('hidden', "");
         item.runned = date.getTime()
         item1.querySelector('#last_script_execute_time').textContent = formatDate(date)
       }
-
+      return {cleanHtml,generateProductJson}
     }
     const onClick = async (name) => {
       const onClick = pathItem.hub_items?.scripts?.onClick
@@ -11643,7 +11652,7 @@ elementsToRemove.forEach(element => element.remove());
 
       // Use the textContent as needed, for example, log it to the console
       console.log('Publishing:', pagePathContent);
-      await onPublish()
+      const {cleanHtml,generateProductJson} = await onPublish()
       //generateSchema(pagePathContent.split(';')[0], date)
       var iframe = document.getElementById("generated-page-iframe");
 
@@ -11659,7 +11668,7 @@ elementsToRemove.forEach(element => element.remove());
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: idFromLink, html, path: pagePathContent, toRemove, robotsTxt, siteMapPriority, siteMapNotDefiniedPriorities, date: date.getTime(), sku: pathItemSku, updateContent }),
+        body: JSON.stringify({ id: idFromLink, html, path: pagePathContent, toRemove, robotsTxt, siteMapPriority, siteMapNotDefiniedPriorities, date: date.getTime(), sku: pathItemSku, updateContent,cleanHtml,generateProductJson }),
       });
       const r = await response.json()
       console.log('link: ' + r.link)
