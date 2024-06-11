@@ -2329,7 +2329,7 @@
       console.log('not found id1' + id)
       return undefined
     }
-    var querySelectorAll1 = (selector) => {
+    var querySelectorAll1 = (selector,head) => {
 
       const els1 = document.querySelectorAll(selector)
 
@@ -2337,7 +2337,7 @@
 
       // Access the content of the iframe
       var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-
+      head && (selector = selector +'[data-lists-element-value]')
 
       var els2 = iframeDocument.querySelectorAll(selector);
 
@@ -6306,7 +6306,7 @@ checkbox1.setAttribute('hidden', "");
 
       }
     }
-    var generateSchema = () => {
+    var generateSchema = (head) => {
       const url = pathItem.lsi1.split(';')[0].replace('|', '/')
       const date = new Date()
       if (url.startsWith('Core.SeoSitesHome.com')) {
@@ -6345,7 +6345,7 @@ checkbox1.setAttribute('hidden', "");
           delete json['offers-aggregate']
  
         }*/
-        traverseJSONAndUpdate(json, '', receiverName, date);
+        traverseJSONAndUpdate(json, '', receiverName, date,head);
 
         json = cleanJson(json)
         // After updating, stringify the JSON object and assign it back to the text content of the schema element
@@ -6371,10 +6371,10 @@ checkbox1.setAttribute('hidden', "");
             tag.setAttribute('href', "https://" + nLink)
 
           }
-          const senders = querySelectorAll1(`[data-transfer-sender^="${receiver}."]`);
-          const senders2 = querySelectorAll1(`[data-transfer-sender-href^="${receiver}."]`);
-          const senders3 = querySelectorAll1(`[data-transfer-sender-src^="${receiver}."]`);
-          const senders4 = querySelectorAll1(`[data-transfer-sender-innerhtml^="${receiver}."]`);
+          const senders = querySelectorAll1(`[data-transfer-sender^="${receiver}."]`,head);
+          const senders2 = querySelectorAll1(`[data-transfer-sender-href^="${receiver}."]`,head);
+          const senders3 = querySelectorAll1(`[data-transfer-sender-src^="${receiver}."]`,head);
+          const senders4 = querySelectorAll1(`[data-transfer-sender-innerhtml^="${receiver}."]`,head);
           if (senders.length) {
             for (const sender of senders) {
               const textContent = sender.textContent;
@@ -6499,7 +6499,7 @@ checkbox1.setAttribute('hidden', "");
       script_head_transfer: generateSchema,
       scrip_eval: runScripts,
       script_breadcrumb_generation: generateBreadCrumb,
-      script_transfer: () => { },
+      script_transfer: () => generateSchema(true),
       script_product_spec_table: () => { },
       script_article_table_of_contents: () => { },
       script_cleaner: () => { },
@@ -11255,7 +11255,7 @@ elementsToRemove.forEach(element => element.remove());
 
 
     }
-    function traverseJSONAndUpdate(json, path = '', sender = '', date) {
+    function traverseJSONAndUpdate(json, path = '', sender = '', date,head) {
       // Iterate through each key-value pair in the JSON object
       for (const key in json) {
         if (json.hasOwnProperty(key)) {
@@ -11264,7 +11264,7 @@ elementsToRemove.forEach(element => element.remove());
           // If the current value is an array, handle each element individually
           if (Array.isArray(json[key])) {
             // Find the data-transfer-cloner attribute for the current array
-            const clonerAttributes = querySelectorAll1(`[data-transfer-cloner="${sender}.${currentPath}"]:not([data-b-value=""]`);
+            const clonerAttributes = querySelectorAll1(`[data-transfer-cloner="${sender}.${currentPath}"]:not([data-b-value=""]`,head);
             if (clonerAttributes.length > 0) {
               const arrayOfObjects = [];
               // Iterate through each set of cloned elements
@@ -11374,7 +11374,7 @@ elementsToRemove.forEach(element => element.remove());
 
           // If the current value is an object or an array, recursively traverse it
           else if (typeof json[key] === 'object' && json[key] !== null) {
-            traverseJSONAndUpdate(json[key], currentPath, sender, date);
+            traverseJSONAndUpdate(json[key], currentPath, sender, date,head);
           }
           else if (key === 'datePublished') {
             json[key] = headContentItem.hosting_time?.published ? new Date(headContentItem.hosting_time.published).toISOString() : date.toISOString()
@@ -11383,7 +11383,7 @@ elementsToRemove.forEach(element => element.remove());
             // If the current value is a string, check for the data-transfer-sender attribute
             const senderPath = sender ? `${sender}.${currentPath}` : currentPath;
             console.log('sender path ' + senderPath)
-            let senderAttribute = querySelectorAll1(`[data-transfer-sender="${senderPath}"]:not([data-b-value=""]`);
+            let senderAttribute = querySelectorAll1(`[data-transfer-sender="${senderPath}"]:not([data-b-value=""]`,head);
 
 
             if (senderAttribute.length) {
@@ -11396,7 +11396,7 @@ elementsToRemove.forEach(element => element.remove());
 
             }
             else {
-              let senderAttribute = querySelectorAll1(`[data-transfer-sender-href="${senderPath}"]:not([data-b-value=""]`);
+              let senderAttribute = querySelectorAll1(`[data-transfer-sender-href="${senderPath}"]:not([data-b-value=""]`,head);
               console.log('iiin2')
               if (senderAttribute.length) {
 
@@ -11404,7 +11404,7 @@ elementsToRemove.forEach(element => element.remove());
 
 
               } else {
-                let senderAttribute = querySelectorAll1(`[data-transfer-sender-src="${senderPath}"]:not([data-b-value=""]`);
+                let senderAttribute = querySelectorAll1(`[data-transfer-sender-src="${senderPath}"]:not([data-b-value=""]`,head);
                 console.log('iiin3')
                 if (senderAttribute.length) {
 
