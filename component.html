@@ -6351,7 +6351,7 @@ checkbox1.setAttribute('hidden', "");
     }
     const funcDictionary = {
       script_head_placeholders_transfer:replacePlaceHolders,
-      script_head_transfer:()=>{},
+      script_head_transfer:generateSchema,
       scrip_eval:()=>{},
       script_breadcrumb_generation:()=>{},
       script_transfer:()=>{},
@@ -6409,21 +6409,39 @@ checkbox1.setAttribute('hidden', "");
     }
     const onPublish = async()=>{
       const onPublish = pathItem.hub_items?.scripts?.onPublish
+      const body = document.getElementById(getBodyIdFromType('onPublish'))
       if(!onPublish){
         return
       }
       for(const item of onPublish){
+        if(!item.execute_in_template && pathItem.lsi1.toLowerCase().includes('seositeshome.com')){
+          return
+        }
         await funcDictionary[item.name]()
+        const item1 = body.querySelector('#'+item.name)
+        item1.querySelector('#script_status').textContent = '🟢'
+        const date = new Date()
+        item.runned = date.getTime()
+        item1.querySelector('#last_script_execute_time').textContent = formatDate(date)
       }
 
     }
     const onClick = async()=>{
       const onClick = pathItem.hub_items?.scripts?.onClick
+      const body = document.getElementById(getBodyIdFromType('onClick'))
       if(!onClick){
         return
       }
       for(const item of onClick){
+        if(!item.execute_in_template && pathItem.lsi1.toLowerCase().includes('seositeshome.com')){
+          return
+        }
         await funcDictionary[item.name]()
+        const item1 = body.querySelector('#'+item.name)
+        item1.querySelector('#script_status').textContent = '🟢'
+        const date = new Date()
+        item.runned = date.getTime()
+        item1.querySelector('#last_script_execute_time').textContent = formatDate(date)
       }
 
     }
@@ -6621,7 +6639,7 @@ checkbox1.setAttribute('hidden', "");
 
       // Use the textContent as needed, for example, log it to the console
       console.log('Publishing:', pagePathContent);
-      generateSchema(pagePathContent.split(';')[0], new Date())
+      //generateSchema(pagePathContent.split(';')[0], new Date())
 
 
       const event = new CustomEvent("pageloaded")
@@ -11312,7 +11330,9 @@ elementsToRemove.forEach(element => element.remove());
       }
     }
 
-    const generateSchema = (url, date) => {
+    const generateSchema = () => {
+      const url = pathItem.split(';')[0].replace('|','/')
+      const date = new Date()
       if (url.startsWith('Core.SeoSitesHome.com')) {
         return
       }
@@ -11593,7 +11613,7 @@ elementsToRemove.forEach(element => element.remove());
 
       // Use the textContent as needed, for example, log it to the console
       console.log('Publishing:', pagePathContent);
-      generateSchema(pagePathContent.split(';')[0], date)
+      //generateSchema(pagePathContent.split(';')[0], date)
       var iframe = document.getElementById("generated-page-iframe");
 
       // Access the content of the iframe
