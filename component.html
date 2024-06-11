@@ -6352,8 +6352,8 @@ checkbox1.setAttribute('hidden', "");
     const funcDictionary = {
       script_head_placeholders_transfer:replacePlaceHolders,
       script_head_transfer:generateSchema,
-      scrip_eval:()=>{},
-      script_breadcrumb_generation:()=>{},
+      scrip_eval:()=>runScripts,
+      script_breadcrumb_generation:generateBreadCrumb,
       script_transfer:()=>{},
       script_product_spec_table:()=>{},
       script_article_table_of_contents:()=>{},
@@ -6544,7 +6544,7 @@ checkbox1.setAttribute('hidden', "");
         }
       )
 
-      await runScripts()
+      //await runScripts()
       await onLoad()
       const imagePs = imagesIds.map(async (imageId) => {
         const element = getElementById1(imageId)
