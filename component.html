@@ -6295,6 +6295,138 @@ checkbox1.setAttribute('hidden', "");
 
       }
     }
+    var generateSchema = () => {
+      const url = pathItem.split(';')[0].replace('|', '/')
+      const date = new Date()
+      if (url.startsWith('Core.SeoSitesHome.com')) {
+        return
+      }
+      const generatedPage = getElementById1('generated-page')
+      const schemas = querySelectorAll1('script[data-transfer-receiver]')
+
+      //sku 
+
+      const combinations = pathItem.combinations
+      const forms = querySelectorAll1('[data-product-attribute-form]');
+      //const priceItems = querySelectorAll1('[data-builder-cart="price"]')
+
+      for (const schema of schemas) {
+        const receiverName = schema.getAttribute('data-transfer-receiver')
+        let json = JSON.parse(schema.textContent)
+        console.log('INPUT SCHEMA ' + schema.textContent)
+        // Start traversing the JSON object
+        /*
+        if (combinations === 1 || forms.length === 1) {
+          const prices = Array.from(priceItems[0].children).map(e => parseInt(e.textContent)).filter(e => e)
+          delete json['offers-aggregate']
+          json['offers-single'] && (json.offers = { ...json['offers-single'], price: Math.min(...prices), url: getPageUrl(url) })
+          delete json['offers-single']
+        }
+        else {
+          let prices = []
+          for (const el of priceItems) {
+            prices.push(...Array.from(el.children).map(e => parseInt(e.textContent)))
+          }
+          prices = prices.filter(e => e)
+          console.log('prices' + JSON.stringify(prices))
+          delete json['offers-single']
+          json['offers-aggregate'] && (json.offers = { ...json['offers-aggregate'], lowPrice: Math.min(...prices), highPrice: Math.max(...prices), offerCount: combinations, url: getPageUrl(url) })
+          delete json['offers-aggregate']
+ 
+        }*/
+        traverseJSONAndUpdate(json, '', receiverName, date);
+
+        json = cleanJson(json)
+        // After updating, stringify the JSON object and assign it back to the text content of the schema element
+        schema.textContent = JSON.stringify(json, null, 2);
+        console.log('OUTPUT SCHEMA JSON ' + JSON.stringify(json))
+      }
+      const tags = querySelectorAll1('[data-transfer-receiver]')
+      for (const tag of tags) {
+        if (tag.tagName.toLowerCase() !== 'script') {
+          const receiver = tag.getAttribute('data-transfer-receiver');
+          const link = pathItemPath.replace(';publish:published', '').toLowerCase()
+          if (receiver === "canonical" && link.endsWith('/hub')) {
+            const splited = link.split('/')
+            splited.pop()
+            if (splited[splited.length - 1] === 'home') {
+              splited.pop()
+            }
+            let nLink = splited[0]
+            if (splited.length > 1) {
+              nLink = splited.join('/') + '/'
+            }
+
+            tag.setAttribute('href', "https://" + nLink)
+
+          }
+          const senders = querySelectorAll1(`[data-transfer-sender^="${receiver}."]`);
+          const senders2 = querySelectorAll1(`[data-transfer-sender-href^="${receiver}."]`);
+          const senders3 = querySelectorAll1(`[data-transfer-sender-src^="${receiver}."]`);
+          const senders4 = querySelectorAll1(`[data-transfer-sender-innerhtml^="${receiver}."]`);
+          if (senders.length) {
+            for (const sender of senders) {
+              const textContent = sender.textContent;
+              const attr = sender.getAttribute('data-transfer-sender').replace(receiver + '.', '');
+              if (attr === 'text-content') {
+                tag.textContent = textContent
+              } else {
+                tag.setAttribute(attr, textContent);
+              }
+
+            }
+
+          }
+          if (senders2.length) {
+            for (const sender of senders2) {
+              const textContent = sender.getAttribute("href");
+              console.log('sender2')
+              const attr = sender.getAttribute('data-transfer-sender-href').replace(receiver + '.', '');
+              if (attr === 'text-content') {
+                tag.textContent = textContent
+              } else {
+                tag.setAttribute(attr, textContent);
+              }
+
+            }
+
+          }
+          if (senders3.length) {
+            for (const sender of senders3) {
+              const textContent = sender.getAttribute('src');
+              const attr = sender.getAttribute('data-transfer-sender-src').replace(receiver + '.', '');
+              if (sender.hasAttribute('data-builder-image-name')) {
+                console.log('iiin55555')
+                const name = sender.getAttribute('data-builder-image-name')
+                const e = 'https://' + link.toLowerCase() + '/' + name + '.' + textContent.split('.').pop()
+                tag.setAttribute(attr, e);
+                continue
+              }
+              if (attr === 'text-content') {
+                tag.textContent = textContent
+              } else {
+                tag.setAttribute(attr, textContent);
+              }
+
+            }
+
+          }
+          if (senders4.length) {
+            for (const sender of senders4) {
+              const html = sender.innerHTML;
+              console.log('sender4')
+              tag.innerHTML = html
+              tag.querySelectorAll('[data-b=""]').forEach(e => e.remove())
+              tag.querySelectorAll('[data-b-value=""]').forEach(e => e.remove())
+              tag.childNodes.forEach(child => removeAttributesStartingWith(child, toRemove.removeAttributesStartWith))
+            }
+
+          }
+        }
+
+      }
+    }
+    
     const handleMenus = () => {
       const table = document.getElementById('menu_toggle')
       if (!pathItem.hub_items) {
@@ -11332,137 +11464,6 @@ elementsToRemove.forEach(element => element.remove());
       }
     }
 
-    const generateSchema = () => {
-      const url = pathItem.split(';')[0].replace('|', '/')
-      const date = new Date()
-      if (url.startsWith('Core.SeoSitesHome.com')) {
-        return
-      }
-      const generatedPage = getElementById1('generated-page')
-      const schemas = querySelectorAll1('script[data-transfer-receiver]')
-
-      //sku 
-
-      const combinations = pathItem.combinations
-      const forms = querySelectorAll1('[data-product-attribute-form]');
-      //const priceItems = querySelectorAll1('[data-builder-cart="price"]')
-
-      for (const schema of schemas) {
-        const receiverName = schema.getAttribute('data-transfer-receiver')
-        let json = JSON.parse(schema.textContent)
-        console.log('INPUT SCHEMA ' + schema.textContent)
-        // Start traversing the JSON object
-        /*
-        if (combinations === 1 || forms.length === 1) {
-          const prices = Array.from(priceItems[0].children).map(e => parseInt(e.textContent)).filter(e => e)
-          delete json['offers-aggregate']
-          json['offers-single'] && (json.offers = { ...json['offers-single'], price: Math.min(...prices), url: getPageUrl(url) })
-          delete json['offers-single']
-        }
-        else {
-          let prices = []
-          for (const el of priceItems) {
-            prices.push(...Array.from(el.children).map(e => parseInt(e.textContent)))
-          }
-          prices = prices.filter(e => e)
-          console.log('prices' + JSON.stringify(prices))
-          delete json['offers-single']
-          json['offers-aggregate'] && (json.offers = { ...json['offers-aggregate'], lowPrice: Math.min(...prices), highPrice: Math.max(...prices), offerCount: combinations, url: getPageUrl(url) })
-          delete json['offers-aggregate']
- 
-        }*/
-        traverseJSONAndUpdate(json, '', receiverName, date);
-
-        json = cleanJson(json)
-        // After updating, stringify the JSON object and assign it back to the text content of the schema element
-        schema.textContent = JSON.stringify(json, null, 2);
-        console.log('OUTPUT SCHEMA JSON ' + JSON.stringify(json))
-      }
-      const tags = querySelectorAll1('[data-transfer-receiver]')
-      for (const tag of tags) {
-        if (tag.tagName.toLowerCase() !== 'script') {
-          const receiver = tag.getAttribute('data-transfer-receiver');
-          const link = pathItemPath.replace(';publish:published', '').toLowerCase()
-          if (receiver === "canonical" && link.endsWith('/hub')) {
-            const splited = link.split('/')
-            splited.pop()
-            if (splited[splited.length - 1] === 'home') {
-              splited.pop()
-            }
-            let nLink = splited[0]
-            if (splited.length > 1) {
-              nLink = splited.join('/') + '/'
-            }
-
-            tag.setAttribute('href', "https://" + nLink)
-
-          }
-          const senders = querySelectorAll1(`[data-transfer-sender^="${receiver}."]`);
-          const senders2 = querySelectorAll1(`[data-transfer-sender-href^="${receiver}."]`);
-          const senders3 = querySelectorAll1(`[data-transfer-sender-src^="${receiver}."]`);
-          const senders4 = querySelectorAll1(`[data-transfer-sender-innerhtml^="${receiver}."]`);
-          if (senders.length) {
-            for (const sender of senders) {
-              const textContent = sender.textContent;
-              const attr = sender.getAttribute('data-transfer-sender').replace(receiver + '.', '');
-              if (attr === 'text-content') {
-                tag.textContent = textContent
-              } else {
-                tag.setAttribute(attr, textContent);
-              }
-
-            }
-
-          }
-          if (senders2.length) {
-            for (const sender of senders2) {
-              const textContent = sender.getAttribute("href");
-              console.log('sender2')
-              const attr = sender.getAttribute('data-transfer-sender-href').replace(receiver + '.', '');
-              if (attr === 'text-content') {
-                tag.textContent = textContent
-              } else {
-                tag.setAttribute(attr, textContent);
-              }
-
-            }
-
-          }
-          if (senders3.length) {
-            for (const sender of senders3) {
-              const textContent = sender.getAttribute('src');
-              const attr = sender.getAttribute('data-transfer-sender-src').replace(receiver + '.', '');
-              if (sender.hasAttribute('data-builder-image-name')) {
-                console.log('iiin55555')
-                const name = sender.getAttribute('data-builder-image-name')
-                const e = 'https://' + link.toLowerCase() + '/' + name + '.' + textContent.split('.').pop()
-                tag.setAttribute(attr, e);
-                continue
-              }
-              if (attr === 'text-content') {
-                tag.textContent = textContent
-              } else {
-                tag.setAttribute(attr, textContent);
-              }
-
-            }
-
-          }
-          if (senders4.length) {
-            for (const sender of senders4) {
-              const html = sender.innerHTML;
-              console.log('sender4')
-              tag.innerHTML = html
-              tag.querySelectorAll('[data-b=""]').forEach(e => e.remove())
-              tag.querySelectorAll('[data-b-value=""]').forEach(e => e.remove())
-              tag.childNodes.forEach(child => removeAttributesStartingWith(child, toRemove.removeAttributesStartWith))
-            }
-
-          }
-        }
-
-      }
-    }
     var handleItemLink = async () => {
       const currentPath = pathItemPath.replace(';publish:published', '').toLowerCase()
       if ((currentPath.endsWith("/main-content") || currentPath.endsWith("/product-content")) &&
