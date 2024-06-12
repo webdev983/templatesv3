@@ -1851,7 +1851,7 @@
 
   -->
   <script>
-    var log1 = (t)=>{}
+    var log1 = (t) => { }
     const showClasses = (event) => {
       const target = event.target
       if (target.classList.contains('b-selected')) {
@@ -2525,7 +2525,7 @@
 
     }
     const generateBreadCrumbApi = async () => {
-      
+
       const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Page|BreadCrumb-Content'
       log1(tableLsi)
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
@@ -2546,7 +2546,7 @@
         method: 'POST',
         body: JSON.stringify({ id: headContentItem.id, sk: 'generated-breadcrumb' }),
       });
-      
+
     }
     var generateBreadCrumb = async (event) => {
       let arr = pathItemPath.split(';')[0].split('/')
@@ -3438,10 +3438,10 @@
       const originalRow = document.querySelector('#script_chatgpt_');
       for (const element of parsed['chatgpt-tasks']) {
         const cloned = originalRow.cloneNode(true);
-        cloned.id =element.name
+        cloned.id = element.name
         cloned.querySelector('#gpt-name').textContent = element.name;
-        
-        
+
+
         const runF = async () => {
           if (status.textContent === '🟠') { return }
           let task = element.task
@@ -6319,7 +6319,7 @@ checkbox1.setAttribute('hidden', "");
               scriptS.textContent = '🟢'
             }
             if (key === 'onClick') {
-              
+
               scriptS.onclick = async () => {
                 await funcDictionary[name]()
                 scriptS.textContent = '🟢'
@@ -6476,7 +6476,7 @@ checkbox1.setAttribute('hidden', "");
       }
     }
 
-    const handleMenus = async() => {
+    const handleMenus = async () => {
       const table = document.getElementById('menu_toggle')
       if (!pathItem.hub_items) {
         pathItem.hub_items = { menus: {} }
@@ -6565,13 +6565,13 @@ checkbox1.setAttribute('hidden', "");
         }
         const item1 = body.querySelector('#' + item.name)
         const status = item1.querySelector('#script_status')
-        if(status.textContent ==='🟢' && item.execute_on_red_checkbox){
+        if (status.textContent === '🟢' && item.execute_on_red_checkbox) {
           continue
         }
-        log1('name '+item.name)
+        log1('name ' + item.name)
         await funcDictionary[item.name]()
-       
-        
+
+
         status.textContent = '🟢'
         const date = new Date()
         const { name } = item
@@ -6582,8 +6582,8 @@ checkbox1.setAttribute('hidden', "");
           headContentItem.scripts[name] = { runned: date.getTime() }
         }
         item1.querySelector('#last_script_execute_time').textContent = formatDate(date)
-        if(item.execute_requires_reload){
-          reload =true
+        if (item.execute_requires_reload) {
+          reload = true
         }
       }
       await updateHeadContentItem()
@@ -6602,11 +6602,11 @@ checkbox1.setAttribute('hidden', "");
         const item1 = body.querySelector('#' + item.name)
         console.log(item1.id)
         const status = item1.querySelector('#script_status')
-        if(status.textContent ==='🟢' && item.execute_on_red_checkbox){
+        if (status.textContent === '🟢' && item.execute_on_red_checkbox) {
           continue
         }
         await funcDictionary[item.name]()
-        
+
         item1.querySelector('#script_status').textContent = '🟢'
         const date = new Date()
         const { name } = item
@@ -6617,8 +6617,8 @@ checkbox1.setAttribute('hidden', "");
           headContentItem.scripts[name] = { runned: date.getTime() }
         }
         item1.querySelector('#last_script_execute_time').textContent = formatDate(date)
-        if(item.execute_requires_reload){
-          reload =true
+        if (item.execute_requires_reload) {
+          reload = true
         }
 
       }
@@ -6640,7 +6640,7 @@ checkbox1.setAttribute('hidden', "");
         }
         const item1 = body.querySelector('#' + item.name)
         const status = item1.querySelector('#script_status')
-        if(status.textContent ==='🟢' && item.execute_on_red_checkbox){
+        if (status.textContent === '🟢' && item.execute_on_red_checkbox) {
           continue
         }
         if (item.name === 'script_generate_product_json') {
@@ -6653,7 +6653,7 @@ checkbox1.setAttribute('hidden', "");
         }
         else { await funcDictionary[item.name]() }
 
-        
+
         item1.querySelector('#script_status').textContent = '🟢'
         const date = new Date()
         const { name } = item
@@ -6664,8 +6664,8 @@ checkbox1.setAttribute('hidden', "");
           headContentItem.scripts[name] = { runned: date.getTime() }
         }
         item1.querySelector('#last_script_execute_time').textContent = formatDate(date)
-        if(item.execute_requires_reload){
-          reload =true
+        if (item.execute_requires_reload) {
+          reload = true
         }
       }
       await updateHeadContentItem()
@@ -6692,7 +6692,7 @@ checkbox1.setAttribute('hidden', "");
         headContentItem.scripts[name] = { runned: date.getTime() }
       }
       item1.querySelector('#last_script_execute_time').textContent = formatDate(date)
-      
+
       await updateHeadContentItem()
 
     }
@@ -6730,7 +6730,7 @@ checkbox1.setAttribute('hidden', "");
       const importValue = urlParams.get('val')
       const message = urlParams.get('message')
       ownerid = localStorage.getItem('ownerid') || urlParams.get('ownerid')
-      if(urlParams.get('ownerid')){
+      if (urlParams.get('ownerid')) {
         localStorage.setItem('executionToggle', 'true')
       }
       if (idFromQuery) {
@@ -6914,7 +6914,7 @@ checkbox1.setAttribute('hidden', "");
         await generateReview(heading, date, name, stars, ip, message)
       }
       //const pagePathContent = pathItemPath;
-      if(reload){
+      if (reload) {
         location.reload()
       }
       // Use the textContent as needed, for example, log it to the console
@@ -7141,7 +7141,7 @@ checkbox1.setAttribute('hidden', "");
         if (element.options?.frozen) {
           frozen = true
         }
-        if (!frozen && !errored && (localStorage.getItem('executionToggle' ))) {
+        if (!frozen && !errored && (localStorage.getItem('executionToggle'))) {
           await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId, attachId)
 
         }
@@ -8148,7 +8148,7 @@ checkbox1.setAttribute('hidden', "");
         return Array.from(elementA.parentElement.children).indexOf(elementA) -
           Array.from(elementB.parentElement.children).indexOf(elementB);
       }
-      function handleAppendOrInsertReplace(actions, selectedArrayNotSorted,fork) {
+      function handleAppendOrInsertReplace(actions, selectedArrayNotSorted, fork) {
         log1('start')
         var firstElementId = selectedArrayNotSorted[0].id;
         var restOfElements = selectedArrayNotSorted.slice(1);
@@ -8240,11 +8240,11 @@ checkbox1.setAttribute('hidden', "");
 
         }
       }
-      function handleAppendOrInsert(action, selectedArrayNotSorted, move, insert_copies,fork) {
+      function handleAppendOrInsert(action, selectedArrayNotSorted, move, insert_copies, fork) {
         // Sort
 
         log1('start')
-        console.log(JSON.stringify({action, selectedArrayNotSorted, move, insert_copies,fork}))
+        console.log(JSON.stringify({ action, selectedArrayNotSorted, move, insert_copies, fork }))
         var firstElementId = selectedArrayNotSorted[0];
         var restOfElements = selectedArrayNotSorted.slice(1);
 
@@ -8388,7 +8388,7 @@ checkbox1.setAttribute('hidden', "");
             if (treeEls.length) {
               treeEls.sort(sortByPlace1)
               compEls.sort(sortByPlace1)
-              
+
               for (const selectedFieldset2 of compEls) {
                 // Clone the selected fieldset and its descendants
                 var clonedFieldset2 = cloneWithDescendants(selectedFieldset2);
@@ -8404,15 +8404,15 @@ checkbox1.setAttribute('hidden', "");
                 }
 
                 // Remove the original fieldset
-                if(fork){
-                  
+                if (fork) {
+
                 }
-                else{selectedFieldset.remove();}
+                else { selectedFieldset.remove(); }
               }
               for (const selectedFieldset of treeEls) {
                 log1('found 11' + selectedFieldset.id)
                 var clonedFieldset = cloneWithDescendants(selectedFieldset);
-                
+
                 var arrowButton = clonedFieldset.querySelector('[data-element="code-tree-show-hide-button"]');
 
                 arrowButton.textContent = '→';
@@ -8426,21 +8426,27 @@ checkbox1.setAttribute('hidden', "");
                 }
 
                 // Remove the original fieldset
-                if(fork){
-                  const newCID =generateUUID()
-                  clonedFieldset.querySelectorAll([id]).forEach(e=>{
-                    if(e.id.endsWith('-tree')){
-                      const sId = e.id.replace('-tree','')
+                if (fork) {
+                  const newCID = generateUUID()
+                  const sId = clonedFieldset.id.replace('-tree', '')
+                  compEl = getElementById1(sId)
+                  const spl = sId.split(':')
+
+                  compEl.id = spl[0] + ':' + newCID
+                  e.id = compEl.id + '-tree'
+                  clonedFieldset.querySelectorAll([id]).forEach(e => {
+                    if (e.id.endsWith('-tree')) {
+                      const sId = e.id.replace('-tree', '')
                       compEl = getElementById1(sId)
-                      const spl =sId.split(':')
-                      
-                      compEl.id = spl[0]+':'+newCID
-                      e.id = compEl.id+'-tree'
-                      
+                      const spl = sId.split(':')
+
+                      compEl.id = spl[0] + ':' + newCID
+                      e.id = compEl.id + '-tree'
+
                     }
                   })
                 }
-                else{selectedFieldset.remove();}
+                else { selectedFieldset.remove(); }
               }
             }
             else {
@@ -9682,10 +9688,10 @@ checkbox1.setAttribute('hidden', "");
           if (target_element.length) {
             log1('movestat ' + move)
             if (options?.actionInReplace) {
-              handleAppendOrInsertReplace('Append', target_element,options?.fork)
+              handleAppendOrInsertReplace('Append', target_element, options?.fork)
             }
             else {
-              handleAppendOrInsert('Append', target_element.map(i => i.id), move, undefined,options?.fork)
+              handleAppendOrInsert('Append', target_element.map(i => i.id), move, undefined, options?.fork)
             }
 
           }
@@ -10049,10 +10055,10 @@ checkbox1.setAttribute('hidden', "");
           if (target_element.length) {
             log1(JSON.stringify(target_element))
             if (options?.actionInReplace) {
-              handleAppendOrInsertReplace('InsertBefore', target_element,options?.fork)
+              handleAppendOrInsertReplace('InsertBefore', target_element, options?.fork)
             }
             else {
-              handleAppendOrInsert('InsertBefore', target_element.map(i => i.id), move, undefined,options?.fork)
+              handleAppendOrInsert('InsertBefore', target_element.map(i => i.id), move, undefined, options?.fork)
             }
           }
           break;
@@ -11784,7 +11790,7 @@ elementsToRemove.forEach(element => element.remove());
       // Use the textContent as needed, for example, log it to the console
       log1('Publishing:', pagePathContent);
       const { cleanHtml, generateProductJson } = await onPublish()
-      if(reload){
+      if (reload) {
         location.reload()
       }
       //generateSchema(pagePathContent.split(';')[0], date)
@@ -14077,7 +14083,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         pushAction({
           time: (new Date()).getTime(),
           action: fieldsetAction,
-          options: { dub_target: true, insert_copies: true, position, actionInReplace,fork },
+          options: { dub_target: true, insert_copies: true, position, actionInReplace, fork },
           target_element
         })
 
@@ -14087,7 +14093,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         pushAction({
           time: (new Date()).getTime(),
           action: fieldsetAction,
-          options: { insert_copies: true, position, actionInReplace,fork },
+          options: { insert_copies: true, position, actionInReplace, fork },
           target_element
         })
       }
@@ -14095,7 +14101,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         let el2 = {
           time: (new Date()).getTime(),
           action: fieldsetAction,
-          options: { position, actionInReplace ,fork },
+          options: { position, actionInReplace, fork },
           target_element
         }
         pushAction(el2)
