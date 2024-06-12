@@ -943,7 +943,7 @@
                 <td>
                   <input type="checkbox" id="script_execute_select" hidden>
                   <label id="script_status" class="l-3">🔴</label>
-                  <label class="l-3" style="margin: 10px;">{sampel} </label>
+                  <label id="gpt-name" class="l-3" style="margin: 10px;">{sampel} </label>
                 </td>
                 <td>
                   <span class="l-3">🤖</span>
@@ -3427,14 +3427,16 @@
         console.log('wrong json')
         return
       }
+      /*
       const ai = document.querySelector('[data-ai]');
       ai.removeAttribute('hidden');
       const originalRow = ai.querySelector('[data-ai-row]');
-
+      */
+      const originalRow = document.querySelector('#script_chatgpt_');
       for (const element of parsed['chatgpt-tasks']) {
         const cloned = originalRow.cloneNode(true);
-        cloned.querySelector('[data-ai-label]').textContent = element.name;
-        const status = cloned.querySelector('[data-ai-status]')
+        cloned.querySelector('#gpt-name').textContent = element.name;
+        const status = cloned.querySelector('#script_status')
         let ex = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${headContentItem.id}&sk=${`ai:${element.name}`}&startsWith=true`, {
           method: 'GET',
           headers: {
@@ -6232,13 +6234,27 @@ checkbox1.setAttribute('hidden', "");
           onLoad: [],
           onPublish: [],
           onClick: [],
-          notActive: [{ "name": "script_head_placeholders_transfer" }, { "name": "script_head_transfer" }, { "name": "scrip_eval" }, { "name": "script_breadcrumb_generation" }, { "name": "script_transfer" }, { "name": "script_product_spec_table" }, { "name": "script_article_table_of_contents" }, { "name": "script_cleaner" }, { "name": "script_generate_product_json" }, { "name": "script_generate_article_anchor" }, { "name": "script_chatgpt_" }]
+          notActive: [{ "name": "script_head_placeholders_transfer" }, { "name": "script_head_transfer" }, { "name": "scrip_eval" }, { "name": "script_breadcrumb_generation" }, { "name": "script_transfer" }, { "name": "script_product_spec_table" }, { "name": "script_article_table_of_contents" }, { "name": "script_cleaner" }, { "name": "script_generate_product_json" }, { "name": "script_generate_article_anchor" }]
         }
         await updatePathItem()
       }
       if (headContentItem && !headContentItem.scripts) {
         headContentItem.scripts = {}
         updateHeadContentItem()
+      }
+      if (pathItem.hub_items?.gpt) {
+        await showai(pathItem.hub_items?.gpt)
+        const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pathItem.id}&sk=ai-logs:&startsWith=true`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(e => e.json())
+        if (res.items.length) {
+          const element = document.getElementById('ai-logs')
+          element.removeAttribute('hidden')
+          element.querySelector('textarea').value = res.items.map(el => JSON.stringify(el.gptResponse, null, 2) + '\n\n' + JSON.stringify(el.content) + '\n\n').join('\n\n=============================================\n\n')
+        }
       }
       for (const key of Object.keys(pathItem.hub_items?.scripts)) {
         if (!pathItem.hub_items?.scripts[key]) {
@@ -6249,7 +6265,7 @@ checkbox1.setAttribute('hidden', "");
         for (const item of (pathItem.hub_items?.scripts?.[key] || [])) {
           const { name, execute_on_red_checkbox, execute_requires_reload, execute_in_template, queue_number } = item;
           const runned = headContentItem.scripts[name]?.runned;
-          console.log('runned :'+runned)
+          console.log('runned :' + runned)
           const appItem = document.getElementById(name);
 
           if (appItem) {
