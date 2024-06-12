@@ -6547,7 +6547,7 @@ checkbox1.setAttribute('hidden', "");
         const item1 = body.querySelector('#' + item.name)
         item1.querySelector('#script_status').textContent = '🟢'
         const date = new Date()
-        const {name} = item
+        const { name } = item
         if (headContentItem.scripts[name]) {
           headContentItem.scripts[name].runned = date.getTime()
         }
@@ -6573,7 +6573,7 @@ checkbox1.setAttribute('hidden', "");
         const item1 = body.querySelector('#' + item.name)
         item1.querySelector('#script_status').textContent = '🟢'
         const date = new Date()
-        const {name} = item
+        const { name } = item
         if (headContentItem.scripts[name]) {
           headContentItem.scripts[name].runned = date.getTime()
         }
@@ -6612,7 +6612,7 @@ checkbox1.setAttribute('hidden', "");
         const item1 = body.querySelector('#' + item.name)
         item1.querySelector('#script_status').textContent = '🟢'
         const date = new Date()
-        const {name} = item
+        const { name } = item
         if (headContentItem.scripts[name]) {
           headContentItem.scripts[name].runned = date.getTime()
         }
@@ -6704,6 +6704,30 @@ checkbox1.setAttribute('hidden', "");
         const responseData = await getRes(idFromQuery, true)
         const { items } = responseData
         pathItem = items.find(e => e.sk === 'path')
+        //converst lsi1 to old
+        pathItemPath = convertToOldPath(pathItem.lsi1)
+        site1 = pathItemPath.split('/')[0]
+        //get head content
+        if (!pathItemPath.split('/').includes('Stock')) {
+          const headLsi = pathItem.lsi1.split(';')[0].split('|')[0].split('/').slice(0, 3).join('/') + '/Content/Page|Head-Content'
+
+          console.log('head lsi' + headLsi)
+          const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headLsi}`;
+          await fetch(url).then(res => res.json())
+            .then(async ({ items }) => {
+              if (!items.length) {
+                return
+              }
+              console.log(JSON.stringify(items))
+              headContentItem = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${items[0].id}:${items[0].sk}`).then(re => re.json())
+              headContentItem.id = items[0].id
+              console.log('head content item' + JSON.stringify(headContentItem))
+              pathItemSku = headContentItem.sku
+            })
+        }
+        else {
+          pathItemSku = pathItem.sku
+        }
       }
       handleMenus()
 
@@ -11052,6 +11076,9 @@ elementsToRemove.forEach(element => element.remove());
         //insertDataIntoCodeLog(timestamp, idFromLink, { name })
       }
       else {
+        if (!pathItem) {
+          window.location.href = 'index.html'
+        }
         components.push(idFromLink)
         responseData = await getRes(idFromLink, true)
         const { items } = responseData
@@ -11059,37 +11086,13 @@ elementsToRemove.forEach(element => element.remove());
         const map = items.find(e => e.sk === 'componentsMap')
         actions = items.filter(i => i.action)
         let r;
+
         if (map) {
           r = Promise.all(map.items.map(id => getRes(id, false, true)))
         }
 
-        if (!pathItem) {
-          window.location.href = 'index.html'
-        }
-        //converst lsi1 to old
-        pathItemPath = convertToOldPath(pathItem.lsi1)
-        site1 = pathItemPath.split('/')[0]
-        //get head content
-        if (!pathItemPath.split('/').includes('Stock')) {
-          const headLsi = pathItem.lsi1.split(';')[0].split('|')[0].split('/').slice(0, 3).join('/') + '/Content/Page|Head-Content'
 
-          console.log('head lsi' + headLsi)
-          const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headLsi}`;
-          await fetch(url).then(res => res.json())
-            .then(async ({ items }) => {
-              if (!items.length) {
-                return
-              }
-              console.log(JSON.stringify(items))
-              headContentItem = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${items[0].id}:${items[0].sk}`).then(re => re.json())
-              headContentItem.id = items[0].id
-              console.log('head content item' + JSON.stringify(headContentItem))
-              pathItemSku = headContentItem.sku
-            })
-        }
-        else {
-          pathItemSku = pathItem.sku
-        }
+
 
         if (pathItemPath.toLowerCase().includes('seositeshome.com/seed-home/hub')) {
           if (pathItem.hub_items) {
