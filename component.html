@@ -7149,7 +7149,7 @@ checkbox1.setAttribute('hidden', "");
       }
       catch (e) {
         if (!errored) {
-          log1('\tname: ' + e.name + ' message: ' + e.message + ' at: ' + e.at + ' text: ' + e.text);
+          console.log('\tname: ' + e.name + ' message: ' + e.message + ' at: ' + e.at + ' text: ' + e.text);
           log1(e.stack);
           const codeLog = getElementById1("code-log-body");
           const query = `#code-log-action-time[sk="${element.time}"]`
@@ -8388,6 +8388,27 @@ checkbox1.setAttribute('hidden', "");
             if (treeEls.length) {
               treeEls.sort(sortByPlace1)
               compEls.sort(sortByPlace1)
+
+              for (const selectedFieldset2 of compEls) {
+                // Clone the selected fieldset and its descendants
+                var clonedFieldset2 = cloneWithDescendants(selectedFieldset2);
+
+                // Insert the cloned fieldset based on the action
+                if (action === 'Append') {
+                  targetFieldset2.appendChild(clonedFieldset2);
+                } else if (action === 'InsertBefore') {
+
+
+                  parentFieldset2.insertBefore(clonedFieldset2, parentFieldset2.children[index2]);
+                  index2++; // Increment the index to maintain the correct order
+                }
+
+                // Remove the original fieldset
+                if (fork) {
+
+                }
+                else { selectedFieldset.remove(); }
+              }
               for (const selectedFieldset of treeEls) {
                 log1('found 11' + selectedFieldset.id)
                 var clonedFieldset = cloneWithDescendants(selectedFieldset);
@@ -8427,27 +8448,6 @@ checkbox1.setAttribute('hidden', "");
                 }
                 else { selectedFieldset.remove(); }
               }
-              for (const selectedFieldset2 of compEls) {
-                // Clone the selected fieldset and its descendants
-                var clonedFieldset2 = cloneWithDescendants(selectedFieldset2);
-
-                // Insert the cloned fieldset based on the action
-                if (action === 'Append') {
-                  targetFieldset2.appendChild(clonedFieldset2);
-                } else if (action === 'InsertBefore') {
-
-
-                  parentFieldset2.insertBefore(clonedFieldset2, parentFieldset2.children[index2]);
-                  index2++; // Increment the index to maintain the correct order
-                }
-
-                // Remove the original fieldset
-                if (fork) {
-
-                }
-                else { selectedFieldset.remove(); }
-              }
-              
             }
             else {
               const s = []
