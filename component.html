@@ -3435,6 +3435,7 @@
       const originalRow = document.querySelector('#script_chatgpt_');
       for (const element of parsed['chatgpt-tasks']) {
         const cloned = originalRow.cloneNode(true);
+        cloned.id =element.name
         cloned.querySelector('#gpt-name').textContent = element.name;
         const status = cloned.querySelector('#script_status')
         let ex = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${headContentItem.id}&sk=${`ai:${element.name}`}&startsWith=true`, {
