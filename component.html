@@ -6310,12 +6310,14 @@ checkbox1.setAttribute('hidden', "");
                 updatePathItem();
               };
             }
+            const scriptS = appItem.querySelector('#script_status')
             const lastExec = appItem.querySelector('#last_script_execute_time')
             if (runned) {
               lastExec.textContent = formatDate(new Date(runned))
+              scriptS.textContent = '🟢'
             }
             if (key === 'onClick') {
-              const scriptS = appItem.querySelector('#script_status')
+              
               scriptS.onclick = async () => {
                 await funcDictionary[name]()
                 scriptS.textContent = '🟢'
