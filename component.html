@@ -2329,7 +2329,7 @@
       console.log('not found id1' + id)
       return undefined
     }
-    var querySelectorAll1 = (selector,head) => {
+    var querySelectorAll1 = (selector, head) => {
 
       const els1 = document.querySelectorAll(selector)
 
@@ -2337,7 +2337,7 @@
 
       // Access the content of the iframe
       var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-      head && (selector = '[data-lists-element-value]'+ selector )
+      head && (selector = '[data-lists-element-value]' + selector)
 
       var els2 = iframeDocument.querySelectorAll(selector);
 
@@ -6345,7 +6345,7 @@ checkbox1.setAttribute('hidden', "");
           delete json['offers-aggregate']
  
         }*/
-        traverseJSONAndUpdate(json, '', receiverName, date,head);
+        traverseJSONAndUpdate(json, '', receiverName, date, head);
 
         json = cleanJson(json)
         // After updating, stringify the JSON object and assign it back to the text content of the schema element
@@ -6371,10 +6371,10 @@ checkbox1.setAttribute('hidden', "");
             tag.setAttribute('href', "https://" + nLink)
 
           }
-          const senders = querySelectorAll1(`[data-transfer-sender^="${receiver}."]`,head);
-          const senders2 = querySelectorAll1(`[data-transfer-sender-href^="${receiver}."]`,head);
-          const senders3 = querySelectorAll1(`[data-transfer-sender-src^="${receiver}."]`,head);
-          const senders4 = querySelectorAll1(`[data-transfer-sender-innerhtml^="${receiver}."]`,head);
+          const senders = querySelectorAll1(`[data-transfer-sender^="${receiver}."]`, head);
+          const senders2 = querySelectorAll1(`[data-transfer-sender-href^="${receiver}."]`, head);
+          const senders3 = querySelectorAll1(`[data-transfer-sender-src^="${receiver}."]`, head);
+          const senders4 = querySelectorAll1(`[data-transfer-sender-innerhtml^="${receiver}."]`, head);
           if (senders.length) {
             for (const sender of senders) {
               const textContent = sender.textContent;
@@ -6555,7 +6555,7 @@ checkbox1.setAttribute('hidden', "");
     const onPublish = async () => {
       const onPublish = pathItem.hub_items?.scripts?.onPublish
       const body = document.getElementById(getBodyIdFromType('onPublish'))
-      let cleanHtml,generateProductJson
+      let cleanHtml, generateProductJson
       if (!onPublish) {
         return {}
       }
@@ -6563,23 +6563,23 @@ checkbox1.setAttribute('hidden', "");
         if (!item.execute_in_template && pathItem.lsi1.toLowerCase().includes('seositeshome.com')) {
           continue
         }
-        if(item.name==='script_generate_product_json'){
+        if (item.name === 'script_generate_product_json') {
           generateProductJson = true
-           
+
         }
-        else if(item.name==="script_cleaner"){
+        else if (item.name === "script_cleaner") {
           cleanHtml = true
-          
+
         }
-        else{await funcDictionary[item.name]()}
-        
+        else { await funcDictionary[item.name]() }
+
         const item1 = body.querySelector('#' + item.name)
         item1.querySelector('#script_status').textContent = '🟢'
         const date = new Date()
         item.runned = date.getTime()
         item1.querySelector('#last_script_execute_time').textContent = formatDate(date)
       }
-      return {cleanHtml,generateProductJson}
+      return { cleanHtml, generateProductJson }
     }
     const onClick = async (name) => {
       const onClick = pathItem.hub_items?.scripts?.onClick
@@ -7323,22 +7323,22 @@ checkbox1.setAttribute('hidden', "");
               items[scriptClicked].push(removedItem);
               sortQueue(items[scriptClicked])
             }
-            else{
-              items[scriptClicked].push({name:id});
+            else {
+              items[scriptClicked].push({ name: id });
             }
             const existing = checkbox.closest('tr')
-            if(type ==='onClick'){
-              existing.querySelector('#script_status').onclick = async()=>{
+            if (type === 'onClick') {
+              existing.querySelector('#script_status').onclick = async () => {
                 await funcDictionary[id]()
                 existing.querySelector('#script_status') = '🟢'
                 const date = new Date()
                 const l = pathItem.hub_items.scripts.onClick.length
-                pathItem.hub_items.scripts.onClick[l-1].runned = date.getTime()
+                pathItem.hub_items.scripts.onClick[l - 1].runned = date.getTime()
                 existing.querySelector('#last_script_execute_time').textContent = formatDate(date)
                 updatePathItem()
               }
-            }else{
-              existing.querySelector('#script_status').onclick = ()=>{}
+            } else {
+              existing.querySelector('#script_status').onclick = () => { }
             }
             document.getElementById(getBodyIdFromType(scriptClicked)).append(existing)
           }
@@ -8587,10 +8587,7 @@ checkbox1.setAttribute('hidden', "");
             else {
               attachId = options?.attachId
             }
-            /*
-            if (!getElementById1(attachId)) {
-              attachId = 'body-tree'
-            }*/
+
 
           }
           if (replaceAction) {
@@ -8711,6 +8708,10 @@ checkbox1.setAttribute('hidden', "");
             el2.innerHTML = `🔄${replaceAction.target_element.length}`;
           }
           console.log('calling path for relative ' + pathForRelative)
+
+          if (!getElementById1(attachId)) {
+            attachId = 'body-tree'
+          }
           await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, replaceActions, replaceAction, noComp1 || noComp, noSubComp1, level, removeActions, replaceId, pathForRelative, newEl2, rT, attachId)
 
 
@@ -11269,7 +11270,7 @@ elementsToRemove.forEach(element => element.remove());
 
 
     }
-    function traverseJSONAndUpdate(json, path = '', sender = '', date,head) {
+    function traverseJSONAndUpdate(json, path = '', sender = '', date, head) {
       // Iterate through each key-value pair in the JSON object
       for (const key in json) {
         if (json.hasOwnProperty(key)) {
@@ -11278,7 +11279,7 @@ elementsToRemove.forEach(element => element.remove());
           // If the current value is an array, handle each element individually
           if (Array.isArray(json[key])) {
             // Find the data-transfer-cloner attribute for the current array
-            const clonerAttributes = querySelectorAll1(`[data-transfer-cloner="${sender}.${currentPath}"]:not([data-b-value=""]`,head);
+            const clonerAttributes = querySelectorAll1(`[data-transfer-cloner="${sender}.${currentPath}"]:not([data-b-value=""]`, head);
             if (clonerAttributes.length > 0) {
               const arrayOfObjects = [];
               // Iterate through each set of cloned elements
@@ -11388,7 +11389,7 @@ elementsToRemove.forEach(element => element.remove());
 
           // If the current value is an object or an array, recursively traverse it
           else if (typeof json[key] === 'object' && json[key] !== null) {
-            traverseJSONAndUpdate(json[key], currentPath, sender, date,head);
+            traverseJSONAndUpdate(json[key], currentPath, sender, date, head);
           }
           else if (key === 'datePublished') {
             json[key] = headContentItem.hosting_time?.published ? new Date(headContentItem.hosting_time.published).toISOString() : date.toISOString()
@@ -11397,7 +11398,7 @@ elementsToRemove.forEach(element => element.remove());
             // If the current value is a string, check for the data-transfer-sender attribute
             const senderPath = sender ? `${sender}.${currentPath}` : currentPath;
             console.log('sender path ' + senderPath)
-            let senderAttribute = querySelectorAll1(`[data-transfer-sender="${senderPath}"]:not([data-b-value=""]`,head);
+            let senderAttribute = querySelectorAll1(`[data-transfer-sender="${senderPath}"]:not([data-b-value=""]`, head);
 
 
             if (senderAttribute.length) {
@@ -11410,7 +11411,7 @@ elementsToRemove.forEach(element => element.remove());
 
             }
             else {
-              let senderAttribute = querySelectorAll1(`[data-transfer-sender-href="${senderPath}"]:not([data-b-value=""]`,head);
+              let senderAttribute = querySelectorAll1(`[data-transfer-sender-href="${senderPath}"]:not([data-b-value=""]`, head);
               console.log('iiin2')
               if (senderAttribute.length) {
 
@@ -11418,7 +11419,7 @@ elementsToRemove.forEach(element => element.remove());
 
 
               } else {
-                let senderAttribute = querySelectorAll1(`[data-transfer-sender-src="${senderPath}"]:not([data-b-value=""]`,head);
+                let senderAttribute = querySelectorAll1(`[data-transfer-sender-src="${senderPath}"]:not([data-b-value=""]`, head);
                 console.log('iiin3')
                 if (senderAttribute.length) {
 
@@ -11654,7 +11655,7 @@ elementsToRemove.forEach(element => element.remove());
 
       // Use the textContent as needed, for example, log it to the console
       console.log('Publishing:', pagePathContent);
-      const {cleanHtml,generateProductJson} = await onPublish()
+      const { cleanHtml, generateProductJson } = await onPublish()
       //generateSchema(pagePathContent.split(';')[0], date)
       var iframe = document.getElementById("generated-page-iframe");
 
@@ -11670,7 +11671,7 @@ elementsToRemove.forEach(element => element.remove());
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: idFromLink, html, path: pagePathContent, toRemove, robotsTxt, siteMapPriority, siteMapNotDefiniedPriorities, date: date.getTime(), sku: pathItemSku, updateContent,cleanHtml,generateProductJson }),
+        body: JSON.stringify({ id: idFromLink, html, path: pagePathContent, toRemove, robotsTxt, siteMapPriority, siteMapNotDefiniedPriorities, date: date.getTime(), sku: pathItemSku, updateContent, cleanHtml, generateProductJson }),
       });
       const r = await response.json()
       console.log('link: ' + r.link)
