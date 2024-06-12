@@ -6475,7 +6475,7 @@ checkbox1.setAttribute('hidden', "");
       }
     }
 
-    const handleMenus = () => {
+    const handleMenus = async() => {
       const table = document.getElementById('menu_toggle')
       if (!pathItem.hub_items) {
         pathItem.hub_items = { menus: {} }
@@ -6496,7 +6496,7 @@ checkbox1.setAttribute('hidden', "");
       }
       if (pathItem.hub_items?.menus?.scripts_menu_toggle) {
         document.getElementById('scripts-list').removeAttribute('hidden')
-        organizeScripts()
+        await organizeScripts()
       }
       table.querySelectorAll('tr').forEach(element => {
         const id = element.id
@@ -6594,12 +6594,10 @@ checkbox1.setAttribute('hidden', "");
       if (!onOpen) {
         return
       }
-      console.log(body.id)
       for (const item of onOpen) {
         if (!item.execute_in_template && pathItem.lsi1.toLowerCase().includes('seositeshome.com')) {
           continue
         }
-        console.log(item.name)
         const item1 = body.querySelector('#' + item.name)
         console.log(item1.id)
         const status = item1.querySelector('#script_status')
