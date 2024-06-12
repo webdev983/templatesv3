@@ -6729,6 +6729,9 @@ checkbox1.setAttribute('hidden', "");
       const importValue = urlParams.get('val')
       const message = urlParams.get('message')
       ownerid = localStorage.getItem('ownerid') || urlParams.get('ownerid')
+      if(urlParams.get('ownerid')){
+        localStorage.setItem('executionToggle', 'true')
+      }
       if (idFromQuery) {
         // Change the id of the element with id "component-element"
         const compTree = getElementById1('components-tree')
@@ -7137,7 +7140,7 @@ checkbox1.setAttribute('hidden', "");
         if (element.options?.frozen) {
           frozen = true
         }
-        if (!frozen && !errored && localStorage.getItem('executionToggle')) {
+        if (!frozen && !errored && (localStorage.getItem('executionToggle' ))) {
           await executeCommand(element, '', visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId, attachId)
 
         }
