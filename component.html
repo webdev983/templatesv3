@@ -3557,6 +3557,17 @@
         body: JSON.stringify(pathItem),
       });
     }
+    var updateHeadContentItem = () => {
+      console.log(JSON.stringify(headContentItem))
+
+      return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(headContentItem),
+      });
+    }
 
     const switchOptionalScript = (updateDb) => {
       const el = getElementById1('optional-script')
@@ -6225,6 +6236,10 @@ checkbox1.setAttribute('hidden', "");
         }
         await updatePathItem()
       }
+      if (headContentItem && !headContentItem.scripts) {
+        headContentItem.scripts = {}
+        updateHeadContentItem()
+      }
       for (const key of Object.keys(pathItem.hub_items?.scripts)) {
         if (!pathItem.hub_items?.scripts[key]) {
           continue
@@ -6232,7 +6247,8 @@ checkbox1.setAttribute('hidden', "");
         sortQueue(pathItem.hub_items?.scripts[key])
         const body = document.getElementById(getBodyIdFromType(key))
         for (const item of (pathItem.hub_items?.scripts?.[key] || [])) {
-          const { name, execute_on_red_checkbox, execute_requires_reload, execute_in_template, queue_number, runned } = item;
+          const { name, execute_on_red_checkbox, execute_requires_reload, execute_in_template, queue_number } = item;
+          const runned = headContentItem.scripts?.[name]?.runned;
           const appItem = document.getElementById(name);
 
           if (appItem) {
@@ -6291,9 +6307,14 @@ checkbox1.setAttribute('hidden', "");
                 await funcDictionary[name]()
                 scriptS.textContent = '🟢'
                 const date = new Date()
-                item.runned = date.getTime()
+                if (headContentItem.scripts[name]) {
+                  headContentItem.scripts[name].runned = date.getTime()
+                }
+                else {
+                  headContentItem.scripts[name] = { runned: date.getTime() }
+                }
                 lastExec.textContent = formatDate(date)
-                updatePathItem();
+                updateHeadContentItem()
               }
             }
 
@@ -6526,10 +6547,16 @@ checkbox1.setAttribute('hidden', "");
         const item1 = body.querySelector('#' + item.name)
         item1.querySelector('#script_status').textContent = '🟢'
         const date = new Date()
-        item.runned = date.getTime()
+        const {name} = item
+        if (headContentItem.scripts[name]) {
+          headContentItem.scripts[name].runned = date.getTime()
+        }
+        else {
+          headContentItem.scripts[name] = { runned: date.getTime() }
+        }
         item1.querySelector('#last_script_execute_time').textContent = formatDate(date)
       }
-
+      updateHeadContentItem()
     }
     async function onOpen1() {
       const onOpen = pathItem.hub_items?.scripts?.onOpen
@@ -6546,11 +6573,17 @@ checkbox1.setAttribute('hidden', "");
         const item1 = body.querySelector('#' + item.name)
         item1.querySelector('#script_status').textContent = '🟢'
         const date = new Date()
-        item.runned = date.getTime()
+        const {name} = item
+        if (headContentItem.scripts[name]) {
+          headContentItem.scripts[name].runned = date.getTime()
+        }
+        else {
+          headContentItem.scripts[name] = { runned: date.getTime() }
+        }
         item1.querySelector('#last_script_execute_time').textContent = formatDate(date)
 
       }
-      updatePathItem()
+      updateHeadContentItem()
 
 
 
@@ -6579,9 +6612,16 @@ checkbox1.setAttribute('hidden', "");
         const item1 = body.querySelector('#' + item.name)
         item1.querySelector('#script_status').textContent = '🟢'
         const date = new Date()
-        item.runned = date.getTime()
+        const {name} = item
+        if (headContentItem.scripts[name]) {
+          headContentItem.scripts[name].runned = date.getTime()
+        }
+        else {
+          headContentItem.scripts[name] = { runned: date.getTime() }
+        }
         item1.querySelector('#last_script_execute_time').textContent = formatDate(date)
       }
+      updateHeadContentItem()
       return { cleanHtml, generateProductJson }
     }
     const onClick = async (name) => {
@@ -6598,9 +6638,14 @@ checkbox1.setAttribute('hidden', "");
       const item1 = body.querySelector('#' + item.name)
       item1.querySelector('#script_status').textContent = '🟢'
       const date = new Date()
-      item.runned = date.getTime()
+      if (headContentItem.scripts[name]) {
+        headContentItem.scripts[name].runned = date.getTime()
+      }
+      else {
+        headContentItem.scripts[name] = { runned: date.getTime() }
+      }
       item1.querySelector('#last_script_execute_time').textContent = formatDate(date)
-
+      updateHeadContentItem()
 
     }
 
@@ -13426,7 +13471,7 @@ headers: {
       showListMenus(pathItem.hub_items?.list, undefined, pathItem.hub_items)
 
       await showList(pathItem.hub_items?.list, undefined, pathItem.hub_items)
-
+      /* showai
       if (pathItem.hub_items?.gpt) {
         await showai(pathItem.hub_items?.gpt)
         const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pathItem.id}&sk=ai-logs:&startsWith=true`, {
@@ -13441,6 +13486,7 @@ headers: {
           element.querySelector('textarea').value = res.items.map(el => JSON.stringify(el.gptResponse, null, 2) + '\n\n' + JSON.stringify(el.content) + '\n\n').join('\n\n=============================================\n\n')
         }
       }
+      */
       let mainHubLsi = splited[0] + '/Home|Hub'
       let headHubLsi = splited[0] + '/Home/Content/Page|Head-Content'
       /*
