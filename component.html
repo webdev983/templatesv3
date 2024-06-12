@@ -1850,6 +1850,7 @@
 
   -->
   <script>
+    var log1 = (t)=>{}
     const showClasses = (event) => {
       const target = event.target
       if (target.classList.contains('b-selected')) {
@@ -1917,7 +1918,7 @@
       const p = clickedText
       path = p + '/'
       localStorage.setItem('storedPath', path)
-      console.debug(path)
+      log1(path)
       window.location.href = 'index.html';
       // Update the text content of the label
 
@@ -2011,7 +2012,7 @@
 
       let items = mergedItems
       items.sort((a, b) => b.sk.localeCompare(a.sk))
-      console.debug('items' + JSON.stringify(items))
+      log1('items' + JSON.stringify(items))
       const table = clonedFieldset.querySelector('#gallery-body');
       const templateRow = clonedFieldset.querySelector('#gallery-item');
       table.innerHTML = ""
@@ -2086,7 +2087,7 @@
       const img = event.target.closest('tr').querySelector('img')
       const id = img.getAttribute('cid')
       const imageSrc = img.src;
-      console.debug('Removing Image Src:', imageSrc);
+      log1('Removing Image Src:', imageSrc);
       const sk = imageSrc.replace('https://s3.amazonaws.com/checkout-admin-panel/', "")
       const imgId = event.target.closest('[data-menu]').id.replace('gallery-menu-wrapper;', '')
       try {
@@ -2099,7 +2100,7 @@
         });
       }
       catch (e) {
-        console.debug('error ' + JSON.stringify(e))
+        log1('error ' + JSON.stringify(e))
       }
       try {
         await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/upload?id=' + sk, {
@@ -2107,7 +2108,7 @@
         });
       }
       catch (e) {
-        console.debug(JSON.stringify(e))
+        log1(JSON.stringify(e))
       }
       //to cont
       //setImg('https://via.placeholder.com/300/0000FF/FFFFFF?text=Article-Image', imgId)
@@ -2154,7 +2155,7 @@
       })
       if (!uploadResponse.ok) {
         const er = await uploadResponse.text()
-        console.debug('error ' + er)
+        log1('error ' + er)
         return
       }
       return path
@@ -2179,7 +2180,7 @@
       try {
 
         const path = await upload(fileName, fileContent)
-        console.debug(path)
+        log1(path)
         //push to db image
         // Send a POST request using fetch
         const payload = {
@@ -2326,7 +2327,7 @@
       if (el2) {
         return el2
       }
-      console.debug('not found id1' + id)
+      log1('not found id1' + id)
       return undefined
     }
     var querySelectorAll1 = (selector, head) => {
@@ -2341,11 +2342,11 @@
 
       var els2 = iframeDocument.querySelectorAll(selector);
 
-      console.debug('not found all' + selector)
+      log1('not found all' + selector)
       const res = [...els1, ...els2]
-      console.debug("r11" + JSON.stringify(Array.from(els1).map(e => e.id)) + selector)
-      console.debug("r12" + JSON.stringify(Array.from(els2).map(e => e.id)) + selector)
-      console.debug("r13" + JSON.stringify(Array.from(res).map(e => e.id)) + selector)
+      log1("r11" + JSON.stringify(Array.from(els1).map(e => e.id)) + selector)
+      log1("r12" + JSON.stringify(Array.from(els2).map(e => e.id)) + selector)
+      log1("r13" + JSON.stringify(Array.from(res).map(e => e.id)) + selector)
       return res
     }
     getElementById1('remove-loading').addEventListener('click', function () {
@@ -2408,7 +2409,7 @@
       const spec = document.getElementById('spec-status')
       spec.textContent = '🗂️ Table spec 🟠'
       const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Specification-Table-Content'
-      console.debug(tableLsi)
+      log1(tableLsi)
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
       const { items } = await fetch(url).then(e => e.json())
       const specid = generateUUID()
@@ -2424,11 +2425,11 @@
           'Content-Type': 'application/json',
         },
       }).then(e => e.json())
-      console.debug('all ' + JSON.stringify(d.items))
+      log1('all ' + JSON.stringify(d.items))
       const promises = d.items.map(async item => {
         if (item.action && item.action !== 'Add_Component') {
           const deleteUrl = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id}:${item.sk}`;
-          console.debug('delete' + deleteUrl)
+          log1('delete' + deleteUrl)
           await fetch(deleteUrl, {
             method: 'DELETE',
             headers: {
@@ -2446,7 +2447,7 @@
         body: JSON.stringify({ id: specid, sk: 'specs', data, ttl }),
       });
       const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&generatespec=${specid}&ownerid=${localStorage.getItem('ownerid')}` };
-      console.debug(eventData.url)
+      log1(eventData.url)
       // Fetch options
       const options = {
         method: 'POST',
@@ -2526,7 +2527,7 @@
       const breadcrumb = document.getElementById('breadcrumb-status')
       breadcrumb.textContent = '🥖 BreadCrumb Menu 🟠'
       const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Page|BreadCrumb-Content'
-      console.debug(tableLsi)
+      log1(tableLsi)
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
       const { items } = await fetch(url).then(e => e.json())
       const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&generatebreadcrumb=true&ownerid=${localStorage.getItem('ownerid')}` };
@@ -2560,7 +2561,7 @@
         arr.splice(index2, 1);
       }
       const active = arr.pop()
-      console.debug('active is ' + active)
+      log1('active is ' + active)
       const breadCA = querySelectorAll1('[data-builder-breadcrumb-active]')
       const breadC = querySelectorAll1('[data-builder-breadCrumb]')
       const a = breadC[0].querySelector('[data-builder-breadCrumb-value]')
@@ -2639,7 +2640,7 @@
 
       }
       const schema = querySelectorAll1('script[data-transfer-receiver="schema-breadcrumb"]')[0]
-      console.debug(schema.textContent)
+      log1(schema.textContent)
       let json = JSON.parse(schema.textContent)
 
 
@@ -2654,7 +2655,7 @@
         newEl.position = i + 2
         json.itemListElement.push(newEl)
       }
-      console.debug('newJSON' + json)
+      log1('newJSON' + json)
       const el = {
         time: (new Date()).getTime(),
         action: 'innerHtml',
@@ -2685,7 +2686,7 @@
 
       // Convert the grouped object to an array of arrays
       const listOfLists = Object.values(groupedItems);
-      console.debug(JSON.stringify(listOfLists))
+      log1(JSON.stringify(listOfLists))
       listOfLists.map(list => {
         const innerHtmlActions = list.filter(e => e.action === 'innerHtml')
         const textActions = list.filter(e => e.action === 'textContent')
@@ -2713,7 +2714,7 @@
     }
     const generateDependeeMenu = (node) => {
       const sku = node.querySelector('#sku-value').textContent
-      console.debug(sku)
+      log1(sku)
       const item = getElementById1('dependee-menu-item')
       const dependeeMenu = node.querySelector('#dependee-menu')
       const forms = querySelectorAll1('[data-product-attribute-form]');
@@ -2727,7 +2728,7 @@
       dependeeMenu.innerHTML = ''
       const checkbox = getElementById1('checkbox-label')
       for (const dependee of dependees1) {
-        console.debug('in')
+        log1('in')
         const cloned = item.cloneNode(true)
         cloned.removeAttribute('hidden')
         cloned.querySelector('[data-type="dependee-value"]').textContent = dependee
@@ -2765,7 +2766,7 @@
       for (const item of checkboxes) {
         const checkbox = item.firstChild
         if (checkbox.checked) {
-          console.debug('checkbox ' + checkbox.id)
+          log1('checkbox ' + checkbox.id)
           const formId = item.getAttribute('formId')
           const form = getElementById1(formId)
           const legendElement = form.querySelector('[data-product-attribute-legend]');
@@ -2783,7 +2784,7 @@
 
       }
       const combinations = generateCombinations(resultList)
-      console.debug(JSON.stringify(combinations))
+      log1(JSON.stringify(combinations))
       const dependencyName = parentFieldSet.querySelector('[data-type="dependee-value"]').textContent
       let dependeeItems = querySelectorAll1(`[data-builder-dependee="${dependencyName}"]`)
       const allIds = Array.from(dependeeItems).map(e => e.id)
@@ -2802,8 +2803,8 @@
           toRemove.push(id)
         }
       }
-      console.debug('tr555 ' + JSON.stringify(toRemove))
-      console.debug('tr555 ' + JSON.stringify(ids))
+      log1('tr555 ' + JSON.stringify(toRemove))
+      log1('tr555 ' + JSON.stringify(ids))
       for (const id of toRemove) {
         await pushAction({
           time: (new Date()).getTime(),
@@ -2840,7 +2841,7 @@
       }
       //get selected combination
       const checked1 = getChecked(resultList)
-      console.debug(JSON.stringify(checked1))
+      log1(JSON.stringify(checked1))
       dependeeItems = querySelectorAll1(`[data-builder-dependee="${dependencyName}"]`)
       for (const item of dependeeItems) {
         const attr = item.getAttribute('data-product-info')
@@ -2862,7 +2863,7 @@
 
       const button = event.target
       if (!button.classList.contains('b-selected')) {
-        console.debug('setting');
+        log1('setting');
 
         // Set the item in local storage
 
@@ -3177,7 +3178,7 @@
         const cloned2 = list2.cloneNode(true)
         cloned2.setAttribute('data-list-menu', list.name)
         cloned2.id = list.name
-        console.debug('list ' + list.name)
+        log1('list ' + list.name)
         cloned2.querySelector('#list-name').textContent = list.name
         cloned2.removeAttribute('hidden')
         list2.parentNode.append(cloned2)
@@ -3276,7 +3277,7 @@
             },
           }).then(e => e.json())
           const statusEl = clonedListElement.querySelector('[data-lists-element-status]')
-          console.debug('existing ' + JSON.stringify(exisitingValue))
+          log1('existing ' + JSON.stringify(exisitingValue))
           if (exisitingValue) {
             exisitingValue.id = storageId
             statusEl.textContent = '🟢'
@@ -3323,8 +3324,8 @@
             }
             exisitingValue.value && (select.value = exisitingValue.value)
             select.addEventListener('change', async function () {
-              console.debug('select ' + select.value)
-              console.debug('option ' + '{' + option.name + '}')
+              log1('select ' + select.value)
+              log1('option ' + '{' + option.name + '}')
               if (select.value === '{' + option.name + '}' || select.value === '') {
                 return
               }
@@ -3366,7 +3367,7 @@
                   delete exisitingValue[varname]
                 }
 
-                console.debug(JSON.stringify(exisitingValue))
+                log1(JSON.stringify(exisitingValue))
                 await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                   method: 'POST',
                   body: JSON.stringify(exisitingValue),
@@ -3424,7 +3425,7 @@
         parsed = JSON.parse(list);
       }
       catch (e) {
-        console.debug('wrong json')
+        log1('wrong json')
         return
       }
       /*
@@ -3445,11 +3446,11 @@
           status.textContent = '🟠'
           task = replacePlaceHolders(task)
           task = replaceVars(task)
-          console.debug('chat gpt task: \n' + task)
+          log1('chat gpt task: \n' + task)
           const res = await sendGptRequest(gptToken, task, element.model)
-          console.debug(JSON.stringify(res))
+          log1(JSON.stringify(res))
           const content = JSON.parse(res.choices[0].message.content.replace(/\\"/g, '"').replace(/\\n/g, '\\n'))
-          console.debug('content ' + JSON.stringify(content))
+          log1('content ' + JSON.stringify(content))
           const currentDate = new Date();
 
           // Add one day to the current date
@@ -3503,7 +3504,7 @@
               body: JSON.stringify(db),
             });
             const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&attr=${import_name}&val=${db.id}&ownerid=${localStorage.getItem('ownerid')}` };
-            console.debug('event ' + eventData.url)
+            log1('event ' + eventData.url)
             // Fetch options
             const options = {
               method: 'POST',
@@ -3516,7 +3517,7 @@
 
 
             if (!response.ok) {
-              console.debug('error pup')
+              log1('error pup')
             }
 
 
@@ -3544,7 +3545,7 @@
 
     }
     var updatePathItem = () => {
-      console.debug(JSON.stringify(pathItem))
+      log1(JSON.stringify(pathItem))
 
       return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
@@ -3555,7 +3556,7 @@
       });
     }
     var updateHeadContentItem = () => {
-      console.debug(JSON.stringify(headContentItem))
+      log1(JSON.stringify(headContentItem))
 
       return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
@@ -3641,9 +3642,9 @@
           let i = 0
           let folders = []
           const elements = []
-          console.debug(JSON.stringify(data))
+          log1(JSON.stringify(data))
           const items = data.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace(path1, '').split(';')[0] } })
-          console.debug(JSON.stringify(items))
+          log1(JSON.stringify(items))
           for (const item of items) {
             const splited = item.name.split(';')[0].split('/')
             if (splited.length > 1) {
@@ -3654,8 +3655,8 @@
             }
           }
           folders = removeDuplicates(folders)
-          console.debug(JSON.stringify(folders))
-          console.debug(JSON.stringify(elements))
+          log1(JSON.stringify(folders))
+          log1(JSON.stringify(elements))
 
           folders.forEach(item => {
 
@@ -3764,9 +3765,9 @@
           let i = 0;
           let folders = []
           const elements = []
-          console.debug(JSON.stringify(data))
+          log1(JSON.stringify(data))
           const items = data.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.split(';')[0] } })
-          console.debug('ites' + JSON.stringify(items))
+          log1('ites' + JSON.stringify(items))
           for (const item of items) {
             const splited = item.name.split(';')[0].split('/')
             if (splited.length > 1) {
@@ -3777,7 +3778,7 @@
             }
           }
           folders = removeDuplicates(folders)
-          console.debug(JSON.stringify(elements))
+          log1(JSON.stringify(elements))
           folders.forEach(item => {
 
 
@@ -3916,7 +3917,7 @@
         // Insert clonedItem before the first child
         //clonedFieldset2.insertBefore(clonedItem, firstChild);
         clonedFieldset2.append(clonedItem)
-        console.debug(JSON.stringify(selected))
+        log1(JSON.stringify(selected))
 
       }
 
@@ -3959,9 +3960,9 @@
               throw new Error('Network response was not ok');
             }
             let data = await response.json();
-            console.debug(JSON.stringify(data));
+            log1(JSON.stringify(data));
             const items = data.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace(path, '').split(';')[0] } });
-            console.debug(JSON.stringify(items));
+            log1(JSON.stringify(items));
             for (const item of items) {
               const splited = item.name.split(';')[0].split('/');
               if (splited.length > 1) {
@@ -3975,7 +3976,7 @@
           else {
             //use folders
             const sk = `folder:${helperid ? helperid : ownerid}:lvl${path.split('/').length}:${path}`
-            console.debug(sk)
+            log1(sk)
             let url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`
             const response = await fetch(url);
             if (!response.ok) {
@@ -3988,7 +3989,7 @@
 
           // Replace existing file paths with dynamic content
 
-          console.debug('folders' + JSON.stringify(folders))
+          log1('folders' + JSON.stringify(folders))
           folders = removeDuplicates(folders);
           folders.sort();
           folders.forEach(item => {
@@ -4085,12 +4086,12 @@
       var loadFileList1 = async () => {
         // Fetch GET request
 
-        console.debug('loading filelist')
+        log1('loading filelist')
         // Fetch GET request
         const helperid = localStorage.getItem('helperid')
         const sk = `folder:${helperid ? helperid : ownerid}:lvl1:`
         let url
-        console.debug(url)
+        log1(url)
 
 
         var filePathList = document.getElementById('filePathList;' + pId);
@@ -4113,17 +4114,17 @@
             return response.json();
           })
           .then(async data => {
-            console.debug(JSON.stringify(data))
+            log1(JSON.stringify(data))
             // Replace existing file paths with dynamic content
 
             let i = 0;
             let folders = data.items.map(item => item.sk.replace(sk, ''))
 
-            console.debug(JSON.stringify(data))
+            log1(JSON.stringify(data))
 
 
             folders = removeDuplicates(folders)
-            console.debug(JSON.stringify(folders))
+            log1(JSON.stringify(folders))
             folders.sort()
             folders.forEach(item => {
 
@@ -4226,7 +4227,7 @@
             querySelectorAll1('#filePathList fieldset').forEach(fieldset => {
               fieldset.id !== 'cancelation' && fieldset.removeAttribute('hidden');
             });
-          }).catch(e => console.debug(e))
+          }).catch(e => log1(e))
 
 
 
@@ -4273,7 +4274,7 @@
         clonedFieldset3.querySelector('#root').onclick = loadRoot
         const loadPrev = (e) => {
           if (lastCompPath) {
-            console.debug(lastCompPath)
+            log1(lastCompPath)
             s = lastCompPath.split('/')
             s.pop()
             path1 = s.join('/') + '/'
@@ -4335,7 +4336,7 @@
     }
     var addTreeElement = (e) => {
       const fieldset = getElementById1('tag-table');
-      console.debug('clicked')
+      log1('clicked')
       if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('tag-table')) {
         const clonedFieldset = fieldset.cloneNode(true);
 
@@ -4365,11 +4366,11 @@
       // Find the index at which paths diverge
       let divergeIndex = 0;
       while (divergeIndex < Math.min(currentLsiParts.length, lsi3Parts.length) && currentLsiParts[divergeIndex] === lsi3Parts[divergeIndex]) {
-        console.debug('adding')
+        log1('adding')
         divergeIndex++;
       }
-      console.debug(currentLsiParts[divergeIndex])
-      console.debug(lsi3Parts[divergeIndex])
+      log1(currentLsiParts[divergeIndex])
+      log1(lsi3Parts[divergeIndex])
       // Calculate the number of levels to go up from currentLsi to the common directory
       const levelsUp = currentLsiParts.length - divergeIndex;
 
@@ -4464,7 +4465,7 @@
           const currentLsi = pathItemPath.replace(';publish:published', "")
           const relativePath = getRelativePath(currentLsi, convertToOldPath(data.lsi1.replace(';publish:published', "")));
           let prefix = optionList.querySelector('#file-list-link-by-content-name').classList.contains('b-selected') ? '$' : '#'
-          await addComponent1(prefix + relativePath, selfuse, newCounter, pId).catch(e => console.debug(e))
+          await addComponent1(prefix + relativePath, selfuse, newCounter, pId).catch(e => log1(e))
           flag = true
         }
 
@@ -4540,7 +4541,7 @@
         clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
         clonedItem.onclick = (e) => { e.target.closest('li').remove(); selected.filter(el => el !== itemId) }
         clonedFieldset2.appendChild(clonedItem)
-        console.debug(JSON.stringify(selected))
+        log1(JSON.stringify(selected))
 
       }
       var setFolder = (path, id) => {
@@ -4575,7 +4576,7 @@
         clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
         clonedItem.onclick = (e) => { e.target.closest('li').remove(); selected.filter(el => el !== path) }
         clonedFieldset2.appendChild(clonedItem)
-        console.debug(JSON.stringify(selected))
+        log1(JSON.stringify(selected))
 
       }
 
@@ -4618,9 +4619,9 @@
               throw new Error('Network response was not ok');
             }
             let data = await response.json();
-            console.debug(JSON.stringify(data));
+            log1(JSON.stringify(data));
             const items = data.items.filter(i => i.lsi1).map(item1 => { return { ...item1, name: item1.lsi1.replace(path, '').split(';')[0] } });
-            console.debug(JSON.stringify(items));
+            log1(JSON.stringify(items));
             for (const item of items) {
               const splited = item.name.split(';')[0].split('/');
               if (splited.length > 1) {
@@ -4634,7 +4635,7 @@
           else {
             //use folders
             const sk = `folder:${helperid ? helperid : ownerid}:lvl${path.split('/').length}:${path}`
-            console.debug(sk)
+            log1(sk)
             let url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`
             const response = await fetch(url);
             if (!response.ok) {
@@ -4647,7 +4648,7 @@
 
           // Replace existing file paths with dynamic content
 
-          console.debug('folders' + JSON.stringify(folders))
+          log1('folders' + JSON.stringify(folders))
           folders = removeDuplicates(folders);
           folders.sort();
           folders.forEach(item => {
@@ -4748,12 +4749,12 @@
       var loadFileList1 = async (id) => {
         // Fetch GET request
 
-        console.debug('loading filelist')
+        log1('loading filelist')
         // Fetch GET request
         const helperid = localStorage.getItem('helperid')
         const sk = `folder:${helperid ? helperid : ownerid}:lvl1:`
         let url
-        console.debug(url)
+        log1(url)
 
 
         var filePathList = getElementById1('filePathList;' + id);
@@ -4776,17 +4777,17 @@
             return response.json();
           })
           .then(async data => {
-            console.debug(JSON.stringify(data))
+            log1(JSON.stringify(data))
             // Replace existing file paths with dynamic content
 
             let i = 0;
             let folders = data.items.map(item => item.sk.replace(sk, ''))
 
-            console.debug(JSON.stringify(data))
+            log1(JSON.stringify(data))
 
 
             folders = removeDuplicates(folders)
-            console.debug(JSON.stringify(folders))
+            log1(JSON.stringify(folders))
             folders.sort()
             folders.forEach(item => {
 
@@ -4892,7 +4893,7 @@
             querySelectorAll1('#filePathList fieldset').forEach(fieldset => {
               fieldset.id !== 'cancelation' && fieldset.removeAttribute('hidden');
             });
-          }).catch(e => console.debug(e))
+          }).catch(e => log1(e))
 
 
 
@@ -4992,7 +4993,7 @@
       if (lastIndexOfSubstring !== -1) {
         // If the substring is found, remove it and return the modified string
         const res = inputString.slice(0, lastIndexOfSubstring) + inputString.slice(lastIndexOfSubstring + substringToRemove.length);
-        console.debug('OUTPUT ' + res)
+        log1('OUTPUT ' + res)
         return res
       } else {
         // If the substring is not found, return the original string
@@ -5022,7 +5023,7 @@
 
       const { id } = parentMenu;
       const action = 'removeAttribute';
-      console.debug('Action: ' + action);
+      log1('Action: ' + action);
 
       const splited = id.split(';');
       const [toRemove, ...rest] = splited;
@@ -5038,10 +5039,10 @@
         el.target_element = el.target_element.split(':')[0].replace('-tree', '') + '-tree'
       }
       tr.remove();
-      console.debug(JSON.stringify(el));
+      log1(JSON.stringify(el));
       await pushAction(el);
 
-      console.debug(JSON.stringify(actionLog));
+      log1(JSON.stringify(actionLog));
     }
     let visualOn = false
     function duplicateId(originalId,) {
@@ -5067,7 +5068,7 @@
 
       event.target.classList.add('b-selected');
       visualOn = true
-      console.debug('transforming');
+      log1('transforming');
       var generatedPage = getElementById1("generated-page");
 
       // Process each child element
@@ -5137,7 +5138,7 @@
       function handleContextMenu(e) {
         if (e.target.hasAttribute('data-visual-element')) {
           e.preventDefault(); // Prevent the default context menu from opening
-          console.debug('in11');
+          log1('in11');
           const parentMenu = getElementById1('right-click-menu'); // Use # for ID selector
           const menu = parentMenu.querySelector('#options')
           menu.innerHTML = '';
@@ -5145,17 +5146,17 @@
           let fieldsetSiblings
           let parentWithAppendChild
           let siblingWithInsertBefore
-          console.debug('tag ' + e.target.tagName)
+          log1('tag ' + e.target.tagName)
           const redirectToImgPage = (imgId, src) => {
             const treeElement = getElementById1(imgId);
-            console.debug(imgId)
+            log1(imgId)
             if (treeElement) {
 
 
               const existingClonedFieldset = treeElement.parentNode.querySelector('[id^="gallery-menu-wrapper"]');
 
               if (!existingClonedFieldset) {
-                console.debug('cloning fieldset')
+                log1('cloning fieldset')
                 // Clone the fieldset node
                 const fieldset = getElementById1('gallery-menu-wrapper');
                 const clonedFieldset = fieldset.cloneNode(true);
@@ -5165,7 +5166,7 @@
 
                 // image input change 
                 clonedFieldset.querySelector('#image-input').addEventListener('change', async function (event) {
-                  console.debug('changing')
+                  log1('changing')
                   var fileNameSpan = clonedFieldset.querySelector('#file-name');
 
                   var uploadButton = clonedFieldset.querySelector('#upload-button');
@@ -5238,7 +5239,7 @@
           if (
             e.target.parentElement.id === e.target.id + '-fieldset') {
             // Check for data-visual-duplicate siblings
-            console.debug('case1')
+            log1('case1')
             siblingsWithDuplicate = Array.from(e.target.parentElement.parentElement.children).filter(
               sibling => sibling.hasAttribute('data-visual-dublicate')
             );
@@ -5257,7 +5258,7 @@
             );
           }
           else {
-            console.debug('case2')
+            log1('case2')
             // Check for data-visual-duplicate siblings
             let ids = []
             siblingsWithDuplicate = Array.from(e.target.parentElement.children).filter(
@@ -5317,14 +5318,14 @@
 
 
 
-          console.debug(JSON.stringify([...fieldsetSiblings, ...siblingsWithDuplicate]));
+          log1(JSON.stringify([...fieldsetSiblings, ...siblingsWithDuplicate]));
 
 
 
           // Add entries for data-visual-duplicate siblings
           const existingIds = []
           for (const sibling of siblingsWithDuplicate) {
-            console.debug('taag' + sibling.tagName)
+            log1('taag' + sibling.tagName)
             let name = `➕ ${sibling.tagName.toLowerCase()}`
             if (sibling.hasAttribute('data-visual-title')) {
               name = `➕ ${sibling.getAttribute('data-visual-title')}`
@@ -5361,7 +5362,7 @@
             }
 
           }
-          console.debug('existing ' + JSON.stringify(existingIds))
+          log1('existing ' + JSON.stringify(existingIds))
 
           // Adjust the position relative to the viewport
           const offsetX = e.pageX;
@@ -5393,9 +5394,9 @@
               }
             }
             else {
-              console.debug('iiid ' + e.target.id)
+              log1('iiid ' + e.target.id)
               const attr = e.target.getAttribute('data-visual-defaultTextNode')
-              console.debug('attr' + attr)
+              log1('attr' + attr)
               e.target.textContent = attr
             }
 
@@ -5405,9 +5406,9 @@
       }
 
       function handleMenuEntryClick(sourceId, targetId, siblingWithInsertBefore, parentWithAppendChild, flag) {
-        console.debug('t');
-        console.debug(parentWithAppendChild);
-        console.debug(siblingWithInsertBefore);
+        log1('t');
+        log1(parentWithAppendChild);
+        log1(siblingWithInsertBefore);
         removeButtons()
         const original = getElementById1(sourceId);
         const originalRect = original.getBoundingClientRect();
@@ -5444,7 +5445,7 @@
 
             for (let i = children.length - 1; i >= 0; i--) {
               const child = children[i];
-              console.debug(child.id)
+              log1(child.id)
 
               if (!child.classList.contains('receive-target')) {
                 lastFieldsetTreeId = child.id;
@@ -5453,11 +5454,11 @@
             }
 
             if (lastFieldsetTreeId !== null) {
-              console.debug('Last fieldset with id ending in -tree:', lastFieldsetTreeId);
+              log1('Last fieldset with id ending in -tree:', lastFieldsetTreeId);
             } else {
-              console.debug('No matching fieldset with id ending in -tree found.');
+              log1('No matching fieldset with id ending in -tree found.');
             }
-            console.debug(lastFieldsetTreeId)
+            log1(lastFieldsetTreeId)
 
             insertAfter(lastFieldsetTreeId, targetId, flag);
             iframeDocument.removeEventListener('click', clickRemoveButton);
@@ -5548,7 +5549,7 @@
 
           for (let i = children.length - 1; i >= 0; i--) {
             const child = children[i];
-            console.debug(child.id)
+            log1(child.id)
             if (child.tagName === 'FIELDSET' && child.id.endsWith('-fieldset')) {
               lastFieldsetTreeId = child.id;
               break; // Found the last matching element, exit the loop
@@ -5556,9 +5557,9 @@
           }
 
           if (lastFieldsetTreeId !== null) {
-            console.debug('Last fieldset with id ending in -tree:', lastFieldsetTreeId);
+            log1('Last fieldset with id ending in -tree:', lastFieldsetTreeId);
           } else {
-            console.debug('No matching fieldset with id ending in -tree found.');
+            log1('No matching fieldset with id ending in -tree found.');
           }
 
 
@@ -5596,14 +5597,14 @@
         // Step 2: If it ends with -copy-x, remove that part
         let modifiedId = removeLastOccurrence(inputId, '-tree');
         const el = getElementById1(modifiedId + '-tree')
-        console.debug('iiie ' + el.id)
+        log1('iiie ' + el.id)
         const tag = el.tagName.toLowerCase()
         const splited = modifiedId.split(';')
         const last = splited[splited.length - 1]
         const lastId = last.split(':')[0]
         splited.pop()
         modifiedId = [...splited, lastId].join(';')
-        console.debug('modfi ' + modifiedId)
+        log1('modfi ' + modifiedId)
         // Step 3: Query for elements starting with the modified ID
         const selector = '[id^="' + modifiedId + '"]';
         const matchingElements = el.parentNode.querySelectorAll(selector);
@@ -5627,7 +5628,7 @@
       function saveT(event, previousValue) {
         const id = event.target.id + '-tree'
         const action = 'textContent'
-        console.debug('ac' + action)
+        log1('ac' + action)
 
 
 
@@ -5651,9 +5652,9 @@
             }
           }
           else {
-            console.debug('iiid ' + event.target.id)
+            log1('iiid ' + event.target.id)
             const attr = event.target.getAttribute('data-visual-defaultTextNode')
-            console.debug('attr' + attr)
+            log1('attr' + attr)
             event.target.textContent = attr
           }
           return
@@ -5699,7 +5700,7 @@
           }
         }
         */
-        console.debug('ac' + JSON.stringify(el))
+        log1('ac' + JSON.stringify(el))
         pushAction(el)
         event.target.removeAttribute('contenteditable')
         return textareaValue
@@ -5707,13 +5708,13 @@
       function onDoubleClick(e) {
         // Get the element that was double-clicked
         var target = e.target;
-        console.debug('target ' + target.id)
+        log1('target ' + target.id)
         // Check if the element has the 'data-visual-contenteditable' attribute
 
         if (target.hasAttribute('data-visual-contenteditable')) {
 
 
-          console.debug('has attr')
+          log1('has attr')
           // Prevent the default double-click behavior
           e.preventDefault();
 
@@ -5747,7 +5748,7 @@
         // Check if the target element has the data-visual-checkbox attribute
         if (event.target.hasAttribute('data-visual-checkbox')) {
           // Log the id of the target element and the new value of the checkbox
-          console.debug('ID:', event.target.id, 'Value:', event.target.checked);
+          log1('ID:', event.target.id, 'Value:', event.target.checked);
           let el
           if (event.target.checked) {
             el = {
@@ -5781,7 +5782,7 @@
       function handleDragStart(e) {
         if (isDraggable(e.target)) {
 
-          console.debug('draggable');
+          log1('draggable');
           removeButtons()
           e.dataTransfer.setData('text/plain', e.target.id);
           const original = getElementById1(e.target.id);
@@ -5831,9 +5832,9 @@
           }
           const newElement = getElementById1(e.target.id);
           const newRect = newElement.getBoundingClientRect();
-          console.debug(window.scrollY)
-          console.debug(newRect.top)
-          console.debug(originalRect.top)
+          log1(window.scrollY)
+          log1(newRect.top)
+          log1(originalRect.top)
           window.scrollTo({
             top: newRect.top - originalRect.top + window.scrollY,
             behavior: 'auto' // You can use 'auto' or 'smooth' for smooth scrolling
@@ -5869,7 +5870,7 @@
         const action = e.target.getAttribute('data-action');
 
         // Log the element id and target element id
-        console.debug(`Element ID: ${draggedElementId}, Target Element ID: ${targetElementId} action ${action}`);
+        log1(`Element ID: ${draggedElementId}, Target Element ID: ${targetElementId} action ${action}`);
         if (targetElementId) {
           moveItem(targetElementId, draggedElementId, action)
         }
@@ -5964,12 +5965,12 @@
     function handlePathSelection() {
       // Get the selected value from the pathSelector
       var selectedValue = getElementById1('pathSelector').value;
-      console.debug(selectedValue)
+      log1(selectedValue)
       // Get the corresponding item based on the selected value
       var selectedItem = selectedValue
 
       // Handle the selected item as needed
-      console.debug('Selected Item:', selectedItem);
+      log1('Selected Item:', selectedItem);
       if (selectedItem === 'select' || selectedItem === undefined) {
         return
       }
@@ -5994,13 +5995,13 @@
         path = path + '/' + selectedItem
 
       }
-      console.debug(path)
+      log1(path)
       loadUsingPath()
 
     }
     function selectFile(event, fileId, name) {
       // Add logic to handle the selected file, if needed
-      console.debug('File selected with ID:', fileId);
+      log1('File selected with ID:', fileId);
       var el = event.target;
 
       // Get the parent fieldset
@@ -6011,8 +6012,8 @@
       var fieldsetAction = fieldset.getAttribute('action');
 
       // Log the id and action attributes (you can replace this with your desired logic)
-      console.debug("Fieldset ID:", fieldsetId);
-      console.debug("Fieldset Action:", fieldsetAction);
+      log1("Fieldset ID:", fieldsetId);
+      log1("Fieldset Action:", fieldsetAction);
       const actionObject = {
         time: (new Date()).getTime(),
         action: 'Add_Component',
@@ -6260,7 +6261,7 @@ checkbox1.setAttribute('hidden', "");
         for (const item of (pathItem.hub_items?.scripts?.[key] || [])) {
           const { name, execute_on_red_checkbox, execute_requires_reload, execute_in_template, queue_number } = item;
           const runned = headContentItem.scripts[name]?.runned;
-          console.debug('runned :' + runned)
+          log1('runned :' + runned)
           const appItem = document.getElementById(name);
 
           if (appItem) {
@@ -6294,7 +6295,7 @@ checkbox1.setAttribute('hidden', "");
                 // Handle onchange event for execute_in_template
                 const checked = e.target.checked
                 item.execute_in_template = checked
-                console.debug('updating')
+                log1('updating')
 
                 await updatePathItem()
               };
@@ -6357,7 +6358,7 @@ checkbox1.setAttribute('hidden', "");
       for (const schema of schemas) {
         const receiverName = schema.getAttribute('data-transfer-receiver')
         let json = JSON.parse(schema.textContent)
-        console.debug('INPUT SCHEMA ' + schema.textContent)
+        log1('INPUT SCHEMA ' + schema.textContent)
         // Start traversing the JSON object
         /*
         if (combinations === 1 || forms.length === 1) {
@@ -6372,7 +6373,7 @@ checkbox1.setAttribute('hidden', "");
             prices.push(...Array.from(el.children).map(e => parseInt(e.textContent)))
           }
           prices = prices.filter(e => e)
-          console.debug('prices' + JSON.stringify(prices))
+          log1('prices' + JSON.stringify(prices))
           delete json['offers-single']
           json['offers-aggregate'] && (json.offers = { ...json['offers-aggregate'], lowPrice: Math.min(...prices), highPrice: Math.max(...prices), offerCount: combinations, url: getPageUrl(url) })
           delete json['offers-aggregate']
@@ -6383,7 +6384,7 @@ checkbox1.setAttribute('hidden', "");
         json = cleanJson(json)
         // After updating, stringify the JSON object and assign it back to the text content of the schema element
         schema.textContent = JSON.stringify(json, null, 2);
-        console.debug('OUTPUT SCHEMA JSON ' + JSON.stringify(json))
+        log1('OUTPUT SCHEMA JSON ' + JSON.stringify(json))
       }
       const tags = querySelectorAll1('[data-transfer-receiver]')
       for (const tag of tags) {
@@ -6424,7 +6425,7 @@ checkbox1.setAttribute('hidden', "");
           if (senders2.length) {
             for (const sender of senders2) {
               const textContent = sender.getAttribute("href");
-              console.debug('sender2')
+              log1('sender2')
               const attr = sender.getAttribute('data-transfer-sender-href').replace(receiver + '.', '');
               if (attr === 'text-content') {
                 tag.textContent = textContent
@@ -6440,7 +6441,7 @@ checkbox1.setAttribute('hidden', "");
               const textContent = sender.getAttribute('src');
               const attr = sender.getAttribute('data-transfer-sender-src').replace(receiver + '.', '');
               if (sender.hasAttribute('data-builder-image-name')) {
-                console.debug('iiin55555')
+                log1('iiin55555')
                 const name = sender.getAttribute('data-builder-image-name')
                 const e = 'https://' + link.toLowerCase() + '/' + name + '.' + textContent.split('.').pop()
                 tag.setAttribute(attr, e);
@@ -6458,7 +6459,7 @@ checkbox1.setAttribute('hidden', "");
           if (senders4.length) {
             for (const sender of senders4) {
               const html = sender.innerHTML;
-              console.debug('sender4')
+              log1('sender4')
               tag.innerHTML = html
               tag.querySelectorAll('[data-b=""]').forEach(e => e.remove())
               tag.querySelectorAll('[data-b-value=""]').forEach(e => e.remove())
@@ -6547,18 +6548,18 @@ checkbox1.setAttribute('hidden', "");
       script_chatgpt_: () => { },
     }
     const onLoad = async () => {
-      console.debug('onload')
+      log1('onload')
       const onLoad = pathItem.hub_items?.scripts?.onLoad
       const body = document.getElementById(getBodyIdFromType('onLoad'))
       if (!onLoad) {
-        console.debug('no onload')
+        log1('no onload')
         return
       }
       for (const item of onLoad) {
         if (!item.execute_in_template && pathItem.lsi1.toLowerCase().includes('seositeshome.com')) {
           continue
         }
-        console.debug('name '+item.name)
+        log1('name '+item.name)
         await funcDictionary[item.name]()
         const item1 = body.querySelector('#' + item.name)
         item1.querySelector('#script_status').textContent = '🟢'
@@ -6677,7 +6678,7 @@ checkbox1.setAttribute('hidden', "");
       const lastActionTime = getElementById1('last-action-time');
       lastActionTime.addEventListener('dblclick', function () {
         // Handle double-click event here
-        console.debug('Double-clicked on the button');
+        log1('Double-clicked on the button');
         // Add your custom logic for double-click handling
       });
       const loadingScreen = getElementById1('loading');
@@ -6727,17 +6728,17 @@ checkbox1.setAttribute('hidden', "");
         if (!pathItemPath.split('/').includes('Stock')) {
           const headLsi = pathItem.lsi1.split(';')[0].split('|')[0].split('/').slice(0, 3).join('/') + '/Content/Page|Head-Content'
 
-          console.debug('head lsi' + headLsi)
+          log1('head lsi' + headLsi)
           const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headLsi}`;
           await fetch(url).then(res => res.json())
             .then(async ({ items }) => {
               if (!items.length) {
                 return
               }
-              console.debug(JSON.stringify(items))
+              log1(JSON.stringify(items))
               headContentItem = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${items[0].id}:${items[0].sk}`).then(re => re.json())
               headContentItem.id = items[0].id
-              console.debug('head content item' + JSON.stringify(headContentItem))
+              log1('head content item' + JSON.stringify(headContentItem))
               pathItemSku = headContentItem.sku
             })
         }
@@ -6802,16 +6803,16 @@ checkbox1.setAttribute('hidden', "");
             if (response.ok || response.status === 200) {
               const t = await response.text()
               if (t.includes('404')) {
-                console.debug('image doesnt exist')
+                log1('image doesnt exist')
                 republish = true
                 return true
               }
               else {
-                console.debug('Image exists.');
+                log1('Image exists.');
               }
 
             } else {
-              console.debug('image doesnt exist')
+              log1('image doesnt exist')
               republish = true
               return true
             }
@@ -6855,7 +6856,7 @@ checkbox1.setAttribute('hidden', "");
       )
       await Promise.all(imagePs)
       if (toPublish == "1" || republish) {
-        console.debug('publishing')
+        log1('publishing')
         await publish()
       }
       if (generatetable) {
@@ -6881,7 +6882,7 @@ checkbox1.setAttribute('hidden', "");
       const pagePathContent = pathItemPath;
 
       // Use the textContent as needed, for example, log it to the console
-      console.debug('Publishing:', pagePathContent);
+      log1('Publishing:', pagePathContent);
       //generateSchema(pagePathContent.split(';')[0], new Date())
 
 
@@ -6896,7 +6897,7 @@ checkbox1.setAttribute('hidden', "");
         button.addEventListener('click', e => loader(e, handleComponentClick));
       });*/
 
-      console.debug(timerElement.textContent)
+      log1(timerElement.textContent)
       if (localStorage.getItem('visualOn')) {
 
         getElementById1('transform').click()
@@ -6954,7 +6955,7 @@ checkbox1.setAttribute('hidden', "");
       }
 
       // Log the selected array (you can replace this with your desired logic)
-      console.debug("Selected Fieldsets:", selected);
+      log1("Selected Fieldsets:", selected);
       var arrowButton = checkbox.parentNode.querySelector('[data-element="code-tree-show-hide-button"]');
       if (checkbox.checked) {
         arrowButton.textContent = '↓';
@@ -7059,7 +7060,7 @@ checkbox1.setAttribute('hidden', "");
               },
               body: JSON.stringify(positionItem),
             });
-            console.debug('Action deleted successfully');
+            log1('Action deleted successfully');
           } else {
             // Delete request failed, handle the error
             console.error('Error deleting action:', response.statusText);
@@ -7080,9 +7081,9 @@ checkbox1.setAttribute('hidden', "");
     let frozen = false
     let errored = false
     const pushAction = async (element, firstLoad, visual, replaceActions, containerId, noComp1, noSubComp1, lvl, removeActions, replaceId, componentPath, pathForRelative, reusableId, attachId) => {
-      console.debug('pushed' + JSON.stringify(element))
+      log1('pushed' + JSON.stringify(element))
       const time = element.time
-      console.debug('time' + time)
+      log1('time' + time)
       actionLog.push(element)
       !firstLoad && await pushActionToDb(element)
       try {
@@ -7112,11 +7113,11 @@ checkbox1.setAttribute('hidden', "");
       }
       catch (e) {
         if (!errored) {
-          console.debug('\tname: ' + e.name + ' message: ' + e.message + ' at: ' + e.at + ' text: ' + e.text);
-          console.debug(e.stack);
+          log1('\tname: ' + e.name + ' message: ' + e.message + ' at: ' + e.at + ' text: ' + e.text);
+          log1(e.stack);
           const codeLog = getElementById1("code-log-body");
           const query = `#code-log-action-time[sk="${element.time}"]`
-          console.debug(query)
+          log1(query)
           codeLog.querySelector(query).classList.add('action-error');
         }
 
@@ -7176,7 +7177,7 @@ checkbox1.setAttribute('hidden', "");
     }
     const searchLogs = (event) => {
       const value = event.target.value.toLowerCase()
-      console.debug(value)
+      log1(value)
       const codeLog = getElementById1("code-log-body");
       const searchCodeLog = getElementById1("code-log-search-body");
       if (value === "") {
@@ -7312,7 +7313,7 @@ checkbox1.setAttribute('hidden', "");
     // Example usage:
     const positions = ["string1", "string2", "string3", "string4"];
     const updatedPositions = moveStringBefore(positions, "string4", "string2");
-    console.debug(updatedPositions); // Output: ["string1", "string4", "string2", "string3"]
+    log1(updatedPositions); // Output: ["string1", "string4", "string2", "string3"]
     var scriptClicked
     function getTypeFromCheckbox(checkbox) {
       // Get the parent tbody element of the checkbox
@@ -7474,7 +7475,7 @@ checkbox1.setAttribute('hidden', "");
             }
             move.removeAttribute('hidden')
             if (!move) {
-              console.debug(element.getAttribute('sk'))
+              log1(element.getAttribute('sk'))
               return
             }
             const afterB = move.querySelector('[data-move-after]')
@@ -7596,7 +7597,7 @@ checkbox1.setAttribute('hidden', "");
       const buttonsContainer = clonedElement.querySelector('[data-action-buttons]')
       const menu = buttonsContainer.querySelector('[data-action-button-menu]')
       if (element?.inserted_component) {
-        console.debug('iiiiiiiiiiin0')
+        log1('iiiiiiiiiiin0')
         const a = clonedElement.querySelector("#code-log-action")
         a.textContent = '🧩' + '{name}' + emoji;
         a.setAttribute('log-id', r + element.inserted_component.id)
@@ -7623,7 +7624,7 @@ checkbox1.setAttribute('hidden', "");
 
         if (options?.attachId) {
           let id1 = removeLastOccurrence(options.attachId, '-tree')
-          console.debug(id1)
+          log1(id1)
           const el11 = getElementById1(id1)
           !el11 && (id1 = 'body')
           cloned2.querySelector('#action-target-tag-id-value').textContent = id1
@@ -7668,14 +7669,14 @@ checkbox1.setAttribute('hidden', "");
 
             // Set the selected option of cloned.querySelector('#change_link_type')
             let selectedOptionValue = '';
-            console.debug('initial ' + initialValue[0])
+            log1('initial ' + initialValue[0])
             switch (initialValue[0]) {
               case '*': selectedOptionValue = 'absolute'; break;
               case '#': selectedOptionValue = 'relative'; break;
               case '$': selectedOptionValue = 'content'; break;
               default: selectedOptionValue = ''; break;
             }
-            console.debug(selectedOptionValue)
+            log1(selectedOptionValue)
             cloned.querySelector('#new-component-input').value = initialValue
 
             // Set the selected option in the dropdown
@@ -7683,7 +7684,7 @@ checkbox1.setAttribute('hidden', "");
             for (let i = 0; i < selectElement.options.length; i++) {
               if (selectElement.options[i].id === selectedOptionValue) {
                 selectElement.selectedIndex = i;
-                console.debug('selected index' + i)
+                log1('selected index' + i)
                 break;
               }
             }
@@ -7832,7 +7833,7 @@ checkbox1.setAttribute('hidden', "");
 
 
               const cloned2 = tagAction.cloneNode(true)
-              console.debug('prob545 ' + element.target_element[0].replaced)
+              log1('prob545 ' + element.target_element[0].replaced)
               cloned2.querySelector('#tag-action-tag-id').textContent = e[0]
               cloned2.querySelector('#tag-action-tag-name').textContent = getTagName(element.target_element[1])
               for (let i = 1; i < e.length; i++) {
@@ -7986,8 +7987,8 @@ checkbox1.setAttribute('hidden', "");
     const fixCommand = async (command,) => {
       let newCommand
       let fixed
-      console.debug('wrong append')
-      console.debug(JSON.stringify(command))
+      log1('wrong append')
+      log1(JSON.stringify(command))
       const missing = getElementById1('target_element_missing')
       const cloned = missing.cloneNode(true)
       getElementById1('code-tree').append(cloned)
@@ -8085,14 +8086,14 @@ checkbox1.setAttribute('hidden', "");
       let treeElement
       let componentElement
 
-      console.debug('command is ' + JSON.stringify(command) + ' replace id ' + replaceId + 'pathForRelative ' + pathForRelative?.current + 'reusable ' + reusableId)
+      log1('command is ' + JSON.stringify(command) + ' replace id ' + replaceId + 'pathForRelative ' + pathForRelative?.current + 'reusable ' + reusableId)
       const removeSelected = (arr) => {
         for (const el of arr) {
-          console.debug('1- ' + el)
+          log1('1- ' + el)
           const treeEl = getElementById1(el)
           const box = treeEl?.querySelector('#selectedCheckbox')
           if (box) {
-            console.debug('d55')
+            log1('d55')
             box.checked = false
           }
         }
@@ -8100,7 +8101,7 @@ checkbox1.setAttribute('hidden', "");
       function sortByPlace(a, b) {
         var elementA = getElementById1(a);
         var elementB = getElementById1(b);
-        console.debug('prob66 ' + a)
+        log1('prob66 ' + a)
         return Array.from(elementA.parentElement.children).indexOf(elementA) -
           Array.from(elementB.parentElement.children).indexOf(elementB);
       }
@@ -8112,7 +8113,7 @@ checkbox1.setAttribute('hidden', "");
           Array.from(elementB.parentElement.children).indexOf(elementB);
       }
       function handleAppendOrInsertReplace(actions, selectedArrayNotSorted) {
-        console.debug('start')
+        log1('start')
         var firstElementId = selectedArrayNotSorted[0].id;
         var restOfElements = selectedArrayNotSorted.slice(1);
         removeSelected(restOfElements.map(e => e.id))
@@ -8183,13 +8184,13 @@ checkbox1.setAttribute('hidden', "");
 
           const targetTreeEl = getElementById1(targetMid + ':' + replaceIds[i] + '-tree')
           const targetCompEl = getElementById1(targetMid + ':' + replaceIds[i])
-          console.debug('tree el id' + targetTreeEl.id)
+          log1('tree el id' + targetTreeEl.id)
           for (const element of restOfElements) {
             const mId = element.id.replace('-tree', '').split(':')[0]
             const treeEl = getElementById1(mId + ':' + replaceIds[i] + '-tree')
             const compEl = getElementById1(mId + ':' + replaceIds[i])
-            console.debug('targetAppend' + targetTreeEl.id)
-            console.debug('appending ' + treeEl.id)
+            log1('targetAppend' + targetTreeEl.id)
+            log1('appending ' + treeEl.id)
             if (action === 'Append') {
               targetTreeEl.append(treeEl)
               targetCompEl.append(compEl)
@@ -8206,13 +8207,13 @@ checkbox1.setAttribute('hidden', "");
       function handleAppendOrInsert(action, selectedArrayNotSorted, move, insert_copies) {
         // Sort
 
-        console.debug('start')
+        log1('start')
         var firstElementId = selectedArrayNotSorted[0];
         var restOfElements = selectedArrayNotSorted.slice(1);
 
         removeSelected(restOfElements)
         if (components.includes(firstElementId.replace('-tree', ''))) {
-          console.debug('in555')
+          log1('in555')
           const target = getElementById1(firstElementId)
           for (const el of restOfElements) {
             const toM = getElementById1(el)
@@ -8228,7 +8229,7 @@ checkbox1.setAttribute('hidden', "");
         }
         // Sort the rest of the elements by their order in the DOM
 
-        console.debug(JSON.stringify(restOfElements))
+        log1(JSON.stringify(restOfElements))
         //test
         restOfElements.filter(z => z)
         restOfElements.sort(sortByPlace);
@@ -8236,7 +8237,7 @@ checkbox1.setAttribute('hidden', "");
           restOfElements = restOfElements.map(el => removeLastOccurrence(el, '-tree')).map(el =>
             getWithoutCopyId1(el)
           )
-          console.debug('rest ELS' + JSON.stringify(restOfElements))
+          log1('rest ELS' + JSON.stringify(restOfElements))
           restOfElements = removeDuplicates(restOfElements)
         }
 
@@ -8245,14 +8246,14 @@ checkbox1.setAttribute('hidden', "");
 
         // Find the target fieldset based on the ID
         var targetElementId = selectedArray[0];
-        console.debug('selected' + JSON.stringify(selectedArray))
+        log1('selected' + JSON.stringify(selectedArray))
         // Find the target fieldset based on the ID
 
 
         const handle = (targetFieldset, targetFieldset2, flag) => {
-          console.debug('target id' + targetFieldset?.id + targetFieldset2?.id)
-          console.debug('handling')
-          console.debug('handling move' + move)
+          log1('target id' + targetFieldset?.id + targetFieldset2?.id)
+          log1('handling')
+          log1('handling move' + move)
           // Get the parent fieldset of the target
           var parentFieldset = targetFieldset.parentNode;
           var parentFieldset2 = targetFieldset2?.parentNode
@@ -8267,9 +8268,9 @@ checkbox1.setAttribute('hidden', "");
           for (var i = 1; i < selectedArray.length; i++) {
             var selectedId = selectedArray[i].id;
             var originalId = selectedArray[i].originalId
-            console.debug(JSON.stringify(selectedArray[i]))
+            log1(JSON.stringify(selectedArray[i]))
             if (!move && !insert_copies) {
-              console.debug('not moving' + JSON.stringify(selectedArrayNotSorted))
+              log1('not moving' + JSON.stringify(selectedArrayNotSorted))
               const attr = data_replaceid
               const l = selectedId.split(';').length
               // Find all elements based on the selected ID and its replacement
@@ -8286,8 +8287,8 @@ checkbox1.setAttribute('hidden', "");
                 }
 
               });
-              console.debug('ppp ' + Array.from(selectedElements).map(e => e?.id))
-              console.debug('ppp ' + Array.from(selectedElements2).map(e => e?.id))
+              log1('ppp ' + Array.from(selectedElements).map(e => e?.id))
+              log1('ppp ' + Array.from(selectedElements2).map(e => e?.id))
 
               selectedElements = selectedElements.filter(el => el.id.split(';').length === l)
               selectedElements2 = selectedElements2.filter(el => el.id.split(';').length === l)
@@ -8297,12 +8298,12 @@ checkbox1.setAttribute('hidden', "");
 
             }
             else {
-              console.debug('moving')
+              log1('moving')
               selectedId = selectedArray[i]
               const treeEl = getElementById1(selectedId)
               let pageEl = getElementById1(removeLastOccurrence(selectedId, '-tree') + '-fieldset')
               if (!pageEl) {
-                console.debug('true11')
+                log1('true11')
                 pageEl = getElementById1(removeLastOccurrence(selectedId, '-tree'))
               }
 
@@ -8327,13 +8328,13 @@ checkbox1.setAttribute('hidden', "");
                 parentFieldset.insertBefore(clonedFieldset, parentFieldset.children[index]);
                 index++; // Increment the index to maintain the correct order
                 if (targetFieldset2.parentNode.id.startsWith(targetFieldset2.id)) {
-                  console.debug('5655')
+                  log1('5655')
                   parentFieldset2.parentNode.insertBefore(clonedFieldset2, parentFieldset2);
                 }
                 else {
-                  console.debug('5777')
-                  console.debug(targetFieldset2.parentNode.id)
-                  console.debug(targetFieldset2.id)
+                  log1('5777')
+                  log1(targetFieldset2.parentNode.id)
+                  log1(targetFieldset2.id)
                   parentFieldset2.insertBefore(clonedFieldset2, parentFieldset2.children[index2]);
                 }
 
@@ -8345,13 +8346,13 @@ checkbox1.setAttribute('hidden', "");
               pageEl.remove()
             }
           }
-          console.debug('eels12' + JSON.stringify(treeEls.map(e => e.id)))
+          log1('eels12' + JSON.stringify(treeEls.map(e => e.id)))
           if (!move && !insert_copies) {
             if (treeEls.length) {
               treeEls.sort(sortByPlace1)
               compEls.sort(sortByPlace1)
               for (const selectedFieldset of treeEls) {
-                console.debug('found 11' + selectedFieldset.id)
+                log1('found 11' + selectedFieldset.id)
                 var clonedFieldset = cloneWithDescendants(selectedFieldset);
                 var arrowButton = clonedFieldset.querySelector('[data-element="code-tree-show-hide-button"]');
 
@@ -8389,17 +8390,17 @@ checkbox1.setAttribute('hidden', "");
             else {
               const s = []
               const s1 = []
-              console.debug('sss' + selectedArrayNotSorted[1])
+              log1('sss' + selectedArrayNotSorted[1])
               querySelectorAll1('[id^="' + selectedArrayNotSorted[1].replace('-tree', '').split(':')[0] + '"]').forEach(el => {
-                console.debug('eel' + el.id)
+                log1('eel' + el.id)
                 if (!el.id.endsWith('-tree') && !el.id.endsWith('-fieldset')) {
                   s.push(getElementById1(el.id + '-tree'));
                   s1.push(el)
                 }
 
               });
-              console.debug('sss' + JSON.stringify(s))
-              console.debug('sss' + JSON.stringify(s1))
+              log1('sss' + JSON.stringify(s))
+              log1('sss' + JSON.stringify(s1))
               const selectedFieldset = s[0]
               const selectedFieldset2 = s1[0]
 
@@ -8445,11 +8446,11 @@ checkbox1.setAttribute('hidden', "");
           handle(targetFieldset, targetFieldset2)
         }
         else {
-          console.debug('target not found')
+          log1('target not found')
           let treeEls = []
           let compEls = []
           const mId = targetElementId.replace('-tree', '').split(':')[0]
-          console.debug('miiid' + mId)
+          log1('miiid' + mId)
           const already = []
           querySelectorAll1('[id^="' + mId + '"]').forEach(
             el => {
@@ -8461,7 +8462,7 @@ checkbox1.setAttribute('hidden', "");
             }
           );
           for (let i = treeEls.length - 1; i >= 0; i--) {
-            console.debug('el pushed 1' + treeEls[i].id)
+            log1('el pushed 1' + treeEls[i].id)
             handle(treeEls[i], compEls[i], i === 0)
           }
         }
@@ -8501,7 +8502,7 @@ checkbox1.setAttribute('hidden', "");
 
         return clone;
       }
-      console.debug("action" + action)
+      log1("action" + action)
       const getWithoutCopyId = (id) => {
         const splited = id.split(';');
         const splited2 = splited[splited.length - 1].replace('-tree', '').split(':')
@@ -8558,8 +8559,8 @@ checkbox1.setAttribute('hidden', "");
             const lsi = site + modId
             const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:' + ownerid + '&gsi1lsi1=true&lsi1=' + lsi)
               .then(response => response.json())
-            console.debug('lsi to search' + lsi)
-            console.debug('lsis' + items.map(i => i.lsi1))
+            log1('lsi to search' + lsi)
+            log1('lsis' + items.map(i => i.lsi1))
             const item1 = items.find(i => i.lsi1.replace(';publish:published', '') === lsi)
             inserted_component.componentId = item1.id
           }
@@ -8567,7 +8568,7 @@ checkbox1.setAttribute('hidden', "");
             let cPath = pathForRelative.current || pathItemPath
             let relative = inserted_component.componentId.replace('#', '').replace('$', "")
             if (inserted_component.componentId.startsWith('$') && componentPath.split('/')[0] !== site1) {
-              console.debug('cpath diff')
+              log1('cpath diff')
               cPath = pathItemPath
               if (relative.startsWith('../')) {
                 relative = './' + relative.replaceAll('../', "")
@@ -8575,20 +8576,20 @@ checkbox1.setAttribute('hidden', "");
 
             }
             cPath = cPath.replace(';publish:published', "")
-            console.debug('cpath ' + cPath + ' relative' + inserted_component.componentId)
+            log1('cpath ' + cPath + ' relative' + inserted_component.componentId)
 
 
 
             const absolutePath = getAbsolutePath(cPath, relative);
-            console.debug('cpath ' + cPath + ' relative' + inserted_component.componentId + ' absolute ' + absolutePath)
+            log1('cpath ' + cPath + ' relative' + inserted_component.componentId + ' absolute ' + absolutePath)
 
             const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:' + ownerid + '&gsi1lsi1=true&lsi1=' + absolutePath)
               .then(response => response.json())
-            console.debug('lsi' + absolutePath)
-            console.debug(JSON.stringify(items))
-            console.debug(absolutePath)
+            log1('lsi' + absolutePath)
+            log1(JSON.stringify(items))
+            log1(absolutePath)
             let item1 = items.find(i => i.lsi1.replace(';publish:published', '') === absolutePath)
-            console.debug(JSON.stringify(item1))
+            log1(JSON.stringify(item1))
             let i = 0
             if (pathForRelative.next.length) {
               while (!item1) {
@@ -8612,13 +8613,13 @@ checkbox1.setAttribute('hidden', "");
           const processedId = (rT ? rT + '|' : '') + inserted_component.id + '-tree'
           const removeAction = removeActions?.find(e => e.target_element === processedId)
           if (removeAction) {
-            console.debug('found 115')
+            log1('found 115')
             return
           }
           const replaceAction = replaceActions?.findLast(e => e.target_element[0] === processedId)
 
           //replace
-          console.debug('selected Actions' + JSON.stringify(replaceAction))
+          log1('selected Actions' + JSON.stringify(replaceAction))
           treeElement = getElementById1(target_element);
           //component
           componentElement = getElementById1('generated-page');
@@ -8626,7 +8627,7 @@ checkbox1.setAttribute('hidden', "");
 
           //const newEl = document.createElement("component");
           //newEl.id = inserted_component.id;
-          //console.debug('comp idddd' + newEl.id);
+          //log1('comp idddd' + newEl.id);
 
           // Check if componentElement and its parent node are valid
           if (componentElement) {
@@ -8663,10 +8664,10 @@ checkbox1.setAttribute('hidden', "");
           }
 
 
-          console.debug('prob' + inserted_component.componentId)
+          log1('prob' + inserted_component.componentId)
           components.push(inserted_component.id)
 
-          console.debug('foundlvl ' + lvl)
+          log1('foundlvl ' + lvl)
 
           if (options?.attachId && options.attachId !== "body-tree") {
             if (reusableId) {
@@ -8683,7 +8684,7 @@ checkbox1.setAttribute('hidden', "");
               await insertDataIntoCodeLog(replaceAction.sk, replaceAction.action, replaceAction.options, undefined, replaceAction)
             }
 
-            console.debug('replace action in')
+            log1('replace action in')
             const toReplace = replaceAction.target_element[0]
             replaceAction.target_element.shift()
             const dontReplaceIndex = replaceAction.target_element.findIndex(e => e.componentId === toReplace)
@@ -8705,7 +8706,7 @@ checkbox1.setAttribute('hidden', "");
             })
             await Promise.all(p)
             replaceAction.target_element = newArr
-            console.debug('new arr' + JSON.stringify(newArr))
+            log1('new arr' + JSON.stringify(newArr))
 
             //replace folders
             if (replaceAction.folders) {
@@ -8720,7 +8721,7 @@ checkbox1.setAttribute('hidden', "");
                 else if (folder1.startsWith('#')) {
                   let cPath = pathForRelative.current || pathItemPath
                   cPath = cPath.replace(';publish:published', "")
-                  console.debug('cpath ' + cPath)
+                  log1('cpath ' + cPath)
 
 
                   const relative = folder.replace('#', '')
@@ -8729,17 +8730,17 @@ checkbox1.setAttribute('hidden', "");
 
 
                 }
-                console.debug('folder is ' + folder)
+                log1('folder is ' + folder)
                 const folderEncoded = encodeURIComponent(folder + '|');
                 const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&lsi1=${folderEncoded}&gsi1lsi1=true`;
-                console.debug('furl ' + url)
+                log1('furl ' + url)
                 const data = await fetch(url).then(e => e.json())
-                console.debug('r items ' + JSON.stringify(data))
+                log1('r items ' + JSON.stringify(data))
                 return data.items
               })
               let allItems = await Promise.all(promises)
               allItems.sort((a, b) => a.lsi1.localeCompare(b.lsi1));
-              console.debug('all Items' + JSON.stringify(allItems))
+              log1('all Items' + JSON.stringify(allItems))
               let updateAction
               for (const arr of allItems) {
                 for (const item of arr) {
@@ -8768,7 +8769,7 @@ checkbox1.setAttribute('hidden', "");
             let l = replaceAction.target_element.filter(e => e.componentId !== toReplace);
             l.sort((a, b) => b.path.localeCompare(a.path));
             let i = false;
-            console.debug('solving ' + JSON.stringify(l))
+            log1('solving ' + JSON.stringify(l))
             replaceIds = l.map(e => e.id)
             for (const el of l) {
 
@@ -8795,7 +8796,7 @@ checkbox1.setAttribute('hidden', "");
             el2.removeAttribute('hidden')
             el2.innerHTML = `🔄${replaceAction.target_element.length}`;
           }
-          console.debug('calling path for relative ' + pathForRelative)
+          log1('calling path for relative ' + pathForRelative)
           /*
           if (!getElementById1(attachId)) {
             attachId = 'body-tree'
@@ -8816,11 +8817,11 @@ checkbox1.setAttribute('hidden', "");
           const newEle = document.createElement(inserted_element.tagName)
           // Check if the tag is <img>
 
-          console.debug('no comp val' + noComp1)
-          console.debug('replaceid1 ' + replaceId)
+          log1('no comp val' + noComp1)
+          log1('replaceid1 ' + replaceId)
           noComp1 && newEle.setAttribute('data-replaceID', replaceId)
           newEle.id = inserted_element.id
-          console.debug(newEle.id)
+          log1(newEle.id)
           componentElement.insertBefore(newEle, componentElement.firstChild);
           const component_ele = getElementById1('tree-element')
           const newEle2 = component_ele.cloneNode(true)
@@ -8850,7 +8851,7 @@ checkbox1.setAttribute('hidden', "");
             else if (inserted_component.componentId.startsWith('#')) {
               let cPath = pathForRelative.prev || pathItemPath
               cPath = cPath.replace(';publish:published', "")
-              console.debug('cpath ' + cPath)
+              log1('cpath ' + cPath)
 
 
               const relative = inserted_component.componentId.replace('#', '')
@@ -8859,11 +8860,11 @@ checkbox1.setAttribute('hidden', "");
 
               const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + absolutePath)
                 .then(response => response.json())
-              console.debug('lsi' + absolutePath)
-              console.debug(JSON.stringify(items))
+              log1('lsi' + absolutePath)
+              log1(JSON.stringify(items))
 
               const item1 = items.find(i => i.lsi1.replace(';publish:published', '') === absolutePath)
-              console.debug(JSON.stringify(item1))
+              log1(JSON.stringify(item1))
               inserted_component.componentId = item1.id
             }
             let rT
@@ -8874,14 +8875,14 @@ checkbox1.setAttribute('hidden', "");
               rT = options?.reusable || reusableId
             }
             const processedId = (rT ? rT + '|' : '') + inserted_component.id + '-tree'
-            console.debug('in')
-            console.debug(target_element)
+            log1('in')
+            log1(target_element)
             treeElement = getElementById1(target_element);
             //component
             //componentElement = getElementById1(removeLastOccurrence(target_element, '-tree'));
             //const newEl = document.createElement("div")
             //newEl.id = inserted_component.id
-            //console.debug(newEl.id)
+            //log1(newEl.id)
             //componentElement.appendChild(newEl)
             const component_el = getElementById1('component-element')
             const newEl2 = component_el.cloneNode(true)
@@ -8894,13 +8895,13 @@ checkbox1.setAttribute('hidden', "");
 
             newEl2.id = processedId
             if (noComp || noComp1) {
-              console.debug('no comp true')
+              log1('no comp true')
               newEl2.setAttribute('hidden', '')
             }
             treeElement.insertAdjacentElement('afterend', newEl2);
             components.push(inserted_component.id)
-            console.debug(inserted_component.componentId)
-            console.debug('insert after reusableid' + reusableId)
+            log1(inserted_component.componentId)
+            log1('insert after reusableid' + reusableId)
             await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev }, undefined, reusableId, attachId)
             break;
           }
@@ -8908,7 +8909,7 @@ checkbox1.setAttribute('hidden', "");
 
           //case duplicate insert after  
           if (inserted_element?.originalId) {
-            console.debug('insert1' + JSON.stringify(command));
+            log1('insert1' + JSON.stringify(command));
             // fieldset
             treeElement = getElementById1(inserted_element?.originalId);
             // component
@@ -8923,7 +8924,7 @@ checkbox1.setAttribute('hidden', "");
               // Set child's text content to its content
               newEl.innerText = newEl.getAttribute('data-visual-defaultTextNode')
             }
-            console.debug(newEl.id);
+            log1(newEl.id);
 
             // Append the duplicated element to the componentElement
             const compEl = getElementById1(removeLastOccurrence(target_element, '-tree'))
@@ -8968,13 +8969,13 @@ checkbox1.setAttribute('hidden', "");
                 splited.pop()
                 const processed1 = [...splited, splited2[0]].join(';')
                 if (processed.find(el => el.startsWith(processed1))) {
-                  console.debug('status' + processed1)
-                  console.debug('status2' + JSON.stringify(processed))
+                  log1('status' + processed1)
+                  log1('status2' + JSON.stringify(processed))
                   child.remove()
                 }
                 else {
                   processed.push(processed1)
-                  console.debug('proce' + processed1)
+                  log1('proce' + processed1)
                   child.id = [...splited, newSubId].join(';')
                   if (child.hasAttribute('data-visual-defaultTextNode') && child.hasAttribute('data-visual-element')) {
                     // Set child's text content to its content
@@ -8995,7 +8996,7 @@ checkbox1.setAttribute('hidden', "");
           }
           if (inserted_element?.tagName) {
             const handleInsert = (treeElement, componentElement, replaceCopyId) => {
-              console.debug('handling' + treeElement + ' ' + componentElement + ' ' + replaceCopyId)
+              log1('handling' + treeElement + ' ' + componentElement + ' ' + replaceCopyId)
               const newEl = document.createElement(inserted_element.tagName)
 
               const attr1 = componentElement.getAttribute('data-replaceID')
@@ -9015,7 +9016,7 @@ checkbox1.setAttribute('hidden', "");
 
               newEl.id = replaceCopyId ? inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') : inserted_element.id
 
-              console.debug(newEl.id)
+              log1(newEl.id)
 
               const component_el = getElementById1('tree-element')
               const newEl2 = component_el.cloneNode(true)
@@ -9044,7 +9045,7 @@ checkbox1.setAttribute('hidden', "");
               :
               getElementById1(removeLastOccurrence(target_element, '-tree'));
             if (!componentElement) {
-              console.debug('comp not found')
+              log1('comp not found')
               const mId = target_element.replace('-tree', '').split(':')[0]
               const treeEls = []
               const compEls = []
@@ -9052,7 +9053,7 @@ checkbox1.setAttribute('hidden', "");
               const elementsWithIdAndAttribute = querySelectorAll1('[id^="' + mId + '"][data-replaceid]')
                 .forEach(
                   el => {
-                    console.debug('ffooound152 ' + el.id)
+                    log1('ffooound152 ' + el.id)
                     if (!existing.includes(el.getAttribute('data-replaceid'))) {
                       existing.push(el.getAttribute('data-replaceid'))
                       treeEls.push(getElementById1(el.id + '-tree'));
@@ -9067,7 +9068,7 @@ checkbox1.setAttribute('hidden', "");
               }
               break;
             }
-            console.debug('handling insert')
+            log1('handling insert')
             handleInsert(treeElement, componentElement)
 
 
@@ -9078,8 +9079,8 @@ checkbox1.setAttribute('hidden', "");
           if (target_element?.length) {
             const afterId = target_element[0].id;
             const id = target_element[1].id;
-            console.debug(id)
-            console.debug(afterId)
+            log1(id)
+            log1(afterId)
             const aftertreeElement = getElementById1(afterId);
             let aftercomponentElement = getElementById1(removeLastOccurrence(afterId, '-tree') + '-fieldset') ||
               getElementById1(removeLastOccurrence(afterId, '-tree'));
@@ -9103,7 +9104,7 @@ checkbox1.setAttribute('hidden', "");
 
         case 'Add_Parent':
           const handleInsertParent = (treeElement, componentElement, replaceCopyId, apply_to_copies) => {
-            console.debug('handling' + treeElement + ' ' + componentElement + ' ' + replaceCopyId)
+            log1('handling' + treeElement + ' ' + componentElement + ' ' + replaceCopyId)
 
             const newEl = document.createElement(inserted_element.tagName)
             componentElement.replaceWith(newEl);
@@ -9124,7 +9125,7 @@ checkbox1.setAttribute('hidden', "");
             const copyId = splited[splited.length - 1].split(':')[1]
 
 
-            console.debug(newEl.id)
+            log1(newEl.id)
 
             const component_el = getElementById1('tree-element')
             const newEl2 = component_el.cloneNode(true)
@@ -9148,7 +9149,7 @@ checkbox1.setAttribute('hidden', "");
 
 
             if (componentElement.hasAttribute('data-parentid')) {
-              console.debug('in12')
+              log1('in12')
 
 
               newEl.id = componentElement.id.split(';')[0] + ';' + newEl.id
@@ -9159,7 +9160,7 @@ checkbox1.setAttribute('hidden', "");
               newEl.id = splited[0] + ';' + newEl.id
               newEl2.id = splited[0] + ';' + newEl2.id
             }
-            console.debug(newEl.id)
+            log1(newEl.id)
             treeElement.replaceWith(newEl2);
             newEl2.appendChild(treeElement)
             const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
@@ -9167,7 +9168,7 @@ checkbox1.setAttribute('hidden', "");
 
             button.addEventListener('mouseout', mouseOutTree);
             if (componentElement.contains(newEl)) {
-              console.debug(newEl.id + ' was created and appended successfully.');
+              log1(newEl.id + ' was created and appended successfully.');
             } else {
               console.error('Failed to create or append newEl.');
             }
@@ -9184,7 +9185,7 @@ checkbox1.setAttribute('hidden', "");
             :
             getElementById1(removeLastOccurrence(target_element, '-tree'));
           if (apply_to_copies) {
-            console.debug('inSL')
+            log1('inSL')
             const mId = target_element.replace('-tree', '').split(':')[0]
             const treeEls = []
             const compEls = []
@@ -9195,7 +9196,7 @@ checkbox1.setAttribute('hidden', "");
                   if (el.id.endsWith('tree')) {
                     return
                   }
-                  console.debug('ffooound152 ' + el.id)
+                  log1('ffooound152 ' + el.id)
 
                   treeEls.push(getElementById1(el.id + '-tree'));
                   compEls.push(el)
@@ -9210,7 +9211,7 @@ checkbox1.setAttribute('hidden', "");
             break;
           }
           if (!componentElement) {
-            console.debug('comp not found')
+            log1('comp not found')
             const mId = target_element.replace('-tree', '').split(':')[0]
             const treeEls = []
             const compEls = []
@@ -9218,7 +9219,7 @@ checkbox1.setAttribute('hidden', "");
             const elementsWithIdAndAttribute = querySelectorAll1('[id^="' + mId + '"][data-replaceid]')
               .forEach(
                 el => {
-                  console.debug('ffooound152 ' + el.id)
+                  log1('ffooound152 ' + el.id)
                   if (!existing.includes(el.getAttribute('data-replaceid'))) {
                     existing.push(el.getAttribute('data-replaceid'))
                     treeEls.push(getElementById1(el.id + '-tree'));
@@ -9233,7 +9234,7 @@ checkbox1.setAttribute('hidden', "");
             }
             break;
           }
-          console.debug('handling insert')
+          log1('handling insert')
 
           handleInsertParent(treeElement, componentElement)
 
@@ -9245,14 +9246,14 @@ checkbox1.setAttribute('hidden', "");
           if (options?.dub_target) {
             // get all copies 
             const handleWithParent = async (id, items) => {
-              console.debug('input 6' + JSON.stringify(items))
+              log1('input 6' + JSON.stringify(items))
               const [firstId, ...restIds] = items
               for (const el of restIds) {
 
 
                 async function append(parentId, selectedElementId, flag) {
-                  console.debug('parent id' + parentId)
-                  console.debug('el id' + selectedElementId)
+                  log1('parent id' + parentId)
+                  log1('el id' + selectedElementId)
                   const { id, copyId } = duplicateId(selectedElementId)
                   // Perform additional actions if needed
                   let actionObject
@@ -9285,9 +9286,9 @@ checkbox1.setAttribute('hidden', "");
                   target_element: [{ type: 'tag', id: t, }, { type: 'tag', id: el, }],
                   move: true
                 }, path, visual);
-                console.debug('main2' + JSON.stringify([{ type: 'tag', t, }, { type: 'tag', id: el, }]))
+                log1('main2' + JSON.stringify([{ type: 'tag', t, }, { type: 'tag', id: el, }]))
               }
-              console.debug('main1' + JSON.stringify([{ type: 'tag', id, }, { type: 'tag', id: firstId, }]))
+              log1('main1' + JSON.stringify([{ type: 'tag', id, }, { type: 'tag', id: firstId, }]))
               await executeCommand({
                 time: (new Date()).getTime(),
                 action: 'Append',
@@ -9313,12 +9314,12 @@ checkbox1.setAttribute('hidden', "");
                   el.id.endsWith('-tree') && el.id.split(';').length === l && items.push(el.id)
                 });
               }
-              console.debug('iteeems' + JSON.stringify(items))
+              log1('iteeems' + JSON.stringify(items))
 
               handleWithParent(id, items)
             }
             else {
-              console.debug('prob555')
+              log1('prob555')
               const mId = getWithoutCopyId(id)
               let copies = querySelectorAll1('[id^="' + mId + '"]')
 
@@ -9328,7 +9329,7 @@ checkbox1.setAttribute('hidden', "");
                   continue
                 }
                 const replaceId = element.getAttribute('data-replaceid')
-                console.debug('replace id + ' + replaceId)
+                log1('replace id + ' + replaceId)
                 const items = []
 
                 for (const element of restOfElements) {
@@ -9337,9 +9338,9 @@ checkbox1.setAttribute('hidden', "");
                     !el.id.endsWith('-fieldset') && !el.id.endsWith('-tree') && el.id.split(';').length === l && el.getAttribute('data-replaceid') === replaceId && items.push(el.id + '-tree')
                   });
                 }
-                console.debug('prob items 1 ' + JSON.stringify(items))
+                log1('prob items 1 ' + JSON.stringify(items))
                 const found = items.find(item => !already.find(i => i === item))
-                console.debug(found)
+                log1(found)
                 already.push(found)
                 handleWithParent(element.id + '-tree', items)
               }
@@ -9349,8 +9350,8 @@ checkbox1.setAttribute('hidden', "");
           }
           if (inserted_component) {
             //fieldset
-            console.debug('in')
-            console.debug(target_element)
+            log1('in')
+            log1(target_element)
             treeElement = getElementById1(target_element);
             //component
 
@@ -9366,15 +9367,15 @@ checkbox1.setAttribute('hidden', "");
             newEl2.id = inserted_component.id + '-tree'
 
             treeElement.appendChild(newEl2)
-            console.debug('prob' + inserted_component.componentId)
+            log1('prob' + inserted_component.componentId)
             components.push(inserted_component.id)
-            console.debug('err ' + path)
+            log1('err ' + path)
             await loadFromDb(inserted_component.componentId, inserted_component.id, path, command.sk, false, noComp1 || noComp)
             break;
           }
           //case duplicate append
           if (inserted_element?.originalId) {
-            console.debug('insert2' + JSON.stringify(command));
+            log1('insert2' + JSON.stringify(command));
             // fieldset
             treeElement = getElementById1(inserted_element?.originalId);
             // component
@@ -9388,7 +9389,7 @@ checkbox1.setAttribute('hidden', "");
             }
             // Set the id of the duplicated element to inserted_element.id
             newEl.id = removeLastOccurrence(inserted_element.id, '-tree');
-            console.debug(newEl.id);
+            log1(newEl.id);
 
             // Append the duplicated element to the componentElement
             if (visual) {
@@ -9428,13 +9429,13 @@ checkbox1.setAttribute('hidden', "");
                 splited.pop()
                 const processed1 = [...splited, splited2[0]].join(';')
                 if (processed.find(el => el.startsWith(processed1))) {
-                  console.debug('status' + processed1)
-                  console.debug('status2' + JSON.stringify(processed))
+                  log1('status' + processed1)
+                  log1('status2' + JSON.stringify(processed))
                   child.remove()
                 }
                 else {
                   processed.push(processed1)
-                  console.debug('proce' + processed1)
+                  log1('proce' + processed1)
                   child.id = [...splited, newSubId].join(';')
                   if (child.hasAttribute('data-visual-defaultTextNode') && child.hasAttribute('data-visual-element')) {
                     // Set child's text content to its content
@@ -9459,7 +9460,7 @@ checkbox1.setAttribute('hidden', "");
 
 
             const handleInsert = (treeElement, componentElement, replaceCopyId) => {
-              console.debug('handling' + treeElement + ' ' + componentElement + ' ' + replaceCopyId)
+              log1('handling' + treeElement + ' ' + componentElement + ' ' + replaceCopyId)
               const newEl = document.createElement(inserted_element.tagName)
 
 
@@ -9482,7 +9483,7 @@ checkbox1.setAttribute('hidden', "");
 
               newEl.id = replaceCopyId ? inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') : inserted_element.id
 
-              console.debug(newEl.id)
+              log1(newEl.id)
 
               const component_el = getElementById1('tree-element')
               const newEl2 = component_el.cloneNode(true)
@@ -9499,7 +9500,7 @@ checkbox1.setAttribute('hidden', "");
                 }
               }
               if (componentElement.hasAttribute('data-parentid')) {
-                console.debug('in12')
+                log1('in12')
 
 
                 newEl.id = componentElement.id.split(';')[0] + ';' + newEl.id
@@ -9510,7 +9511,7 @@ checkbox1.setAttribute('hidden', "");
                 newEl.id = splited[0] + ';' + newEl.id
                 newEl2.id = splited[0] + ';' + newEl2.id
               }
-              console.debug(newEl.id)
+              log1(newEl.id)
               if (options?.position) {
                 const fieldsets = Array.from(treeElement.children).filter(e => e.tagName.toLowerCase() === 'fieldset')
                 if (options.position.startsWith("start-")) {
@@ -9545,7 +9546,7 @@ checkbox1.setAttribute('hidden', "");
 
               button.addEventListener('mouseout', mouseOutTree);
               if (componentElement.contains(newEl)) {
-                console.debug(newEl.id + ' was created and appended successfully.');
+                log1(newEl.id + ' was created and appended successfully.');
               } else {
                 console.error('Failed to create or append newEl.');
               }
@@ -9563,10 +9564,10 @@ checkbox1.setAttribute('hidden', "");
               getElementById1(removeLastOccurrence(target_element, '-tree'));
             if (options?.actionInReplace) {
               const mId = target_element.replace('-tree', '').split(':')[0]
-              console.debug('replaceIds' + JSON.stringify(replaceIds))
+              log1('replaceIds' + JSON.stringify(replaceIds))
               replaceIds.forEach(replaceId => {
-                console.debug(mId)
-                console.debug(replaceId)
+                log1(mId)
+                log1(replaceId)
                 const treeEl = getElementById1(mId + ':' + replaceId + '-tree')
                 const compEl = getElementById1(mId + ':' + replaceId)
                 handleInsert(treeEl, compEl, true)
@@ -9575,7 +9576,7 @@ checkbox1.setAttribute('hidden', "");
             }
             /*
             if (!componentElement) {
-              console.debug('comp not found')
+              log1('comp not found')
               const mId = target_element.replace('-tree', '').split(':')[0]
               const treeEls = []
               const compEls = []
@@ -9583,7 +9584,7 @@ checkbox1.setAttribute('hidden', "");
               const elementsWithIdAndAttribute = querySelectorAll1('[id^="' + mId + '"][data-replaceid]')
               elementsWithIdAndAttribute.forEach(
                 el => {
-                  console.debug('ffooound152 ' + el.id)
+                  log1('ffooound152 ' + el.id)
                   if (!existing.includes(el.getAttribute('data-replaceid'))) {
                     existing.push(el.getAttribute('data-replaceid'))
                     treeEls.push(getElementById1(el.id + '-tree'));
@@ -9607,7 +9608,7 @@ checkbox1.setAttribute('hidden', "");
               }
 
             }
-            console.debug('handling insert')
+            log1('handling insert')
             */
             if (!componentElement) {
               treeElement = getElementById1('body-tree')
@@ -9623,7 +9624,7 @@ checkbox1.setAttribute('hidden', "");
 
           }
           if (target_element.length) {
-            console.debug('movestat ' + move)
+            log1('movestat ' + move)
             if (options?.actionInReplace) {
               handleAppendOrInsertReplace('Append', target_element)
             }
@@ -9641,14 +9642,14 @@ checkbox1.setAttribute('hidden', "");
           if (options?.dub_target) {
             // get all copies 
             const handleWithParent = async (id, items) => {
-              console.debug('input 6' + JSON.stringify(items))
+              log1('input 6' + JSON.stringify(items))
               const [firstId, ...restIds] = items
               for (const el of restIds) {
 
 
                 async function append(parentId, selectedElementId, flag) {
-                  console.debug('parent id' + parentId)
-                  console.debug('el id' + selectedElementId)
+                  log1('parent id' + parentId)
+                  log1('el id' + selectedElementId)
                   const { id, copyId } = duplicateId(selectedElementId)
                   // Perform additional actions if needed
                   let actionObject
@@ -9681,9 +9682,9 @@ checkbox1.setAttribute('hidden', "");
                   target_element: [{ type: 'tag', id: t, }, { type: 'tag', id: el, }],
                   move: true
                 }, path, visual);
-                console.debug('main2' + JSON.stringify([{ type: 'tag', t, }, { type: 'tag', id: el, }]))
+                log1('main2' + JSON.stringify([{ type: 'tag', t, }, { type: 'tag', id: el, }]))
               }
-              console.debug('main1' + JSON.stringify([{ type: 'tag', id, }, { type: 'tag', id: firstId, }]))
+              log1('main1' + JSON.stringify([{ type: 'tag', id, }, { type: 'tag', id: firstId, }]))
               await executeCommand({
                 time: (new Date()).getTime(),
                 action: 'InsertBefore',
@@ -9712,19 +9713,19 @@ checkbox1.setAttribute('hidden', "");
               if (!items.length) {
                 for (const element of restOfElements) {
                   const mId = getWithoutCopyId(element)
-                  console.debug('miiid ' + mId)
+                  log1('miiid ' + mId)
                   querySelectorAll1('[id^="' + mId + '"]').forEach(el => {
-                    console.debug('dddd ' + el.id)
+                    log1('dddd ' + el.id)
                     el.id.endsWith('-tree') && el.id.split(';').length === l && items.push(el.id)
                   });
                 }
               }
-              console.debug('iteeems' + JSON.stringify(items))
+              log1('iteeems' + JSON.stringify(items))
 
               handleWithParent(id, items)
             }
             else {
-              console.debug('prob555')
+              log1('prob555')
               const mId = getWithoutCopyId(id)
               let copies = querySelectorAll1('[id^="' + mId + '"]')
 
@@ -9734,7 +9735,7 @@ checkbox1.setAttribute('hidden', "");
                   continue
                 }
                 const replaceId = element.getAttribute('data-replaceid')
-                console.debug('replace id + ' + replaceId)
+                log1('replace id + ' + replaceId)
                 const items = []
 
                 for (const element of restOfElements) {
@@ -9743,9 +9744,9 @@ checkbox1.setAttribute('hidden', "");
                     !el.id.endsWith('-fieldset') && !el.id.endsWith('-tree') && el.id.split(';').length === l && el.getAttribute('data-replaceid') === replaceId && items.push(el.id + '-tree')
                   });
                 }
-                console.debug('prob items 1 ' + JSON.stringify(items))
+                log1('prob items 1 ' + JSON.stringify(items))
                 const found = items.find(item => !already.find(i => i === item))
-                console.debug(found)
+                log1(found)
                 already.push(found)
                 handleWithParent(element.id + '-tree', items)
               }
@@ -9766,7 +9767,7 @@ checkbox1.setAttribute('hidden', "");
             else if (inserted_component.componentId.startsWith('#')) {
               let cPath = pathForRelative.prev || pathItemPath
               cPath = cPath.replace(';publish:published', "")
-              console.debug('cpath ' + cPath)
+              log1('cpath ' + cPath)
 
 
               const relative = inserted_component.componentId.replace('#', '')
@@ -9775,21 +9776,21 @@ checkbox1.setAttribute('hidden', "");
 
               const { items } = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path&gsi1lsi1=true&lsi1=' + absolutePath)
                 .then(response => response.json())
-              console.debug('lsi' + absolutePath)
-              console.debug(JSON.stringify(items))
+              log1('lsi' + absolutePath)
+              log1(JSON.stringify(items))
 
               const item1 = items.find(i => i.lsi1.replace(';publish:published', '') === absolutePath)
-              console.debug(JSON.stringify(item1))
+              log1(JSON.stringify(item1))
               inserted_component.componentId = item1.id
             }
-            console.debug('in')
-            console.debug(target_element)
+            log1('in')
+            log1(target_element)
             treeElement = getElementById1(target_element);
             //component
             //componentElement = getElementById1(removeLastOccurrence(target_element, '-tree'));
             //const newEl = document.createElement("div")
             //newEl.id = inserted_component.id
-            //console.debug(newEl.id)
+            //log1(newEl.id)
             //componentElement.appendChild(newEl)
             const component_el = getElementById1('component-element')
             const newEl2 = component_el.cloneNode(true)
@@ -9802,19 +9803,19 @@ checkbox1.setAttribute('hidden', "");
 
             newEl2.id = inserted_component.id + '-tree'
             if (noComp || noComp1) {
-              console.debug('no comp true')
+              log1('no comp true')
               newEl2.setAttribute('hidden', '')
             }
             treeElement.parentNode.insertBefore(newEl2, treeElement)
             components.push(inserted_component.id)
-            console.debug(inserted_component.componentId)
-            console.debug('insert before replace id ' + replaceId)
+            log1(inserted_component.componentId)
+            log1('insert before replace id ' + replaceId)
             await loadFromDb(inserted_component.componentId, inserted_component.id, path, inserted_component.name, replaceActions, false, noComp || noComp1, noSubComp, lvl, removeActions, replaceId, { current: pathForRelative.prev, prev: pathForRelative.prev }, reusableId)
             break;
           }
           //case duplicate insert before
           if (inserted_element?.originalId) {
-            console.debug('insert1' + JSON.stringify(command));
+            log1('insert1' + JSON.stringify(command));
             // fieldset
             treeElement = getElementById1(inserted_element?.originalId);
             // component
@@ -9829,7 +9830,7 @@ checkbox1.setAttribute('hidden', "");
               // Set child's text content to its content
               newEl.innerText = newEl.getAttribute('data-visual-defaultTextNode')
             }
-            console.debug(newEl.id);
+            log1(newEl.id);
 
             // Append the duplicated element to the componentElement
             const compEl = getElementById1(removeLastOccurrence(target_element, '-tree'))
@@ -9872,13 +9873,13 @@ checkbox1.setAttribute('hidden', "");
                 splited.pop()
                 const processed1 = [...splited, splited2[0]].join(';')
                 if (processed.find(el => el.startsWith(processed1))) {
-                  console.debug('status' + processed1)
-                  console.debug('status2' + JSON.stringify(processed))
+                  log1('status' + processed1)
+                  log1('status2' + JSON.stringify(processed))
                   child.remove()
                 }
                 else {
                   processed.push(processed1)
-                  console.debug('proce' + processed1)
+                  log1('proce' + processed1)
                   child.id = [...splited, newSubId].join(';')
                   if (child.hasAttribute('data-visual-defaultTextNode') && child.hasAttribute('data-visual-element')) {
                     // Set child's text content to its content
@@ -9900,7 +9901,7 @@ checkbox1.setAttribute('hidden', "");
           //case insert tag
           if (inserted_element?.tagName) {
             const handleInsert = (treeElement, componentElement, replaceCopyId) => {
-              console.debug('handling' + treeElement + ' ' + componentElement + ' ' + replaceCopyId)
+              log1('handling' + treeElement + ' ' + componentElement + ' ' + replaceCopyId)
               const newEl = document.createElement(inserted_element.tagName)
 
               const attr1 = componentElement.getAttribute('data-replaceID')
@@ -9920,7 +9921,7 @@ checkbox1.setAttribute('hidden', "");
 
               newEl.id = replaceCopyId ? inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') : inserted_element.id
 
-              console.debug(newEl.id)
+              log1(newEl.id)
 
               const component_el = getElementById1('tree-element')
               const newEl2 = component_el.cloneNode(true)
@@ -9948,10 +9949,10 @@ checkbox1.setAttribute('hidden', "");
               getElementById1(removeLastOccurrence(target_element, '-tree'));
             if (options?.actionInReplace) {
               const mId = target_element.replace('-tree', '').split(':')[0]
-              console.debug('replaceIds' + JSON.stringify(replaceIds))
+              log1('replaceIds' + JSON.stringify(replaceIds))
               replaceIds.forEach(replaceId => {
-                console.debug(mId)
-                console.debug(replaceId)
+                log1(mId)
+                log1(replaceId)
                 const treeEl = getElementById1(mId + ':' + replaceId + '-tree')
                 const compEl = getElementById1(mId + ':' + replaceId)
                 handleInsert(treeEl, compEl, true)
@@ -9959,7 +9960,7 @@ checkbox1.setAttribute('hidden', "");
               break;
             }
             if (!componentElement) {
-              console.debug('comp not found')
+              log1('comp not found')
               const mId = target_element.replace('-tree', '').split(':')[0]
               const treeEls = []
               const compEls = []
@@ -9967,7 +9968,7 @@ checkbox1.setAttribute('hidden', "");
               const elementsWithIdAndAttribute = querySelectorAll1('[id^="' + mId + '"][data-replaceid]')
                 .forEach(
                   el => {
-                    console.debug('ffooound152 ' + el.id)
+                    log1('ffooound152 ' + el.id)
                     if (!existing.includes(el.getAttribute('data-replaceid'))) {
                       existing.push(el.getAttribute('data-replaceid'))
                       treeEls.push(getElementById1(el.id + '-tree'));
@@ -9982,7 +9983,7 @@ checkbox1.setAttribute('hidden', "");
               }
               break;
             }
-            console.debug('handling insert')
+            log1('handling insert')
             handleInsert(treeElement, componentElement)
 
 
@@ -9990,7 +9991,7 @@ checkbox1.setAttribute('hidden', "");
 
           }
           if (target_element.length) {
-            console.debug(JSON.stringify(target_element))
+            log1(JSON.stringify(target_element))
             if (options?.actionInReplace) {
               handleAppendOrInsertReplace('InsertBefore', target_element)
             }
@@ -10206,7 +10207,7 @@ elementsToRemove.forEach(element => element.remove());
         case 'textContent':
           // Handle the 'removeTag' action
           // tree
-          console.debug('pr' + target_element)
+          log1('pr' + target_element)
           const element1 = getElementById1(target_element);
           if (element1) {
             const textContentButton = element1.querySelector('[data-element="code-tree-text-content-button"]');
@@ -10262,7 +10263,7 @@ elementsToRemove.forEach(element => element.remove());
         // Add more cases as needed for other actions
         case 'removeAttributeFromCopies':
         case 'removeAttribute+':
-          console.debug('pr' + target_element);
+          log1('pr' + target_element);
 
           const selector111 = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
           const els111 = querySelectorAll1(selector111); // Corrected the function name to document.querySelectorAll
@@ -10298,12 +10299,12 @@ elementsToRemove.forEach(element => element.remove());
 
 
               if (key) {
-                console.debug('key11 ' + key)
-                console.debug('value ' + value)
+                log1('key11 ' + key)
+                log1('value ' + value)
 
                 element22.setAttribute(key, value);
                 if (!element22.textContent && key.toLowerCase() === 'data-visual-defaultTextNode'.toLowerCase()) {
-                  console.debug('not found 111')
+                  log1('not found 111')
                   element22.textContent = value
                 }
               }
@@ -10315,7 +10316,7 @@ elementsToRemove.forEach(element => element.remove());
             }
             break;
           }
-          console.debug('pr' + target_element);
+          log1('pr' + target_element);
           target_element = target_element.endsWith('-tree') ? target_element : target_element + '-tree'
 
           // component
@@ -10355,12 +10356,12 @@ elementsToRemove.forEach(element => element.remove());
             }
           }
           if (key) {
-            console.debug('key11 ' + key)
-            console.debug('value ' + value)
+            log1('key11 ' + key)
+            log1('value ' + value)
 
             element22.setAttribute(key, value);
             if (!element22.textContent && key.toLowerCase() === 'data-visual-defaultTextNode'.toLowerCase()) {
-              console.debug('not found 111')
+              log1('not found 111')
               element22.textContent = value
             }
           }
@@ -10371,7 +10372,7 @@ elementsToRemove.forEach(element => element.remove());
           }
           break;
         case 'setAttribute+':
-          console.debug('pr' + target_element);
+          log1('pr' + target_element);
           target_element = target_element.endsWith('-tree') ? target_element : target_element + '-tree'
           const allSelector = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
           const allTargets = Array.from(querySelectorAll1(allSelector)).filter(element => !element.id.endsWith('-fieldset') && !element.id.endsWith('-tree'))
@@ -10391,12 +10392,12 @@ elementsToRemove.forEach(element => element.remove());
 
 
             if (key) {
-              console.debug('key11 ' + key)
-              console.debug('value ' + value)
+              log1('key11 ' + key)
+              log1('value ' + value)
 
               element22.setAttribute(key, value);
               if (!element22.textContent && key.toLowerCase() === 'data-visual-defaultTextNode'.toLowerCase()) {
-                console.debug('not found 111')
+                log1('not found 111')
                 element22.textContent = value
               }
             }
@@ -10408,7 +10409,7 @@ elementsToRemove.forEach(element => element.remove());
           }
           break;
         case 'removeAttribute':
-          console.debug('pr' + target_element);
+          log1('pr' + target_element);
           if (options?.apply_to_copies) {
             const selector111 = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
             const els111 = querySelectorAll1(selector111); // Corrected the function name to document.querySelectorAll
@@ -10479,7 +10480,7 @@ elementsToRemove.forEach(element => element.remove());
 
       loadingScreen.style.display = 'none';
       clearInterval(interval);
-      console.debug(timerElement.textContent)
+      log1(timerElement.textContent)
       const lastActionTime = getElementById1('last-action-time');
 
       lastActionTime.textContent = timerElement.textContent;
@@ -10632,7 +10633,7 @@ elementsToRemove.forEach(element => element.remove());
     const saveComment = async (event) => {
 
       const action = 'Add_Comment'
-      console.debug('ac' + action)
+      log1('ac' + action)
 
       const saveButton = event.target;
       const fieldset = saveButton.parentNode
@@ -10641,7 +10642,7 @@ elementsToRemove.forEach(element => element.remove());
       const textareaValue = fieldset.querySelector('#comment-content').value;
       const splited = fieldset.id.split(';')
       const [toRemove, ...rest] = splited
-      console.debug('fid' + fieldset.id)
+      log1('fid' + fieldset.id)
 
       const el = {
         time: (new Date()).getTime(),
@@ -10650,17 +10651,17 @@ elementsToRemove.forEach(element => element.remove());
         insertedCode: textareaValue,
 
       }
-      console.debug(JSON.stringify(el))
+      log1(JSON.stringify(el))
       await pushAction(el)
 
       removeMenus()
-      console.debug(JSON.stringify(actionLog))
+      log1(JSON.stringify(actionLog))
 
     }
     const removeComment = async (event) => {
 
       const action = 'Remove_Comment'
-      console.debug('ac' + action)
+      log1('ac' + action)
 
       const saveButton = event.target;
       const fieldset = saveButton.parentNode
@@ -10669,7 +10670,7 @@ elementsToRemove.forEach(element => element.remove());
 
       const splited = fieldset.id.split(';')
       const [toRemove, ...rest] = splited
-      console.debug('fid' + fieldset.id)
+      log1('fid' + fieldset.id)
 
       const el = {
         time: (new Date()).getTime(),
@@ -10677,17 +10678,17 @@ elementsToRemove.forEach(element => element.remove());
         target_element: rest.join(';'),
 
       }
-      console.debug(JSON.stringify(el))
+      log1(JSON.stringify(el))
       await pushAction(el)
 
       removeMenus()
-      console.debug(JSON.stringify(actionLog))
+      log1(JSON.stringify(actionLog))
 
     }
 
     function handleComponentClick(event) {
       const button = event.target.closest('button[data-element="code-tree-tag-name-button"]');
-      console.debug('in111')
+      log1('in111')
       if (button) {
         const parentId = button.parentNode.id;
         const textContentButton = button.parentNode.querySelector('[data-element="code-tree-text-content-button"]');
@@ -10720,8 +10721,8 @@ elementsToRemove.forEach(element => element.remove());
                     event.preventDefault()
                     const id = checkbox.closest('fieldset').id
                     //set action target
-                    console.debug(parentId)
-                    console.debug(JSON.stringify(actions))
+                    log1(parentId)
+                    log1(JSON.stringify(actions))
                     const foundAction = actions.find(action => action.inserted_component.id === removeLastOccurrence(parentId, "-tree"))
                     if (foundAction.options) {
                       foundAction.options.attachId = id
@@ -10839,7 +10840,7 @@ elementsToRemove.forEach(element => element.remove());
     function handleTreeClick(event) {
       removeMenus()
       const button = event.target
-      console.debug('tree clicked')
+      log1('tree clicked')
       if (button) {
         const parentId = button.parentNode.id;
         const textContentButton = button.parentNode.querySelector('[data-element="code-tree-text-content-button"]');
@@ -10849,9 +10850,9 @@ elementsToRemove.forEach(element => element.remove());
 
         if (!existingClonedFieldset) {
           // Clone the fieldset node
-          console.debug('in1')
+          log1('in1')
           const fieldset = getElementById1('code-tree-click-tag');
-          console.debug(fieldset.innerHTML)
+          log1(fieldset.innerHTML)
           const clonedFieldset = fieldset.cloneNode(true);
 
           // Assign a unique id to the cloned fieldset
@@ -10898,9 +10899,9 @@ elementsToRemove.forEach(element => element.remove());
     let foundMainContent
 
     var loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative, treeElement, reusableId, attachId) => {
-      console.debug('load from db' + id + 'reusable' + reusableId + 'attachid' + attachId)
-      console.debug('err2 ' + p)
-      console.debug('path for relative ' + pathForRelative?.current)
+      log1('load from db' + id + 'reusable' + reusableId + 'attachid' + attachId)
+      log1('err2 ' + p)
+      log1('path for relative ' + pathForRelative?.current)
       let newPathForRelative = pathForRelative?.current
       let next = pathForRelative?.next
       let path = ""
@@ -10909,7 +10910,7 @@ elementsToRemove.forEach(element => element.remove());
       let idFromLink = urlSearchParams.get('id');
       let responseData
       const showSku = async (sku) => {
-        console.debug('showing sku ' + sku)
+        log1('showing sku ' + sku)
         getElementById1("input-sku").setAttribute('hidden', '')
         getElementById1("create-sku").setAttribute('hidden', '')
         const item1 = getElementById1("sku-item-1")
@@ -11026,7 +11027,7 @@ elementsToRemove.forEach(element => element.remove());
         responseData = await getRes(id)
         const reusableId1 = reusableId ? reusableId + '|' : ''
         const { items } = responseData
-        console.debug('iteeems ' + JSON.stringify(items))
+        log1('iteeems ' + JSON.stringify(items))
         //change component 
         const subPath = convertToOldPath(items.find(e => e.sk === 'path').lsi1.split(';')[0])
         const splited = subPath.split('/')
@@ -11050,7 +11051,7 @@ elementsToRemove.forEach(element => element.remove());
         el.setAttribute('name', name)
         el.setAttribute('path', items.find(e => e.sk === 'path').lsi1)
         const logSearch = reusableId1 + newId
-        console.debug('searching log ' + logSearch)
+        log1('searching log ' + logSearch)
         const logE = document.querySelectorAll(`[log-id="${logSearch}"]`).forEach(e => e.textContent = e.textContent.replace('{name}', name))
         document.querySelectorAll(`[data-log-id="${logSearch}"]`).forEach(e => {
           e.querySelector("#action-add-component-name").textContent = name
@@ -11063,7 +11064,7 @@ elementsToRemove.forEach(element => element.remove());
           }
 
         })
-        console.debug('sId ' + id)
+        log1('sId ' + id)
         document.querySelectorAll(`[replace-names="${newId}-tree"]`).forEach(e => {
           e.querySelector("#replaced-component-name-value").textContent = name
           e.querySelector("#replaced-component-path-value").textContent = subPath
@@ -11124,7 +11125,7 @@ elementsToRemove.forEach(element => element.remove());
         }
         const splited = pathItemPath.split(';')[0].split('/')
 
-        console.debug('path item ' + JSON.stringify(pathItem))
+        log1('path item ' + JSON.stringify(pathItem))
         setOptions(pathItem)
         const name = splited[splited.length - 1]
         if (name.toLowerCase() === 'breadcrumb-content') {
@@ -11148,18 +11149,18 @@ elementsToRemove.forEach(element => element.remove());
         const replaceActions = [...responseData.items.filter(el => el.action === 'Replace_Component'), ...upper]
         const removeActions = [...responseData.items.filter(el => el.action === 'removeComponent'), ...upper1]
         const componentPath = convertToOldPath(responseData.items.find(e => e.sk === 'path')?.lsi1.replace(';publish:published', ''))
-        console.debug('compP' + componentPath)
+        log1('compP' + componentPath)
         const componentFileName = componentPath.split('/')[componentPath.split('/').length - 1]
         if (id) {
           const relativecomponentFileName = pathForRelative.current.split('/')[pathForRelative.current.split('/').length - 1]
           if (componentFileName !== relativecomponentFileName) {
             newPathForRelative = componentPath
             next = []
-            console.debug('test relative different ' + componentFileName + 'diff ' + relativecomponentFileName + ' path ' + newPathForRelative)
+            log1('test relative different ' + componentFileName + 'diff ' + relativecomponentFileName + ' path ' + newPathForRelative)
           }
           else {
             next.push(componentPath)
-            console.debug('test relative same ' + componentFileName + ' path ' + newPathForRelative)
+            log1('test relative same ' + componentFileName + ' path ' + newPathForRelative)
           }
         }
         const sortItems = async (items) => {
@@ -11255,7 +11256,7 @@ elementsToRemove.forEach(element => element.remove());
 
               const replaceWithNewId = (s) => {
                 if (s.startsWith('3bf8d522-9423-4818-ad91-d8dfcda1f425')) {
-                  console.debug('fouuund ' + s + '  replace  ' + replaceId)
+                  log1('fouuund ' + s + '  replace  ' + replaceId)
                 }
                 if (!replaceId || s === 'body-tree' || s === 'body' || s === 'head-tree' | s === 'head') return s
                 if (s.endsWith('-tree')) {
@@ -11280,13 +11281,13 @@ elementsToRemove.forEach(element => element.remove());
 
               else if (components.includes(removeLastOccurrence(item.target_element, '-tree'))) {
                 item.target_element = reusableId1 + item.target_element
-                console.debug('case2')
-                console.debug('in')
+                log1('case2')
+                log1('in')
               }
               else if (Array.isArray(item.target_element)) {
-                console.debug('array of targter ' + JSON.stringify(item.target_element))
+                log1('array of targter ' + JSON.stringify(item.target_element))
                 item.target_element = item.target_element.filter(e => e).map(i => {
-                  console.debug('prob666' + JSON.stringify(i))
+                  log1('prob666' + JSON.stringify(i))
                   if (i.id === id + '-tree') {
                     return { ...i, id: reusableId1 + newId + '-tree' }
                   }
@@ -11379,7 +11380,7 @@ elementsToRemove.forEach(element => element.remove());
                       objectFromClonedElements[attributeKey] = parseInt(clonerAttribute.innerText);
                     }
                     else {
-                      console.debug('inner ' + clonerAttribute.innerText)
+                      log1('inner ' + clonerAttribute.innerText)
                       objectFromClonedElements[attributeKey] = clonerAttribute.innerText;
                     }
 
@@ -11468,7 +11469,7 @@ elementsToRemove.forEach(element => element.remove());
           else {
             // If the current value is a string, check for the data-transfer-sender attribute
             const senderPath = sender ? `${sender}.${currentPath}` : currentPath;
-            console.debug('sender path ' + senderPath)
+            log1('sender path ' + senderPath)
             let senderAttribute = querySelectorAll1(`[data-transfer-sender="${senderPath}"]:not([data-b-value=""]`, head);
 
 
@@ -11483,7 +11484,7 @@ elementsToRemove.forEach(element => element.remove());
             }
             else {
               let senderAttribute = querySelectorAll1(`[data-transfer-sender-href="${senderPath}"]:not([data-b-value=""]`, head);
-              console.debug('iiin2')
+              log1('iiin2')
               if (senderAttribute.length) {
 
                 json[key] = senderAttribute[0].getAttribute('href') || "";
@@ -11491,7 +11492,7 @@ elementsToRemove.forEach(element => element.remove());
 
               } else {
                 let senderAttribute = querySelectorAll1(`[data-transfer-sender-src="${senderPath}"]:not([data-b-value=""]`, head);
-                console.debug('iiin3')
+                log1('iiin3')
                 if (senderAttribute.length) {
 
                   json[key] = senderAttribute[0].getAttribute('src') || "";
@@ -11687,7 +11688,7 @@ elementsToRemove.forEach(element => element.remove());
       !currentPath.includes("/settings/") &&
       !currentPath.includes("/setting-product/")) {
       
-      console.debug("Conditions ok, set data-builder-item-link .");
+      log1("Conditions ok, set data-builder-item-link .");
   
       */
 
@@ -11700,7 +11701,7 @@ elementsToRemove.forEach(element => element.remove());
       !currentPath.includes("/settings/") &&
       !currentPath.includes("/setting-product/")) {
     
-      console.debug("Conditions ok, generate breadcrumb .");
+      log1("Conditions ok, generate breadcrumb .");
   
       
       */
@@ -11725,7 +11726,7 @@ elementsToRemove.forEach(element => element.remove());
       const pagePathContent = getElementById1('page-path').textContent;
 
       // Use the textContent as needed, for example, log it to the console
-      console.debug('Publishing:', pagePathContent);
+      log1('Publishing:', pagePathContent);
       const { cleanHtml, generateProductJson } = await onPublish()
       //generateSchema(pagePathContent.split(';')[0], date)
       var iframe = document.getElementById("generated-page-iframe");
@@ -11735,7 +11736,7 @@ elementsToRemove.forEach(element => element.remove());
       let html = '<!DOCTYPE html>' + iframeDocument.documentElement.outerHTML;
 
       //html = replacePlaceHolders(html)
-      console.debug(html)
+      log1(html)
 
       const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/publishv2', {
         method: 'POST',
@@ -11745,7 +11746,7 @@ elementsToRemove.forEach(element => element.remove());
         body: JSON.stringify({ id: idFromLink, html, path: pagePathContent, toRemove, robotsTxt, siteMapPriority, siteMapNotDefiniedPriorities, date: date.getTime(), sku: pathItemSku, updateContent, cleanHtml, generateProductJson }),
       });
       const r = await response.json()
-      console.debug('link: ' + r.link)
+      log1('link: ' + r.link)
       const el = getElementById1('page-path')
 
 
@@ -12097,7 +12098,7 @@ elementsToRemove.forEach(element => element.remove());
         const value = element.getAttribute(`data-import-${attr}`)
         return { tag: value, element, set: false, index: 1 }
       })
-      console.debug('map is ' + JSON.stringify(map))
+      log1('map is ' + JSON.stringify(map))
       let imgLead = false
       let pLead = false
       let previous
@@ -12105,9 +12106,9 @@ elementsToRemove.forEach(element => element.remove());
         if (!child?.tagName) {
           continue
         }
-        console.debug('map is ' + JSON.stringify(map))
+        log1('map is ' + JSON.stringify(map))
         const tag = child.tagName.toLowerCase()
-        console.debug(tag)
+        log1(tag)
         let foundE
         if (tag === 'img' && !imgLead) {
           imgLead = true
@@ -12151,7 +12152,7 @@ elementsToRemove.forEach(element => element.remove());
 
             const path = await upload(name, blob)
 
-            console.debug('path ' + path)
+            log1('path ' + path)
             const id = pathItem.id
             const payload2 = {
 
@@ -12250,7 +12251,7 @@ elementsToRemove.forEach(element => element.remove());
 
             const path = await upload(name, blob)
 
-            console.debug('path ' + path)
+            log1('path ' + path)
             const id = pathItem.id
             const payload = {
               id,
@@ -12427,7 +12428,7 @@ elementsToRemove.forEach(element => element.remove());
                 const value = element.getAttribute(`data-import-${attr}`)
                 return { tag: value, element, set: false, index: 1 }
               })
-              console.debug('map is ' + JSON.stringify(map))
+              log1('map is ' + JSON.stringify(map))
               let imgLead = false
               let pLead = false
               let imgLead1 = false
@@ -12437,9 +12438,9 @@ elementsToRemove.forEach(element => element.remove());
                 if (!child?.tagName) {
                   continue
                 }
-                console.debug('map is ' + JSON.stringify(map))
+                log1('map is ' + JSON.stringify(map))
                 const tag = child.tagName.toLowerCase()
-                console.debug(tag)
+                log1(tag)
                 let foundE
                 if (tag === 'img' && !imgLead) {
 
@@ -12487,7 +12488,7 @@ elementsToRemove.forEach(element => element.remove());
 
                     const path = await upload(name, blob)
 
-                    console.debug('path ' + path)
+                    log1('path ' + path)
                     const id = pathItem.id
                     const payload2 = {
 
@@ -12590,7 +12591,7 @@ elementsToRemove.forEach(element => element.remove());
 
                     const path = await upload(name, blob)
 
-                    console.debug('path ' + path)
+                    log1('path ' + path)
                     const id = pathItem.id
                     const payload = {
                       id,
@@ -12783,7 +12784,7 @@ elementsToRemove.forEach(element => element.remove());
     }
     const generateTableApi = async (textContents) => {
       const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Article-Table-Of-Contents-Content'
-      console.debug(tableLsi)
+      log1(tableLsi)
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
       const { items } = await fetch(url).then(e => e.json())
       const currentDate = new Date();
@@ -12808,7 +12809,7 @@ elementsToRemove.forEach(element => element.remove());
         body: JSON.stringify(db),
       });
       const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&generatetable=${db.id}&ownerid=${localStorage.getItem('ownerid')}` };
-      console.debug(eventData.url)
+      log1(eventData.url)
       // Fetch options
       const options = {
         method: 'POST',
@@ -13077,7 +13078,7 @@ headers: {
         }
         await pushAction(el)
       })
-      console.debug(JSON.stringify(items))
+      log1(JSON.stringify(items))
       if (items.length > 1 || items[0]?.items.length > 1) {
 
         for (const item of items) {
@@ -13304,7 +13305,7 @@ headers: {
                 'Content-Type': 'application/json',
               },
             }).then(el => el.json())
-            console.debug(JSON.stringify(res))
+            log1(JSON.stringify(res))
 
             const table = clonedViewStock.querySelector('#stock-table-body')
             for (const item of res.items) {
@@ -13357,7 +13358,7 @@ headers: {
     }
 
     const showSku = async (sku) => {
-      console.debug('showing sku original ' + sku)
+      log1('showing sku original ' + sku)
       const item1 = getElementById1("sku-item-1")
       getElementById1("input-sku").setAttribute('hidden', '')
       getElementById1("create-sku").setAttribute('hidden', '')
@@ -13377,7 +13378,7 @@ headers: {
 
         const cloned = el[0].cloneNode(true)
         const v = item.sk.replace('qty;', '')
-        console.debug("sku i is " + JSON.stringify(item))
+        log1("sku i is " + JSON.stringify(item))
         cloned.querySelector('#sku-attribute-value').textContent = v
         const psk = `price;${pathItemPath.split('/')[0].toLowerCase()};${v}price`
         const pItem = await fetch(`${backend_url}?id=${sku}&sk=${psk}&startsWith=true`, {
@@ -13460,7 +13461,7 @@ headers: {
            }
           
            else if (items.length === 1) {
-             console.debug('showing sku')
+             log1('showing sku')
              const cloned = el[0].cloneNode(true)
              cloned.querySelector('#sku-attribute-value').textContent = 'Solo'
              cloned.querySelector('#sku-qty').textContent = items[0].qty || 0
@@ -13475,7 +13476,7 @@ headers: {
       const resultList = await getProductAttributes()
 
       if (resultList.length || pathItemSku) {
-        console.debug('path item sku' + pathItemSku)
+        log1('path item sku' + pathItemSku)
         getElementById1('sku-menu').removeAttribute('hidden')
 
         pathItemSku && showSku(pathItemSku, true)
@@ -13571,12 +13572,12 @@ element.setAttribute('data-product', [first, name].join(';'))
       const parent = event.target.parentNode
       const { id } = parent
       const action = parent.getAttribute('action')
-      console.debug('ac' + action)
+      log1('ac' + action)
       if (action === 'innerHtml') {
         const saveButton = event.target;
         const fieldset = saveButton.closest('fieldset');
 
-        console.debug(id)
+        log1(id)
         const textareaValue = fieldset.querySelector('#code-tree-inner-html-receive-textarea').value;
 
         const splited = id.split(';')
@@ -13588,18 +13589,18 @@ element.setAttribute('data-product', [first, name].join(';'))
           insertedCode: textareaValue,
 
         }
-        console.debug(JSON.stringify(el))
+        log1(JSON.stringify(el))
         await pushAction(el)
       }
       parent.remove()
-      console.debug(JSON.stringify(actionLog))
+      log1(JSON.stringify(actionLog))
 
     }
     const saveText = async (event) => {
       const parent = event.target.parentNode
       const { id } = parent
       const action = 'textContent'
-      console.debug('ac' + action)
+      log1('ac' + action)
 
       const saveButton = event.target;
       const fieldset = saveButton.closest('fieldset');
@@ -13616,18 +13617,18 @@ element.setAttribute('data-product', [first, name].join(';'))
         value: textareaValue,
 
       }
-      console.debug(JSON.stringify(el))
+      log1(JSON.stringify(el))
       await pushAction(el)
 
       parent.remove()
-      console.debug(JSON.stringify(actionLog))
+      log1(JSON.stringify(actionLog))
 
     }
     const saveInnerHtml = async (event) => {
       const parent = event.target.parentNode
       const { id } = parent
       const action = 'innerHtml'
-      console.debug('ac' + action)
+      log1('ac' + action)
 
       const saveButton = event.target;
       const fieldset = saveButton.closest('fieldset');
@@ -13644,11 +13645,11 @@ element.setAttribute('data-product', [first, name].join(';'))
         insertedCode: textareaValue,
 
       }
-      console.debug(JSON.stringify(el))
+      log1(JSON.stringify(el))
       await pushAction(el)
 
       parent.remove()
-      console.debug(JSON.stringify(actionLog))
+      log1(JSON.stringify(actionLog))
 
     }
     const saveAttribute = async (event) => {
@@ -13661,7 +13662,7 @@ element.setAttribute('data-product', [first, name].join(';'))
 
       const { id } = parentMenu
       const action = 'setAttribute'
-      console.debug('ac' + action)
+      log1('ac' + action)
 
       const saveButton = event.target;
       const fieldset = saveButton.closest('fieldset');
@@ -13715,10 +13716,10 @@ element.setAttribute('data-product', [first, name].join(';'))
       fieldset.querySelector('#code-tree-tag-attribute-input-text').value = ""
       //fieldset.querySelector('#code-tree-tag-attribute-input-key').value = ''
       //fieldset.querySelector('#code-tree-tag-attribute-input-key-value').value = ''
-      //console.debug(JSON.stringify(el))
+      //log1(JSON.stringify(el))
 
       parentMenu.remove()
-      console.debug(JSON.stringify(actionLog))
+      log1(JSON.stringify(actionLog))
 
     }
 
@@ -13883,7 +13884,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         clonedFieldset.setAttribute('action', 'ChangeTag')
         if (checked) {
 
-          console.debug('setting checked')
+          log1('setting checked')
           clonedFieldset.querySelector('#applyForCopies2').checked = true
 
         }
@@ -13985,8 +13986,8 @@ element.setAttribute('data-product', [first, name].join(';'))
       fieldset.remove();
 
       // Log the id and action attributes (you can replace this with your desired logic)
-      console.debug("Fieldset ID:", fieldsetId);
-      console.debug("Fieldset Action:", fieldsetAction);
+      log1("Fieldset ID:", fieldsetId);
+      log1("Fieldset Action:", fieldsetAction);
       const splited = fieldsetId.split(';')
       splited.shift()
       const id = splited.join(';')
@@ -14778,8 +14779,8 @@ element.setAttribute('data-product', [first, name].join(';'))
       }
     }
     function chooseTag(index, event) {
-      console.debug('in')
-      console.debug(event)
+      log1('in')
+      log1(event)
       let chosenTag = tags[index];
       //alert("Chosen Tag Name: " + chosenTag.tagName + "\nChosen Tag Value: " + chosenTag.tagValue);
 
@@ -14789,8 +14790,8 @@ element.setAttribute('data-product', [first, name].join(';'))
         const fieldsetId = fieldset.id;
         const fieldsetAction = fieldset.getAttribute('action');
         const apply_to_copies = fieldset.getAttribute('copiesOfInserting');
-        console.debug("Fieldset ID:", fieldsetId);
-        console.debug("Fieldset Action:", fieldsetAction);
+        log1("Fieldset ID:", fieldsetId);
+        log1("Fieldset Action:", fieldsetAction);
         const splited = fieldsetId.split(';')
         splited.shift()
         splited.join(';')
