@@ -3446,7 +3446,7 @@
         if (ex.items.length) {
           status.textContent = '🟢'
         }
-        status.addEventListener('click', async () => {
+        const runF = async () => {
           if (status.textContent === '🟠') { return }
           let task = element.task
           status.textContent = '🟠'
@@ -3542,7 +3542,9 @@
           });
           status.textContent = '🟢'
 
-        })
+        }
+        status.addEventListener('click',runF )
+        funcDictionary[element.name] = runF
         originalRow.parentNode.append(cloned);
       }
       originalRow.remove();
