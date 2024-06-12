@@ -3056,6 +3056,7 @@
     var actions = []
     var replaceIds = []
     var lastCompPath
+    var reload
     loadFirst()
     var replacePlaceHolders = (html) => {
       const iframe = document.getElementById("generated-page-iframe");
@@ -6580,6 +6581,9 @@ checkbox1.setAttribute('hidden', "");
           headContentItem.scripts[name] = { runned: date.getTime() }
         }
         item1.querySelector('#last_script_execute_time').textContent = formatDate(date)
+        if(item.execute_requires_reload){
+          reload =true
+        }
       }
       await updateHeadContentItem()
     }
@@ -6611,6 +6615,9 @@ checkbox1.setAttribute('hidden', "");
           headContentItem.scripts[name] = { runned: date.getTime() }
         }
         item1.querySelector('#last_script_execute_time').textContent = formatDate(date)
+        if(item.execute_requires_reload){
+          reload =true
+        }
 
       }
       await updateHeadContentItem()
@@ -6655,6 +6662,9 @@ checkbox1.setAttribute('hidden', "");
           headContentItem.scripts[name] = { runned: date.getTime() }
         }
         item1.querySelector('#last_script_execute_time').textContent = formatDate(date)
+        if(item.execute_requires_reload){
+          reload =true
+        }
       }
       await updateHeadContentItem()
       return { cleanHtml, generateProductJson }
@@ -6680,6 +6690,7 @@ checkbox1.setAttribute('hidden', "");
         headContentItem.scripts[name] = { runned: date.getTime() }
       }
       item1.querySelector('#last_script_execute_time').textContent = formatDate(date)
+      
       await updateHeadContentItem()
 
     }
@@ -6897,10 +6908,12 @@ checkbox1.setAttribute('hidden', "");
         const heading = urlParams.get('heading')
         await generateReview(heading, date, name, stars, ip, message)
       }
-      const pagePathContent = pathItemPath;
-
+      //const pagePathContent = pathItemPath;
+      if(reload){
+        location.reload()
+      }
       // Use the textContent as needed, for example, log it to the console
-      log1('Publishing:', pagePathContent);
+      log1('Publishing:', pathItemPath);
       //generateSchema(pagePathContent.split(';')[0], new Date())
 
 
