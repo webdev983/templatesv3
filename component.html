@@ -8388,24 +8388,7 @@ checkbox1.setAttribute('hidden', "");
             if (treeEls.length) {
               treeEls.sort(sortByPlace1)
               compEls.sort(sortByPlace1)
-              for (const selectedFieldset of treeEls) {
-                log1('found 11' + selectedFieldset.id)
-                var clonedFieldset = cloneWithDescendants(selectedFieldset);
-                var arrowButton = clonedFieldset.querySelector('[data-element="code-tree-show-hide-button"]');
-
-                arrowButton.textContent = '→';
-                // Insert the cloned fieldset based on the action
-                if (action === 'Append') {
-                  targetFieldset.appendChild(clonedFieldset);
-                } else if (action === 'InsertBefore') {
-
-                  parentFieldset.insertBefore(clonedFieldset, parentFieldset.children[index]);
-                  index++; // Increment the index to maintain the correct order
-                }
-
-                // Remove the original fieldset
-                !fork && selectedFieldset.remove();
-              }
+              
               for (const selectedFieldset2 of compEls) {
                 // Clone the selected fieldset and its descendants
                 var clonedFieldset2 = cloneWithDescendants(selectedFieldset2);
@@ -8421,7 +8404,43 @@ checkbox1.setAttribute('hidden', "");
                 }
 
                 // Remove the original fieldset
-                !fork &&  selectedFieldset2.remove();
+                if(fork){
+                  
+                }
+                else{selectedFieldset.remove();}
+              }
+              for (const selectedFieldset of treeEls) {
+                log1('found 11' + selectedFieldset.id)
+                var clonedFieldset = cloneWithDescendants(selectedFieldset);
+                
+                var arrowButton = clonedFieldset.querySelector('[data-element="code-tree-show-hide-button"]');
+
+                arrowButton.textContent = '→';
+                // Insert the cloned fieldset based on the action
+                if (action === 'Append') {
+                  targetFieldset.appendChild(clonedFieldset);
+                } else if (action === 'InsertBefore') {
+
+                  parentFieldset.insertBefore(clonedFieldset, parentFieldset.children[index]);
+                  index++; // Increment the index to maintain the correct order
+                }
+
+                // Remove the original fieldset
+                if(fork){
+                  const newCID =generateUUID()
+                  clonedFieldset.querySelectorAll([id]).forEach(e=>{
+                    if(e.id.endsWith('-tree')){
+                      const sId = e.id.replace('-tree','')
+                      compEl = getElementById1(sId)
+                      const spl =sId.split(':')
+                      
+                      compEl.id = spl[0]+':'+newCID
+                      e.id = compEl.id+'-tree'
+                      
+                    }
+                  })
+                }
+                else{selectedFieldset.remove();}
               }
             }
             else {
