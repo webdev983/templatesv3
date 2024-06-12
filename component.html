@@ -3438,15 +3438,7 @@
         cloned.id =element.name
         cloned.querySelector('#gpt-name').textContent = element.name;
         const status = cloned.querySelector('#script_status')
-        let ex = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${headContentItem.id}&sk=${`ai:${element.name}`}&startsWith=true`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }).then(e => e.json())
-        if (ex.items.length) {
-          status.textContent = '🟢'
-        }
+        
         const runF = async () => {
           if (status.textContent === '🟠') { return }
           let task = element.task
