@@ -6561,10 +6561,16 @@ checkbox1.setAttribute('hidden', "");
         if (!item.execute_in_template && pathItem.lsi1.toLowerCase().includes('seositeshome.com')) {
           continue
         }
+        const item1 = body.querySelector('#' + item.name)
+        const status = item1.querySelector('#script_status')
+        if(status.textContent ==='🟢' && item.execute_on_red_checkbox){
+          continue
+        }
         log1('name '+item.name)
         await funcDictionary[item.name]()
-        const item1 = body.querySelector('#' + item.name)
-        item1.querySelector('#script_status').textContent = '🟢'
+       
+        
+        status.textContent = '🟢'
         const date = new Date()
         const { name } = item
         if (headContentItem.scripts[name]) {
@@ -6588,8 +6594,13 @@ checkbox1.setAttribute('hidden', "");
         if (!item.execute_in_template && pathItem.lsi1.toLowerCase().includes('seositeshome.com')) {
           continue
         }
-        await funcDictionary[item.name]()
         const item1 = body.querySelector('#' + item.name)
+        const status = item1.querySelector('#script_status')
+        if(status.textContent ==='🟢' && item.execute_on_red_checkbox){
+          continue
+        }
+        await funcDictionary[item.name]()
+        
         item1.querySelector('#script_status').textContent = '🟢'
         const date = new Date()
         const { name } = item
@@ -6618,6 +6629,11 @@ checkbox1.setAttribute('hidden', "");
         if (!item.execute_in_template && pathItem.lsi1.toLowerCase().includes('seositeshome.com')) {
           continue
         }
+        const item1 = body.querySelector('#' + item.name)
+        const status = item1.querySelector('#script_status')
+        if(status.textContent ==='🟢' && item.execute_on_red_checkbox){
+          continue
+        }
         if (item.name === 'script_generate_product_json') {
           generateProductJson = true
 
@@ -6628,7 +6644,7 @@ checkbox1.setAttribute('hidden', "");
         }
         else { await funcDictionary[item.name]() }
 
-        const item1 = body.querySelector('#' + item.name)
+        
         item1.querySelector('#script_status').textContent = '🟢'
         const date = new Date()
         const { name } = item
