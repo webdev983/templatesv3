@@ -6748,7 +6748,7 @@ checkbox1.setAttribute('hidden', "");
       handleMenus()
 
       await onOpen1()
-      localStorage.getItem('executionToggle') && await loadFromDb()
+      await loadFromDb()
 
       clearInterval(interval);
       lastActionTime.textContent = timerElement.textContent;
@@ -11103,7 +11103,7 @@ elementsToRemove.forEach(element => element.remove());
         actions = items.filter(i => i.action)
         let r;
 
-        if (map) {
+        if (map && localStorage.getItem('executionToggle')) {
           r = Promise.all(map.items.map(id => getRes(id, false, true)))
         }
 
