@@ -3474,7 +3474,7 @@
           });
 
           const element0 = document.getElementById('ai-logs')
-          element0.removeAttribute('hidden')
+          //element0.removeAttribute('hidden')
           element0.querySelector('textarea').value = [element0.querySelector('textarea').value, JSON.stringify(res, null, 2) + '\n\n' + JSON.stringify(content)].join('\n\n=============================================\n\n')
           for (const toImport of element.import_data) {
             const { import_page, import_name } = toImport
@@ -6247,7 +6247,7 @@ checkbox1.setAttribute('hidden', "");
         }).then(e => e.json())
         if (res.items.length) {
           const element = document.getElementById('ai-logs')
-          element.removeAttribute('hidden')
+          //element.removeAttribute('hidden')
           element.querySelector('textarea').value = res.items.map(el => JSON.stringify(el.gptResponse, null, 2) + '\n\n' + JSON.stringify(el.content) + '\n\n').join('\n\n=============================================\n\n')
         }
       }
@@ -11186,7 +11186,6 @@ elementsToRemove.forEach(element => element.remove());
           return [...nonActionItems, ...newActionItems]
         }
         responseData.items = await sortItems(responseData.items)
-        console.log('err789' + JSON.stringify(responseData.items))
         for (const item of responseData.items) {
           if (!id) {
             if (item.sk === 'path') {
