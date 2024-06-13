@@ -3063,6 +3063,34 @@
     var lastCompPath
     var reload
     loadFirst()
+    function getAbsolutePath(currentPath, relativePath) {
+        // Split current path and relative path into arrays of directories and filename
+        const currentPathParts = currentPath.split('/');
+        const relativePathParts = relativePath.split('/');
+
+        // Extract filename from the relative path
+        const relativeFilename = relativePathParts.pop();
+        currentPathParts.pop()
+
+        // Handle "./" in relative path
+        if (relativePathParts[0] === '.') {
+          relativePathParts.shift(); // Remove the first element (".")
+        }
+        // Handle "../" in relative path
+        while (relativePathParts[0] === '..') {
+          currentPathParts.pop(); // Remove the last element from the current path
+          relativePathParts.shift(); // Remove the first element ("..")
+        }
+
+
+        // Combine current path and relative path parts
+        const combinedPath = currentPathParts.concat(relativePathParts).join('/');
+
+        // Append the relative filename
+        const absolutePath = combinedPath + '|' + relativeFilename;
+
+        return absolutePath;
+      }
     var replacePlaceHolders = (html) => {
       const iframe = document.getElementById("generated-page-iframe");
 
@@ -8667,34 +8695,7 @@ checkbox1.setAttribute('hidden', "");
         const processed1 = [...splited, splited2[0]].join(';')
         return { id: processed1, originalId: id }
       }
-      function getAbsolutePath(currentPath, relativePath) {
-        // Split current path and relative path into arrays of directories and filename
-        const currentPathParts = currentPath.split('/');
-        const relativePathParts = relativePath.split('/');
-
-        // Extract filename from the relative path
-        const relativeFilename = relativePathParts.pop();
-        currentPathParts.pop()
-
-        // Handle "./" in relative path
-        if (relativePathParts[0] === '.') {
-          relativePathParts.shift(); // Remove the first element (".")
-        }
-        // Handle "../" in relative path
-        while (relativePathParts[0] === '..') {
-          currentPathParts.pop(); // Remove the last element from the current path
-          relativePathParts.shift(); // Remove the first element ("..")
-        }
-
-
-        // Combine current path and relative path parts
-        const combinedPath = currentPathParts.concat(relativePathParts).join('/');
-
-        // Append the relative filename
-        const absolutePath = combinedPath + '|' + relativeFilename;
-
-        return absolutePath;
-      }
+      
       !path && (path = '')
       switch (action) {
 
