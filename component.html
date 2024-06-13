@@ -4536,6 +4536,13 @@
       await pushAction(el)
       location.reload()
     }
+    var setAnchor =async(event)=>{
+        const path = event.target.parentNode.parentNode.getAttribute('path')
+        const currentLsi = pathItemPath.replace(';publish:published', "")
+        const relativePath = getRelativePath(currentLsi, convertToOldPath(path.replace(';publish:published', "")));
+        pathItem.hub_items.anchor = relativePath
+        await updatePathItem()
+      }
     //file list scripts
     var replaceComponent = (e, flag) => {
       var single = e.target.parentNode.querySelector('#single_replace')?.checked
@@ -4558,13 +4565,7 @@
         log1(JSON.stringify(selected))
 
       }
-      var setAnchor =async(event)=>{
-        const path = event.target.parentNode.parentNode.getAttribute('path')
-        const currentLsi = pathItemPath.replace(';publish:published', "")
-        const relativePath = getRelativePath(currentLsi, convertToOldPath(path.replace(';publish:published', "")));
-        pathItem.hub_items.anchor = relativePath
-        await updatePathItem()
-      }
+      
       var setFolder = (path, id) => {
         const relative = getElementById1('relative-input')
         const absolute = getElementById1('absolute-input')
