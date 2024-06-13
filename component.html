@@ -1500,7 +1500,7 @@
         </div>
       </div>
 
-      <label><input type="checkbox" id="set_anchor_checkbox"><span class="l-3">⚓️ Set anchor</span></label>
+      <label><input type="checkbox" id="set_anchor_checkbox" onclick="setAnchor(event)"><span class="l-3">⚓️ Set anchor</span></label>
 
     </div>
 
@@ -4557,6 +4557,13 @@
         clonedFieldset2.appendChild(clonedItem)
         log1(JSON.stringify(selected))
 
+      }
+      var setAnchor =async(event)=>{
+        const path = event.target.parentNode.parentNode.getAttribute('path')
+        const currentLsi = pathItemPath.replace(';publish:published', "")
+        const relativePath = getRelativePath(currentLsi, convertToOldPath(path.replace(';publish:published', "")));
+        pathItem.hub_items.anchor = relativePath
+        await updatePathItem()
       }
       var setFolder = (path, id) => {
         const relative = getElementById1('relative-input')
@@ -11039,6 +11046,7 @@ elementsToRemove.forEach(element => element.remove());
       LinkBP && switchLinkBP(false)
     }
     let foundMainContent
+    let foundAnchor
 
     var loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative, treeElement, reusableId, attachId) => {
       log1('load from db' + id + 'reusable' + reusableId + 'attachid' + attachId)
@@ -11171,7 +11179,8 @@ elementsToRemove.forEach(element => element.remove());
         const { items } = responseData
         log1('iteeems ' + JSON.stringify(items))
         //change component 
-        const subPath = convertToOldPath(items.find(e => e.sk === 'path').lsi1.split(';')[0])
+        const lsi1 =items.find(e => e.sk === 'path').lsi1
+        const subPath = convertToOldPath(lsi1.split(';')[0])
         const splited = subPath.split('/')
         const name = splited[splited.length - 1]
         const { testPage, optionalScript } = items.find(e => e.sk === 'path')
@@ -11231,6 +11240,14 @@ elementsToRemove.forEach(element => element.remove());
             }
 
           }
+        }
+        if(pathItem.hub_items?.anchor && !foundAnchor){
+          const absolute = getAbsolutePath(pathItemPath,relativePath)
+          if(lsi1 ===absolute){
+            foundAnchor = true
+            el.setAttribute('anchor',"")
+          }
+          
         }
         //insertDataIntoCodeLog(timestamp, idFromLink, { name })
       }
