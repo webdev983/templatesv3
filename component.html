@@ -287,10 +287,10 @@
                 use</span></label>
             <label class="action-label" id="action-in-replace"><span class="action-icon">🔄</span><span>in
                 replace</span></label>
-                <label class="action-label" id="action-fork-id"><span class="action-icon">🍴 fork
-                </span><span id="action-fork-id-value"></span></label>
-  
-  
+            <label class="action-label" id="action-fork-id"><span class="action-icon">🍴 fork
+              </span><span id="action-fork-id-value"></span></label>
+
+
           </div>
 
         </div>
@@ -4528,7 +4528,7 @@
         time: (new Date()).getTime(),
         action: 'Replace_Component',
         target_element: [parentId.replace('selectedFilePathList;', ''), ...arr],
-        options:{single}
+        options: { single }
       };
       if (m2.length) {
         el.folders = m2.map(e => e.id)
@@ -7600,6 +7600,12 @@ checkbox1.setAttribute('hidden', "");
         } else {
           optionNumber++
         }
+        if (!options.fork) {
+          cloned.querySelector('#action-fork-id').remove()
+        } else {
+          cloned.querySelector('#action-fork-id-value').textContent = options.fork
+          optionNumber++
+        }
         if (!options.selfuse) {
           cloned.querySelector('#action-self-use-component').remove()
         } else {
@@ -8210,15 +8216,15 @@ checkbox1.setAttribute('hidden', "");
 
               if (i === 0) {
 
-                treeEl.id = fork+'|'+mId + ':' + replaceIds[0] + '-tree'
-                compEl.id = fork+'|'+mId + ':' + replaceIds[0]
+                treeEl.id = fork + '|' + mId + ':' + replaceIds[0] + '-tree'
+                compEl.id = fork + '|' + mId + ':' + replaceIds[0]
                 compEl.setAttribute('data-replaceID', replaceIds[0])
                 continue
               }
               const cloned = cloneWithDescendants(compEl)
               const cloned2 = cloneWithDescendants(treeEl)
-              cloned2.id = fork+'|'+mId + ':' + replaceIds[i] + '-tree'
-              cloned.id = fork+'|'+mId + ':' + replaceIds[i]
+              cloned2.id = fork + '|' + mId + ':' + replaceIds[i] + '-tree'
+              cloned.id = fork + '|' + mId + ':' + replaceIds[i]
               cloned.setAttribute('data-replaceID', replaceIds[i])
               insertAfter(cloned, prev[0])
               insertAfter(cloned2, prev[1])
@@ -8271,10 +8277,10 @@ checkbox1.setAttribute('hidden', "");
           log1('tree el id' + targetTreeEl.id)
           for (const element of restOfElements) {
             let mId = element.id.replace('-tree', '').split(':')[0]
-            if(fork){
-              mId = fork + '|'+element.id.replace('-tree', '').split(':')[0].split('|')
+            if (fork) {
+              mId = fork + '|' + element.id.replace('-tree', '').split(':')[0].split('|')
             }
-            
+
             const treeEl = getElementById1(mId + ':' + replaceIds[i] + '-tree')
             const compEl = getElementById1(mId + ':' + replaceIds[i])
             log1('targetAppend' + targetTreeEl.id)
@@ -8803,7 +8809,7 @@ checkbox1.setAttribute('hidden', "");
             const toReplace = replaceAction.target_element[0]
             replaceAction.target_element.shift()
             const dontReplaceIndex = replaceAction.target_element.findIndex(e => e.componentId === toReplace)
-            
+
             //remove unfound replace
             const newArr = []
             let shouldUpdate
@@ -8895,7 +8901,7 @@ checkbox1.setAttribute('hidden', "");
                 inserted_component: el,
                 noComp: true,
                 noSubComp: i
-              }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions,single ? undefined : el.id, undefined, pathForRelative, rT, attachId)
+              }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions, single ? undefined : el.id, undefined, pathForRelative, rT, attachId)
               i = true
 
             }
