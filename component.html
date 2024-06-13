@@ -10857,6 +10857,9 @@ elementsToRemove.forEach(element => element.remove());
           clonedFieldset.setAttribute('path', button.getAttribute('path'))
           clonedFieldset.setAttribute('replaced', button.parentNode.getAttribute('replaced'))
           clonedFieldset.setAttribute('replacedFolders', button.parentNode.getAttribute('replacedFolders'))
+          if(event.target.hasAttribute('anchor')){
+            clonedFieldset.querySelector('#set_anchor_checkbox').checked = true
+          }
           // Find the position to insert the cloned fieldset
           const insertAfterElement = textContentButton || button;
           if (button.parentNode.hasAttribute('data-first-child')) {
