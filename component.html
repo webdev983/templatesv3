@@ -4504,7 +4504,7 @@
       const m = Array.from(e.target.parentNode.children).filter(i => i.id)
       const m1 = m.filter(e => e.hasAttribute('component'))
       const m2 = m.filter(e => e.hasAttribute('folder'))
-
+      const single = e.target.parentNode.hasAttribute('single')
       //const folderChecked = e.target.parentNode.querySelector('#attach-folder').checked
       const parentId = e.target.parentNode.id.replace('file-path-list;', '')
       if (!parentId) {
@@ -4526,6 +4526,7 @@
         time: (new Date()).getTime(),
         action: 'Replace_Component',
         target_element: [parentId.replace('selectedFilePathList;', ''), ...arr],
+        options:{single}
       };
       if (m2.length) {
         el.folders = m2.map(e => e.id)
@@ -4535,6 +4536,7 @@
     }
     //file list scripts
     var replaceComponent = (e, flag) => {
+      var single = e.target.parentNode.querySelector('#single_replace').checked
       let selected = []
       let path1 = ''
       var addSelected = (id, itemId, path) => {
@@ -4924,6 +4926,7 @@
       if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('filePathList')) {
         const clonedFieldset = fieldset.cloneNode(true);
         const clonedFieldset2 = fieldset2.cloneNode(true);
+        single && clonedFieldset2.setAttribute('single')
         clonedFieldset2.id = clonedFieldset2.id + ';' + parentId;
         clonedFieldset.id = clonedFieldset.id + ';' + parentId;
         clonedFieldset.setAttribute('action', 'Replace')
