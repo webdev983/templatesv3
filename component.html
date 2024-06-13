@@ -6331,22 +6331,29 @@ checkbox1.setAttribute('hidden', "");
               lastExec.textContent = formatDate(new Date(runned))
               scriptS.textContent = '🟢'
             }
-            if (key === 'onClick') {
-
-              scriptS.onclick = async () => {
-                await funcDictionary[name]()
-                scriptS.textContent = '🟢'
-                const date = new Date()
-                if (headContentItem.scripts[name]) {
-                  headContentItem.scripts[name].runned = date.getTime()
-                }
-                else {
-                  headContentItem.scripts[name] = { runned: date.getTime() }
-                }
-                lastExec.textContent = formatDate(date)
-                updateHeadContentItem()
+           
+            let r 
+            scriptS.onclick = async () => {
+              if(r){
+                return
               }
+              r =true
+              scriptS.textContent = '🟠'
+              await funcDictionary[name]()
+              
+              const date = new Date()
+              if (headContentItem.scripts[name]) {
+                headContentItem.scripts[name].runned = date.getTime()
+              }
+              else {
+                headContentItem.scripts[name] = { runned: date.getTime() }
+              }
+              lastExec.textContent = formatDate(date)
+              await updateHeadContentItem()
+              scriptS.textContent = '🟢'
+              r=false
             }
+            
 
 
 
