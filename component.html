@@ -1473,7 +1473,8 @@
     <div id="code-tree-click-component" data-menu style="margin-bottom: 30px;">
       <button class="b-3" onclick="cancel(event)" style="margin-right:5px; margin-top: 5px;">❌</button>
       <br>
-      <button class="b-3" style="margin-right: 5px; margin-top: 5px;" onclick="replaceComponent(event)">🔄 Replace</button>
+      <button class="b-3" style="margin-right: 5px; margin-top: 5px;" onclick="replaceComponent(event)">🔄
+        Replace</button>
       <label><input type="checkbox" id="single_replace"><span class="l-3">1️⃣ single replace</span></label>
       <remove HIDDEN class="b-3" style="margin:5px; margin-left: 5px;" id="target-button" hidden>🎯 target</remove>
       <br>
@@ -8191,27 +8192,28 @@ checkbox1.setAttribute('hidden', "");
 
           }
         }
-        for (const element of restOfElements) {
+        if (fork) {
+          for (const element of restOfElements) {
 
-          if (!element.replaced) {
+
             const compEl = getElementById1(element.id.replace('-tree', ''))
             const treeEl = getElementById1(element.id)
 
             let prev = [compEl, treeEl]
             for (let i = 0; i < replaceIds.length; i++) {
-              const mId = compEl.id.split(':')[0]
+              const mId = compEl.id.split(':')[0].split('|').pop()
 
               if (i === 0) {
 
-                treeEl.id = mId + ':' + replaceIds[0] + '-tree'
-                compEl.id = mId + ':' + replaceIds[0]
+                treeEl.id = fork+'|'+mId + ':' + replaceIds[0] + '-tree'
+                compEl.id = fork+'|'+mId + ':' + replaceIds[0]
                 compEl.setAttribute('data-replaceID', replaceIds[0])
                 continue
               }
               const cloned = cloneWithDescendants(compEl)
               const cloned2 = cloneWithDescendants(treeEl)
-              cloned2.id = mId + ':' + replaceIds[i] + '-tree'
-              cloned.id = mId + ':' + replaceIds[i]
+              cloned2.id = fork+'|'+mId + ':' + replaceIds[i] + '-tree'
+              cloned.id = fork+'|'+mId + ':' + replaceIds[i]
               cloned.setAttribute('data-replaceID', replaceIds[i])
               insertAfter(cloned, prev[0])
               insertAfter(cloned2, prev[1])
@@ -8219,8 +8221,42 @@ checkbox1.setAttribute('hidden', "");
 
 
             }
-          }
 
+
+          }
+        }
+        else {
+          for (const element of restOfElements) {
+
+            if (!element.replaced) {
+              const compEl = getElementById1(element.id.replace('-tree', ''))
+              const treeEl = getElementById1(element.id)
+
+              let prev = [compEl, treeEl]
+              for (let i = 0; i < replaceIds.length; i++) {
+                const mId = compEl.id.split(':')[0]
+
+                if (i === 0) {
+
+                  treeEl.id = mId + ':' + replaceIds[0] + '-tree'
+                  compEl.id = mId + ':' + replaceIds[0]
+                  compEl.setAttribute('data-replaceID', replaceIds[0])
+                  continue
+                }
+                const cloned = cloneWithDescendants(compEl)
+                const cloned2 = cloneWithDescendants(treeEl)
+                cloned2.id = mId + ':' + replaceIds[i] + '-tree'
+                cloned.id = mId + ':' + replaceIds[i]
+                cloned.setAttribute('data-replaceID', replaceIds[i])
+                insertAfter(cloned, prev[0])
+                insertAfter(cloned2, prev[1])
+                prev = [cloned, cloned2]
+
+
+              }
+            }
+
+          }
         }
         for (let i = 0; i < replaceIds.length; i++) {
 
@@ -8229,7 +8265,11 @@ checkbox1.setAttribute('hidden', "");
           const targetCompEl = getElementById1(targetMid + ':' + replaceIds[i])
           log1('tree el id' + targetTreeEl.id)
           for (const element of restOfElements) {
-            const mId = element.id.replace('-tree', '').split(':')[0]
+            let mId = element.id.replace('-tree', '').split(':')[0]
+            if(fork){
+              mId = fork + '|'+element.id.replace('-tree', '').split(':')[0].split('|')
+            }
+            
             const treeEl = getElementById1(mId + ':' + replaceIds[i] + '-tree')
             const compEl = getElementById1(mId + ':' + replaceIds[i])
             log1('targetAppend' + targetTreeEl.id)
