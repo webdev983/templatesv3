@@ -4421,7 +4421,29 @@
         return prefix + nextChar;
       }
     }
+    const getLastReusableId = async () => {
+      let newCounter = 'AA'
+      const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/re_use_counter:counter')
+        .then(response => response.json())
 
+      if (data) {
+        const prevCounter = data.value
+        newCounter = prevCounter
+
+      }
+      return newCounter
+    }
+    const updateCounter = async (newCounter) => {
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+          { id: 're_use_counter', sk: 'counter', value: newCounter }
+        ),
+      });
+    }
     var approveAddComponent = async (e) => {
       const m1 = e.target.parentNode.nextElementSibling
 
@@ -4434,15 +4456,7 @@
       const reusableC = optionList.querySelector('#reusable').checked
       let newCounter
       if (reusableC) {
-        newCounter = 'AA'
-        const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/re_use_counter:counter')
-          .then(response => response.json())
-
-        if (data) {
-          const prevCounter = data.value
-          newCounter = prevCounter
-
-        }
+        newCounter = await getLastReusableId()
       }
 
 
@@ -4478,15 +4492,7 @@
 
       }
       if (newCounter) {
-        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(
-            { id: 're_use_counter', sk: 'counter', value: newCounter }
-          ),
-        });
+        await updateCounter(newCounter)
       }
       flag && location.reload()
       getElementById1('file-list-attach-component-options;' + pId).remove()
@@ -8431,17 +8437,18 @@ checkbox1.setAttribute('hidden', "");
                   const newCID = generateUUID()
                   const sId = clonedFieldset.id.replace('-tree', '')
                   compEl = getElementById1(sId)
-                  const spl = sId.split(':')
-
-                  compEl.id = spl[0] + ':' + newCID
+                  const spl = sId.split('|')
+                  const idWithoutReplace = spl.pop()
+                  compEl.id = fork + '|' + idWithoutReplace
                   clonedFieldset.id = compEl.id + '-tree'
                   clonedFieldset.querySelectorAll("[id]").forEach(e => {
                     if (e.id.endsWith('-tree')) {
                       const sId = e.id.replace('-tree', '')
                       compEl = getElementById1(sId)
-                      const spl = sId.split(':')
+                      const spl = sId.split('|')
+                      const idWithoutReplace = spl.pop()
 
-                      compEl.id = spl[0] + ':' + newCID
+                      compEl.id = fork + '|' + idWithoutReplace
                       e.id = compEl.id + '-tree'
 
                     }
@@ -10092,7 +10099,7 @@ checkbox1.setAttribute('hidden', "");
             }
 
           }
-          targetElement.innerHTML = insertedCode.replaceAll('\n','');
+          targetElement.innerHTML = insertedCode.replaceAll('\n', '');
 
           break;
         case 'Replace_Component':
@@ -14023,7 +14030,12 @@ element.setAttribute('data-product', [first, name].join(';'))
     const approve = async (event) => {
       var checkbox = event.target;
       const actionInReplace = event.target.parentNode.querySelector('#actionInReplaceExisting').checked
-      const fork = event.target.parentNode.querySelector('#fork').checked
+      let fork = event.target.parentNode.querySelector('#fork').checked
+      if (fork) {
+        let newC = await getLastReusableId()
+        fork = getNextCounter(newC)
+        await updateCounter(fork)
+      }
       // Get the parent fieldset
       var fieldset = checkbox.closest('fieldset');
 
