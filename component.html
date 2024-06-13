@@ -8208,13 +8208,23 @@ checkbox1.setAttribute('hidden', "");
           for (const element of restOfElements) {
 
 
-            const compEl = getElementById1(element.id.replace('-tree', ''))
-            const treeEl = getElementById1(element.id)
+            let compEl1 = getElementById1(element.id.replace('-tree', ''))
+            let treeEl1 = getElementById1(element.id)
 
             let prev = [compEl, treeEl]
             for (let i = 0; i < replaceIds.length; i++) {
-              const mId = compEl.id.split(':')[0].split('|').pop()
-
+              const mId = element.id.split(':')[0].replace('-tree', '').split('|').pop()
+              const mId1 = element.id.split(':')[0].replace('-tree', '')
+              let compEl
+              let treeEl
+              if(!compEl1){
+                compEl = getElementById1(mId1 + ':' + replaceIds[i])
+                treeEl = getElementById1(mId1 + ':' + replaceIds[i] + '-tree')
+              }
+              else{
+                compEl = compEl1
+                treeEl =treeEl1
+              }
               if (i === 0) {
 
                 treeEl.id = fork + '|' + mId + ':' + replaceIds[0] + '-tree'
@@ -8279,7 +8289,7 @@ checkbox1.setAttribute('hidden', "");
           for (const element of restOfElements) {
             let mId = element.id.replace('-tree', '').split(':')[0]
             if (fork) {
-              mId = fork + '|' + element.id.replace('-tree', '').split(':')[0].split('|')
+              mId = fork + '|' + element.id.replace('-tree', '').split(':')[0].split('|').pop()
             }
 
             const treeEl = getElementById1(mId + ':' + replaceIds[i] + '-tree')
