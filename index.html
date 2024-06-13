@@ -2899,7 +2899,7 @@
                   }
                 ),
               })
-              return createFolders(item.lsi1.replace(path, new_value))
+              return createFolders(convertToOldPath(item.lsi1.replace(path, new_value)))
             })
             const splited = path.split('/')
             splited.pop()
@@ -2923,7 +2923,7 @@
               })
 
             })
-            await createFolders(new_value)
+            await createFolders(convertToOldPath(new_value))
             await Promise.all(promises2)
             await Promise.all(promises)
             console.log('done')
