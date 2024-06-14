@@ -289,6 +289,7 @@
                 replace</span></label>
             <label class="action-label" id="action-fork-id"><span class="action-icon">🍴 fork
               </span><span id="action-fork-id-value"></span></label>
+            
 
 
           </div>
@@ -1590,6 +1591,7 @@
       <label><input type="checkbox" id="actionInReplaceExisting"><span class="l-3">🔄 action in replace</span></label>
       <br>
       <label><input type="checkbox" id="fork"><span class="l-3">🍴 fork</span></label>
+      <label><input type="checkbox" id="transfer-inner-html"><span class="l-3">transfer inner html</span></label>
 
       <br>
       <label class="l-3" hidden><input type="checkbox" onchange="switchPosition(event)" id="position-checkbox">🎯
@@ -8211,7 +8213,7 @@ checkbox1.setAttribute('hidden', "");
         return Array.from(elementA.parentElement.children).indexOf(elementA) -
           Array.from(elementB.parentElement.children).indexOf(elementB);
       }
-      function handleAppendOrInsertReplace(actions, selectedArrayNotSorted, fork) {
+      function handleAppendOrInsertReplace(actions, selectedArrayNotSorted, fork,transferInnerHtml) {
         log1('start')
         var firstElementId = selectedArrayNotSorted[0].id;
         var restOfElements = selectedArrayNotSorted.slice(1);
@@ -8355,7 +8357,7 @@ checkbox1.setAttribute('hidden', "");
 
         }
       }
-      function handleAppendOrInsert(action, selectedArrayNotSorted, move, insert_copies, fork) {
+      function handleAppendOrInsert(action, selectedArrayNotSorted, move, insert_copies, fork,transferInnerHtml) {
         // Sort
 
         log1('start')
@@ -9777,10 +9779,10 @@ checkbox1.setAttribute('hidden', "");
           if (target_element.length) {
             log1('movestat ' + move)
             if (options?.actionInReplace) {
-              handleAppendOrInsertReplace('Append', target_element, options?.fork)
+              handleAppendOrInsertReplace('Append', target_element, options?.fork, options?.transferInnerHtml)
             }
             else {
-              handleAppendOrInsert('Append', target_element.map(i => i.id), move, undefined, options?.fork)
+              handleAppendOrInsert('Append', target_element.map(i => i.id), move, undefined, options?.fork, options?.transferInnerHtml)
             }
 
           }
@@ -10144,10 +10146,10 @@ checkbox1.setAttribute('hidden', "");
           if (target_element.length) {
             log1(JSON.stringify(target_element))
             if (options?.actionInReplace) {
-              handleAppendOrInsertReplace('InsertBefore', target_element, options?.fork)
+              handleAppendOrInsertReplace('InsertBefore', target_element, options?.fork, options?.transferInnerHtml)
             }
             else {
-              handleAppendOrInsert('InsertBefore', target_element.map(i => i.id), move, undefined, options?.fork)
+              handleAppendOrInsert('InsertBefore', target_element.map(i => i.id), move, undefined, options?.fork, options?.transferInnerHtml)
             }
           }
           break;
@@ -14125,6 +14127,8 @@ element.setAttribute('data-product', [first, name].join(';'))
       var checkbox = event.target;
       const actionInReplace = event.target.parentNode.querySelector('#actionInReplaceExisting').checked
       let fork = event.target.parentNode.querySelector('#fork').checked
+      let transferInnerHtml = event.target.parentNode.querySelector('#transfer-inner-html').checked
+      
       if (fork) {
         let newC = await getLastReusableId()
         fork = getNextCounter(newC)
@@ -14190,7 +14194,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         pushAction({
           time: (new Date()).getTime(),
           action: fieldsetAction,
-          options: { dub_target: true, insert_copies: true, position, actionInReplace, fork },
+          options: { dub_target: true, insert_copies: true, position, actionInReplace, fork,transferInnerHtml },
           target_element
         })
 
@@ -14200,7 +14204,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         pushAction({
           time: (new Date()).getTime(),
           action: fieldsetAction,
-          options: { insert_copies: true, position, actionInReplace, fork },
+          options: { insert_copies: true, position, actionInReplace, fork,transferInnerHtml },
           target_element
         })
       }
@@ -14208,7 +14212,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         let el2 = {
           time: (new Date()).getTime(),
           action: fieldsetAction,
-          options: { position, actionInReplace, fork },
+          options: { position, actionInReplace, fork,transferInnerHtml },
           target_element
         }
         pushAction(el2)
