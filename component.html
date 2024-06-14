@@ -8514,7 +8514,10 @@ checkbox1.setAttribute('hidden', "");
                 // Clone the selected fieldset and its descendants
                 const clonedFieldset = cloneWithDescendants(selectedFieldset2);
                 const clonedFieldset2 = cloneWithDescendants(selectedFieldset);
-
+                if(transferInnerHtml){
+                  clonedFieldset.innerHTML = targetFieldset2.innerHTML
+                  targetFieldset2.innerHTML =""
+                }
                 // Insert the cloned fieldset based on the action
                 if (action === 'Append') {
                   targetFieldset2.appendChild(clonedFieldset);
@@ -8526,6 +8529,7 @@ checkbox1.setAttribute('hidden', "");
                   parentFieldset.insertBefore(clonedFieldset2, parentFieldset.children[index]);
                   index++; // Increment the index to maintain the correct order
                 }
+                
 
                 // Modify clonedFieldset for 'treeEls'
                 const arrowButton = clonedFieldset2.querySelector('[data-element="code-tree-show-hide-button"]');
