@@ -289,7 +289,7 @@
                 replace</span></label>
             <label class="action-label" id="action-fork-id"><span class="action-icon">🍴 fork
               </span><span id="action-fork-id-value"></span></label>
-            
+
 
 
           </div>
@@ -1501,7 +1501,8 @@
         </div>
       </div>
 
-      <label><input type="checkbox" id="set_anchor_checkbox" onclick="setAnchor(event)"><span class="l-3">⚓️ Set anchor</span></label>
+      <label><input type="checkbox" id="set_anchor_checkbox" onclick="setAnchor(event)"><span class="l-3">⚓️ Set
+          anchor</span></label>
 
     </div>
 
@@ -3065,34 +3066,34 @@
     var lastCompPath
     var reload
     loadFirst()
-    var  getAbsolutePath = (currentPath, relativePath)=> {
-        // Split current path and relative path into arrays of directories and filename
-        const currentPathParts = currentPath.split('/');
-        const relativePathParts = relativePath.split('/');
+    var getAbsolutePath = (currentPath, relativePath) => {
+      // Split current path and relative path into arrays of directories and filename
+      const currentPathParts = currentPath.split('/');
+      const relativePathParts = relativePath.split('/');
 
-        // Extract filename from the relative path
-        const relativeFilename = relativePathParts.pop();
-        currentPathParts.pop()
+      // Extract filename from the relative path
+      const relativeFilename = relativePathParts.pop();
+      currentPathParts.pop()
 
-        // Handle "./" in relative path
-        if (relativePathParts[0] === '.') {
-          relativePathParts.shift(); // Remove the first element (".")
-        }
-        // Handle "../" in relative path
-        while (relativePathParts[0] === '..') {
-          currentPathParts.pop(); // Remove the last element from the current path
-          relativePathParts.shift(); // Remove the first element ("..")
-        }
-
-
-        // Combine current path and relative path parts
-        const combinedPath = currentPathParts.concat(relativePathParts).join('/');
-
-        // Append the relative filename
-        const absolutePath = combinedPath + '|' + relativeFilename;
-
-        return absolutePath;
+      // Handle "./" in relative path
+      if (relativePathParts[0] === '.') {
+        relativePathParts.shift(); // Remove the first element (".")
       }
+      // Handle "../" in relative path
+      while (relativePathParts[0] === '..') {
+        currentPathParts.pop(); // Remove the last element from the current path
+        relativePathParts.shift(); // Remove the first element ("..")
+      }
+
+
+      // Combine current path and relative path parts
+      const combinedPath = currentPathParts.concat(relativePathParts).join('/');
+
+      // Append the relative filename
+      const absolutePath = combinedPath + '|' + relativeFilename;
+
+      return absolutePath;
+    }
     var replacePlaceHolders = (html) => {
       const iframe = document.getElementById("generated-page-iframe");
 
@@ -4566,13 +4567,13 @@
       await pushAction(el)
       location.reload()
     }
-    var setAnchor =async(event)=>{
-        const path = event.target.parentNode.parentNode.getAttribute('path')
-        const currentLsi = pathItemPath.replace(';publish:published', "")
-        const relativePath = getRelativePath(currentLsi, convertToOldPath(path.replace(';publish:published', "")));
-        pathItem.hub_items.anchor = relativePath
-        await updatePathItem()
-      }
+    var setAnchor = async (event) => {
+      const path = event.target.parentNode.parentNode.getAttribute('path')
+      const currentLsi = pathItemPath.replace(';publish:published', "")
+      const relativePath = getRelativePath(currentLsi, convertToOldPath(path.replace(';publish:published', "")));
+      pathItem.hub_items.anchor = relativePath
+      await updatePathItem()
+    }
     //file list scripts
     var replaceComponent = (e, flag) => {
       var single = e.target.parentNode.querySelector('#single_replace')?.checked
@@ -4595,7 +4596,7 @@
         log1(JSON.stringify(selected))
 
       }
-      
+
       var setFolder = (path, id) => {
         const relative = getElementById1('relative-input')
         const absolute = getElementById1('absolute-input')
@@ -4966,7 +4967,7 @@
       if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('filePathList')) {
         const clonedFieldset = fieldset.cloneNode(true);
         const clonedFieldset2 = fieldset2.cloneNode(true);
-        single && clonedFieldset2.setAttribute('single',"")
+        single && clonedFieldset2.setAttribute('single', "")
         clonedFieldset2.id = clonedFieldset2.id + ';' + parentId;
         clonedFieldset.id = clonedFieldset.id + ';' + parentId;
         clonedFieldset.setAttribute('action', 'Replace')
@@ -6369,16 +6370,16 @@ checkbox1.setAttribute('hidden', "");
               lastExec.textContent = formatDate(new Date(runned))
               scriptS.textContent = '🟢'
             }
-           
-            let r 
+
+            let r
             scriptS.onclick = async () => {
-              if(r){
+              if (r) {
                 return
               }
-              r =true
+              r = true
               scriptS.textContent = '🟠'
               await funcDictionary[name]()
-              
+
               const date = new Date()
               if (headContentItem.scripts[name]) {
                 headContentItem.scripts[name].runned = date.getTime()
@@ -6389,9 +6390,9 @@ checkbox1.setAttribute('hidden', "");
               lastExec.textContent = formatDate(date)
               await updateHeadContentItem()
               scriptS.textContent = '🟢'
-              r=false
+              r = false
             }
-            
+
 
 
 
@@ -8213,7 +8214,7 @@ checkbox1.setAttribute('hidden', "");
         return Array.from(elementA.parentElement.children).indexOf(elementA) -
           Array.from(elementB.parentElement.children).indexOf(elementB);
       }
-      function handleAppendOrInsertReplace(actions, selectedArrayNotSorted, fork,transferInnerHtml) {
+      function handleAppendOrInsertReplace(actions, selectedArrayNotSorted, fork, transferInnerHtml) {
         log1('start')
         var firstElementId = selectedArrayNotSorted[0].id;
         var restOfElements = selectedArrayNotSorted.slice(1);
@@ -8256,19 +8257,19 @@ checkbox1.setAttribute('hidden', "");
             let compEl1 = getElementById1(element.id.replace('-tree', ''))
             let treeEl1 = getElementById1(element.id)
 
-            let prev 
+            let prev
             for (let i = 0; i < replaceIds.length; i++) {
               const mId = element.id.split(':')[0].replace('-tree', '').split('|').pop()
               const mId1 = element.id.split(':')[0].replace('-tree', '')
               let compEl
               let treeEl
-              if(!compEl1){
+              if (!compEl1) {
                 compEl = getElementById1(mId1 + ':' + replaceIds[i])
                 treeEl = getElementById1(mId1 + ':' + replaceIds[i] + '-tree')
               }
-              else{
+              else {
                 compEl = compEl1
-                treeEl =treeEl1
+                treeEl = treeEl1
               }
               prev = [compEl, treeEl]
               /*
@@ -8357,7 +8358,7 @@ checkbox1.setAttribute('hidden', "");
 
         }
       }
-      function handleAppendOrInsert(action, selectedArrayNotSorted, move, insert_copies, fork,transferInnerHtml) {
+      function handleAppendOrInsert(action, selectedArrayNotSorted, move, insert_copies, fork, transferInnerHtml) {
         // Sort
 
         log1('start')
@@ -8506,65 +8507,63 @@ checkbox1.setAttribute('hidden', "");
               treeEls.sort(sortByPlace1)
               compEls.sort(sortByPlace1)
 
-              for (const selectedFieldset2 of compEls) {
+              for (let i = 0; i < compEls.length; i++) {
+                const selectedFieldset2 = compEls[i];
+                const selectedFieldset = treeEls[i];
+
                 // Clone the selected fieldset and its descendants
-                var clonedFieldset2 = cloneWithDescendants(selectedFieldset2);
+                const clonedFieldset2 = cloneWithDescendants(selectedFieldset2);
+                const clonedFieldset = cloneWithDescendants(selectedFieldset);
 
                 // Insert the cloned fieldset based on the action
                 if (action === 'Append') {
                   targetFieldset2.appendChild(clonedFieldset2);
-                } else if (action === 'InsertBefore') {
-
-
-                  parentFieldset2.insertBefore(clonedFieldset2, parentFieldset2.children[index2]);
-                  index2++; // Increment the index to maintain the correct order
-                }
-
-                // Remove the original fieldset
-                if (fork) {
-
-                }
-                else { selectedFieldset2.remove(); }
-              }
-              for (const selectedFieldset of treeEls) {
-                log1('found 11' + selectedFieldset.id)
-                var clonedFieldset = cloneWithDescendants(selectedFieldset);
-
-                var arrowButton = clonedFieldset.querySelector('[data-element="code-tree-show-hide-button"]');
-
-                arrowButton.textContent = '→';
-                // Insert the cloned fieldset based on the action
-                if (action === 'Append') {
                   targetFieldset.appendChild(clonedFieldset);
                 } else if (action === 'InsertBefore') {
+                  parentFieldset2.insertBefore(clonedFieldset2, parentFieldset2.children[index2]);
+                  index2++; // Increment the index to maintain the correct order
 
                   parentFieldset.insertBefore(clonedFieldset, parentFieldset.children[index]);
                   index++; // Increment the index to maintain the correct order
                 }
 
+                // Modify clonedFieldset for 'treeEls'
+                const arrowButton = clonedFieldset.querySelector('[data-element="code-tree-show-hide-button"]');
+                arrowButton.textContent = '→';
+
                 // Remove the original fieldset
                 if (fork) {
-                  const newCID = generateUUID()
-                  const sId = clonedFieldset.id.replace('-tree', '')
-                  compEl = getElementById1(sId)
-                  const spl = sId.split('|')
-                  const idWithoutReplace = spl.pop()
-                  compEl.id = fork + '|' + idWithoutReplace
-                  clonedFieldset.id = compEl.id + '-tree'
-                  clonedFieldset.querySelectorAll("[id]").forEach(e => {
+                  // Modification for 'compEls'
+                  const newCID = generateUUID();
+                  const sId = clonedFieldset2.id.replace('-tree', '');
+                  const spl = sId.split('|');
+                  const idWithoutReplace = spl.pop();
+                  clonedFieldset.id = fork + '|' + idWithoutReplace;
+                  clonedFieldset2.id = clonedFieldset.id + '-tree';
+                  clonedFieldset2.querySelectorAll("[id]").forEach(e => {
                     if (e.id.endsWith('-tree')) {
-                      const sId = e.id.replace('-tree', '')
-                      compEl = getElementById1(sId)
-                      const spl = sId.split('|')
-                      const idWithoutReplace = spl.pop()
-
-                      compEl.id = fork + '|' + idWithoutReplace
-                      e.id = compEl.id + '-tree'
-
+                      const sId = e.id.replace('-tree', '');
+                      
+                      const spl = sId.split('|');
+                      const idWithoutReplace = spl.pop();
+                      e.id = fork + '|' + idWithoutReplace+ '-tree';
                     }
-                  })
+                  });
+                  clonedFieldset.querySelectorAll("[id]").forEach(e => {
+                    if (!e.id.endsWith('-fieldset')) {
+                      const sId = e.id.replace('-tree', '');
+                      
+                      const spl = sId.split('|');
+                      const idWithoutReplace = spl.pop();
+                      e.id = fork + '|' + idWithoutReplace;
+                    }
+                  });
+
+                  
+                } else {
+                  selectedFieldset2.remove();
+                  selectedFieldset.remove();
                 }
-                else { selectedFieldset.remove(); }
               }
             }
             else {
@@ -8697,7 +8696,7 @@ checkbox1.setAttribute('hidden', "");
         const processed1 = [...splited, splited2[0]].join(';')
         return { id: processed1, originalId: id }
       }
-      
+
       !path && (path = '')
       switch (action) {
 
@@ -8933,7 +8932,7 @@ checkbox1.setAttribute('hidden', "");
                 inserted_component: el,
                 noComp: true,
                 noSubComp: i
-              }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions,replaceAction.options?.single ? undefined : el.id, undefined, pathForRelative, rT, attachId)
+              }, path, visual, replaceActions, undefined, noComp1, noSubComp1, level, removeActions, replaceAction.options?.single ? undefined : el.id, undefined, pathForRelative, rT, attachId)
               i = true
 
             }
@@ -10859,7 +10858,7 @@ elementsToRemove.forEach(element => element.remove());
           clonedFieldset.setAttribute('path', button.getAttribute('path'))
           clonedFieldset.setAttribute('replaced', button.parentNode.getAttribute('replaced'))
           clonedFieldset.setAttribute('replacedFolders', button.parentNode.getAttribute('replacedFolders'))
-          if(event.target.hasAttribute('anchor')){
+          if (event.target.hasAttribute('anchor')) {
             clonedFieldset.querySelector('#set_anchor_checkbox').checked = true
           }
           // Find the position to insert the cloned fieldset
@@ -11186,7 +11185,7 @@ elementsToRemove.forEach(element => element.remove());
         const { items } = responseData
         log1('iteeems ' + JSON.stringify(items))
         //change component 
-        const lsi1 =items.find(e => e.sk === 'path').lsi1
+        const lsi1 = items.find(e => e.sk === 'path').lsi1
         const subPath = convertToOldPath(lsi1.split(';')[0])
         const splited = subPath.split('/')
         const name = splited[splited.length - 1]
@@ -11248,13 +11247,13 @@ elementsToRemove.forEach(element => element.remove());
 
           }
         }
-        if(pathItem.hub_items?.anchor && !foundAnchor){
-          const absolute = getAbsolutePath(pathItemPath,pathItem.hub_items.anchor)
-          if(lsi1 ===absolute){
+        if (pathItem.hub_items?.anchor && !foundAnchor) {
+          const absolute = getAbsolutePath(pathItemPath, pathItem.hub_items.anchor)
+          if (lsi1 === absolute) {
             foundAnchor = true
-            el.setAttribute('anchor',"")
+            el.setAttribute('anchor', "")
           }
-          
+
         }
         //insertDataIntoCodeLog(timestamp, idFromLink, { name })
       }
@@ -14128,7 +14127,7 @@ element.setAttribute('data-product', [first, name].join(';'))
       const actionInReplace = event.target.parentNode.querySelector('#actionInReplaceExisting').checked
       let fork = event.target.parentNode.querySelector('#fork').checked
       let transferInnerHtml = event.target.parentNode.querySelector('#transfer-inner-html').checked
-      
+
       if (fork) {
         let newC = await getLastReusableId()
         fork = getNextCounter(newC)
@@ -14194,7 +14193,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         pushAction({
           time: (new Date()).getTime(),
           action: fieldsetAction,
-          options: { dub_target: true, insert_copies: true, position, actionInReplace, fork,transferInnerHtml },
+          options: { dub_target: true, insert_copies: true, position, actionInReplace, fork, transferInnerHtml },
           target_element
         })
 
@@ -14204,7 +14203,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         pushAction({
           time: (new Date()).getTime(),
           action: fieldsetAction,
-          options: { insert_copies: true, position, actionInReplace, fork,transferInnerHtml },
+          options: { insert_copies: true, position, actionInReplace, fork, transferInnerHtml },
           target_element
         })
       }
@@ -14212,7 +14211,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         let el2 = {
           time: (new Date()).getTime(),
           action: fieldsetAction,
-          options: { position, actionInReplace, fork,transferInnerHtml },
+          options: { position, actionInReplace, fork, transferInnerHtml },
           target_element
         }
         pushAction(el2)
