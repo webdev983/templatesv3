@@ -2555,6 +2555,26 @@
       });
 
     }
+    const generateAnchorApi = async () => {
+      const absolute = getAbsolutePath(pathItemPath, pathItem.hub_items.anchor)
+
+      url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${absolute}`;
+      const { items } = await fetch(url).then(e => e.json())
+      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&generateanchor=${pathItem.href}&ownerid=${localStorage.getItem('ownerid')}` };
+
+      // Fetch options
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData)
+      };
+      console.log(eventData.url)
+      const response = await fetch(pup_url, options);
+
+
+    }
     var generateBreadCrumb = async (event) => {
       let arr = pathItemPath.split(';')[0].split('/')
       const site = arr[0]
@@ -6607,7 +6627,7 @@ checkbox1.setAttribute('hidden', "");
       script_article_table_of_contents: () => { },
       script_cleaner: () => { },
       script_generate_product_json: () => { },
-      script_generate_article_anchor: () => { },
+      script_generate_article_anchor: generateAnchorApi,
       script_chatgpt_: () => { },
     }
     const onLoad = async () => {
@@ -6785,6 +6805,7 @@ checkbox1.setAttribute('hidden', "");
       const generatetable = urlParams.get('generatetable')
       const generatebreadcrumb = urlParams.get('generatebreadcrumb')
       const generateSpec = urlParams.get('generatespec')
+      const generateAnchor = urlParams.get('generateanchor')
       const importAttribute = urlParams.get('attr')
       const importValue = urlParams.get('val')
       const message = urlParams.get('message')
@@ -6971,6 +6992,9 @@ checkbox1.setAttribute('hidden', "");
         const date = urlParams.get('date')
         const heading = urlParams.get('heading')
         await generateReview(heading, date, name, stars, ip, message)
+      }
+      if (generateAnchor) {
+        await generateAnchor(generateAnchor)
       }
       //const pagePathContent = pathItemPath;
       if (reload) {
@@ -8340,7 +8364,7 @@ checkbox1.setAttribute('hidden', "");
             if (fork) {
               mId = fork + '|' + element.id.replace('-tree', '').split(':')[0].split('|').pop()
             }
-            
+
 
             const treeEl = getElementById1(mId + ':' + replaceIds[i] + '-tree')
             const compEl = getElementById1(mId + ':' + replaceIds[i])
@@ -12203,6 +12227,23 @@ elementsToRemove.forEach(element => element.remove());
           lastEl = newId
         }
       }
+    }
+    const generateAnchor = async (href) => {
+      const elementsWithAnchorClass = document.querySelectorAll('[class*="anchor"]');
+
+      const promises = Array.from(elementsWithAnchorClass).map(element => {
+        const el = {
+          time: (new Date()).getTime(),
+          action: 'setAttribute',
+          target_element: element.id + '-tree',
+          key: 'href',
+          value: href,
+
+        }
+        return pushAction(el);
+      });
+      await Promise.all(promises)
+
     }
     const handleImportGpt = async (valueId, attr) => {
       const items1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${valueId}:import`, {
