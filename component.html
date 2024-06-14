@@ -8512,30 +8512,30 @@ checkbox1.setAttribute('hidden', "");
                 const selectedFieldset = treeEls[i];
 
                 // Clone the selected fieldset and its descendants
-                const clonedFieldset2 = cloneWithDescendants(selectedFieldset2);
-                const clonedFieldset = cloneWithDescendants(selectedFieldset);
+                const clonedFieldset = cloneWithDescendants(selectedFieldset2);
+                const clonedFieldset2 = cloneWithDescendants(selectedFieldset);
 
                 // Insert the cloned fieldset based on the action
                 if (action === 'Append') {
-                  targetFieldset2.appendChild(clonedFieldset2);
-                  targetFieldset.appendChild(clonedFieldset);
+                  targetFieldset2.appendChild(clonedFieldset);
+                  targetFieldset.appendChild(clonedFieldset2);
                 } else if (action === 'InsertBefore') {
-                  parentFieldset2.insertBefore(clonedFieldset2, parentFieldset2.children[index2]);
+                  parentFieldset2.insertBefore(clonedFieldset, parentFieldset2.children[index2]);
                   index2++; // Increment the index to maintain the correct order
 
-                  parentFieldset.insertBefore(clonedFieldset, parentFieldset.children[index]);
+                  parentFieldset.insertBefore(clonedFieldset2, parentFieldset.children[index]);
                   index++; // Increment the index to maintain the correct order
                 }
 
                 // Modify clonedFieldset for 'treeEls'
-                const arrowButton = clonedFieldset.querySelector('[data-element="code-tree-show-hide-button"]');
+                const arrowButton = clonedFieldset2.querySelector('[data-element="code-tree-show-hide-button"]');
                 arrowButton.textContent = '→';
 
                 // Remove the original fieldset
                 if (fork) {
                   // Modification for 'compEls'
                   const newCID = generateUUID();
-                  const sId = clonedFieldset2.id.replace('-tree', '');
+                  const sId = clonedFieldset.id
                   const spl = sId.split('|');
                   const idWithoutReplace = spl.pop();
                   clonedFieldset.id = fork + '|' + idWithoutReplace;
