@@ -8369,9 +8369,16 @@ checkbox1.setAttribute('hidden', "");
             const treeEl = getElementById1(mId + ':' + replaceIds[i] + '-tree')
             const compEl = getElementById1(mId + ':' + replaceIds[i])
             if (transferInnerHtml) {
-              console.log('inner :'+ targetCompEl.innerHTML)
+              console.log('inner :' + targetCompEl.innerHTML)
               compEl.innerHTML = targetCompEl.innerHTML
               targetCompEl.innerHTML = ""
+              const targetIB = targetTreeEl.querySelector('[data-element="code-tree-inner-html-button"]')
+              targetIB.setAttribute('hidden', '')
+              const targetITB = targetElement1.querySelector('[data-element="code-tree-text-content-button"]');
+              targetITB.setAttribute('hidden', '')
+              const innerHtmlButton = treeEl.querySelector('[data-element="code-tree-inner-html-button"]');
+              innerHtmlButton.removeAttribute('hidden')
+              innerHtmlButton.textContent = `▶️${compEl.innerHTML.length}`;
             }
             console.log('targetAppend' + targetTreeEl.id)
             console.log('appending ' + treeEl.id + compEl.id)
@@ -8547,6 +8554,13 @@ checkbox1.setAttribute('hidden', "");
                 if (transferInnerHtml) {
                   clonedFieldset.innerHTML = targetFieldset2.innerHTML
                   targetFieldset2.innerHTML = ""
+                  const targetIB = targetFieldset.querySelector('[data-element="code-tree-inner-html-button"]')
+                  targetIB.setAttribute('hidden', '')
+                  const targetITB = targetFieldset.querySelector('[data-element="code-tree-text-content-button"]');
+                  targetITB.setAttribute('hidden', '')
+                  const innerHtmlButton = clonedFieldset.querySelector('[data-element="code-tree-inner-html-button"]');
+                  innerHtmlButton.removeAttribute('hidden')
+                  innerHtmlButton.textContent = `▶️${clonedFieldset.innerHTML.length}`;
                 }
                 // Insert the cloned fieldset based on the action
                 if (action === 'Append') {
