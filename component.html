@@ -1489,12 +1489,13 @@
 
         <label class="b-3"><input type="radio" name="main-content-type" data-content-type="article" value="article" />⭐
           Article</label>
+
+        <label class="b-3"><input type="radio" name="main-content-type" data-content-type="catalog" value="catalog" />✨
+          Catalog</label>
         <div hidden id="catalog-folder">
           <button class="b-4">💾 Update</button>
           <input type="text" placeholder="📂 Catalog folder" class="input-1" style=" width: 50px;">
         </div>
-        <label class="b-3"><input type="radio" name="main-content-type" data-content-type="catalog" value="catalog" />✨
-          Catalog</label>
         <div hidden id="catalog-weight">
           <button class="b-4">💾 Update</button>
           <input type="number" placeholder="🏋️‍♂️ Catalog Weight" class="input-1" style=" width: 50px;">
@@ -2556,22 +2557,22 @@
 
     }
     const generateAnchorApi = async () => {
-      const absolutes =pathItem.hub_items.anchor.map(e=>getAbsolutePath(pathItemPath, e)) 
-      const promise = absolutes.map(async absolute=>{
-      url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${absolute}`;
-      const { items } = await fetch(url).then(e => e.json())
-      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&generateanchor=${pathItem.href}&ownerid=${localStorage.getItem('ownerid')}` };
+      const absolutes = pathItem.hub_items.anchor.map(e => getAbsolutePath(pathItemPath, e))
+      const promise = absolutes.map(async absolute => {
+        url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${absolute}`;
+        const { items } = await fetch(url).then(e => e.json())
+        const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&generateanchor=${pathItem.href}&ownerid=${localStorage.getItem('ownerid')}` };
 
-      // Fetch options
-      const options = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(eventData)
-      };
-      console.log(eventData.url)
-      const response = await fetch(pup_url, options);
+        // Fetch options
+        const options = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(eventData)
+        };
+        console.log(eventData.url)
+        const response = await fetch(pup_url, options);
       })
       await Promise.all(promise)
 
@@ -4594,20 +4595,20 @@
       const currentLsi = pathItemPath.replace(';publish:published', "")
       const relativePath = getRelativePath(currentLsi, convertToOldPath(path.replace(';publish:published', "")));
       const icon = event.target.closest('[data-element="code-tree-tag"]').querySelector('[data-element="set_anchor"]')
-      if(checked){
-        if(pathItem.hub_items.anchor){
+      if (checked) {
+        if (pathItem.hub_items.anchor) {
           pathItem.hub_items.anchor.push(relativePath)
         }
-        else{
+        else {
           pathItem.hub_items.anchor = [relativePath]
         }
         icon.removeAttribute('hidden')
       }
-      else{
-        pathItem.hub_items.anchor.filter(e=>e!==relativePath)
-        icon.setAttribute('hidden','')
+      else {
+        pathItem.hub_items.anchor.filter(e => e !== relativePath)
+        icon.setAttribute('hidden', '')
       }
-      
+
       await updatePathItem()
     }
     //file list scripts
@@ -7966,13 +7967,13 @@ checkbox1.setAttribute('hidden', "");
               let id1 = element.target_element.replace('-tree', '')
               let tag
               if (options?.apply_to_copies) {
-                
+
                 tag = querySelectorAll1(`[id^="${id1}"]`).find(e => !e.id.endsWith('-tree')).tagName.toLowerCase()
               } else {
                 tag = getElementById1(id1)?.tagName.toLowerCase()
               }
               cloned.querySelector('#action-target-tag-id-value').textContent = id1
-              
+
 
               cloned.querySelector('#action-target-tag-name-value').textContent = tag
             }
@@ -11007,7 +11008,7 @@ elementsToRemove.forEach(element => element.remove());
             const contentEl = clonedFieldset.querySelector('#content-type')
             const catWeight = contentEl.querySelector('#catalog-weight')
             const catFolder = contentEl.querySelector('#catalog-folder')
-            catFolder.querySelector('button').addEventListener('click',async (e) => {
+            catFolder.querySelector('button').addEventListener('click', async (e) => {
               const inputV = catFolder.querySelector('input').value
               pathItem.hub_items.article_folder = inputV
               delete pathItem.hub_items.catalog_page_weight
@@ -11017,7 +11018,7 @@ elementsToRemove.forEach(element => element.remove());
               });
               clonedFieldset.remove()
             })
-            catWeight.querySelector('button').addEventListener('click',async (e) => {
+            catWeight.querySelector('button').addEventListener('click', async (e) => {
               const inputV = catWeight.querySelector('input').value
               pathItem.hub_items.catalog_page_weight = inputV
               delete pathItem.hub_items.article_folder
@@ -11353,13 +11354,13 @@ elementsToRemove.forEach(element => element.remove());
 
           }
         }
-        if (pathItem.hub_items?.anchor  ) {
-          if(typeof pathItem.hub_items.anchor ==='string'){
+        if (pathItem.hub_items?.anchor) {
+          if (typeof pathItem.hub_items.anchor === 'string') {
 
             pathItem.hub_items.anchor = []
           }
-          const absolutes =pathItem.hub_items.anchor.map(e=>getAbsolutePath(pathItemPath, e)) 
-          if (absolutes.includes(lsi1) ) {
+          const absolutes = pathItem.hub_items.anchor.map(e => getAbsolutePath(pathItemPath, e))
+          if (absolutes.includes(lsi1)) {
             el.setAttribute('anchor', "")
             el1.querySelector('[data-element="set_anchor"]').removeAttribute('hidden')
           }
