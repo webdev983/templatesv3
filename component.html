@@ -6838,6 +6838,17 @@ checkbox1.setAttribute('hidden', "");
         //converst lsi1 to old
         pathItemPath = convertToOldPath(pathItem.lsi1)
         site1 = pathItemPath.split('/')[0]
+        if(generatebreadcrumb){
+          await Promise.all(items.filter(e=>e.action && e.action !=='Add_Component').map(item=>{
+            return fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id}:${item.sk}`, {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  // Add any additional headers if needed
+                },
+              });
+          }))
+        }
         //get head content
         if (!pathItemPath.split('/').includes('Stock')) {
           const headLsi = pathItem.lsi1.split(';')[0].split('|')[0].split('/').slice(0, 3).join('/') + '/Content/Page|Head-Content'
