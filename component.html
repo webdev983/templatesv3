@@ -11005,23 +11005,25 @@ elementsToRemove.forEach(element => element.remove());
             const contentEl = clonedFieldset.querySelector('#content-type')
             const catWeight = contentEl.querySelector('#catalog-weight')
             const catFolder = contentEl.querySelector('#catalog-folder')
-            catFolder.querySelector('button').addEventListener('click', (e) => {
+            catFolder.querySelector('button').addEventListener('click',async (e) => {
               const inputV = catFolder.querySelector('input').value
               pathItem.hub_items.article_folder = inputV
               delete pathItem.hub_items.catalog_page_weight
-              fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+              await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                 method: 'POST',
                 body: JSON.stringify(pathItem),
               });
+              clonedFieldset.remove()
             })
-            catWeight.querySelector('button').addEventListener('click', (e) => {
+            catWeight.querySelector('button').addEventListener('click',async (e) => {
               const inputV = catWeight.querySelector('input').value
               pathItem.hub_items.catalog_page_weight = inputV
               delete pathItem.hub_items.article_folder
-              fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+              await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                 method: 'POST',
                 body: JSON.stringify(pathItem),
               });
+              clonedFieldset.remove()
             })
             function handleRadioChange(event) {
               // Check which radio button is selected
