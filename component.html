@@ -8967,7 +8967,13 @@ checkbox1.setAttribute('hidden', "");
                 });
               }
             }
-            let l = replaceAction.target_element //.filter(e => e.componentId !== toReplace);
+            let l = replaceAction.target_element.reduce((acc, current) => {
+              // Check if there is no object in the accumulator with the same componentId
+              if (!acc.some(obj => obj.componentId === current.componentId)) {
+                acc.push(current);
+              }
+              return acc;
+            }, []); //.filter(e => e.componentId !== toReplace);
             l.sort((a, b) => b.path.localeCompare(a.path));
             let i = false;
             log1('solving ' + JSON.stringify(l))
