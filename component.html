@@ -4589,9 +4589,22 @@
     }
     var setAnchor = async (event) => {
       const path = event.target.parentNode.parentNode.getAttribute('path')
+      const checked = event.target.checked
       const currentLsi = pathItemPath.replace(';publish:published', "")
       const relativePath = getRelativePath(currentLsi, convertToOldPath(path.replace(';publish:published', "")));
-      pathItem.hub_items.anchor = relativePath
+      if(checked){
+        if(pathItem.hub_items.anchor){
+          pathItem.hub_items.anchor.push(relativePath)
+        }
+        else{
+          pathItem.hub_items.anchor = [relativePath]
+        }
+        
+      }
+      else{
+        pathItem.hub_items.anchor.filter(e=>e!==relativePath)
+      }
+      
       await updatePathItem()
     }
     //file list scripts
@@ -11138,7 +11151,7 @@ elementsToRemove.forEach(element => element.remove());
       LinkBP && switchLinkBP(false)
     }
     let foundMainContent
-    let foundAnchor
+    let foundAnchors = []
 
     var loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative, treeElement, reusableId, attachId) => {
       log1('load from db' + id + 'reusable' + reusableId + 'attachid' + attachId)
@@ -11333,10 +11346,10 @@ elementsToRemove.forEach(element => element.remove());
 
           }
         }
-        if (pathItem.hub_items?.anchor && !foundAnchor) {
-          const absolute = getAbsolutePath(pathItemPath, pathItem.hub_items.anchor)
-          if (lsi1 === absolute) {
-            foundAnchor = true
+        if (pathItem.hub_items?.anchor  ) {
+          const absolutes =pathItem.hub_items.anchor.map(e=>getAbsolutePath(pathItemPath, e)) 
+          if (absolute.includes(lsi1) && !foundAnchors.includes(absolute)) {
+            foundAnchors.push(absolute)
             el.setAttribute('anchor', "")
             el1.querySelector('[data-element="set_anchor"]').removeAttribute('hidden')
           }
