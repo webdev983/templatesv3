@@ -11347,6 +11347,9 @@ elementsToRemove.forEach(element => element.remove());
           }
         }
         if (pathItem.hub_items?.anchor  ) {
+          if(typeof pathItem.hub_items.anchor ==='string'){
+            pathItem.hub_items.anchor = []
+          }
           const absolutes =pathItem.hub_items.anchor.map(e=>getAbsolutePath(pathItemPath, e)) 
           if (absolute.includes(lsi1) && !foundAnchors.includes(absolute)) {
             foundAnchors.push(absolute)
