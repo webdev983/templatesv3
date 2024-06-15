@@ -6838,15 +6838,15 @@ checkbox1.setAttribute('hidden', "");
         //converst lsi1 to old
         pathItemPath = convertToOldPath(pathItem.lsi1)
         site1 = pathItemPath.split('/')[0]
-        if(generatebreadcrumb){
-          await Promise.all(items.filter(e=>e.action && e.action !=='Add_Component').map(item=>{
+        if (generatebreadcrumb) {
+          await Promise.all(items.filter(e => e.action && e.action !== 'Add_Component').map(item => {
             return fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id}:${item.sk}`, {
-                method: 'DELETE',
-                headers: {
-                  'Content-Type': 'application/json',
-                  // Add any additional headers if needed
-                },
-              });
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+                // Add any additional headers if needed
+              },
+            });
           }))
         }
         //get head content
@@ -7947,21 +7947,22 @@ checkbox1.setAttribute('hidden', "");
             actionData.append(cloned)
             if (typeof element.target_element === 'string') {
               //optionsStrings.push(` Target ${options?.attachId || element.target_element.replace('-tree', '')}`)
-              const id1 = element.target_element.replace('-tree', '')
-              cloned.querySelector('#action-target-tag-id-value').textContent = id1
-              let tag
+              let id1 = element.target_element.replace('-tree', '')
               if (options?.apply_to_copies) {
-
+                
                 tag = querySelectorAll1(`[id^="${id1}"]`).find(e => !e.id.endsWith('-tree')).tagName.toLowerCase()
               } else {
                 tag = getElementById1(id1)?.tagName.toLowerCase()
               }
+              cloned.querySelector('#action-target-tag-id-value').textContent = id1
+              let tag
+
               cloned.querySelector('#action-target-tag-name-value').textContent = tag
             }
             else {
               const e = element.target_element.map(el => {
 
-                return removeLastOccurrence(el.id, '-tree')
+                return removeLastOccurrence(el.id, '-tree').split(':')[0]
               })
               e.shift()
               const id1 = element.target_element[0].id.replace('-tree', '')
