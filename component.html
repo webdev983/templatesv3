@@ -9238,6 +9238,14 @@ checkbox1.setAttribute('hidden', "");
                 newEl.id = splited[0] + ';' + newEl.id
                 newEl2.id = splited[0] + ';' + newEl2.id
               }
+              if (inserted_element.tagName === 'script' || inserted_element.tagName === 'style') {
+              const button = newEl2.querySelector('[data-element="redirect-to-component"]')
+              button.removeAttribute('hidden')
+              button.onclick = () => {
+                const redirectURL = `component.html?id=${command.id}&rand=${Math.random()}`;
+                window.open(redirectURL, '_blank');
+              }
+            }
               insertAfter(newEl, componentElement)
               insertAfter(newEl2, treeElement)
               //componentElement.parentNode.insertBefore(newEl, componentElement)
@@ -9251,14 +9259,7 @@ checkbox1.setAttribute('hidden', "");
               getElementById1('generated-page')
               :
               getElementById1(removeLastOccurrence(target_element, '-tree'));
-            if (inserted_element.tagName === 'script' || inserted_element.tagName === 'style') {
-              const button = newEl2.querySelector('[data-element="redirect-to-component"]')
-              button.removeAttribute('hidden')
-              button.onclick = () => {
-                const redirectURL = `component.html?id=${command.id}&rand=${Math.random()}`;
-                window.open(redirectURL, '_blank');
-              }
-            }
+            
             if (!componentElement) {
               log1('comp not found')
               const mId = target_element.replace('-tree', '').split(':')[0]
@@ -10151,6 +10152,14 @@ checkbox1.setAttribute('hidden', "");
                 newEl.id = splited[0] + ';' + newEl.id
                 newEl2.id = splited[0] + ';' + newEl2.id
               }
+              if (inserted_element.tagName === 'script' || inserted_element.tagName === 'style') {
+              const button = newEl2.querySelector('[data-element="redirect-to-component"]')
+              button.removeAttribute('hidden')
+              button.onclick = () => {
+                const redirectURL = `component.html?id=${command.id}&rand=${Math.random()}`;
+                window.open(redirectURL, '_blank');
+              }
+            }
               componentElement.parentNode.insertBefore(newEl, componentElement)
               treeElement.parentNode.insertBefore(newEl2, treeElement)
             }
@@ -10174,14 +10183,7 @@ checkbox1.setAttribute('hidden', "");
               })
               break;
             }
-            if (inserted_element.tagName === 'script' || inserted_element.tagName === 'style') {
-              const button = newEl2.querySelector('[data-element="redirect-to-component"]')
-              button.removeAttribute('hidden')
-              button.onclick = () => {
-                const redirectURL = `component.html?id=${command.id}&rand=${Math.random()}`;
-                window.open(redirectURL, '_blank');
-              }
-            }
+            
             if (!componentElement) {
               log1('comp not found')
               const mId = target_element.replace('-tree', '').split(':')[0]
