@@ -11156,7 +11156,7 @@ elementsToRemove.forEach(element => element.remove());
       LinkBP && switchLinkBP(false)
     }
     let foundMainContent
-    let foundAnchors = []
+    //let foundAnchors = []
 
     var loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative, treeElement, reusableId, attachId) => {
       log1('load from db' + id + 'reusable' + reusableId + 'attachid' + attachId)
@@ -11357,8 +11357,7 @@ elementsToRemove.forEach(element => element.remove());
             pathItem.hub_items.anchor = []
           }
           const absolutes =pathItem.hub_items.anchor.map(e=>getAbsolutePath(pathItemPath, e)) 
-          if (absolutes.includes(lsi1) && !foundAnchors.includes(absolute)) {
-            foundAnchors.push(absolute)
+          if (absolutes.includes(lsi1) ) {
             el.setAttribute('anchor', "")
             el1.querySelector('[data-element="set_anchor"]').removeAttribute('hidden')
           }
