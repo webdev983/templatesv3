@@ -4593,6 +4593,7 @@
       const checked = event.target.checked
       const currentLsi = pathItemPath.replace(';publish:published', "")
       const relativePath = getRelativePath(currentLsi, convertToOldPath(path.replace(';publish:published', "")));
+      const icon = event.target.closest('[data-element="code-tree-tag"]').querySelector('[data-element="set_anchor"]')
       if(checked){
         if(pathItem.hub_items.anchor){
           pathItem.hub_items.anchor.push(relativePath)
@@ -4600,10 +4601,11 @@
         else{
           pathItem.hub_items.anchor = [relativePath]
         }
-        
+        icon.removeAttribute('hidden')
       }
       else{
         pathItem.hub_items.anchor.filter(e=>e!==relativePath)
+        icon.setAttribute('hidden','')
       }
       
       await updatePathItem()
