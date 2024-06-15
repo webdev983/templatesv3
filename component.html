@@ -2556,8 +2556,8 @@
 
     }
     const generateAnchorApi = async () => {
-      const absolute = getAbsolutePath(pathItemPath, pathItem.hub_items.anchor)
-
+      const absolutes =pathItem.hub_items.anchor.map(e=>getAbsolutePath(pathItemPath, e)) 
+      const promise = absolutes.map(async absolute=>{
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${absolute}`;
       const { items } = await fetch(url).then(e => e.json())
       const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&generateanchor=${pathItem.href}&ownerid=${localStorage.getItem('ownerid')}` };
@@ -2572,7 +2572,8 @@
       };
       console.log(eventData.url)
       const response = await fetch(pup_url, options);
-
+      })
+      await Promise.all(promise)
 
     }
     var generateBreadCrumb = async (event) => {
@@ -11348,7 +11349,7 @@ elementsToRemove.forEach(element => element.remove());
         }
         if (pathItem.hub_items?.anchor  ) {
           if(typeof pathItem.hub_items.anchor ==='string'){
-            
+
             pathItem.hub_items.anchor = []
           }
           const absolutes =pathItem.hub_items.anchor.map(e=>getAbsolutePath(pathItemPath, e)) 
