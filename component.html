@@ -4602,7 +4602,9 @@
       const parentId = e.target.parentNode.id.replace('file-path-list;', '')
       if (article) {
         const id = m1[0]?.id
+        const menu =e.target.parentNode.closest('[data-open-menu]')
         if (!id) {
+          menu.children.forEach(e=>e.remove())
           return
         }
         const element = getElementById1(id);
@@ -4615,8 +4617,10 @@
         pathItem.hub_items.article_page = splited.join('/')
         pathItem.hub_items.article_component = parentId
         await updatePathItem()
-        const container = e.target.parentNode.closest('[data-open-menu]').parentNode
+        
+        const container = menu.parentNode
         container.querySelector('[data-element="catalog"]').removeAttribute('hidden')
+        menu.children.forEach(e=>e.remove())
         return
       }
       //const folderChecked = e.target.parentNode.querySelector('#attach-folder').checked
