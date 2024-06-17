@@ -2439,8 +2439,8 @@
 
 
     const generateTableSpecApi = async () => {
-      const spec = document.getElementById('spec-status')
-      spec.textContent = '🗂️ Table spec 🟠'
+      //const spec = document.getElementById('spec-status')
+      //spec.textContent = '🗂️ Table spec 🟠'
       const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Specification-Table-Content'
       log1(tableLsi)
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
@@ -2490,11 +2490,13 @@
         body: JSON.stringify(eventData)
       };
       const response = await fetch(pup_url, options);
+      /*
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         body: JSON.stringify({ id: headContentItem.id, sk: 'generated-tablespec' }),
       });
       spec.textContent = '🗂️ Table spec 🟢'
+      */
     }
     const generateTableSpec = async (specid) => {
 
@@ -6665,9 +6667,8 @@ checkbox1.setAttribute('hidden', "");
       script_breadcrumb_generation: generateBreadCrumbApi,
       script_transfer: generateSchema,
       script_product_spec_table:async () => {
-        const headingElements = querySelectorAll1('[data-table-of-contents-heading]')
-        const textContents = Array.from(headingElements).map(e => e.textContent)
-        await generateTableApi(textContents)
+       
+        await generateTableSpecApi()
       },
       script_article_table_of_contents: async() => {
         const headingElements = querySelectorAll1('[data-table-of-contents-heading]')
@@ -6945,7 +6946,7 @@ checkbox1.setAttribute('hidden', "");
       await handleWebPageMenu()
       //await handleTableGeneration()
       await handleBreadCrumbStatus()
-      await handleSpecStatus()
+      //await handleSpecStatus()
       await handleItemLink()
       //dispatch event
       await handleImportMenu()
@@ -13166,6 +13167,7 @@ elementsToRemove.forEach(element => element.remove());
         breadcrumb.textContent = '🥖 BreadCrumb Menu 🟢'
       }
     }
+    /*
     const handleSpecStatus = async () => {
       let exisitingValue = headContentItem && await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${headContentItem.id}:generated-tablespec`, {
         method: 'GET',
@@ -13204,7 +13206,7 @@ elementsToRemove.forEach(element => element.remove());
           tableElement.querySelector('span').textContent = '📑 Table of contents 🟢'
         }
       }
-    }
+    }*/
 
     function generateCombinations(data) {
       const combinations = [];
