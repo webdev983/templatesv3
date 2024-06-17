@@ -4599,10 +4599,24 @@
       const single = e.target.parentNode.hasAttribute('single')
       const article = e.target.parentNode.hasAttribute('article')
       const catalogue = e.target.parentNode.hasAttribute('catalogue')
+      const menu = e.target.parentNode.closest('[data-open-menu]')
+      const container = menu.parentNode
       const parentId = e.target.parentNode.id
+      const catIcon =container.querySelector('[data-element="catalog"]')
       if (article) {
+        if (!m.length) {
+          delete pathItem.hub_items.article_page
+          delete pathItem.hub_items.article_component
+          await updatePathItem()
+          Array.from(menu.children).forEach(child => {
+            child.remove();
+          });
+          catIcon.setAttribute('hidden','')
+          return
+
+        }
         const id = m1[0]?.id
-        const menu = e.target.parentNode.closest('[data-open-menu]')
+        
         if (!id) {
           Array.from(menu.children).forEach(child => {
             child.remove();
@@ -4621,8 +4635,8 @@
         pathItem.hub_items.article_component = parentId.replace('selectedFilePathList;', '').replace('-tree', '')
         await updatePathItem()
 
-        const container = menu.parentNode
-        container.querySelector('[data-element="catalog"]').removeAttribute('hidden')
+        
+        catIcon.removeAttribute('hidden')
         Array.from(menu.children).forEach(child => {
           child.remove();
         });
