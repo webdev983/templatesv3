@@ -4586,6 +4586,20 @@
       const m1 = m.filter(e => e.hasAttribute('component'))
       const m2 = m.filter(e => e.hasAttribute('folder'))
       const single = e.target.parentNode.hasAttribute('single')
+      const article = e.target.parentNode.hasAttribute('article')
+      const catalogue = e.target.parentNode.hasAttribute('catalogue')
+      if(article){
+        const id = m1[0].id
+        const element = getElementById1(id);
+        const path =element.querySelector('[data-value="file-path"]').textContent
+        const splited= path.split('/')
+        if(splited[2] !=="Home"){
+          splited[2] ='*' 
+        }
+        pathItem.hub_items.article_page = splited.join('/')
+        await updatePathItem()
+        return
+      }
       //const folderChecked = e.target.parentNode.querySelector('#attach-folder').checked
       const parentId = e.target.parentNode.id.replace('file-path-list;', '')
       if (!parentId) {
@@ -4639,7 +4653,9 @@
     }
     //file list scripts
     var replaceComponent = (e, flag) => {
-      var single = e.target.parentNode.querySelector('#single_replace')?.checked
+      const single = e.target.parentNode.querySelector('#single_replace')?.checked
+      const article = e.target.parentNode.querySelector('#choose_article')?.checked
+      const catalogue = e.target.parentNode.querySelector('#choose_catalog')?.checked
       let selected = []
       let path1 = ''
       var addSelected = (id, itemId, path) => {
@@ -5031,6 +5047,8 @@
         const clonedFieldset = fieldset.cloneNode(true);
         const clonedFieldset2 = fieldset2.cloneNode(true);
         single && clonedFieldset2.setAttribute('single', "")
+        article && clonedFieldset2.setAttribute('article', "")
+        catalogue && clonedFieldset2.setAttribute('catalogue', "")
         clonedFieldset2.id = clonedFieldset2.id + ';' + parentId;
         clonedFieldset.id = clonedFieldset.id + ';' + parentId;
         clonedFieldset.setAttribute('action', 'Replace')
