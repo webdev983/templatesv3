@@ -6664,8 +6664,16 @@ checkbox1.setAttribute('hidden', "");
       scrip_eval: runScripts,
       script_breadcrumb_generation: generateBreadCrumbApi,
       script_transfer: generateSchema,
-      script_product_spec_table: () => { },
-      script_article_table_of_contents: () => { },
+      script_product_spec_table:async () => {
+        const headingElements = querySelectorAll1('[data-table-of-contents-heading]')
+        const textContents = Array.from(headingElements).map(e => e.textContent)
+        await generateTableApi(textContents)
+      },
+      script_article_table_of_contents: async() => {
+        const headingElements = querySelectorAll1('[data-table-of-contents-heading]')
+        const textContents = Array.from(headingElements).map(e => e.textContent)
+        await generateTableApi(textContents)
+      },
       script_cleaner: () => { },
       script_generate_product_json: () => { },
       script_generate_article_anchor: generateAnchorApi,
@@ -10308,13 +10316,13 @@ checkbox1.setAttribute('hidden', "");
             }
 
           }
-          if(targetElement.tagName.toLowerCase()!=='script'){
+          if (targetElement.tagName.toLowerCase() !== 'script') {
             targetElement.innerHTML = insertedCode.replaceAll('\n', '');
           }
-          else{
+          else {
             targetElement.innerHTML = insertedCode
           }
-          
+
 
           break;
         case 'Replace_Component':
