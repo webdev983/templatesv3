@@ -12428,7 +12428,9 @@ elementsToRemove.forEach(element => element.remove());
       }
     }
     const generateAnchor = async (href) => {
-      const elementsWithAnchorClass = querySelectorAll1('[class*="anchor"]');
+      const iframe = getElementById1("generated-page-iframe");
+      const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+      const elementsWithAnchorClass = iframeDocument.querySelectorAll('[class*="anchor"]');
 
       const promises = Array.from(elementsWithAnchorClass).map(element => {
         const el = {
