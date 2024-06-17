@@ -471,7 +471,8 @@
           <span class="l-3 b-dark-blue" id="menus_load_status">🔴</span>
           <span class="l-3 b-dark-blue">Menus 🧱</span>
         </summary>
-        <label hidden class="l-3" style="margin-left: 30px;"><input id="menu_toggle_saved_in_head" type="checkbox">save in
+        <label hidden class="l-3" style="margin-left: 30px;"><input id="menu_toggle_saved_in_head" type="checkbox">save
+          in
           local head🗿</label>
 
         <table class="table-1" id="menu_toggle" style="margin-left: 30px;">
@@ -567,7 +568,8 @@
             <span class="l-3 b-dark-blue" id="scripts_menu_load_status">🔴</span>
             <span class="l-3 b-dark-blue">Scripts 🦾</span>
           </summary>
-          <label hidden class="l-3" style="margin-left: 30px;"><input id="scripts-menu-save-head" type="checkbox">save in local
+          <label hidden class="l-3" style="margin-left: 30px;"><input id="scripts-menu-save-head" type="checkbox">save
+            in local
             head🗿</label>
 
           <table class="table-1" style="margin-left: 30px;">
@@ -1501,21 +1503,28 @@
     <div id="code-tree-click-component" data-menu style="margin-bottom: 30px;">
       <button class="b-3" onclick="cancel(event)" style="margin-right:5px; margin-top: 5px;">❌</button>
       <br>
-      <button class="b-3" style="margin-right: 5px; margin-top: 5px;" onclick="replaceComponent(event)">➕ choose</button>
-      <label><input checked type="radio" id="replace" name="choose_component_type"><span class="l-3">🔄 replace</span></label>
-      <label><input type="radio" id="single_replace" name="choose_component_type"><span class="l-3">1️⃣ single replace</span></label>
-      <label><input type="radio" id="choose_catalog" name="choose_component_type"><span class="l-3">✨ choose catalog</span></label>
-      <label><input type="radio" id="choose_article" name="choose_component_type"><span class="l-3">⭐ choose article</span></label>
+      <button class="b-3" style="margin-right: 5px; margin-top: 5px;" onclick="replaceComponent(event)">➕
+        choose</button>
+      <label><input checked type="radio" id="replace" name="choose_component_type"><span class="l-3">🔄
+          replace</span></label>
+      <label><input type="radio" id="single_replace" name="choose_component_type"><span class="l-3">1️⃣ single
+          replace</span></label>
+      <label><input type="radio" id="choose_catalog" name="choose_component_type"><span class="l-3">✨ choose
+          catalog</span></label>
+      <label><input type="radio" id="choose_article" name="choose_component_type"><span class="l-3">⭐ choose
+          article</span></label>
 
 
       <div hidden id="content-type">
         <label class="b-3" hidden><input type="radio" name="main-content-type" data-content-type="none" checked
             value="none" />🗅 None</label>
 
-        <label class="b-3" hidden><input type="radio" name="main-content-type" data-content-type="article" value="article" />⭐
+        <label class="b-3" hidden><input type="radio" name="main-content-type" data-content-type="article"
+            value="article" />⭐
           Article</label>
 
-        <label class="b-3" hidden><input type="radio" name="main-content-type" data-content-type="catalog" value="catalog" />✨
+        <label class="b-3" hidden><input type="radio" name="main-content-type" data-content-type="catalog"
+            value="catalog" />✨
           Catalog</label>
         <div hidden id="catalog-folder">
           <button class="b-4">💾 Update</button>
@@ -1526,8 +1535,9 @@
           <input type="number" placeholder="🏋️‍♂️ Catalog Weight" class="input-1" style=" width: 50px;">
         </div>
       </div>
-     <br>
-      <label style="margin-top: 10px;"><input type="checkbox" id="set_anchor_checkbox" onclick="setAnchor(event)"><span class="l-3">⚓️ Set
+      <br>
+      <label style="margin-top: 10px;"><input type="checkbox" id="set_anchor_checkbox" onclick="setAnchor(event)"><span
+          class="l-3">⚓️ Set
           anchor</span></label>
 
     </div>
@@ -4590,18 +4600,18 @@
       const article = e.target.parentNode.hasAttribute('article')
       const catalogue = e.target.parentNode.hasAttribute('catalogue')
       const parentId = e.target.parentNode.id.replace('file-path-list;', '')
-      if(article){
+      if (article) {
         const id = m1[0]?.id
-        if(!id){
+        if (!id) {
           return
         }
         const element = getElementById1(id);
-        const path =element.querySelector('[data-value="file-path"]').textContent
-        const splited= path.split('/')
-        if(splited[2] ==="Home"){
+        const path = element.querySelector('[data-value="file-path"]').textContent
+        const splited = path.split('/')
+        if (splited[2] === "Home") {
           alert('home folder')
         }
-        splited[2] ='*' 
+        splited[2] = '*'
         pathItem.hub_items.article_page = splited.join('/')
         pathItem.hub_items.article_component = parentId
         await updatePathItem()
@@ -4610,7 +4620,7 @@
         return
       }
       //const folderChecked = e.target.parentNode.querySelector('#attach-folder').checked
-      
+
       if (!parentId) {
         alert('no target id')
         return
@@ -5083,16 +5093,19 @@
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset2);
         !flag && e.target.parentNode.remove()
-        if(article && pathItem.hub_items.article_page){
-          const clonedItem = getElementById1('item').cloneNode(true);
-          clonedItem.setAttribute('article_page', true)
-          clonedItem.id = pathItem.hub_items.article_page;
-          selected.push(pathItem.hub_items.article_page)
-          const file_path = clonedItem.querySelector('[data-value="file-path"]')
-          file_path.textContent = pathItem.hub_items.article_page;
-          clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
-          clonedFieldset2.appendChild(clonedItem)
-          clonedItem.onclick = (e) => { e.target.closest('li').remove(); selected.filter(el => el !== pathItem.hub_items.article_page) }
+        if (article) {
+          if (pathItem.hub_items.article_page) {
+            const clonedItem = getElementById1('item').cloneNode(true);
+            clonedItem.setAttribute('article_page', true)
+            clonedItem.id = pathItem.hub_items.article_page;
+            selected.push(pathItem.hub_items.article_page)
+            const file_path = clonedItem.querySelector('[data-value="file-path"]')
+            file_path.textContent = pathItem.hub_items.article_page;
+            clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
+            clonedFieldset2.appendChild(clonedItem)
+            clonedItem.onclick = (e) => { e.target.closest('li').remove(); selected.filter(el => el !== pathItem.hub_items.article_page) }
+
+          }
         }
         else if (!replaced && !replacedFolders) {
           var clonedItem = getElementById1('item').cloneNode(true);
@@ -6704,11 +6717,11 @@ checkbox1.setAttribute('hidden', "");
       scrip_eval: runScripts,
       script_breadcrumb_generation: generateBreadCrumbApi,
       script_transfer: generateSchema,
-      script_product_spec_table:async () => {
-       
+      script_product_spec_table: async () => {
+
         await generateTableSpecApi()
       },
-      script_article_table_of_contents: async() => {
+      script_article_table_of_contents: async () => {
         const headingElements = querySelectorAll1('[data-table-of-contents-heading]')
         const textContents = Array.from(headingElements).map(e => e.textContent)
         await generateTableApi(textContents)
@@ -11443,9 +11456,9 @@ elementsToRemove.forEach(element => element.remove());
           }
 
         }
-        if (pathItem.hub_items?.article_page && pathItem.hub_items?.article_component ===newId) {
+        if (pathItem.hub_items?.article_page && pathItem.hub_items?.article_component === newId) {
           el1.querySelector('[data-element="catalog"]').removeAttribute('hidden')
-          
+
 
         }
         //insertDataIntoCodeLog(timestamp, idFromLink, { name })
