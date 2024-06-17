@@ -2595,12 +2595,12 @@
     }
     const generateAnchorApi = async () => {
       const absolutes = pathItem.hub_items.anchor.map(e => getAbsolutePath(pathItemPath, e))
-      const href = document.getElementById('published-site-label').getAttribute('href')
+      const {pLink} = getLinks()
       const promise = absolutes.map(async absolute => {
         url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${absolute}`;
         const { items } = await fetch(url).then(e => e.json())
-        
-        const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&generateanchor=${encodeURIComponent(href)}&ownerid=${localStorage.getItem('ownerid')}` };
+
+        const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&generateanchor=${encodeURIComponent(pLink)}&ownerid=${localStorage.getItem('ownerid')}` };
 
         // Fetch options
         const options = {
@@ -4604,7 +4604,7 @@
       const menu = e.target.parentNode.closest('[data-open-menu]')
       const container = menu.parentNode
       const parentId = e.target.parentNode.id
-      const catIcon =container.querySelector('[data-element="catalog"]')
+      const catIcon = container.querySelector('[data-element="catalog"]')
       if (article) {
         if (!m.length) {
           delete pathItem.hub_items.article_page
@@ -4613,12 +4613,12 @@
           Array.from(menu.children).forEach(child => {
             child.remove();
           });
-          catIcon.setAttribute('hidden','')
+          catIcon.setAttribute('hidden', '')
           return
 
         }
         const id = m1[0]?.id
-        
+
         if (!id) {
           Array.from(menu.children).forEach(child => {
             child.remove();
@@ -4637,7 +4637,7 @@
         pathItem.hub_items.article_component = parentId.replace('selectedFilePathList;', '').replace('-tree', '')
         await updatePathItem()
 
-        
+
         catIcon.removeAttribute('hidden')
         Array.from(menu.children).forEach(child => {
           child.remove();
@@ -11277,7 +11277,23 @@ elementsToRemove.forEach(element => element.remove());
     }
     let foundMainContent
     //let foundAnchors = []
+    const getLinks = () => {
+      const [s, ...rest] = pathItemPath.split('/')
+      if (rest[rest.length - 1].toLowerCase() === 'hub') {
+        if (rest[rest.length - 2]?.toLowerCase() === 'home') {
+          rest.pop()
 
+        }
+        rest[rest.length - 1] = 'index.html'
+      }
+      else {
+        rest[rest.length - 1] = rest[rest.length - 1] + '.html'
+      }
+      const key = rest.join('/').toLowerCase()
+      const link = 'https://s3.amazonaws.com/' + s.toLowerCase() + '/' + key
+      const pLink ='https://'+ s.toLowerCase() + '/' + key.replace('index.html','')
+      return {s3link,pLink}
+    }
     var loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative, treeElement, reusableId, attachId) => {
       log1('load from db' + id + 'reusable' + reusableId + 'attachid' + attachId)
       log1('err2 ' + p)
@@ -11604,7 +11620,10 @@ elementsToRemove.forEach(element => element.remove());
                 pSiteLabel.removeAttribute('hidden')
                 el4.removeAttribute('hidden')
                 el5.removeAttribute('hidden')
-
+                if (!item.href) {
+                  const {s3link}= getS3Link()
+                  item.href =s3link
+                }
                 el3.setAttribute('href', item.href)
                 pSiteLabel.setAttribute('href', item.href?.replace('s3.amazonaws.com/', '').replace('index.html', ''), '')
               }
