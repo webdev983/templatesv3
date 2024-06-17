@@ -1467,6 +1467,7 @@
       <button hidden class="b-3 t" data-element="optional-script" onclick="replaceComponent(event,true)">🔄10</button>
       <span hidden class="b-3 t" data-element="content_type">⭐</span>
       <span hidden class="b-3 t" data-element="set_anchor">⚓️</span>
+      <span hidden class="b-3 t" data-element="catalog">✨</span>
 
       <span data-open-menu></span>
     </div>
@@ -4589,7 +4590,10 @@
       const article = e.target.parentNode.hasAttribute('article')
       const catalogue = e.target.parentNode.hasAttribute('catalogue')
       if(article){
-        const id = m1[0].id
+        const id = m1[0]?.id
+        if(!id){
+          return
+        }
         const element = getElementById1(id);
         const path =element.querySelector('[data-value="file-path"]').textContent
         const splited= path.split('/')
@@ -4599,6 +4603,8 @@
         splited[2] ='*' 
         pathItem.hub_items.article_page = splited.join('/')
         await updatePathItem()
+        const container = e.target.parentNode.closest('[data-open-menu]').parentNode
+        container.querySelector('[data-element="catalog"]').removeAttribute('hidden')
         return
       }
       //const folderChecked = e.target.parentNode.querySelector('#attach-folder').checked
@@ -5075,7 +5081,18 @@
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
         e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset2);
         !flag && e.target.parentNode.remove()
-        if (!replaced && !replacedFolders) {
+        if(article && pathItem.hub_items.article_page){
+          const clonedItem = getElementById1('item').cloneNode(true);
+          clonedItem.setAttribute('article_page', true)
+          clonedItem.id = pathItem.hub_items.article_page;
+          selected.push(pathItem.hub_items.article_page)
+          const file_path = clonedItem.querySelector('[data-value="file-path"]')
+          file_path.textContent = pathItem.hub_items.article_page;
+          clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
+          clonedFieldset2.appendChild(clonedItem)
+          clonedItem.onclick = (e) => { e.target.closest('li').remove(); selected.filter(el => el !== pathItem.hub_items.article_page) }
+        }
+        else if (!replaced && !replacedFolders) {
           var clonedItem = getElementById1('item').cloneNode(true);
           clonedItem.setAttribute('alreadyReplaced', true)
           clonedItem.id = parentId;
