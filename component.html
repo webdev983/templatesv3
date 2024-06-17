@@ -4589,6 +4589,7 @@
       const single = e.target.parentNode.hasAttribute('single')
       const article = e.target.parentNode.hasAttribute('article')
       const catalogue = e.target.parentNode.hasAttribute('catalogue')
+      const parentId = e.target.parentNode.id.replace('file-path-list;', '')
       if(article){
         const id = m1[0]?.id
         if(!id){
@@ -4602,13 +4603,14 @@
         }
         splited[2] ='*' 
         pathItem.hub_items.article_page = splited.join('/')
+        pathItem.hub_items.article_component = parentId
         await updatePathItem()
         const container = e.target.parentNode.closest('[data-open-menu]').parentNode
         container.querySelector('[data-element="catalog"]').removeAttribute('hidden')
         return
       }
       //const folderChecked = e.target.parentNode.querySelector('#attach-folder').checked
-      const parentId = e.target.parentNode.id.replace('file-path-list;', '')
+      
       if (!parentId) {
         alert('no target id')
         return
@@ -11439,6 +11441,11 @@ elementsToRemove.forEach(element => element.remove());
             el.setAttribute('anchor', "")
             el1.querySelector('[data-element="set_anchor"]').removeAttribute('hidden')
           }
+
+        }
+        if (pathItem.hub_items?.article_page && pathItem.hub_items?.article_component ===newId) {
+          el1.querySelector('[data-element="catalog"]').removeAttribute('hidden')
+          
 
         }
         //insertDataIntoCodeLog(timestamp, idFromLink, { name })
