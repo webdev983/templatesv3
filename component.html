@@ -4602,9 +4602,11 @@
       const parentId = e.target.parentNode.id
       if (article) {
         const id = m1[0]?.id
-        const menu =e.target.parentNode.closest('[data-open-menu]')
+        const menu = e.target.parentNode.closest('[data-open-menu]')
         if (!id) {
-          menu.children.forEach(e=>e.remove())
+          Array.from(menu.children).forEach(child => {
+            child.remove();
+          });
           return
         }
         const element = getElementById1(id);
@@ -4616,12 +4618,14 @@
         splited[2] = '*'
         splited[0] = '*'
         pathItem.hub_items.article_page = splited.join('/')
-        pathItem.hub_items.article_component = parentId.replace('selectedFilePathList;', '').replace('-tree','')
+        pathItem.hub_items.article_component = parentId.replace('selectedFilePathList;', '').replace('-tree', '')
         await updatePathItem()
-        
+
         const container = menu.parentNode
         container.querySelector('[data-element="catalog"]').removeAttribute('hidden')
-        menu.children.forEach(e=>e.remove())
+        Array.from(menu.children).forEach(child => {
+          child.remove();
+        });
         return
       }
       //const folderChecked = e.target.parentNode.querySelector('#attach-folder').checked
