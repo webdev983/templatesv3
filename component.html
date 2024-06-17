@@ -4599,7 +4599,7 @@
       const single = e.target.parentNode.hasAttribute('single')
       const article = e.target.parentNode.hasAttribute('article')
       const catalogue = e.target.parentNode.hasAttribute('catalogue')
-      const parentId = e.target.parentNode.id.replace('file-path-list;', '')
+      const parentId = e.target.parentNode.id
       if (article) {
         const id = m1[0]?.id
         const menu =e.target.parentNode.closest('[data-open-menu]')
@@ -4614,8 +4614,9 @@
           alert('home folder')
         }
         splited[2] = '*'
+        splited[0] = '*'
         pathItem.hub_items.article_page = splited.join('/')
-        pathItem.hub_items.article_component = parentId
+        pathItem.hub_items.article_component = parentId.replace('selectedFilePathList;', '').replace('-tree','')
         await updatePathItem()
         
         const container = menu.parentNode
