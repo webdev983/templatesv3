@@ -12450,7 +12450,7 @@ elementsToRemove.forEach(element => element.remove());
     const generateAnchor = async (href) => {
       const iframe = getElementById1("generated-page-iframe");
       const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-      const elementsWithAnchorClass = iframeDocument.querySelectorAll('[class*="anchor"]');
+      const elementsWithAnchorClass = iframeDocument.querySelectorAll('[class*="anchor"]:not([data-replaceid])');
 
       const promises = Array.from(elementsWithAnchorClass).map(element => {
         const el = {
