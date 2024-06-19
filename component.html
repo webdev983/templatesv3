@@ -5099,7 +5099,7 @@
         } else if (catalogue) {
           clonedFieldset2.setAttribute('catalogue', '');
         }
-        else{
+        else {
           clonedFieldset2.querySelector('#content-label').removeAttribute('hidden')
           clonedFieldset2.querySelector('#absolute-label').removeAttribute('hidden')
         }
@@ -7056,7 +7056,13 @@ checkbox1.setAttribute('hidden', "");
       )
 
       //await runScripts()
-      await onLoad()
+      try {
+        await onLoad()
+
+      }
+      catch (e) {
+        console.log(e.message)
+      }
       const imagePs = imagesIds.map(async (imageId) => {
         const element = getElementById1(imageId)
         if (!element) {
