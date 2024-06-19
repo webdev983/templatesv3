@@ -6414,7 +6414,13 @@ checkbox1.setAttribute('hidden', "");
     const runScripts = () => {
       const scripts = querySelectorAll1("[data-builder-script]")
       for (const script of scripts) {
-        eval(script.innerHTML)
+        try{
+          eval(script.innerHTML)
+        }
+        catch(e){
+          console.log(e.message)
+        }
+        
       }
     }
     const organizeScripts = async () => {
