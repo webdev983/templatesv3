@@ -7108,7 +7108,10 @@ checkbox1.setAttribute('hidden', "");
       }
       )
       await Promise.all(imagePs)
-      
+      if (toPublish == "1" || republish) {
+        log1('publishing')
+        await publish()
+      }
       if (generatetable) {
         await generateTable(generatetable)
       }
@@ -7135,10 +7138,6 @@ checkbox1.setAttribute('hidden', "");
       //const pagePathContent = pathItemPath;
       if (reload) {
         location.reload()
-      }
-      if (toPublish == "1" || republish) {
-        console.log('publishing')
-        await publish()
       }
       // Use the textContent as needed, for example, log it to the console
       log1('Publishing:', pathItemPath);
@@ -12146,9 +12145,7 @@ elementsToRemove.forEach(element => element.remove());
       // Use the textContent as needed, for example, log it to the console
       log1('Publishing:', pagePathContent);
       const { cleanHtml, generateProductJson } = await onPublish()
-      if (reload) {
-        location.reload()
-      }
+      
       //generateSchema(pagePathContent.split(';')[0], date)
       var iframe = document.getElementById("generated-page-iframe");
 
@@ -12166,6 +12163,9 @@ elementsToRemove.forEach(element => element.remove());
         },
         body: JSON.stringify({ id: idFromLink, html, path: pagePathContent, toRemove, robotsTxt, siteMapPriority, siteMapNotDefiniedPriorities, date: date.getTime(), sku: pathItemSku, updateContent, cleanHtml, generateProductJson }),
       });
+      if (reload) {
+        location.reload()
+      }
       const r = await response.json()
       log1('link: ' + r.link)
       const el = getElementById1('page-path')
