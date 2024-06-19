@@ -7071,6 +7071,10 @@ checkbox1.setAttribute('hidden', "");
       catch (e) {
         console.log(e.message)
       }
+      if (toPublish == "1" || republish) {
+        console.log('publishing')
+        await publish()
+      }
       const imagePs = imagesIds.map(async (imageId) => {
         const element = getElementById1(imageId)
         if (!element) {
@@ -7136,10 +7140,7 @@ checkbox1.setAttribute('hidden', "");
       }
       )
       await Promise.all(imagePs)
-      if (toPublish == "1" || republish) {
-        console.log('publishing')
-        await publish()
-      }
+      
       if (generatetable) {
         await generateTable(generatetable)
       }
