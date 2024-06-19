@@ -3122,13 +3122,14 @@
             }
 
             const data = await response.json();
-            console.log('Success:' + item.id);
+            console.log('Success:' + item.id + item.lsi1);
           } catch (error) {
             console.error('Error:', error);
           }
         })
         await Promise.all(publishPromise)
         const site = path.split('/')[0]
+        console.log('invalidating '+ site)
         await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/invalidate', {
           method: 'POST',
           headers: {
