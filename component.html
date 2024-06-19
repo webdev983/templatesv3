@@ -12193,10 +12193,11 @@ elementsToRemove.forEach(element => element.remove());
         },
         body: JSON.stringify({ id: idFromLink, html, path: pagePathContent, toRemove, robotsTxt, siteMapPriority, siteMapNotDefiniedPriorities, date: date.getTime(), sku: pathItemSku, updateContent, cleanHtml, generateProductJson }),
       });
+      const r = await response.json()
       if (reload) {
         location.reload()
       }
-      const r = await response.json()
+      
       log1('link: ' + r.link)
       const el = getElementById1('page-path')
 
