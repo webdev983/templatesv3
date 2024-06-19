@@ -6790,8 +6790,12 @@ checkbox1.setAttribute('hidden', "");
           continue
         }
         log1('name ' + item.name)
-        await funcDictionary[item.name]()
-
+        try {
+          await funcDictionary[item.name]()
+        }
+        catch (e) {
+          continue
+        }
 
         status.textContent = '🟢'
         const date = new Date()
