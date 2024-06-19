@@ -1832,9 +1832,9 @@
         Approve</button>
       <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" data-action="moveBack">⤴️ Up</button>
       <label class="l-3"><input onchange="switchFolder(event)" id="attach-folder" type="checkbox">📂Folder</label>
-      <label class="l-3" id="relative-label" ><input type="radio" name="relative-absolute-choose"
+      <label class="l-3" id="relative-label" hidden><input type="radio" name="relative-absolute-choose"
           id="relative-input">🗂️Relative</label>
-      <label class="l-3" id="absolute-label" ><input type="radio" name="relative-absolute-choose"
+      <label class="l-3" id="absolute-label" hidden><input type="radio" name="relative-absolute-choose"
           id="absolute-input">📂Absolute</label>
       <label class="l-3" id="content-label" hidden><input type="radio" name="relative-absolute-choose"
           id="content-input"></label>
@@ -2595,7 +2595,7 @@
     }
     const generateAnchorApi = async () => {
       const absolutes = pathItem.hub_items.anchor.map(e => getAbsolutePath(pathItemPath, e))
-      const {pLink} = getLinks()
+      const { pLink } = getLinks()
       const promise = absolutes.map(async absolute => {
         url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${absolute}`;
         const { items } = await fetch(url).then(e => e.json())
@@ -5092,9 +5092,17 @@
       if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('filePathList')) {
         const clonedFieldset = fieldset.cloneNode(true);
         const clonedFieldset2 = fieldset2.cloneNode(true);
-        single && clonedFieldset2.setAttribute('single', "")
-        article && clonedFieldset2.setAttribute('article', "")
-        catalogue && clonedFieldset2.setAttribute('catalogue', "")
+        if (single) {
+          clonedFieldset2.setAttribute('single', '');
+        } else if (article) {
+          clonedFieldset2.setAttribute('article', '');
+        } else if (catalogue) {
+          clonedFieldset2.setAttribute('catalogue', '');
+        }
+        else{
+          clonedFieldset2.querySelector('#content-label').removeAttribute('hidden')
+          clonedFieldset2.querySelector('#absolute-label').removeAttribute('hidden')
+        }
         clonedFieldset2.id = clonedFieldset2.id + ';' + parentId;
         clonedFieldset.id = clonedFieldset.id + ';' + parentId;
         clonedFieldset.setAttribute('action', 'Replace')
@@ -6414,13 +6422,13 @@ checkbox1.setAttribute('hidden', "");
     const runScripts = () => {
       const scripts = querySelectorAll1("[data-builder-script]")
       for (const script of scripts) {
-        try{
+        try {
           eval(script.innerHTML)
         }
-        catch(e){
+        catch (e) {
           console.log(e.message)
         }
-        
+
       }
     }
     const organizeScripts = async () => {
@@ -11297,8 +11305,8 @@ elementsToRemove.forEach(element => element.remove());
       }
       const key = rest.join('/').toLowerCase()
       const s3link = 'https://s3.amazonaws.com/' + s.toLowerCase() + '/' + key
-      const pLink ='https://'+ s.toLowerCase() + '/' + key.replace('index.html','')
-      return {s3link,pLink}
+      const pLink = 'https://' + s.toLowerCase() + '/' + key.replace('index.html', '')
+      return { s3link, pLink }
     }
     var loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative, treeElement, reusableId, attachId) => {
       log1('load from db' + id + 'reusable' + reusableId + 'attachid' + attachId)
@@ -11627,8 +11635,8 @@ elementsToRemove.forEach(element => element.remove());
                 el4.removeAttribute('hidden')
                 el5.removeAttribute('hidden')
                 if (!item.href) {
-                  const {s3link}= getLinks()
-                  item.href =s3link
+                  const { s3link } = getLinks()
+                  item.href = s3link
                 }
                 el3.setAttribute('href', item.href)
                 pSiteLabel.setAttribute('href', item.href?.replace('s3.amazonaws.com/', '').replace('index.html', ''), '')
@@ -12151,7 +12159,7 @@ elementsToRemove.forEach(element => element.remove());
       // Use the textContent as needed, for example, log it to the console
       log1('Publishing:', pagePathContent);
       const { cleanHtml, generateProductJson } = await onPublish()
-      
+
       //generateSchema(pagePathContent.split(';')[0], date)
       var iframe = document.getElementById("generated-page-iframe");
 
