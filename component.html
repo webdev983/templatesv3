@@ -9107,7 +9107,7 @@ checkbox1.setAttribute('hidden', "");
               let allItems = await Promise.all(promises)
               allItems.sort((a, b) => a.lsi1.localeCompare(b.lsi1));
               log1('all Items' + JSON.stringify(allItems))
-              let updateAction
+              //let updateAction
               for (const arr of allItems) {
                 for (const item of arr) {
                   if (item.lsi1.split(';')[0].endsWith('0-Content') || replaceAction.target_element.find(e => e.componentId === item.id)) {
@@ -9117,9 +9117,10 @@ checkbox1.setAttribute('hidden', "");
                     componentId: item.id, id: generateUUID(), path: item.lsi1.split(';')[0]
                   }
                   replaceAction.target_element.push(newReplaceItem)
-                  updateAction = true
+                  //updateAction = true
                 }
               }
+              /*
               if (updateAction && replaceAction.id === pathItem.id) {
                 const rToPush = { ...replaceAction }
                 rToPush.target_element = [toReplace, ...replaceAction.target_element]
@@ -9130,7 +9131,7 @@ checkbox1.setAttribute('hidden', "");
                   },
                   body: JSON.stringify(rToPush),
                 });
-              }
+              }*/
             }
             let l = replaceAction.target_element.reduce((acc, current) => {
               // Check if there is no object in the accumulator with the same componentId
