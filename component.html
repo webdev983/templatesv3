@@ -1095,10 +1095,10 @@
         <details style="margin-left: 25px;">
           <summary class="summary-L-3" style="margin-top: 5px; "><span class="l-3">➕ add new positions to
               list</span><span></summary>
-          <textarea id="import-input" class="text1" style="width: 50vw; "
+          <textarea id="import-list-input" class="text1" style="width: 50vw; "
             placeholder=" use : separator for key values"></textarea>
           <br>
-          <button class="b-4">💾 Save</button>
+          <button class="b-4" onclick="saveToList(event)">💾 Save</button>
 
         </details>
       </details>
@@ -3325,6 +3325,26 @@
         }
       }
     }
+    var saveToList = (event) => {
+      const target = event.target
+      const input = target.parentNode.querySelector('#import-list-input').textContent
+      const details = target.closest('details')
+      const listName = details.getAttribute('data-list')
+      const storageId = details.getAttribute('storageId')
+      const [key, value] = input.split(':')
+      const storageSk = `list:${listName}:${key}`
+      const v = {
+        id: storageId,
+        sk: storageSk,
+        value
+      }
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        body: JSON.stringify(v),
+      });
+
+
+    }
     var showList = async (lists, storageId1, hubItems) => {
       let parsedLists
       try {
@@ -3337,6 +3357,7 @@
       }
 
       const list1 = document.querySelector('[data-list][hidden]')
+
       !storageId1 && document.querySelectorAll('[data-list]:not([hidden])').forEach(e => e.remove())
 
       for (const list of parsedLists['data-lists']) {
@@ -3345,6 +3366,8 @@
         }
         const cloned = list1.cloneNode(true)
 
+
+        cloned.setAttribute('data-list', list.name)
 
         cloned.setAttribute('data-list', list.name)
 
@@ -3357,6 +3380,7 @@
 
         const storage = list.data_storage
         let storageId = storageId1 ?? ((storage === 'sku') ? (pathItemSku || selectedSku) : headContentItem.id)
+        cloned.setAttribute('storageId', storageId)
         cloned.querySelector('[data-list-emoji]').textContent = list.emoji
         cloned.querySelector('[data-list-name]').textContent = list.name
         const listOriginalElement = cloned.querySelector('[data-lists-element]')
@@ -7726,16 +7750,16 @@ checkbox1.setAttribute('hidden', "");
               items[scriptClicked].push({ name: id });
             }
             const existing = checkbox.closest('tr')
-            
-              existing.querySelector('#script_status').onclick = async () => {
-                await funcDictionary[id]()
-                existing.querySelector('#script_status') = '🟢'
-                const date = new Date()
-                headContentItem.scripts[id].runned = date.getTime()
-                existing.querySelector('#last_script_execute_time').textContent = formatDate(date)
-                updateHeadContentItem()
-              }
-            
+
+            existing.querySelector('#script_status').onclick = async () => {
+              await funcDictionary[id]()
+              existing.querySelector('#script_status') = '🟢'
+              const date = new Date()
+              headContentItem.scripts[id].runned = date.getTime()
+              existing.querySelector('#last_script_execute_time').textContent = formatDate(date)
+              updateHeadContentItem()
+            }
+
             document.getElementById(getBodyIdFromType(scriptClicked)).append(existing)
           }
           checkbox.setAttribute('hidden', '');
