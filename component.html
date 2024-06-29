@@ -2611,6 +2611,34 @@
       });
 
     }
+    const refreshCatalogue = () => {
+      if (!pathItemPath.endsWith('/Home/Hub')) {
+        alert('not home  page')
+        return
+      }
+      const { article_component, article_page } = pathItem.hub_items
+      const splited = article_page.split('*')
+      const sLsi = pathItemPath.split('/')[0] + splited[1]
+      const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${sLsi}`;
+      const { items } = await fetch(url).then(e => e.json())
+      const filtered = items.filter(element=>element.lsi1.endsWith(splited[2]))
+    
+      const arr = filtered.map(element=>{
+        const newId = generateUUID()
+        return {
+
+          componentId: element.id, id:  generateUUID(), path: element.lsi1.split(';')[0]
+        }
+      })
+      const el = {
+        time: (new Date()).getTime(),
+        action: 'Replace_Component',
+        target_element: [article_component+'-tree', ...arr],
+       
+      };
+      await pushAction(el)
+
+    }
     const generateAnchorApi = async () => {
       const absolutes = pathItem.hub_items.anchor.map(e => getAbsolutePath(pathItemPath, e))
       const { pLink } = getLinks()
@@ -3584,11 +3612,11 @@
             });
             statusEl.textContent = '🟢'
           });
-          
 
-          
+
+
           exisitingValue.value && (span.textContent = exisitingValue.value)
-            
+
           select.remove()
           if (filteredKeys.length) {
             const inputs = clonedListElement.querySelectorAll('[data-list-element-benefit]')
@@ -3598,7 +3626,7 @@
 
                 input.checked = true
               }
-              else{
+              else {
                 input.checked = false
               }
               //exisitingValue.varlist===true ? (input.checked = true) : (input.checked = !!option.varlist)
@@ -6923,6 +6951,7 @@ checkbox1.setAttribute('hidden', "");
       script_generate_product_json: () => { },
       script_generate_article_anchor: generateAnchorApi,
       script_chatgpt_: () => { },
+      script_refresh_catalog: refreshCatalogue
     }
     const onLoad = async () => {
       log1('onload')
