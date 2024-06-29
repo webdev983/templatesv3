@@ -3328,7 +3328,7 @@
     var saveToList = async (event) => {
       const target = event.target
       const input = target.parentNode.querySelector('#import-list-input').value
-      console.log('input '+input)
+      console.log('input ' + input)
       const details = target.closest('[data-list]')
       const listName = details.getAttribute('data-list')
       const storageId = details.getAttribute('storageId')
@@ -3351,7 +3351,7 @@
       span.textContent = `{${key.replaceAll('_', ' ')}}`
       const statusEl = clonedListElement.querySelector('[data-lists-element-status]')
       statusEl.textContent = '🟢'
-      span.textContent= value
+      span.textContent = value
       span.addEventListener('blur', async function () {
         const value = span.textContent
 
@@ -3366,7 +3366,7 @@
           method: 'POST',
           body: JSON.stringify(exisitingValue),
         });
-        
+
       });
       listOriginalElement.parentNode.append(clonedListElement)
     }
@@ -3438,12 +3438,14 @@
             'Content-Type': 'application/json',
           },
         }).then(el => el.json()).then(e => e.items)
-        const existingStorageSk = []
+
         for (const option of list.options) {
           const clonedListElement = listOriginalElement.cloneNode(true)
           const storageSk = `list:${list.name}:${option.name}`
-          existingStorageSk.push(storageSk)
+
+
           let exisitingValue = listValues.find(e => e.sk === storageSk)
+          listValues.filter(e => e.sk !== storageSk)
           const statusEl = clonedListElement.querySelector('[data-lists-element-status]')
           log1('existing ' + JSON.stringify(exisitingValue))
           if (exisitingValue) {
@@ -3476,6 +3478,110 @@
               body: JSON.stringify(exisitingValue),
             });
             select.value = "none"
+            statusEl.textContent = '🟢'
+          });
+          if (option.transfer) {
+            span.setAttribute('data-transfer-sender', option.transfer)
+          }
+
+          if (option.values) {
+            const originalValue = clonedListElement.querySelector('[data-list-element-selection-value]')
+            for (const value of option.values) {
+              const clonedValue = originalValue.cloneNode(true)
+              clonedValue.textContent = value
+              clonedValue.value = value
+              originalValue.parentNode.append(clonedValue)
+            }
+            exisitingValue.value && (select.value = exisitingValue.value)
+            select.addEventListener('change', async function () {
+              log1('select ' + select.value)
+              log1('option ' + '{' + option.name + '}')
+              if (select.value === '{' + option.name + '}' || select.value === '') {
+                return
+              }
+              exisitingValue = {
+                ...exisitingValue,
+                value: select.value
+              }
+              await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                method: 'POST',
+                body: JSON.stringify(exisitingValue),
+              });
+              span.textContent = `{${option.name.replaceAll('_', ' ')}}`
+              statusEl.textContent = '🟢'
+
+            });
+            originalValue.remove()
+          }
+          else {
+            exisitingValue.value && (span.textContent = exisitingValue.value)
+            select.remove()
+          }
+          if (filteredKeys.length) {
+            const inputs = clonedListElement.querySelectorAll('[data-list-element-benefit]')
+            for (const input of inputs) {
+              const varname = input.getAttribute('varname')
+              if (exisitingValue[varname]) {
+
+                input.checked = true
+              }
+              //exisitingValue.varlist===true ? (input.checked = true) : (input.checked = !!option.varlist)
+              input.addEventListener('change', async function () {
+                if (input.checked) {
+                  exisitingValue = {
+                    ...exisitingValue,
+                    [varname]: true,
+                  }
+                }
+                else {
+                  delete exisitingValue[varname]
+                }
+
+                log1(JSON.stringify(exisitingValue))
+                await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                  method: 'POST',
+                  body: JSON.stringify(exisitingValue),
+                });
+                statusEl.textContent = '🟢'
+
+              });
+            }
+
+          }
+          listOriginalElement.parentNode.append(clonedListElement)
+
+        }
+        for (const el of listValues) {
+          const clonedListElement = listOriginalElement.cloneNode(true)
+          const storageSk = listValues.sk
+
+
+          let exisitingValue = el
+          const statusEl = clonedListElement.querySelector('[data-lists-element-status]')
+          log1('existing ' + JSON.stringify(exisitingValue))
+
+          statusEl.textContent = '🟢'
+
+
+          clonedListElement.querySelector('[data-lists-element-key]').textContent = exisitingValue.sk.split(':')[2]
+          const span = clonedListElement.querySelector('[data-lists-element-value]')
+          span.textContent = `{${exisitingValue.sk.split(':')[2].replaceAll('_', ' ')}}`
+
+          const select = clonedListElement.querySelector('[data-list-element-selection]')
+          span.addEventListener('blur', async function () {
+            const value = span.textContent
+
+            if (value === '{' + exisitingValue.sk.split(':')[2] + '}' || value === '') {
+              return
+            }
+            exisitingValue = {
+              ...exisitingValue,
+              value
+            }
+            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+              method: 'POST',
+              body: JSON.stringify(exisitingValue),
+            });
             statusEl.textContent = '🟢'
           });
           if (option.transfer) {
