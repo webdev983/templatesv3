@@ -3344,6 +3344,7 @@
       });
 
 
+
     }
     var showList = async (lists, storageId1, hubItems) => {
       let parsedLists
@@ -3406,16 +3407,19 @@
 
           }
         }
-
+        //fetch all sks
+        const listValues = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${storageId}&sk=list:&startsWith=true`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(el => el.json())
+        const existingStorageSk = []
         for (const option of list.options) {
           const clonedListElement = listOriginalElement.cloneNode(true)
           const storageSk = `list:${list.name}:${option.name}`
-          let exisitingValue = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${storageId}:${storageSk}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }).then(e => e.json())
+          existingStorageSk.push(storageSk)
+          let exisitingValue = listValues.find(e=>e.sk===storageSk)
           const statusEl = clonedListElement.querySelector('[data-lists-element-status]')
           log1('existing ' + JSON.stringify(exisitingValue))
           if (exisitingValue) {
@@ -3521,6 +3525,7 @@
           listOriginalElement.parentNode.append(clonedListElement)
 
         }
+
         listOriginalElement.remove()
         list1.parentNode.append(cloned)
       }
