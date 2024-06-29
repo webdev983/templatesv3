@@ -3325,7 +3325,7 @@
         }
       }
     }
-    var saveToList = async(event) => {
+    var saveToList = async (event) => {
       const target = event.target
       const input = target.parentNode.querySelector('#import-list-input').textContent
       const details = target.closest('details')
@@ -3342,9 +3342,28 @@
         method: 'POST',
         body: JSON.stringify(v),
       });
+      const listOriginalElement = details.querySelector('[data-lists-element]')
+      const clonedListElement = listOriginalElement.cloneNode(true)
+      clonedListElement.querySelector('[data-lists-element-key]').textContent = key
+      const span = clonedListElement.querySelector('[data-lists-element-value]')
+      span.textContent = `{${key.replaceAll('_', ' ')}}`
+      const statusEl = clonedListElement.querySelector('[data-lists-element-status]')
+      span.addEventListener('blur', async function () {
+        const value = span.textContent
 
-
-
+        if (value === '{' + key + '}' || value === '') {
+          return
+        }
+        exisitingValue = {
+          ...v,
+          value
+        }
+        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          body: JSON.stringify(exisitingValue),
+        });
+        statusEl.textContent = '🟢'
+      });
     }
     var showList = async (lists, storageId1, hubItems) => {
       let parsedLists
@@ -3413,13 +3432,13 @@
           headers: {
             'Content-Type': 'application/json',
           },
-        }).then(el => el.json()).then(e=>e.items)
+        }).then(el => el.json()).then(e => e.items)
         const existingStorageSk = []
         for (const option of list.options) {
           const clonedListElement = listOriginalElement.cloneNode(true)
           const storageSk = `list:${list.name}:${option.name}`
           existingStorageSk.push(storageSk)
-          let exisitingValue = listValues.find(e=>e.sk===storageSk)
+          let exisitingValue = listValues.find(e => e.sk === storageSk)
           const statusEl = clonedListElement.querySelector('[data-lists-element-status]')
           log1('existing ' + JSON.stringify(exisitingValue))
           if (exisitingValue) {
