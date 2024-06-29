@@ -3584,43 +3584,12 @@
             });
             statusEl.textContent = '🟢'
           });
-          if (option.transfer) {
-            span.setAttribute('data-transfer-sender', option.transfer)
-          }
+          
 
-          if (option.values) {
-            const originalValue = clonedListElement.querySelector('[data-list-element-selection-value]')
-            for (const value of option.values) {
-              const clonedValue = originalValue.cloneNode(true)
-              clonedValue.textContent = value
-              clonedValue.value = value
-              originalValue.parentNode.append(clonedValue)
-            }
-            exisitingValue.value && (select.value = exisitingValue.value)
-            select.addEventListener('change', async function () {
-              log1('select ' + select.value)
-              log1('option ' + '{' + option.name + '}')
-              if (select.value === '{' + option.name + '}' || select.value === '') {
-                return
-              }
-              exisitingValue = {
-                ...exisitingValue,
-                value: select.value
-              }
-              await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                method: 'POST',
-                body: JSON.stringify(exisitingValue),
-              });
-              span.textContent = `{${option.name.replaceAll('_', ' ')}}`
-              statusEl.textContent = '🟢'
-
-            });
-            originalValue.remove()
-          }
-          else {
-            exisitingValue.value && (span.textContent = exisitingValue.value)
-            select.remove()
-          }
+          
+          exisitingValue.value && (span.textContent = exisitingValue.value)
+            
+          
           if (filteredKeys.length) {
             const inputs = clonedListElement.querySelectorAll('[data-list-element-benefit]')
             for (const input of inputs) {
