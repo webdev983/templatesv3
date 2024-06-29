@@ -7763,13 +7763,13 @@ checkbox1.setAttribute('hidden', "");
           return
 
         }
-        element.querySelectorAll('#script_execute_select').forEach(checkbox => {
+        element.querySelectorAll('#script_execute_select').forEach(async checkbox => {
           if (checkbox.checked) {
             const id = checkbox.closest('tr').id;
-            const type1 = getTypeFromCheckbox(checkbox); // Assuming you have a function to determine the type
 
             delete headContentItem.scripts[id]?.runned
-            updateHeadContentItem()
+            await updateHeadContentItem()
+            checkbox.parentNode.querySelector('#script_status') = '🔴'
 
           }
           checkbox.setAttribute('hidden', '');
