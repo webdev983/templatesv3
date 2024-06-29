@@ -3350,6 +3350,7 @@
       const span = clonedListElement.querySelector('[data-lists-element-value]')
       span.textContent = `{${key.replaceAll('_', ' ')}}`
       const statusEl = clonedListElement.querySelector('[data-lists-element-status]')
+      statusEl.textContent = '🟢'
       span.addEventListener('blur', async function () {
         const value = span.textContent
 
@@ -3364,7 +3365,7 @@
           method: 'POST',
           body: JSON.stringify(exisitingValue),
         });
-        statusEl.textContent = '🟢'
+        
       });
     }
     var showList = async (lists, storageId1, hubItems) => {
