@@ -572,14 +572,15 @@
             in local
             head🗿</label>
 
-          
+
           <table class="table-1" style="margin-left: 30px;">
             <tbody id="on_open_body">
               <tr id="scripts_on_open">
                 <td colspan="7" style="text-align: center;">
                   <span class="l-2 b-dark-blue">on open 🚪</span>
                   <button class="b-2" onclick="addScript(event,'onOpen')">➕</button>
-                  <button class="b-2" style="margin-left:3px;">🗑️️</button>
+                  <button class="b-2" style="margin-left:3px;"
+                    onclick="removeScriptStatus(event,'onOpen')">🗑️️</button>
                 </td>
               </tr>
 
@@ -594,6 +595,8 @@
                 <td colspan="7" style="text-align: center;">
                   <span class="l-2 b-dark-blue">on load ⌛</span>
                   <button class="b-2" onclick="addScript(event,'onLoad')">➕</button>
+                  <button class="b-2" style="margin-left:3px;"
+                    onclick="removeScriptStatus(event,'onLoad')">🗑️️</button>
                 </td>
               </tr>
 
@@ -603,6 +606,8 @@
                 <td colspan="7" style="text-align: center;">
                   <span class="l-2 b-dark-blue">on publish 📰</span>
                   <button class="b-2" onclick="addScript(event,'onPublish')">➕</button>
+                  <button class="b-2" style="margin-left:3px;"
+                    onclick="removeScriptStatus(event,'onPublish')">🗑️️</button>
                 </td>
               </tr>
             </tbody>
@@ -612,6 +617,8 @@
                 <td colspan="7" style="text-align: center;">
                   <span class="l-2 b-dark-blue">on click 🐭</span>
                   <button class="b-2" onclick="addScript(event,'onClick')">➕</button>
+                  <button class="b-2" style="margin-left:3px;"
+                    onclick="removeScriptStatus(event,'onClick')">🗑️️</button>
 
                 </td>
               </tr>
@@ -1062,7 +1069,7 @@
 
       </div>
 
-    
+
 
       <!-- undefinied menus-->
       <details style="margin-bottom: 7px;" data-list hidden>
@@ -1086,9 +1093,11 @@
                   type="checkbox">Benefit</label></td>
         </table>
         <details style="margin-left: 25px;">
-          <summary class="summary-L-3" style="margin-top: 5px; "><span class="l-3">➕ add new positions to list</span><span></summary>
-          <textarea id="import-input" class="text1" style="width: 50vw; " placeholder=" use : separator for key values"></textarea>
-          <br> 
+          <summary class="summary-L-3" style="margin-top: 5px; "><span class="l-3">➕ add new positions to
+              list</span><span></summary>
+          <textarea id="import-input" class="text1" style="width: 50vw; "
+            placeholder=" use : separator for key values"></textarea>
+          <br>
           <button class="b-4">💾 Save</button>
 
         </details>
@@ -1379,7 +1388,7 @@
         <span id="file-name" hidden>No file chosen</span>
       </div>
       <table style=" border-collapse: collapse;">
-        <tr hidden id="gallery-item" style="border-bottom: 2px dashed #3d3d3d;" >
+        <tr hidden id="gallery-item" style="border-bottom: 2px dashed #3d3d3d;">
           <td style="padding-top: 9px; padding-bottom: 9px;">
 
             <div data-picture-meta>
@@ -7031,9 +7040,9 @@ checkbox1.setAttribute('hidden', "");
       }
       await handleMenus()
       try {
-      await onOpen1()
+        await onOpen1()
       }
-      catch(e){
+      catch (e) {
         console.log(e.message)
       }
       await loadFromDb()
@@ -7152,7 +7161,7 @@ checkbox1.setAttribute('hidden', "");
       }
       )
       await Promise.all(imagePs)
-      
+
       if (generatetable) {
         await generateTable(generatetable)
       }
@@ -7615,6 +7624,7 @@ checkbox1.setAttribute('hidden', "");
     const updatedPositions = moveStringBefore(positions, "string4", "string2");
     log1(updatedPositions); // Output: ["string1", "string4", "string2", "string3"]
     var scriptClicked
+    var removeScriptClicked
     function getTypeFromCheckbox(checkbox) {
       // Get the parent tbody element of the checkbox
       const tbody = checkbox.closest('tbody');
@@ -7716,19 +7726,16 @@ checkbox1.setAttribute('hidden', "");
               items[scriptClicked].push({ name: id });
             }
             const existing = checkbox.closest('tr')
-            if (type === 'onClick') {
+            
               existing.querySelector('#script_status').onclick = async () => {
                 await funcDictionary[id]()
                 existing.querySelector('#script_status') = '🟢'
                 const date = new Date()
-                const l = pathItem.hub_items.scripts.onClick.length
-                pathItem.hub_items.scripts.onClick[l - 1].runned = date.getTime()
+                headContentItem.scripts[id].runned = date.getTime()
                 existing.querySelector('#last_script_execute_time').textContent = formatDate(date)
-                updatePathItem()
+                updateHeadContentItem()
               }
-            } else {
-              existing.querySelector('#script_status').onclick = () => { }
-            }
+            
             document.getElementById(getBodyIdFromType(scriptClicked)).append(existing)
           }
           checkbox.setAttribute('hidden', '');
@@ -7742,6 +7749,40 @@ checkbox1.setAttribute('hidden', "");
 
 
       scriptClicked = scriptClicked ? undefined : type
+    }
+
+    async function removeScriptStatus(event, type) {
+      const element = event.target.closest('tr')
+      element.querySelectorAll('#script_execute_select').forEach(checkbox => {
+        checkbox.removeAttribute('hidden')
+
+      })
+      if (removeScriptClicked) {
+        let items = pathItem.hub_items?.scripts
+        if (!items) {
+          return
+
+        }
+        element.querySelectorAll('#script_execute_select').forEach(checkbox => {
+          if (checkbox.checked) {
+            const id = checkbox.closest('tr').id;
+            const type1 = getTypeFromCheckbox(checkbox); // Assuming you have a function to determine the type
+
+            delete headContentItem.scripts[id]?.runned
+            updateHeadContentItem()
+
+          }
+          checkbox.setAttribute('hidden', '');
+          checkbox.checked = false
+        });
+
+        pathItem.hub_items.scripts = items
+        await updatePathItem()
+
+      }
+
+
+      removeScriptClicked = removeScriptClicked ? undefined : type
     }
 
     function insertDataIntoCodeLog(actionTime, actionName, options, inserted_component, element, reusableId) {
@@ -12210,7 +12251,7 @@ elementsToRemove.forEach(element => element.remove());
       if (reload) {
         location.reload()
       }
-      
+
       log1('link: ' + r.link)
       const el = getElementById1('page-path')
 
