@@ -2611,7 +2611,7 @@
       });
 
     }
-    const refreshCatalogue = async() => {
+    const refreshCatalogue = async () => {
       if (!pathItemPath.endsWith('/Home/Hub')) {
         alert('not home  page')
         return
@@ -2621,20 +2621,20 @@
       const sLsi = pathItemPath.split('/')[0] + splited[1]
       const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${sLsi}`;
       const { items } = await fetch(url).then(e => e.json())
-      const filtered = items.filter(element=>element.lsi1.endsWith(splited[2]))
-    
-      const arr = filtered.map(element=>{
+      const filtered = items.filter(element => element.lsi1.endsWith(splited[2]))
+
+      const arr = filtered.map(element => {
         const newId = generateUUID()
         return {
 
-          componentId: element.id, id:  generateUUID(), path: element.lsi1.split(';')[0]
+          componentId: element.id, id: generateUUID(), path: element.lsi1.split(';')[0]
         }
       })
       const el = {
         time: (new Date()).getTime(),
         action: 'Replace_Component',
-        target_element: [article_component+'-tree', ...arr],
-       
+        target_element: [article_component + '-tree', ...arr],
+
       };
       await pushAction(el)
       location.reload()
@@ -2761,8 +2761,8 @@
 
 
       json.itemListElement[0].item["@id"] = 'https://' + site.toLowerCase()
-      let link1 ='https://{site}/',
-      active && arr.push(active)
+      let link1 = 'https://{site}/',
+        active && arr.push(active)
       for (let i = 0; i < arr.length; i++) {
         const newEl = deepCopy(json.itemListElement[0])
         link1 = link1 + arr[i] + '/'
@@ -3356,48 +3356,51 @@
     }
     var saveToList = async (event) => {
       const target = event.target
-      const input = target.parentNode.querySelector('#import-list-input').value
-      console.log('input ' + input)
+      const input1 = target.parentNode.querySelector('#import-list-input').value
+      console.log('input ' + input1)
       const details = target.closest('[data-list]')
       const listName = details.getAttribute('data-list')
       const storageId = details.getAttribute('storageId')
-      const [key, value] = input.split(':')
-      const storageSk = `list:${listName}:${key}`
-      const v = {
-        id: storageId,
-        sk: storageSk,
-        value
-      }
-      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-        method: 'POST',
-        body: JSON.stringify(v),
-      });
-      console.log(JSON.stringify(v))
-      const listOriginalElement = details.querySelector('[data-lists-element]')
-      const clonedListElement = listOriginalElement.cloneNode(true)
-      clonedListElement.querySelector('[data-lists-element-key]').textContent = key
-      const span = clonedListElement.querySelector('[data-lists-element-value]')
-      span.textContent = `{${key.replaceAll('_', ' ')}}`
-      const statusEl = clonedListElement.querySelector('[data-lists-element-status]')
-      statusEl.textContent = '🟢'
-      span.textContent = value
-      span.addEventListener('blur', async function () {
-        const value = span.textContent
-
-        if (value === '{' + key + '}' || value === '') {
-          return
-        }
-        exisitingValue = {
-          ...v,
+      const splited = input1.split('\n')
+      for (const input of splited) {
+        const [key, value] = input.trim().split(':')
+        const storageSk = `list:${listName}:${key}`
+        const v = {
+          id: storageId,
+          sk: storageSk,
           value
         }
         await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
           method: 'POST',
-          body: JSON.stringify(exisitingValue),
+          body: JSON.stringify(v),
         });
+        console.log(JSON.stringify(v))
+        const listOriginalElement = details.querySelector('[data-lists-element]')
+        const clonedListElement = listOriginalElement.cloneNode(true)
+        clonedListElement.querySelector('[data-lists-element-key]').textContent = key
+        const span = clonedListElement.querySelector('[data-lists-element-value]')
+        span.textContent = `{${key.replaceAll('_', ' ')}}`
+        const statusEl = clonedListElement.querySelector('[data-lists-element-status]')
+        statusEl.textContent = '🟢'
+        span.textContent = value
+        span.addEventListener('blur', async function () {
+          const value = span.textContent
 
-      });
-      listOriginalElement.parentNode.append(clonedListElement)
+          if (value === '{' + key + '}' || value === '') {
+            return
+          }
+          exisitingValue = {
+            ...v,
+            value
+          }
+          await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            body: JSON.stringify(exisitingValue),
+          });
+
+        });
+        listOriginalElement.parentNode.append(clonedListElement)
+      }
     }
     var showList = async (lists, storageId1, hubItems) => {
       let parsedLists
