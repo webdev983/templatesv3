@@ -1,0 +1,1896 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <link rel="stylesheet" href="css/right-click-menu.css" media="all">
+  <link rel="stylesheet" href="css/buttons-and-menus.css" media="all">
+  <link rel="stylesheet" href="css/panels.css" media="all">
+  <link rel="icon" type="image/png" href="favicon.png">
+
+
+</head>
+
+<body class="body">
+  <aside class="aside">
+    <div class="panel top">
+      <button disabled class="b-1" id="last-action-time"
+        style="color: black;z-index:1; position: absolute;top: 50%;left: 50%; transform: translate(-50%, -50%);">⏳</button>
+    </div>
+
+    <div class="panel left" style="overflow-y: auto; height: 100vh;">
+      <div id="nav-buttons" hidden>
+        <a href="https://webdev983.github.io/templatesv3/"><button class="b-1">📂</button></a>
+      </div>
+      <div style="margin-top: 3px;">
+        <button class="b-1 b-select" id="log-open">🪵</button>
+        <button class="b-1 " id="execute-commands" onclick="toggleExecution(event)">🌴</button>
+        <button class="b-1 " id="toggle-component-tree" onclick="toggleComponentTree()">🧩</button>
+        <button class="b-1 " id="toggle-code-tree" onclick="toggleCodeTree()">🏷️</button>
+        <button class="b-1 " id="toggle-head" onclick="toggleHead()">🗿</button>
+        <button class="b-1 " id="toggle-generated-page" onclick="toggleGeneratedPage()">👁️</button>
+        <button hidden id="refresh-page" class="b-1" onclick="reloadPage(event)">🔄</button>
+        <button hidden id="remove-duplicate-actions" onclick="removeDuplicatedActions(event)" class="b-1">🧹</button>
+
+
+        <input hidden id="search-actions" type="text" placeholder="🔎 Search actions" style="  padding: 5px; 
+        border: 2px solid #4A90E2;   
+        border-radius: 5px;   
+        font-size: 18px; margin-bottom: 7px; margin-top: 10px;  margin-left: 5px; min-width: 315px; "
+          oninput="searchLogs(event)">
+
+      </div>
+      <div id="logs-menu">
+      </div>
+      <table id="code-log" class="table-1"
+        style="margin-left: auto; margin-right: auto; margin-bottom: 450px; width: 98%;" hidden>
+        <style>
+          .action-data-tooltip {
+            display: none;
+            position: absolute;
+            background-color: #333;
+            /* Темный фон */
+            color: #fff;
+            /* Белый текст */
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            /* Убедитесь, что tooltip отображается над другими элементами */
+            max-height: 400px;
+            /* Максимальная высота перед добавлением прокрутки */
+            overflow-y: auto;
+            /* Вертикальная прокрутка при переполнении */
+            width: 555px;
+            /* или задайте конкретную ширину */
+            top: calc(100% + 0px);
+            /* Разместить под элементом на 3px ниже */
+            left: 0px;
+            /* Сместить вправо на 50px от начала родительского элемента */
+          }
+
+
+          #code-log-element:hover .action-data-tooltip {
+            display: block;
+          }
+
+
+
+
+          td {
+            position: relative;
+            /* Необходимо для корректной работы позиционирования tooltip */
+          }
+
+          .action-error {
+            background-color: #ff7a7a;
+          }
+
+          .action-frozen {
+            background-color: #5f96fc;
+          }
+        </style>
+        <tbody id="code-log-body">
+          <!--NUMBERS!! 1️⃣ 2️⃣ 3️⃣ 4️⃣-->
+          <tr hidden id="code-log-element">
+            <td style="position: relative; padding: 4px;" data-type-code-log="action-time">
+              <span data-move-actions hidden>
+                <button class="b-5" data-move-after>⬇️</button>
+                <button class="b-5" data-move-before style="margin-left: -7px; margin-right: -10px;">⬆️</button>
+              </span>
+              <span class="l-4" id="code-log-action-time" style="margin-left: 10px;">1703707728031</span>
+              <div class="action-data-tooltip">
+                <div style="margin-right: 15px;" data-action-error hidden>
+                  <span class="l-4">⚠️</span>
+                  <span class="l-4" data-error-message>missing target</span>
+                </div>
+                <div data-action-buttons="" style="position: relative;">
+                  <button class="b-3" id="move-button">↕️</button>
+                  <button id="change-target" class="b-3">🎯</button>
+                  <button id="freeze" class="b-3">🥶</button>
+                  <button style="position: absolute; right: 3px;" onclick="deleteAction(event)"
+                    class="b-3">&#128465;</button>
+
+                  <div data-action-button-menu data-menu>
+
+                  </div>
+                </div>
+                <hr style="border-bottom: 1px solid #ffcc81;">
+                <div data-action-data>
+
+
+                </div>
+
+
+              </div>
+            </td>
+            <td data-type-code-log="action-name"><span class="l-4" id="code-log-action">append child</span>
+            </td>
+            <td hidden><button data-type-code-log="action-remove" onclick="deleteAction(event)"
+                class="b-5">&#128465;</button>
+
+          </tr>
+        </tbody>
+
+
+
+        <!-- action buttons menus-->
+        <div hidden action-buttons-menus-storage>
+          <button hidden id="change-self-use" class="b-3" class="b-3">🪞</button>
+          <button hidden id="change-component" class="b-3" class="b-3">🧩</button>
+          <div hidden id="change-adding-component" style="margin-top: 5px;">
+            <label>
+              <span class="l-4">🔗</span><span class="l-4"> attach by: </span>
+              <select class="select-1" style="display: inline-block; margin-bottom: 2px;" id="change_link_type">
+                <option id="byId">🆔 id</option>
+                <option id="absolute">✳️ absolute</option>
+                <option id="relative">#️⃣ relative</option>
+                <option id="content">💲content folder</option>
+              </select>
+              <input id="new-component-input" type="text" class="input-actions" style="margin-top:5px;">
+              <button id="save-new-component" class="b-4" style="margin-left: -1px;">💾 Save</button>
+              <button onclick="cancel2(event)" class="b-4" style="margin-left: -3px;">❌ Cancel</button>
+            </label>
+          </div>
+
+
+          <div id="change-target-id-menu" style="margin-top: 5px;">
+            <label><span class="l-4">🎯</span><span class="l-4"> Change target id: </span>
+              <input hidden id="save-new-target-input" type="text" class="input-actions" style="margin-top:5px;">
+              <button hidden id="save-new-target" class="b-4" style="margin-left: -1px;">💾 Save</button>
+              <button onclick="cancel2(event)" class="b-4" style="margin-left: -3px;">❌ Cancel</button>
+            </label>
+          </div>
+        </div>
+        <!-- actions menus-->
+
+        <div hidden id="actions-containers">
+          <div id="replace-action">
+            <label class="action-label"><span class="action-icon">🔄 Replace</span></label>
+            <div class="action-data-group" data-target>
+              <label class="action-group-label"><span class="action-icon">🎯 Target</span></label>
+              <label class="action-label"><span class="action-icon">🧩</span><span
+                  id="replaced-component-name-value">product-name</span></label>
+              <label class="action-label"> <span class="action-icon">🆔</span><span
+                  id="replaced-component-id-value">61453686-ff1b-4a8b-bc37-66f63857f621</span></label>
+              <label class="action-label"> <span class="action-icon" style="background-color: white;">👣</span><span
+                  id="replaced-component-path-value">site.com/path/blablabla/blablabla</span></label>
+            </div>
+
+            <div class="action-data-group" id="replace-action-folder">
+              <label class="action-group-label"><span class="action-icon">🆕</span><span>replace folder</span></label>
+              <label class="action-label"> <span class="action-icon">📂</span><span
+                  id="replace-action-folder-value">site.com/path/blablabla/blablabla</span></label>
+              <label class="action-label"><span class="action-icon"
+                  style="user-select: none; background-color: white;">➕</span><span
+                  id="replace-action-folder-link-value">$../blabla/blabla/blabla</span></label>
+            </div>
+
+
+            <ol id="new-replace-components-list">
+              <label class="action-group-list-label"><span class="action-icon">🆕 Files</span></label>
+              <li id="new-replace-component">
+                <label class="action-label"><span class="action-icon">🧩</span><span
+                    id="new-replace-component-name-value">product-name</span></label>
+                <label class="action-label"><span class="action-icon">🆔</span><span
+                    id="new-replace-component-id-value">61453686-ff1b-4a8b-bc37-66f63857f621</span></label>
+                <label class="action-label"><span class="action-icon" style="background-color: white">👣</span><span
+                    id="new-replace-component-path-value">site.com/path/blablabla/blablabla</span></label>
+              </li>
+            </ol>
+          </div>
+
+
+
+          <label class="action-single-label" id="class-action"><span class="action-icon">🎨</span><span
+              id="class-action-value">class="cool class2"</span></label>
+          <label class="action-single-label" id="attriute-action"><span data-action-data-part-key
+              class="action-icon">🔑</span><span id="attriute-action-value">data-user-icon</span></label>
+          <label class="action-single-label" id="tc-action"><span class="action-icon">📄 insert text
+              content</span></label>
+          <label class="action-single-label" id="innerhtml-textcontent-action-content"><span
+              class="action-icon">🪣</span><span
+              id="innerhtml-textcontent-action-content-value">dasdsadkj124kj21djkasdkj daokjdsakjdsajk dajkdskjsadjk
+              ddsakjdsakjsdakjd dsadasdsad</span> </label>
+          <label class="action-single-label" id="innerhtml-action"><span class="action-icon">▶️</span><span>insert inner
+              html</span></label>
+
+
+          <div id="component-action-add">
+            <label class="action-single-label"><span class="action-icon">🧩</span><span
+                id="action-add-component-name">Hub</span></label>
+            <label class="action-single-label"> <span class="action-icon">🆔</span><span
+                id="action-add-component-id">61453686-ff1b-4a8b-bc37-66f63857f621</span>
+            </label>
+            <label class="action-single-label" id="action-component-link"><span class="action-icon"
+                style=" background-color: white;">👣</span><span
+                id="action-add-component-path">site.com/path/blablabla/blablabla</span>
+              <button id="action-component-redirect">↗️</button>
+
+            </label>
+
+            <label class="action-single-label"> <span class="action-icon"
+                style="user-select: none; background-color: white; margin-top: 3px;">➕</span><span
+                id="action-add-component-link-type">$../blabla/blabla</span></label>
+          </div>
+
+          <div class="action-data-group" id="action-target">
+            <label class="action-group-label"><span class="action-icon">🎯 Target</span></label>
+            <label class="action-label" id="action-target-tag-name"><span class="action-icon">🏷️</span><span
+                id="action-target-tag-name-value">body</span></label>
+            <label class="action-label" id="action-target-tag-id"><span class="action-icon">🆔</span><span
+                id="action-target-tag-id-value">ff1b-4a8b-bc37-66f63857f621dy-61453686</span></label>
+          </div>
+
+
+
+          <label id="change-tag-action" class="action-single-label"><span class="action-icon">🆕</span><span
+              id="change-tag-action-value">div</span></label>
+          <div class="action-data-group" id="tag-action">
+            <label class="action-group-label" id="tag-action-created" hidden><span class="action-icon">🆕
+                created</span></label>
+            <label class="action-group-label" id="tag-action-moved"><span class="action-icon">➡️ moved</span></label>
+            <div class="action-data-group-lvl2" id="moved-tag">
+              <label class="action-label"> <span class="action-icon">🏷️</span><span
+                  id="tag-action-tag-name">div</span></label>
+              <label class="action-label"> <span class="action-icon">🆔</span><span
+                  id="tag-action-tag-id">61453686-ff1b-4a8b-bc37-66f63857f621</span></label>
+            </div>
+          </div>
+
+
+
+          <label id="copy-tag-action" class="action-single-label"><span class="action-icon">⧉ copyid </span><span
+              id="copy-id-value">414112-4141412412-41412412-4124124124-412412421</span></label>
+
+
+
+          <div class="action-data-group" id="action-options" original>
+            <label class="action-group-label"> <span class="action-icon" style="background: white;"
+                id="action-options-amount">🛠️</span><span>options</span></label>
+            <label class="action-label"></label>
+            <label hidden class="action-label" id="action-option-free"><span
+                class="action-icon">🥶</span><span>freeze</span></label>
+            <label class="action-label" id="action-dub-target"><span class="action-icon">⧉</span><span>dub
+                target</span></label>
+            <label class="action-label" id="action-apply-target-copies"><span class="action-icon">⧉</span><span>apply to
+                target copies</span></label>
+            <label class="action-label" id="action-apply-moving-copies"><span class="action-icon">⧉</span><span>apply to
+                moving copies</span></label>
+            <label class="action-label" id="action-append-position"><span class="action-icon">📍 append position:
+              </span><span id="action-append-position-value">1</span></label>
+            <label class="action-label" id="action-reuse-id"><span class="action-icon">♻️ reuse id: </span><span
+                id="action-reuse-id-value">AC</span></label>
+            <label class="action-label" id="action-self-use-component"><span class="action-icon">🪞</span><span>self
+                use</span></label>
+            <label class="action-label" id="action-in-replace"><span class="action-icon">🔄</span><span>in
+                replace</span></label>
+            <label class="action-label" id="action-fork-id"><span class="action-icon">🍴 fork
+              </span><span id="action-fork-id-value"></span></label>
+
+
+
+          </div>
+
+        </div>
+
+
+
+
+        <!-- actions menus-->
+
+
+
+
+
+
+
+
+
+        <tbody id="code-log-search-body">
+          <!--NUMBERS!! 1️⃣ 2️⃣ 3️⃣ 4️⃣-->
+          <tr hidden id="code-log-element">
+            <td style="position: relative;" data-type-code-log="action-time">
+              <span data-move-actions>
+                <button hidden class="b-5">⬇️</button>
+                <button hidden class="b-5" style="margin-left: -7px; margin-right: -10px;">⬆️</button>
+              </span>
+              <span id="code-log-action-time" style="margin-left: 10px;">1703707728031</span>
+              <div class="action-data-tooltip">
+                <div data-action-data="">
+                  empty
+                </div>
+              </div>
+            </td>
+            <td data-type-code-log="action-name"><span id="code-log-action">append child</span>
+            </td>
+            <td><button data-type-code-log="action-remove" onclick="deleteAction(event)" class="b-5">&#128465;</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+    </div>
+
+    <div class="panel bottom" style="position: fixed; bottom: 0; left: 0;">
+      <button id="bottom-buttons" style="margin-left: 3px;" class="b-1" onclick="removeTokenAndReload()">📴</button>
+      <script>function removeTokenAndReload() {
+          // Удаляем 'token' из localStorage
+          localStorage.removeItem('token');
+          localStorage.removeItem('ownerid');
+          localStorage.removeItem('helperid');
+
+          // Перезагружаем страницу
+          window.location.href = '/templatesv3/';
+        }
+      </script>
+    </div>
+
+  </aside>
+  <main class="main" style="position: relative;">
+
+    <div class="panel horizontal-menu">
+      <button id="path_select" onclick="loadRoot()" class='b-1'
+        style="user-select: none; margin-right: 7px;">👣</button>
+
+      <label id="page-path" onclick="labelClick(event)" class="l-2 b-dark-blue"
+        style="cursor: pointer;  font:700;">~</label>
+
+      <a href="" target="_blank" style="text-decoration: none; color: #000000;" hidden id="published-label"
+        class="l-3">🌐</a>
+      <a href="" target="_blank" style="text-decoration: none; color: #000000;" hidden id="published-site-label"
+        class="l-3">🌎</a>
+
+    </div>
+
+
+
+
+
+
+    <div id="web-page-menu" hidden class="panel-2 horizontal-menu" style="position: relative">
+      <button id="path-icon" class='b-1' onclick="publish(event)"
+        style="user-select: none; margin-right: 7px;">📰</button>
+      <button hidden class="b-1" id="published-invalidate" onclick="invalidate(event)"
+        style="margin-right: 5px;">🔄</button>
+      <button onclick="removeAndInvalidate(event)" hidden id="published-remove" class="b-1"
+        style="margin-right: 5px;">🗑️️</button>
+
+      <button id="published-update-content" class="b-1" style="margin-right: 5px; position: absolute; right: 20px;"
+        onclick="publish(event,true)">🗞️</button>
+
+    </div>
+
+
+
+    </div>
+
+    <div id="components-tree-menu" class="panel horizontal-menu">
+      <label class="l-1" style="margin-right: 10px; user-select: none;">🧩</label>
+      <button class="b-1" style="margin-right: 5px;" onclick="addComponent(event)">➕</button>
+    </div>
+
+    <div id="components-tree" class="horizontal-area" style="position: relative;">
+    </div>
+
+    <div id="code-tree-menu" class="panel horizontal-menu">
+      <label class="l-1" style="margin-right: 10px; user-select: none;">🏷️</label>
+      <button class="b-1" onclick="addTreeElement(event)">➕</button>
+      <button class="b-1" onclick="showClasses(event)">🎨</button>
+      <button class="b-1" onclick="showAttributes(event)">🔑</button>
+
+
+
+
+    </div>
+    <div id="code-tree" class="horizontal-area" style="position: relative;">
+      <fieldset id="head-tree" data-element="code-tree-tag" class="tree-element">
+        <legend class="l-p b-dark-blue"></legend>
+        <input id="selectedCheckbox" hidden="" type="checkbox" onchange="handleCheckboxChange(event)">
+        <button class="b-3 arrow" data-element="code-tree-show-hide-button" onclick="toggleSubFields(event)">→</button>
+        <button class="b-3 t" data-element="code-tree-tag-name-button"
+          onclick="loader(event, handleTreeClick)">🏷️head</button>
+        <button hidden class="b-3 t" data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)">
+          ▶️</button>
+        <button class="b-3 t" hidden data-element="code-tree-attributes-button"
+          onclick="openAttributeContent(event)">🔑</button>
+        <button class="b-3 t" hidden data-element="code-tree-text-content-button"
+          onclick="openTextContent(event)">📄</button>
+        <span data-element="comment" hidden class="l-3 t b-dark-blue">💬</span>
+        <span data-element="class" hidden class="l-3 t b-dark-green">🎨</span>
+        <div data-open-menu></div>
+      </fieldset>
+
+      <fieldset id="body-tree" data-element="code-tree-tag" class="tree-element">
+        <legend class="l-p b-dark-blue"></legend>
+        <input id="selectedCheckbox" hidden="" type="checkbox" onchange="handleCheckboxChange(event)">
+        <button class="b-3 arrow" data-element="code-tree-show-hide-button" onclick="toggleSubFields(event)">→</button>
+        <button class="b-3 t" data-element="code-tree-tag-name-button"
+          onclick="loader(event, handleTreeClick)">🏷️body</button>
+        <button class="b-3 t " hidden data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)">
+          ▶️</button>
+        <button class="b-3 t" hidden data-element="code-tree-attributes-button"
+          onclick="openAttributeContent(event)">🔑</button>
+        <button class="b-3 t b-dark-blue" data-element="code-tree-text-content-button" hidden
+          onclick="openTextContent(event)">📄</button>
+        <span data-element="comment" hidden class="l-3 t b-dark-blue">💬</span>
+        <span data-element="class" hidden class="l-3 t b-dark-green">🎨</span>
+        <div data-open-menu></div>
+      </fieldset>
+
+    </div>
+
+
+    <div id="head-menu" class="panel horizontal-menu">
+      <label class="l-1" style="margin-right: 10px; user-select: none;">🗿</label>
+      <button hidden class="b-1 b-selected" style="margin-right: 5px;">⭐</button>
+
+    </div>
+    <div id="head-1" class="horizontal-area">
+
+
+
+      <details style="margin-bottom: 7px;" hidden data-file-name-show="Hub">
+        <summary class="summary-L-3">
+          <span class="l-3 b-dark-blue" id="menus_load_status">🔴</span>
+          <span class="l-3 b-dark-blue">Menus 🧱</span>
+        </summary>
+        <label hidden class="l-3" style="margin-left: 30px;"><input id="menu_toggle_saved_in_head" type="checkbox">save
+          in
+          local head🗿</label>
+
+        <table class="table-1" id="menu_toggle" style="margin-left: 30px;">
+          <tr id="scripts_menu_toggle">
+            <td>
+              <label id="menu_toggle_status" class="l-3">🔴</label>
+              <label class="l-3" style="margin: 10px;">scripts menu</label>
+            </td>
+            <td hidden>
+              <span class="l-3">🕐</span>
+              <span class="l-3" id="menu_toggle_last_update_time">never</span>
+            </td>
+          </tr>
+          <tr id="lists_tasks_toggle">
+            <td>
+              <label id="menu_toggle_status" class="l-3">🔴</label>
+              <label class="l-3" style="margin: 10px;">lists task</label>
+            </td>
+            <td hidden>
+              <span class="l-3">🕐</span>
+              <span class="l-3" id="menu_toggle_last_update_time">never</span>
+            </td>
+          </tr>
+
+
+          <tr id="chatgpt_logs_toggle">
+            <td>
+              <label id="menu_toggle_status" class="l-3">🔴</label>
+              <label class="l-3" style="margin: 10px;">ChatGPT logs</label>
+            </td>
+            <td hidden>
+              <span class="l-3">🕐</span>
+              <span class="l-3" id="menu_toggle_last_update_time">never</span>
+            </td>
+          </tr>
+
+
+          <tr id="chatgpt_task_toggle">
+            <td>
+              <label id="menu_toggle_status" class="l-3">🔴</label>
+              <label class="l-3" style="margin: 10px;">ChatGPT task</label>
+            </td>
+            <td hidden>
+              <span class="l-3">🕐</span>
+              <span class="l-3" id="menu_toggle_last_update_time">never</span>
+            </td>
+          </tr>
+
+          <tr id="sku_menu_toggle">
+            <td>
+              <label id="menu_toggle_status" class="l-3">🔴</label>
+              <label class="l-3" style="margin: 10px;">Sku menu</label>
+            </td>
+            <td hidden>
+              <span class="l-3">🕐</span>
+              <span class="l-3" id="menu_toggle_last_update_time">never</span>
+            </td>
+          </tr>
+          <tr id="import_menu_toggle">
+            <td>
+              <label id="menu_toggle_status" class="l-3">🔴</label>
+              <label class="l-3" style="margin: 10px;">import</label>
+            </td>
+            <td hidden>
+              <span class="l-3">🕐</span>
+              <span class="l-3" id="menu_toggle_last_update_time">never</span>
+            </td>
+          </tr>
+          <tr id="list_menu_toggle" hidden>
+            <td>
+              <label id="menu_toggle_status" class="l-3">🔴</label>
+              <label id="list-name" class="l-3" style="margin: 10px;"></label>
+              <label class="l-3">📋</label>
+            </td>
+            <td hidden>
+              <span class="l-3">🕐</span>
+              <span class="l-3" id="menu_toggle_last_update_time"></span>
+            </td>
+          </tr>
+
+        </table>
+      </details>
+
+
+
+
+
+
+
+      <div id="head-menus">
+        <details style="margin-bottom: 7px;" hidden id="scripts-list">
+          <summary class="summary-L-3">
+            <span class="l-3 b-dark-blue" id="scripts_menu_load_status">🔴</span>
+            <span class="l-3 b-dark-blue">Scripts 🦾</span>
+          </summary>
+          <label hidden class="l-3" style="margin-left: 30px;"><input id="scripts-menu-save-head" type="checkbox">save
+            in local
+            head🗿</label>
+
+
+          <table class="table-1" style="margin-left: 30px;">
+            <tbody id="on_open_body">
+              <tr id="scripts_on_open">
+                <td colspan="7" style="text-align: center;">
+                  <span class="l-2 b-dark-blue">on open 🚪</span>
+                  <button class="b-2" onclick="addScript(event,'onOpen')">➕</button>
+                  <button class="b-2" style="margin-left:3px;"
+                    onclick="removeScriptStatus(event,'onOpen')">🗑️️</button>
+                </td>
+              </tr>
+
+
+
+
+            </tbody>
+            <tbody id="on_load_body">
+
+              <tr id="scripts_on_load">
+
+                <td colspan="7" style="text-align: center;">
+                  <span class="l-2 b-dark-blue">on load ⌛</span>
+                  <button class="b-2" onclick="addScript(event,'onLoad')">➕</button>
+                </td>
+              </tr>
+
+            </tbody>
+            <tbody id="on_publish_body">
+              <tr id="scripts_on_publish">
+                <td colspan="7" style="text-align: center;">
+                  <span class="l-2 b-dark-blue">on publish 📰</span>
+                  <button class="b-2" onclick="addScript(event,'onPublish')">➕</button>
+                </td>
+              </tr>
+            </tbody>
+            <tbody id="on_click_body">
+              <tr id="scripts_on_click">
+
+                <td colspan="7" style="text-align: center;">
+                  <span class="l-2 b-dark-blue">on click 🐭</span>
+                  <button class="b-2" onclick="addScript(event,'onClick')">➕</button>
+
+                </td>
+              </tr>
+
+
+
+
+
+
+            </tbody>
+            <tbody id="not_active_body">
+
+
+
+
+
+
+              <tr id="scripts_not_active">
+                <td colspan="7" style="text-align: center;">
+                  <span class="l-2 b-dark-blue">not active 🚫</span>
+                  <button class="b-2" onclick="addScript(event,'notActive')">➕</button>
+                </td>
+
+              </tr>
+
+              <tr id="script_head_transfer">
+                <td>
+                  <input type="checkbox" id="script_execute_select" hidden>
+                  <label id="script_status" class="l-3">🔴</label>
+                  <label class="l-3" style="margin: 10px;">head transfer ✉️</label>
+                </td>
+                <td>
+                  <span class="l-3">🦾</span>
+                  <span class="l-3" id="last_script_execute_time">never</span>
+                </td>
+                <td>
+                  <span id="queue_number_container">
+                    <span class="l-3">🔀 </span>
+                    <span class="l-3  queue" contenteditable id="queue_number">~</span>
+                  </span>
+                </td>
+
+                <td>
+                </td>
+                <td>
+                </td>
+
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_in_template" />🚧</label>
+                </td>
+
+              </tr>
+
+
+
+              <tr id="script_head_placeholders_transfer">
+                <td>
+
+                  <input type="checkbox" id="script_execute_select" hidden>
+                  <label id="script_status" class="l-3">🔴</label>
+                  <label class="l-3" style="margin: 10px;">head placeholders transfer ✉️</label>
+                </td>
+                <td>
+                  <span class="l-3">🦾</span>
+                  <span class="l-3" id="last_script_execute_time">never</span>
+                </td>
+                <td>
+                  <span id="queue_number_container">
+                    <span class="l-3">🔀 </span>
+                    <span class="l-3  queue" contenteditable id="queue_number">~</span>
+                  </span>
+                </td>
+
+                <td>
+                </td>
+                <td>
+                </td>
+
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_in_template" />🚧</label>
+                </td>
+
+              </tr>
+
+
+
+
+
+
+
+              <tr id="scrip_eval">
+                <td>
+                  <input type="checkbox" id="script_execute_select" hidden>
+                  <label id="script_status" class="l-3">🔴</label>
+                  <label class="l-3" style="margin: 10px;">eval</label>
+                </td>
+                <td>
+                  <span class="l-3">🦾</span>
+                  <span class="l-3" id="last_script_execute_time">never</span>
+
+                </td>
+                <td>
+                  <span id="queue_number_container">
+                    <span class="l-3">🔀 </span>
+                    <span class="l-3  queue" contenteditable id="queue_number">~</span>
+                  </span>
+                </td>
+
+                <td>
+                </td>
+
+                <td>
+                </td>
+
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_in_template" />🚧</label>
+                </td>
+
+              </tr>
+
+
+              <tr id="script_breadcrumb_generation">
+                <td>
+                  <input type="checkbox" id="script_execute_select" hidden>
+                  <label id="script_status" class="l-3">🔴</label>
+                  <label class="l-3" style="margin: 10px;">breadCrumb generation</label>
+                </td>
+                <td>
+                  <span class="l-3">🦾</span>
+                  <span class="l-3" id="last_script_execute_time">never</span>
+                </td>
+                <td>
+                  <span id="queue_number_container">
+                    <span class="l-3">🔀 </span>
+                    <span class="l-3  queue" contenteditable id="queue_number">~</span>
+                  </span>
+                </td>
+
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_on_red_checkbox" />🟥</label>
+                </td>
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_requires_reload" />🔃</label>
+                </td>
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_in_template" />🚧</label>
+                </td>
+              </tr>
+              <tr id="script_transfer">
+                <td>
+                  <input type="checkbox" id="script_execute_select" hidden>
+                  <label id="script_status" class="l-3">🔴</label>
+                  <label class="l-3" style="margin: 10px;">transfer ✉️</label>
+                </td>
+                <td>
+                  <span class="l-3">🦾</span>
+                  <span class="l-3" id="last_script_execute_time">never</span>
+                </td>
+                <td>
+                  <span id="queue_number_container">
+                    <span class="l-3">🔀 </span>
+                    <span class="l-3 queue" contenteditable id="queue_number">~</span>
+                  </span>
+                </td>
+
+                <td>
+                </td>
+
+                <td>
+                </td>
+
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_in_template" />🚧</label>
+
+                </td>
+
+              </tr>
+
+              <tr id="script_product_spec_table">
+                <td>
+                  <input type="checkbox" id="script_execute_select" hidden>
+                  <label id="script_status" class="l-3">🔴</label>
+                  <label class="l-3" style="margin: 10px;">product specification table 📦</label>
+                </td>
+
+                <td>
+                  <span class="l-3">🦾</span>
+                  <span class="l-3" id="last_script_execute_time">never</span>
+                </td>
+                <td>
+                  <span id="queue_number_container" hidden>
+                    <span class="l-3">🔀 </span>
+                    <span class="l-3 queue" contenteditable id="queue_number">~</span>
+                  </span>
+                </td>
+
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_on_red_checkbox" />🟥</label>
+                </td>
+
+                <td>
+                </td>
+
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_in_template" />🚧</label>
+
+                </td>
+
+              </tr>
+
+              <tr id="script_article_table_of_contents">
+                <td>
+                  <input type="checkbox" id="script_execute_select" hidden>
+                  <label id="script_status" class="l-3">🔴</label>
+                  <label class="l-3" style="margin: 10px;">article table of contents 📜</label>
+                </td>
+                <td>
+                  <span class="l-3">🦾</span>
+                  <span class="l-3" id="last_script_execute_time">never</span>
+                </td>
+                <td>
+                  <span id="queue_number_container" hidden>
+                    <span class="l-3">🔀 </span>
+                    <span class="l-3 queue" contenteditable id="queue_number">~</span>
+                  </span>
+                </td>
+
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_on_red_checkbox" />🟥</label>
+                </td>
+                <td>
+                </td>
+
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_in_template" />🚧</label>
+
+                </td>
+
+              </tr>
+              <tr id="script_cleaner">
+                <td>
+                  <input type="checkbox" id="script_execute_select" hidden>
+                  <label id="script_status" class="l-3">🔴</label>
+                  <label class="l-3" style="margin: 10px;">cleaner </label>
+                </td>
+                <td>
+                  <span class="l-3">🦾</span>
+                  <span class="l-3" id="last_script_execute_time">never</span>
+                </td>
+                <td>
+                  <span id="queue_number_container">
+                    <span class="l-3">🔀 </span>
+                    <span class="l-3 queue" contenteditable id="queue_number">~</span>
+                  </span>
+                </td>
+
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_on_red_checkbox" />🟥</label>
+                </td>
+                <td>
+                </td>
+
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_in_template" />🚧</label>
+
+                </td>
+
+              </tr>
+
+              <tr id="script_generate_product_json">
+                <td>
+                  <input type="checkbox" id="script_execute_select" hidden>
+                  <label id="script_status" class="l-3">🔴</label>
+                  <label class="l-3" style="margin: 10px;">product json 📦</label>
+                </td>
+
+                <td>
+                  <span class="l-3">🦾</span>
+                  <span class="l-3" id="last_script_execute_time">never</span>
+                </td>
+                <td>
+                  <span id="queue_number_container">
+                    <span class="l-3">🔀 </span>
+                    <span class="l-3 queue" contenteditable id="queue_number">~</span>
+                  </span>
+                </td>
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_on_red_checkbox" />🟥</label>
+                </td>
+                <td>
+                </td>
+
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_in_template" />🚧</label>
+
+                </td>
+
+              </tr>
+
+
+
+              <tr id="script_generate_article_anchor">
+                <td>
+                  <input type="checkbox" id="script_execute_select" hidden>
+                  <label id="script_status" class="l-3">🔴</label>
+                  <label class="l-3" style="margin: 10px;">self anchor ⚓️</label>
+                </td>
+                <td>
+                  <span class="l-3">🦾</span>
+                  <span class="l-3" id="last_script_execute_time">never</span>
+                </td>
+                <td>
+                  <span id="queue_number_container" hidden>
+                    <span class="l-3">🔀 </span>
+                    <span class="l-3 queue" contenteditable id="queue_number">~</span>
+                  </span>
+                </td>
+
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_on_red_checkbox" />🟥</label>
+                </td>
+                <td>
+                </td>
+
+
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_in_template" />🚧</label>
+
+                </td>
+
+              </tr>
+
+              <tr id="script_refresh_catalog">
+                <td>
+                  <input type="checkbox" id="script_execute_select" hidden>
+                  <label id="script_status" class="l-3">🔴</label>
+                  <label class="l-3" style="margin: 10px;">refresh catalog ✨</label>
+                </td>
+                <td>
+                  <span class="l-3">🦾</span>
+                  <span class="l-3" id="last_script_execute_time">never</span>
+                </td>
+                <td>
+                  <span id="queue_number_container">
+                    <span class="l-3">🔀 </span>
+                    <span class="l-3  queue" contenteditable id="queue_number">~</span>
+                  </span>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_in_template" />🚧</label>
+                </td>
+              </tr>
+
+
+              <tr id="script_chatgpt_">
+                <td>
+                  <input type="checkbox" id="script_execute_select" hidden>
+                  <label id="script_status" class="l-3">🔴</label>
+                  <label id="gpt-name" class="l-3" style="margin: 10px;">{sampel} </label>
+                </td>
+                <td>
+                  <span class="l-3">🤖</span>
+                  <span class="l-3" id="last_script_execute_time">never</span>
+                </td>
+                <td>
+                  <span id="queue_number_container" hidden>
+                    <span class="l-3">🔀 </span>
+                    <span class="l-3 queue" contenteditable id="queue_number">~</span>
+                  </span>
+                </td>
+
+                <td>
+                  <label class="l-3"><input checked type="checkbox" id="execute_on_red_checkbox" />🟥</label>
+                </td>
+
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_requires_reload" />🔃</label>
+
+                </td>
+
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_in_template" />🚧</label>
+
+                </td>
+
+              </tr>
+            </tbody>
+
+          </table>
+
+
+
+
+        </details>
+
+        <details style="margin-bottom: 7px; " id="article-table-of-content-menu" hidden>
+          <summary class="summary-L-3"><span class="l-3">📑 Table of contents 🔴</span></summary>
+          <div style="margin-left: 30px;">
+            <button class="b-3" id="generate-table-button"> Generate</button>
+          </div>
+        </details>
+
+
+        <details hidden id="product-table-specification" style="margin-bottom: 7px;">
+          <summary class="summary-L-3"><span class="l-3 b-dark-blue" id='spec-status'>🗂️ Table spec 🔴</span>
+          </summary>
+          <button class="b-3" onclick="generateTableSpecApi(event)"> Generate</button>
+        </details>
+
+
+        <details hidden id="breadCrumb-menu" style="margin-bottom: 7px;">
+          <summary class="summary-L-3"><span class="l-3 b-dark-blue" id='breadcrumb-status'>🥖 BreadCrumb Menu 🔴</span>
+          </summary>
+          <button class="b-3" onclick="generateBreadCrumbApi(event)"> Generate</button>
+        </details>
+
+
+        <details hidden style="margin-bottom: 7px; " id="ai-logs">
+          <summary class="summary-L-3"><span class="l-3">🪵 AI logs</span></summary>
+          <textarea class="text1"></textarea>
+        </details>
+
+        <details hidden style="margin-bottom: 7px;" id="chatgpt-task-json">
+          <summary class="summary-L-3"><span class="l-3 b-dark-blue">⚙️ ChatGPT</span></summary>
+          <textarea id="gpt-input" class="text1" style="width: 50vw" placeholder=" 🤖 AI tasks"></textarea>
+          <button onclick="saveGpt(event)" data-save class="b-4">💾 Save</button>
+        </details>
+
+        <details hidden style="margin-bottom: 7px;" id="chatgpt-task-json">
+          <summary class="summary-L-3"><span class="l-3 b-dark-blue">⚙️ ChatGPT</span></summary>
+          <textarea id="gpt-input" class="text1" style="width: 50vw" placeholder=" 🤖 AI tasks"></textarea>
+          <button onclick="saveGpt(event)" data-save class="b-4">💾 Save</button>
+        </details>
+
+
+
+        <details id="lists-task-json" hidden style="margin-bottom: 7px;">
+          <summary class="summary-L-3"><span class="l-3 b-dark-blue">⚙️ List</span></summary>
+          <textarea id="list-input" class="text1" style="width: 50vw" placeholder=" 📍 List tasks"></textarea>
+          <button onclick="saveList(event)" data-save class="b-4">💾 Save</button>
+        </details>
+
+
+
+      </div>
+
+
+
+      <!-- undefinied menus-->
+      <details style="margin-bottom: 7px;" data-list hidden>
+        <summary class="summary-L-3"><span class="l-3" data-list-emoji>📣</span><span> </span><span
+            class="l-3 b-dark-blue" data-list-name> Meta</span></summary>
+        <table class="table-1" style="margin-left: 30px;">
+          <tr data-lists-element>
+            <td class="l-3"><label class="l-3" style="margin-right: 5px;" data-lists-element-status>🔴</label>
+              <label class="l-3" data-lists-element-key></label>
+            </td>
+            <td class="l-3">
+              <span data-lists-element-value contenteditable></span>
+            </td>
+            <td class="l-3">
+              <select class="select-1" data-list-element-selection>
+                <option value="none">⬇️ Select</option>
+                <option data-list-element-selection-value>➡️</option>
+              </select>
+            </td>
+            <td><label data-list-element-benefit-label class="l-3"><input data-list-element-benefit
+                  type="checkbox">Benefit</label></td>
+        </table>
+        <details style="margin-left: 25px;">
+          <summary class="summary-L-3" style="margin-top: 5px; "><span class="l-3">➕ add new positions to
+              list</span><span></summary>
+          <textarea id="import-list-input" class="text1" style="width: 50vw; "
+            placeholder=" use : separator for key values"></textarea>
+          <br>
+          <button class="b-4" onclick="saveToList(event)">💾 Save</button>
+
+        </details>
+      </details>
+      <details hidden style="margin-bottom: 7px;" data-ai>
+        <summary class="summary-L-3"><span class="l-3 b-dark-blue">🤖 AI</span></summary>
+        <table class="table-1" data-head="meta" style="margin-left: 30px;">
+          <tr data-ai-row>
+            <td class="l-3"><label data-ai-status class="l-3">🔴</label><label data-ai-label class="l-3"
+                style="margin: 10px;"></label>
+            </td>
+            <td class="l-3"> <button class="b-3" data-ai-send>🤖</button></td>
+          </tr>
+        </table>
+      </details>
+
+      <details id="import-menu" hidden style="margin-bottom: 7px;">
+        <summary class="summary-L-3"><span class="l-3 b-dark-blue">🚀 Import Menu</span></summary>
+        <button style="margin-left: 10px;" class="b-4" id="import-name"><span>🔡 </span><span
+            id="import-name-span">Article</span></button>
+
+        <div id="import-data" hidden data-menu style="margin-bottom: 30px; ">
+          <button onclick="cancel(event)" class="b-4" style="margin-bottom: 5px; margin-top: 10px;">❌</button>
+          <br>
+          <div hidden id="variation-amount-field"><span class="l-3">🧮 Variations: </span><span id="variation-amount"
+              class="l-3">10</span></div>
+          <div hidden id="variation-site-field"><span class="l-3">🌐 Site: </span><span id="variant-site"
+              class="l-3">accbuddy.com</span></div>
+
+          <span class="l-3"></span>
+          <button data-save class="b-4">💾 Save</button>
+          <button hidden id='previous-html' class="b-4"> Prev. ◀️</button>
+          <button hidden id="next-html" class="b-4">▶️ Next</button>
+          <button hidden id="remove-html" class="b-4">🗑️Remove</button>
+          <button hidden id="update-html" class="b-4">🔄 Update</button>
+          <div hidden id="approve-menu">
+            <button class="b-4"> ✅ Approve</button>
+            <button class="b-4"> ❌ Cancel</button>
+          </div>
+          <br>
+          <textarea id="import-input" class="text1" style="width: 50vw" placeholder=" 🚀 Enter Import Text"></textarea>
+          <br>
+          <button data-save class="b-4">💾 Save</button>
+        </div>
+      </details>
+
+      <details id="sku-menu"  style="margin-bottom: 7px;">
+        <summary class="summary-L-3"><span class="l-3 b-dark-blue">📦 SKU</span></summary>
+        <input type="text" class="b-3" id="input-sku" placeholder="enter sku">
+        <button class="b-3" id="create-sku" onclick="addSku(event)">▶️</button>
+        <div id="sku-list" hidden>
+        </div>
+
+        <label id="checkbox-label" hidden data-type="dependant" class="l-3"><input type="checkbox">Color</label>
+        <fieldset hidden id="dependee-menu-item" data-type="dependee">
+          <legend>
+            <label class="l-2">🎚️</label>
+            <label data-type="dependee-value" class="l-2 b-dark-blue">Price</label>
+          </legend>
+
+          <div>
+            <button class="b-3" id="generate-dependees" onclick="generateDependees(event)">Generate</button>
+          </div>
+        </fieldset>
+
+
+
+        <div hidden id=sku-item-1>
+          <label class="l-3 b-dark-blue"></label><label style="margin-left: 30px;" class="l-2" id="sku-value"></label>
+          <button hidden class="b-3" id="toggleSkuAttributeList" onclick='toggleSkuAttributeList(event)'>👀</button>
+          <button class="b-3" id="toggleDependencyMenu1" onclick='toggleDependencyMenu1(event)'>🛠️</button>
+
+
+          <button class="b-3" id="remove-sku" onclick="openRemoveSku(event)">🗑️️</button>
+
+          <fieldset style="display: none;" id="remove-sku-menu" class="menu">
+            <legend><button class="b-6" onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
+            <label class="l-3">Are you sure want to remove this SKU?</label>
+            <br>
+            <button onclick="removeSku(event)" class="b-3">🗑️️ Remove</button>
+          </fieldset>
+
+
+          <ul class="list-1" id="sku-attribute-list">
+            <div id='sku-item'>
+              <li id="sku-attribute">
+                <span class="l-4">🔖</span><span class="l-4" id="sku-attribute-value">none</span>
+                <span style="margin-left: 10px;" class="l-4">📦</span>
+                <span class="l-4" id="sku-qty">~</span>
+                <del class="l-4" style="margin-left: 10px; margin-right: 10px;" contenteditable
+                  data-price_old_value>~</del>
+                <ins class="l-4" contenteditable data-price_value>~</ins>
+              </li>
+            </div>
+          </ul>
+
+          <div id="dependee-menu" hidden>
+            <fieldset data-type="dependee">
+              <legend>
+                <label class="l-2">🎚️</label>
+                <label data-type="dependee-value" class="l-2 b-dark-blue">Price</label>
+              </legend>
+              <label data-type="dependant" class="l-3"><input type="checkbox">Color</label>
+              <div>
+                <button class="b-3" id="generate-dependees">Generate</button>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+
+      </details>
+    </div>
+
+
+    <!-- undefinied menus-->
+
+
+
+
+
+
+
+
+
+    <div id="generated-page-menu" class="panel horizontal-menu">
+      <label class="l-1" style="margin-right: 10px; user-select: none;">👁️</label>
+      <button id='transform' class="b-1" onclick="transformToVisual(event)">✍️</button>
+    </div>
+
+
+
+    <!--
+        IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+      IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+    IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+  IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+      IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+    IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+        IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+      IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+    IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+        IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+      IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+    IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+        IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+      IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+    IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+        IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+      IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+    IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+        IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+      IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+    IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+        IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+      IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+    IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+        IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+      IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+    IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+        IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+      IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+    IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+
+  -->
+    <div id="iframe-container">
+      <iframe id="generated-page-iframe" src="./iframe.html"
+        style="width:100%; height:2000px; border:none; margin-bottom: 200px;" allowfullscreen="true" allow="
+      
+      display-capture;
+      geolocation; 
+      microphone; " class="horizontal-area">
+      </iframe>
+    </div>
+    <!--
+        IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+      IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+    IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+  IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+      IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+    IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+        IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+      IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+    IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+        IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+      IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+    IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+        IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+      IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+    IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+        IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+      IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+    IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+        IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+      IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+    IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+        IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+      IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+    IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+        IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+      IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+    IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+        IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+      IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+    IFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAMEIFRAME
+
+  -->
+
+  </main>
+
+  <!-- MENUS-->
+
+
+  <div hidden>
+
+
+
+
+
+    <div id="stock-menu" data-menu style="margin-bottom: 30px;">
+      <button style="margin-right:5px; margin-top: 5px; margin-bottom: 5px;" class="b-3"
+        onclick="cancel(event)">❌</button>
+      <br>
+      <label class="l-3"><input type="radio" id="digital-good" name="choose-goods-type" checked value="digital" />📟
+        Digital</label>
+      <label class="l-3"><input type="radio" name="choose-goods-type" id="real-good" value="real" />📦 Real</label>
+      <div id="digital-menu" style="margin-top: 10px;">
+        <button add-stock class="b-3">➕ Add</button>
+        <button stock-qty class="b-3">🔢 Qty</button>
+        <button view-stock class="b-3">🔎 View</button>
+        <button stock-label class="b-3">🏷️ Label</button>
+      </div>
+      <div hidden id="real-goods-menu">
+        <button stock-qty class="b-3"> 🔢 Qty</button>
+      </div>
+    </div>
+
+    <div id="view-stock" data-menu style="margin-bottom: 30px; ">
+      <button class="b-3" onclick="cancel(event)" style="margin-top: 10px; margin-bottom: 5px;">❌</button>
+
+      <table class="table-2 table-row-number-2">
+        <tbody id="stock-table-body">
+          <tr id="stock-item" hidden stockItem>
+            <td><span class="l-4" style="user-select: none;">🔑</span><span class="l-4" id="stock-item-value"></span>
+            </td>
+            <td><span class="l-4" style="user-select: none;">👨</span><span class="l-4" id="stock-item-status"><span>
+            </td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+    <div id="stock-label" data-menu style="margin-bottom: 30px; ">
+      <button onclick="cancel(event)" class="b-4" style="margin-bottom: 5px;">❌</button>
+      <br>
+      <button class="b-4" id="update-label">💾 Update</button>
+      <input type="text" placeholder="🏷️ Stock label" class="input-1" style=" width: 50px;" id="stock-label-input">
+    </div>
+
+
+    <div id="stock-qty" data-menu style="margin-bottom: 30px; ">
+      <button onclick="cancel(event)" class="b-4" style="margin-top:5px; margin-bottom: 5px;">❌</button>
+      <br>
+      <button id="update-qty" class="b-4">💾 Update</button>
+      <input type="number" placeholder="⚖️ Qty" class="input-2" value="0" style=" width: 50px;">
+    </div>
+
+
+    <div id="add-stock-menu" data-menu style="margin-bottom: 30px; ">
+      <br>
+      <button class="b-3" onclick="cancel(event)" style="margin-bottom:7px; margin-right: 5px;">❌</button>
+      <br>
+      <button save-stock class="b-3" style="margin-bottom:7px; margin-right: 5px;">💾 Save</button>
+      <br>
+      <textarea id="add-stock-input" class="text1" placeholder=" 📦 insert digital goods 1 per line"></textarea>
+      <br>
+      <button save-stock class="b-3" style="margin-top:5px;">💾 save</button>
+    </div>
+
+    <fieldset class="menu" id="gallery-menu-wrapper" data-menu>
+      <legend><button class="b-3" id="remove-galeryMenu">❌</button></legend>
+      <div style="font-size: 30px; height: 100px;">
+        <input type="file" id="image-input" accept="image/*" hidden />
+        <label for="image-input" id="select-file-button" class="file-upload-button b-1">➕ Add new</label>
+        <button id="upload-button" class="upload-button b-1" hidden>📤</button>
+        <span id="file-name" hidden>No file chosen</span>
+      </div>
+      <table style=" border-collapse: collapse;">
+        <tr hidden id="gallery-item" style="border-bottom: 2px dashed #3d3d3d;">
+          <td style="padding-top: 9px; padding-bottom: 9px;">
+
+            <div data-picture-meta>
+              <br>
+              <label class="l-3">Created: </label>
+              <time data-picture-time class="l-3 b-dark-blue">24.02.23 15:39</time>
+              <br>
+              <div data-picture-attached>
+                <label class="l-3">Attached: </label><label class="l-3 b-dark-blue" data-picture-attached-label>
+                  📎Yes</label>
+                <label class="attached">📎</label>
+              </div>
+              <div data-file-name-show="Product-Content">
+                <label class="l-3">
+                  <input data-picture-main-checkbox type="checkbox">⭐ Main
+                </label>
+                <br>
+                <label class="l-3">
+                  <input data-picture-secondary-checkbox type="checkbox">✨ Secondary
+                </label>
+              </div>
+              <div>
+                <button class="b-3" data-select-image>✅ Attach</button>
+
+                <button class="b-3" data-remove-image>🗑️ Delete️</button>
+              </div>
+
+            </div>
+
+
+          </td>
+          <td style="padding-top: 9px; padding-bottom: 9px;">
+            <div class="gallery-image">
+
+              <img style="width: 200px; height: auto;" src="https://via.placeholder.com/500/0000FF/FFFFFF?text=image">
+
+            </div>
+          </td>
+
+        </tr>
+        <tbody id="gallery-body">
+
+
+
+
+        </tbody>
+      </table>
+      <fieldset style="display: none;" id="menu-1" class="menu">
+        <legend><button class="b-3" onclick="cancelGalleryMenu(event)">❌</button>
+          <button class="b-3">⬅️</button>
+        </legend>
+
+        <img src="https://via.placeholder.com/1000/0000FF/FFFFFF?text=image">
+
+      </fieldset>
+    </fieldset>
+
+
+
+
+    <div id="code-tree-comment-form" data-menu style="margin-bottom: 30px; ">
+      <button onclick="cancel(event)" class="b-4" style="margin-top:5px; margin-bottom: 5px;">❌</button>
+      <br>
+      <label><input type="checkbox" id="applyToCopies"><span class="l-3" style="margin-bottom: 5px;">⧉ Apply to
+          Copies</span></label>
+      <br>
+
+      <button class="b-4" onclick="removeComment(event)">🗑️️ Remove</button>
+      <button class="b-4" onclick="saveComment(event)">💾 Save</button>
+      <br>
+      <input id="comment-content" type="text" placeholder="💬 Comment" class="input-1" style="margin-top: 7px;">
+    </div>
+
+
+
+    <fieldset id="update-href-menu" class="menu" data-menu>
+      <button class="b-3" onclick="cancel(event)">❌Cancel</button>
+      <input id="editHrefInput" style="width: 500px" placeholder="🔗 edit href" type="text">
+      <button id="editHrefButton">💾</button>
+    </fieldset>
+    <!--
+          <fieldset id="component-element" data-element="code-tree-tag" class="tree-element" style="margin-left: 50px;">
+
+-->
+
+    <div id="component-element" data-element="code-tree-tag" class="tree-element tree-element-1">
+
+      <legend></legend>
+      <input hidden type="checkbox" onchange="handleCheckboxChange(event)">
+      <button class="b-3 arrow" data-element="code-tree-show-hide-button"
+        onclick="toggleSubFields(event)">&#8594;</button>
+      <button class="b-3 t" data-element="code-tree-tag-name-button"
+        onclick="loader(event, handleComponentClick)">🏷️component</button>
+      <button hidden class="b-3 t" data-element="code-tree-attributes-button"
+        onclick="openAttributeContent(event)">🔑</button>
+      <button hidden class="b-3 t" data-element="optional-script" onclick="replaceComponent(event,true)">🔄10</button>
+      <span hidden class="b-3 t" data-element="content_type">⭐</span>
+      <span hidden class="b-3 t" data-element="set_anchor">⚓️</span>
+      <span hidden class="b-3 t" data-element="catalog">✨</span>
+
+      <span data-open-menu></span>
+    </div>
+
+    <fieldset id="tree-element" data-element="code-tree-tag" class="tree-element" style="margin-left: 50px;">
+      <legend></legend>
+      <input id="selectedCheckbox" hidden type="checkbox" onchange="handleCheckboxChange(event)">
+      <button class="b-3 arrow" data-element="code-tree-show-hide-button"
+        onclick="toggleSubFields(event)">&#8594;</button>
+      <button class="b-3 t" data-element="code-tree-tag-name-button"
+        onclick="loader(event, handleTreeClick)">🏷️component</button>
+      <button class="b-3 t" data-element="code-tree-inner-html-button" hidden onclick="openInnerHtmlContent(event)">
+        ▶️</button>
+      <button class="b-3 t" data-element="code-tree-attributes-button" hidden
+        onclick="openAttributeContent(event)">🔑</button>
+      <button class="b-3 t" data-element="code-tree-text-content-button" hidden
+        onclick="openTextContent(event)">📄</button>
+      <button class="b-3 t" hidden data-element="redirect-to-component">↗️</button>
+
+      <span data-element="comment" hidden class="l-3 t b-dark-blue">💬</span>
+      <span data-element="class" hidden class="l-3 t b-dark-green">🎨</span>
+      <span data-open-menu></button>
+    </fieldset>
+
+
+
+
+
+
+    <!--menu click component-->
+    <div id="code-tree-click-component" data-menu style="margin-bottom: 30px;">
+      <button class="b-3" onclick="cancel(event)" style="margin-right:5px; margin-top: 5px;">❌</button>
+      <br>
+      <button class="b-3" style="margin-right: 5px; margin-top: 5px;" onclick="replaceComponent(event)">➕
+        choose</button>
+      <label><input checked type="radio" id="replace" name="choose_component_type"><span class="l-3">🔄
+          replace</span></label>
+      <label><input type="radio" id="single_replace" name="choose_component_type"><span class="l-3">1️⃣ single
+          replace</span></label>
+      <label><input type="radio" id="choose_catalog" name="choose_component_type"><span class="l-3">✨ choose
+          catalog</span></label>
+      <label><input type="radio" id="choose_article" name="choose_component_type"><span class="l-3">⭐ choose
+          article</span></label>
+
+
+      <div hidden id="content-type">
+        <label class="b-3" hidden><input type="radio" name="main-content-type" data-content-type="none" checked
+            value="none" />🗅 None</label>
+
+        <label class="b-3" hidden><input type="radio" name="main-content-type" data-content-type="article"
+            value="article" />⭐
+          Article</label>
+
+        <label class="b-3" hidden><input type="radio" name="main-content-type" data-content-type="catalog"
+            value="catalog" />✨
+          Catalog</label>
+        <div hidden id="catalog-folder">
+          <button class="b-4">💾 Update</button>
+          <input type="text" placeholder="📂 Catalog folder" class="input-1" style=" width: 50px;">
+        </div>
+        <div hidden id="catalog-weight">
+          <button class="b-4">💾 Update</button>
+          <input type="number" placeholder="🏋️‍♂️ Catalog Weight" class="input-1" style=" width: 50px;">
+        </div>
+      </div>
+      <br>
+      <label style="margin-top: 10px;"><input type="checkbox" id="set_anchor_checkbox" onclick="setAnchor(event)"><span
+          class="l-3">⚓️ Set
+          anchor</span></label>
+
+    </div>
+
+
+    <!--menu click tag-->
+    <div id="code-tree-click-tag" data-menu style="margin-bottom: 30px; ">
+      <button style="margin-right:5px; margin-top: 5px;" class="b-3" onclick="cancel(event)">❌</button>
+      <br>
+
+
+      <label><input type="checkbox" id="applyToCopies"><span class="l-3">⧉ Apply to Copies</span></label>
+      <label><input type="checkbox" id="actionInReplace"><span class="l-3">🔄 action in replace</span></label>
+
+      <br>
+
+      <button style="margin-right: 5px;" class="b-3" id="code-tree-click-tag-change-tag" onclick="changeTag(event)">✏️
+        Change tag</button>
+
+      <button style="margin-right: 5px;" class="b-3" id="code-tree-click-tag-remove-tag" onclick="removeTag(event)">🗑️️
+        Remove
+        element</button>
+
+      <br>
+
+
+      <button class="b-3 t" data-element="code-tree-attributes-button" onclick="openAttributeContent(event)">🔑
+        Attributes</button>
+
+      <button style="margin-right:5px; margin-top: 5px;" data-element="code-tree-comment-button" class="b-3"
+        onclick="openComment(event)">💬 Comment</button>
+      <button class="b-3 t" data-element="code-tree-inner-html-button" onclick="openInnerHtmlContent(event)"> ▶️
+        InnerHtml</button>
+      <button class="b-3 t" data-element="code-tree-text-content-button" onclick="openTextContent(event)">📄
+        TextContent</button>
+      <br>
+      <button style="margin:5px; margin-left: 0px; background-color: #f0f0f0;" class="b-3"
+        id="code-tree-click-tag-append-child" onclick="append(event)">👶 Append</button>
+      <button style="margin:5px; margin-left: 0px; background-color: #f0f0f0;" onclick="addParent(event)"
+        class="b-3">👨‍👦️ Add Parent</button>
+
+      <button style="margin:5px; margin-left: 0px; background-color: #f0f0f0;" class="b-3"
+        id="code-tree-click-tag-insert-before" onclick="insertB(event)">⬅️ insertBefore</button>
+      <button style="margin:5px; margin-left: 0px; background-color: #f0f0f0;" class="b-3"
+        id="code-tree-click-tag-insert-before" onclick="insertA(event)"> insertAfter ➡️</button>
+
+      <button style="margin:5px; margin-left: 0px; background-color: #f0f0f0;" class="b-3"
+        id="code-tree-click-tag-insert-before">history 🧩</button>
+
+      <br>
+
+
+
+
+
+
+      <!--
+      <button style="margin-right:5px; margin-top: 5px;" class="b-3" id="code-tree-click-tag-change-tag"
+        onclick="changeTagForCopies(event)">✏️ ChangeCopies</button>
+
+
+
+<button  class="b-2" id="code-tree-click-tag-inner-html" onclick="insertHtml(event)">📄 inner HTML</button>
+        <button class="b-2" id="code-tree-click-tag-dublicate-tag" onclick="duplicateTag(event)"> ⧉ Duplicate Element</button>
+        -->
+    </div>
+
+    <!--menu add element-->
+    <div id="code-tree-add-tag-step-1" style="padding: 7px; margin-bottom: 30px; " data-menu>
+      <button style="margin-bottom: 5px;" class="b-4" onclick="cancel(event)">❌</button>
+      <br>
+      <button class="b-4" id="code-tree-add-tag-choose-new" onclick="addNew(event)"> ➕ New</button>
+      <button class="b-4" id="code-tree-add-tag-choose-existed" onclick="addExisting(event)"> ✔️ Existed</button>
+      <button class="b-4" id="code-tree-add-tag-choose-component" onclick="addComponent(event,true)">
+        🧩Component</button>
+    </div>
+
+
+    <!-- menu confirm selected append/insert tags-->
+    <fieldset id="code-tree-append-or-insert-approv-menu" data-menu class="menu"
+      style="border: 0; padding: 0; margin-bottom: 30px; user-select: none; display: block; width: 100%;">
+      <button onclick="cancel(event)" class="b-4" style="margin-top: 5px; margin-bottom: 5px;">❌</button>
+      <br>
+      <span id="code-tree-amount-selected-for-append-or-insert" style="font-size: 24px;">0</span>
+      <button class="b-4" id="code-tree-click-tag-approve" onclick="approve(event)"> ✅ Approve</button>
+      <br>
+
+      <label><input type="checkbox" id="actionInReplaceExisting"><span class="l-3">🔄 action in replace</span></label>
+      <br>
+      <label><input type="checkbox" id="fork"><span class="l-3">🍴 fork</span></label>
+      <label><input type="checkbox" id="transfer-inner-html"><span class="l-3">transfer inner html</span></label>
+
+      <br>
+      <label class="l-3" hidden><input type="checkbox" onchange="switchPosition(event)" id="position-checkbox">🎯
+        Position</label>
+      <label class="l-3" hidden><input type="number" value="1" id="position-number"></label>
+      <label class="l-3" hidden><input type="radio" checked name="position-start-end-existed"
+          id="position-start-checkbox">start</label>
+      <label class="l-3" hidden><input type="radio" name="position-start-end-existed"
+          id="position-end-checkbox">end</label>
+
+      <br>
+      <label><input type="checkbox" id="code-tree-menu-copies-too"><span class="l-3">🚂⧉ Insert Copies
+          too</span></label>
+      <br>
+      <label hidden class="l-3"><input name="duplicate-or-not-target-for-copies"
+          id="code-tree-menu-dublicate-with-parent-option" id="code-tree-menu-dublicate-with-parent-option-1"
+          id="code-tree-menu-dublicate-with-parent-option-2" type="checkbox">🎯⧉ Duplicate Target for Copies</label>
+
+    </fieldset>
+
+
+    <!-- history menu -->
+    <div id="component_history_menu" data-menu style="margin-bottom: 30px; ">
+      <button id="code-tree-tag-attributes-form-action-back" class="b-3" onclick="cancel(event)"
+        style="margin-bottom:7px; margin-right: 5px;">❌</button>
+      <table class="table-1" id="components_history_table" style="margin-left: 30px;">
+        <tr id="component_history">
+          <td>
+            <span class="l-3"></span>
+            <span class="l-3" id="component-history-value">cool-component</span>
+          </td>
+          <td>
+            <a href="" class="l-3" id="component-history-anchor">↗️</span>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- menu to receive text area html -->
+    <div id="code-tree-tag-text-content-form" data-menu style="margin-bottom: 30px; ">
+      <button id="code-tree-tag-attributes-form-action-back" class="b-3" onclick="cancel(event)"
+        style="margin-bottom:7px; margin-right: 5px;">❌</button>
+
+      <br>
+      <label><input type="checkbox"><span class="l-3">⧉ Apply to Copies</span></label>
+      <br>
+      <label><input type="checkbox"><span class="l-3">🔄 action in replace</span></label>
+      <br>
+
+      <button id="code-tree-tag-text-content-action-save" onclick="saveText(event)" class="b-3"
+        style="margin-bottom:7px; margin-top: 7px; margin-right: 5px;">💾 Save</button>
+      <br>
+      <textarea class="text1" placeholder=" 📄 Text content" id="code-tree-tag-text-content"></textarea>
+      <br>
+      <button id="code-tree-tag-text-content-action-save" onclick="saveText(event)" class="b-3"
+        style="margin-top: 5px;">💾 save</button>
+    </div>
+    <!-- menu to receive inner html -->
+    <div id="code-tree-tag-html-content-form" data-menu style="margin-bottom: 30px; ">
+      <br>
+      <button id="code-tree-tag-attributes-form-action-back" class="b-3" onclick="cancel(event)"
+        style="margin-bottom:7px; margin-right: 5px;">❌</button>
+      <br>
+      <label><input type="checkbox" id="applyToCopies"><span class="l-3">⧉ Apply to Copies</span></label>
+      <br>
+
+      <label><input type="checkbox"><span class="l-3">🔄 action in replace</span></label>
+      <br>
+
+
+      <button id="code-tree-tag-text-content-action-save" onclick="saveInnerHtml(event)" class="b-3"
+        style="margin-bottom:7px; margin-right: 5px;">💾
+        Save</button>
+      <br>
+      <textarea class="text1" placeholder=" ▶️ HTML content" id="code-tree-tag-html-content"></textarea>
+      <br>
+      <button id="code-tree-tag-text-content-action-save" onclick="saveInnerHtml(event)" class="b-3"
+        style="margin-top:5px;">💾
+        save</button>
+    </div>
+
+
+
+    <!--menu to view and edit attributes-->
+    <div class="menu-1" id="code-tree-tag-attributes-form-1" data-menu style="margin-bottom: 30px; ">
+      <button id="code-tree-tag-attributes-form-action-back" class="b-3" onclick="cancel(event)"
+        style="margin-top: 10px; margin-bottom: 5px;">❌</button>
+
+
+      <table class="table-2 table-row-number-2" id="code-tree-tag-attributes-list">
+        <tbody>
+          <tr id="code-tree-tag-attributes-list-item">
+            <td><span class="l-4" style="user-select: none;">🔑</span><span class="l-4"
+                id="code-tree-tag-attribute-key"></span></td>
+            <td><span class="l-4" style="user-select: none;">📄</span><span style="color:white">=</span><span
+                style="color:white">"</span><span class="l-4" id="code-tree-tag-attribute-value"></span><span
+                style="color:white">"</span></td>
+            <td>
+              <button id="code-tree-tag-attribute-remove-button" class="b-4"
+                onclick="removeAttribute1(event)">🗑️️</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-bottom: 10px;">
+        <br>
+        <label><input type="checkbox" id="applyToCopies"><span class="l-3">⧉ Apply to Copies</span></label>
+        <br>
+
+        <label><input type="checkbox"><span class="l-3">🔄 action in replace</span></label>
+        <br>
+
+        <button class="b-3" onclick="saveAttribute(event)" style="margin-bottom: 5px; margin-top: 5px;">💾 Save</button>
+        <br>
+        <textarea id="code-tree-tag-attribute-input-text" class="text1" placeholder=" 🔑 Add Attributes"></textarea>
+        <br>
+        <button class="b-3" onclick="saveAttribute(event)" style="margin-bottom: 5px; margin-top: 5px;">💾 Save</button>
+      </div>
+    </div>
+
+    <fieldset id="tag-table" style="border-width: 0px; margin-bottom: 30px; " data-menu>
+      <button onclick="cancel(event)" class="b-3" style="margin-top: 5px; margin-bottom: 5px;">❌</button></legend>
+      <br>
+      <label class="l-3"><input type="checkbox" id="position-checkbox" onchange="switchPosition(event)">🎯
+        Position</label>
+      <label class="l-3" hidden><input type="number" value="1" id="position-number"></label>
+      <label class="l-3" hidden><input type="radio" name="position-start-end-new" id="position-start-checkbox"
+          checked>start</label>
+      <label class="l-3" hidden><input type="radio" name="position-start-end-new" id="position-end-checkbox">end</label>
+
+
+      <br>
+
+      <label class="l-3">
+        <input type="checkbox" id="applyForCopies2">
+        ⧉ InsertToCopies+
+      </label>
+      <br>
+      <label class="l-3">
+        <input type="checkbox" id="actionInReplace2">
+        🔄 action in replace
+      </label>
+
+
+
+
+      <table id="tagsTable" class="tagsTable-style">
+        <thead>
+          <tr>
+            <th><input type="text" id="searchTagName" placeholder="Search by Tag Name" onkeyup="filterTable(0)">
+            </th>
+            <th><input type="text" id="searchTagValue" placeholder="Search by Tag Value" onkeyup="filterTable(1)">
+            </th>
+            <th><input type="text" id="searchTagType" placeholder="Search by Tag Type" onkeyup="filterTable(2)">
+            </th>
+            <th><input type="text" id="searchTagComment" placeholder="Search by Tag Comment" onkeyup="filterTable(3)">
+            </th>
+          </tr>
+          <tr>
+            <th>Tag Name</th>
+            <th>Tag Value</th>
+            <th>Tag Type</th>
+            <th>Tag Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </fieldset>
+
+
+    <!--files menus-->
+
+    <!-- missing target -->
+
+    <div id="target_element_missing">
+
+      <span class="l-1">⚠️</span><span class="l-2">Target element missing</span>
+      <br>
+      <div id="error_action_info"></div>
+      <button id='fix-in-component' class="b-2">🧩 fix in component</button>
+      <button id='set-new-target' class="b-2">🆕 new target</button>
+      <button id='remove-command' class="b-2">🗑 remove</button>
+    </div>
+
+    <!-- file path-->
+    <li data-element="file-path" id="item">
+      <label hidden class="l-3" style="margin-right: 3px;" id="Pushpin">📌</label>
+      <label data-value="file-path" class="l-3">universal/blablabla/blablabla/coolcss</label>
+      <label data-value="file-emoji" style="user-select: none; margin-left: 5px;" class="l-3">🧩</label>
+      <div hidden data-value="file-id">for javascript</div>
+      <button hidden data-action="remove-file-confirmation">for javascript</button>
+    </li>
+
+
+    <ol data-element="file-path-list" id="selectedFilePathList" class="list-1"
+      style="margin-left: -10px; margin-bottom: 30px; " data-menu>
+      <button style="margin-bottom: 8px; margin-left: -10px;" class="b-4" onclick="cancelReplace(event)">❌</button>
+      <br>
+      <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" onclick="approveReplace(event)">✅
+        Approve</button>
+      <button style="margin-bottom: 8px; margin-left: 4px;" class="b-4" data-action="moveBack">⤴️ Up</button>
+      <label class="l-3"><input onchange="switchFolder(event)" id="attach-folder" type="checkbox">📂Folder</label>
+      <label class="l-3" id="relative-label" hidden><input type="radio" name="relative-absolute-choose"
+          id="relative-input">🗂️Relative</label>
+      <label class="l-3" id="absolute-label" hidden><input type="radio" name="relative-absolute-choose"
+          id="absolute-input">📂Absolute</label>
+      <label class="l-3" id="content-label" hidden><input type="radio" name="relative-absolute-choose"
+          id="content-input"></label>
+
+    </ol>
+
+
+    <ol id="filePathList" class="list-1" style="margin-left: -10px;">
+    </ol>
+
+
+    <div hidden id="file-list-attach-component-options" style="padding: 5px; margin-left: 10px; margin-bottom: 30px; "
+      data-menu>
+      <label class="l-3"><input checked type="radio" id="root" name="start_path" checked />🫚root</label>
+      <label class="l-3"><input type="radio" id="previous-component" name="start_path" checked />⏮️previous</label>
+      <label class="l-3"><input type="radio" id="current-component" name="start_path" checked />🧩component</label>
+      <br>
+
+
+
+      <button class="b-3" id="file-list-link-by-path" style="margin-top: 5px;"
+        onclick="switchSelected(event)">📂Absolute</button>
+      <button class="b-3" id="file-list-link-by-name" style="margin-top: 5px;"
+        onclick="switchSelected(event)">🗂️Relative</button>
+
+      <button class="b-3" id="file-list-link-by-content-name" style="margin-top: 5px;"
+        onclick="switchSelected(event)">🔗Folder-Content</button>
+      <label class="l-3"><input id="selfuse" type="checkbox">Self use</label>
+      <label class="l-3"><input id="reusable" type="checkbox">Re-usable</label>
+
+      <br>
+
+      <button style="margin-top: 5px;" class="b-4" onclick="cancelAddComponent(event)">❌Cancel</button>
+      <button style="margin-top: 5px;" class="b-4" onclick="approveAddComponent(event)">✅ Approve</button>
+      <button style="margin-top: 5px;" class="b-4" data-action="moveBack">⤴️ Up</button>
+
+    </div>
+  </div>
+
+
+  <div id="loading">
+
+    <span hidden style="font-size: 1; color: white;"></span>
+    <div hidden id="timer" style="font-size: 2em; color: white;">1.12</div>
+    <button hidden style="font-size: 30px;" id="remove-loading">❌</button>
+  </div>
+
+
