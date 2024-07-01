@@ -2609,8 +2609,8 @@
         alert('not home  page')
         return
       }
-      const { article_component, article_page } = pathItem.hub_items
-      const cid = document.getElementById(article_component + '-tree').getAttribute('cid')
+      const { catalogue_component, article_page } = pathItem.hub_items
+      const cid = document.getElementById(catalogue_component + '-tree').getAttribute('cid')
       const splited = article_page.split('*')
       const sLsi = pathItemPath.split('/')[0] + splited[1]
       const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${sLsi}`;
@@ -4854,7 +4854,7 @@
       if (article) {
         if (!m.length) {
           delete pathItem.hub_items.article_page
-          delete pathItem.hub_items.article_component
+          delete pathItem.hub_items.catalogue_component
           await updatePathItem()
           Array.from(menu.children).forEach(child => {
             child.remove();
@@ -4880,7 +4880,7 @@
         splited[2] = '*'
         splited[0] = '*'
         pathItem.hub_items.article_page = splited.join('/')
-        pathItem.hub_items.article_component = parentId.replace('selectedFilePathList;', '').replace('-tree', '')
+        pathItem.hub_items.catalogue_component = parentId.replace('selectedFilePathList;', '').replace('-tree', '')
         await updatePathItem()
 
 
@@ -11812,7 +11812,7 @@ elementsToRemove.forEach(element => element.remove());
           }
 
         }
-        if (pathItem.hub_items?.article_page && pathItem.hub_items?.article_component === newId) {
+        if (pathItem.hub_items?.article_page && pathItem.hub_items?.catalogue_component === newId) {
           el1.querySelector('[data-element="catalog"]').removeAttribute('hidden')
 
 
