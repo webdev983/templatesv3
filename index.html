@@ -3110,13 +3110,17 @@
 
 
       const publishFolder = async (id, path) => {
-        fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/bulkpublish', {
+        try{
+          fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/bulkpublish', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({ id, path,ownerid }),
           })
+        }catch(e){
+
+        }
         alert('publishing')
       }
       addMenuEntry(menu, '📰 Publish', (e) => publishFolder(id, path))
