@@ -3355,6 +3355,7 @@
       const listName = details.getAttribute('data-list')
       const storageId = details.getAttribute('storageId')
       const splited = input1.split('\n')
+      const listOriginalElement = details.querySelector('[data-lists-element]')
       for (const input of splited) {
         const [key, value] = input.trim().split(':')
         const storageSk = `list:${listName}:${key}`
@@ -3368,7 +3369,7 @@
           body: JSON.stringify(v),
         });
         console.log(JSON.stringify(v))
-        const listOriginalElement = details.querySelector('[data-lists-element]')
+
         const clonedListElement = listOriginalElement.cloneNode(true)
         clonedListElement.querySelector('[data-lists-element-key]').textContent = key
         const span = clonedListElement.querySelector('[data-lists-element-value]')
@@ -3376,13 +3377,21 @@
         const statusEl = clonedListElement.querySelector('[data-lists-element-status]')
         statusEl.textContent = '🟢'
         span.textContent = value
-        span.addEventListener('blur', async function () {
-          const value = span.textContent
+        span.addEventListener('blur', handleSave);
+        span.addEventListener('keydown', function (event) {
+          if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent default behavior of Enter key (like new line)
+            handleSave(); // Call handleSave function
+          }
+        });
+
+        // Function to handle save logic
+        async function handleSave() {
+          const value = span.textContent.trim(); // Trim whitespace
 
           if (value === '{' + key + '}') {
-            return
-          }
-          else if (value === '') {
+            return; // Return early if value matches specific condition
+          } else if (value === '') {
             await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${v.id}:${v.sk}`, {
               method: 'DELETE',
               headers: {
@@ -3390,19 +3399,22 @@
                 // Add any additional headers if needed
               },
             });
-            clonedListElement.remove()
-            return
+            clonedListElement.remove(); // Remove clonedListElement if value is empty
+            return;
           }
-          exisitingValue = {
+
+          const exisitingValue = {
             ...v,
             value
-          }
+          };
+
           await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
             method: 'POST',
             body: JSON.stringify(exisitingValue),
           });
 
-        });
+          // Add any additional logic after save, if needed
+        }
         listOriginalElement.parentNode.append(clonedListElement)
         target.closest('details').removeAttribute('open')
         target.parentNode.querySelector('#import-list-input').value = ''
@@ -3502,13 +3514,20 @@
           span.textContent = `{${option.name.replaceAll('_', ' ')}}`
 
           const select = clonedListElement.querySelector('[data-list-element-selection]')
-          span.addEventListener('blur', async function () {
-            const value = span.textContent
+          span.addEventListener('blur', handleSave);
+          span.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+              event.preventDefault();
+              handleSave();
+            }
+          });
+
+          async function handleSave() {
+            const value = span.textContent.trim(); // Trim whitespace
 
             if (value === '{' + option.name + '}') {
-              return
-            }
-            else if (value === '') {
+              return;
+            } else if (value === '') {
               await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${exisitingValue.id}:${exisitingValue.sk}`, {
                 method: 'DELETE',
                 headers: {
@@ -3516,19 +3535,22 @@
                   // Add any additional headers if needed
                 },
               });
-              return
+              return;
             }
+
             exisitingValue = {
               ...exisitingValue,
               value
-            }
+            };
+
             await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
               method: 'POST',
               body: JSON.stringify(exisitingValue),
             });
-            select.value = "none"
-            statusEl.textContent = '🟢'
-          });
+
+            select.value = "none"; // Reset select element, assuming `select` is defined somewhere
+            statusEl.textContent = '🟢'; // Update status element
+          }
           if (option.transfer) {
             span.setAttribute('data-transfer-sender', option.transfer)
           }
@@ -3617,13 +3639,20 @@
           span.textContent = `{${exisitingValue.sk.split(':')[2].replaceAll('_', ' ')}}`
 
           const select = clonedListElement.querySelector('[data-list-element-selection]')
-          span.addEventListener('blur', async function () {
-            const value = span.textContent
+          span.addEventListener('blur', handleSave);
+          span.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+              event.preventDefault();
+              handleSave();
+            }
+          });
+
+          async function handleSave() {
+            const value = span.textContent.trim(); // Trim whitespace
 
             if (value === '{' + exisitingValue.sk.split(':')[2] + '}') {
-              return
-            }
-            else if (value === '') {
+              return;
+            } else if (value === '') {
               await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${exisitingValue.id}:${exisitingValue.sk}`, {
                 method: 'DELETE',
                 headers: {
@@ -3631,19 +3660,22 @@
                   // Add any additional headers if needed
                 },
               });
-              clonedListElement.remove()
-              return
+              clonedListElement.remove();
+              return;
             }
+
             exisitingValue = {
               ...exisitingValue,
               value
-            }
+            };
+
             await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
               method: 'POST',
               body: JSON.stringify(exisitingValue),
             });
-            statusEl.textContent = '🟢'
-          });
+
+            statusEl.textContent = '🟢';
+          }
 
 
 
