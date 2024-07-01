@@ -3460,7 +3460,7 @@
           }
         }
         //fetch all sks
-        const listValues = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${storageId}&sk=list:&startsWith=true`, {
+        let listValues = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${storageId}&sk=list:&startsWith=true`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -3474,7 +3474,7 @@
 
 
           let exisitingValue = listValues.find(e => e.sk === storageSk)
-          listValues.filter(e => e.sk !== storageSk)
+          listValues = listValues.filter(e => e.sk !== storageSk)
           const statusEl = clonedListElement.querySelector('[data-lists-element-status]')
           log1('existing ' + JSON.stringify(exisitingValue))
           if (exisitingValue) {
