@@ -3110,54 +3110,13 @@
 
 
       const publishFolder = async (id, path) => {
-        const response = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${path}`);
-        //list of sub paths
-        let { items } = await response.json();
-        let url2 = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${path.slice(0, -1) + '|'}`;
-        let data2 = await fetch(url2).then(e => e.json())
-        items = [...items, ...data2.items]
-        const publishPromise = items.filter(item => item.lsi1.split(';')[0].endsWith('Hub')).map(async item => {
-          const url = 'https://b3dutg6xlx4zfz52xgrf4staza0dgeff.lambda-url.us-east-1.on.aws/';
-
-          // Event data
-          const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${item.id}&publish=true&ownerid=${localStorage.getItem('ownerid')}` };
-
-          // Fetch options
-          const options = {
+        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
             },
-            body: JSON.stringify(eventData)
-          };
-
-          try {
-            // Make the fetch request
-            let response = await fetch(url, options);
-
-            while (!response.ok) {
-              console.log('retrying')
-              response = await fetch(url, options);
-            }
-
-            const data = await response.json();
-            console.log('Success:' + item.id + ' ' + item.lsi1 + ' ' + eventData.url);
-            console.log(JSON.stringify(data))
-          } catch (error) {
-            console.error('Error:', error);
-          }
-        })
-        await Promise.all(publishPromise)
-        const site = path.split('/')[0]
-        console.log('invalidating ' + site)
-        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/invalidate', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ site }),
-        });
-        console.log('published all')
+            body: JSON.stringify({ id, path,ownerid }),
+          })
         alert('published folder')
       }
       addMenuEntry(menu, '📰 Publish', (e) => publishFolder(id, path))
