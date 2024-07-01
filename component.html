@@ -2610,6 +2610,7 @@
         return
       }
       const { article_component, article_page } = pathItem.hub_items
+      const cid = document.getElementById(article_component + '-tree').getAttribute('cid')
       const splited = article_page.split('*')
       const sLsi = pathItemPath.split('/')[0] + splited[1]
       const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${sLsi}`;
@@ -2623,13 +2624,17 @@
           componentId: element.id, id: generateUUID(), path: element.lsi1.split(';')[0]
         }
       })
-      const el = {
-        time: (new Date()).getTime(),
-        action: 'Replace_Component',
-        target_element: [article_component + '-tree', ...arr],
-
-      };
-      await pushAction(el)
+      //load actions
+      const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku1}&sk=${attr}&startsWith=true`).then(re => re.json())
+      const replace = res.items.find(e=>e.action ==='Replace_Component')
+      let {target_element} = replace
+      const target = target_element[0]
+      target_element = [target,...arr]
+      replace.target_element = target_element
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        body: JSON.stringify(replace),
+      });
       location.reload()
 
     }
