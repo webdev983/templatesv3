@@ -2540,7 +2540,7 @@
         time: (new Date()).getTime(),
         action: 'textContent',
         target_element: th.id + '-tree',
-        value: data[0].key.replaceAll('_',' '),
+        value: data[0].key.replaceAll('_', ' '),
 
       }
       await pushAction(el1)
@@ -2568,7 +2568,7 @@
           time: (new Date()).getTime(),
           action: 'textContent',
           target_element: th.id + '-tree',
-          value: data[i].key.replaceAll('_',' '),
+          value: data[i].key.replaceAll('_', ' '),
 
         }
         await pushAction(el1)
@@ -2759,7 +2759,7 @@
 
       json.itemListElement[0].item["@id"] = 'https://' + site.toLowerCase()
       let link1 = 'https://{site}/';
-        active && arr.push(active)
+      active && arr.push(active)
       for (let i = 0; i < arr.length; i++) {
         const newEl = deepCopy(json.itemListElement[0])
         link1 = link1 + arr[i] + '/'
@@ -3498,7 +3498,17 @@
           span.addEventListener('blur', async function () {
             const value = span.textContent
 
-            if (value === '{' + option.name + '}' || value === '') {
+            if (value === '{' + option.name + '}') {
+              return
+            }
+            else if (value === '') {
+              await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${exisitingValue.id}:${exisitingValue.sk}`, {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  // Add any additional headers if needed
+                },
+              });
               return
             }
             exisitingValue = {
@@ -3580,7 +3590,7 @@
             }
 
           }
-          
+
 
         }
         for (const el of listValues) {
@@ -3603,7 +3613,18 @@
           span.addEventListener('blur', async function () {
             const value = span.textContent
 
-            if (value === '{' + exisitingValue.sk.split(':')[2] + '}' || value === '') {
+            if (value === '{' + exisitingValue.sk.split(':')[2] + '}' ) {
+              return
+            }
+            else if (value === '') {
+              await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${exisitingValue.id}:${exisitingValue.sk}`, {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  // Add any additional headers if needed
+                },
+              });
+              clonedListElement.remove()
               return
             }
             exisitingValue = {
