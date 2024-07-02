@@ -4322,7 +4322,7 @@
     const setSorting = () => {
       const sortSelect = document.getElementById('sortSelect');
       const dataTable = document.getElementById('filePathList');
-      
+
       function parseCustomDate(dateString) {
 
         const months = {
@@ -4334,6 +4334,23 @@
         const day = parseInt(parts[1].replace(',', ''));
         const year = parseInt(parts[2]);
         return new Date(year, month, day);
+      }
+      function getDateValue(row, attribute) {
+        const element = row.querySelector(`[${attribute}]`);
+        if (element) {
+          const value = element.textContent.trim();
+          return value ? parseCustomDate(value) : null;
+        }
+        return null;
+      }
+
+      function compareDates(dateA, dateB) {
+        // Handle null or undefined cases
+        if (!dateA && !dateB) return 0;
+        if (!dateA) return 1; // dateB is considered smaller (should be sorted earlier)
+        if (!dateB) return -1; // dateA is considered smaller
+
+        return dateA - dateB;
       }
       sortSelect.addEventListener('change', function () {
         let rows = Array.from(dataTable.getElementsByTagName('tr'));
@@ -4356,58 +4373,58 @@
             break;
           case 'published_asc':
             rows.sort((a, b) => {
-              const dateA = parseCustomDate(a.querySelector('[data-column-published-value]').textContent.trim());
-              const dateB = parseCustomDate(b.querySelector('[data-column-published-value]').textContent.trim());
-              return dateA - dateB;
+              const dateA = getDateValue(a, 'data-column-published-value');
+              const dateB = getDateValue(b, 'data-column-published-value');
+              return compareDates(dateA, dateB);
             });
             break;
           case 'published_desc':
             rows.sort((a, b) => {
-              const dateA = parseCustomDate(a.querySelector('[data-column-published-value]').textContent.trim());
-              const dateB = parseCustomDate(b.querySelector('[data-column-published-value]').textContent.trim());
-              return dateB - dateA;
+              const dateA = getDateValue(a, 'data-column-published-value');
+              const dateB = getDateValue(b, 'data-column-published-value');
+              return compareDates(dateB, dateA);
             });
             break;
           case 'created_asc':
             rows.sort((a, b) => {
-              const dateA = parseCustomDate(a.querySelector('[data-column-created-value]').textContent.trim());
-              const dateB = parseCustomDate(b.querySelector('[data-column-created-value]').textContent.trim());
-              return dateA - dateB;
+              const dateA = getDateValue(a, 'data-column-created-value');
+              const dateB = getDateValue(b, 'data-column-created-value');
+              return compareDates(dateA, dateB);
             });
             break;
           case 'created_desc':
             rows.sort((a, b) => {
-              const dateA = parseCustomDate(a.querySelector('[data-column-created-value]').textContent.trim());
-              const dateB = parseCustomDate(b.querySelector('[data-column-created-value]').textContent.trim());
-              return dateB - dateA;
+              const dateA = getDateValue(a, 'data-column-created-value');
+              const dateB = getDateValue(b, 'data-column-created-value');
+              return compareDates(dateB, dateA);
             });
             break;
           case 'content_updated_asc':
             rows.sort((a, b) => {
-              const dateA = parseCustomDate(a.querySelector('[data-column-content-updated-value]').textContent.trim());
-              const dateB = parseCustomDate(b.querySelector('[data-column-content-updated-value]').textContent.trim());
-              return dateA - dateB;
+              const dateA = getDateValue(a, 'data-column-content-updated-value');
+              const dateB = getDateValue(b, 'data-column-content-updated-value');
+              return compareDates(dateA, dateB);
             });
             break;
           case 'content_updated_desc':
             rows.sort((a, b) => {
-              const dateA = parseCustomDate(a.querySelector('[data-column-content-updated-value]').textContent.trim());
-              const dateB = parseCustomDate(b.querySelector('[data-column-content-updated-value]').textContent.trim());
-              return dateB - dateA;
+              const dateA = getDateValue(a, 'data-column-content-updated-value');
+              const dateB = getDateValue(b, 'data-column-content-updated-value');
+              return compareDates(dateB, dateA);
             });
             break;
           case 'removed_asc':
             rows.sort((a, b) => {
-              const dateA = parseCustomDate(a.querySelector('[data-column-removed-value]').textContent.trim());
-              const dateB = parseCustomDate(b.querySelector('[data-column-removed-value]').textContent.trim());
-              return dateA - dateB;
+              const dateA = getDateValue(a, 'data-column-removed-value');
+              const dateB = getDateValue(b, 'data-column-removed-value');
+              return compareDates(dateA, dateB);
             });
             break;
           case 'removed_desc':
             rows.sort((a, b) => {
-              const dateA = parseCustomDate(a.querySelector('[data-column-removed-value]').textContent.trim());
-              const dateB = parseCustomDate(b.querySelector('[data-column-removed-value]').textContent.trim());
-              return dateB - dateA;
+              const dateA = getDateValue(a, 'data-column-removed-value');
+              const dateB = getDateValue(b, 'data-column-removed-value');
+              return compareDates(dateB, dateA);
             });
             break;
           default:
@@ -4418,8 +4435,7 @@
               return pathA.localeCompare(pathB);
             });
             break;
-        }
-        // Reorder rows in the table
+        }// Reorder rows in the table
         rows.forEach(row => dataTable.appendChild(row));
       })
     }
