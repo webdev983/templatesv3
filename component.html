@@ -1502,6 +1502,7 @@
 
       <span data-element="comment" hidden class="l-3 t b-dark-blue">💬</span>
       <span data-element="class" hidden class="l-3 t b-dark-green">🎨</span>
+      <span data-element="attributes" hidden class="l-3 t b-dark-green">🎨</span>
       <span data-open-menu></button>
     </fieldset>
 
@@ -1906,6 +1907,30 @@
   -->
   <script>
     var log1 = (t) => { }
+    const showAttributes = (event) => {
+      const target = event.target
+      if (target.classList.contains('b-selected')) {
+        //hide*
+        target.classList.remove('b-selected')
+        document.querySelectorAll('[data-element="attributes"]').forEach(element => {
+          element.setAttribute('hidden', '')
+        })
+      }
+      else {
+        //show
+        target.classList.add('b-selected')
+        document.querySelectorAll('[data-element="attributes"]').forEach(element => {
+          const id = element.parentNode.id
+          const generated = getElementById1(removeLastOccurrence(id, '-tree'))
+         
+          const attributes = generated.getAttributeNames().filter(attr => !['id', 'class'].includes(attr));
+          if (attributes.length) {
+            element.removeAttribute('hidden')
+            element.textContent = attributes.join(' ')
+          }
+        })
+      }
+    }
     const showClasses = (event) => {
       const target = event.target
       if (target.classList.contains('b-selected')) {
