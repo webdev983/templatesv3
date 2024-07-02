@@ -1,4 +1,5 @@
-document.getElementById('log-open').addEventListener('click', function() {
+
+function openLeftPanel() {
 
 
   var logOpenButton = document.getElementById('log-open'); 
@@ -55,7 +56,8 @@ document.getElementById('log-open').addEventListener('click', function() {
     asideElement.style.width = '625px';
     leftElement.style.width = '615px';
   }
-});
+}
+document.getElementById('log-open').addEventListener('click', openLeftPanel);
 
 function reloadPage(event) {
   event.preventDefault(); // Эта строка предотвращает выполнение действия по умолчанию для события (например, перезагрузка страницы)
