@@ -735,26 +735,28 @@
         <div data-not-functional="filters-sorting" style="position: relative; padding-bottom:4px;">
 
           <div style="position: absolute; right: 10px; ">
-            <select style="display: inline">
-              <option selected>⬇️ A to Z</option>
-              <option><label class="l-1">⬆️ Z to A</label>
+            <select id="sortSelect" style="display: inline">
+              <option value="az" selected>⬇️ A to Z</option>
+              <option value="za"><label class="l-1">⬆️ Z to A</label>
                 </label>hr>
               </option>
-              <option>⬇️ published</option>
-              <option>⬆️ published
+              <option value="published_asc">⬇️ published</option>
+              <option value="published_desc">⬆️ published
                 <hr>
               </option>
-              <option>⬇️ created</option>
-              <option>⬆️ created
+              <option value="created_asc">⬇️ created</option>
+              <option value="created_desc">⬆️ created
                 <hr>
               </option>
-              <option>⬇️ content updated</option>
-              <option>⬆️ content updated
+              <option value="content_updated_asc">⬇️ content updated</option>
+              <option value="content_updated_desc">⬆️ content updated
                 <hr>
               </option>
-              <option>⬇️ removed</option>
-              <option>⬆️ removed
-                <hr>
+              <hr>
+              </option>
+              <option value="removed_asc">⬇️ removed</option>
+              <option value="removed_desc">⬆️ removed</option>
+              <hr>
               </option>
             </select>
           </div>
@@ -2894,7 +2896,7 @@
                   'Content-Type': 'application/json',
                   // Add any additional headers if needed
                 },
-              }).then(e=>e.json());;
+              }).then(e => e.json());;
               item.id = item1.id
               await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                 method: 'POST',
@@ -2924,7 +2926,7 @@
                   'Content-Type': 'application/json',
                   // Add any additional headers if needed
                 },
-              }).then(e=>e.json());
+              }).then(e => e.json());
               item.id = item1.id
               await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                 method: 'POST',
@@ -3110,15 +3112,15 @@
 
 
       const publishFolder = async (id, path) => {
-        try{
+        try {
           fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/bulkpublish', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ id, path,ownerid }),
+            body: JSON.stringify({ id, path, ownerid }),
           })
-        }catch(e){
+        } catch (e) {
 
         }
         alert('publishing')
@@ -4091,7 +4093,7 @@
         }
 
         //get folders
-        if (path.split('/').length > 3 ) {
+        if (path.split('/').length > 3) {
           //normal
           if (localStorage.getItem('helperid')) {
             url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?helperUUID=path:${helperid}&ownerUUID=${ownerid}&helperlsi1=true&lsi1=${path}&token=${localStorage.getItem('token')}`;
@@ -4317,63 +4319,157 @@
         document.querySelectorAll(`[${selector}]`).forEach(e => e.setAttribute('hidden', ''))
       }
     }
-    document.addEventListener('DOMContentLoaded', async function () {
-      /*
-      const loadingScreen = document.getElementById('loading');
-      loadingScreen.style.display = 'flex';
-      const timerElement = document.getElementById('timer');
-      let tenthsOfSeconds = 0;
-      const interval = setInterval(function () {
-        tenthsOfSeconds++;
-        timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
-      }, 100);
-      */
-      const storedPath = localStorage.getItem('storedPath')
-      if (localStorage.getItem('token')) {
-        document.getElementById('login').classList.add('hidden')
-        document.getElementById('aside_element').removeAttribute('hidden')
-        document.getElementById('main_element').removeAttribute('hidden')
-      }
-      try {
-        if (storedPath) {
-          path = storedPath
-          const labelElement = document.querySelector('#path-label');
+    const setSorting = () => {
+      const sortSelect = document.getElementById('sortSelect');
+      const dataTable = document.getElementById('filePathList');
+      let rows = Array.from(dataTable.getElementsByTagName('tr'));
 
-          // Update the text content of the label
-          labelElement.textContent = `${path}`;
-          await loadUsingPath()
+      sortSelect.addEventListener('change', function () {
+        const selectedOption = sortSelect.value;
+
+        switch (selectedOption) {
+          case 'az':
+            rows.sort((a, b) => {
+              const pathA = a.querySelector('[data-value="file-path"]').textContent.trim().toLowerCase();
+              const pathB = b.querySelector('[data-value="file-path"]').textContent.trim().toLowerCase();
+              return pathA.localeCompare(pathB);
+            });
+            break;
+          case 'za':
+            rows.sort((a, b) => {
+              const pathA = a.querySelector('[data-value="file-path"]').textContent.trim().toLowerCase();
+              const pathB = b.querySelector('[data-value="file-path"]').textContent.trim().toLowerCase();
+              return pathB.localeCompare(pathA);
+            });
+            break;
+          case 'published_asc':
+            rows.sort((a, b) => {
+              const dateA = new Date(a.querySelector('[data-column-published-value]').textContent.trim());
+              const dateB = new Date(b.querySelector('[data-column-published-value]').textContent.trim());
+              return dateA - dateB;
+            });
+            break;
+          case 'published_desc':
+            rows.sort((a, b) => {
+              const dateA = new Date(a.querySelector('[data-column-published-value]').textContent.trim());
+              const dateB = new Date(b.querySelector('[data-column-published-value]').textContent.trim());
+              return dateB - dateA;
+            });
+            break;
+          case 'created_asc':
+            rows.sort((a, b) => {
+              const dateA = new Date(a.querySelector('[data-column-created-value]').textContent.trim());
+              const dateB = new Date(b.querySelector('[data-column-created-value]').textContent.trim());
+              return dateA - dateB;
+            });
+            break;
+          case 'created_desc':
+            rows.sort((a, b) => {
+              const dateA = new Date(a.querySelector('[data-column-created-value]').textContent.trim());
+              const dateB = new Date(b.querySelector('[data-column-created-value]').textContent.trim());
+              return dateB - dateA;
+            });
+            break;
+          case 'content_updated_asc':
+            rows.sort((a, b) => {
+              const dateA = new Date(a.querySelector('[data-column-content-updated-value]').textContent.trim());
+              const dateB = new Date(b.querySelector('[data-column-content-updated-value]').textContent.trim());
+              return dateA - dateB;
+            });
+            break;
+          case 'content_updated_desc':
+            rows.sort((a, b) => {
+              const dateA = new Date(a.querySelector('[data-column-content-updated-value]').textContent.trim());
+              const dateB = new Date(b.querySelector('[data-column-content-updated-value]').textContent.trim());
+              return dateB - dateA;
+            });
+            break;
+          case 'removed_asc':
+            rows.sort((a, b) => {
+              const dateA = new Date(a.querySelector('[data-column-removed-value]').textContent.trim());
+              const dateB = new Date(b.querySelector('[data-column-removed-value]').textContent.trim());
+              return dateA - dateB;
+            });
+            break;
+          case 'removed_desc':
+            rows.sort((a, b) => {
+              const dateA = new Date(a.querySelector('[data-column-removed-value]').textContent.trim());
+              const dateB = new Date(b.querySelector('[data-column-removed-value]').textContent.trim());
+              return dateB - dateA;
+            });
+            break;
+          default:
+            // Default sorting (could be A to Z by file path as per your example)
+            rows.sort((a, b) => {
+              const pathA = a.querySelector('[data-value="file-path"]').textContent.trim().toLowerCase();
+              const pathB = b.querySelector('[data-value="file-path"]').textContent.trim().toLowerCase();
+              return pathA.localeCompare(pathB);
+            });
+            break;
         }
-        else {
-          await loadFileList()
+
+        // Reorder rows in the table
+        rows.forEach(row => dataTable.appendChild(row));
+      })
+    }
+    document.addEventListener('DOMContentLoaded', async function () {
+        /*
+        const loadingScreen = document.getElementById('loading');
+        loadingScreen.style.display = 'flex';
+        const timerElement = document.getElementById('timer');
+        let tenthsOfSeconds = 0;
+        const interval = setInterval(function () {
+          tenthsOfSeconds++;
+          timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
+        }, 100);
+        */
+        const storedPath = localStorage.getItem('storedPath')
+        if (localStorage.getItem('token')) {
+          document.getElementById('login').classList.add('hidden')
+          document.getElementById('aside_element').removeAttribute('hidden')
+          document.getElementById('main_element').removeAttribute('hidden')
         }
-      }
-      catch (e) {
-        localStorage.removeItem('token')
-        document.getElementById('login').classList.remove('hidden')
-        document.getElementById('aside_element').setAttribute('hidden', '')
-        document.getElementById('main_element').setAttribute('hidden', '')
-      }
-      setColumnSelectors()
-      //clearInterval(interval);
-      //console.log(timerElement.textContent)
-      //const lastActionTime = document.getElementById('last-action-time');
-      //lastActionTime.textContent = timerElement.textContent;
-      //loadingScreen.style.display = 'none';
-    })
+        try {
+          if (storedPath) {
+            path = storedPath
+            const labelElement = document.querySelector('#path-label');
+
+            // Update the text content of the label
+            labelElement.textContent = `${path}`;
+            await loadUsingPath()
+          }
+          else {
+            await loadFileList()
+          }
+        }
+        catch (e) {
+          localStorage.removeItem('token')
+          document.getElementById('login').classList.remove('hidden')
+          document.getElementById('aside_element').setAttribute('hidden', '')
+          document.getElementById('main_element').setAttribute('hidden', '')
+        }
+        setSorting()
+        setColumnSelectors()
+        //clearInterval(interval);
+        //console.log(timerElement.textContent)
+        //const lastActionTime = document.getElementById('last-action-time');
+        //lastActionTime.textContent = timerElement.textContent;
+        //loadingScreen.style.display = 'none';
+      })
   </script>
   </script>
 
   <script>
     function adjustWidthToContent(input) {
-      const minWidth = 150; // Minimum width of the input in pixels
-      const charWidth = 10; // Average width per character in pixels, adjust as needed for your font
+          const minWidth = 150; // Minimum width of the input in pixels
+          const charWidth = 10; // Average width per character in pixels, adjust as needed for your font
 
-      // Calculate the new width based on the length of the input's value or the minimum width, whichever is greater
-      const newWidth = Math.max(input.value.length * charWidth, minWidth);
+          // Calculate the new width based on the length of the input's value or the minimum width, whichever is greater
+          const newWidth = Math.max(input.value.length * charWidth, minWidth);
 
-      // Apply the new width to the input
-      input.style.width = `${newWidth}px`;
-    }
+          // Apply the new width to the input
+          input.style.width = `${newWidth}px`;
+        }
   </script>
 
   <script>
@@ -4399,72 +4495,72 @@
 
   <script>
 
-    document.addEventListener('DOMContentLoaded', function () {
-      // Определяем кнопки, которые будут переключать секции
-      const buttons = document.querySelectorAll('button[data-section-button="brains"], button[data-section-button="files"]');
-      buttons.forEach(button => {
-        button.addEventListener('click', function () {
-          const sectionToShow = this.getAttribute('data-section-button');
+      document.addEventListener('DOMContentLoaded', function () {
+        // Определяем кнопки, которые будут переключать секции
+        const buttons = document.querySelectorAll('button[data-section-button="brains"], button[data-section-button="files"]');
+        buttons.forEach(button => {
+          button.addEventListener('click', function () {
+            const sectionToShow = this.getAttribute('data-section-button');
 
-          // Переключение класса 'b-selected' для кнопок
-          buttons.forEach(btn => {
-            if (btn.getAttribute('data-section-button') === sectionToShow) {
-              btn.classList.add('b-selected');
-            } else {
-              btn.classList.remove('b-selected');
-            }
-          });
+            // Переключение класса 'b-selected' для кнопок
+            buttons.forEach(btn => {
+              if (btn.getAttribute('data-section-button') === sectionToShow) {
+                btn.classList.add('b-selected');
+              } else {
+                btn.classList.remove('b-selected');
+              }
+            });
 
-          // Переключение видимости секций
-          const sections = document.querySelectorAll('section[data-section="brains"], section[data-section="files"]');
-          sections.forEach(section => {
-            if (section.getAttribute('data-section') === sectionToShow) {
-              section.hidden = false;
-            } else {
-              section.hidden = true;
-            }
-          });
+            // Переключение видимости секций
+            const sections = document.querySelectorAll('section[data-section="brains"], section[data-section="files"]');
+            sections.forEach(section => {
+              if (section.getAttribute('data-section') === sectionToShow) {
+                section.hidden = false;
+              } else {
+                section.hidden = true;
+              }
+            });
 
-          // Переключение видимости связанных элементов aside
-          const asides = document.querySelectorAll('div[data-section-aside="brains"], div[data-section-aside="files"]');
-          asides.forEach(aside => {
-            if (aside.getAttribute('data-section-aside') === sectionToShow) {
-              aside.hidden = false;
-            } else {
-              aside.hidden = true;
-            }
+            // Переключение видимости связанных элементов aside
+            const asides = document.querySelectorAll('div[data-section-aside="brains"], div[data-section-aside="files"]');
+            asides.forEach(aside => {
+              if (aside.getAttribute('data-section-aside') === sectionToShow) {
+                aside.hidden = false;
+              } else {
+                aside.hidden = true;
+              }
+            });
           });
         });
       });
-    });
 
 
 
 
   </script>
   <script>
-    function openColumnsSelector() {
-      console.log("1");
-      var columnsSelector = document.getElementById('columns_selector');
-      var columnsSelectorOpen = document.getElementById('columns_selector_open');
+      function openColumnsSelector() {
+        console.log("1");
+        var columnsSelector = document.getElementById('columns_selector');
+        var columnsSelectorOpen = document.getElementById('columns_selector_open');
 
-      if (columnsSelectorOpen.classList.contains('b-selected')) {
-        console.log("2");
+        if (columnsSelectorOpen.classList.contains('b-selected')) {
+          console.log("2");
 
-        columnsSelector.hidden = true;
-        columnsSelectorOpen.classList.remove('b-selected');
-        document.querySelector('.aside').style.width = '70px';
-        document.querySelector('.left').style.width = '60px';
+          columnsSelector.hidden = true;
+          columnsSelectorOpen.classList.remove('b-selected');
+          document.querySelector('.aside').style.width = '70px';
+          document.querySelector('.left').style.width = '60px';
 
-      } else {
-        console.log("3");
+        } else {
+          console.log("3");
 
-        columnsSelector.removeAttribute('hidden');
-        columnsSelectorOpen.classList.add('b-selected');
-        document.querySelector('.aside').style.width = '215px';
-        document.querySelector('.left').style.width = '205px';
+          columnsSelector.removeAttribute('hidden');
+          columnsSelectorOpen.classList.add('b-selected');
+          document.querySelector('.aside').style.width = '215px';
+          document.querySelector('.left').style.width = '205px';
+        }
       }
-    }
   </script>
 
 </body>
