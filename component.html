@@ -3805,6 +3805,7 @@
           const aiPayload = {
             id: pathItem.id,
             sk: `ai-logs:${new Date().getTime()}`,
+            task,
             content,
             gptResponse: res,
             ttl
@@ -3819,7 +3820,7 @@
 
           const element0 = document.getElementById('ai-logs')
           //element0.removeAttribute('hidden')
-          element0.querySelector('textarea').value = [element0.querySelector('textarea').value, JSON.stringify(res, null, 2) + '\n\n' + JSON.stringify(content)].join('\n\n=============================================\n\n')
+          element0.querySelector('textarea').value = [element0.querySelector('textarea').value, JSON.stringify(res, null, 2)+ JSON.stringify(task) + '\n\n' + JSON.stringify(content)].join('\n\n=============================================\n\n')
           for (const toImport of element.import_data) {
             const { import_page, import_name } = toImport
 
@@ -6703,7 +6704,7 @@ checkbox1.setAttribute('hidden', "");
         if (res.items.length) {
           const element = document.getElementById('ai-logs')
           //element.removeAttribute('hidden')
-          element.querySelector('textarea').value = res.items.map(el => JSON.stringify(el.gptResponse, null, 2) + '\n\n' + JSON.stringify(el.content) + '\n\n').join('\n\n=============================================\n\n')
+          element.querySelector('textarea').value = res.items.map(el => JSON.stringify(el.gptResponse, null, 2) + '\n\n' + JSON.stringify(el.task) + '\n\n' + JSON.stringify(el.content) + '\n\n').join('\n\n=============================================\n\n')
         }
       }
       for (const key of Object.keys(pathItem.hub_items?.scripts)) {
