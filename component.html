@@ -14779,7 +14779,8 @@ headers: {
       log1('showing sku original ' + sku)
 
       getElementById1("sku-empty2").setAttribute('hidden', '')
-      getElementById1('sku_filled').removeAttribute('hidden')
+      const filled = getElementById1('sku_filled')
+      filled.removeAttribute('hidden')
       //get warehouses
 
       const warehouses = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=warehouse:`)
@@ -14791,7 +14792,7 @@ headers: {
       const shippingMethodes = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=shippingMethode:`)
         .then(response => response.json()).then(res => res.items)
       for (const element of warehouses) {
-        const tr = getElementById1('warehouse-row[hidden]')
+        const tr = filled.querySelector('#warehouse-row[hidden]')
         const cloned = tr.cloneNode(true)
         cloned.setAttribute('sk',element.sk)
         cloned.removeAttribute('hidden')
@@ -14799,7 +14800,7 @@ headers: {
         cloned.querySelector('#wareHouseInput').textContent = element.value
       }
       for (const element of destinations) {
-        const tr = getElementById1('destination-row[hidden]')
+        const tr = filled.querySelector('#destination-row[hidden]')
         const cloned = tr.cloneNode(true)
         cloned.setAttribute('sk',element.sk)
         cloned.removeAttribute('hidden')
@@ -14807,7 +14808,7 @@ headers: {
         cloned.querySelector('#destinationInput').textContent = element.value
       }
       for (const element of conditions) {
-        const tr = getElementById1('condition-row[hidden]')
+        const tr = filled.querySelector('#condition-row[hidden]')
         const cloned = tr.cloneNode(true)
         cloned.setAttribute('sk',element.sk)
         cloned.removeAttribute('hidden')
@@ -14815,7 +14816,7 @@ headers: {
         cloned.querySelector('#conditionInput').textContent = element.value
       }
       for (const element of shippingMethodes) {
-        const tr = getElementById1('ship-row[hidden]')
+        const tr = filled.querySelector('#ship-row[hidden]')
         const cloned = tr.cloneNode(true)
         cloned.setAttribute('sk',element.sk)
         cloned.removeAttribute('hidden')
