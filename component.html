@@ -1217,7 +1217,7 @@
             <option>⬇️ Select</option>
             <option hidden id="warehouse_select_option">
               🏬
-              
+
             </option>
           </select>
           <select id="destionation-select" class="select-1"
@@ -1225,7 +1225,7 @@
             <option>⬇️ Select</option>
             <option hidden id="destination_select_option"><span>🏬</span><span id="destionation-value"></span></option>
           </select>
-          
+
 
           <table id="sku-table" class="table-sku" style="margin-left: 30px; margin-top: 10px;">
             <tbody>
@@ -1242,7 +1242,7 @@
 
                   <span class="l-3 b-dark-blue"> max processing</span>
                 </td>
-                <td id="sku-variable-condition">
+                <td id="sku-variable-condition" hidden>
                   <span class="l-3">📦</span>
                   <span class="l-3 b-dark-blue" id="sku-variable-condition-value">new</span>
                 </td>
@@ -1534,7 +1534,7 @@
               <tbody>
                 <tr id="condition-row" hidden>
                   <td>
-                    <span class="l-3 enable-condition">🔴</span>
+                    <span class="l-3 enable-condition" id="enableCondition">🔴</span>
                   </td>
                   <td>
                     <span class="l-3 condition-name" onblur="setSkuItemValue(event)" id="conditionInput"
@@ -14694,7 +14694,7 @@ headers: {
         const cloned1 = option.cloneNode(true)
         cloned1.removeAttribute('hidden')
         cloned1.setAttribute('id', item.sk)
-        cloned1.querySelector('#warehouse-value').textContent = "🏬"+e.target.parentNode.parentNode.querySelector('#wareHouseInput').textContent
+        cloned1.querySelector('#warehouse-value').textContent = "🏬" + e.target.parentNode.parentNode.querySelector('#wareHouseInput').textContent
         option.parentNode.append(cloned1)
 
       }
@@ -14726,7 +14726,7 @@ headers: {
         const cloned1 = option.cloneNode(true)
         cloned1.removeAttribute('hidden')
         cloned1.setAttribute('id', item.sk)
-        cloned1.querySelector('#destination-value').textContent ="🏴󠁥󠁳󠁰󠁶󠁿"+ e.target.parentNode.parentNode.querySelector('#destinationInput').textContent
+        cloned1.querySelector('#destination-value').textContent = "🏴󠁥󠁳󠁰󠁶󠁿" + e.target.parentNode.parentNode.querySelector('#destinationInput').textContent
         option.parentNode.append(cloned1)
 
       }
@@ -14752,6 +14752,13 @@ headers: {
         value: 'condition'
       }
       cloned.setAttribute('sk', item.sk)
+      cloned.querySelector('#enableCondition').onclick = (e) => {
+        e.target.textContent = '🟢'
+        const original = getElementById1('sku-variable-condition')
+        const cloned = original.cloneNode(true)
+        cloned.querySelector('#sku-variable-condition-value').textContent = e.target.parentNode.parentNode.querySelector('#destinationInput').textContent
+        original.parentNode.insertBefore(cloned, original)
+      }
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
@@ -14848,7 +14855,7 @@ headers: {
           const cloned1 = option.cloneNode(true)
           cloned1.setAttribute('id', element.sk)
           cloned1.removeAttribute('hidden')
-          cloned1.textContent = "🏬"+e.target.parentNode.parentNode.querySelector('#wareHouseInput').textContent
+          cloned1.textContent = "🏬" + e.target.parentNode.parentNode.querySelector('#wareHouseInput').textContent
           option.parentNode.append(cloned1)
 
         }
@@ -14866,7 +14873,7 @@ headers: {
           const cloned1 = option.cloneNode(true)
           cloned1.removeAttribute('hidden')
           cloned1.setAttribute('id', element.sk)
-          cloned1.textContent ="🏴󠁥󠁳󠁰󠁶󠁿"+ e.target.parentNode.parentNode.querySelector('#destinationInput').textContent
+          cloned1.textContent = "🏴󠁥󠁳󠁰󠁶󠁿" + e.target.parentNode.parentNode.querySelector('#destinationInput').textContent
           option.parentNode.append(cloned1)
 
         }
@@ -14879,6 +14886,13 @@ headers: {
         cloned.removeAttribute('hidden')
         tr.parentNode.append(cloned)
         cloned.querySelector('#conditionInput').textContent = element.value
+        cloned.querySelector('#enableCondition').onclick = (e) => {
+          e.target.textContent = '🟢'
+          const original = getElementById1('sku-variable-condition')
+          const cloned = original.cloneNode(true)
+          cloned.querySelector('#sku-variable-condition-value').textContent = e.target.parentNode.parentNode.querySelector('#destinationInput').textContent
+          original.parentNode.insertBefore(cloned, original)
+        }
       }
       for (const element of shippingMethodes) {
         const tr = filled.querySelector('#ship-row[hidden]')
