@@ -1208,7 +1208,7 @@
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">📦 SKU</span></summary>
         <div id="sku-empty2">
           <input type="text" class="b-3" id="input-sku2" placeholder="enter sku">
-          <button class="b-3" id="create-sku2" onclick="addSku(event)">▶️</button>
+          <button class="b-3" id="create-sku2" onclick="addSku2(event)">▶️</button>
         </div>
 
         <div hidden id="sku_filled">
@@ -1444,7 +1444,7 @@
             <textarea id="push_new_sku_variables" class="text1" style="width: 50vw; "
               placeholder=" use : separator for key values"></textarea>
             <br>
-            <button class="b-4">💾 Save</button>
+            <button class="b-4" onclick="pushSkuVariables(event)">💾 Save</button>
           </details>
           <details style="margin-left: 25px; margin-top: 10px;">
            <summary class="summary-L-3" style="margin-top: 5px; "><span class="l-3">➕ select warehouse</span><span></summary>
@@ -14056,6 +14056,44 @@ headers: {
       }
       pathItemSku = value
     }
+    const addSku2 = async (event) => {
+      const value = getElementById1('input-sku').value.trim().toLowerCase()
+      
+      const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${value}&sk=created:&startsWith=true`)
+        .then(response => response.json())
+      if (items.length) {
+        if (items[0].ownerUUID.replace('sku:', '') === ownerid) {
+          await setSku(value)
+          showSku2(value)
+         
+          return
+          //alert('adding sku in progress')
+        }
+        else {
+          getElementById1('input-sku2').value = ''
+
+        }
+        return
+
+
+      }
+
+     
+      await setSku(value)
+      
+      // add sku 
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id:'sku:'+ value, sk: 'created:' + new Date().getTime().toString(), ownerUUID: 'sku:' + ownerid }),
+      });
+      
+      showSku2(value, true)
+      setDataProduct(value, resultList)
+    }
+    
     const addSku = async (event) => {
       const value = getElementById1('input-sku').value.trim().toLowerCase()
       const resultList = await getProductAttributes(true)
@@ -14551,6 +14589,10 @@ headers: {
            }*/
       getElementById1("sku-list").appendChild(cloned1)
       el.forEach(e => e.remove())
+    }
+    const pushSkuVariables = (event)=>{
+      const inputValue = getElementById1('push_new_sku_variables').value
+      const lines = 
     }
     const showSku2 = async (sku) => {
       log1('showing sku original ' + sku)
