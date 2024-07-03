@@ -1475,7 +1475,7 @@
           <details style="margin-left: 25px; margin-top: 10px;">
             <summary class="summary-L-3" style="margin-top: 5px; "><span class="l-3">➕ select destination</span><span>
             </summary>
-            <button class="b-4" onclick="addWareHouse(event)">add</button>
+            <button class="b-4" onclick="addDestination(event)">add</button>
 
             <table id="destination-table" class="table-1" style="margin-left: 30px; margin-top: 10px;">
               <tbody>
@@ -1500,7 +1500,7 @@
           <details style="margin-left: 25px; margin-top: 10px;">
             <summary class="summary-L-3" style="margin-top: 5px; "><span class="l-3">➕ select ship method</span><span>
             </summary>
-            <button class="b-4" onclick="addWareHouse(event)">add</button>
+            <button class="b-4" onclick="addShippingMethode(event)">add</button>
 
             <table id="ship-table" class="table-1" style="margin-left: 30px; margin-top: 10px;">
               <tbody>
@@ -1509,8 +1509,8 @@
                     <span class="l-3 enable-ship">🔴</span>
                   </td>
                   <td>
-                    <span class="l-3 ship-name" onblur="setSkuItemValue(event)" id="shipInput"
-                      contenteditable>ship method</span>
+                    <span class="l-3 ship-name" onblur="setSkuItemValue(event)" id="shipInput" contenteditable>ship
+                      method</span>
                   </td>
                   <td>
                     <button class="b-3 ship-rename">🗑</button>
@@ -1524,7 +1524,7 @@
           <details style="margin-left: 25px; margin-top: 10px;">
             <summary class="summary-L-3" style="margin-top: 5px; "><span class="l-3">➕ select condition</span><span>
             </summary>
-            <button class="b-4" onclick="addWareHouse(event)">add</button>
+            <button class="b-4" onclick="addCondition(event)">add</button>
 
             <table id="condition-table" class="table-1" style="margin-left: 30px; margin-top: 10px;">
               <tbody>
@@ -14668,6 +14668,66 @@ headers: {
       const item = {
         id: ownerid,
         sk: 'warehouse:' + (new Date()).getTime().toString(),
+      }
+      cloned.setAttribute('sk', item.sk)
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(item),
+      });
+    }
+    const addDestination = async (event) => {
+
+      const tr = element.closest('tr')
+
+      const cloned = tr.cloneNode(true)
+      cloned.removeAttribute('hidden')
+      tr.parentNode.append(cloned)
+      const item = {
+        id: ownerid,
+        sk: 'destination:' + (new Date()).getTime().toString(),
+      }
+      cloned.setAttribute('sk', item.sk)
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(item),
+      });
+    }
+    const addCondition = async (event) => {
+
+      const tr = element.closest('tr')
+
+      const cloned = tr.cloneNode(true)
+      cloned.removeAttribute('hidden')
+      tr.parentNode.append(cloned)
+      const item = {
+        id: ownerid,
+        sk: 'condition:' + (new Date()).getTime().toString(),
+      }
+      cloned.setAttribute('sk', item.sk)
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(item),
+      });
+    }
+    const addShippingMethode = async (event) => {
+
+      const tr = element.closest('tr')
+
+      const cloned = tr.cloneNode(true)
+      cloned.removeAttribute('hidden')
+      tr.parentNode.append(cloned)
+      const item = {
+        id: ownerid,
+        sk: 'shippingMethode:' + (new Date()).getTime().toString(),
       }
       cloned.setAttribute('sk', item.sk)
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
