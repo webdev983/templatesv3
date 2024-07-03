@@ -1234,56 +1234,56 @@
                   <span class="l-3 b-dark-blue"> min processing</span>
                 </td>
                 <td>
-                <span class="l-3">⌛</span>
-            
-                <span class="l-3 b-dark-blue"> max processing</span>
-              </td>
+                  <span class="l-3">⌛</span>
+
+                  <span class="l-3 b-dark-blue"> max processing</span>
+                </td>
                 <td id="sku-variable-condition">
                   <span class="l-3">📦</span>
                   <span class="l-3 b-dark-blue" id="sku-variable-condition-value">new</span>
-              </td>
+                </td>
               </tr>
             </tbody>
-  
-              <tbody>
-                <tr>
-                  <th>
-                    <span>
-                      <span class="l-3 sku-attribute">ALL</span>
-                    </span> 
-                    <span >
-                    </th>
-                  <td>
-                      <span id="all-min-processing" class="l-3"  contenteditable>0</span>
-                  </td>
-                  <td>
-                    <span id="all-max-processing" class="l-3"contenteditable id="all-max-processing">0</span>
-                  </td>
-            
-                  <td>
-                    <span id="all-quantity" class="l-3"contenteditable>0</span>
-                  </td>
-                  </tr>
-              <tr id="sku-variable-row" >
-                  <th>
-                    <span id="sku-variable-xz">
-                      <span id="sku-attribute-key-xz" class="l-3 sku-attribute"></span>
-                      <span class="l-3">:</span>
-                      <span id="sku-attribute-value-xz" class="l-3"></span>
-                      <span class="l-3">;</span>
-                    </span> 
-                    </th>
-                  <td>
-                    <span id="sku-variable-min-processing" class="l-3"contenteditable>0</span>
-                  </td>
+
+            <tbody>
+              <tr>
+                <th>
+                  <span>
+                    <span class="l-3 sku-attribute">ALL</span>
+                  </span>
+                  <span>
+                </th>
                 <td>
-                  <span id="sku-variable-max-processing" class="l-3"contenteditable>0</span>
+                  <span id="all-min-processing" class="l-3" contenteditable>0</span>
                 </td>
-              <td>
-                <span  id="sku-variable-quantity" class="l-3"contenteditable>0</span>
-            </td>
+                <td>
+                  <span id="all-max-processing" class="l-3" contenteditable id="all-max-processing">0</span>
+                </td>
+
+                <td>
+                  <span id="all-quantity" class="l-3" contenteditable>0</span>
+                </td>
               </tr>
-              </tbody>
+              <tr id="sku-variable-row">
+                <th>
+                  <span id="sku-variable-xz">
+                    <span id="sku-attribute-key-xz" class="l-3 sku-attribute"></span>
+                    <span class="l-3">:</span>
+                    <span id="sku-attribute-value-xz" class="l-3"></span>
+                    <span class="l-3">;</span>
+                  </span>
+                </th>
+                <td>
+                  <span id="sku-variable-min-processing" class="l-3" contenteditable>0</span>
+                </td>
+                <td>
+                  <span id="sku-variable-max-processing" class="l-3" contenteditable>0</span>
+                </td>
+                <td>
+                  <span id="sku-variable-quantity" class="l-3" contenteditable>0</span>
+                </td>
+              </tr>
+            </tbody>
           </table>
 
           <hr style="border-bottom: 2px solid #ffcc81; margin-top: 20px; margin-bottom: 20px;">
@@ -1447,53 +1447,103 @@
             <button class="b-4" onclick="pushSkuVariables(event)">💾 Save</button>
           </details>
           <details style="margin-left: 25px; margin-top: 10px;">
-           <summary class="summary-L-3" style="margin-top: 5px; "><span class="l-3">➕ select warehouse</span><span></summary>
-               <button class="b-4" onclick="addWareHouse(event)">add</button>
-  
-                  <table id="warehouse-table" class="table-1" style="margin-left: 30px; margin-top: 10px;">
-                    <tbody>
-                      <tr id="warehouse-row">
-                        <td>
-                            <span class="l-3 enable-warehouse">🔴</span>
-                        </td>
-                        <td>
-                            <span class="l-3 warehouse-name" id="wareHouseInput" contenteditable>warehouse1</span>
-                        </td>
-                        <td>
-                          <button class="b-3 warehouse-rename">🗑</button>
-                      </td>
-                        </tr>
-                    </tbody>
-                
-  
-                </table>
+            <summary class="summary-L-3" style="margin-top: 5px; "><span class="l-3">➕ select warehouse</span><span>
+            </summary>
+            <button class="b-4" onclick="addWareHouse(event)">add</button>
+
+            <table id="warehouse-table" class="table-1" style="margin-left: 30px; margin-top: 10px;">
+              <tbody>
+                <tr id="warehouse-row">
+                  <td>
+                    <span class="l-3 enable-warehouse">🔴</span>
+                  </td>
+                  <td>
+                    <span class="l-3 warehouse-name" onblur="setSkuItemValue(event)" id="wareHouseInput"
+                      contenteditable>warehouse1</span>
+                  </td>
+                  <td>
+                    <button class="b-3 warehouse-rename">🗑</button>
+                  </td>
+                </tr>
+              </tbody>
+
+
+            </table>
 
           </details>
 
           <details style="margin-left: 25px; margin-top: 10px;">
             <summary class="summary-L-3" style="margin-top: 5px; "><span class="l-3">➕ select destination</span><span>
             </summary>
-            <textarea id="import-list-input" class="text1" style="width: 50vw; "
-              placeholder=" use : separator for key values"></textarea>
-            <br>
-            <button class="b-4">💾 Save</button>
+            <button class="b-4" onclick="addWareHouse(event)">add</button>
+
+            <table id="destination-table" class="table-1" style="margin-left: 30px; margin-top: 10px;">
+              <tbody>
+                <tr id="destination-row">
+                  <td>
+                    <span class="l-3 enable-destination">🔴</span>
+                  </td>
+                  <td>
+                    <span class="l-3 destination-name" onblur="setSkuItemValue(event)" id="destinationInput"
+                      contenteditable>destination</span>
+                  </td>
+                  <td>
+                    <button class="b-3 destination-rename">🗑</button>
+                  </td>
+                </tr>
+              </tbody>
+
+
+            </table>
           </details>
 
           <details style="margin-left: 25px; margin-top: 10px;">
             <summary class="summary-L-3" style="margin-top: 5px; "><span class="l-3">➕ select ship method</span><span>
             </summary>
-            <textarea id="import-list-input" class="text1" style="width: 50vw; "
-              placeholder=" use : separator for key values"></textarea>
-            <br>
-            <button class="b-4">💾 Save</button>
+            <button class="b-4" onclick="addWareHouse(event)">add</button>
+
+            <table id="ship-table" class="table-1" style="margin-left: 30px; margin-top: 10px;">
+              <tbody>
+                <tr id="ship-row">
+                  <td>
+                    <span class="l-3 enable-ship">🔴</span>
+                  </td>
+                  <td>
+                    <span class="l-3 ship-name" onblur="setSkuItemValue(event)" id="shipInput"
+                      contenteditable>ship method</span>
+                  </td>
+                  <td>
+                    <button class="b-3 ship-rename">🗑</button>
+                  </td>
+                </tr>
+              </tbody>
+
+
+            </table>
           </details>
           <details style="margin-left: 25px; margin-top: 10px;">
             <summary class="summary-L-3" style="margin-top: 5px; "><span class="l-3">➕ select condition</span><span>
             </summary>
-            <textarea id="import-list-input" class="text1" style="width: 50vw; "
-              placeholder=" use : separator for key values"></textarea>
-            <br>
-            <button class="b-4">💾 Save</button>
+            <button class="b-4" onclick="addWareHouse(event)">add</button>
+
+            <table id="condition-table" class="table-1" style="margin-left: 30px; margin-top: 10px;">
+              <tbody>
+                <tr id="condition-row">
+                  <td>
+                    <span class="l-3 enable-condition">🔴</span>
+                  </td>
+                  <td>
+                    <span class="l-3 condition-name" onblur="setSkuItemValue(event)" id="conditionInput"
+                      contenteditable>condition</span>
+                  </td>
+                  <td>
+                    <button class="b-3 condition-rename">🗑</button>
+                  </td>
+                </tr>
+              </tbody>
+
+
+            </table>
           </details>
         </div>
 
@@ -13952,7 +14002,7 @@ elementsToRemove.forEach(element => element.remove());
         }
       }
     }*/
-    
+
     function generateCombinations(data) {
       const combinations = [];
 
@@ -14058,14 +14108,14 @@ headers: {
     }
     const addSku2 = async (event) => {
       const value = getElementById1('input-sku').value.trim().toLowerCase()
-      
+
       const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${value}&sk=created:&startsWith=true`)
         .then(response => response.json())
       if (items.length) {
         if (items[0].ownerUUID.replace('sku:', '') === ownerid) {
           await setSku(value)
           showSku2(value)
-         
+
           return
           //alert('adding sku in progress')
         }
@@ -14078,22 +14128,22 @@ headers: {
 
       }
 
-     
+
       await setSku(value)
-      
+
       // add sku 
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id:'sku:'+ value, sk: 'created:' + new Date().getTime().toString(), ownerUUID: 'sku:' + ownerid }),
+        body: JSON.stringify({ id: 'sku:' + value, sk: 'created:' + new Date().getTime().toString(), ownerUUID: 'sku:' + ownerid }),
       });
-      
+
       showSku2(value, true)
       setDataProduct(value, resultList)
     }
-    
+
     const addSku = async (event) => {
       const value = getElementById1('input-sku').value.trim().toLowerCase()
       const resultList = await getProductAttributes(true)
@@ -14590,33 +14640,51 @@ headers: {
       getElementById1("sku-list").appendChild(cloned1)
       el.forEach(e => e.remove())
     }
-    const addWareHouse =async (event)=>{
+    const setSkuItemValue = (event) => {
+      const target = event.target
+      const value = target.value
+      const sk = target.closest('tr').getAttribute('sk')
+      const item = {
+        id: ownerid,
+        sk,
+        value
+      }
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(item),
+      });
+
+    }
+    const addWareHouse = async (event) => {
       const element = document.getElementById('wareHouseInput')
-      
+
       const tr = element.closest('tr')
-      
+
       const cloned = tr.cloneNode(true)
       cloned.removeAttribute('hidden')
       tr.parentNode.append(cloned)
       const item = {
-        id:ownerid,
-        sk:'warehouse:'+ (new Date()).getTime().toString(),
+        id: ownerid,
+        sk: 'warehouse:' + (new Date()).getTime().toString(),
       }
-      cloned.setAttribute('sk',item.sk)
+      cloned.setAttribute('sk', item.sk)
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(item),
-          });
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(item),
+      });
     }
-    const pushSkuVariables = async(event)=>{
+    const pushSkuVariables = async (event) => {
       const inputValue = getElementById1('push_new_sku_variables').value
       const lines = inputValue.split('\n')
-      const data =[]
-      for(const line of lines){
-        const [legend,joinedAttributes] = line.trim().split(':')
+      const data = []
+      for (const line of lines) {
+        const [legend, joinedAttributes] = line.trim().split(':')
         const attributes = joinedAttributes.split(',')
         data.push({
           legend,
@@ -14630,7 +14698,7 @@ headers: {
       console.log(combinations)
       for (const combination of combinations) {
         const item = {
-          id: 'sku:'+pathItemSku,
+          id: 'sku:' + pathItemSku,
           sk: 'sku-variables;' + combination.toLowerCase(),
         }
 
