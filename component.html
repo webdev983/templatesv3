@@ -14607,11 +14607,11 @@ headers: {
       updatePathItem()
       for (const combination of combinations) {
         const item = {
-          id: 'sku:pathItemSku',
+          id: 'sku:'+pathItemSku,
           sk: 'sku-variables;' + combination.toLowerCase(),
         }
 
-        const existing = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/' + value + ':' + item.sk)
+        const existing = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/' + item.id + ':' + item.sk)
           .then(response => response.json())
         if (!existing) {
           await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
