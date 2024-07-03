@@ -14549,6 +14549,121 @@ headers: {
       getElementById1("sku-list").appendChild(cloned1)
       el.forEach(e => e.remove())
     }
+    const showSku2 = async (sku) => {
+      log1('showing sku original ' + sku)
+      const item1 = getElementById1("sku-item-1")
+      getElementById1("input-sku").setAttribute('hidden', '')
+      getElementById1("create-sku").setAttribute('hidden', '')
+      const cloned1 = item1.cloneNode(true)
+      cloned1.id = sku
+      cloned1.removeAttribute('hidden')
+      getElementById1("sku-list").removeAttribute('hidden')
+      cloned1.querySelector("#sku-value").textContent = sku
+      cloned1.querySelector("#remove-sku").removeAttribute('hidden')
+      const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku}&sk=qty;&startsWith=true`)
+        .then(response => response.json())
+      const el = cloned1.querySelectorAll('#sku-item')
+      const parent = cloned1.querySelector('#sku-attribute-list')
+      //if (items.length > 1) {
+
+      const p = items.map(async item => {
+
+        const cloned = el[0].cloneNode(true)
+        const v = item.sk.replace('qty;', '')
+        log1("sku i is " + JSON.stringify(item))
+        cloned.querySelector('#sku-attribute-value').textContent = v
+        const psk = `price;${pathItemPath.split('/')[0].toLowerCase()};${v}price`
+        const pItem = await fetch(`${backend_url}?id=${sku}&sk=${psk}&startsWith=true`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(e => e.json()).then(({ items }) => items[0])
+
+        cloned.querySelector('#sku-qty').textContent = item.qty || 0
+        const oldEl = cloned.querySelector('[data-price_old_value]')
+        const pEl = cloned.querySelector('[data-price_value]')
+        oldEl.textContent = pItem?.oldprice || 0
+        pEl.textContent = pItem?.price || 0
+        pEl.addEventListener('blur', async function () {
+          let value = -1
+          try {
+            value = parseFloat(pEl.textContent)
+          }
+          catch (e) {
+
+          }
+          if (value < 0) {
+            value = 0
+            pEl.textContent = 0
+          }
+
+
+          let nV = pItem
+          if (nV) {
+            nV.price = value
+          }
+          else {
+            nV = {
+              id: sku,
+              sk: psk,
+              price: value
+            }
+          }
+          await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            body: JSON.stringify(nV),
+          });
+        });
+        oldEl.addEventListener('blur', async function () {
+          let value = -1
+          try {
+            value = parseFloat(oldEl.textContent)
+          }
+          catch (e) {
+
+          }
+          if (value < 0) {
+            value = 0
+            oldEl.textContent = 0
+          }
+
+
+          let nV = pItem
+          if (nV) {
+            nV.oldprice = value
+          }
+          else {
+            nV = {
+              id: sku,
+              sk: psk,
+              oldprice: value
+            }
+          }
+          await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            body: JSON.stringify(nV),
+          });
+        });
+        parent.appendChild(cloned)
+        cloned.addEventListener('click', e => handleSkuItemClick(cloned, item))
+      })
+      await Promise.all(p)
+      /*
+           }
+          
+           else if (items.length === 1) {
+             log1('showing sku')
+             const cloned = el[0].cloneNode(true)
+             cloned.querySelector('#sku-attribute-value').textContent = 'Solo'
+             cloned.querySelector('#sku-qty').textContent = items[0].qty || 0
+             parent.appendChild(cloned)
+             cloned.addEventListener('click', e => handleSkuItemClick(cloned, items[0], sku))
+           }*/
+      getElementById1("sku-list").appendChild(cloned1)
+      el.forEach(e => e.remove())
+    }
+    
     const handleHead = async () => {
 
       const resultList = await getProductAttributes()
@@ -14559,6 +14674,7 @@ headers: {
         //getElementById1('sku-menu2').removeAttribute('hidden')
 
         pathItemSku && showSku(pathItemSku, true)
+        pathItemSku && showSku2(pathItemSku, true)
 
 
 
