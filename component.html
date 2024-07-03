@@ -14591,17 +14591,18 @@ headers: {
       el.forEach(e => e.remove())
     }
     const addWareHouse =async (event)=>{
-      const element = document.querySelector('#wareHouseInput[contenteditable]')
-      const value = element.textContent
+      const element = document.getElementById('wareHouseInput')
+      
       const tr = element.closest('tr')
+      
       const cloned = tr.cloneNode(true)
-      element.removeAttribute('contenteditable')
+      cloned.removeAttribute('hidden')
       tr.parentNode.append(cloned)
       const item = {
         id:ownerid,
         sk:'warehouse:'+ (new Date()).getTime().toString(),
-        name:value
       }
+      cloned.setAttribute('sk',item.sk)
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
             method: 'POST',
             headers: {
