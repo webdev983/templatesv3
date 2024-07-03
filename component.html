@@ -1453,7 +1453,7 @@
 
             <table id="warehouse-table" class="table-1" style="margin-left: 30px; margin-top: 10px;">
               <tbody>
-                <tr id="warehouse-row">
+                <tr hidden id="warehouse-row">
                   <td>
                     <span class="l-3 enable-warehouse">🔴</span>
                   </td>
@@ -14640,7 +14640,7 @@ headers: {
       getElementById1("sku-list").appendChild(cloned1)
       el.forEach(e => e.remove())
     }
-    const setSkuItemValue = async(event) => {
+    const setSkuItemValue = async (event) => {
       const target = event.target
       const value = target.value
       const sk = target.closest('tr').getAttribute('sk')
@@ -14659,8 +14659,8 @@ headers: {
 
     }
     const addWareHouse = async (event) => {
-
-      const tr = element.closest('tr')
+      
+      const tr = getElementById1('warehouse-row[hidden]')
 
       const cloned = tr.cloneNode(true)
       cloned.removeAttribute('hidden')
@@ -14680,7 +14680,7 @@ headers: {
     }
     const addDestination = async (event) => {
 
-      const tr = element.closest('tr')
+      const tr = getElementById1('destination-row[hidden]')
 
       const cloned = tr.cloneNode(true)
       cloned.removeAttribute('hidden')
@@ -14700,7 +14700,7 @@ headers: {
     }
     const addCondition = async (event) => {
 
-      const tr = element.closest('tr')
+      const tr = getElementById1('condition-row[hidden]')
 
       const cloned = tr.cloneNode(true)
       cloned.removeAttribute('hidden')
@@ -14720,7 +14720,7 @@ headers: {
     }
     const addShippingMethode = async (event) => {
 
-      const tr = element.closest('tr')
+      const tr = getElementById1('ship-row[hidden]')
 
       const cloned = tr.cloneNode(true)
       cloned.removeAttribute('hidden')
@@ -14779,7 +14779,19 @@ headers: {
       log1('showing sku original ' + sku)
 
       getElementById1("sku-empty2").setAttribute('hidden', '')
-      /*
+
+      //get warehouses
+
+      const warehouses = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=warehouse:`)
+        .then(response => response.json()).then(res => res.items)
+      const destinations = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=warehouse:`)
+        .then(response => response.json()).then(res => res.items)
+      const conditions = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=condition:`)
+        .then(response => response.json()).then(res => res.items)
+      const shippingMethodes = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=shippingMethode:`)
+        .then(response => response.json()).then(res => res.items)
+      
+        /*
       const item1 = getElementById1("sku-item-1")
       const cloned1 = item1.cloneNode(true)
       cloned1.id = sku
