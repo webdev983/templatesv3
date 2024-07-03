@@ -14640,17 +14640,17 @@ headers: {
       getElementById1("sku-list").appendChild(cloned1)
       el.forEach(e => e.remove())
     }
-    const removeSkuParam= async(event)=>{
+    const removeSkuParam = async (event) => {
       const target = event.target
-      const tr= target.closest('tr')
+      const tr = target.closest('tr')
       const sk = tr.getAttribute('sk')
       fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${ownerid}:${sk}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            // Add any additional headers if needed
-          },
-        });
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          // Add any additional headers if needed
+        },
+      });
       tr.remove()
     }
     const setSkuItemValue = async (event) => {
@@ -14681,14 +14681,14 @@ headers: {
       const item = {
         id: ownerid,
         sk: 'warehouse:' + (new Date()).getTime().toString(),
-        value:'warehouse'
+        value: 'warehouse'
       }
       cloned.setAttribute('sk', item.sk)
-      cloned.querySelector('#enableWareHouse').onclick = (e)=>{
+      cloned.querySelector('#enableWareHouse').onclick = (e) => {
         e.target.textContent = '🟢'
         const option = getElementById1('warehouse_select_option')
         const cloned = option.cloneNode(true)
-        cloned.setAttribute('id',item.sk)
+        cloned.setAttribute('id', item.sk)
         cloned.querySelector('#warehouse-value').textContent = tr.querySelector('#wareHouseInput').textContent
         option.parentNode.append(cloned)
 
@@ -14712,7 +14712,7 @@ headers: {
       const item = {
         id: ownerid,
         sk: 'destination:' + (new Date()).getTime().toString(),
-        value:'destination'
+        value: 'destination'
       }
       cloned.setAttribute('sk', item.sk)
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -14734,7 +14734,7 @@ headers: {
       const item = {
         id: ownerid,
         sk: 'condition:' + (new Date()).getTime().toString(),
-        value:'condition'
+        value: 'condition'
       }
       cloned.setAttribute('sk', item.sk)
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -14755,7 +14755,7 @@ headers: {
       const item = {
         id: ownerid,
         sk: 'shippingMethode:' + (new Date()).getTime().toString(),
-        value:'shipping methode'
+        value: 'shipping methode'
       }
       cloned.setAttribute('sk', item.sk)
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -14822,15 +14822,25 @@ headers: {
       for (const element of warehouses) {
         const tr = filled.querySelector('#warehouse-row[hidden]')
         const cloned = tr.cloneNode(true)
-        cloned.setAttribute('sk',element.sk)
+        cloned.setAttribute('sk', element.sk)
         cloned.removeAttribute('hidden')
         tr.parentNode.append(cloned)
         cloned.querySelector('#wareHouseInput').textContent = element.value
+
+        cloned.querySelector('#enableWareHouse').onclick = (e) => {
+          e.target.textContent = '🟢'
+          const option = getElementById1('warehouse_select_option')
+          const cloned = option.cloneNode(true)
+          cloned.setAttribute('id', item.sk)
+          cloned.querySelector('#warehouse-value').textContent = tr.querySelector('#wareHouseInput').textContent
+          option.parentNode.append(cloned)
+
+        }
       }
       for (const element of destinations) {
         const tr = filled.querySelector('#destination-row[hidden]')
         const cloned = tr.cloneNode(true)
-        cloned.setAttribute('sk',element.sk)
+        cloned.setAttribute('sk', element.sk)
         cloned.removeAttribute('hidden')
         tr.parentNode.append(cloned)
         cloned.querySelector('#destinationInput').textContent = element.value
@@ -14838,7 +14848,7 @@ headers: {
       for (const element of conditions) {
         const tr = filled.querySelector('#condition-row[hidden]')
         const cloned = tr.cloneNode(true)
-        cloned.setAttribute('sk',element.sk)
+        cloned.setAttribute('sk', element.sk)
         cloned.removeAttribute('hidden')
         tr.parentNode.append(cloned)
         cloned.querySelector('#conditionInput').textContent = element.value
@@ -14846,7 +14856,7 @@ headers: {
       for (const element of shippingMethodes) {
         const tr = filled.querySelector('#ship-row[hidden]')
         const cloned = tr.cloneNode(true)
-        cloned.setAttribute('sk',element.sk)
+        cloned.setAttribute('sk', element.sk)
         cloned.removeAttribute('hidden')
         tr.parentNode.append(cloned)
         cloned.querySelector('#shipInput').textContent = element.value
@@ -14951,7 +14961,7 @@ headers: {
     
     getElementById1("sku-list").appendChild(cloned1)
     */
-     
+
     }
 
     const handleHead = async () => {
