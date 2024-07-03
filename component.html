@@ -13952,7 +13952,7 @@ elementsToRemove.forEach(element => element.remove());
         }
       }
     }*/
-
+    
     function generateCombinations(data) {
       const combinations = [];
 
@@ -14592,7 +14592,37 @@ headers: {
     }
     const pushSkuVariables = (event)=>{
       const inputValue = getElementById1('push_new_sku_variables').value
-      const lines = ''
+      const lines = inputValue.split('\n')
+      const data =[]
+      for(const line of lines){
+        const [legend,joinedAttributes] = line.trim().split(':')
+        const attributes = joinedAttributes.split(',')
+        data.push({
+          legend,
+          items: attributes
+        })
+      }
+      const combinations = generateCombinations(data)
+      pathItem.combinations = combinations.length
+      updatePathItem()
+      for (const combination of combinations) {
+        const item = {
+          id: 'sku:pathItemSku',
+          sk: 'sku-variables;' + combination.toLowerCase(),
+        }
+
+        const existing = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/' + value + ':' + item.sk)
+          .then(response => response.json())
+        if (!existing) {
+          await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(item),
+          });
+        }
+      }
     }
     const showSku2 = async (sku) => {
       log1('showing sku original ' + sku)
