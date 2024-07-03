@@ -1448,7 +1448,7 @@
           </details>
           <details style="margin-left: 25px; margin-top: 10px;">
            <summary class="summary-L-3" style="margin-top: 5px; "><span class="l-3">➕ select warehouse</span><span></summary>
-               <button class="b-4">add</button>
+               <button class="b-4" onclick="addWareHouse(event)">add</button>
   
                   <table id="warehouse-table" class="table-1" style="margin-left: 30px; margin-top: 10px;">
                     <tbody>
@@ -1457,7 +1457,7 @@
                             <span class="l-3 enable-warehouse">🔴</span>
                         </td>
                         <td>
-                            <span class="l-3 warehouse-name" contenteditable>warehouse1</span>
+                            <span class="l-3 warehouse-name" id="wareHouseInput" contenteditable>warehouse1</span>
                         </td>
                         <td>
                           <button class="b-3 warehouse-rename">🗑</button>
@@ -14589,6 +14589,26 @@ headers: {
            }*/
       getElementById1("sku-list").appendChild(cloned1)
       el.forEach(e => e.remove())
+    }
+    const addWareHouse = (event)=>{
+      const element = document.querySelector('#wareHouseInput[contenteditable]')
+      const value = element.textContent
+      const tr = element.closest('tr')
+      const cloned = tr.cloneNode(true)
+      element.removeAttribute('contenteditable')
+      tr.parentNode.append(cloned)
+      const item = {
+        id:ownerid,
+        sk:'warehouse:'+ (new Date()).getTime().toString(),
+        name:value
+      }
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(item),
+          });
     }
     const pushSkuVariables = async(event)=>{
       const inputValue = getElementById1('push_new_sku_variables').value
