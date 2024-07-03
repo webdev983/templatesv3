@@ -1215,7 +1215,7 @@
           <select id="warehouse_select" class="select-1"
             style="display: inline-block; margin-bottom: 7px; margin-left: 30px;">
             <option>⬇️ Select</option>
-            <option id="warehouse_select_option"><span>🏬</span><span id="warehouse-value"></span></option>
+            <option hidden id="warehouse_select_option"><span>🏬</span><span id="warehouse-value"></span></option>
           </select>
           <select id="country_select" class="select-1"
             style="display: inline-block; margin-bottom: 7px; margin-left: 30px;">
@@ -1455,7 +1455,7 @@
               <tbody>
                 <tr hidden id="warehouse-row">
                   <td>
-                    <span class="l-3 enable-warehouse">🔴</span>
+                    <span class="l-3 enable-warehouse" id="enableWareHouse"> 🔴</span>
                   </td>
                   <td>
                     <span class="l-3 warehouse-name" onblur="setSkuItemValue(event)" id="wareHouseInput"
@@ -14684,6 +14684,15 @@ headers: {
         value:'warehouse'
       }
       cloned.setAttribute('sk', item.sk)
+      cloned.querySelector('#enableWareHouse').onclick = (e)=>{
+        e.target.textContent = '🟢'
+        const option = getElementById1('warehouse_select_option')
+        const cloned = option.cloneNode(true)
+        cloned.setAttribute('id',item.sk)
+        cloned.querySelector('#warehouse-value').textContent = tr.querySelector('#wareHouseInput').textContent
+        option.parentNode.append(cloned)
+
+      }
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
