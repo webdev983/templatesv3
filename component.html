@@ -1462,7 +1462,7 @@
                       contenteditable>warehouse1</span>
                   </td>
                   <td>
-                    <button class="b-3 warehouse-rename">🗑</button>
+                    <button class="b-3 warehouse-rename" onclick="removeSkuParam(event)">🗑</button>
                   </td>
                 </tr>
               </tbody>
@@ -1488,7 +1488,7 @@
                       contenteditable>destination</span>
                   </td>
                   <td>
-                    <button class="b-3 destination-rename">🗑</button>
+                    <button class="b-3 destination-rename" onclick="removeSkuParam(event)">🗑</button>
                   </td>
                 </tr>
               </tbody>
@@ -1513,7 +1513,7 @@
                       method</span>
                   </td>
                   <td>
-                    <button class="b-3 ship-rename">🗑</button>
+                    <button class="b-3 ship-rename" onclick="removeSkuParam(event)">🗑</button>
                   </td>
                 </tr>
               </tbody>
@@ -1537,7 +1537,7 @@
                       contenteditable>condition</span>
                   </td>
                   <td>
-                    <button class="b-3 condition-rename">🗑</button>
+                    <button class="b-3 condition-rename" onclick="removeSkuParam(event)">🗑</button>
                   </td>
                 </tr>
               </tbody>
@@ -14639,6 +14639,19 @@ headers: {
            }*/
       getElementById1("sku-list").appendChild(cloned1)
       el.forEach(e => e.remove())
+    }
+    const removeSkuParam= async(event)=>{
+      const target = event.target
+      const tr= target.closest('tr')
+      const sk = tr.getAttribute('sk')
+      fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${ownerid}:${sk}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            // Add any additional headers if needed
+          },
+        });
+      tr.remove()
     }
     const setSkuItemValue = async (event) => {
       const target = event.target
