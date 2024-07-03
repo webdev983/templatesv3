@@ -1486,7 +1486,7 @@
               <tbody>
                 <tr id="destination-row" hidden>
                   <td>
-                    <span class="l-3 enable-destination">🔴</span>
+                    <span class="l-3 enable-destination" id="enableDestination">🔴</span>
                   </td>
                   <td>
                     <span class="l-3 destination-name" onblur="setSkuItemValue(event)" id="destinationInput"
@@ -14720,6 +14720,15 @@ headers: {
         value: 'destination'
       }
       cloned.setAttribute('sk', item.sk)
+      cloned.querySelector('#enableDestination').onclick = (e) => {
+        e.target.textContent = '🟢'
+        const option = getElementById1('destination_select_option')
+        const cloned = option.cloneNode(true)
+        cloned.setAttribute('id', item.sk)
+        cloned.querySelector('#destination-value').textContent = tr.querySelector('#destinationInput').textContent
+        option.parentNode.append(cloned)
+
+      }
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
@@ -14849,6 +14858,16 @@ headers: {
         cloned.removeAttribute('hidden')
         tr.parentNode.append(cloned)
         cloned.querySelector('#destinationInput').textContent = element.value
+        cloned.querySelector('#enableDestination').onclick = (e) => {
+          e.target.textContent = '🟢'
+          const option = getElementById1('destination_select_option')
+          const cloned = option.cloneNode(true)
+          cloned.setAttribute('id', item.sk)
+          cloned.querySelector('#destination-value').textContent = tr.querySelector('#destinationInput').textContent
+          option.parentNode.append(cloned)
+
+        }
+
       }
       for (const element of conditions) {
         const tr = filled.querySelector('#condition-row[hidden]')
