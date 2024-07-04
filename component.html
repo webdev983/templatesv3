@@ -1309,7 +1309,7 @@
                   </td>
                 </tr>
 
-                <tr id="sku-variable-row">
+                <tr id="sku-variable-row" hidden>
                   <th>
                     <span id="sku-variable-xz">
                       <span id="sku-attribute-key-xz" class="l-3 sku-attribute">color</span>
@@ -14730,12 +14730,17 @@ headers: {
       });
     }
     const generateConditionTable = (v)=>{
-      const original = document.getElementById('condition-price-table')
+      const original = document.getElementById('condition-price-table[hidden]')
       const cloned = original.cloneNode(true)
       cloned.removeAttribute('hidden')
       cloned.setAttribute('id',v)
       cloned.querySelector('#condition-table-caption-value').textContent = v
+      const originalRow = cloned.querySelector('#sku-variable-row[hidden]')
+      
+
+
       original.parentNode.insertBefore(cloned,original)
+      
     }
     const addCondition = async (event) => {
 
