@@ -13151,12 +13151,12 @@ elementsToRemove.forEach(element => element.remove());
         const filteredActions = actions.filter(e =>
           e.target_element &&
           typeof e.target_element === 'string' &&  // Check if target_element is a string
-          e.target_element.startsWith(id.split(':')[0])  // Call startsWith only if target_element is a string
+          e.target_element.replace('-tree','').startsWith(id.split(':')[0])  // Call startsWith only if target_element is a string
         );
         actions = actions.filter(e =>
           !e.target_element ||
           typeof e.target_element !== 'string' ||  // Check if target_element is a string
-          !e.target_element.startsWith(id.split(':')[0])  // Call startsWith only if target_element is a string
+          !e.target_element.replace('-tree','').startsWith(id.split(':')[0])  // Call startsWith only if target_element is a string
         );
         console.log('filtered '+JSON.stringify(filteredActions))
         const ps = filteredActions.map(
