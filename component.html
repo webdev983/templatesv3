@@ -4202,6 +4202,19 @@
 
             const compid = document.querySelector(`[name="${import_page}"]`).parentNode.getAttribute('cid')
             const data = content[import_name]
+
+            //clean
+            const eventData1 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&cleanAttr=${import_name}&ownerid=${localStorage.getItem('ownerid')}` };
+            console.log('event ' + eventData1.url)
+            // Fetch options
+            const options = {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(eventData1)
+            };
+            await fetch(pup_url, options);
             const currentDate = new Date();
 
             // Add one day to the current date
@@ -7580,6 +7593,7 @@ checkbox1.setAttribute('hidden', "");
       const generateSpec = urlParams.get('generatespec')
       const generateAnchorHref = urlParams.get('generateanchor')
       const importAttribute = urlParams.get('attr')
+      const cleanAttribute = urlParams.get('cleanAttr')
       const importValue = urlParams.get('val')
       const message = urlParams.get('message')
       ownerid = localStorage.getItem('ownerid') || urlParams.get('ownerid')
@@ -7776,6 +7790,9 @@ checkbox1.setAttribute('hidden', "");
       }
       if (generateSpec) {
         await generateTableSpec(generateSpec)
+      }
+      if (cleanAttribute) {
+        await cleanImport(cleanAttribute)
       }
       if (importAttribute) {
         await handleImportGpt(importValue, importAttribute)
@@ -13204,8 +13221,7 @@ elementsToRemove.forEach(element => element.remove());
       }).then(el => el.json())
       inputValue = items1.data
       let sku1 = pathItemSku || selectedSku
-      // save content
-      cleanImport(attr)
+      
       if (attr === 'meta_description') {
         const id1 = querySelectorAll1('meta[name="description"]')[0].id
         const payload2 = {
