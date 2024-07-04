@@ -14729,18 +14729,31 @@ headers: {
         body: JSON.stringify(item),
       });
     }
-    const generateConditionTable = (v)=>{
+    const generateConditionTable = (v) => {
       const original = document.getElementById('condition-price-table[hidden]')
       const cloned = original.cloneNode(true)
       cloned.removeAttribute('hidden')
-      cloned.setAttribute('id',v)
+      cloned.setAttribute('id', v)
       cloned.querySelector('#condition-table-caption-value').textContent = v
+
+
+      const selectElement = document.getElementById('warehouse_select');
+
+     
+      const selectedOption = selectElement.options[selectElement.selectedIndex];
+
+      
+      const selectedText = selectedOption.textContent.trim();
+      const wareHouseEl = cloned.querySelector('#condition-table-caption-value')
+      const siteEl = cloned.querySelector('#sku-condition-site-name-value')
+      wareHouseEl.textContent = selectedText
+      siteEl.textContent = pathItemPath.split('/')[0]
       const originalRow = cloned.querySelector('#sku-variable-row[hidden]')
-      
 
 
-      original.parentNode.insertBefore(cloned,original)
-      
+
+      original.parentNode.insertBefore(cloned, original)
+
     }
     const addCondition = async (event) => {
 
@@ -14761,7 +14774,7 @@ headers: {
         const original = getElementById1('sku-table').querySelector('#sku-variable-condition[hidden]')
         const cloned = original.cloneNode(true)
         cloned.removeAttribute('hidden')
-        const v =e.target.parentNode.parentNode.querySelector('#conditionInput').textContent
+        const v = e.target.parentNode.parentNode.querySelector('#conditionInput').textContent
         cloned.querySelector('#sku-variable-condition-value').textContent = v
         original.parentNode.insertBefore(cloned, original)
 
@@ -14912,7 +14925,7 @@ headers: {
           const original = getElementById1('sku-table').querySelector('#sku-variable-condition[hidden]')
           const cloned = original.cloneNode(true)
           cloned.removeAttribute('hidden')
-          const v =  e.target.parentNode.parentNode.querySelector('#conditionInput').textContent
+          const v = e.target.parentNode.parentNode.querySelector('#conditionInput').textContent
           cloned.querySelector('#sku-variable-condition-value').textContent = v
           original.parentNode.insertBefore(cloned, original)
 
