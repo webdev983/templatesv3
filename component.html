@@ -1214,9 +1214,9 @@
         <div id="sku_filled">
 
           <div id="warehouse_select" style="margin-left: 25px;">
-            <label class="l-3"><input type="radio" name="warehouse_select" id="warehouse"/>🏬</label>
+            <label class="l-3"><input type="radio" name="warehouse_select" id="warehouse" />🏬</label>
           </div>
-  
+
 
           <table id="sku-table" class="table-sku" style="margin-left: 30px; margin-top: 10px;">
             <tbody>
@@ -1322,9 +1322,9 @@
           </div>
           <hr style="border-bottom: 2px solid #ffcc81; margin-top: 20px; margin-bottom: 20px;">
           <div id="destionation-select" style="margin-left: 25px;">
-            <label class="l-3"><input type="radio" name="destionation-select" id="destination"/>🏴</label>
-            </div>
-  
+            <label class="l-3"><input type="radio" name="destionation-select" id="destination" />🏴</label>
+          </div>
+
           <table class="table-sku" style="margin-left: 30px; margin-top: 10px;">
             <tbody>
               <tr>
@@ -13148,7 +13148,11 @@ elementsToRemove.forEach(element => element.remove());
       const els = querySelectorAll1(`[data-import-${attr}]`)
       for (const el of Array.from(els)) {
         const id = el.id
-        const filteredActions = actions.filter(e =>  typeof e.target_element === 'string' &&  e.target_element.startsWith(id.split(':')[0]))
+        const filteredActions = actions.filter(e =>
+          e.target_element &&
+          typeof e.target_element === 'string' &&  // Check if target_element is a string
+          e.target_element.startsWith(id.split(':')[0])  // Call startsWith only if target_element is a string
+        );
         actions = actions.filter(e => !e.target_element.startsWith(id.split(':')[0]))
         const ps = filteredActions.map(
           action =>
