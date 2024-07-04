@@ -14913,167 +14913,179 @@ headers: {
 
             original.parentNode.insertBefore(cloned, original)
           })
-          }
-      }
-        for (const element of shippingMethodes) {
-          const tr = filled.querySelector('#ship-row[hidden]')
-          const cloned = tr.cloneNode(true)
-          cloned.setAttribute('sk', element.sk)
-          cloned.removeAttribute('hidden')
-          tr.parentNode.append(cloned)
-          cloned.querySelector('#shipInput').textContent = element.value
         }
-        /*
-      const item1 = getElementById1("sku-item-1")
-      const cloned1 = item1.cloneNode(true)
-      cloned1.id = sku
-      cloned1.removeAttribute('hidden')
-      getElementById1("sku-list").removeAttribute('hidden')
-      cloned1.querySelector("#sku-value").textContent = sku
-      cloned1.querySelector("#remove-sku").removeAttribute('hidden')
-      const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku}&sk=qty;&startsWith=true`)
-        .then(response => response.json())
-      const el = cloned1.querySelectorAll('#sku-item')
-      const parent = cloned1.querySelector('#sku-attribute-list')
-      //if (items.length > 1) {
-  
-      const p = items.map(async item => {
-  
-        const cloned = el[0].cloneNode(true)
-        const v = item.sk.replace('qty;', '')
-        log1("sku i is " + JSON.stringify(item))
-        cloned.querySelector('#sku-attribute-value').textContent = v
-        const psk = `price;${pathItemPath.split('/')[0].toLowerCase()};${v}price`
-        const pItem = await fetch(`${backend_url}?id=${sku}&sk=${psk}&startsWith=true`, {
+      }
+      for (const element of shippingMethodes) {
+        const tr = filled.querySelector('#ship-row[hidden]')
+        const cloned = tr.cloneNode(true)
+        cloned.setAttribute('sk', element.sk)
+        cloned.removeAttribute('hidden')
+        tr.parentNode.append(cloned)
+        cloned.querySelector('#shipInput').textContent = element.value
+      }
+      /*
+    const item1 = getElementById1("sku-item-1")
+    const cloned1 = item1.cloneNode(true)
+    cloned1.id = sku
+    cloned1.removeAttribute('hidden')
+    getElementById1("sku-list").removeAttribute('hidden')
+    cloned1.querySelector("#sku-value").textContent = sku
+    cloned1.querySelector("#remove-sku").removeAttribute('hidden')
+    const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku}&sk=qty;&startsWith=true`)
+      .then(response => response.json())
+    const el = cloned1.querySelectorAll('#sku-item')
+    const parent = cloned1.querySelector('#sku-attribute-list')
+    //if (items.length > 1) {
+ 
+    const p = items.map(async item => {
+ 
+      const cloned = el[0].cloneNode(true)
+      const v = item.sk.replace('qty;', '')
+      log1("sku i is " + JSON.stringify(item))
+      cloned.querySelector('#sku-attribute-value').textContent = v
+      const psk = `price;${pathItemPath.split('/')[0].toLowerCase()};${v}price`
+      const pItem = await fetch(`${backend_url}?id=${sku}&sk=${psk}&startsWith=true`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(e => e.json()).then(({ items }) => items[0])
+ 
+      cloned.querySelector('#sku-qty').textContent = item.qty || 0
+      const oldEl = cloned.querySelector('[data-price_old_value]')
+      const pEl = cloned.querySelector('[data-price_value]')
+      oldEl.textContent = pItem?.oldprice || 0
+      pEl.textContent = pItem?.price || 0
+      pEl.addEventListener('blur', async function () {
+        let value = -1
+        try {
+          value = parseFloat(pEl.textContent)
+        }
+        catch (e) {
+ 
+        }
+        if (value < 0) {
+          value = 0
+          pEl.textContent = 0
+        }
+ 
+ 
+        let nV = pItem
+        if (nV) {
+          nV.price = value
+        }
+        else {
+          nV = {
+            id: sku,
+            sk: psk,
+            price: value
+          }
+        }
+        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          body: JSON.stringify(nV),
+        });
+      });
+      oldEl.addEventListener('blur', async function () {
+        let value = -1
+        try {
+          value = parseFloat(oldEl.textContent)
+        }
+        catch (e) {
+ 
+        }
+        if (value < 0) {
+          value = 0
+          oldEl.textContent = 0
+        }
+ 
+ 
+        let nV = pItem
+        if (nV) {
+          nV.oldprice = value
+        }
+        else {
+          nV = {
+            id: sku,
+            sk: psk,
+            oldprice: value
+          }
+        }
+        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          body: JSON.stringify(nV),
+        });
+      });
+      parent.appendChild(cloned)
+      cloned.addEventListener('click', e => handleSkuItemClick(cloned, item))
+    })
+    await Promise.all(p)
+    
+    getElementById1("sku-list").appendChild(cloned1)
+    */
+
+    }
+
+    const handleHead = async () => {
+
+      const resultList = await getProductAttributes()
+
+      if (resultList.length || pathItemSku) {
+        log1('path item sku' + pathItemSku)
+        //getElementById1('sku-menu').removeAttribute('hidden')
+        //getElementById1('sku-menu2').removeAttribute('hidden')
+
+        pathItemSku && showSku(pathItemSku, true)
+        pathItemSku && showSku2(pathItemSku, true)
+
+
+
+      }
+      const splited = pathItemPath.split(';')[0].split('/')
+      const name = splited[splited.length - 1]
+
+      showListMenus(pathItem.hub_items?.list, undefined, pathItem.hub_items)
+
+      await showList(pathItem.hub_items?.list, undefined, pathItem.hub_items)
+      /* showai
+      if (pathItem.hub_items?.gpt) {
+        await showai(pathItem.hub_items?.gpt)
+        const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pathItem.id}&sk=ai-logs:&startsWith=true`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
           },
-        }).then(e => e.json()).then(({ items }) => items[0])
-  
-        cloned.querySelector('#sku-qty').textContent = item.qty || 0
-        const oldEl = cloned.querySelector('[data-price_old_value]')
-        const pEl = cloned.querySelector('[data-price_value]')
-        oldEl.textContent = pItem?.oldprice || 0
-        pEl.textContent = pItem?.price || 0
-        pEl.addEventListener('blur', async function () {
-          let value = -1
-          try {
-            value = parseFloat(pEl.textContent)
-          }
-          catch (e) {
-  
-          }
-          if (value < 0) {
-            value = 0
-            pEl.textContent = 0
-          }
-  
-  
-          let nV = pItem
-          if (nV) {
-            nV.price = value
-          }
-          else {
-            nV = {
-              id: sku,
-              sk: psk,
-              price: value
-            }
-          }
-          await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-            method: 'POST',
-            body: JSON.stringify(nV),
-          });
-        });
-        oldEl.addEventListener('blur', async function () {
-          let value = -1
-          try {
-            value = parseFloat(oldEl.textContent)
-          }
-          catch (e) {
-  
-          }
-          if (value < 0) {
-            value = 0
-            oldEl.textContent = 0
-          }
-  
-  
-          let nV = pItem
-          if (nV) {
-            nV.oldprice = value
-          }
-          else {
-            nV = {
-              id: sku,
-              sk: psk,
-              oldprice: value
-            }
-          }
-          await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-            method: 'POST',
-            body: JSON.stringify(nV),
-          });
-        });
-        parent.appendChild(cloned)
-        cloned.addEventListener('click', e => handleSkuItemClick(cloned, item))
-      })
-      await Promise.all(p)
-      
-      getElementById1("sku-list").appendChild(cloned1)
-      */
-
+        }).then(e => e.json())
+        if (res.items.length) {
+          const element = document.getElementById('ai-logs')
+          element.removeAttribute('hidden')
+          element.querySelector('textarea').value = res.items.map(el => JSON.stringify(el.gptResponse, null, 2) + '\n\n' + JSON.stringify(el.content) + '\n\n').join('\n\n=============================================\n\n')
+        }
       }
-
-      const handleHead = async () => {
-
-        const resultList = await getProductAttributes()
-
-        if (resultList.length || pathItemSku) {
-          log1('path item sku' + pathItemSku)
-          //getElementById1('sku-menu').removeAttribute('hidden')
-          //getElementById1('sku-menu2').removeAttribute('hidden')
-
-          pathItemSku && showSku(pathItemSku, true)
-          pathItemSku && showSku2(pathItemSku, true)
-
-
-
-        }
-        const splited = pathItemPath.split(';')[0].split('/')
-        const name = splited[splited.length - 1]
-
-        showListMenus(pathItem.hub_items?.list, undefined, pathItem.hub_items)
-
-        await showList(pathItem.hub_items?.list, undefined, pathItem.hub_items)
-        /* showai
-        if (pathItem.hub_items?.gpt) {
-          await showai(pathItem.hub_items?.gpt)
-          const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pathItem.id}&sk=ai-logs:&startsWith=true`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }).then(e => e.json())
-          if (res.items.length) {
-            const element = document.getElementById('ai-logs')
-            element.removeAttribute('hidden')
-            element.querySelector('textarea').value = res.items.map(el => JSON.stringify(el.gptResponse, null, 2) + '\n\n' + JSON.stringify(el.content) + '\n\n').join('\n\n=============================================\n\n')
+      */
+      let mainHubLsi = splited[0] + '/Home|Hub'
+      let headHubLsi = splited[0] + '/Home/Content/Page|Head-Content'
+      /*
+      if(pathItem.lsi1.startsWith('Style-Green.SeoSitesHome.com')){
+        mainHubLsi = splited[0] + '/Seed-Home|Hub'
+        headHubLsi = splited[0] + '/Seed-Home/Content/Page|Head-Content'
+      }*/
+      if (pathItem.lsi1.split(';')[0] !== mainHubLsi) {
+        url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${mainHubLsi}`;
+        let mainHub
+        try {
+          const mainHubResponse = await fetch(url);
+          const mainHubData = await mainHubResponse.json();
+          if (mainHubData.items.length) {
+            const mainHubItem = mainHubData.items[0];
+            const templateResponse = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${mainHubItem.id}:${mainHubItem.sk}`);
+            const templateData = await templateResponse.json();
+            mainHub = templateData; // Assuming `templateData` is the desired result
           }
-        }
-        */
-        let mainHubLsi = splited[0] + '/Home|Hub'
-        let headHubLsi = splited[0] + '/Home/Content/Page|Head-Content'
-        /*
-        if(pathItem.lsi1.startsWith('Style-Green.SeoSitesHome.com')){
-          mainHubLsi = splited[0] + '/Seed-Home|Hub'
-          headHubLsi = splited[0] + '/Seed-Home/Content/Page|Head-Content'
-        }*/
-        if (pathItem.lsi1.split(';')[0] !== mainHubLsi) {
-          url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${mainHubLsi}`;
-          let mainHub
-          try {
+          else if (splited[0] + '/Seed-Home|Hub' !== pathItem.lsi1.split(';')[0]) {
+            mainHubLsi = splited[0] + '/Seed-Home|Hub'
+            headHubLsi = splited[0] + '/Seed-Home/Content/Page|Head-Content'
+            url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${mainHubLsi}`;
             const mainHubResponse = await fetch(url);
             const mainHubData = await mainHubResponse.json();
             if (mainHubData.items.length) {
@@ -15082,119 +15094,51 @@ headers: {
               const templateData = await templateResponse.json();
               mainHub = templateData; // Assuming `templateData` is the desired result
             }
-            else if (splited[0] + '/Seed-Home|Hub' !== pathItem.lsi1.split(';')[0]) {
-              mainHubLsi = splited[0] + '/Seed-Home|Hub'
-              headHubLsi = splited[0] + '/Seed-Home/Content/Page|Head-Content'
-              url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${mainHubLsi}`;
-              const mainHubResponse = await fetch(url);
-              const mainHubData = await mainHubResponse.json();
-              if (mainHubData.items.length) {
-                const mainHubItem = mainHubData.items[0];
-                const templateResponse = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${mainHubItem.id}:${mainHubItem.sk}`);
-                const templateData = await templateResponse.json();
-                mainHub = templateData; // Assuming `templateData` is the desired result
-              }
 
-            }
-
-            // Use `mainHub` here
-          } catch (error) {
-            // Handle errors
           }
-          if (mainHub?.hub_items?.list) {
 
-            url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headHubLsi}`;
-            const { items } = await fetch(url).then(e => e.json())
-            showListMenus(mainHub.hub_items?.list, items[0].id, pathItem.hub_items)
-            await showList(mainHub.hub_items?.list, items[0].id, pathItem.hub_items)
-          }
+          // Use `mainHub` here
+        } catch (error) {
+          // Handle errors
         }
+        if (mainHub?.hub_items?.list) {
 
-
-        /*
-  querySelectorAll1('[data-product]').forEach(
-  element => {
-  const prev = element.getAttribute('data-product')
-  if (prev) {
-  const [first, last] = prev.split(';')
-  element.setAttribute('data-product', [first, name].join(';'))
-  }
-  }
-  )
-  */
-
-
-      }
-      const save = async (event) => {
-        const parent = event.target.parentNode
-        const { id } = parent
-        const action = parent.getAttribute('action')
-        log1('ac' + action)
-        if (action === 'innerHtml') {
-          const saveButton = event.target;
-          const fieldset = saveButton.closest('fieldset');
-
-          log1(id)
-          const textareaValue = fieldset.querySelector('#code-tree-inner-html-receive-textarea').value;
-
-          const splited = id.split(';')
-          const [toRemove, ...rest] = splited
-          const el = {
-            time: (new Date()).getTime(),
-            action,
-            target_element: rest.join(';'),
-            insertedCode: textareaValue,
-
-          }
-          log1(JSON.stringify(el))
-          await pushAction(el)
+          url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headHubLsi}`;
+          const { items } = await fetch(url).then(e => e.json())
+          showListMenus(mainHub.hub_items?.list, items[0].id, pathItem.hub_items)
+          await showList(mainHub.hub_items?.list, items[0].id, pathItem.hub_items)
         }
-        parent.remove()
-        log1(JSON.stringify(actionLog))
-
       }
-      const saveText = async (event) => {
-        const parent = event.target.parentNode
-        const { id } = parent
-        const action = 'textContent'
-        log1('ac' + action)
 
+
+      /*
+querySelectorAll1('[data-product]').forEach(
+element => {
+const prev = element.getAttribute('data-product')
+if (prev) {
+const [first, last] = prev.split(';')
+element.setAttribute('data-product', [first, name].join(';'))
+}
+}
+)
+*/
+
+
+    }
+    const save = async (event) => {
+      const parent = event.target.parentNode
+      const { id } = parent
+      const action = parent.getAttribute('action')
+      log1('ac' + action)
+      if (action === 'innerHtml') {
         const saveButton = event.target;
         const fieldset = saveButton.closest('fieldset');
 
+        log1(id)
+        const textareaValue = fieldset.querySelector('#code-tree-inner-html-receive-textarea').value;
 
-        const textareaValue = fieldset.querySelector('#code-tree-tag-text-content').value;
         const splited = id.split(';')
         const [toRemove, ...rest] = splited
-
-        const el = {
-          time: (new Date()).getTime(),
-          action,
-          target_element: rest.join(';'),
-          value: textareaValue,
-
-        }
-        log1(JSON.stringify(el))
-        await pushAction(el)
-
-        parent.remove()
-        log1(JSON.stringify(actionLog))
-
-      }
-      const saveInnerHtml = async (event) => {
-        const parent = event.target.parentNode
-        const { id } = parent
-        const action = 'innerHtml'
-        log1('ac' + action)
-
-        const saveButton = event.target;
-        const fieldset = saveButton.closest('fieldset');
-
-
-        const textareaValue = fieldset.querySelector('#code-tree-tag-html-content').value;
-        const splited = id.split(';')
-        const [toRemove, ...rest] = splited
-
         const el = {
           time: (new Date()).getTime(),
           action,
@@ -15204,1202 +15148,1258 @@ headers: {
         }
         log1(JSON.stringify(el))
         await pushAction(el)
+      }
+      parent.remove()
+      log1(JSON.stringify(actionLog))
 
-        parent.remove()
-        log1(JSON.stringify(actionLog))
+    }
+    const saveText = async (event) => {
+      const parent = event.target.parentNode
+      const { id } = parent
+      const action = 'textContent'
+      log1('ac' + action)
+
+      const saveButton = event.target;
+      const fieldset = saveButton.closest('fieldset');
+
+
+      const textareaValue = fieldset.querySelector('#code-tree-tag-text-content').value;
+      const splited = id.split(';')
+      const [toRemove, ...rest] = splited
+
+      const el = {
+        time: (new Date()).getTime(),
+        action,
+        target_element: rest.join(';'),
+        value: textareaValue,
 
       }
-      const saveAttribute = async (event) => {
-        const parentMenu = event.target.closest('.menu-1');
-        const checked = parentMenu.querySelector('#applyToCopies').checked
-        if (!parentMenu) {
-          console.error('Could not find parent menu element');
-          return;
-        }
+      log1(JSON.stringify(el))
+      await pushAction(el)
 
-        const { id } = parentMenu
-        const action = 'setAttribute'
-        log1('ac' + action)
+      parent.remove()
+      log1(JSON.stringify(actionLog))
 
-        const saveButton = event.target;
-        const fieldset = saveButton.closest('fieldset');
+    }
+    const saveInnerHtml = async (event) => {
+      const parent = event.target.parentNode
+      const { id } = parent
+      const action = 'innerHtml'
+      log1('ac' + action)
+
+      const saveButton = event.target;
+      const fieldset = saveButton.closest('fieldset');
 
 
-        //const textareaValue = fieldset.querySelector('#code-tree-tag-attribute-input-key').value;
-        //const textareaValue2 = fieldset.querySelector('#code-tree-tag-attribute-input-key-value').value;
-        const text = fieldset.querySelector('#code-tree-tag-attribute-input-text').value;
-        const splited = id.split(';')
-        const [toRemove, ...rest] = splited
-        function parseText(text) {
-          const lines = text.split('\n');
-          const result = [];
+      const textareaValue = fieldset.querySelector('#code-tree-tag-html-content').value;
+      const splited = id.split(';')
+      const [toRemove, ...rest] = splited
 
-          lines.forEach(line => {
-            if (line === "") {
-              return
-            }
-            const keyValue = line.replaceAll('"', '').split('=');
-            if (keyValue.length >= 2) {
-              const key = keyValue[0].trim();
-              keyValue.shift()
-              const value = keyValue.join('=').trim();
-              result.push({ key, value })
-            }
-            else {
-              result.push({ key: line.trim(), value: "" })
-            }
-          });
+      const el = {
+        time: (new Date()).getTime(),
+        action,
+        target_element: rest.join(';'),
+        insertedCode: textareaValue,
 
-          return result;
-        }
-        const list = parseText(text)
-        for (const element of list) {
+      }
+      log1(JSON.stringify(el))
+      await pushAction(el)
 
-          const el = {
-            time: (new Date()).getTime(),
-            action,
-            target_element: rest.join(';'),
-            key: element.key,
-            value: element.value,
+      parent.remove()
+      log1(JSON.stringify(actionLog))
 
+    }
+    const saveAttribute = async (event) => {
+      const parentMenu = event.target.closest('.menu-1');
+      const checked = parentMenu.querySelector('#applyToCopies').checked
+      if (!parentMenu) {
+        console.error('Could not find parent menu element');
+        return;
+      }
+
+      const { id } = parentMenu
+      const action = 'setAttribute'
+      log1('ac' + action)
+
+      const saveButton = event.target;
+      const fieldset = saveButton.closest('fieldset');
+
+
+      //const textareaValue = fieldset.querySelector('#code-tree-tag-attribute-input-key').value;
+      //const textareaValue2 = fieldset.querySelector('#code-tree-tag-attribute-input-key-value').value;
+      const text = fieldset.querySelector('#code-tree-tag-attribute-input-text').value;
+      const splited = id.split(';')
+      const [toRemove, ...rest] = splited
+      function parseText(text) {
+        const lines = text.split('\n');
+        const result = [];
+
+        lines.forEach(line => {
+          if (line === "") {
+            return
           }
-          if (checked) {
-            el.options = { apply_to_copies: true }
-            el.target_element = el.target_element.split(':')[0].replace('-tree', '') + '-tree'
+          const keyValue = line.replaceAll('"', '').split('=');
+          if (keyValue.length >= 2) {
+            const key = keyValue[0].trim();
+            keyValue.shift()
+            const value = keyValue.join('=').trim();
+            result.push({ key, value })
           }
-          await pushAction(el)
-
-        }
-        fieldset.querySelector('#code-tree-tag-attribute-input-text').value = ""
-        //fieldset.querySelector('#code-tree-tag-attribute-input-key').value = ''
-        //fieldset.querySelector('#code-tree-tag-attribute-input-key-value').value = ''
-        //log1(JSON.stringify(el))
-
-        parentMenu.remove()
-        log1(JSON.stringify(actionLog))
-
-      }
-
-  </script>
-  <script>
-
-      //second menu 
-      const cancelReplace = (event) => {
-
-        event.target.parentNode.nextElementSibling.remove()
-        event.target.parentNode.remove()
-      }
-      const cancelAddComponent = (event) => {
-        const pid = event.target.parentNode.id.replace('file-list-attach-component-options;', '')
-        document.getElementById('file-list-attach-component-options;' + pid).remove()
-        document.getElementById('selectedFilePathList;' + pid).remove()
-        document.getElementById('filePathList;' + pid).remove()
-      }
-      const cancel = (e) => {
-
-        e.target.parentNode.remove()
-      }
-      const cancel2 = (e) => {
-
-        e.target.parentNode.parentNode.remove()
-        var codeTreeTagFieldsets = querySelectorAll1('fieldset[data-element="code-tree-tag"]');
-        codeTreeTagFieldsets.forEach(function (fieldset) {
-          var checkbox = fieldset.querySelector('input[type="checkbox"]');
-          if (checkbox) {
-            checkbox.setAttribute('hidden', 'true');
+          else {
+            result.push({ key: line.trim(), value: "" })
           }
         });
+
+        return result;
       }
-      const cancel1 = (e) => {
-
-        // Assuming e is an event object
-        const elementToRemove = e.target.closest('[id^="code-tree-tag-attributes-form-1;"]');
-
-        if (elementToRemove) {
-          elementToRemove.remove();
-        }
-      }
-      var append = (e) => {
-        const splited = e.target.parentNode.id.split(';')
-        const [toRemove, ...rest] = splited
-        const parentId = rest.join(';');
-        const fieldset = getElementById1('code-tree-add-tag-step-1');
-        const checked = e.target.parentNode.querySelector('#applyToCopies').checked
-        const actionInReplace = e.target.parentNode.querySelector('#actionInReplace').checked
-        if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-add-tag-step-1')) {
-          const clonedFieldset = fieldset.cloneNode(true);
-
-          clonedFieldset.id = clonedFieldset.id + ';' + parentId;
-          clonedFieldset.setAttribute('action', 'Append')
-          checked && clonedFieldset.setAttribute('copiesOfInserting', "true")
-          actionInReplace && clonedFieldset.setAttribute('actionInReplace', "true")
-          e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
-          e.target.parentNode.remove()
-        }
-      }
-      var addParent = (e) => {
-        const splited = e.target.parentNode.id.split(';')
-        const [toRemove, ...rest] = splited
-        const parentId = rest.join(';');
-        const fieldset = getElementById1('tag-table');
-        const applyToCopies = e.target.parentNode.querySelector('#applyToCopies').checked
-
-        if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('tag-table')) {
-          const clonedFieldset = fieldset.cloneNode(true);
-
-          const clonedRows = clonedFieldset.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-          for (let i = 0; i < clonedRows.length; i++) {
-            const index = i; // Capture the current value of 'i' in a closure
-            clonedRows[i].onclick = function (event) {
-              chooseTag(index, event);
-            };
-          }
-          clonedFieldset.id = clonedFieldset.id + ';' + parentId;
-          clonedFieldset.setAttribute('action', "Add_Parent")
-          if (applyToCopies) {
-            clonedFieldset.querySelector('#applyForCopies2').checked = true
-          }
-
-          e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
-          e.target.parentNode.remove()
-        }
-      }
-
-      const insertB = (e) => {
-
-
-        const splited = e.target.parentNode.id.split(';')
-        const [toRemove, ...rest] = splited
-        const parentId = rest.join(';');
-        const fieldset = getElementById1('code-tree-add-tag-step-1');
-        const checked = e.target.parentNode.querySelector('#applyToCopies').checked
-        if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-add-tag-step-1')) {
-          const clonedFieldset = fieldset.cloneNode(true);
-
-          clonedFieldset.id = clonedFieldset.id + ';' + parentId;
-          clonedFieldset.setAttribute('action', 'InsertBefore')
-          checked && clonedFieldset.setAttribute('copiesOfInserting', "true")
-          e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
-          e.target.parentNode.remove()
-        }
-
-      }
-      const insertA = (e) => {
-
-
-        const splited = e.target.parentNode.id.split(';')
-        const [toRemove, ...rest] = splited
-        const parentId = rest.join(';');
-        const fieldset = getElementById1('code-tree-add-tag-step-1');
-        const checked = e.target.parentNode.querySelector('#applyToCopies').checked
-        if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-add-tag-step-1')) {
-          const clonedFieldset = fieldset.cloneNode(true);
-
-          clonedFieldset.id = clonedFieldset.id + ';' + parentId;
-          clonedFieldset.setAttribute('action', 'InsertAfter')
-          checked && clonedFieldset.setAttribute('copiesOfInserting', "true")
-          e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
-          e.target.parentNode.remove()
-        }
-
-      }
-      const insertHtml = (e) => {
-
-        const splited = e.target.parentNode.id.split(';')
-        const [toRemove, ...rest] = splited
-        const parentId = rest.join(';');
-        const fieldset = getElementById1('code-tree-inner-html-receive-menu');
-
-        if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-inner-html-receive-menu')) {
-          const clonedFieldset = fieldset.cloneNode(true);
-          clonedFieldset.querySelector('textarea').value = getElementById1(parentId.replace('-tree', '')).innerHTML
-          clonedFieldset.id = clonedFieldset.id + ';' + parentId;
-          clonedFieldset.setAttribute('action', 'innerHtml')
-          e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
-          e.target.parentNode.remove()
-        }
-      }
-      const changeTag = (e) => {
-        const splited = e.target.parentNode.id.split(';')
-        const checked = e.target.parentNode.querySelector('#applyToCopies').checked
-        const [toRemove, ...rest] = splited
-        const parentId = rest.join(';');
-        const fieldset = getElementById1('tag-table');
-
-        if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('tag-table')) {
-          const clonedFieldset = fieldset.cloneNode(true);
-
-
-          const clonedRows = clonedFieldset.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-          for (let i = 0; i < clonedRows.length; i++) {
-            const index = i; // Capture the current value of 'i' in a closure
-            clonedRows[i].onclick = function (event) {
-              chooseTag(index, event);
-            };
-          }
-          clonedFieldset.id = clonedFieldset.id + ';' + parentId;
-          clonedFieldset.setAttribute('action', 'ChangeTag')
-          if (checked) {
-
-            log1('setting checked')
-            clonedFieldset.querySelector('#applyForCopies2').checked = true
-
-          }
-          e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
-          e.target.parentNode.remove()
-        }
-      }
-
-      const duplicateTag = (e) => {
-        const splited = e.target.parentNode.id.split(';');
-        const [toRemove, ...rest] = splited;
-        const parentId = rest.join(';');
-        function duplicateId(originalId,) {
-          const splited = originalId.split(';');
-          const lastId = splited[splited.length - 1]
-          let newLastUUID
-          const splited2 = lastId.split(':')
-          newLastUUID = splited2[0] + ':' + generateUUID()
-          splited.pop()
-          return [...splited, newLastUUID].join(';') + '-tree'
-
-        }
+      const list = parseText(text)
+      for (const element of list) {
 
         const el = {
           time: (new Date()).getTime(),
-          action: 'InsertBefore',
-          target_element: parentId,
-          inserted_element: { originalId: parentId, id: duplicateId(removeLastOccurrence(parentId, '-tree')) },
-        };
-
-        pushAction(el);
-      };
-      const removeTag = (e) => {
-        const checked = e.target.parentNode.querySelector('#applyToCopies').checked
-        const splited = e.target.parentNode.id.split(';')
-        const [toRemove, ...rest] = splited
-        const parentId = rest.join(';');
-        const el =
-        {
-          time: (new Date()).getTime(),
-          action: 'removeTag',
-
-          target_element: parentId,
+          action,
+          target_element: rest.join(';'),
+          key: element.key,
+          value: element.value,
 
         }
         if (checked) {
           el.options = { apply_to_copies: true }
           el.target_element = el.target_element.split(':')[0].replace('-tree', '') + '-tree'
         }
-        pushAction(el)
+        await pushAction(el)
+
+      }
+      fieldset.querySelector('#code-tree-tag-attribute-input-text').value = ""
+      //fieldset.querySelector('#code-tree-tag-attribute-input-key').value = ''
+      //fieldset.querySelector('#code-tree-tag-attribute-input-key-value').value = ''
+      //log1(JSON.stringify(el))
+
+      parentMenu.remove()
+      log1(JSON.stringify(actionLog))
+
+    }
+
+  </script>
+  <script>
+
+    //second menu 
+    const cancelReplace = (event) => {
+
+      event.target.parentNode.nextElementSibling.remove()
+      event.target.parentNode.remove()
+    }
+    const cancelAddComponent = (event) => {
+      const pid = event.target.parentNode.id.replace('file-list-attach-component-options;', '')
+      document.getElementById('file-list-attach-component-options;' + pid).remove()
+      document.getElementById('selectedFilePathList;' + pid).remove()
+      document.getElementById('filePathList;' + pid).remove()
+    }
+    const cancel = (e) => {
+
+      e.target.parentNode.remove()
+    }
+    const cancel2 = (e) => {
+
+      e.target.parentNode.parentNode.remove()
+      var codeTreeTagFieldsets = querySelectorAll1('fieldset[data-element="code-tree-tag"]');
+      codeTreeTagFieldsets.forEach(function (fieldset) {
+        var checkbox = fieldset.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+          checkbox.setAttribute('hidden', 'true');
+        }
+      });
+    }
+    const cancel1 = (e) => {
+
+      // Assuming e is an event object
+      const elementToRemove = e.target.closest('[id^="code-tree-tag-attributes-form-1;"]');
+
+      if (elementToRemove) {
+        elementToRemove.remove();
+      }
+    }
+    var append = (e) => {
+      const splited = e.target.parentNode.id.split(';')
+      const [toRemove, ...rest] = splited
+      const parentId = rest.join(';');
+      const fieldset = getElementById1('code-tree-add-tag-step-1');
+      const checked = e.target.parentNode.querySelector('#applyToCopies').checked
+      const actionInReplace = e.target.parentNode.querySelector('#actionInReplace').checked
+      if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-add-tag-step-1')) {
+        const clonedFieldset = fieldset.cloneNode(true);
+
+        clonedFieldset.id = clonedFieldset.id + ';' + parentId;
+        clonedFieldset.setAttribute('action', 'Append')
+        checked && clonedFieldset.setAttribute('copiesOfInserting', "true")
+        actionInReplace && clonedFieldset.setAttribute('actionInReplace', "true")
+        e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+        e.target.parentNode.remove()
+      }
+    }
+    var addParent = (e) => {
+      const splited = e.target.parentNode.id.split(';')
+      const [toRemove, ...rest] = splited
+      const parentId = rest.join(';');
+      const fieldset = getElementById1('tag-table');
+      const applyToCopies = e.target.parentNode.querySelector('#applyToCopies').checked
+
+      if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('tag-table')) {
+        const clonedFieldset = fieldset.cloneNode(true);
+
+        const clonedRows = clonedFieldset.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+        for (let i = 0; i < clonedRows.length; i++) {
+          const index = i; // Capture the current value of 'i' in a closure
+          clonedRows[i].onclick = function (event) {
+            chooseTag(index, event);
+          };
+        }
+        clonedFieldset.id = clonedFieldset.id + ';' + parentId;
+        clonedFieldset.setAttribute('action', "Add_Parent")
+        if (applyToCopies) {
+          clonedFieldset.querySelector('#applyForCopies2').checked = true
+        }
+
+        e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+        e.target.parentNode.remove()
+      }
+    }
+
+    const insertB = (e) => {
+
+
+      const splited = e.target.parentNode.id.split(';')
+      const [toRemove, ...rest] = splited
+      const parentId = rest.join(';');
+      const fieldset = getElementById1('code-tree-add-tag-step-1');
+      const checked = e.target.parentNode.querySelector('#applyToCopies').checked
+      if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-add-tag-step-1')) {
+        const clonedFieldset = fieldset.cloneNode(true);
+
+        clonedFieldset.id = clonedFieldset.id + ';' + parentId;
+        clonedFieldset.setAttribute('action', 'InsertBefore')
+        checked && clonedFieldset.setAttribute('copiesOfInserting', "true")
+        e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
         e.target.parentNode.remove()
       }
 
-      const removeComponent = async (e) => {
-        const splited = e.target.parentNode.id.split(';')
-        const [toRemove, ...rest] = splited
-        const parentId = rest.join(';');
-        const el =
-        {
+    }
+    const insertA = (e) => {
+
+
+      const splited = e.target.parentNode.id.split(';')
+      const [toRemove, ...rest] = splited
+      const parentId = rest.join(';');
+      const fieldset = getElementById1('code-tree-add-tag-step-1');
+      const checked = e.target.parentNode.querySelector('#applyToCopies').checked
+      if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-add-tag-step-1')) {
+        const clonedFieldset = fieldset.cloneNode(true);
+
+        clonedFieldset.id = clonedFieldset.id + ';' + parentId;
+        clonedFieldset.setAttribute('action', 'InsertAfter')
+        checked && clonedFieldset.setAttribute('copiesOfInserting', "true")
+        e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+        e.target.parentNode.remove()
+      }
+
+    }
+    const insertHtml = (e) => {
+
+      const splited = e.target.parentNode.id.split(';')
+      const [toRemove, ...rest] = splited
+      const parentId = rest.join(';');
+      const fieldset = getElementById1('code-tree-inner-html-receive-menu');
+
+      if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('code-tree-inner-html-receive-menu')) {
+        const clonedFieldset = fieldset.cloneNode(true);
+        clonedFieldset.querySelector('textarea').value = getElementById1(parentId.replace('-tree', '')).innerHTML
+        clonedFieldset.id = clonedFieldset.id + ';' + parentId;
+        clonedFieldset.setAttribute('action', 'innerHtml')
+        e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+        e.target.parentNode.remove()
+      }
+    }
+    const changeTag = (e) => {
+      const splited = e.target.parentNode.id.split(';')
+      const checked = e.target.parentNode.querySelector('#applyToCopies').checked
+      const [toRemove, ...rest] = splited
+      const parentId = rest.join(';');
+      const fieldset = getElementById1('tag-table');
+
+      if (!e.target.parentNode.nextElementSibling || !e.target.parentNode.nextElementSibling.id.startsWith('tag-table')) {
+        const clonedFieldset = fieldset.cloneNode(true);
+
+
+        const clonedRows = clonedFieldset.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+        for (let i = 0; i < clonedRows.length; i++) {
+          const index = i; // Capture the current value of 'i' in a closure
+          clonedRows[i].onclick = function (event) {
+            chooseTag(index, event);
+          };
+        }
+        clonedFieldset.id = clonedFieldset.id + ';' + parentId;
+        clonedFieldset.setAttribute('action', 'ChangeTag')
+        if (checked) {
+
+          log1('setting checked')
+          clonedFieldset.querySelector('#applyForCopies2').checked = true
+
+        }
+        e.target.parentNode.insertAdjacentElement('afterend', clonedFieldset);
+        e.target.parentNode.remove()
+      }
+    }
+
+    const duplicateTag = (e) => {
+      const splited = e.target.parentNode.id.split(';');
+      const [toRemove, ...rest] = splited;
+      const parentId = rest.join(';');
+      function duplicateId(originalId,) {
+        const splited = originalId.split(';');
+        const lastId = splited[splited.length - 1]
+        let newLastUUID
+        const splited2 = lastId.split(':')
+        newLastUUID = splited2[0] + ':' + generateUUID()
+        splited.pop()
+        return [...splited, newLastUUID].join(';') + '-tree'
+
+      }
+
+      const el = {
+        time: (new Date()).getTime(),
+        action: 'InsertBefore',
+        target_element: parentId,
+        inserted_element: { originalId: parentId, id: duplicateId(removeLastOccurrence(parentId, '-tree')) },
+      };
+
+      pushAction(el);
+    };
+    const removeTag = (e) => {
+      const checked = e.target.parentNode.querySelector('#applyToCopies').checked
+      const splited = e.target.parentNode.id.split(';')
+      const [toRemove, ...rest] = splited
+      const parentId = rest.join(';');
+      const el =
+      {
+        time: (new Date()).getTime(),
+        action: 'removeTag',
+
+        target_element: parentId,
+
+      }
+      if (checked) {
+        el.options = { apply_to_copies: true }
+        el.target_element = el.target_element.split(':')[0].replace('-tree', '') + '-tree'
+      }
+      pushAction(el)
+      e.target.parentNode.remove()
+    }
+
+    const removeComponent = async (e) => {
+      const splited = e.target.parentNode.id.split(';')
+      const [toRemove, ...rest] = splited
+      const parentId = rest.join(';');
+      const el =
+      {
+        time: (new Date()).getTime(),
+        action: 'removeComponent',
+        target_element: parentId,
+
+      }
+      await pushAction(el)
+      location.reload()
+
+
+    }
+    const approve = async (event) => {
+      var checkbox = event.target;
+      const actionInReplace = event.target.parentNode.querySelector('#actionInReplaceExisting').checked
+      let fork = event.target.parentNode.querySelector('#fork').checked
+      let transferInnerHtml = event.target.parentNode.querySelector('#transfer-inner-html').checked
+
+      if (fork) {
+        let newC = await getLastReusableId()
+        fork = getNextCounter(newC)
+        await updateCounter(fork)
+      }
+      // Get the parent fieldset
+      var fieldset = checkbox.closest('fieldset');
+
+      // Get the "Duplicate with Parent" checkbox
+      var duplicateCheckbox = fieldset.querySelector('#code-tree-menu-dublicate-with-parent-option');
+
+      // Check if the "Duplicate with Parent" checkbox is checked
+      var isDuplicateWithParent = duplicateCheckbox.checked;
+      var copyInsertingCheckbox = fieldset.querySelector('#code-tree-menu-copies-too');
+      var isCopiesOfInserting = copyInsertingCheckbox.checked;
+      // Get the id and action attributes
+      var fieldsetId = fieldset.id;
+      var fieldsetAction = fieldset.getAttribute('action');
+
+      // Get all fieldsets with data-element="code-tree-tag"
+      var codeTreeTagFieldsets = querySelectorAll1('fieldset[data-element="code-tree-tag"]');
+
+      // Iterate through each fieldset and hide them
+      codeTreeTagFieldsets.forEach(function (fieldset) {
+        var checkbox = fieldset.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+          checkbox.setAttribute('hidden', 'true');
+        }
+      });
+
+      // Remove the parent fieldset
+      fieldset.remove();
+
+      // Log the id and action attributes (you can replace this with your desired logic)
+      log1("Fieldset ID:", fieldsetId);
+      log1("Fieldset Action:", fieldsetAction);
+      const splited = fieldsetId.split(';')
+      splited.shift()
+      const id = splited.join(';')
+      const positionChecked = fieldset.querySelector('#position-checkbox').checked
+      let position
+      if (positionChecked) {
+        const positionV = fieldset.querySelector('#position-number').value
+        const start = fieldset.querySelector('#position-start-checkbox').checked
+        position = start ? 'start-' + positionV : 'end-' + positionV
+
+      }
+      let target_element = [{ type: 'tag', id, }, ...selected.map(id => {
+        return { type: 'tag', id }
+      })]
+      if (actionInReplace) {
+        target_element = target_element.map(el => {
+          const rId = getElementById1(el.id.replace('-tree', '')).getAttribute('data-replaceID')
+          if (el.id.split(':')[1] && (el.id.split(':')[1].replace('-tree', '') === rId)) {
+            el.replaced = true
+            el.id = el.id.split(':')[0] + '-tree'
+
+          }
+          return el
+        })
+      }
+      if (isDuplicateWithParent) {
+        pushAction({
           time: (new Date()).getTime(),
-          action: 'removeComponent',
-          target_element: parentId,
-
-        }
-        await pushAction(el)
-        location.reload()
+          action: fieldsetAction,
+          options: { dub_target: true, insert_copies: true, position, actionInReplace, fork, transferInnerHtml },
+          target_element
+        })
 
 
       }
-      const approve = async (event) => {
-        var checkbox = event.target;
-        const actionInReplace = event.target.parentNode.querySelector('#actionInReplaceExisting').checked
-        let fork = event.target.parentNode.querySelector('#fork').checked
-        let transferInnerHtml = event.target.parentNode.querySelector('#transfer-inner-html').checked
-
-        if (fork) {
-          let newC = await getLastReusableId()
-          fork = getNextCounter(newC)
-          await updateCounter(fork)
-        }
-        // Get the parent fieldset
-        var fieldset = checkbox.closest('fieldset');
-
-        // Get the "Duplicate with Parent" checkbox
-        var duplicateCheckbox = fieldset.querySelector('#code-tree-menu-dublicate-with-parent-option');
-
-        // Check if the "Duplicate with Parent" checkbox is checked
-        var isDuplicateWithParent = duplicateCheckbox.checked;
-        var copyInsertingCheckbox = fieldset.querySelector('#code-tree-menu-copies-too');
-        var isCopiesOfInserting = copyInsertingCheckbox.checked;
-        // Get the id and action attributes
-        var fieldsetId = fieldset.id;
-        var fieldsetAction = fieldset.getAttribute('action');
-
-        // Get all fieldsets with data-element="code-tree-tag"
-        var codeTreeTagFieldsets = querySelectorAll1('fieldset[data-element="code-tree-tag"]');
-
-        // Iterate through each fieldset and hide them
-        codeTreeTagFieldsets.forEach(function (fieldset) {
-          var checkbox = fieldset.querySelector('input[type="checkbox"]');
-          if (checkbox) {
-            checkbox.setAttribute('hidden', 'true');
-          }
-        });
-
-        // Remove the parent fieldset
-        fieldset.remove();
-
-        // Log the id and action attributes (you can replace this with your desired logic)
-        log1("Fieldset ID:", fieldsetId);
-        log1("Fieldset Action:", fieldsetAction);
-        const splited = fieldsetId.split(';')
-        splited.shift()
-        const id = splited.join(';')
-        const positionChecked = fieldset.querySelector('#position-checkbox').checked
-        let position
-        if (positionChecked) {
-          const positionV = fieldset.querySelector('#position-number').value
-          const start = fieldset.querySelector('#position-start-checkbox').checked
-          position = start ? 'start-' + positionV : 'end-' + positionV
-
-        }
-        let target_element = [{ type: 'tag', id, }, ...selected.map(id => {
-          return { type: 'tag', id }
-        })]
-        if (actionInReplace) {
-          target_element = target_element.map(el => {
-            const rId = getElementById1(el.id.replace('-tree', '')).getAttribute('data-replaceID')
-            if (el.id.split(':')[1] && (el.id.split(':')[1].replace('-tree', '') === rId)) {
-              el.replaced = true
-              el.id = el.id.split(':')[0] + '-tree'
-
-            }
-            return el
-          })
-        }
-        if (isDuplicateWithParent) {
-          pushAction({
-            time: (new Date()).getTime(),
-            action: fieldsetAction,
-            options: { dub_target: true, insert_copies: true, position, actionInReplace, fork, transferInnerHtml },
-            target_element
-          })
-
-
-        }
-        else if (isCopiesOfInserting) {
-          pushAction({
-            time: (new Date()).getTime(),
-            action: fieldsetAction,
-            options: { insert_copies: true, position, actionInReplace, fork, transferInnerHtml },
-            target_element
-          })
-        }
-        else {
-          let el2 = {
-            time: (new Date()).getTime(),
-            action: fieldsetAction,
-            options: { position, actionInReplace, fork, transferInnerHtml },
-            target_element
-          }
-          pushAction(el2)
-        }
-        selected = []
-        event.target.parentNode.remove()
+      else if (isCopiesOfInserting) {
+        pushAction({
+          time: (new Date()).getTime(),
+          action: fieldsetAction,
+          options: { insert_copies: true, position, actionInReplace, fork, transferInnerHtml },
+          target_element
+        })
       }
+      else {
+        let el2 = {
+          time: (new Date()).getTime(),
+          action: fieldsetAction,
+          options: { position, actionInReplace, fork, transferInnerHtml },
+          target_element
+        }
+        pushAction(el2)
+      }
+      selected = []
+      event.target.parentNode.remove()
+    }
 
   </script>
 
   <script>const tags =
-        [
-          {
-            "tagName": "head",
-            "tagValue": "<head></head>",
-            "TagComment": "Contains metadata/information for the document",
-            "TagType": "Basic HTML"
-          },
-          {
-            "tagName": "title",
-            "tagValue": "<title></title>",
-            "TagComment": "Defines a title for the document",
-            "TagType": "Basic HTML"
-          },
-          {
-            "tagName": "body",
-            "tagValue": "<body></body>",
-            "TagComment": "Defines the document's body",
-            "TagType": "Basic HTML"
-          },
-          {
-            "tagName": "h1",
-            "tagValue": "<h1></h1>",
-            "TagComment": "Defines HTML headings",
-            "TagType": "Basic HTML"
-          },
-          {
-            "tagName": "h2",
-            "tagValue": "<h2></h2>",
-            "TagComment": "Defines HTML headings",
-            "TagType": "Basic HTML"
-          },
-          {
-            "tagName": "h3",
-            "tagValue": "<h3></h3>",
-            "TagComment": "Defines HTML headings",
-            "TagType": "Basic HTML"
-          },
-          {
-            "tagName": "h4",
-            "tagValue": "<h4></h4>",
-            "TagComment": "Defines HTML headings",
-            "TagType": "Basic HTML"
-          },
-          {
-            "tagName": "h5",
-            "tagValue": "<h5></h5>",
-            "TagComment": "Defines HTML headings",
-            "TagType": "Basic HTML"
-          },
-          {
-            "tagName": "h6",
-            "tagValue": "<h6></h6>",
-            "TagComment": "Defines HTML headings",
-            "TagType": "Basic HTML"
-          },
-          {
-            "tagName": "p",
-            "tagValue": "<p></p>",
-            "TagComment": "Defines a paragraph",
-            "TagType": "Basic HTML"
-          },
-          {
-            "tagName": "br",
-            "tagValue": "<br>",
-            "TagComment": "Inserts a single line break",
-            "TagType": "Basic HTML"
-          },
-          {
-            "tagName": "hr",
-            "tagValue": "<hr>",
-            "TagComment": "Defines a thematic change in the content",
-            "TagType": "Basic HTML"
-          },
-          {
-            "tagName": "!--...--",
-            "tagValue": "<!--...-->",
-            "TagComment": "Defines a comment",
-            "TagType": "Basic HTML"
-          },
-          {
-            "tagName": "abbr",
-            "tagValue": "<abbr></abbr>",
-            "TagComment": "Defines an abbreviation or an acronym",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "address",
-            "tagValue": "<address></address>",
-            "TagComment": "Defines contact information for the author/owner of a document/article",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "b",
-            "tagValue": "<b></b>",
-            "TagComment": "Defines bold text",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "bdi",
-            "tagValue": "<bdi></bdi>",
-            "TagComment": "Isolates a part of text that might be formatted in a different direction from other text outside it",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "bdo",
-            "tagValue": "<bdo></bdo>",
-            "TagComment": "Overrides the current text direction",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "blockquote",
-            "tagValue": "<blockquote></blockquote>",
-            "TagComment": "Defines a section that is quoted from another source",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "cite",
-            "tagValue": "<cite></cite>",
-            "TagComment": "Defines the title of a work",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "code",
-            "tagValue": "<code></code>",
-            "TagComment": "Defines a piece of computer code",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "del",
-            "tagValue": "<del></del>",
-            "TagComment": "Defines text that has been deleted from a document",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "dfn",
-            "tagValue": "<dfn></dfn>",
-            "TagComment": "Specifies a term that is going to be defined within the content",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "em",
-            "tagValue": "<em></em>",
-            "TagComment": "Defines emphasized text",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "i",
-            "tagValue": "<i></i>",
-            "TagComment": "Defines a part of text in an alternate voice or mood",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "ins",
-            "tagValue": "<ins></ins>",
-            "TagComment": "Defines a text that has been inserted into a document",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "kbd",
-            "tagValue": "<kbd></kbd>",
-            "TagComment": "Defines keyboard input",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "mark",
-            "tagValue": "<mark></mark>",
-            "TagComment": "Defines marked/highlighted text",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "meter",
-            "tagValue": "<meter></meter>",
-            "TagComment": "Defines a scalar measurement within a known range (a gauge)",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "pre",
-            "tagValue": "<pre></pre>",
-            "TagComment": "Defines preformatted text",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "progress",
-            "tagValue": "<progress></progress>",
-            "TagComment": "Represents the progress of a task",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "q",
-            "tagValue": "<q></q>",
-            "TagComment": "Defines a short quotation",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "rp",
-            "tagValue": "<rp></rp>",
-            "TagComment": "Defines what to show in browsers that do not support ruby annotations",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "rt",
-            "tagValue": "<rt></rt>",
-            "TagComment": "Defines an explanation/pronunciation of characters (for East Asian typography)",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "ruby",
-            "tagValue": "<ruby></ruby>",
-            "TagComment": "Defines a ruby annotation (for East Asian typography)",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "s",
-            "tagValue": "<s></s>",
-            "TagComment": "Defines text that is no longer correct",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "samp",
-            "tagValue": "<samp></samp>",
-            "TagComment": "Defines sample output from a computer program",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "small",
-            "tagValue": "<small></small>",
-            "TagComment": "Defines smaller text",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "strong",
-            "tagValue": "<strong></strong>",
-            "TagComment": "Defines important text",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "sub",
-            "tagValue": "<sub></sub>",
-            "TagComment": "Defines subscripted text",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "sup",
-            "tagValue": "<sup></sup>",
-            "TagComment": "Defines superscripted text",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "template",
-            "tagValue": "<template></template>",
-            "TagComment": "Defines a container for content that should be hidden when the page loads",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "time",
-            "tagValue": "<time></time>",
-            "TagComment": "Defines a specific time (or datetime)",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "u",
-            "tagValue": "<u></u>",
-            "TagComment": "Defines some text that is unarticulated and styled differently from normal text",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "var",
-            "tagValue": "<var></var>",
-            "TagComment": "Defines a variable",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "wbr",
-            "tagValue": "<wbr>",
-            "TagComment": "Defines a possible line-break",
-            "TagType": "Formatting"
-          },
-          {
-            "tagName": "form",
-            "tagValue": "<form></form>",
-            "TagComment": "Defines an HTML form for user input",
-            "TagType": "Forms and Input"
-          },
-          {
-            "tagName": "input",
-            "tagValue": "<input>",
-            "TagComment": "Defines an input control",
-            "TagType": "Forms and Input"
-          },
-          {
-            "tagName": "textarea",
-            "tagValue": "<textarea></textarea>",
-            "TagComment": "Defines a multiline input control (text area)",
-            "TagType": "Forms and Input"
-          },
-          {
-            "tagName": "button",
-            "tagValue": "<button></button>",
-            "TagComment": "Defines a clickable button",
-            "TagType": "Forms and Input"
-          },
-          {
-            "tagName": "select",
-            "tagValue": "<select></select>",
-            "TagComment": "Defines a drop-down list",
-            "TagType": "Forms and Input"
-          },
-          {
-            "tagName": "optgroup",
-            "tagValue": "<optgroup></optgroup>",
-            "TagComment": "Defines a group of related options in a drop-down list",
-            "TagType": "Forms and Input"
-          },
-          {
-            "tagName": "option",
-            "tagValue": "<option></option>",
-            "TagComment": "Defines an option in a drop-down list",
-            "TagType": "Forms and Input"
-          },
-          {
-            "tagName": "label",
-            "tagValue": "<label></label>",
-            "TagComment": "Defines a label for an <input> element",
-            "TagType": "Forms and Input"
-          },
-          {
-            "tagName": "fieldset",
-            "tagValue": "<fieldset></fieldset>",
-            "TagComment": "Groups related elements in a form",
-            "TagType": "Forms and Input"
-          },
-          {
-            "tagName": "legend",
-            "tagValue": "<legend></legend>",
-            "TagComment": "Defines a caption for a <fieldset> element",
-            "TagType": "Forms and Input"
-          },
-          {
-            "tagName": "datalist",
-            "tagValue": "<datalist></datalist>",
-            "TagComment": "Specifies a list of pre-defined options for input controls",
-            "TagType": "Forms and Input"
-          },
-          {
-            "tagName": "output",
-            "tagValue": "<output></output>",
-            "TagComment": "Defines the result of a calculation",
-            "TagType": "Forms and Input"
-          },
-          {
-            "tagName": "iframe",
-            "tagValue": "<iframe></iframe>",
-            "TagComment": "Defines an inline frame",
-            "TagType": "Frames"
-          },
-          {
-            "tagName": "img",
-            "tagValue": "<img>",
-            "TagComment": "Defines an image",
-            "TagType": "Images"
-          },
-          {
-            "tagName": "map",
-            "tagValue": "<map></map>",
-            "TagComment": "Defines a client-side image map",
-            "TagType": "Images"
-          },
-          {
-            "tagName": "area",
-            "tagValue": "<area>",
-            "TagComment": "Defines an area inside an image map",
-            "TagType": "Images"
-          },
-          {
-            "tagName": "canvas",
-            "tagValue": "<canvas></canvas>",
-            "TagComment": "Used to draw graphics, on the fly, via scripting (usually JavaScript)",
-            "TagType": "Images"
-          },
-          {
-            "tagName": "figcaption",
-            "tagValue": "<figcaption></figcaption>",
-            "TagComment": "Defines a caption for a <figure> element",
-            "TagType": "Images"
-          },
-          {
-            "tagName": "figure",
-            "tagValue": "<figure></figure>",
-            "TagComment": "Specifies self-contained content",
-            "TagType": "Images"
-          },
-          {
-            "tagName": "picture",
-            "tagValue": "<picture></picture>",
-            "TagComment": "Defines a container for multiple image resources",
-            "TagType": "Images"
-          },
-          {
-            "tagName": "audio",
-            "tagValue": "<audio></audio>",
-            "TagComment": "Defines sound content",
-            "TagType": "Audio / Video"
-          },
-          {
-            "tagName": "source",
-            "tagValue": "<source>",
-            "TagComment": "Defines multiple media resources for media elements (<video>, <audio> and <picture>)",
-            "TagType": "Audio / Video"
-          },
-          {
-            "tagName": "track",
-            "tagValue": "<track>",
-            "TagComment": "Defines text tracks for media elements (<video> and <audio>)",
-            "TagType": "Audio / Video"
-          },
-          {
-            "tagName": "video",
-            "tagValue": "<video></video>",
-            "TagComment": "Defines a video or movie",
-            "TagType": "Audio / Video"
-          },
-          {
-            "tagName": "a",
-            "tagValue": "<a></a>",
-            "TagComment": "Defines a hyperlink",
-            "TagType": "Links"
-          },
-          {
-            "tagName": "link",
-            "tagValue": "<link>",
-            "TagComment": "Defines the relationship between a document and an external resource (most used to link to style sheets)",
-            "TagType": "Links"
-          },
-          {
-            "tagName": "nav",
-            "tagValue": "<nav></nav>",
-            "TagComment": "Defines navigation links",
-            "TagType": "Links"
-          },
-          {
-            "tagName": "menu",
-            "tagValue": "<menu></menu>",
-            "TagComment": "Defines an alternative unordered list",
-            "TagType": "Lists"
-          },
-          {
-            "tagName": "ul",
-            "tagValue": "<ul></ul>",
-            "TagComment": "Defines an unordered list",
-            "TagType": "Lists"
-          },
-          {
-            "tagName": "ol",
-            "tagValue": "<ol></ol>",
-            "TagComment": "Defines an ordered list",
-            "TagType": "Lists"
-          },
-          {
-            "tagName": "li",
-            "tagValue": "<li></li>",
-            "TagComment": "Defines a list item",
-            "TagType": "Lists"
-          },
-          {
-            "tagName": "dl",
-            "tagValue": "<dl></dl>",
-            "TagComment": "Defines a description list",
-            "TagType": "Lists"
-          },
-          {
-            "tagName": "dt",
-            "tagValue": "<dt></dt>",
-            "TagComment": "Defines a term/name in a description list",
-            "TagType": "Lists"
-          },
-          {
-            "tagName": "dd",
-            "tagValue": "<dd></dd>",
-            "TagComment": "Defines a description of a term/name in a description list",
-            "TagType": "Lists"
-          },
-          {
-            "tagName": "table",
-            "tagValue": "<table></table>",
-            "TagComment": "Defines a table",
-            "TagType": "Tables"
-          },
-          {
-            "tagName": "caption",
-            "tagValue": "<caption></caption>",
-            "TagComment": "Defines a table caption",
-            "TagType": "Tables"
-          },
-          {
-            "tagName": "th",
-            "tagValue": "<th></th>",
-            "TagComment": "Defines a header cell in a table",
-            "TagType": "Tables"
-          },
-          {
-            "tagName": "tr",
-            "tagValue": "<tr></tr>",
-            "TagComment": "Defines a row in a table",
-            "TagType": "Tables"
-          },
-          {
-            "tagName": "td",
-            "tagValue": "<td></td>",
-            "TagComment": "Defines a cell in a table",
-            "TagType": "Tables"
-          },
-          {
-            "tagName": "thead",
-            "tagValue": "<thead></thead>",
-            "TagComment": "Groups the header content in a table",
-            "TagType": "Tables"
-          },
-          {
-            "tagName": "tbody",
-            "tagValue": "<tbody></tbody>",
-            "TagComment": "Groups the body content in a table",
-            "TagType": "Tables"
-          },
-          {
-            "tagName": "tfoot",
-            "tagValue": "<tfoot></tfoot>",
-            "TagComment": "Groups the footer content in a table",
-            "TagType": "Tables"
-          },
-          {
-            "tagName": "col",
-            "tagValue": "<col>",
-            "TagComment": "Specifies column properties for each column within a <colgroup> element",
-            "TagType": "Tables"
-          },
-          {
-            "tagName": "colgroup",
-            "tagValue": "<colgroup></colgroup>",
-            "TagComment": "Specifies a group of one or more columns in a table for formatting",
-            "TagType": "Tables"
-          },
-          {
-            "tagName": "style",
-            "tagValue": "<style></style>",
-            "TagComment": "🎨Defines style information for a document🎨",
-            "TagType": "Styles and Semantics"
-          },
-          {
-            "tagName": "div",
-            "tagValue": "<div></div>",
-            "TagComment": "Defines a section in a document",
-            "TagType": "Styles and Semantics"
-          },
-          {
-            "tagName": "span",
-            "tagValue": "<span></span>",
-            "TagComment": "Defines a section in a document",
-            "TagType": "Styles and Semantics"
-          },
-          {
-            "tagName": "header",
-            "tagValue": "<header></header>",
-            "TagComment": "Defines a header for a document or section",
-            "TagType": "Styles and Semantics"
-          },
-          {
-            "tagName": "hgroup",
-            "tagValue": "<hgroup></hgroup>",
-            "TagComment": "Defines a header and related content",
-            "TagType": "Styles and Semantics"
-          },
-          {
-            "tagName": "footer",
-            "tagValue": "<footer></footer>",
-            "TagComment": "Defines a footer for a document or section",
-            "TagType": "Styles and Semantics"
-          },
-          {
-            "tagName": "main",
-            "tagValue": "<main></main>",
-            "TagComment": "Specifies the main content of a document",
-            "TagType": "Styles and Semantics"
-          },
-          {
-            "tagName": "section",
-            "tagValue": "<section></section>",
-            "TagComment": "Defines a section in a document",
-            "TagType": "Styles and Semantics"
-          },
-          {
-            "tagName": "search",
-            "tagValue": "<search></search>",
-            "TagComment": "Defines a search section",
-            "TagType": "Styles and Semantics"
-          },
-          {
-            "tagName": "article",
-            "tagValue": "<article></article>",
-            "TagComment": "Defines an article",
-            "TagType": "Styles and Semantics"
-          },
-          {
-            "tagName": "aside",
-            "tagValue": "<aside></aside>",
-            "TagComment": "Defines content aside from the page content",
-            "TagType": "Styles and Semantics"
-          },
-          {
-            "tagName": "details",
-            "tagValue": "<details></details>",
-            "TagComment": "Defines additional details that the user can view or hide",
-            "TagType": "Styles and Semantics"
-          },
-          {
-            "tagName": "dialog",
-            "tagValue": "<dialog></dialog>",
-            "TagComment": "Defines a dialog box or window",
-            "TagType": "Styles and Semantics"
-          },
-          {
-            "tagName": "summary",
-            "tagValue": "<summary></summary>",
-            "TagComment": "Defines a visible heading for a <details> element",
-            "TagType": "Styles and Semantics"
-          },
-          {
-            "tagName": "data",
-            "tagValue": "<data></data>",
-            "TagComment": "Adds a machine-readable translation of a given content",
-            "TagType": "Styles and Semantics"
-          },
-          {
-            "tagName": "meta",
-            "tagValue": "<meta>",
-            "TagComment": "Defines metadata about an HTML document",
-            "TagType": "Meta Info"
-          },
-          {
-            "tagName": "base",
-            "tagValue": "<base>",
-            "TagComment": "Specifies the base URL/target for all relative URLs in a document",
-            "TagType": "Meta Info"
-          },
-          {
-            "tagName": "script",
-            "tagValue": "<scrip></scrip>",
-            "TagComment": "💻Defines a client-side script💻",
-            "TagType": "Programming"
-          },
-          {
-            "tagName": "noscript",
-            "tagValue": "<noscript></noscript>",
-            "TagComment": "Defines an alternate content for users that do not support client-side scripts",
-            "TagType": "Programming"
-          },
-          {
-            "tagName": "embed",
-            "tagValue": "<embed></embed>",
-            "TagComment": "Defines a container for an external (non-HTML) application",
-            "TagType": "Programming"
-          },
-          {
-            "tagName": "object",
-            "tagValue": "<object></object>",
-            "TagComment": "Defines an embedded object",
-            "TagType": "Programming"
-          },
-          {
-            "tagName": "param",
-            "tagValue": "<param>",
-            "TagComment": "Defines a parameter for an object",
-            "TagType": "Programming"
-          },
-          {
-            "tagName": "svg",
-            "tagValue": "<svg></svg>",
-            "TagComment": "Defines a container for SVG graphics",
-            "TagType": "Images"
-          },
-          {
-            "tagName": "path",
-            "tagValue": "<path>",
-            "TagComment": "svg",
-            "TagType": "svg"
-          },
-          {
-            "tagName": "text",
-            "tagValue": "<text></text>",
-            "TagComment": "svg",
-            "TagType": "svg"
-          }
-        ];
+      [
+        {
+          "tagName": "head",
+          "tagValue": "<head></head>",
+          "TagComment": "Contains metadata/information for the document",
+          "TagType": "Basic HTML"
+        },
+        {
+          "tagName": "title",
+          "tagValue": "<title></title>",
+          "TagComment": "Defines a title for the document",
+          "TagType": "Basic HTML"
+        },
+        {
+          "tagName": "body",
+          "tagValue": "<body></body>",
+          "TagComment": "Defines the document's body",
+          "TagType": "Basic HTML"
+        },
+        {
+          "tagName": "h1",
+          "tagValue": "<h1></h1>",
+          "TagComment": "Defines HTML headings",
+          "TagType": "Basic HTML"
+        },
+        {
+          "tagName": "h2",
+          "tagValue": "<h2></h2>",
+          "TagComment": "Defines HTML headings",
+          "TagType": "Basic HTML"
+        },
+        {
+          "tagName": "h3",
+          "tagValue": "<h3></h3>",
+          "TagComment": "Defines HTML headings",
+          "TagType": "Basic HTML"
+        },
+        {
+          "tagName": "h4",
+          "tagValue": "<h4></h4>",
+          "TagComment": "Defines HTML headings",
+          "TagType": "Basic HTML"
+        },
+        {
+          "tagName": "h5",
+          "tagValue": "<h5></h5>",
+          "TagComment": "Defines HTML headings",
+          "TagType": "Basic HTML"
+        },
+        {
+          "tagName": "h6",
+          "tagValue": "<h6></h6>",
+          "TagComment": "Defines HTML headings",
+          "TagType": "Basic HTML"
+        },
+        {
+          "tagName": "p",
+          "tagValue": "<p></p>",
+          "TagComment": "Defines a paragraph",
+          "TagType": "Basic HTML"
+        },
+        {
+          "tagName": "br",
+          "tagValue": "<br>",
+          "TagComment": "Inserts a single line break",
+          "TagType": "Basic HTML"
+        },
+        {
+          "tagName": "hr",
+          "tagValue": "<hr>",
+          "TagComment": "Defines a thematic change in the content",
+          "TagType": "Basic HTML"
+        },
+        {
+          "tagName": "!--...--",
+          "tagValue": "<!--...-->",
+          "TagComment": "Defines a comment",
+          "TagType": "Basic HTML"
+        },
+        {
+          "tagName": "abbr",
+          "tagValue": "<abbr></abbr>",
+          "TagComment": "Defines an abbreviation or an acronym",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "address",
+          "tagValue": "<address></address>",
+          "TagComment": "Defines contact information for the author/owner of a document/article",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "b",
+          "tagValue": "<b></b>",
+          "TagComment": "Defines bold text",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "bdi",
+          "tagValue": "<bdi></bdi>",
+          "TagComment": "Isolates a part of text that might be formatted in a different direction from other text outside it",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "bdo",
+          "tagValue": "<bdo></bdo>",
+          "TagComment": "Overrides the current text direction",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "blockquote",
+          "tagValue": "<blockquote></blockquote>",
+          "TagComment": "Defines a section that is quoted from another source",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "cite",
+          "tagValue": "<cite></cite>",
+          "TagComment": "Defines the title of a work",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "code",
+          "tagValue": "<code></code>",
+          "TagComment": "Defines a piece of computer code",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "del",
+          "tagValue": "<del></del>",
+          "TagComment": "Defines text that has been deleted from a document",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "dfn",
+          "tagValue": "<dfn></dfn>",
+          "TagComment": "Specifies a term that is going to be defined within the content",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "em",
+          "tagValue": "<em></em>",
+          "TagComment": "Defines emphasized text",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "i",
+          "tagValue": "<i></i>",
+          "TagComment": "Defines a part of text in an alternate voice or mood",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "ins",
+          "tagValue": "<ins></ins>",
+          "TagComment": "Defines a text that has been inserted into a document",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "kbd",
+          "tagValue": "<kbd></kbd>",
+          "TagComment": "Defines keyboard input",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "mark",
+          "tagValue": "<mark></mark>",
+          "TagComment": "Defines marked/highlighted text",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "meter",
+          "tagValue": "<meter></meter>",
+          "TagComment": "Defines a scalar measurement within a known range (a gauge)",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "pre",
+          "tagValue": "<pre></pre>",
+          "TagComment": "Defines preformatted text",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "progress",
+          "tagValue": "<progress></progress>",
+          "TagComment": "Represents the progress of a task",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "q",
+          "tagValue": "<q></q>",
+          "TagComment": "Defines a short quotation",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "rp",
+          "tagValue": "<rp></rp>",
+          "TagComment": "Defines what to show in browsers that do not support ruby annotations",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "rt",
+          "tagValue": "<rt></rt>",
+          "TagComment": "Defines an explanation/pronunciation of characters (for East Asian typography)",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "ruby",
+          "tagValue": "<ruby></ruby>",
+          "TagComment": "Defines a ruby annotation (for East Asian typography)",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "s",
+          "tagValue": "<s></s>",
+          "TagComment": "Defines text that is no longer correct",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "samp",
+          "tagValue": "<samp></samp>",
+          "TagComment": "Defines sample output from a computer program",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "small",
+          "tagValue": "<small></small>",
+          "TagComment": "Defines smaller text",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "strong",
+          "tagValue": "<strong></strong>",
+          "TagComment": "Defines important text",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "sub",
+          "tagValue": "<sub></sub>",
+          "TagComment": "Defines subscripted text",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "sup",
+          "tagValue": "<sup></sup>",
+          "TagComment": "Defines superscripted text",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "template",
+          "tagValue": "<template></template>",
+          "TagComment": "Defines a container for content that should be hidden when the page loads",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "time",
+          "tagValue": "<time></time>",
+          "TagComment": "Defines a specific time (or datetime)",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "u",
+          "tagValue": "<u></u>",
+          "TagComment": "Defines some text that is unarticulated and styled differently from normal text",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "var",
+          "tagValue": "<var></var>",
+          "TagComment": "Defines a variable",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "wbr",
+          "tagValue": "<wbr>",
+          "TagComment": "Defines a possible line-break",
+          "TagType": "Formatting"
+        },
+        {
+          "tagName": "form",
+          "tagValue": "<form></form>",
+          "TagComment": "Defines an HTML form for user input",
+          "TagType": "Forms and Input"
+        },
+        {
+          "tagName": "input",
+          "tagValue": "<input>",
+          "TagComment": "Defines an input control",
+          "TagType": "Forms and Input"
+        },
+        {
+          "tagName": "textarea",
+          "tagValue": "<textarea></textarea>",
+          "TagComment": "Defines a multiline input control (text area)",
+          "TagType": "Forms and Input"
+        },
+        {
+          "tagName": "button",
+          "tagValue": "<button></button>",
+          "TagComment": "Defines a clickable button",
+          "TagType": "Forms and Input"
+        },
+        {
+          "tagName": "select",
+          "tagValue": "<select></select>",
+          "TagComment": "Defines a drop-down list",
+          "TagType": "Forms and Input"
+        },
+        {
+          "tagName": "optgroup",
+          "tagValue": "<optgroup></optgroup>",
+          "TagComment": "Defines a group of related options in a drop-down list",
+          "TagType": "Forms and Input"
+        },
+        {
+          "tagName": "option",
+          "tagValue": "<option></option>",
+          "TagComment": "Defines an option in a drop-down list",
+          "TagType": "Forms and Input"
+        },
+        {
+          "tagName": "label",
+          "tagValue": "<label></label>",
+          "TagComment": "Defines a label for an <input> element",
+          "TagType": "Forms and Input"
+        },
+        {
+          "tagName": "fieldset",
+          "tagValue": "<fieldset></fieldset>",
+          "TagComment": "Groups related elements in a form",
+          "TagType": "Forms and Input"
+        },
+        {
+          "tagName": "legend",
+          "tagValue": "<legend></legend>",
+          "TagComment": "Defines a caption for a <fieldset> element",
+          "TagType": "Forms and Input"
+        },
+        {
+          "tagName": "datalist",
+          "tagValue": "<datalist></datalist>",
+          "TagComment": "Specifies a list of pre-defined options for input controls",
+          "TagType": "Forms and Input"
+        },
+        {
+          "tagName": "output",
+          "tagValue": "<output></output>",
+          "TagComment": "Defines the result of a calculation",
+          "TagType": "Forms and Input"
+        },
+        {
+          "tagName": "iframe",
+          "tagValue": "<iframe></iframe>",
+          "TagComment": "Defines an inline frame",
+          "TagType": "Frames"
+        },
+        {
+          "tagName": "img",
+          "tagValue": "<img>",
+          "TagComment": "Defines an image",
+          "TagType": "Images"
+        },
+        {
+          "tagName": "map",
+          "tagValue": "<map></map>",
+          "TagComment": "Defines a client-side image map",
+          "TagType": "Images"
+        },
+        {
+          "tagName": "area",
+          "tagValue": "<area>",
+          "TagComment": "Defines an area inside an image map",
+          "TagType": "Images"
+        },
+        {
+          "tagName": "canvas",
+          "tagValue": "<canvas></canvas>",
+          "TagComment": "Used to draw graphics, on the fly, via scripting (usually JavaScript)",
+          "TagType": "Images"
+        },
+        {
+          "tagName": "figcaption",
+          "tagValue": "<figcaption></figcaption>",
+          "TagComment": "Defines a caption for a <figure> element",
+          "TagType": "Images"
+        },
+        {
+          "tagName": "figure",
+          "tagValue": "<figure></figure>",
+          "TagComment": "Specifies self-contained content",
+          "TagType": "Images"
+        },
+        {
+          "tagName": "picture",
+          "tagValue": "<picture></picture>",
+          "TagComment": "Defines a container for multiple image resources",
+          "TagType": "Images"
+        },
+        {
+          "tagName": "audio",
+          "tagValue": "<audio></audio>",
+          "TagComment": "Defines sound content",
+          "TagType": "Audio / Video"
+        },
+        {
+          "tagName": "source",
+          "tagValue": "<source>",
+          "TagComment": "Defines multiple media resources for media elements (<video>, <audio> and <picture>)",
+          "TagType": "Audio / Video"
+        },
+        {
+          "tagName": "track",
+          "tagValue": "<track>",
+          "TagComment": "Defines text tracks for media elements (<video> and <audio>)",
+          "TagType": "Audio / Video"
+        },
+        {
+          "tagName": "video",
+          "tagValue": "<video></video>",
+          "TagComment": "Defines a video or movie",
+          "TagType": "Audio / Video"
+        },
+        {
+          "tagName": "a",
+          "tagValue": "<a></a>",
+          "TagComment": "Defines a hyperlink",
+          "TagType": "Links"
+        },
+        {
+          "tagName": "link",
+          "tagValue": "<link>",
+          "TagComment": "Defines the relationship between a document and an external resource (most used to link to style sheets)",
+          "TagType": "Links"
+        },
+        {
+          "tagName": "nav",
+          "tagValue": "<nav></nav>",
+          "TagComment": "Defines navigation links",
+          "TagType": "Links"
+        },
+        {
+          "tagName": "menu",
+          "tagValue": "<menu></menu>",
+          "TagComment": "Defines an alternative unordered list",
+          "TagType": "Lists"
+        },
+        {
+          "tagName": "ul",
+          "tagValue": "<ul></ul>",
+          "TagComment": "Defines an unordered list",
+          "TagType": "Lists"
+        },
+        {
+          "tagName": "ol",
+          "tagValue": "<ol></ol>",
+          "TagComment": "Defines an ordered list",
+          "TagType": "Lists"
+        },
+        {
+          "tagName": "li",
+          "tagValue": "<li></li>",
+          "TagComment": "Defines a list item",
+          "TagType": "Lists"
+        },
+        {
+          "tagName": "dl",
+          "tagValue": "<dl></dl>",
+          "TagComment": "Defines a description list",
+          "TagType": "Lists"
+        },
+        {
+          "tagName": "dt",
+          "tagValue": "<dt></dt>",
+          "TagComment": "Defines a term/name in a description list",
+          "TagType": "Lists"
+        },
+        {
+          "tagName": "dd",
+          "tagValue": "<dd></dd>",
+          "TagComment": "Defines a description of a term/name in a description list",
+          "TagType": "Lists"
+        },
+        {
+          "tagName": "table",
+          "tagValue": "<table></table>",
+          "TagComment": "Defines a table",
+          "TagType": "Tables"
+        },
+        {
+          "tagName": "caption",
+          "tagValue": "<caption></caption>",
+          "TagComment": "Defines a table caption",
+          "TagType": "Tables"
+        },
+        {
+          "tagName": "th",
+          "tagValue": "<th></th>",
+          "TagComment": "Defines a header cell in a table",
+          "TagType": "Tables"
+        },
+        {
+          "tagName": "tr",
+          "tagValue": "<tr></tr>",
+          "TagComment": "Defines a row in a table",
+          "TagType": "Tables"
+        },
+        {
+          "tagName": "td",
+          "tagValue": "<td></td>",
+          "TagComment": "Defines a cell in a table",
+          "TagType": "Tables"
+        },
+        {
+          "tagName": "thead",
+          "tagValue": "<thead></thead>",
+          "TagComment": "Groups the header content in a table",
+          "TagType": "Tables"
+        },
+        {
+          "tagName": "tbody",
+          "tagValue": "<tbody></tbody>",
+          "TagComment": "Groups the body content in a table",
+          "TagType": "Tables"
+        },
+        {
+          "tagName": "tfoot",
+          "tagValue": "<tfoot></tfoot>",
+          "TagComment": "Groups the footer content in a table",
+          "TagType": "Tables"
+        },
+        {
+          "tagName": "col",
+          "tagValue": "<col>",
+          "TagComment": "Specifies column properties for each column within a <colgroup> element",
+          "TagType": "Tables"
+        },
+        {
+          "tagName": "colgroup",
+          "tagValue": "<colgroup></colgroup>",
+          "TagComment": "Specifies a group of one or more columns in a table for formatting",
+          "TagType": "Tables"
+        },
+        {
+          "tagName": "style",
+          "tagValue": "<style></style>",
+          "TagComment": "🎨Defines style information for a document🎨",
+          "TagType": "Styles and Semantics"
+        },
+        {
+          "tagName": "div",
+          "tagValue": "<div></div>",
+          "TagComment": "Defines a section in a document",
+          "TagType": "Styles and Semantics"
+        },
+        {
+          "tagName": "span",
+          "tagValue": "<span></span>",
+          "TagComment": "Defines a section in a document",
+          "TagType": "Styles and Semantics"
+        },
+        {
+          "tagName": "header",
+          "tagValue": "<header></header>",
+          "TagComment": "Defines a header for a document or section",
+          "TagType": "Styles and Semantics"
+        },
+        {
+          "tagName": "hgroup",
+          "tagValue": "<hgroup></hgroup>",
+          "TagComment": "Defines a header and related content",
+          "TagType": "Styles and Semantics"
+        },
+        {
+          "tagName": "footer",
+          "tagValue": "<footer></footer>",
+          "TagComment": "Defines a footer for a document or section",
+          "TagType": "Styles and Semantics"
+        },
+        {
+          "tagName": "main",
+          "tagValue": "<main></main>",
+          "TagComment": "Specifies the main content of a document",
+          "TagType": "Styles and Semantics"
+        },
+        {
+          "tagName": "section",
+          "tagValue": "<section></section>",
+          "TagComment": "Defines a section in a document",
+          "TagType": "Styles and Semantics"
+        },
+        {
+          "tagName": "search",
+          "tagValue": "<search></search>",
+          "TagComment": "Defines a search section",
+          "TagType": "Styles and Semantics"
+        },
+        {
+          "tagName": "article",
+          "tagValue": "<article></article>",
+          "TagComment": "Defines an article",
+          "TagType": "Styles and Semantics"
+        },
+        {
+          "tagName": "aside",
+          "tagValue": "<aside></aside>",
+          "TagComment": "Defines content aside from the page content",
+          "TagType": "Styles and Semantics"
+        },
+        {
+          "tagName": "details",
+          "tagValue": "<details></details>",
+          "TagComment": "Defines additional details that the user can view or hide",
+          "TagType": "Styles and Semantics"
+        },
+        {
+          "tagName": "dialog",
+          "tagValue": "<dialog></dialog>",
+          "TagComment": "Defines a dialog box or window",
+          "TagType": "Styles and Semantics"
+        },
+        {
+          "tagName": "summary",
+          "tagValue": "<summary></summary>",
+          "TagComment": "Defines a visible heading for a <details> element",
+          "TagType": "Styles and Semantics"
+        },
+        {
+          "tagName": "data",
+          "tagValue": "<data></data>",
+          "TagComment": "Adds a machine-readable translation of a given content",
+          "TagType": "Styles and Semantics"
+        },
+        {
+          "tagName": "meta",
+          "tagValue": "<meta>",
+          "TagComment": "Defines metadata about an HTML document",
+          "TagType": "Meta Info"
+        },
+        {
+          "tagName": "base",
+          "tagValue": "<base>",
+          "TagComment": "Specifies the base URL/target for all relative URLs in a document",
+          "TagType": "Meta Info"
+        },
+        {
+          "tagName": "script",
+          "tagValue": "<scrip></scrip>",
+          "TagComment": "💻Defines a client-side script💻",
+          "TagType": "Programming"
+        },
+        {
+          "tagName": "noscript",
+          "tagValue": "<noscript></noscript>",
+          "TagComment": "Defines an alternate content for users that do not support client-side scripts",
+          "TagType": "Programming"
+        },
+        {
+          "tagName": "embed",
+          "tagValue": "<embed></embed>",
+          "TagComment": "Defines a container for an external (non-HTML) application",
+          "TagType": "Programming"
+        },
+        {
+          "tagName": "object",
+          "tagValue": "<object></object>",
+          "TagComment": "Defines an embedded object",
+          "TagType": "Programming"
+        },
+        {
+          "tagName": "param",
+          "tagValue": "<param>",
+          "TagComment": "Defines a parameter for an object",
+          "TagType": "Programming"
+        },
+        {
+          "tagName": "svg",
+          "tagValue": "<svg></svg>",
+          "TagComment": "Defines a container for SVG graphics",
+          "TagType": "Images"
+        },
+        {
+          "tagName": "path",
+          "tagValue": "<path>",
+          "TagComment": "svg",
+          "TagType": "svg"
+        },
+        {
+          "tagName": "text",
+          "tagValue": "<text></text>",
+          "TagComment": "svg",
+          "TagType": "svg"
+        }
+      ];
 
 
-      function buildTable() {
-        const tableBody = getElementById1('tagsTable').getElementsByTagName('tbody')[0];
+    function buildTable() {
+      const tableBody = getElementById1('tagsTable').getElementsByTagName('tbody')[0];
 
-        tags.forEach((tag, index) => {
-          let row = tableBody.insertRow();
-          row.onclick = function (event) { chooseTag(index, event); };
+      tags.forEach((tag, index) => {
+        let row = tableBody.insertRow();
+        row.onclick = function (event) { chooseTag(index, event); };
 
-          let tagNameCell = row.insertCell(0);
-          let tagValueCell = row.insertCell(1);
-          let tagTypeCell = row.insertCell(2);
-          let tagCommentCell = row.insertCell(3);
+        let tagNameCell = row.insertCell(0);
+        let tagValueCell = row.insertCell(1);
+        let tagTypeCell = row.insertCell(2);
+        let tagCommentCell = row.insertCell(3);
 
-          tagNameCell.textContent = tag.tagName;
-          tagValueCell.textContent = tag.tagValue;
-          tagTypeCell.textContent = tag.TagType;
-          tagCommentCell.textContent = tag.TagComment;
-        });
-      }
-      function filterTable(column) {
-        let input, filter, table, tr, td, i, txtValue;
-        input = getElementById1("tagsTable").getElementsByTagName("thead")[0].getElementsByTagName("input")[column];
-        filter = input.value.toUpperCase();
-        table = getElementById1("tagsTable");
-        tr = table.getElementsByTagName("tr");
+        tagNameCell.textContent = tag.tagName;
+        tagValueCell.textContent = tag.tagValue;
+        tagTypeCell.textContent = tag.TagType;
+        tagCommentCell.textContent = tag.TagComment;
+      });
+    }
+    function filterTable(column) {
+      let input, filter, table, tr, td, i, txtValue;
+      input = getElementById1("tagsTable").getElementsByTagName("thead")[0].getElementsByTagName("input")[column];
+      filter = input.value.toUpperCase();
+      table = getElementById1("tagsTable");
+      tr = table.getElementsByTagName("tr");
 
-        for (i = 2; i < tr.length; i++) {
-          td = tr[i].getElementsByTagName("td")[column];
-          if (td) {
-            txtValue = td.textContent || td.innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-              tr[i].style.display = "";
-            } else {
-              tr[i].style.display = "none";
-            }
+      for (i = 2; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[column];
+        if (td) {
+          txtValue = td.textContent || td.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
           }
         }
       }
-      function chooseTag(index, event) {
-        log1('in')
-        log1(event)
-        let chosenTag = tags[index];
-        //alert("Chosen Tag Name: " + chosenTag.tagName + "\nChosen Tag Value: " + chosenTag.tagValue);
+    }
+    function chooseTag(index, event) {
+      log1('in')
+      log1(event)
+      let chosenTag = tags[index];
+      //alert("Chosen Tag Name: " + chosenTag.tagName + "\nChosen Tag Value: " + chosenTag.tagValue);
 
-        // Get the fieldset attributes
-        const fieldset = event.currentTarget.closest('fieldset');
-        if (fieldset) {
-          const fieldsetId = fieldset.id;
-          const fieldsetAction = fieldset.getAttribute('action');
-          const apply_to_copies = fieldset.getAttribute('copiesOfInserting');
-          log1("Fieldset ID:", fieldsetId);
-          log1("Fieldset Action:", fieldsetAction);
-          const splited = fieldsetId.split(';')
-          splited.shift()
-          splited.join(';')
-          const el =
-          {
-            time: (new Date()).getTime(),
-            action: fieldsetAction,
-            target_element: splited.join(';'),
+      // Get the fieldset attributes
+      const fieldset = event.currentTarget.closest('fieldset');
+      if (fieldset) {
+        const fieldsetId = fieldset.id;
+        const fieldsetAction = fieldset.getAttribute('action');
+        const apply_to_copies = fieldset.getAttribute('copiesOfInserting');
+        log1("Fieldset ID:", fieldsetId);
+        log1("Fieldset Action:", fieldsetAction);
+        const splited = fieldsetId.split(';')
+        splited.shift()
+        splited.join(';')
+        const el =
+        {
+          time: (new Date()).getTime(),
+          action: fieldsetAction,
+          target_element: splited.join(';'),
 
-          }
-          const applyToCopies2 = fieldset.querySelector('#applyForCopies2').checked
-          if (applyToCopies2) {
-            el.options = { apply_to_copies: true }
-            el.target_element = el.target_element.split(':')[0].replace('-tree', '') + '-tree'
-          }
-          const actionInReplace2 = fieldset.querySelector('#actionInReplace2').checked
-          if (actionInReplace2) {
-            el.options ? (el.options.actionInReplace = true) : (el.options = { actionInReplace: true })
-            if (el.target_element.split(':')[1] && (el.target_element.split(':')[1] === getElementById1(el.target_element.replace('-tree', '')).getAttribute('data-replaceID'))) {
-              el.target_element = el.target_element.split(':')[0] + "-tree"
-            }
-
-          }
-          const positionChecked = fieldset.querySelector('#position-checkbox').checked
-          if (positionChecked) {
-            const positionV = fieldset.querySelector('#position-number').value
-            const start = fieldset.querySelector('#position-start-checkbox').checked
-            const position = start ? 'start-' + positionV : 'end-' + positionV
-            el.options ? (el.options.position = position) : (el.options = { position })
-          }
-          if (fieldsetAction === 'ChangeTag') {
-            el.tag_change = chosenTag.tagName
-          }
-
-          else {
-            el.inserted_element = { type: 'tag', tagValue: chosenTag.tagValue, tagName: chosenTag.tagName, id: generateUUID() }
-          }
-          pushAction(el)
-          fieldset.remove()
         }
-      }
+        const applyToCopies2 = fieldset.querySelector('#applyForCopies2').checked
+        if (applyToCopies2) {
+          el.options = { apply_to_copies: true }
+          el.target_element = el.target_element.split(':')[0].replace('-tree', '') + '-tree'
+        }
+        const actionInReplace2 = fieldset.querySelector('#actionInReplace2').checked
+        if (actionInReplace2) {
+          el.options ? (el.options.actionInReplace = true) : (el.options = { actionInReplace: true })
+          if (el.target_element.split(':')[1] && (el.target_element.split(':')[1] === getElementById1(el.target_element.replace('-tree', '')).getAttribute('data-replaceID'))) {
+            el.target_element = el.target_element.split(':')[0] + "-tree"
+          }
 
-      window.onload = buildTable;    
+        }
+        const positionChecked = fieldset.querySelector('#position-checkbox').checked
+        if (positionChecked) {
+          const positionV = fieldset.querySelector('#position-number').value
+          const start = fieldset.querySelector('#position-start-checkbox').checked
+          const position = start ? 'start-' + positionV : 'end-' + positionV
+          el.options ? (el.options.position = position) : (el.options = { position })
+        }
+        if (fieldsetAction === 'ChangeTag') {
+          el.tag_change = chosenTag.tagName
+        }
+
+        else {
+          el.inserted_element = { type: 'tag', tagValue: chosenTag.tagValue, tagName: chosenTag.tagName, id: generateUUID() }
+        }
+        pushAction(el)
+        fieldset.remove()
+      }
+    }
+
+    window.onload = buildTable;    
   </script>
 
   <style>
@@ -16429,149 +16429,149 @@ headers: {
     }
   </style>
   <script>
-      function mouseOverTree(e) {
-        // Highlight this button in red
-        e.target.classList.add('highlight-red');
+    function mouseOverTree(e) {
+      // Highlight this button in red
+      e.target.classList.add('highlight-red');
 
-        let parentFieldset = e.target.closest('[data-element="code-tree-tag"]');
+      let parentFieldset = e.target.closest('[data-element="code-tree-tag"]');
 
-        // Highlight the left border of the parent fieldset in red
-        if (parentFieldset) {
-          parentFieldset.classList.add('highlight-left-border-red');
-        }
-
-        // Highlight the left border of sibling fieldsets and their direct child buttons in red
-        Array.from(parentFieldset.parentElement.children).forEach(sibling => {
-          if (sibling !== parentFieldset && sibling.getAttribute('data-element') === 'code-tree-tag') {
-            sibling.classList.add('highlight-left-border-red');
-            Array.from(sibling.children).forEach(child => {
-              if (child.tagName === 'BUTTON' && child.getAttribute('data-element') === 'code-tree-show-hide-button') {
-                child.classList.add('highlight-red');
-              }
-            });
-          }
-        });
-
-        // Highlight the left border and buttons of direct child fieldsets of parentFieldset in blue
-        Array.from(parentFieldset.children).forEach(child => {
-          if (child.tagName === 'FIELDSET' && child.getAttribute('data-element') === 'code-tree-tag') {
-            child.classList.add('highlight-left-border-blue');
-            Array.from(child.children).forEach(grandchild => {
-              if (grandchild.tagName === 'BUTTON' && grandchild.getAttribute('data-element') === 'code-tree-show-hide-button') {
-                grandchild.classList.add('highlight-blue');
-              }
-            });
-          }
-        });
+      // Highlight the left border of the parent fieldset in red
+      if (parentFieldset) {
+        parentFieldset.classList.add('highlight-left-border-red');
       }
-      function mouseOutTree(e) {
-        let parentFieldset = e.target.closest('[data-element="code-tree-tag"]');
 
-        // Remove the red and blue highlights
-        e.target.classList.remove('highlight-red');
-        if (parentFieldset) {
-          parentFieldset.classList.remove('highlight-left-border-red');
+      // Highlight the left border of sibling fieldsets and their direct child buttons in red
+      Array.from(parentFieldset.parentElement.children).forEach(sibling => {
+        if (sibling !== parentFieldset && sibling.getAttribute('data-element') === 'code-tree-tag') {
+          sibling.classList.add('highlight-left-border-red');
+          Array.from(sibling.children).forEach(child => {
+            if (child.tagName === 'BUTTON' && child.getAttribute('data-element') === 'code-tree-show-hide-button') {
+              child.classList.add('highlight-red');
+            }
+          });
         }
-        Array.from(parentFieldset.parentElement.children).forEach(sibling => {
-          if (sibling !== parentFieldset && sibling.getAttribute('data-element') === 'code-tree-tag') {
-            sibling.classList.remove('highlight-left-border-red');
-            Array.from(sibling.children).forEach(child => {
-              if (child.tagName === 'BUTTON' && child.getAttribute('data-element') === 'code-tree-show-hide-button') {
-                child.classList.remove('highlight-red');
-              }
-            });
-          }
-        });
-        Array.from(parentFieldset.children).forEach(child => {
-          if (child.tagName === 'FIELDSET' && child.getAttribute('data-element') === 'code-tree-tag') {
-            child.classList.remove('highlight-left-border-blue');
-            Array.from(child.children).forEach(grandchild => {
-              if (grandchild.tagName === 'BUTTON' && grandchild.getAttribute('data-element') === 'code-tree-show-hide-button') {
-                grandchild.classList.remove('highlight-blue');
-              }
-            });
-          }
-        });
-      }
-      querySelectorAll1('button[data-element="code-tree-show-hide-button"]').forEach(button => {
-        button.addEventListener('mouseover', mouseOverTree);
-
-        button.addEventListener('mouseout', mouseOutTree);
       });
+
+      // Highlight the left border and buttons of direct child fieldsets of parentFieldset in blue
+      Array.from(parentFieldset.children).forEach(child => {
+        if (child.tagName === 'FIELDSET' && child.getAttribute('data-element') === 'code-tree-tag') {
+          child.classList.add('highlight-left-border-blue');
+          Array.from(child.children).forEach(grandchild => {
+            if (grandchild.tagName === 'BUTTON' && grandchild.getAttribute('data-element') === 'code-tree-show-hide-button') {
+              grandchild.classList.add('highlight-blue');
+            }
+          });
+        }
+      });
+    }
+    function mouseOutTree(e) {
+      let parentFieldset = e.target.closest('[data-element="code-tree-tag"]');
+
+      // Remove the red and blue highlights
+      e.target.classList.remove('highlight-red');
+      if (parentFieldset) {
+        parentFieldset.classList.remove('highlight-left-border-red');
+      }
+      Array.from(parentFieldset.parentElement.children).forEach(sibling => {
+        if (sibling !== parentFieldset && sibling.getAttribute('data-element') === 'code-tree-tag') {
+          sibling.classList.remove('highlight-left-border-red');
+          Array.from(sibling.children).forEach(child => {
+            if (child.tagName === 'BUTTON' && child.getAttribute('data-element') === 'code-tree-show-hide-button') {
+              child.classList.remove('highlight-red');
+            }
+          });
+        }
+      });
+      Array.from(parentFieldset.children).forEach(child => {
+        if (child.tagName === 'FIELDSET' && child.getAttribute('data-element') === 'code-tree-tag') {
+          child.classList.remove('highlight-left-border-blue');
+          Array.from(child.children).forEach(grandchild => {
+            if (grandchild.tagName === 'BUTTON' && grandchild.getAttribute('data-element') === 'code-tree-show-hide-button') {
+              grandchild.classList.remove('highlight-blue');
+            }
+          });
+        }
+      });
+    }
+    querySelectorAll1('button[data-element="code-tree-show-hide-button"]').forEach(button => {
+      button.addEventListener('mouseover', mouseOverTree);
+
+      button.addEventListener('mouseout', mouseOutTree);
+    });
   </script>
   <!-- dublicate for components-->
   <script>
-      function mouseOver(e) {
-        // Highlight this button in red
-        e.target.classList.add('highlight-red');
+    function mouseOver(e) {
+      // Highlight this button in red
+      e.target.classList.add('highlight-red');
 
-        let parentFieldset = e.target.closest('[data-element="component-tree-tag"]');
+      let parentFieldset = e.target.closest('[data-element="component-tree-tag"]');
 
-        // Highlight the left border of the parent fieldset in red
-        if (parentFieldset) {
-          parentFieldset.classList.add('highlight-left-border-red');
-        }
-
-        // Highlight the left border of sibling fieldsets and their direct child buttons in red
-        Array.from(parentFieldset.parentElement.children).forEach(sibling => {
-          if (sibling !== parentFieldset && sibling.getAttribute('data-element') === 'component-tree-tag') {
-            sibling.classList.add('highlight-left-border-red');
-            Array.from(sibling.children).forEach(child => {
-              if (child.tagName === 'BUTTON' && child.getAttribute('data-element') === 'component-tree-show-hide-button') {
-                child.classList.add('highlight-red');
-              }
-            });
-          }
-        });
-
-        // Highlight the left border and buttons of direct child fieldsets of parentFieldset in blue
-        Array.from(parentFieldset.children).forEach(child => {
-          if (child.tagName === 'FIELDSET' && child.getAttribute('data-element') === 'component-tree-tag') {
-            child.classList.add('highlight-left-border-blue');
-            Array.from(child.children).forEach(grandchild => {
-              if (grandchild.tagName === 'BUTTON' && grandchild.getAttribute('data-element') === 'component-tree-show-hide-button') {
-                grandchild.classList.add('highlight-blue');
-              }
-            });
-          }
-        });
+      // Highlight the left border of the parent fieldset in red
+      if (parentFieldset) {
+        parentFieldset.classList.add('highlight-left-border-red');
       }
-      function mouseOut(e) {
-        let parentFieldset = e.target.closest('[data-element="component-tree-tag"]');
 
-        // Remove the red and blue highlights
-        e.target.classList.remove('highlight-red');
-        if (parentFieldset) {
-          parentFieldset.classList.remove('highlight-left-border-red');
+      // Highlight the left border of sibling fieldsets and their direct child buttons in red
+      Array.from(parentFieldset.parentElement.children).forEach(sibling => {
+        if (sibling !== parentFieldset && sibling.getAttribute('data-element') === 'component-tree-tag') {
+          sibling.classList.add('highlight-left-border-red');
+          Array.from(sibling.children).forEach(child => {
+            if (child.tagName === 'BUTTON' && child.getAttribute('data-element') === 'component-tree-show-hide-button') {
+              child.classList.add('highlight-red');
+            }
+          });
         }
-        Array.from(parentFieldset.parentElement.children).forEach(sibling => {
-          if (sibling !== parentFieldset && sibling.getAttribute('data-element') === 'component-tree-tag') {
-            sibling.classList.remove('highlight-left-border-red');
-            Array.from(sibling.children).forEach(child => {
-              if (child.tagName === 'BUTTON' && child.getAttribute('data-element') === 'component-tree-show-hide-button') {
-                child.classList.remove('highlight-red');
-              }
-            });
-          }
-        });
-        Array.from(parentFieldset.children).forEach(child => {
-          if (child.tagName === 'FIELDSET' && child.getAttribute('data-element') === 'component-tree-tag') {
-            child.classList.remove('highlight-left-border-blue');
-            Array.from(child.children).forEach(grandchild => {
-              if (grandchild.tagName === 'BUTTON' && grandchild.getAttribute('data-element') === 'component-tree-show-hide-button') {
-                grandchild.classList.remove('highlight-blue');
-              }
-            });
-          }
-        });
-
-      }
-      querySelectorAll1('button[data-element="component-tree-show-hide-button"]').forEach(button => {
-        button.addEventListener('mouseover', mouseOver);
-
-        button.addEventListener('mouseout', mouseOut);
-
       });
+
+      // Highlight the left border and buttons of direct child fieldsets of parentFieldset in blue
+      Array.from(parentFieldset.children).forEach(child => {
+        if (child.tagName === 'FIELDSET' && child.getAttribute('data-element') === 'component-tree-tag') {
+          child.classList.add('highlight-left-border-blue');
+          Array.from(child.children).forEach(grandchild => {
+            if (grandchild.tagName === 'BUTTON' && grandchild.getAttribute('data-element') === 'component-tree-show-hide-button') {
+              grandchild.classList.add('highlight-blue');
+            }
+          });
+        }
+      });
+    }
+    function mouseOut(e) {
+      let parentFieldset = e.target.closest('[data-element="component-tree-tag"]');
+
+      // Remove the red and blue highlights
+      e.target.classList.remove('highlight-red');
+      if (parentFieldset) {
+        parentFieldset.classList.remove('highlight-left-border-red');
+      }
+      Array.from(parentFieldset.parentElement.children).forEach(sibling => {
+        if (sibling !== parentFieldset && sibling.getAttribute('data-element') === 'component-tree-tag') {
+          sibling.classList.remove('highlight-left-border-red');
+          Array.from(sibling.children).forEach(child => {
+            if (child.tagName === 'BUTTON' && child.getAttribute('data-element') === 'component-tree-show-hide-button') {
+              child.classList.remove('highlight-red');
+            }
+          });
+        }
+      });
+      Array.from(parentFieldset.children).forEach(child => {
+        if (child.tagName === 'FIELDSET' && child.getAttribute('data-element') === 'component-tree-tag') {
+          child.classList.remove('highlight-left-border-blue');
+          Array.from(child.children).forEach(grandchild => {
+            if (grandchild.tagName === 'BUTTON' && grandchild.getAttribute('data-element') === 'component-tree-show-hide-button') {
+              grandchild.classList.remove('highlight-blue');
+            }
+          });
+        }
+      });
+
+    }
+    querySelectorAll1('button[data-element="component-tree-show-hide-button"]').forEach(button => {
+      button.addEventListener('mouseover', mouseOver);
+
+      button.addEventListener('mouseout', mouseOut);
+
+    });
 
   </script>
 
