@@ -7628,6 +7628,9 @@ checkbox1.setAttribute('hidden', "");
           pathItemSku = pathItem.sku
         }
       }
+      if(importAttribute){
+        await cleanImport(importAttribute)
+      }
       await handleMenus()
       try {
         await onOpen1()
@@ -13183,7 +13186,7 @@ elementsToRemove.forEach(element => element.remove());
       inputValue = items1.data
       let sku1 = pathItemSku || selectedSku
       // save content
-      cleanImport(attr)
+      
       if (attr === 'meta_description') {
         const id1 = querySelectorAll1('meta[name="description"]')[0].id
         const payload2 = {
