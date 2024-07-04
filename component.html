@@ -32,7 +32,7 @@
         <button class="b-1 " id="toggle-head" onclick="toggleHead()">🗿</button>
         <button class="b-1 " id="toggle-generated-page" onclick="toggleGeneratedPage()">👁️</button>
         <button hidden id="refresh-page" class="b-1" onclick="reloadPage(event)">🔄</button>
-        <button hidden id="remove-duplicate-actions" onclick="removeDuplicatedActions(event)" class="b-1">🧹</button>
+        <button hidden id="remove-duplicate-actions" onclick="removeActions(event)" class="b-1">🧹</button>
 
 
         <input hidden id="search-actions" type="text" placeholder="🔎 Search actions" style="  padding: 5px; 
@@ -3166,6 +3166,22 @@
         const setAttributeActions = list.filter(e => e.action === 'setAttribute')
         const commentActions = list.filter(e => e.action === 'Add_Comment')
       })
+    }
+    const removeActions = (event)=>{
+      const filteredActions = actions.filter(action=>action.action!=='Add_Component')
+      const ps = filteredActions.map(
+          action =>
+            fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${action.id}:${action.sk}`, {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+                // Add any additional headers if needed
+              },
+            })
+        );
+
+        await Promise.all(ps)
+        location.reload()
     }
     const toggleGeneratedPage = () => {
       const s = localStorage.getItem('generatedPageToggle')
