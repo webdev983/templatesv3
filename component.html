@@ -7592,6 +7592,7 @@ checkbox1.setAttribute('hidden', "");
         const responseData = await getRes(idFromQuery, true)
         const { items } = responseData
         pathItem = items.find(e => e.sk === 'path')
+        actions = items.filter(i => i.action)
         //converst lsi1 to old
         pathItemPath = convertToOldPath(pathItem.lsi1)
         site1 = pathItemPath.split('/')[0]
@@ -12194,7 +12195,7 @@ elementsToRemove.forEach(element => element.remove());
         const { items } = responseData
         //pathItem = items.find(e => e.sk === 'path')
         const map = items.find(e => e.sk === 'componentsMap')
-        actions = items.filter(i => i.action)
+        //actions = items.filter(i => i.action)
         let r;
 
         if (map && localStorage.getItem('executionToggle')) {
@@ -12427,7 +12428,7 @@ elementsToRemove.forEach(element => element.remove());
             }
 
 
-            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: componentPath, prev: componentPath, next: [] }, "", '', attachId)
+            actions.find(e=>e.sk ===item.sk) && await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: componentPath, prev: componentPath, next: [] }, "", '', attachId)
           }
 
         }
