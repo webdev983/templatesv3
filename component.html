@@ -14734,7 +14734,8 @@ headers: {
       const cloned = original.cloneNode(true)
       cloned.removeAttribute('hidden')
       cloned.setAttribute('id',v)
-      original.parentNode.append(cloned)
+      cloned.querySelector('#condition-table-caption-value').textContent = v
+      original.parentNode.insertBefore(cloned,original)
     }
     const addCondition = async (event) => {
 
