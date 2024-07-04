@@ -14750,8 +14750,16 @@ headers: {
       wareHouseEl.textContent = selectedText
       siteEl.textContent = pathItemPath.split('/')[0]
       const originalRow = cloned.querySelector('#sku-variable-row[hidden]')
-
-
+      //get combinations
+      const existing = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=sku-variables;&startsWith=true`)
+          .then(response => response.json())
+      for(const item of existing.items){
+        const comb = item.sk.replace('sku-variables;',"")
+        const clonedRow = originalRow.cloneNode(true)
+        clonedRow.removeAttribute('hidden')
+        clonedRow.querySelector('#sku-variable-xz').innerHTML = comb
+        originalRow.parentNode.append(clonedRow)
+      }
 
       original.parentNode.insertBefore(cloned, original)
 
