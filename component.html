@@ -13150,6 +13150,26 @@ elementsToRemove.forEach(element => element.remove());
       await Promise.all(promises)
 
     }
+    const cleanImport =async (att) => {
+      const els = querySelectorAll1(`[data-import-${attr}]`)
+      for (const el of Array.from(els)) {
+        const id = el.id
+        const filteredActions = actions.filter(e => e.target_element.startsWith(id.split(':')[0]))
+        actions = actions.filter(e =>!e.target_element.startsWith(id.split(':')[0]))
+        const ps = filteredActions.map(
+          action =>
+            fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${action.id}:${action.sk}`, {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+                // Add any additional headers if needed
+              },
+            });
+          
+        )
+        await Promise.All(ps)
+      }
+    }
     const handleImportGpt = async (valueId, attr) => {
       const items1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${valueId}:import`, {
         method: 'GET',
@@ -13160,6 +13180,7 @@ elementsToRemove.forEach(element => element.remove());
       inputValue = items1.data
       let sku1 = pathItemSku || selectedSku
       // save content
+      cleanImport(attr)
       if (attr === 'meta_description') {
         const id1 = querySelectorAll1('meta[name="description"]')[0].id
         const payload2 = {
@@ -14753,7 +14774,7 @@ headers: {
       //get combinations
       const existing = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=sku-variables;&startsWith=true`)
         .then(response => response.json())
-      
+
 
       for (let i = 0; i < existing.items.length; i++) {
         const item = existing.items[i]
@@ -14763,10 +14784,10 @@ headers: {
         clonedRow.removeAttribute('hidden')
         const elements = comb.split(';')
         elements.pop()
-        for(const element of elements){
+        for (const element of elements) {
           const clonedSpan = span.cloneNode(true)
-          
-          const [key,value] = element.split(':')
+
+          const [key, value] = element.split(':')
           clonedSpan.removeAttribute('hidden')
           clonedSpan.querySelector('#sku-attribute-key-xz').textContent = key
           clonedSpan.querySelector('#sku-attribute-value-xz').textContent = value
