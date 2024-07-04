@@ -13153,7 +13153,11 @@ elementsToRemove.forEach(element => element.remove());
           typeof e.target_element === 'string' &&  // Check if target_element is a string
           e.target_element.startsWith(id.split(':')[0])  // Call startsWith only if target_element is a string
         );
-        actions = actions.filter(e => !e.target_element.startsWith(id.split(':')[0]))
+        actions = actions.filter(e =>
+          !e.target_element ||
+          typeof e.target_element !== 'string' ||  // Check if target_element is a string
+          !e.target_element.startsWith(id.split(':')[0])  // Call startsWith only if target_element is a string
+        );
         const ps = filteredActions.map(
           action =>
             fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${action.id}:${action.sk}`, {
