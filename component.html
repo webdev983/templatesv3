@@ -7628,9 +7628,6 @@ checkbox1.setAttribute('hidden', "");
           pathItemSku = pathItem.sku
         }
       }
-      if(importAttribute){
-        cleanImport(attr)
-      }
       await handleMenus()
       try {
         await onOpen1()
@@ -13161,7 +13158,7 @@ elementsToRemove.forEach(element => element.remove());
           typeof e.target_element !== 'string' ||  // Check if target_element is a string
           !e.target_element.startsWith(id.split(':')[0])  // Call startsWith only if target_element is a string
         );
-        console.log(JSON.stringify(filteredActions))
+        console.log(JSON.stringify(filtered))
         const ps = filteredActions.map(
           action =>
             fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${action.id}:${action.sk}`, {
