@@ -3167,21 +3167,21 @@
         const commentActions = list.filter(e => e.action === 'Add_Comment')
       })
     }
-    const removeActions = async(event)=>{
-      const filteredActions = actions.filter(action=>action.action!=='Add_Component')
+    const removeActions = async (event) => {
+      const filteredActions = actions.filter(action => action.action !== 'Add_Component')
       const ps = filteredActions.map(
-          action =>
-            fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${action.id}:${action.sk}`, {
-              method: 'DELETE',
-              headers: {
-                'Content-Type': 'application/json',
-                // Add any additional headers if needed
-              },
-            })
-        );
+        action =>
+          fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${action.id}:${action.sk}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              // Add any additional headers if needed
+            },
+          })
+      );
 
-        await Promise.all(ps)
-        location.reload()
+      await Promise.all(ps)
+      location.reload()
     }
     const toggleGeneratedPage = () => {
       const s = localStorage.getItem('generatedPageToggle')
@@ -13184,20 +13184,20 @@ elementsToRemove.forEach(element => element.remove());
     }
     const cleanImport = async (attr) => {
       const els = querySelectorAll1(`[data-import-${attr}]`)
-      for (const el of Array.from(els)) {
+      for (const el of els) {
         const id = el.id
-        console.log('to remove id '+id)
+        console.log('to remove id ' + id)
         const filteredActions = actions.filter(e =>
           e.target_element &&
           typeof e.target_element === 'string' &&  // Check if target_element is a string
-          e.target_element.replace('-tree','').startsWith(id.split(':')[0])  // Call startsWith only if target_element is a string
+          e.target_element.replace('-tree', '').startsWith(id.split(':')[0])  // Call startsWith only if target_element is a string
         );
         actions = actions.filter(e =>
           !e.target_element ||
           typeof e.target_element !== 'string' ||  // Check if target_element is a string
-          !e.target_element.replace('-tree','').startsWith(id.split(':')[0])  // Call startsWith only if target_element is a string
+          !e.target_element.replace('-tree', '').startsWith(id.split(':')[0])  // Call startsWith only if target_element is a string
         );
-        console.log('filtered '+JSON.stringify(filteredActions))
+        console.log('filtered ' + JSON.stringify(filteredActions))
         const ps = filteredActions.map(
           action =>
             fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${action.id}:${action.sk}`, {
@@ -13208,8 +13208,33 @@ elementsToRemove.forEach(element => element.remove());
               },
             })
         );
-
         await Promise.all(ps)
+        if (el.tagName === 'li' || el.tagName === 'ol') {
+          const id = el.children[0].id
+          const filteredActions = actions.filter(e =>
+            e.target_element &&
+            typeof e.target_element === 'string' &&  // Check if target_element is a string
+            e.target_element.replace('-tree', '').startsWith(id.split(':')[0])  // Call startsWith only if target_element is a string
+          );
+          actions = actions.filter(e =>
+            !e.target_element ||
+            typeof e.target_element !== 'string' ||  // Check if target_element is a string
+            !e.target_element.replace('-tree', '').startsWith(id.split(':')[0])  // Call startsWith only if target_element is a string
+          );
+          const ps = filteredActions.map(
+            action =>
+              fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${action.id}:${action.sk}`, {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  // Add any additional headers if needed
+                },
+              })
+          ); 
+          await Promise.all(ps)
+        }
+
+
       }
     }
     const handleImportGpt = async (valueId, attr) => {
@@ -13221,7 +13246,7 @@ elementsToRemove.forEach(element => element.remove());
       }).then(el => el.json())
       inputValue = items1.data
       let sku1 = pathItemSku || selectedSku
-      
+
       if (attr === 'meta_description') {
         const id1 = querySelectorAll1('meta[name="description"]')[0].id
         const payload2 = {
