@@ -1311,7 +1311,7 @@
 
                 <tr id="sku-variable-row" hidden>
                   <th>
-                    <span id="sku-variable-xz">
+                    <span id="sku-variable-xz" hidden>
                       <span id="sku-attribute-key-xz" class="l-3 sku-attribute">color</span>
                       <span class="l-3">:</span>
                       <span id="sku-attribute-value-xz" class="l-3">white</span>
@@ -14729,7 +14729,7 @@ headers: {
         body: JSON.stringify(item),
       });
     }
-    const generateConditionTable = async(v) => {
+    const generateConditionTable = async (v) => {
       console.log(v)
       const original = document.querySelector('#condition-price-table[hidden]')
       const cloned = original.cloneNode(true)
@@ -14740,10 +14740,10 @@ headers: {
 
       const selectElement = document.getElementById('warehouse_select');
 
-     
+
       const selectedOption = selectElement.options[selectElement.selectedIndex];
 
-      
+
       const selectedText = selectedOption.textContent.trim();
       const wareHouseEl = cloned.querySelector('#sku-condition-warehouse-name-value')
       const siteEl = cloned.querySelector('#sku-condition-site-name-value')
@@ -14752,12 +14752,25 @@ headers: {
       const originalRow = cloned.querySelector('#sku-variable-row[hidden]')
       //get combinations
       const existing = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=sku-variables;&startsWith=true`)
-          .then(response => response.json())
-      for(const item of existing.items){
-        const comb = item.sk.replace('sku-variables;',"")
+        .then(response => response.json())
+      
+
+      for (let i = 0; i < existing.items.length; i++) {
+        const item = existing.items[i]
+        const comb = item.sk.replace('sku-variables;', "")
         const clonedRow = originalRow.cloneNode(true)
+        const span = clonedRow.querySelector('#sku-variable-xz[hidden]')
         clonedRow.removeAttribute('hidden')
-        clonedRow.querySelector('#sku-variable-xz').innerHTML = comb
+        const elements = comb.split(';')
+        elements.pop()
+        for(const element of elements){
+          const clonedSpan = span.cloneNode(true)
+          
+          const [key,value] = element.split(':')
+          clonedSpan.querySelector('#sku-attribute-key-xz').textContent = key
+          clonedSpan.querySelector('#sku-attribute-value-xz').textContent = value
+          span.parentNode.append(clonedSpan)
+        }
         originalRow.parentNode.append(clonedRow)
       }
 
