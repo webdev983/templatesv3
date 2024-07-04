@@ -7592,7 +7592,6 @@ checkbox1.setAttribute('hidden', "");
         const responseData = await getRes(idFromQuery, true)
         const { items } = responseData
         pathItem = items.find(e => e.sk === 'path')
-        actions = items.filter(i => i.action)
         //converst lsi1 to old
         pathItemPath = convertToOldPath(pathItem.lsi1)
         site1 = pathItemPath.split('/')[0]
@@ -7630,7 +7629,7 @@ checkbox1.setAttribute('hidden', "");
         }
       }
       if(importAttribute){
-        await cleanImport(importAttribute)
+        cleanImport(attr)
       }
       await handleMenus()
       try {
@@ -12195,7 +12194,7 @@ elementsToRemove.forEach(element => element.remove());
         const { items } = responseData
         //pathItem = items.find(e => e.sk === 'path')
         const map = items.find(e => e.sk === 'componentsMap')
-        //actions = items.filter(i => i.action)
+        actions = items.filter(i => i.action)
         let r;
 
         if (map && localStorage.getItem('executionToggle')) {
@@ -12428,7 +12427,7 @@ elementsToRemove.forEach(element => element.remove());
             }
 
 
-            actions.find(e=>e.sk ===item.sk) && await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: componentPath, prev: componentPath, next: [] }, "", '', attachId)
+            await pushAction({ ...item, time: item.sk }, true, false, replaceActions, newId, noComp11, noSubComp, lvl, removeActions, replaceId, componentPath, { current: componentPath, prev: componentPath, next: [] }, "", '', attachId)
           }
 
         }
@@ -13187,7 +13186,7 @@ elementsToRemove.forEach(element => element.remove());
       inputValue = items1.data
       let sku1 = pathItemSku || selectedSku
       // save content
-      
+      cleanImport(attr)
       if (attr === 'meta_description') {
         const id1 = querySelectorAll1('meta[name="description"]')[0].id
         const payload2 = {
