@@ -13150,12 +13150,12 @@ elementsToRemove.forEach(element => element.remove());
       await Promise.all(promises)
 
     }
-    const cleanImport =async (att) => {
+    const cleanImport = async (att) => {
       const els = querySelectorAll1(`[data-import-${attr}]`)
       for (const el of Array.from(els)) {
         const id = el.id
         const filteredActions = actions.filter(e => e.target_element.startsWith(id.split(':')[0]))
-        actions = actions.filter(e =>!e.target_element.startsWith(id.split(':')[0]))
+        actions = actions.filter(e => !e.target_element.startsWith(id.split(':')[0]))
         const ps = filteredActions.map(
           action =>
             fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${action.id}:${action.sk}`, {
@@ -13164,9 +13164,9 @@ elementsToRemove.forEach(element => element.remove());
                 'Content-Type': 'application/json',
                 // Add any additional headers if needed
               },
-            });
-          
-        )
+            })
+        );
+
         await Promise.All(ps)
       }
     }
