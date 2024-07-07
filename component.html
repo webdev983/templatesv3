@@ -1212,10 +1212,25 @@
         </div>
 
         <div id="sku_filled">
-
+<!--
           <div id="warehouse_select" style="margin-left: 25px;">
             <label class="l-3"><input type="radio" name="warehouse_select" id="warehouse" />🏬</label>
           </div>
+
+          -->
+          <select id="warehouse_select" class="select-1"
+            style="display: inline-block; margin-bottom: 7px; margin-left: 30px;">
+            <option>⬇️ Select</option>
+            <option hidden id="warehouse_select_option">
+              🏬
+
+            </option>
+          </select>
+          <select id="destionation-select" class="select-1"
+            style="display: inline-block; margin-bottom: 7px; margin-left: 30px;">
+            <option>⬇️ Select</option>
+            <option hidden id="destination_select_option"><span>🏬</span><span id="destionation-value"></span></option>
+          </select>
 
 
           <table id="sku-table" class="table-sku" style="margin-left: 30px; margin-top: 10px;">
@@ -1224,9 +1239,16 @@
                 <th>
                   <span class="l-3 b-dark-blue">sku variables</span>
                 </th>
-                <td id="sku-variable-condition" hidden>
-                  <span class="l-3">📦</span>
+                <td id="sku-variable-condition" >
+                  <span style="float: left;">
+                  <span class="l-3" >📦</span>
+                  <span class="l-3 b-dark-blue" id="sku-variable-condition-value">new</span>
+                </span>
+                <span style="float: right;">
+                  <span class="l-3">💰</span>
                   <span class="l-3 b-dark-blue" id="sku-variable-condition-value"></span>
+                </span>
+
                 </td>
               </tr>
             </tbody>
@@ -1240,8 +1262,10 @@
                   <span>
                 </th>
 
-                <td id="all-td" hidden>
-                  <span id="all-quantity" class="l-3" contenteditable>0</span>
+                <td id="all-td" >
+                  <span id="all-quantity " style="float: left;" class="l-3" contenteditable>0</span>
+                  <span id="all-warehouse-price" style="float: right;" class="l-3" contenteditable>0</span>
+
                 </td>
               </tr>
               <tr id="sku-variable-row">
@@ -1253,8 +1277,10 @@
                     <span class="l-3">;</span>
                   </span>
                 </th>
-                <td id="sku-variable-td" hidden>
-                  <span id="sku-variable-quantity" class="l-3" contenteditable>0</span>
+                <td id="sku-variable-td" >
+                  <span id="sku-variable-quantity" style="float: left;" class="l-3" contenteditable>0</span>
+                  <span id="sku-variable-warehouse-price" style="float: right;" class="l-3" contenteditable>0</span>
+
                 </td>
               </tr>
             </tbody>
@@ -1321,13 +1347,18 @@
             </table>
           </div>
           <hr style="border-bottom: 2px solid #ffcc81; margin-top: 20px; margin-bottom: 20px;">
+          <!--
           <div id="destionation-select" style="margin-left: 25px;">
             <label class="l-3"><input type="radio" name="destionation-select" id="destination" />🏴</label>
           </div>
-
+-->
           <table class="table-sku" style="margin-left: 30px; margin-top: 10px;">
             <tbody>
               <tr>
+                <td>
+                  <span class="l-3 b-dark-blue">for all products</span>
+                </td>
+
                 <th>
                   <span class="l-3 b-dark-blue">ship method</span>
                 </th>
@@ -1352,6 +1383,9 @@
 
             <tbody>
               <tr id="sku-variable-row-all">
+                <td>
+                  <input  type="checkbox">
+                </td>
                 <th class="">
                   <span id="sku-variable-xz">
                     <span id="sku-attribute-key-xz" class="l-3 sku-attribute">fedex first overnight</span>
@@ -1372,6 +1406,9 @@
 
               </tr>
               <tr id="sku-variable-row-all">
+                <td>
+                <input  type="checkbox">
+              </td>
                 <th class="">
                   <span id="sku-variable-xz">
                     <span id="sku-attribute-key-xz" class="l-3 sku-attribute">fedex first overnight</span>
