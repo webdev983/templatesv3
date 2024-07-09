@@ -15172,6 +15172,38 @@ headers: {
         ),
       });
     }
+    const setAllQty = async (event) => {
+      const { target } = event
+      const condition = target.closest('td').getAttribute('condition')
+      const value = target.textContent.trim()
+      querySelectorAll1(`[condition="${condition}"]`).forEach(element => {
+        if (element.id !== "all-td" && !element.parentNode.hasAttribute('hidden')) {
+          element.querySelector('#sku-variable-quantity').textContent = value
+          element.querySelector('#sku-variable-quantity').onblur({ target: element.querySelector('#sku-variable-quantity') })
+        }
+      })
+    }
+    const setPriceWareHouse = async (event) => {
+      const { target } = event
+      const condition = target.closest('td').getAttribute('warehouse')
+      const value = target.textContent
+      const item = {
+        id: ownerid,
+        sk: condition,
+        qty: parseInt(value)
+
+      }
+      console.log()
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+          item
+        ),
+      });
+    }
     const setPriceWareHouseAll = async (event) => {
       const { target } = event
       const condition = target.closest('td').getAttribute('warehouse')
