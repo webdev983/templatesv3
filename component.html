@@ -15184,6 +15184,11 @@ headers: {
           original.parentNode.insertBefore(cloned, original)
         })
       }
+      let setWareHouse
+      if(skuQtyValue.length){
+        setWareHouse = skuQtyValue[0].sk.split(';').pop()
+      }
+      
       for (const element of skuVariables) {
 
 
@@ -15203,6 +15208,9 @@ headers: {
           if(foundV){
             qI.textContent = foundV?.qty || 0
             qI.setAttribute('warehouse',foundV.sk.split(';').pop())
+          }
+          else{
+            qI.setAttribute('warehouse',setWareHouse)
           }
           
           
