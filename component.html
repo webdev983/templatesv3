@@ -15178,8 +15178,9 @@ headers: {
       const value = target.textContent.trim()
       querySelectorAll1(`[condition="${condition}"]`).forEach(element => {
         if (element.id !== "all-td" && !element.parentNode.hasAttribute('hidden')) {
-          element.querySelector('#sku-variable-quantity').textContent = value
-          element.querySelector('#sku-variable-quantity').onblur({ target: element.querySelector('#sku-variable-quantity') })
+          const e = element.querySelector('#sku-variable-quantity')
+          e.textContent = value
+          e.onblur({ target: e })
         }
       })
     }
