@@ -15204,15 +15204,15 @@ headers: {
           'Content-Type': 'application/json',
         },
       }).then(e=>e.json()).then(res=>res.items[0])
-      item
-      console.log()
+      const pushItem ={...item,price:parseInt(value)}
+      console.log(JSON.stringify(pushItem))
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-          {...item,price:vparseInt(value)}
+          pushItem
         ),
       });
     }
