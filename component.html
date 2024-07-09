@@ -14992,6 +14992,8 @@ headers: {
         const clonedRow = originalRow.cloneNode(true)
         const span = clonedRow.querySelector('#sku-variable-xz[hidden]')
         clonedRow.removeAttribute('hidden')
+        clonedRow.querySelector('#sku-variable-price-warehouse').setAttribute('warehouse',selectElement.parentNode.id)
+        clonedRow.querySelector('#sku-variable-price-site').setAttribute('site',pathItemPath.split('/')[0])
         const elements = comb.split(';')
         elements.pop()
         for (const element of elements) {
@@ -15160,7 +15162,8 @@ headers: {
         ),
       });
     }
-    const setAllQty = async (event) => {
+    set
+    const setPriceWareHouseAll = async (event) => {
       const { target } = event
       const condition = target.closest('td').getAttribute('condition')
       const value = target.textContent.trim()
