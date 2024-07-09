@@ -1329,12 +1329,14 @@
                       <span>
                     </th>
                     <td id="sku-variable-price-warehouse-all">
-                      <strong id="sku-variable-price-warehouse-value-all" class="price-normal"
-                        contenteditable onBlur="setPriceWareHouseAll(event)">0</strong>
+                      <strong id="sku-variable-price-warehouse-value-all" class="price-normal" contenteditable
+                        onBlur="setPriceWareHouseAll(event)">0</strong>
                     </td>
                     <td id="sku-variable-price-all">
-                      <del onBlur="setPriceSiteOldAll(event)" id="sku-variable-price-all-old" class="price-old" contenteditable>0</del>
-                      <strong onBlur="setPriceSiteAll(event)" id="sku-variable-price-all-current" class="price-normal" contenteditable>0</strong>
+                      <del onBlur="setPriceSiteOldAll(event)" id="sku-variable-price-all-old" class="price-old"
+                        contenteditable>0</del>
+                      <strong onBlur="setPriceSiteAll(event)" id="sku-variable-price-all-current" class="price-normal"
+                        contenteditable>0</strong>
                     </td>
                   </tr>
 
@@ -1348,11 +1350,14 @@
                       </span>
                     </th>
                     <td id="sku-variable-price-warehouse">
-                      <strong onBlur="setPriceWareHouse(event)" id="sku-variable-price-warehouse-value" class="price-normal" contenteditable>0</strong>
+                      <strong onBlur="setPriceWareHouse(event)" id="sku-variable-price-warehouse-value"
+                        class="price-normal" contenteditable>0</strong>
                     </td>
                     <td id="sku-variable-price-site">
-                      <del onBlur="setPriceSiteOld(event)" id="sku-variable-price-site-old" class="price-old" contenteditable>0</del>
-                      <strong onBlur="setPriceSite(event)" id="sku-variable-price-site-current" class="price-normal" contenteditable>0</strong>
+                      <del onBlur="setPriceSiteOld(event)" id="sku-variable-price-site-old" class="price-old"
+                        contenteditable>0</del>
+                      <strong onBlur="setPriceSite(event)" id="sku-variable-price-site-current" class="price-normal"
+                        contenteditable>0</strong>
                     </td>
                   </tr>
                 </tbody>
@@ -14972,7 +14977,7 @@ headers: {
       const selectElement = document.querySelector('#warehouse-zd[checked]');
 
 
-      
+
 
 
       const selectedText = selectElement.parentNode.querySelector('#warehouse_value-zd').textContent.trim();
@@ -14983,8 +14988,8 @@ headers: {
       siteEl.textContent = pathItemPath.split('/')[0]
       const originalRow = cloned.querySelector('#sku-variable-row[hidden]')
 
-      clonedRow.querySelector('#sku-variable-price-warehouse').setAttribute('warehouse',selectElement.parentNode.id)
-      clonedRow.querySelector('#sku-variable-price-site').setAttribute('site',pathItemPath.split('/')[0])
+      document.querySelector('#sku-variable-price-warehouse-all').setAttribute('warehouse', selectElement.parentNode.id)
+      document.querySelector('#sku-variable-price-all').setAttribute('site', pathItemPath.split('/')[0])
       //get combinations
       const existing = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=sku-variables;&startsWith=true`)
         .then(response => response.json())
@@ -14996,8 +15001,9 @@ headers: {
         const clonedRow = originalRow.cloneNode(true)
         const span = clonedRow.querySelector('#sku-variable-xz[hidden]')
         clonedRow.removeAttribute('hidden')
-        document.querySelector('#sku-variable-price-warehouse-all').setAttribute('warehouse',selectElement.parentNode.id)
-        document.querySelector('#sku-variable-price-all').setAttribute('site',pathItemPath.split('/')[0])
+
+        clonedRow.querySelector('#sku-variable-price-warehouse').setAttribute('warehouse', selectElement.parentNode.id)
+        clonedRow.querySelector('#sku-variable-price-site').setAttribute('site', pathItemPath.split('/')[0])
         const elements = comb.split(';')
         elements.pop()
         for (const element of elements) {
@@ -15213,9 +15219,9 @@ headers: {
         if (option.parentNode.children.length === 1) {
           cloned1.querySelector('input').setAttribute('checked', "")
         }
-        cloned1.querySelector('#warehouse_value-zd').textContent = warehouses.find(e=>e.sk===setWareHouse).value
+        cloned1.querySelector('#warehouse_value-zd').textContent = warehouses.find(e => e.sk === setWareHouse).value
         option.parentNode.append(cloned1)
-        
+
       }
       for (const addedCondition of addedConditions) {
         const original = getElementById1('sku-table').querySelector('#sku-variable-condition[hidden]')
@@ -15242,7 +15248,7 @@ headers: {
         })
         generateConditionTable(conditions.find(e => e.sk === addedCondition).value)
       }
-      
+
 
       for (const element of skuVariables) {
 
