@@ -1220,7 +1220,7 @@
             <legend><button class="b-6" onclick="cancel3(event)" style="font-size: 0.9em;">❌</button></legend>
             <label class="l-3">Are you sure want to remove this SKU?</label>
             <br>
-            <button onclick="removeSku(event)" class="b-3">🗑️ Remove</button>
+            <button onclick="removeSku2(event)" class="b-3">🗑️ Remove</button>
           </fieldset>
           <div id="warehouse_select2" style="margin-left: 25px;">
             <label class="l-3" id="warehouse_select_label" hidden><input type="radio" name="warehouse_select"
@@ -14161,6 +14161,8 @@ elementsToRemove.forEach(element => element.remove());
       const menu = event.target.parentNode.querySelector('#remove-sku-menu')
       menu.style.display = 'block'
     }
+
+
     const removeSku = async (event) => {
 
       const sku = pathItemSku
@@ -14207,6 +14209,52 @@ headers: {
       event.target.parentNode.parentNode.remove()
       getElementById1("input-sku").removeAttribute('hidden')
       getElementById1("create-sku").removeAttribute('hidden')
+    }
+    const removeSku2 = async (event) => {
+
+      const sku = pathItemSku
+      // to do 
+      if (headContentItem) {
+        headContentItem.sku = undefined
+        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(headContentItem),
+        });
+        pathItemSku = undefined
+      }
+      else {
+        pathItem.sku = undefined
+        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(pathItem),
+        });
+        pathItemSku = undefined
+      }
+
+      /*
+      const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku}&startsWith=true`)
+        .then(response => response.json())
+      
+      const res = await Promise.all(items.map(async item => {
+        const deleteUrl = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id}:${item.sk}`;
+        const response = await fetch(deleteUrl, {
+      method: 'DELETE',
+      headers: {
+      'Content-Type': 'application/json',
+      // Add any additional headers if needed
+      },
+      
+        });
+      }))*/
+      //to complete
+      getElementById1("sku-empty2").removeAttribute('hidden')
+      getElementById1("sku_filled").setAttribute('hidden', "")
     }
     const setSku = async (value) => {
       if (pathItemPath.split('/').includes('Stock')) {
