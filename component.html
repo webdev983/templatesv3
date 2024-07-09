@@ -1217,7 +1217,7 @@
           <button class="b-3" id="remove-sku" onclick="openRemoveSku(event)">🗑️</button>
 
           <fieldset style="display: none;" id="remove-sku-menu" class="menu">
-            <legend><button class="b-6" onclick="cancel(event)" style="font-size: 0.9em;">❌</button></legend>
+            <legend><button class="b-6" onclick="cancel3(event)" style="font-size: 0.9em;">❌</button></legend>
             <label class="l-3">Are you sure want to remove this SKU?</label>
             <br>
             <button onclick="removeSku(event)" class="b-3">🗑️ Remove</button>
@@ -14163,7 +14163,7 @@ elementsToRemove.forEach(element => element.remove());
     }
     const removeSku = async (event) => {
 
-      const sku = event.target.parentNode.parentNode.querySelector('#sku-value').textContent
+      const sku = pathItemSku
       // to do 
       if (headContentItem) {
         headContentItem.sku = undefined
@@ -14185,6 +14185,7 @@ elementsToRemove.forEach(element => element.remove());
           },
           body: JSON.stringify(pathItem),
         });
+        pathItemSku = undefined
       }
 
       /*
@@ -14992,7 +14993,7 @@ headers: {
         const attributes = joinedAttributes.split(',')
         data.push({
           legend,
-          items: attributes.map(e=>e.trim())
+          items: attributes.map(e => e.trim())
         })
       }
       console.log(data)
@@ -15496,6 +15497,10 @@ element.setAttribute('data-product', [first, name].join(';'))
     const cancel = (e) => {
 
       e.target.parentNode.remove()
+    }
+    const cancel3 = (e) => {
+
+      e.target.parentNode.parentNode.remove()
     }
     const cancel2 = (e) => {
 
