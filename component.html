@@ -15065,6 +15065,25 @@ headers: {
             },
             body: JSON.stringify(item),
           });
+          const originalRow = getElementById1('sku-variable-row')
+          
+          const comb = combination.toLowerCase()
+          const clonedRow = originalRow.cloneNode(true)
+          const span = clonedRow.querySelector('#sku-variable-xz')
+          clonedRow.removeAttribute('hidden')
+          const elements = comb.split(';')
+          elements.pop()
+          for (const element of elements) {
+            const clonedSpan = span.cloneNode(true)
+
+            const [key, value] = element.split(':')
+            clonedSpan.removeAttribute('hidden')
+            clonedSpan.querySelector('#sku-attribute-key-xz').textContent = key
+            clonedSpan.querySelector('#sku-attribute-value-xz').textContent = value
+            span.parentNode.append(clonedSpan)
+          }
+          span.remove()
+          originalRow.parentNode.append(clonedRow)
         }
       }
       event.target.closest('details').removeAttribute('open')
