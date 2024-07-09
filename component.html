@@ -15001,13 +15001,14 @@ headers: {
         const original2 = getElementById1('sku-table').querySelector('#all-td[hidden]')
         const cloned2 = original2.cloneNode(true)
         cloned2.removeAttribute('hidden')
-        cloned2.setAttribute('condition', v)
+        const condSk = e.target.parentNode.parentNode.getAttribute('sk')
+        cloned2.setAttribute('condition', condSk)
         original2.parentNode.insertBefore(cloned2, original2)
 
         const originals = getElementById1('sku-table').querySelectorAll('#sku-variable-td[hidden]')
         originals.forEach(original => {
           const cloned = original.cloneNode(true)
-          cloned.setAttribute('condition', v)
+          cloned.setAttribute('condition', condSk)
           cloned.removeAttribute('hidden')
 
           original.parentNode.insertBefore(cloned, original)
@@ -15244,13 +15245,14 @@ headers: {
           const original2 = getElementById1('sku-table').querySelector('#all-td[hidden]')
           const cloned2 = original2.cloneNode(true)
           cloned2.removeAttribute('hidden')
-          cloned2.setAttribute('condition', v)
+          const condSk = e.target.parentNode.parentNode.getAttribute('sk')
+          cloned2.setAttribute('condition', condSk)
           original2.parentNode.insertBefore(cloned2, original2)
 
           const originals = getElementById1('sku-table').querySelectorAll('#sku-variable-td[hidden]')
           originals.forEach(original => {
             const cloned = original.cloneNode(true)
-            cloned.setAttribute('condition', v)
+            cloned.setAttribute('condition', condSk)
             cloned.removeAttribute('hidden')
 
             original.parentNode.insertBefore(cloned, original)
