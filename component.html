@@ -14234,7 +14234,7 @@ headers: {
       pathItemSku = value
     }
     const addSku2 = async (event) => {
-      const value = getElementById1('input-sku').value.trim().toLowerCase()
+      const value = getElementById1('input-sku2').value.trim().toLowerCase()
 
       const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${value}&sk=created:&startsWith=true`)
         .then(response => response.json())
@@ -15039,6 +15039,56 @@ headers: {
         .then(response => response.json()).then(res => res.items)
       const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=sku-variables;&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
+      for (const element of skuVariables) {
+        console.log(v)
+        const original = document.querySelector('#condition-price-table[hidden]')
+        const cloned = original.cloneNode(true)
+        cloned.removeAttribute('hidden')
+        cloned.setAttribute('id', v)
+        cloned.querySelector('#condition-table-caption-value').textContent = v
+
+
+        const selectElement = document.getElementById('warehouse_select');
+
+
+        const selectedOption = selectElement.options[selectElement.selectedIndex];
+
+
+        const selectedText = selectedOption.textContent.trim();
+        const wareHouseEl = cloned.querySelector('#sku-condition-warehouse-name-value')
+        const siteEl = cloned.querySelector('#sku-condition-site-name-value')
+        wareHouseEl.textContent = selectedText
+        siteEl.textContent = pathItemPath.split('/')[0]
+        const originalRow = cloned.querySelector('#sku-variable-row[hidden]')
+        //get combinations
+        const existing = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=sku-variables;&startsWith=true`)
+          .then(response => response.json())
+
+
+        for (let i = 0; i < existing.items.length; i++) {
+          const item = existing.items[i]
+          const comb = item.sk.replace('sku-variables;', "")
+          const clonedRow = originalRow.cloneNode(true)
+          const span = clonedRow.querySelector('#sku-variable-xz[hidden]')
+          clonedRow.removeAttribute('hidden')
+          const elements = comb.split(';')
+          elements.pop()
+          for (const element of elements) {
+            const clonedSpan = span.cloneNode(true)
+
+            const [key, value] = element.split(':')
+            clonedSpan.removeAttribute('hidden')
+            clonedSpan.querySelector('#sku-attribute-key-xz').textContent = key
+            clonedSpan.querySelector('#sku-attribute-value-xz').textContent = value
+            span.parentNode.append(clonedSpan)
+          }
+          span.remove()
+          originalRow.parentNode.append(clonedRow)
+        }
+        originalRow.remove()
+
+        original.parentNode.insertBefore(cloned, original)
+      }
       for (const element of warehouses) {
         const tr = filled.querySelector('#warehouse-row[hidden]')
         const cloned = tr.cloneNode(true)
