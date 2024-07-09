@@ -15196,6 +15196,21 @@ headers: {
         element.sk.split(';')[0].split(':')[1] + ':' + element.sk.split(';')[0].split(':')[2]
       )
       addedConditions = removeDuplicates(addedConditions)
+      let setWareHouse
+      if (skuQtyValue.length) {
+        setWareHouse = skuQtyValue[0].sk.split(';').pop()
+        const option = getElementById1('warehouse_select_label')
+        const cloned1 = option.cloneNode(true)
+        cloned1.setAttribute('id', setWareHouse)
+        cloned1.removeAttribute('hidden')
+        console.log(option.parentNode.children.length)
+        if (option.parentNode.children.length === 1) {
+          cloned1.querySelector('input').setAttribute('checked', "")
+        }
+        cloned1.querySelector('#warehouse_value-zd').textContent = warehouses.find(e=>e.sk===setWareHouse).value
+        option.parentNode.append(cloned1)
+        
+      }
       for (const addedCondition of addedConditions) {
         const original = getElementById1('sku-table').querySelector('#sku-variable-condition[hidden]')
         const cloned = original.cloneNode(true)
@@ -15221,21 +15236,7 @@ headers: {
         })
         generateConditionTable(conditions.find(e => e.sk === addedCondition).value)
       }
-      let setWareHouse
-      if (skuQtyValue.length) {
-        setWareHouse = skuQtyValue[0].sk.split(';').pop()
-        const option = getElementById1('warehouse_select_label')
-        const cloned1 = option.cloneNode(true)
-        cloned1.setAttribute('id', setWareHouse)
-        cloned1.removeAttribute('hidden')
-        console.log(option.parentNode.children.length)
-        if (option.parentNode.children.length === 1) {
-          cloned1.querySelector('input').setAttribute('checked', "")
-        }
-        cloned1.querySelector('#warehouse_value-zd').textContent = warehouses.find(e=>e.sk===setWareHouse).value
-        option.parentNode.append(cloned1)
-        
-      }
+      
 
       for (const element of skuVariables) {
 
