@@ -15027,7 +15027,7 @@ headers: {
       const filled = getElementById1('sku_filled')
       filled.removeAttribute('hidden')
       //get warehouses
-
+      document.querySelector('#sku-value2').textContent = sku
       const warehouses = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=warehouse:&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
       const destinations = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=destination:&startsWith=true`)
@@ -15035,6 +15035,8 @@ headers: {
       const conditions = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=condition:&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
       const shippingMethodes = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=shippingMethode:&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
+      const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=sku-variables;&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
       for (const element of warehouses) {
         const tr = filled.querySelector('#warehouse-row[hidden]')
