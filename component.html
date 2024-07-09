@@ -15131,8 +15131,7 @@ headers: {
       querySelectorAll1(`[condition="${condition}"]`).forEach(element => {
         if (element.id !== "all-td" && !element.parentNode.hasAttribute('hidden')) {
           element.querySelector('#sku-variable-quantity').textContent = value
-          const blurEvent = new Event('blur', { bubbles: true, cancelable: true });
-          element.querySelector('#sku-variable-quantity').dispatchEvent(blurEvent);
+          element.querySelector('#sku-variable-quantity').onblur({target:element.querySelector('#sku-variable-quantity')})
         }
       })
     }
