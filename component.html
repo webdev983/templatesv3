@@ -15195,7 +15195,7 @@ headers: {
       const getItem = {
         id: 'sku:' + pathItemSku,
         sk: 'warehouse_price_qty:' + condition + ';' + sk.replace('sku-variables;', '') + checkedWareHouse,
-        price: parseInt(value)
+        
 
       }
       const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${getItem.id}&sk=${getItem.sk}`, {
@@ -15204,7 +15204,7 @@ headers: {
           'Content-Type': 'application/json',
         },
       }).then(e=>e.json()).then(res=>res.items[0])
-      item.price = value
+      item
       console.log()
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
@@ -15212,7 +15212,7 @@ headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-          item
+          {...item,price:vparseInt(value)}
         ),
       });
     }
