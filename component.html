@@ -1806,41 +1806,41 @@
 
             </div>
           </td>
-        <td>
-          <div id="buttons-picture-product-attribute">
-            <label id="buttons-picture-attribute-legend" class="b-dark-blue l-3">color:
-            <select class="select-1">
-              <option id="buttons-picture-attribute-value-none">⬇️ Select</option>
-              <option id="buttons-picture-attribute-value">blue</option>
-              <option id="buttons-picture-attribute-value">white</option>
-            </select>
-          </label>
+          <td>
+            <div id="buttons-picture-product-attribute">
+              <label id="buttons-picture-attribute-legend" class="b-dark-blue l-3">color:
+                <select class="select-1">
+                  <option id="buttons-picture-attribute-value-none">⬇️ Select</option>
+                  <option id="buttons-picture-attribute-value">blue</option>
+                  <option id="buttons-picture-attribute-value">white</option>
+                </select>
+              </label>
 
-          </div>
-        </td>
-        <td>
-          <div data-file-name-show="Product-Content">
-            <label class="l-3">
-              <input data-picture-main-checkbox type="checkbox">⭐ Main
-            </label>
-            <br>
-            <label class="l-3">
-              <input data-picture-secondary-checkbox type="checkbox">✨ Secondary
-            </label>
-          </div>
+            </div>
+          </td>
+          <td>
+            <div data-file-name-show="Product-Content">
+              <label class="l-3">
+                <input data-picture-main-checkbox type="checkbox">⭐ Main
+              </label>
+              <br>
+              <label class="l-3">
+                <input data-picture-secondary-checkbox type="checkbox">✨ Secondary
+              </label>
+            </div>
 
-          <div id="gallery-picture-product-attribute">
-            <label id="gallery-picture-attribute-legend" class="b-dark-blue l-3">color:
-            <select class="select-1">
-              <option id="gallery-picture-attribute-value-none">⬇️ Select</option>
-              <option id="gallery-picture-attribute-value">blue</option>
-              <option id="gallery-picture-attribute-value">white</option>
-            </select>
-          </label>
+            <div id="gallery-picture-product-attribute">
+              <label id="gallery-picture-attribute-legend" class="b-dark-blue l-3">color:
+                <select class="select-1">
+                  <option id="gallery-picture-attribute-value-none">⬇️ Select</option>
+                  <option id="gallery-picture-attribute-value">blue</option>
+                  <option id="gallery-picture-attribute-value">white</option>
+                </select>
+              </label>
 
-          </div>
+            </div>
 
-        </td>
+          </td>
 
         </tr>
         <tbody id="gallery-body">
@@ -15225,13 +15225,14 @@ headers: {
         setWareHouse = skuQtyValue[0].sk.split(';').pop()
         const option = getElementById1('warehouse_select_label')
         const cloned1 = option.cloneNode(true)
+        cloned1.setAttribute('id', element.sk)
         cloned1.removeAttribute('hidden')
-        cloned1.setAttribute('id', skuQtyValue.sk)
-        cloned1.querySelector('#warehouse_value-zd').textContent = setWareHouse
-
+        console.log(option.parentNode.children.length)
         if (option.parentNode.children.length === 1) {
           cloned1.querySelector('input').setAttribute('checked', "")
         }
+        cloned1.querySelector('#warehouse_value-zd').textContent = e.target.parentNode.parentNode.querySelector('#wareHouseInput').textContent
+        option.parentNode.append(cloned1)
       }
 
       for (const element of skuVariables) {
