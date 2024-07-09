@@ -14965,12 +14965,13 @@ headers: {
         body: JSON.stringify(item),
       });
     }
-    const generateConditionTable = async (v) => {
+    const generateConditionTable = async (v,sk) => {
       console.log(v)
       const original = document.querySelector('#condition-price-table[hidden]')
       const cloned = original.cloneNode(true)
       cloned.removeAttribute('hidden')
       cloned.setAttribute('id', v)
+      cloned.setAttribute('sk', sk)
       cloned.querySelector('#condition-table-caption-value').textContent = v
 
 
@@ -15061,7 +15062,7 @@ headers: {
 
           original.parentNode.insertBefore(cloned, original)
         })
-        generateConditionTable(v)
+        generateConditionTable(v,condSk)
       }
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
@@ -15190,9 +15191,10 @@ headers: {
       const value = target.textContent
       const checkedWareHouse = querySelectorAll1('#warehouse-zd[checked]')[0]?.parentNode.id || target.getAttribute('warehouse')
       const sk = target.closest('tr').getAttribute('sk')
+
       const item = {
         id: 'sku:' + pathItemSku,
-        sk: 'warehouse_price_qty:' + warehouse + ';' + sk.replace('sku-variables;', '') + checkedWareHouse,
+        sk: 'warehouse_price_qty:' + condition + ';' + sk.replace('sku-variables;', '') + checkedWareHouse,
         price: parseInt(value)
 
       }
@@ -15283,7 +15285,7 @@ headers: {
 
           original.parentNode.insertBefore(cloned, original)
         })
-        generateConditionTable(conditions.find(e => e.sk === addedCondition).value)
+        generateConditionTable(conditions.find(e => e.sk === addedCondition).value,addedCondition)
       }
 
 
