@@ -1213,7 +1213,7 @@
 
         <div id="sku_filled">
           <div id="warehouse_select2" style="margin-left: 25px;" hidden>
-            <label class="l-3"><input checked type="radio" name="warehouse_select" id="warehouse-zd" /><span>🏬</span><span id="warehouse_value-zd"></span></label>
+            <label class="l-3" id="warehouse_select_label" hidden><input type="radio" name="warehouse_select" id="warehouse-zd" /><span>🏬</span><span id="warehouse_value-zd"></span></label>
           </div>
         <!--
           <select id="warehouse_select" class="select-1"
@@ -14799,11 +14799,11 @@ headers: {
       cloned.setAttribute('sk', item.sk)
       cloned.querySelector('#enableWareHouse').onclick = (e) => {
         e.target.textContent = '🟢'
-        const option = getElementById1('warehouse_select_option')
+        const option = getElementById1('warehouse_select_label')
         const cloned1 = option.cloneNode(true)
         cloned1.removeAttribute('hidden')
         cloned1.setAttribute('id', item.sk)
-        cloned1.querySelector('#warehouse-value').textContent = "🏬" + e.target.parentNode.parentNode.querySelector('#wareHouseInput').textContent
+        cloned1.querySelector('#warehouse_value-zd').textContent = e.target.parentNode.parentNode.querySelector('#wareHouseInput').textContent
         option.parentNode.append(cloned1)
 
       }
@@ -15028,11 +15028,11 @@ headers: {
 
         cloned.querySelector('#enableWareHouse').onclick = (e) => {
           e.target.textContent = '🟢'
-          const option = getElementById1('warehouse_select_option')
+          const option = getElementById1('warehouse_select_label')
           const cloned1 = option.cloneNode(true)
           cloned1.setAttribute('id', element.sk)
           cloned1.removeAttribute('hidden')
-          cloned1.textContent = "🏬" + e.target.parentNode.parentNode.querySelector('#wareHouseInput').textContent
+          cloned1.querySelector('#warehouse_value-zd').textContent = e.target.parentNode.parentNode.querySelector('#wareHouseInput').textContent
           option.parentNode.append(cloned1)
 
         }
