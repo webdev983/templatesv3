@@ -1253,7 +1253,7 @@
                   </th>
                   <td hidden id="sku-variable-condition">
                     <span class="l-3">📦</span>
-                    <span class="l-3" id="sku-variable-condition-value" ></span>
+                    <span class="l-3" id="sku-variable-condition-value"></span>
 
                   </td>
                 </tr>
@@ -1269,7 +1269,8 @@
                   </th>
 
                   <td id="all-td" hidden>
-                    <span id="all-quantity " style="float: left;" class="l-3" contenteditable>0</span>
+                    <span onBlur="setAllQty(event)" id="all-quantity " style="float: left;" class="l-3"
+                      contenteditable>0</span>
 
                   </td>
                 </tr>
@@ -1283,7 +1284,8 @@
                     </span>
                   </th>
                   <td id="sku-variable-td" hidden>
-                    <span id="sku-variable-quantity" style="float: left;" class="l-3" contenteditable>0</span>
+                    <span onBlur="setQty(event)" id="sku-variable-quantity" style="float: left;" class="l-3"
+                      contenteditable>0</span>
                   </td>
                 </tr>
               </tbody>
@@ -14999,7 +15001,7 @@ headers: {
         const originals = getElementById1('sku-table').querySelectorAll('#sku-variable-td[hidden]')
         originals.forEach(original => {
           const cloned = original.cloneNode(true)
-          cloned.setAttribute('condition',v)
+          cloned.setAttribute('condition', v)
           cloned.removeAttribute('hidden')
 
           original.parentNode.insertBefore(cloned, original)
@@ -15069,12 +15071,12 @@ headers: {
             body: JSON.stringify(item),
           });
           const originalRow = getElementById1('sku-variable-row')
-          
+
           const comb = combination.toLowerCase()
           const clonedRow = originalRow.cloneNode(true)
           const span = clonedRow.querySelector('#sku-variable-xz')
           clonedRow.removeAttribute('hidden')
-          clonedRow.setAttribute('sk',item.sk)
+          clonedRow.setAttribute('sk', item.sk)
           const elements = comb.split(';')
           elements.pop()
           for (const element of elements) {
@@ -15091,6 +15093,12 @@ headers: {
         }
       }
       event.target.closest('details').removeAttribute('open')
+    }
+    const setQty = async (event) => {
+
+    }
+    const setAllQty = async (event) => {
+
     }
     const showSku2 = async (sku) => {
       pathItemSku = sku
@@ -15118,7 +15126,7 @@ headers: {
         const item = element
         const comb = item.sk.replace('sku-variables;', "")
         const clonedRow = originalRow.cloneNode(true)
-        clonedRow.setAttribute('sk',item.sk)
+        clonedRow.setAttribute('sk', item.sk)
         const span = clonedRow.querySelector('#sku-variable-xz')
         clonedRow.removeAttribute('hidden')
         const elements = comb.split(';')
@@ -15208,7 +15216,7 @@ headers: {
           const originals = getElementById1('sku-table').querySelectorAll('#sku-variable-td[hidden]')
           originals.forEach(original => {
             const cloned = original.cloneNode(true)
-            cloned.setAttribute('condition',v)
+            cloned.setAttribute('condition', v)
             cloned.removeAttribute('hidden')
 
             original.parentNode.insertBefore(cloned, original)
