@@ -1384,7 +1384,8 @@
                     <span>
                   </th>
                   <td>
-                    <table id="ship-method-destination-table" class="table-1" style="margin-left: 30px; margin-top: 10px;">
+                    <table id="ship-method-destination-table" class="table-1"
+                      style="margin-left: 30px; margin-top: 10px;">
                       <tr>
                         <td>
                           <span class="b-dark-blue">🏴to</span>
@@ -15166,7 +15167,7 @@ headers: {
       querySelectorAll1(`[condition="${condition}"]`).forEach(element => {
         if (element.id !== "all-td" && !element.parentNode.hasAttribute('hidden')) {
           element.querySelector('#sku-variable-quantity').textContent = value
-          element.querySelector('#sku-variable-quantity').onblur({target:element.querySelector('#sku-variable-quantity')})
+          element.querySelector('#sku-variable-quantity').onblur({ target: element.querySelector('#sku-variable-quantity') })
         }
       })
     }
@@ -15191,22 +15192,22 @@ headers: {
         .then(response => response.json()).then(res => res.items)
       const skuQtyValue = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=warehouse_price_qty:&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
-      let addedConditions = skuQtyValue.map(element=>
-        element.sk.split(';')[0].split(':')[1] +':' + element.sk.split(';')[0].split(':')[2]
+      let addedConditions = skuQtyValue.map(element =>
+        element.sk.split(';')[0].split(':')[1] + ':' + element.sk.split(';')[0].split(':')[2]
       )
       addedConditions = removeDuplicates(addedConditions)
-      for(const addedCondition of addedConditions){
+      for (const addedCondition of addedConditions) {
         const original = getElementById1('sku-table').querySelector('#sku-variable-condition[hidden]')
         const cloned = original.cloneNode(true)
         cloned.removeAttribute('hidden')
-        cloned.querySelector('#sku-variable-condition-value').textContent = conditions.find(e=>e.sk ===addedCondition).value
+        cloned.querySelector('#sku-variable-condition-value').textContent = conditions.find(e => e.sk === addedCondition).value
         original.parentNode.insertBefore(cloned, original)
         const original2 = getElementById1('sku-table').querySelector('#all-td[hidden]')
         const cloned2 = original2.cloneNode(true)
         cloned2.removeAttribute('hidden')
         console.log(addedCondition)
         console.log(JSON.stringify(conditions))
-        const condSk = conditions.find(e=>e.sk ===addedCondition).sk
+        const condSk = conditions.find(e => e.sk === addedCondition).sk
         cloned2.setAttribute('condition', condSk)
         original2.parentNode.insertBefore(cloned2, original2)
 
@@ -15220,10 +15221,19 @@ headers: {
         })
       }
       let setWareHouse
-      if(skuQtyValue.length){
+      if (skuQtyValue.length) {
         setWareHouse = skuQtyValue[0].sk.split(';').pop()
+        const option = getElementById1('warehouse_select_label')
+        const cloned1 = option.cloneNode(true)
+        cloned1.removeAttribute('hidden')
+        cloned1.setAttribute('id', skuQtyValue.sk)
+        cloned1.querySelector('#warehouse_value-zd').textContent = setWareHouse
+
+        if (option.parentNode.children.length === 1) {
+          cloned1.querySelector('input').setAttribute('checked', "")
+        }
       }
-      
+
       for (const element of skuVariables) {
 
 
@@ -15236,19 +15246,19 @@ headers: {
         clonedRow.removeAttribute('hidden')
         const elements = comb.split(';')
         elements.pop()
-        clonedRow.querySelectorAll('#sku-variable-td[condition]').forEach(element=>{
+        clonedRow.querySelectorAll('#sku-variable-td[condition]').forEach(element => {
           const cond = element.getAttribute('condition')
-          const foundV = skuQtyValue.find(e=>e.sk.startsWith('warehouse_price_qty:'+cond+';'+comb))
+          const foundV = skuQtyValue.find(e => e.sk.startsWith('warehouse_price_qty:' + cond + ';' + comb))
           const qI = element.querySelector('#sku-variable-quantity')
-          if(foundV){
+          if (foundV) {
             qI.textContent = foundV?.qty || 0
-            qI.setAttribute('warehouse',foundV.sk.split(';').pop())
+            qI.setAttribute('warehouse', foundV.sk.split(';').pop())
           }
-          else if(setWareHouse){
-            qI.setAttribute('warehouse',setWareHouse)
+          else if (setWareHouse) {
+            qI.setAttribute('warehouse', setWareHouse)
           }
-          
-          
+
+
         })
         for (const element of elements) {
           const clonedSpan = span.cloneNode(true)
