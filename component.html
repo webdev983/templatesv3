@@ -15089,141 +15089,115 @@ headers: {
       const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=sku-variables;&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
       for (const element of skuVariables) {
-        /*
-        console.log(v)
-        
-        const original = document.querySelector('#condition-price-table[hidden]')
+
+
+        const originalRow = getElementById1('sku-variable-row')
+        const item = element
+        const comb = item.sk.replace('sku-variables;', "")
+        const clonedRow = originalRow.cloneNode(true)
+        const span = clonedRow.querySelector('#sku-variable-xz[hidden]')
+        clonedRow.removeAttribute('hidden')
+        const elements = comb.split(';')
+        elements.pop()
+        for (const element of elements) {
+          const clonedSpan = span.cloneNode(true)
+
+          const [key, value] = element.split(':')
+          clonedSpan.removeAttribute('hidden')
+          clonedSpan.querySelector('#sku-attribute-key-xz').textContent = key
+          clonedSpan.querySelector('#sku-attribute-value-xz').textContent = value
+          span.parentNode.append(clonedSpan)
+        }
+        span.remove()
+        originalRow.parentNode.append(clonedRow)
+      }
+
+
+
+    }
+    for (const element of warehouses) {
+      const tr = filled.querySelector('#warehouse-row[hidden]')
+      const cloned = tr.cloneNode(true)
+      cloned.setAttribute('sk', element.sk)
+      cloned.removeAttribute('hidden')
+      tr.parentNode.append(cloned)
+      cloned.querySelector('#wareHouseInput').textContent = element.value
+
+      cloned.querySelector('#enableWareHouse').onclick = (e) => {
+        e.target.textContent = '🟢'
+        const option = getElementById1('warehouse_select_label')
+        const cloned1 = option.cloneNode(true)
+        cloned1.setAttribute('id', element.sk)
+        cloned1.removeAttribute('hidden')
+        console.log(option.parentNode.children.length)
+        if (option.parentNode.children.length === 1) {
+          cloned1.querySelector('input').setAttribute('checked', "")
+        }
+        cloned1.querySelector('#warehouse_value-zd').textContent = e.target.parentNode.parentNode.querySelector('#wareHouseInput').textContent
+        option.parentNode.append(cloned1)
+
+      }
+    }
+    /*
+    for (const element of destinations) {
+      const tr = filled.querySelector('#destination-row[hidden]')
+      const cloned = tr.cloneNode(true)
+      cloned.setAttribute('sk', element.sk)
+      cloned.removeAttribute('hidden')
+      tr.parentNode.append(cloned)
+      cloned.querySelector('#destinationInput').textContent = element.value
+      cloned.querySelector('#enableDestination').onclick = (e) => {
+        e.target.textContent = '🟢'
+        const option = getElementById1('destination_select_option')
+        const cloned1 = option.cloneNode(true)
+        cloned1.removeAttribute('hidden')
+        cloned1.setAttribute('id', element.sk)
+        cloned1.textContent = "🏴󠁥󠁳󠁰󠁶󠁿" + e.target.parentNode.parentNode.querySelector('#destinationInput').textContent
+        option.parentNode.append(cloned1)
+
+      }
+
+    }*/
+    for (const element of conditions) {
+      const tr = filled.querySelector('#condition-row[hidden]')
+      const cloned = tr.cloneNode(true)
+      cloned.setAttribute('sk', element.sk)
+      cloned.removeAttribute('hidden')
+      tr.parentNode.append(cloned)
+      cloned.querySelector('#conditionInput').textContent = element.value
+      cloned.querySelector('#enableCondition').onclick = (e) => {
+        e.target.textContent = '🟢'
+        const original = getElementById1('sku-table').querySelector('#sku-variable-condition[hidden]')
         const cloned = original.cloneNode(true)
         cloned.removeAttribute('hidden')
-        cloned.setAttribute('id', v)
-        cloned.querySelector('#condition-table-caption-value').textContent = v
-
-
-        const selectElement = document.getElementById('warehouse_select');
-
-
-        const selectedOption = selectElement.options[selectElement.selectedIndex];
-
-
-        const selectedText = selectedOption.textContent.trim();
-        const wareHouseEl = cloned.querySelector('#sku-condition-warehouse-name-value')
-        const siteEl = cloned.querySelector('#sku-condition-site-name-value')
-        wareHouseEl.textContent = selectedText
-        siteEl.textContent = pathItemPath.split('/')[0]
-        const originalRow = cloned.querySelector('#sku-variable-row[hidden]')
-        //get combinations
-        const existing = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=sku-variables;&startsWith=true`)
-          .then(response => response.json())
-
-
-        for (let i = 0; i < existing.items.length; i++) {
-          const item = existing.items[i]
-          const comb = item.sk.replace('sku-variables;', "")
-          const clonedRow = originalRow.cloneNode(true)
-          const span = clonedRow.querySelector('#sku-variable-xz[hidden]')
-          clonedRow.removeAttribute('hidden')
-          const elements = comb.split(';')
-          elements.pop()
-          for (const element of elements) {
-            const clonedSpan = span.cloneNode(true)
-
-            const [key, value] = element.split(':')
-            clonedSpan.removeAttribute('hidden')
-            clonedSpan.querySelector('#sku-attribute-key-xz').textContent = key
-            clonedSpan.querySelector('#sku-attribute-value-xz').textContent = value
-            span.parentNode.append(clonedSpan)
-          }
-          span.remove()
-          originalRow.parentNode.append(clonedRow)
-        }
-        originalRow.remove()
-
+        const v = e.target.parentNode.parentNode.querySelector('#conditionInput').textContent
+        cloned.querySelector('#sku-variable-condition-value').textContent = v
         original.parentNode.insertBefore(cloned, original)
-        */
-      }
-      for (const element of warehouses) {
-        const tr = filled.querySelector('#warehouse-row[hidden]')
-        const cloned = tr.cloneNode(true)
-        cloned.setAttribute('sk', element.sk)
-        cloned.removeAttribute('hidden')
-        tr.parentNode.append(cloned)
-        cloned.querySelector('#wareHouseInput').textContent = element.value
 
-        cloned.querySelector('#enableWareHouse').onclick = (e) => {
-          e.target.textContent = '🟢'
-          const option = getElementById1('warehouse_select_label')
-          const cloned1 = option.cloneNode(true)
-          cloned1.setAttribute('id', element.sk)
-          cloned1.removeAttribute('hidden')
-          console.log(option.parentNode.children.length)
-          if (option.parentNode.children.length === 1) {
-            cloned1.querySelector('input').setAttribute('checked', "")
-          }
-          cloned1.querySelector('#warehouse_value-zd').textContent = e.target.parentNode.parentNode.querySelector('#wareHouseInput').textContent
-          option.parentNode.append(cloned1)
+        const original2 = getElementById1('sku-table').querySelector('#all-td[hidden]')
+        const cloned2 = original2.cloneNode(true)
+        cloned2.removeAttribute('hidden')
 
-        }
-      }
-      /*
-      for (const element of destinations) {
-        const tr = filled.querySelector('#destination-row[hidden]')
-        const cloned = tr.cloneNode(true)
-        cloned.setAttribute('sk', element.sk)
-        cloned.removeAttribute('hidden')
-        tr.parentNode.append(cloned)
-        cloned.querySelector('#destinationInput').textContent = element.value
-        cloned.querySelector('#enableDestination').onclick = (e) => {
-          e.target.textContent = '🟢'
-          const option = getElementById1('destination_select_option')
-          const cloned1 = option.cloneNode(true)
-          cloned1.removeAttribute('hidden')
-          cloned1.setAttribute('id', element.sk)
-          cloned1.textContent = "🏴󠁥󠁳󠁰󠁶󠁿" + e.target.parentNode.parentNode.querySelector('#destinationInput').textContent
-          option.parentNode.append(cloned1)
+        original2.parentNode.insertBefore(cloned2, original2)
 
-        }
-
-      }*/
-      for (const element of conditions) {
-        const tr = filled.querySelector('#condition-row[hidden]')
-        const cloned = tr.cloneNode(true)
-        cloned.setAttribute('sk', element.sk)
-        cloned.removeAttribute('hidden')
-        tr.parentNode.append(cloned)
-        cloned.querySelector('#conditionInput').textContent = element.value
-        cloned.querySelector('#enableCondition').onclick = (e) => {
-          e.target.textContent = '🟢'
-          const original = getElementById1('sku-table').querySelector('#sku-variable-condition[hidden]')
+        const originals = getElementById1('sku-table').querySelectorAll('#sku-variable-td[hidden]')
+        originals.forEach(original => {
           const cloned = original.cloneNode(true)
           cloned.removeAttribute('hidden')
-          const v = e.target.parentNode.parentNode.querySelector('#conditionInput').textContent
-          cloned.querySelector('#sku-variable-condition-value').textContent = v
+
           original.parentNode.insertBefore(cloned, original)
-
-          const original2 = getElementById1('sku-table').querySelector('#all-td[hidden]')
-          const cloned2 = original2.cloneNode(true)
-          cloned2.removeAttribute('hidden')
-
-          original2.parentNode.insertBefore(cloned2, original2)
-
-          const originals = getElementById1('sku-table').querySelectorAll('#sku-variable-td[hidden]')
-          originals.forEach(original => {
-            const cloned = original.cloneNode(true)
-            cloned.removeAttribute('hidden')
-
-            original.parentNode.insertBefore(cloned, original)
-          })
-          generateConditionTable(v)
-        }
+        })
+        generateConditionTable(v)
       }
-      for (const element of shippingMethodes) {
-        const tr = filled.querySelector('#ship-row[hidden]')
-        const cloned = tr.cloneNode(true)
-        cloned.setAttribute('sk', element.sk)
-        cloned.removeAttribute('hidden')
-        tr.parentNode.append(cloned)
-        cloned.querySelector('#shipInput').textContent = element.value
-      }
+    }
+    for (const element of shippingMethodes) {
+      const tr = filled.querySelector('#ship-row[hidden]')
+      const cloned = tr.cloneNode(true)
+      cloned.setAttribute('sk', element.sk)
+      cloned.removeAttribute('hidden')
+      tr.parentNode.append(cloned)
+      cloned.querySelector('#shipInput').textContent = element.value
+    }
       /*
     const item1 = getElementById1("sku-item-1")
     const cloned1 = item1.cloneNode(true)
