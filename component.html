@@ -15936,8 +15936,15 @@ headers: {
                 'Content-Type': 'application/json',
               },
             }).then(e => e.json()).then(res => res.items[0])
-            item.conditions = item.conditions ? [...item.conditions, element.sk] : [element.sk]
-            console.log(JSON.stringify(item))
+            
+            if(item.conditions ){
+              if(!item.conditions.includes(element.sk)){
+                item.conditions = [...item.conditions, element.sk]
+              }
+            }
+            else{
+              item.conditions = [element.sk]
+            }
             await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
               method: 'POST',
               headers: {
@@ -15969,7 +15976,15 @@ headers: {
                 'Content-Type': 'application/json',
               },
             }).then(e => e.json()).then(res => res.items[0])
-            item.shippingMethodes = item.shippingMethodes ? [...item.shippingMethodes, element.sk] : [element.sk]
+            //item.shippingMethodes = item.shippingMethodes ? [...item.shippingMethodes, element.sk] : [element.sk]
+            if(item.shippingMethodes ){
+              if(!item.shippingMethodes.includes(element.sk)){
+                item.shippingMethodes = [...item.shippingMethodes, element.sk]
+              }
+            }
+            else{
+              item.shippingMethodes = [element.sk]
+            }
             console.log(JSON.stringify(item))
             await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
               method: 'POST',
