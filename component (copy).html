@@ -1218,6 +1218,7 @@
         </div>
 
         <div id="sku_filled">
+          <span class="l-3">🚛</span>
           <label style="margin-left: 30px;" class="l-2" id="sku-value2"></label>
 
           <button class="b-3" id="remove-sku" onclick="openRemoveSku(event)">🗑️</button>
@@ -1259,18 +1260,19 @@
                     <span class="l-3 b-dark-blue">condition</span>
                   </th>
                   <td id="all-td" >
-                    <span    class="l-3" >📦</span>
                     <span onBlur="setAllQty(event)" id="all-quantity"  class="l-3"
-                      contenteditable>qty</span>
+                      contenteditable>📦</span>
+                      <span class="l-3" >qty</span>
+
                   </td>
 
                   <td id="sku-condition-warehouse-qty">
-                    <span class="l-3">🏬</span>
+                    <span class="l-3" contenteditable>🏬</span>
                     <span id="sku-condition-warehouse-qty-value" class="l-3">wrhs</span>
                   </td>
 
                   <td id="sku-condition-site-name">
-                    <span class="l-3">🌐</span>
+                    <span class="l-3" contenteditable>🌐</span>
                     <span class="l-3" id="sku-condition-site-name-value">mogobuy.com</span>
                   </td>
 
@@ -1369,37 +1371,42 @@
           </div>
 -->
 
-            <table class="shipping-table" style="margin-left: 30px; margin-top: 10px;">
-              <tbody>
+            <table class="table-1" style="margin-left: 30px; margin-top: 10px;">
                 <tr>
-
                   <th>
                     <span class="l-3 b-dark-blue">ship method</span>
                   </th>
                 </tr>
-              </tbody>
-
-              <tbody>
                 <tr>
-                  <th>
-                    <span>
-                      <span class="l-3 sku-attribute"></span>
-                    </span>
-                    <span>
-                  </th>
+                  <td>
+                      <span class="l-3 sku-attribute">UPS ground</span>
+                    </td>
                   <td>
                     <table id="ship-method-destination-table" class="table-1"
                       style="margin-left: 30px; margin-top: 10px;">
                       <tr>
                         <td>
+                    
                           <span class="b-dark-blue">🏴 to</span>
                         </td>
                       </tr>
-                      <tr>
                       <tr id="ship-method-destination-row">
-                        <td>
-                          <span id="ship-method-destination-value" contenteditable>usa</span>
-                        </td>
+                        <td id="warehouse-destination-value">
+                          <select class="select-country">
+                            <option id="ship-to-none">⬇️</option>
+                            <option id="ship-to-usa">🇺🇸USA</option>
+                            <option id="ship-to-cn">🇨🇳CN</option>
+                          </select>
+                          </td>
+                      </tr>
+                      <tr id="ship-method-destination-row">
+                        <td id="warehouse-destination-value">
+                          <select class="select-country">
+                            <option id="ship-to-none">⬇️</option>
+                            <option id="ship-to-usa">🇺🇸USA</option>
+                            <option id="ship-to-cn">🇨🇳CN</option>
+                          </select>
+                          </td>
                       </tr>
 
                     </table>
@@ -1408,8 +1415,6 @@
                   <td>
                     <button id="ship-method-add-destination-row" class="b-3">➕</button>
                   </td>
-
-
                 </tr>
               </tbody>
             </table>
@@ -1542,20 +1547,91 @@
                         </td>
                       </tr>
                       <tr id="ship-from-to-row">
-                        <td>
-                          <span id="ship-from-value" contenteditable="">~</span>
+                        <td id="ship-from-td">
+                          <select class="select-country">
+                            <option id="ship-from-none">⬇️</option>
+                            <option id="ship-from-usa">🇺🇸USA</option>
+                            <option id="ship-from-cn">🇨🇳CN</option>
+                          </select>
                         </td>
-                        <td>
-                          <span id="ship-to-value" contenteditable>~</span>
+                        <td id="ship-to-td">
+                          <select class="select-country">
+                            <option id="ship-to-none">⬇️</option>
+                            <option id="ship-to-usa">🇺🇸USA</option>
+                            <option id="ship-to-cn">🇨🇳CN</option>
+                          </select>
                         </td>
-                        <td>
-                          <span id="ship-min-time" contenteditable>~</span>
+                        <td id="ship-min-td">
+                          <select class="select-num">
+                            <option id="ship-min-none">⬇️</option>
+                            <option id="ship-min-1">1</option>
+                            <option id="ship-min-2">2</option>
+                            <option id="ship-min-3">3</option>
+                            <option id="ship-min-4">4</option>
+                            <option id="ship-min-5">5</option>
+                            <option id="ship-min-6">6</option>
+                            <option id="ship-min-7">7</option>
+                            <option id="ship-min-8">8</option>
+                            <option id="ship-min-9">9</option>
+                            <option id="ship-min-10">10</option>
+                            <option id="ship-min-11">11</option>
+                            <option id="ship-min-12">12</option>
+                            <option id="ship-min-13">13</option>
+                            <option id="ship-min-14">14</option>
+                            <option id="ship-min-15">15</option>
+                            <option id="ship-min-16">16</option>
+                            <option id="ship-min-17">17</option>
+                            <option id="ship-min-18">18</option>
+                            <option id="ship-min-19">19</option>
+                            <option id="ship-min-20">20</option>
+                            <option id="ship-min-21">21</option>
+                            <option id="ship-min-22">22</option>
+                            <option id="ship-min-23">23</option>
+                            <option id="ship-min-24">24</option>
+                            <option id="ship-min-25">25</option>
+                            <option id="ship-min-26">26</option>
+                            <option id="ship-min-27">27</option>
+                            <option id="ship-min-28">28</option>
+                            <option id="ship-min-29">29</option>
+                            <option id="ship-min-30">30</option>                            
+                          </select>
                         </td>
-                        <td>
-                          <span id="ship-max-time" contenteditable>~</span>
+                        <td id="ship-max-td">
+                          <select class="select-num">
+                            <option id="ship-max-none">⬇️</option>
+                            <option id="ship-max-1">1</option>
+                            <option id="ship-max-2">2</option>
+                            <option id="ship-max-3">3</option>
+                            <option id="ship-max-4">4</option>
+                            <option id="ship-max-5">5</option>
+                            <option id="ship-max-6">6</option>
+                            <option id="ship-max-7">7</option>
+                            <option id="ship-max-8">8</option>
+                            <option id="ship-max-9">9</option>
+                            <option id="ship-max-10">10</option>
+                            <option id="ship-max-11">11</option>
+                            <option id="ship-max-12">12</option>
+                            <option id="ship-max-13">13</option>
+                            <option id="ship-max-14">14</option>
+                            <option id="ship-max-15">15</option>
+                            <option id="ship-max-16">16</option>
+                            <option id="ship-max-17">17</option>
+                            <option id="ship-max-18">18</option>
+                            <option id="ship-max-19">19</option>
+                            <option id="ship-max-20">20</option>
+                            <option id="ship-max-21">21</option>
+                            <option id="ship-max-22">22</option>
+                            <option id="ship-max-23">23</option>
+                            <option id="ship-max-24">24</option>
+                            <option id="ship-max-25">25</option>
+                            <option id="ship-max-26">26</option>
+                            <option id="ship-max-27">27</option>
+                            <option id="ship-max-28">28</option>
+                            <option id="ship-max-29">29</option>
+                            <option id="ship-max-30">30</option>                            
+                          </select>
                         </td>
                       </tr>
-
                     </table>
                   </td>
 
