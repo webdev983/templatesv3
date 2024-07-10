@@ -15401,6 +15401,26 @@ headers: {
         option.parentNode.append(cloned1)
 
       }
+      cloned.querySelector('#defaultWareHouseInput').onchange = async (e) => {
+        const checked = e.target.checked
+        const element = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?'+`id=${item.id}&sk=${item.sk}&startsWith=true`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(e=>e.json()).then(res=>res.items[0])
+        element.default = checked
+        fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(
+            element
+          ),
+        });
+
+      }
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
