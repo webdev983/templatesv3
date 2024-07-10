@@ -1219,7 +1219,7 @@
 
         <div id="sku_filled">
           <span class="l-3" style="margin-left: 30px;">🆔</span>
-          <label  class="l-2" id="sku-value2"></label>
+          <label class="l-2" id="sku-value2"></label>
           <button class="b-3" id="remove-sku" onclick="openRemoveSku(event)">🗑️</button>
 
           <fieldset style="display: none;" id="remove-sku-menu" class="menu">
@@ -1249,167 +1249,165 @@
             <option hidden id="destination_select_option"><span>🏬</span><span id="destionation-value"></span></option>
           </select>
           -->
-         <div class="scrollable-table-container">
+          <div class="scrollable-table-container">
             <table id="sku-table" class="table-sku" style="margin-left: 30px; margin-top: 10px;">
+              <tr>
+                <th>
+                  <span class="l-3 b-dark-blue">sku variables</span>
+                </th>
+                <th>
+                  <span class="l-3 b-dark-blue">condition</span>
+                </th>
+                <td id="all-td">
+                  <span onBlur="setAllQty(event)" id="all-quantity" class="l-3" contenteditable>📦</span>
+                  <span class="l-3">qty</span>
+
+                </td>
+
+                <td id="sku-condition-warehouse-qty">
+                  <span class="l-3" contenteditable>🏬</span>
+                  <span id="sku-condition-warehouse-qty-value" class="l-3">wrhs</span>
+                </td>
+
+                <td id="sku-condition-site-name">
+                  <span class="l-3" contenteditable>🌐</span>
+                  <span class="l-3" id="sku-condition-site-name-value">mogobuy.com</span>
+                </td>
+
+              </tr>
+              <tr id="sku-variable-row" hidden>
+                <th>
+                  <span id="sku-variable-xz">
+                    <span id="sku-attribute-key-xz" class="l-3 sku-attribute"></span>
+                    <span class="l-3">:</span>
+                    <span id="sku-attribute-value-xz" class="l-3"></span>
+                    <span class="l-3">;</span>
+                  </span>
+                </th>
+                <th>
+                  <span id="sku-attribute-condition">new</span>
+                </th>
+                <td id="sku-variable-td">
+                  <span onBlur="setQty(event)" id="sku-variable-quantity" style="float: left;" class="l-3"
+                    contenteditable>0</span>
+                </td>
+                <td id="sku-variable-price-warehouse-all">
+                  <strong id="sku-variable-price-warehouse-value-all" class="price-normal" contenteditable
+                    onBlur="setPriceWareHouseAll(event)">0</strong>
+                </td>
+                <td id="sku-variable-price-all">
+                  <del onBlur="setPriceSiteOldAll(event)" id="sku-variable-price-all-old" class="price-old"
+                    contenteditable>0</del>
+                  <strong onBlur="setPriceSiteAll(event)" id="sku-variable-price-all-current" class="price-normal"
+                    contenteditable>0</strong>
+                </td>
+
+              </tr>
+            </table>
+          </div>
+          <div id="condition-price-table" hidden>
+            <hr style="border-bottom: 2px solid #ffcc81; margin-top: 20px; margin-bottom: 20px;">
+            <table class="table-sku" style="margin-left: 30px; margin-top: 10px;" id="site_sku_table">
+              <caption>
+                <strong class="l-1 b-dark-blue">📦</strong>
+                <strong class="l-1 b-dark-blue" id="condition-table-caption-value">new</strong>
+              </caption>
+              <tbody>
                 <tr>
-                  <th >
-                    <span class="l-3 b-dark-blue" >sku variables</span>
-                  </th>
                   <th>
-                    <span class="l-3 b-dark-blue">condition</span>
+                    <span class="l-3 b-dark-blue">sku variables</span>
                   </th>
-                  <td id="all-td" >
-                    <span onBlur="setAllQty(event)" id="all-quantity"  class="l-3"
-                      contenteditable>📦</span>
-                      <span class="l-3" >qty</span>
-
-                  </td>
-
-                  <td id="sku-condition-warehouse-qty">
-                    <span class="l-3" contenteditable>🏬</span>
-                    <span id="sku-condition-warehouse-qty-value" class="l-3">wrhs</span>
+                  <td id="sku-condition-warehouse-name">
+                    <span class="l-3">🏬</span>
+                    <span id="sku-condition-warehouse-name-value" class="l-3">warehouse</span>
                   </td>
 
                   <td id="sku-condition-site-name">
-                    <span class="l-3" contenteditable>🌐</span>
+                    <span class="l-3">🌐</span>
                     <span class="l-3" id="sku-condition-site-name-value">mogobuy.com</span>
                   </td>
-
                 </tr>
+              </tbody>
+
+              <tbody>
+                <tr id="sku-variable-row-all">
+                  <th class="">
+                    <span>
+                      <span class="l-3 sku-attribute">ALL</span>
+                    </span>
+                    <span>
+                  </th>
+                </tr>
+
                 <tr id="sku-variable-row" hidden>
                   <th>
-                    <span id="sku-variable-xz">
-                      <span id="sku-attribute-key-xz" class="l-3 sku-attribute"></span>
+                    <span id="sku-variable-xz" hidden>
+                      <span id="sku-attribute-key-xz" class="l-3 sku-attribute">color</span>
                       <span class="l-3">:</span>
-                      <span id="sku-attribute-value-xz" class="l-3"></span>
+                      <span id="sku-attribute-value-xz" class="l-3">white</span>
                       <span class="l-3">;</span>
                     </span>
                   </th>
-                  <th>
-                    <span id="sku-attribute-condition">new</span>
-                  </th>
-                  <td id="sku-variable-td">
-                    <span onBlur="setQty(event)" id="sku-variable-quantity" style="float: left;" class="l-3"
-                      contenteditable>0</span>
+                  <td id="sku-variable-price-warehouse">
+                    <strong onBlur="setPriceWareHouse(event)" id="sku-variable-price-warehouse-value"
+                      class="price-normal" contenteditable>0</strong>
                   </td>
-                  <td id="sku-variable-price-warehouse-all">
-                    <strong id="sku-variable-price-warehouse-value-all" class="price-normal" contenteditable
-                      onBlur="setPriceWareHouseAll(event)">0</strong>
-                  </td>
-                  <td id="sku-variable-price-all">
-                    <del onBlur="setPriceSiteOldAll(event)" id="sku-variable-price-all-old" class="price-old"
+                  <td id="sku-variable-price-site">
+                    <del onBlur="setPriceSiteOld(event)" id="sku-variable-price-site-old" class="price-old"
                       contenteditable>0</del>
-                    <strong onBlur="setPriceSiteAll(event)" id="sku-variable-price-all-current" class="price-normal"
+                    <strong onBlur="setPriceSite(event)" id="sku-variable-price-site-current" class="price-normal"
                       contenteditable>0</strong>
                   </td>
-
                 </tr>
+              </tbody>
             </table>
           </div>
-            <div id="condition-price-table" hidden>
-              <hr style="border-bottom: 2px solid #ffcc81; margin-top: 20px; margin-bottom: 20px;">
-              <table class="table-sku" style="margin-left: 30px; margin-top: 10px;" id="site_sku_table">
-                <caption>
-                  <strong class="l-1 b-dark-blue">📦</strong>
-                  <strong class="l-1 b-dark-blue" id="condition-table-caption-value">new</strong>
-                </caption>
-                <tbody>
-                  <tr>
-                    <th>
-                      <span class="l-3 b-dark-blue">sku variables</span>
-                    </th>
-                    <td id="sku-condition-warehouse-name">
-                      <span class="l-3">🏬</span>
-                      <span id="sku-condition-warehouse-name-value" class="l-3">warehouse</span>
-                    </td>
-
-                    <td id="sku-condition-site-name">
-                      <span class="l-3">🌐</span>
-                      <span class="l-3" id="sku-condition-site-name-value">mogobuy.com</span>
-                    </td>
-                  </tr>
-                </tbody>
-
-                <tbody>
-                  <tr id="sku-variable-row-all">
-                    <th class="">
-                      <span>
-                        <span class="l-3 sku-attribute">ALL</span>
-                      </span>
-                      <span>
-                    </th>
-                  </tr>
-
-                  <tr id="sku-variable-row" hidden>
-                    <th>
-                      <span id="sku-variable-xz" hidden>
-                        <span id="sku-attribute-key-xz" class="l-3 sku-attribute">color</span>
-                        <span class="l-3">:</span>
-                        <span id="sku-attribute-value-xz" class="l-3">white</span>
-                        <span class="l-3">;</span>
-                      </span>
-                    </th>
-                    <td id="sku-variable-price-warehouse">
-                      <strong onBlur="setPriceWareHouse(event)" id="sku-variable-price-warehouse-value"
-                        class="price-normal" contenteditable>0</strong>
-                    </td>
-                    <td id="sku-variable-price-site">
-                      <del onBlur="setPriceSiteOld(event)" id="sku-variable-price-site-old" class="price-old"
-                        contenteditable>0</del>
-                      <strong onBlur="setPriceSite(event)" id="sku-variable-price-site-current" class="price-normal"
-                        contenteditable>0</strong>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <hr style="border-bottom: 2px solid #ffcc81; margin-top: 20px; margin-bottom: 20px;">
-            <!--
+          <hr style="border-bottom: 2px solid #ffcc81; margin-top: 20px; margin-bottom: 20px;">
+          <!--
           <div id="destionation-select" style="margin-left: 25px;">
             <label class="l-3"><input type="radio" name="destionation-select" id="destination" />🏴</label>
           </div>
 -->
 
-            <table class="table-1" style="margin-left: 30px; margin-top: 10px;">
-                <tr>
-                  <th>
-                    <span class="l-3 b-dark-blue">ship method</span>
-                  </th>
-                </tr>
-                <tr>
-                  <td>
-                      <span class="l-3 sku-attribute">UPS ground</span>
+          <table class="table-1" style="margin-left: 30px; margin-top: 10px;">
+            <tr>
+              <th>
+                <span class="l-3 b-dark-blue">ship method</span>
+              </th>
+            </tr>
+            <tr>
+              <td>
+                <span class="l-3 sku-attribute">UPS ground</span>
+              </td>
+              <td>
+                <table id="ship-method-destination-table" class="table-1" style="margin-left: 30px; margin-top: 10px;">
+                  <tr>
+                    <td>
+
+                      <span class="b-dark-blue">🏴 to</span>
                     </td>
-                  <td>
-                    <table id="ship-method-destination-table" class="table-1"
-                      style="margin-left: 30px; margin-top: 10px;">
-                      <tr>
-                        <td>
-                    
-                          <span class="b-dark-blue">🏴 to</span>
-                        </td>
-                      </tr>
-                      <tr id="ship-method-destination-row">
-                        <td id="warehouse-destination-value">
-                          <select class="select-country">
-                            <option id="ship-to-none">⬇️</option>
-                            <option id="ship-to-usa">🇺🇸USA</option>
-                            <option id="ship-to-cn">🇨🇳CN</option>
-                          </select>
-                          </td>
-                      </tr>
+                  </tr>
+                  <tr id="ship-method-destination-row">
+                    <td id="warehouse-destination-value">
+                      <select class="select-country">
+                        <option id="ship-to-none">⬇️</option>
+                        <option id="ship-to-usa">🇺🇸USA</option>
+                        <option id="ship-to-cn">🇨🇳CN</option>
+                      </select>
+                    </td>
+                  </tr>
 
 
-                    </table>
-                  </td>
+                </table>
+              </td>
 
-                  <td>
-                    <button id="ship-method-add-destination-row" class="b-3">➕</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-       
+              <td>
+                <button id="ship-method-add-destination-row" class="b-3">➕</button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+
           <hr style="border-bottom: 2px solid #ffcc81; margin-top: 20px; margin-bottom: 20px;">
 
 
@@ -1474,7 +1472,8 @@
                     <span id="warehouse-max-processing" class="l-3" contenteditable>0</span>
                   </td>
                   <td>
-                    <label class="l-3">default<input type="checkbox" name="default-ship-mathod"></label>
+                    <label class="l-3">default<input id="defaultWareHouseInput" type="checkbox"
+                        name="default-ship-method"></label>
                   </td>
 
                   <td>
@@ -1593,7 +1592,7 @@
                             <option id="ship-min-27">27</option>
                             <option id="ship-min-28">28</option>
                             <option id="ship-min-29">29</option>
-                            <option id="ship-min-30">30</option>                            
+                            <option id="ship-min-30">30</option>
                           </select>
                         </td>
                         <td id="ship-max-td">
@@ -1628,7 +1627,7 @@
                             <option id="ship-max-27">27</option>
                             <option id="ship-max-28">28</option>
                             <option id="ship-max-29">29</option>
-                            <option id="ship-max-30">30</option>                            
+                            <option id="ship-max-30">30</option>
                           </select>
                         </td>
                       </tr>
@@ -1678,7 +1677,7 @@
 
       </details>
 
-<!--
+      <!--
       <details id="sku-menu2" style="margin-bottom: 7px;">
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">📦 SKU</span></summary>
         <div id="sku-empty2">
@@ -15443,7 +15442,7 @@ headers: {
         body: JSON.stringify(item),
       });
     }
-    const generateConditionTable = async (v,sk) => {
+    const generateConditionTable = async (v, sk) => {
       console.log(v)
       const original = document.querySelector('#condition-price-table[hidden]')
       const cloned = original.cloneNode(true)
@@ -15480,7 +15479,7 @@ headers: {
         const clonedRow = originalRow.cloneNode(true)
         const span = clonedRow.querySelector('#sku-variable-xz[hidden]')
         clonedRow.removeAttribute('hidden')
-        clonedRow.setAttribute('sk',item.sk)
+        clonedRow.setAttribute('sk', item.sk)
         clonedRow.querySelector('#sku-variable-price-warehouse').setAttribute('warehouse', selectElement.parentNode.id)
         clonedRow.querySelector('#sku-variable-price-site').setAttribute('site', pathItemPath.split('/')[0])
         const elements = comb.split(';')
@@ -15673,7 +15672,7 @@ headers: {
       const getItem = {
         id: 'sku:' + pathItemSku,
         sk: 'warehouse_price_qty:' + condition + ';' + sk.replace('sku-variables;', '') + checkedWareHouse,
-        
+
 
       }
       const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${getItem.id}&sk=${getItem.sk}&startsWith=true`, {
@@ -15681,8 +15680,8 @@ headers: {
         headers: {
           'Content-Type': 'application/json',
         },
-      }).then(e=>e.json()).then(res=>res.items[0])
-      const pushItem ={...item,price:parseInt(value)}
+      }).then(e => e.json()).then(res => res.items[0])
+      const pushItem = { ...item, price: parseInt(value) }
       console.log(JSON.stringify(pushItem))
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
@@ -15837,6 +15836,20 @@ headers: {
           }
           cloned1.querySelector('#warehouse_value-zd').textContent = e.target.parentNode.parentNode.querySelector('#wareHouseInput').textContent
           option.parentNode.append(cloned1)
+
+        }
+        cloned.querySelector('#defaultWareHouseInput').onchange = (e) => {
+          const checked = e.target.checked
+          element.default = checked
+          fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+              element
+            ),
+          });
 
         }
       }
