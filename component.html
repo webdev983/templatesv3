@@ -15946,7 +15946,7 @@ headers: {
       const condition = target.closest('tr').getAttribute('condition')
       const getItem = {
         id: 'sku:' + pathItemSku,
-        sk: 'site_price:' + pathItemPath.split('/')[0] + ';' + condition + ';' + sk.replace('sku-variables;', '') + checkedWareHouse,
+        sk: 'site_price:' + pathItemPath.split('/')[0].toLowerCase() + ';' + condition + ';' + sk.replace('sku-variables;', '') ,
 
 
       }
@@ -16003,7 +16003,7 @@ headers: {
         .then(response => response.json()).then(res => res.items)
       const skuQtyValue = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=warehouse_price_qty:&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
-      const skuSiteValue = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=site_price:${pathItemPath.split('/')[0]}&startsWith=true`)
+      const skuSiteValue = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=site_price:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
       let addedConditions = skuQtyValue.map(element =>
         element.sk.split(';')[0].split(':')[1] + ':' + element.sk.split(';')[0].split(':')[2]
