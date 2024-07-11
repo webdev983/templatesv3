@@ -1296,9 +1296,9 @@
                     onBlur="setPriceWareHouse(event)">0</strong>
                 </td>
                 <td id="sku-variable-price-all">
-                  <del onBlur="setPriceSiteOldAll(event)" id="sku-variable-price-all-old" class="price-old"
+                  <del onBlur="setPriceSite(event,true)" id="sku-variable-price-all-old" class="price-old"
                     contenteditable>0</del>
-                  <strong onBlur="setPriceSiteAll(event)" id="sku-variable-price-all-current" class="price-normal"
+                  <strong onBlur="setPriceSite(event)" id="sku-variable-price-all-current" class="price-normal"
                     contenteditable>0</strong>
                 </td>
 
@@ -15698,7 +15698,7 @@ headers: {
         }
       })
     }
-    const setPriceWareHouse = async (event) => {
+    const setPriceWareHouse = async (event,old) => {
       const { target } = event
       const warehouse = target.getAttribute('warehouse')
       const value = target.textContent
@@ -15718,6 +15718,38 @@ headers: {
         },
       }).then(e => e.json()).then(res => res.items[0])
       const pushItem = { ...item, price: parseInt(value) }
+      console.log(JSON.stringify(pushItem))
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+          pushItem
+        ),
+      });
+    }
+    const setPriceSite = async (event,old) => {
+      const { target } = event
+      const warehouse = target.getAttribute('warehouse')
+      const value = target.textContent
+      const checkedWareHouse = querySelectorAll1('#warehouse-zd[checked]')[0]?.parentNode.id || target.getAttribute('warehouse')
+      const sk = target.closest('tr').getAttribute('sk')
+      const condition = target.closest('tr').getAttribute('condition')
+      const getItem = {
+        id: 'sku:' + pathItemSku,
+        sk: 'site_price:' + pathItemPath.split('/')[0]+';'+condition+ ';' + sk.replace('sku-variables;', '') + checkedWareHouse,
+
+
+      }
+      const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${getItem.id}&sk=${getItem.sk}&startsWith=true`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(e => e.json()).then(res => res.items[0])
+      const pushItem = { ...item,  }
+      old ? (pushItem.oldPrice = parseInt(value)) : (pushItem.price = parseInt(value))
       console.log(JSON.stringify(pushItem))
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
@@ -15763,7 +15795,8 @@ headers: {
         .then(response => response.json()).then(res => res.items)
       const skuQtyValue = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=warehouse_price_qty:&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
-      
+      const skuSiteValue = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=site_price:${pathItemPath.split('/')[0]}&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
       let addedConditions = skuQtyValue.map(element =>
         element.sk.split(';')[0].split(':')[1] + ':' + element.sk.split(';')[0].split(':')[2]
       )
@@ -15832,22 +15865,24 @@ headers: {
             clonedRow.querySelector('#sku-attribute-condition').textContent = conditionValue
 
 
-            const foundV = skuQtyValue.find(e => e.sk.startsWith('warehouse_price_qty:' + condition + ';' + comb))
+            const foundV = skuQtyValue.find(e => e.sk.startsWith('warehouse_price_qty:' + condition + ';' + comb+defaultWareHouse.sk))
             const qI = clonedRow.querySelector('#sku-variable-quantity')
             const pI = clonedRow.querySelector('#sku-variable-price-warehouse-value-all')
+            qI.setAttribute('warehouse', defaultWareHouse.sk)
+            pI.setAttribute('warehouse', defaultWareHouse.sk)
             if (foundV) {
               qI.textContent = foundV?.qty || 0
               pI.textContent = foundV?.price || 0
-              qI.setAttribute('warehouse', foundV.sk.split(';').pop())
-              pI.setAttribute('warehouse', foundV.sk.split(';').pop())
             }
-            else {
-              qI.setAttribute('warehouse', defaultWareHouse.sk)
-              pI.setAttribute('warehouse', defaultWareHouse.sk)
+            const siteValue = skuSiteValue.find(e => e.sk.startsWith('site_price:' + pathItemPath.split('/')[0]+';'+ condition + ';' + comb+defaultWareHouse.sk))
+            const sI = clonedRow.querySelector('#sku-variable-price-all-current')
+            const osI = clonedRow.querySelector('#sku-variable-price-all-old')
+            sI.setAttribute('warehouse', defaultWareHouse.sk)
+            osI.setAttribute('warehouse', defaultWareHouse.sk)
+            if (siteValue) {
+              sI.textContent = siteValue.price || 0
+              osI.textContent = siteValue.oldPrice || 0
             }
-
-            
-
 
             for (const element of elements) {
               const clonedSpan = span.cloneNode(true)
