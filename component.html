@@ -15805,7 +15805,7 @@ headers: {
       }*/
 
       const defaultWareHouse = warehouses.find(e => e.default)
-      const generateSkuV = (wareHouseSk, conditions1) => {
+      const generateSkuV = (defaultWareHouse, conditions1) => {
         for (const condition of conditions1) {
           const conditionValue = conditions.find(e => e.sk === condition).value
           console.log(conditionValue)
@@ -15832,7 +15832,7 @@ headers: {
               qI.setAttribute('warehouse', foundV.sk.split(';').pop())
             }
             else {
-              qI.setAttribute('warehouse', wareHouseSk)
+              qI.setAttribute('warehouse', defaultWareHouse.sk)
             }
 
 
@@ -15862,7 +15862,8 @@ headers: {
         }
         cloned1.querySelector('#warehouse_value-zd').textContent = defaultWareHouse.value
         option.parentNode.append(cloned1)
-        generateSkuV(defaultWareHouse.sk, defaultWareHouse.conditions)
+        getElementById1('#sku-condition-warehouse-qty-value').textContent = defaultWareHouse.value
+        generateSkuV(defaultWareHouse, defaultWareHouse.conditions)
       }
 
 
