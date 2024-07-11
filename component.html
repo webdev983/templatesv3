@@ -1402,7 +1402,7 @@
               </td>
 
               <td>
-                <button id="ship-method-add-destination-row" class="b-3">➕</button>
+                <button id="ship-method-add-destination-row" class="b-3" onclick='duplicateRow(event,"ship-method-destination-row")'>➕</button>
               </td>
             </tr>
             </tbody>
@@ -1645,7 +1645,7 @@
                   </td>
 
                   <td>
-                    <button id="ship-method-add-from-to" class="b-3">➕</button>
+                    <button id="ship-method-add-from-to" class="b-3" onclick='duplicateRow(event,"ship-from-to-row")'> ➕</button>
                   </td>
 
 
@@ -15383,6 +15383,12 @@ headers: {
         body: JSON.stringify(item),
       });
 
+    }
+    const duplicateRow = (event,rowId)=>{
+      const tr = event.target.closest('tr')
+      const row = tr.querySelector('#'+rowId)
+      const cloned = row.cloneNode(true)
+      tr.append(cloned)
     }
     const addWareHouse = async (event) => {
       const filled = getElementById1('sku_filled')
