@@ -16083,6 +16083,7 @@ headers: {
           if (option.parentNode.children.length === 1) {
             cloned1.querySelector('input').setAttribute('checked', "")
             generateSkuV(element)
+            generateShippingM(defaultWareHouse)
           }
           cloned1.querySelector('#warehouse_value-zd').textContent = e.target.parentNode.parentNode.querySelector('#wareHouseInput').textContent
           option.parentNode.append(cloned1)
@@ -16172,10 +16173,12 @@ headers: {
             if (item.conditions) {
               if (!item.conditions.includes(element.sk)) {
                 item.conditions = [...item.conditions, element.sk]
+                generateSkuV(item)
               }
             }
             else {
               item.conditions = [element.sk]
+              generateSkuV(item)
             }
             await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
               method: 'POST',
