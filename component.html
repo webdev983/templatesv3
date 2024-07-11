@@ -15599,6 +15599,39 @@ headers: {
         },
         body: JSON.stringify(item),
       });
+      cloned.querySelector('#enableShip').onclick = async (e) => {
+        const checkedWareHouses = querySelectorAll1('#warehouse-zd[checked]')
+        if (checkedWareHouses.length) {
+          const checkedWareHouse = checkedWareHouses[0]
+          const sk = checkedWareHouse.parentNode.id
+          const item1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json()).then(res => res.items[0])
+          //item.shippingMethodes = item.shippingMethodes ? [...item.shippingMethodes, element.sk] : [element.sk]
+          if (item1.shippingMethodes) {
+            if (!item1.shippingMethodes.includes(item.sk)) {
+              item1.shippingMethodes = [...item1.shippingMethodes, item.sk]
+            }
+          }
+          else {
+            item1.shippingMethodes = [item.sk]
+          }
+          console.log(JSON.stringify(item))
+          await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+              item1
+            ),
+          });
+          e.target.textContent = '🟢'
+        }
+      }
     }
     const pushSkuVariables = async (event) => {
       const inputValue = getElementById1('push_new_sku_variables').value
@@ -15999,11 +16032,11 @@ headers: {
         }
 
       }
-      const generateShippingM = async(defaultWareHouse)=>{
+      const generateShippingM = async (defaultWareHouse) => {
         const shippingIds = defaultWareHouse.shippingMethodes
-        const filtered = shippingIds.map(id1=>shippingMethodes.find(e=>e.sk===id1))
+        const filtered = shippingIds.map(id1 => shippingMethodes.find(e => e.sk === id1))
         const original = getElementById1('shipping-des-item')
-        for(const el of filtered){
+        for (const el of filtered) {
           const cloned = original.cloneNode(true)
           cloned.removeAttribute('hidden')
           cloned.querySelector('#shipping-type').textContent = el.value
@@ -16164,7 +16197,7 @@ headers: {
         cloned.querySelector('#shipInput').textContent = element.value
         const { country, destination, min, max } = element
         //set values
-        
+
 
         const countrySelect = cloned.querySelector('#ship-from-td select');
         // Example value to match against option id
