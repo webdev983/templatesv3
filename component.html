@@ -15813,7 +15813,8 @@ headers: {
       const sk = checkedWareHouse.parentNode.id
       
       var selectElement = event.target
-      const wareHouseSk = selectElement.closest('tr').parentNode.closest('tr').getAttribute('sk')
+      const shipSK = selectElement.closest('tr').parentNode.closest('tr').getAttribute('sk')
+      console.log(shipSK)
       var selectedOption = selectElement.options[selectElement.selectedIndex].id;
       
       const getItem = {
@@ -15831,7 +15832,7 @@ headers: {
         },
       }).then(e => e.json()).then(res => res.items[0])
       console.log(JSON.stringify(item))
-      const found = item.shippingMethodes.find(e=>e.id===wareHouseSk)
+      const found = item.shippingMethodes.find(e=>e.id===shipSK)
       if(!found.items){
         found.items = []
       }
