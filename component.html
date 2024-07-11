@@ -15757,6 +15757,7 @@ headers: {
         .then(response => response.json()).then(res => res.items)
       const skuQtyValue = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=warehouse_price_qty:&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
+      
       let addedConditions = skuQtyValue.map(element =>
         element.sk.split(';')[0].split(':')[1] + ':' + element.sk.split(';')[0].split(':')[2]
       )
@@ -15827,13 +15828,19 @@ headers: {
 
             const foundV = skuQtyValue.find(e => e.sk.startsWith('warehouse_price_qty:' + condition + ';' + comb))
             const qI = clonedRow.querySelector('#sku-variable-quantity')
+            const pI = clonedRow.querySelector('#sku-variable-price-warehouse-value-all')
             if (foundV) {
               qI.textContent = foundV?.qty || 0
+              pI.textContent = foundV?.price || 0
               qI.setAttribute('warehouse', foundV.sk.split(';').pop())
+              pI.setAttribute('warehouse', foundV.sk.split(';').pop())
             }
             else {
               qI.setAttribute('warehouse', defaultWareHouse.sk)
+              pI.setAttribute('warehouse', defaultWareHouse.sk)
             }
+
+            
 
 
             for (const element of elements) {
