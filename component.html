@@ -15978,7 +15978,8 @@ headers: {
       }*/
 
       const defaultWareHouse = warehouses.find(e => e.default)
-      const generateSkuV = (defaultWareHouse, conditions1) => {
+      const generateSkuV = (defaultWareHouse) => {
+        const conditions1 = defaultWareHouse.conditions
         for (const condition of conditions1) {
           const conditionValue = conditions.find(e => e.sk === condition).value
           console.log(conditionValue)
@@ -16056,7 +16057,7 @@ headers: {
         option.parentNode.append(cloned1)
         getElementById1('sku-condition-warehouse-qty-value').textContent = defaultWareHouse.value
         generateShippingM(defaultWareHouse)
-        generateSkuV(defaultWareHouse, defaultWareHouse.conditions)
+        generateSkuV(defaultWareHouse)
       }
 
 
@@ -16081,6 +16082,7 @@ headers: {
           console.log(option.parentNode.children.length)
           if (option.parentNode.children.length === 1) {
             cloned1.querySelector('input').setAttribute('checked', "")
+            generateSkuV(element)
           }
           cloned1.querySelector('#warehouse_value-zd').textContent = e.target.parentNode.parentNode.querySelector('#wareHouseInput').textContent
           option.parentNode.append(cloned1)
