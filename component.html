@@ -1387,7 +1387,7 @@
                       <span class="b-dark-blue">🏴 to</span>
                     </td>
                   </tr>
-                  <tr id="ship-method-destination-row">
+                  <tr id="ship-method-destination-row-0">
                     <td id="warehouse-destination-value">
                       <select class="select-country">
                         <option id="ship-to-none">⬇️</option>
@@ -1403,7 +1403,7 @@
 
               <td>
                 <button id="ship-method-add-destination-row" class="b-3"
-                  onclick='duplicateRow(event,"ship-method-destination-row")'>➕</button>
+                  onclick='duplicateRow(event,"ship-method-destination-row-")'>➕</button>
               </td>
             </tr>
             </tbody>
@@ -1556,7 +1556,7 @@
                           <span class="b-dark-blue">⌛max</span>
                         </td>
                       </tr>
-                      <tr id="ship-from-to-row">
+                      <tr id="ship-from-to-row-0">
                         <td id="ship-from-td">
                           <select class="select-country" onchange="handleShipCountrySelection(event)">
                             <option id="none">⬇️</option>
@@ -1646,7 +1646,7 @@
                   </td>
 
                   <td>
-                    <button id="ship-method-add-from-to" class="b-3" onclick='duplicateRow(event,"ship-from-to-row")'>
+                    <button id="ship-method-add-from-to" class="b-3" onclick='duplicateRow(event,"ship-from-to-row-")'>
                       ➕</button>
                   </td>
 
@@ -15388,8 +15388,13 @@ headers: {
     }
     const duplicateRow = (event, rowId) => {
       const tr = event.target.closest('tr')
-      const row = tr.querySelector('#' + rowId)
+      
+      const rows = tr.querySelectorAll('[id^="' + rowId + '"]');
+      const row = tr.querySelector('#' + rowId)[0]
       const cloned = row.cloneNode(true)
+      const latestIndex = rows[rows.length -1].id.replace(rowId,"")
+      const newIndex = parseInt(latestIndex)+1
+      cloned.id = rowId+newIndex
       tr.append(cloned)
     }
     const addWareHouse = async (event) => {
@@ -15777,14 +15782,20 @@ headers: {
       const getItem = {
         id: ownerid,
         sk,
-        country: selectedOption
       }
+
+      const tr = selectElement.closest('tr')
+      const index = parseInt(tr.id.replace('ship-from-to-row-'),'')
       const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${getItem.id}&sk=${getItem.sk}&startsWith=true`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
       }).then(e => e.json()).then(res => res.items[0])
+      if(!item.items){
+        item.items = []
+      }
+      item.items[index] ? (item.items[index].country =selectedOption) : (item.items[index] ={country:selectedOption})
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
@@ -15802,7 +15813,6 @@ headers: {
       const getItem = {
         id: ownerid,
         sk,
-        destination: selectedOption
       }
       const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${getItem.id}&sk=${getItem.sk}&startsWith=true`, {
         method: 'GET',
@@ -15810,6 +15820,12 @@ headers: {
           'Content-Type': 'application/json',
         },
       }).then(e => e.json()).then(res => res.items[0])
+      const tr = selectElement.closest('tr')
+      const index = parseInt(tr.id.replace('ship-from-to-row-'),'')
+      if(!item.items){
+        item.items = []
+      }
+      item.items[index] ? (item.items[index].destination =selectedOption) : (item.items[index] ={destination:selectedOption})
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
@@ -15827,7 +15843,6 @@ headers: {
       const getItem = {
         id: ownerid,
         sk,
-        min: selectedOption
       }
       const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${getItem.id}&sk=${getItem.sk}&startsWith=true`, {
         method: 'GET',
@@ -15835,6 +15850,12 @@ headers: {
           'Content-Type': 'application/json',
         },
       }).then(e => e.json()).then(res => res.items[0])
+      const tr = selectElement.closest('tr')
+      const index = parseInt(tr.id.replace('ship-from-to-row-'),'')
+      if(!item.items){
+        item.items = []
+      }
+      item.items[index] ? (item.items[index].min =selectedOption) : (item.items[index] ={min:selectedOption})
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
@@ -15852,7 +15873,6 @@ headers: {
       const getItem = {
         id: ownerid,
         sk,
-        max: selectedOption
       }
       const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${getItem.id}&sk=${getItem.sk}&startsWith=true`, {
         method: 'GET',
@@ -15860,6 +15880,12 @@ headers: {
           'Content-Type': 'application/json',
         },
       }).then(e => e.json()).then(res => res.items[0])
+      const tr = selectElement.closest('tr')
+      const index = parseInt(tr.id.replace('ship-from-to-row-'),'')
+      if(!item.items){
+        item.items = []
+      }
+      item.items[index] ? (item.items[index].max =selectedOption) : (item.items[index] ={max:selectedOption})
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
@@ -16212,8 +16238,8 @@ headers: {
         if (element.items?.length) {
 
 
-          for (const el of element.items) {
-
+          for (let i =0;i<element.items.length;i++) {
+            const el = element.items[i]
             const cloned = originalSubRow.cloneNode(true)
             const { country, destination, min, max } = item
             //set values
@@ -16234,6 +16260,7 @@ headers: {
             // Select and set the selectedIndex for the max select element
             const maxSelect = cloned.querySelector('#ship-max-td select');
             maxSelect.selectedIndex = Array.from(maxSelect.children).findIndex(option => option.id === max);
+            cloned.id = 'ship-method-destination-row-'+i
             originalSubRow.parentNode.append(cloned)
 
           }
