@@ -1402,7 +1402,8 @@
               </td>
 
               <td>
-                <button id="ship-method-add-destination-row" class="b-3" onclick='duplicateRow(event,"ship-method-destination-row")'>➕</button>
+                <button id="ship-method-add-destination-row" class="b-3"
+                  onclick='duplicateRow(event,"ship-method-destination-row")'>➕</button>
               </td>
             </tr>
             </tbody>
@@ -1645,7 +1646,8 @@
                   </td>
 
                   <td>
-                    <button id="ship-method-add-from-to" class="b-3" onclick='duplicateRow(event,"ship-from-to-row")'> ➕</button>
+                    <button id="ship-method-add-from-to" class="b-3" onclick='duplicateRow(event,"ship-from-to-row")'>
+                      ➕</button>
                   </td>
 
 
@@ -15384,9 +15386,9 @@ headers: {
       });
 
     }
-    const duplicateRow = (event,rowId)=>{
+    const duplicateRow = (event, rowId) => {
       const tr = event.target.closest('tr')
-      const row = tr.querySelector('#'+rowId)
+      const row = tr.querySelector('#' + rowId)
       const cloned = row.cloneNode(true)
       tr.append(cloned)
     }
@@ -16206,25 +16208,37 @@ headers: {
         cloned.removeAttribute('hidden')
         tr.parentNode.append(cloned)
         cloned.querySelector('#shipInput').textContent = element.value
-        const { country, destination, min, max } = element
-        //set values
+        const originalSubRow = cloned.querySelector('#ship-from-to-row')
+        if (element.items.length) {
 
 
-        const countrySelect = cloned.querySelector('#ship-from-td select');
-        // Example value to match against option id
-        countrySelect.selectedIndex = Array.from(countrySelect.children).findIndex(option => option.id === country);
+          for (const el of element.items) {
 
-        // Select and set the selectedIndex for the destination select element
-        const destinationSelect = cloned.querySelector('#ship-to-td select');
-        destinationSelect.selectedIndex = Array.from(destinationSelect.children).findIndex(option => option.id === destination);
+            const cloned = originalSubRow.cloneNode(true)
+            const { country, destination, min, max } = item
+            //set values
 
-        // Select and set the selectedIndex for the min select element
-        const minSelect = cloned.querySelector('#ship-min-td select');
-        minSelect.selectedIndex = Array.from(minSelect.children).findIndex(option => option.id === min);
 
-        // Select and set the selectedIndex for the max select element
-        const maxSelect = cloned.querySelector('#ship-max-td select');
-        maxSelect.selectedIndex = Array.from(maxSelect.children).findIndex(option => option.id === max);
+            const countrySelect = cloned.querySelector('#ship-from-td select');
+            // Example value to match against option id
+            countrySelect.selectedIndex = Array.from(countrySelect.children).findIndex(option => option.id === country);
+
+            // Select and set the selectedIndex for the destination select element
+            const destinationSelect = cloned.querySelector('#ship-to-td select');
+            destinationSelect.selectedIndex = Array.from(destinationSelect.children).findIndex(option => option.id === destination);
+
+            // Select and set the selectedIndex for the min select element
+            const minSelect = cloned.querySelector('#ship-min-td select');
+            minSelect.selectedIndex = Array.from(minSelect.children).findIndex(option => option.id === min);
+
+            // Select and set the selectedIndex for the max select element
+            const maxSelect = cloned.querySelector('#ship-max-td select');
+            maxSelect.selectedIndex = Array.from(maxSelect.children).findIndex(option => option.id === max);
+            originalSubRow.parentNode.append(cloned)
+
+          }
+          originalSubRow.remove()
+        }
         cloned.querySelector('#enableShip').onclick = async (e) => {
           const checkedWareHouses = querySelectorAll1('#warehouse-zd[checked]')
           if (checkedWareHouses.length) {
