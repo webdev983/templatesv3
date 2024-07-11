@@ -16055,6 +16055,9 @@ headers: {
       const defaultWareHouse = warehouses.find(e => e.default)
       const generateSkuV = (defaultWareHouse) => {
         const conditions1 = defaultWareHouse.conditions
+        if(!conditions1){
+          return
+        }
         for (const condition of conditions1) {
           const conditionValue = conditions.find(e => e.sk === condition).value
           console.log(conditionValue)
@@ -16110,6 +16113,9 @@ headers: {
       }
       const generateShippingM = async (defaultWareHouse) => {
         const shippingIds = defaultWareHouse.shippingMethodes
+        if(!shippingIds){
+          return
+        }
         const ids = removeDuplicates(shippingIds.map(e => e.id))
         console.log(ids)
         const filtered = ids.map(id1 => shippingMethodes.find(e => e.sk === id1))
