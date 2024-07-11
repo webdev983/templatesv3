@@ -15807,7 +15807,7 @@ headers: {
       const defaultWareHouse = warehouses.find(e => e.default)
       const generateSkuV = (wareHouseSk, conditions1) => {
         for (const condition of conditions1) {
-          const conditionValue = conditions.find(e=>e.sk ===condition).value
+          const conditionValue = conditions.find(e => e.sk === condition).value
           console.log(conditionValue)
           for (const element of skuVariables) {
 
@@ -15823,21 +15823,19 @@ headers: {
             const elements = comb.split(';')
             elements.pop()
             clonedRow.querySelector('#sku-attribute-condition').textContent = conditionValue
-            /*
-            clonedRow.querySelectorAll('#sku-variable-td[condition]').forEach(element => {
-              const cond = element.getAttribute('condition')
-              const foundV = skuQtyValue.find(e => e.sk.startsWith('warehouse_price_qty:' + cond + ';' + comb))
-              const qI = element.querySelector('#sku-variable-quantity')
-              if (foundV) {
-                qI.textContent = foundV?.qty || 0
-                qI.setAttribute('warehouse', foundV.sk.split(';').pop())
-              }
-              else if (setWareHouse) {
-                qI.setAttribute('warehouse', setWareHouse)
-              }
 
 
-            })*/
+            const foundV = skuQtyValue.find(e => e.sk.startsWith('warehouse_price_qty:' + condition + ';' + comb))
+            const qI = element.querySelector('#sku-variable-quantity')
+            if (foundV) {
+              qI.textContent = foundV?.qty || 0
+              qI.setAttribute('warehouse', foundV.sk.split(';').pop())
+            }
+            else {
+              qI.setAttribute('warehouse', wareHouseSk)
+            }
+
+
             for (const element of elements) {
               const clonedSpan = span.cloneNode(true)
 
