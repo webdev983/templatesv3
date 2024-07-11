@@ -16070,7 +16070,10 @@ headers: {
       }
       const generateShippingM = async (defaultWareHouse) => {
         const shippingIds = defaultWareHouse.shippingMethodes
-        const filtered =removeDuplicates(shippingIds.map(e=>e.id)).map(id1 => shippingMethodes.find(e => e.sk === id1))
+        const ids = removeDuplicates(shippingIds.map(e=>e.id))
+        console.log(ids)
+        const filtered =ids.map(id1 => shippingMethodes.find(e => e.sk === id1))
+        console.log(JSON.stringify(filtered))
         const originals = querySelectorAll1('#shipping-des-item')
         const original = originals[0]
         for (const el of filtered) {
