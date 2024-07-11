@@ -1375,9 +1375,9 @@
                 <span class="l-3 b-dark-blue">ship method</span>
               </th>
             </tr>
-            <tr>
+            <tr id="shipping-des-item" hidden>
               <td>
-                <span class="l-3 sku-attribute">UPS ground</span>
+                <span id="shipping-type" class="l-3 sku-attribute">UPS ground</span>
               </td>
               <td>
                 <table id="ship-method-destination-table" class="table-1" style="margin-left: 30px; margin-top: 10px;">
@@ -15999,6 +15999,17 @@ headers: {
         }
 
       }
+      const generateShippingM = async(defaultWareHouse)=>{
+        const shippingIds = defaultWareHouse.shippingMethodes
+        const filtered = shippingIds.map(id=>shippingMethodes.find(e=>e.sk===id))
+        const original = getElementById1('shipping-des-item')
+        for(const el of filtered){
+          const cloned = original.cloneNode(true)
+          cloned.removeAttribute('hidden')
+          cloned.querySelector('#shipping-type').textContent = el.value
+          original.parentNode.append(cloned)
+        }
+      }
       if (defaultWareHouse) {
         const option = getElementById1('warehouse_select_label')
         const cloned1 = option.cloneNode(true)
@@ -16011,6 +16022,7 @@ headers: {
         cloned1.querySelector('#warehouse_value-zd').textContent = defaultWareHouse.value
         option.parentNode.append(cloned1)
         getElementById1('sku-condition-warehouse-qty-value').textContent = defaultWareHouse.value
+        generateShippingM(defaultWareHouse)
         generateSkuV(defaultWareHouse, defaultWareHouse.conditions)
       }
 
