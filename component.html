@@ -15388,13 +15388,13 @@ headers: {
     }
     const duplicateRow = (event, rowId) => {
       const tr = event.target.closest('tr')
-      
+
       const rows = tr.querySelectorAll('[id^="' + rowId + '"]');
       const row = rows[0]
       const cloned = row.cloneNode(true)
-      const latestIndex = rows[rows.length -1].id.replace(rowId,"")
-      const newIndex = parseInt(latestIndex)+1
-      cloned.id = rowId+newIndex
+      const latestIndex = rows[rows.length - 1].id.replace(rowId, "")
+      const newIndex = parseInt(latestIndex) + 1
+      cloned.id = rowId + newIndex
       row.parentNode.append(cloned)
     }
     const addWareHouse = async (event) => {
@@ -15785,18 +15785,18 @@ headers: {
       }
 
       const tr = selectElement.closest('tr')
-      const index = parseInt(tr.id.replace('ship-from-to-row-',""))
-      console.log('index'+index)
+      const index = parseInt(tr.id.replace('ship-from-to-row-', ""))
+      console.log('index' + index)
       const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${getItem.id}&sk=${getItem.sk}&startsWith=true`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
       }).then(e => e.json()).then(res => res.items[0])
-      if(!item.items){
+      if (!item.items) {
         item.items = []
       }
-      item.items[index] ? (item.items[index].country =selectedOption) : (item.items[index] ={country:selectedOption})
+      item.items[index] ? (item.items[index].country = selectedOption) : (item.items[index] = { country: selectedOption })
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
@@ -15811,20 +15811,20 @@ headers: {
       const checkedWareHouses = querySelectorAll1('#warehouse-zd[checked]')
       const checkedWareHouse = checkedWareHouses[0]
       const sk = checkedWareHouse.parentNode.id
-      
+
       var selectElement = event.target
       const shipSK = selectElement.closest('tr').parentNode.closest('tr').id
       console.log(shipSK)
       var selectedOption = selectElement.options[selectElement.selectedIndex].id;
-      
+
       const getItem = {
         id: ownerid,
         sk,
       }
 
       const tr = selectElement.closest('tr')
-      const index = parseInt(tr.id.replace('ship-method-destination-row-',""))
-      console.log('index'+index)
+      const index = parseInt(tr.id.replace('ship-method-destination-row-', ""))
+      console.log('index' + index)
       const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${getItem.id}&sk=${getItem.sk}&startsWith=true`, {
         method: 'GET',
         headers: {
@@ -15832,11 +15832,11 @@ headers: {
         },
       }).then(e => e.json()).then(res => res.items[0])
       console.log(JSON.stringify(item))
-      const found = item.shippingMethodes.find(e=>e.id===shipSK)
-      if(!found.items){
+      const found = item.shippingMethodes.find(e => e.id === shipSK)
+      if (!found.items) {
         found.items = []
       }
-      found.items[index] =selectedOption
+      found.items[index] = selectedOption
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
@@ -15862,11 +15862,11 @@ headers: {
         },
       }).then(e => e.json()).then(res => res.items[0])
       const tr = selectElement.closest('tr')
-      const index = parseInt(tr.id.replace('ship-from-to-row-',""))
-      if(!item.items){
+      const index = parseInt(tr.id.replace('ship-from-to-row-', ""))
+      if (!item.items) {
         item.items = []
       }
-      item.items[index] ? (item.items[index].destination =selectedOption) : (item.items[index] ={destination:selectedOption})
+      item.items[index] ? (item.items[index].destination = selectedOption) : (item.items[index] = { destination: selectedOption })
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
@@ -15892,11 +15892,11 @@ headers: {
         },
       }).then(e => e.json()).then(res => res.items[0])
       const tr = selectElement.closest('tr')
-      const index = parseInt(tr.id.replace('ship-from-to-row-',""))
-      if(!item.items){
+      const index = parseInt(tr.id.replace('ship-from-to-row-', ""))
+      if (!item.items) {
         item.items = []
       }
-      item.items[index] ? (item.items[index].min =selectedOption) : (item.items[index] ={min:selectedOption})
+      item.items[index] ? (item.items[index].min = selectedOption) : (item.items[index] = { min: selectedOption })
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
@@ -15922,11 +15922,11 @@ headers: {
         },
       }).then(e => e.json()).then(res => res.items[0])
       const tr = selectElement.closest('tr')
-      const index = parseInt(tr.id.replace('ship-from-to-row-',""))
-      if(!item.items){
+      const index = parseInt(tr.id.replace('ship-from-to-row-', ""))
+      if (!item.items) {
         item.items = []
       }
-      item.items[index] ? (item.items[index].max =selectedOption) : (item.items[index] ={max:selectedOption})
+      item.items[index] ? (item.items[index].max = selectedOption) : (item.items[index] = { max: selectedOption })
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
@@ -16110,9 +16110,9 @@ headers: {
       }
       const generateShippingM = async (defaultWareHouse) => {
         const shippingIds = defaultWareHouse.shippingMethodes
-        const ids = removeDuplicates(shippingIds.map(e=>e.id))
+        const ids = removeDuplicates(shippingIds.map(e => e.id))
         console.log(ids)
-        const filtered =ids.map(id1 => shippingMethodes.find(e => e.sk === id1))
+        const filtered = ids.map(id1 => shippingMethodes.find(e => e.sk === id1))
         console.log(JSON.stringify(filtered))
         const originals = querySelectorAll1('#shipping-des-item')
         const original = originals[0]
@@ -16120,10 +16120,32 @@ headers: {
           const cloned = original.cloneNode(true)
           cloned.removeAttribute('hidden')
           cloned.querySelector('#shipping-type').textContent = el.value
-          cloned.id=el.sk
+          cloned.id = el.sk
           original.parentNode.append(cloned)
+          const originalSubRow = cloned.querySelector('#ship-method-destination-row-0')
+          const element = shippingIds.find(e=>e.id===filtered.sk)
+          if (element.items?.length) {
+
+
+            for (let i = 0; i < element.items.length; i++) {
+              const el = element.items[i]
+              const cloned = originalSubRow.cloneNode(true)
+              //set values
+
+
+              const countrySelect = cloned.querySelector('#warehouse-destination-value select');
+              // Example value to match against option id
+              countrySelect.selectedIndex = Array.from(countrySelect.children).findIndex(option => option.id === el);
+
+             
+              cloned.id = 'ship-method-destination-row-' + i
+              originalSubRow.parentNode.append(cloned)
+
+            }
+            originalSubRow.remove()
+          }
         }
-        filtered.length && originals.forEach(e=>e.remove())
+        filtered.length && originals.forEach(e => e.remove())
       }
       if (defaultWareHouse) {
         const option = getElementById1('warehouse_select_label')
@@ -16285,7 +16307,7 @@ headers: {
         if (element.items?.length) {
 
 
-          for (let i =0;i<element.items.length;i++) {
+          for (let i = 0; i < element.items.length; i++) {
             const el = element.items[i]
             const cloned = originalSubRow.cloneNode(true)
             const { country, destination, min, max } = el
@@ -16307,7 +16329,7 @@ headers: {
             // Select and set the selectedIndex for the max select element
             const maxSelect = cloned.querySelector('#ship-max-td select');
             maxSelect.selectedIndex = Array.from(maxSelect.children).findIndex(option => option.id === max);
-            cloned.id = 'ship-from-to-row-'+i
+            cloned.id = 'ship-from-to-row-' + i
             originalSubRow.parentNode.append(cloned)
 
           }
@@ -16327,11 +16349,11 @@ headers: {
             //item.shippingMethodes = item.shippingMethodes ? [...item.shippingMethodes, element.sk] : [element.sk]
             if (item.shippingMethodes) {
               if (!item.shippingMethodes.includes(element.sk)) {
-                item.shippingMethodes = [...item.shippingMethodes,{id: element.sk}]
+                item.shippingMethodes = [...item.shippingMethodes, { id: element.sk }]
               }
             }
             else {
-              item.shippingMethodes = [{id:element.sk}]
+              item.shippingMethodes = [{ id: element.sk }]
             }
             console.log(JSON.stringify(item))
             await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
