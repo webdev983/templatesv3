@@ -15734,9 +15734,9 @@ headers: {
       var selectedOption = selectElement.options[selectElement.selectedIndex].id;
       const sk = selectElement.closest('#ship-row').getAttribute('sk')
       const getItem = {
-        id:ownerid,
+        id: ownerid,
         sk,
-        country:selectedOption
+        country: selectedOption
       }
       const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${getItem.id}&sk=${getItem.sk}&startsWith=true`, {
         method: 'GET',
@@ -15750,7 +15750,7 @@ headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-          {...getItem,...item}
+          { ...getItem, ...item }
         ),
       });
     }
@@ -15759,9 +15759,9 @@ headers: {
       var selectedOption = selectElement.options[selectElement.selectedIndex].id;
       const sk = selectElement.closest('#ship-row').getAttribute('sk')
       const getItem = {
-        id:ownerid,
+        id: ownerid,
         sk,
-        destination:selectedOption
+        destination: selectedOption
       }
       const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${getItem.id}&sk=${getItem.sk}&startsWith=true`, {
         method: 'GET',
@@ -15775,7 +15775,7 @@ headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-          {...getItem,...item}
+          { ...getItem, ...item }
         ),
       });
     }
@@ -15784,9 +15784,9 @@ headers: {
       var selectedOption = selectElement.options[selectElement.selectedIndex].id;
       const sk = selectElement.closest('#ship-row').getAttribute('sk')
       const getItem = {
-        id:ownerid,
+        id: ownerid,
         sk,
-        min:selectedOption
+        min: selectedOption
       }
       const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${getItem.id}&sk=${getItem.sk}&startsWith=true`, {
         method: 'GET',
@@ -15800,7 +15800,7 @@ headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-          {...getItem,...item}
+          { ...getItem, ...item }
         ),
       });
     }
@@ -15809,9 +15809,9 @@ headers: {
       var selectedOption = selectElement.options[selectElement.selectedIndex].id;
       const sk = selectElement.closest('#ship-row').getAttribute('sk')
       const getItem = {
-        id:ownerid,
+        id: ownerid,
         sk,
-        max:selectedOption
+        max: selectedOption
       }
       const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${getItem.id}&sk=${getItem.sk}&startsWith=true`, {
         method: 'GET',
@@ -15825,7 +15825,7 @@ headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-          {...getItem,...item}
+          { ...getItem, ...item }
         ),
       });
     }
@@ -16150,6 +16150,25 @@ headers: {
         cloned.removeAttribute('hidden')
         tr.parentNode.append(cloned)
         cloned.querySelector('#shipInput').textContent = element.value
+        const { country, destination, min, max } = element
+        //set values
+        
+
+        const countrySelect = cloned.querySelector('#ship-from-td select');
+        // Example value to match against option id
+        countrySelect.selectedIndex = Array.from(countrySelect.children).findIndex(option => option.id === country);
+
+        // Select and set the selectedIndex for the destination select element
+        const destinationSelect = cloned.querySelector('#ship-to-td select');
+        destinationSelect.selectedIndex = Array.from(destinationSelect.children).findIndex(option => option.id === destination);
+
+        // Select and set the selectedIndex for the min select element
+        const minSelect = cloned.querySelector('#ship-min-td select');
+        minSelect.selectedIndex = Array.from(minSelect.children).findIndex(option => parseInt(option.id) === min);
+
+        // Select and set the selectedIndex for the max select element
+        const maxSelect = cloned.querySelector('#ship-max-td select');
+        maxSelect.selectedIndex = Array.from(maxSelect.children).findIndex(option => parseInt(option.id) === max);
         cloned.querySelector('#enableShip').onclick = async (e) => {
           const checkedWareHouses = querySelectorAll1('#warehouse-zd[checked]')
           if (checkedWareHouses.length) {
