@@ -15660,7 +15660,7 @@ headers: {
     const setQty = async (event) => {
       const { target } = event
       const sk = target.closest('tr').getAttribute('sk')
-      const condition = target.closest('td').getAttribute('condition')
+      const condition = target.closest('tr').getAttribute('condition')
       const value = target.textContent
       const checkedWareHouse = querySelectorAll1('#warehouse-zd[checked]')[0]?.parentNode.id || target.getAttribute('warehouse')
       const item = {
@@ -15815,6 +15815,7 @@ headers: {
             const comb = item.sk.replace('sku-variables;', "")
             const clonedRow = originalRow.cloneNode(true)
             clonedRow.setAttribute('sk', item.sk)
+            clonedRow.setAttribute('condition', condition)
             const span = clonedRow.querySelector('#sku-variable-xz')
             clonedRow.removeAttribute('hidden')
             const elements = comb.split(';')
