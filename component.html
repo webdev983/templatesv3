@@ -15830,6 +15830,7 @@ headers: {
           'Content-Type': 'application/json',
         },
       }).then(e => e.json()).then(res => res.items[0])
+      console.log(JSON.stringify(item))
       const found = item.shippingMethodes.find(e=>e.id===wareHouseSk)
       if(!found.items){
         found.items = []
@@ -15841,7 +15842,7 @@ headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-          { ...getItem, ...item }
+          { ...getItem }
         ),
       });
     }
