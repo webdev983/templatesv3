@@ -16282,11 +16282,11 @@ headers: {
             //item.shippingMethodes = item.shippingMethodes ? [...item.shippingMethodes, element.sk] : [element.sk]
             if (item.shippingMethodes) {
               if (!item.shippingMethodes.includes(element.sk)) {
-                item.shippingMethodes = [...item.shippingMethodes, element.sk]
+                item.shippingMethodes = [...item.shippingMethodes,{id: element.sk}]
               }
             }
             else {
-              item.shippingMethodes = [element.sk]
+              item.shippingMethodes = [{id:element.sk}]
             }
             console.log(JSON.stringify(item))
             await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
