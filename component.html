@@ -1388,11 +1388,11 @@
                     </td>
                   </tr>
                   <tr id="ship-method-destination-row-0">
-                    <td id="warehouse-destination-value">
+                    <td id="warehouse-destination-value" onchange="handleWarehouseDestinationSelection(event)">
                       <select class="select-country">
-                        <option id="ship-to-none">⬇️</option>
-                        <option id="ship-to-usa">🇺🇸USA</option>
-                        <option id="ship-to-cn">🇨🇳CN</option>
+                        <option id="none">⬇️</option>
+                        <option id="usa">🇺🇸USA</option>
+                        <option id="cn">🇨🇳CN</option>
                       </select>
                     </td>
                   </tr>
@@ -15797,6 +15797,44 @@ headers: {
         item.items = []
       }
       item.items[index] ? (item.items[index].country =selectedOption) : (item.items[index] ={country:selectedOption})
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+          { ...getItem, ...item }
+        ),
+      });
+    }
+    const handleWarehouseDestinationSelection = async event => {
+      const checkedWareHouses = querySelectorAll1('#warehouse-zd[checked]')
+      const checkedWareHouse = checkedWareHouses[0]
+      const sk = checkedWareHouse.parentNode.id
+      
+      var selectElement = event.target
+      const wareHouseSk = selectElement.closest('tr').closest('tr').getAttribute('sk')
+      var selectedOption = selectElement.options[selectElement.selectedIndex].id;
+      
+      const getItem = {
+        id: ownerid,
+        sk,
+      }
+
+      const tr = selectElement.closest('tr')
+      const index = parseInt(tr.id.replace('ship-method-destination-row-',""))
+      console.log('index'+index)
+      const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${getItem.id}&sk=${getItem.sk}&startsWith=true`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(e => e.json()).then(res => res.items[0])
+      const found = item.shippingMethodes.find(e=>e.id===wareHouseSk)
+      if(!found.items){
+        found.items = []
+      }
+      found.items[index] =selectedOption
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
