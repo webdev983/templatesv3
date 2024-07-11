@@ -16070,8 +16070,9 @@ headers: {
       }
       const generateShippingM = async (defaultWareHouse) => {
         const shippingIds = defaultWareHouse.shippingMethodes
-        const filtered = shippingIds.map(id1 => shippingMethodes.find(e => e.sk === id1))
-        const original = getElementById1('shipping-des-item')
+        const filtered =removeDuplicates(shippingIds.map(e=>e.id)).map(id1 => shippingMethodes.find(e => e.sk === id1))
+        const originals = querySelectorAll1('#shipping-des-item')
+        const original = originals[0]
         for (const el of filtered) {
           const cloned = original.cloneNode(true)
           cloned.removeAttribute('hidden')
@@ -16079,6 +16080,7 @@ headers: {
           cloned.id=el.sk
           original.parentNode.append(cloned)
         }
+        filtered.length && originals.forEach(e=>e.remove())
       }
       if (defaultWareHouse) {
         const option = getElementById1('warehouse_select_label')
