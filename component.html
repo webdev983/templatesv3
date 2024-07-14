@@ -2987,7 +2987,10 @@
           const attributes = generated.getAttributeNames().filter(attr => !['id', 'class'].includes(attr));
           if (attributes.length) {
             element.removeAttribute('hidden')
-            element.textContent = attributes.join(' ')
+            element.textContent = attributes.map(att=>{
+              const value = generated.getAttribute(att)
+              return att + '=' + value
+            }).join(' ')
           }
         })
       }
