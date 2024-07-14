@@ -8099,8 +8099,10 @@ checkbox1.setAttribute('hidden', "");
             const {import_page,import_name} = element
             const cloned = row.cloneNode(true)
             row.parentNode.append(cloned)
-            cloned.querySelector('#select_import_name').value = import_name
-            cloned.querySelector('#import-component-select').value = import_page
+            nameEl = cloned.querySelector('#select_import_name')
+            compEl = cloned.querySelector('#import-component-select')
+            nameEl.selectedIndex = Array.from(nameEl.children).findIndex(option => option.id === import_name);
+            compEl.selectedIndex =  Array.from(compEl.children).findIndex(option => option.id === import_page);
           }
         }
 
