@@ -8095,7 +8095,13 @@ checkbox1.setAttribute('hidden', "");
       const gpt = JSON.parse(pathItem.hub_items?.gpt)['chatgpt-tasks']
       if (gpt) {
         for(const task of gpt){
-          
+          for(const element of task.import_data){
+            const {import_page,import_name} = element
+            const cloned = row.cloneNode(true)
+            row.parentNode.append(cloned)
+            cloned.querySelector('#import_name').value = import_name
+            cloned.querySelector('#import-component-name').value = import_page
+          }
         }
 
       }
