@@ -8053,11 +8053,60 @@ checkbox1.setAttribute('hidden', "");
 
       }
     }
-    const add_import_row = async(event)=>{
+    const add_import_row = async (event,item) => {
       const row = document.querySelector('#import2-row[hidden]')
       const cloned = row.cloneNode(true)
+      const selectName = cloned.querySelector('#select_import_name')
+      const selectComponent = cloned.querySelector('#import-component-select')
+      
       cloned.removeAttribute('hidden')
+      if(item){
+        selectName.selectedIndex = Array.from(selectName.children).findIndex(option => option.id === item.name);
+        selectComponent.selectedIndex =  Array.from(selectComponent.children).findIndex(option => option.id === item.cname);
+      }
+      else{
+        item = {
+          id:generateUUID()
+        }
+      }
+      selectName.onchange = (e)=>{
+        const selectedName = selectName.options[selectElement.selectedIndex].id
+        item.name = selectedName
+        if(pathItem.hub_items?.import_items){
+          const f = pathItem.hub_items?.import_items.find(e=>e.id ===item.id)
+          if(f){
+            f = item
+          }
+          else{
+            pathItem.hub_items?.import_items.push(item)
+          }
+          
+        }
+        else{
+          pathItem.hub_items?.import_items = [item]
+        }
+        updatePathItem()
+      }
+      selectComponent.onchange = (e)=>{
+        const selectedComponent = selectComponent.options[selectElement.selectedIndex].id
+        item.cname = selectedComponent
+        if(pathItem.hub_items?.import_items){
+          const f = pathItem.hub_items?.import_items.find(e=>e.id ===item.id)
+          if(f){
+            f = item
+          }
+          else{
+            pathItem.hub_items?.import_items.push(item)
+          }
+          
+        }
+        else{
+          pathItem.hub_items?.import_items = [item]
+        }
+        updatePathItem()
+      }
       row.parentNode.append(cloned)
+      
     }
     const handleImportMenu2 = async () => {
       const splited = pathItemPath.split('/')
@@ -8080,7 +8129,7 @@ checkbox1.setAttribute('hidden', "");
         }
 
         return null; // Return null if no matching attribute found
-      }).filter(value => value); 
+      }).filter(value => value);
       const row = getElementById1('import2-row')
       const importName = row.querySelector('#import_name')
       const importComponent = row.querySelector('#import-component-name')
@@ -8098,7 +8147,13 @@ checkbox1.setAttribute('hidden', "");
         cloned.textContent = cloned.textContent + ' ' + value
       }
       importComponent.remove()
-      
+      if (pathItem.hub_items?.import_items) {
+        for(let i=0;i<pathItem.hub_items?.import_items;i++){
+          const item = pathItem.hub_items?.import_items[i]
+          add_import_row(undefined,item)
+        }
+      }
+
     }
     const handleMenus = async () => {
       const table = document.getElementById('menu_toggle')
@@ -8120,7 +8175,7 @@ checkbox1.setAttribute('hidden', "");
         document.getElementById('sku-menu').removeAttribute('hidden')
         document.getElementById('sku-menu2').removeAttribute('hidden')
       }
-      
+
 
       if (pathItem.hub_items?.menus?.chatgpt_logs_toggle) {
         document.getElementById('ai-logs').removeAttribute('hidden')
