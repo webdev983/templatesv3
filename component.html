@@ -8084,12 +8084,18 @@ checkbox1.setAttribute('hidden', "");
           id: generateUUID()
         }
       }
-      saveButton.onclick =async (e) => {
+      saveButton.onclick = async (e) => {
         const v = textArea.value
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 7);
+
+        // Convert the date to ISO 8601 format (required by DynamoDB)
+        const ttl = tomorrow.getTime();
         const body = {
-          id:pathItem.id,
-          sk:`import:${item.id}`,
-          value:v
+          id: pathItem.id,
+          sk: `import:${item.id}`,
+          value: v,
+          ttl
 
         }
         const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/upload', {
