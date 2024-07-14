@@ -8059,27 +8059,40 @@ checkbox1.setAttribute('hidden', "");
       const fpath = splited.join('/') + '/'
       const response2 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${fpath}`);
       const data2 = await response2.json();
-      const subContentElements = data2.items.map(item  => item.lsi1.split(';')[0].split('|')[1]).filter(item => item.endsWith('-Content'))
+      const subContentElements = data2.items.map(item => item.lsi1.split(';')[0].split('|')[1]).filter(item => item.endsWith('-Content'))
       const data_imports = querySelectorAll1('*')
-      const data_importValues = Array.from(data_imports).map(z => z.getAttributeNames().find(e=>e.startsWith('data-import-')).filter(e=>e).replace('data-import-',''))
+      const data_importValues = Array.from(data_imports).map(element => {
+        // Get all attribute names of the current element
+        const attributeNames = element.getAttributeNames();
+
+        // Find the attribute that starts with 'data-import-'
+        const data_importAttribute = attributeNames.find(attr => attr.startsWith('data-import-'));
+
+        // If such attribute exists, extract its value
+        if (data_importAttribute) {
+          return data_importAttribute.replace('data-import-', ''); // Remove 'data-import-' prefix
+        }
+
+        return null; // Return null if no matching attribute found
+      }).filter(value => value); 
       const row = getElementById1('import2-row')
       const importName = row.querySelector('#import_name')
       const importComponent = row.querySelector('#import-component-name')
-      for(const value of data_importValues){
+      for (const value of data_importValues) {
         const cloned = importName.cloneNode(true)
         importName.parentNode.append(cloned)
         cloned.id = value
-        cloned.textContent = cloned.textContent + ' '+ value
+        cloned.textContent = cloned.textContent + ' ' + value
       }
       importName.remove()
-      for(const value of subContentElements){
+      for (const value of subContentElements) {
         const cloned = importComponent.cloneNode(true)
         importComponent.parentNode.append(cloned)
         cloned.id = value
-        cloned.textContent = cloned.textContent + ' '+ value
+        cloned.textContent = cloned.textContent + ' ' + value
       }
       importComponent.remove()
-      const gpt =JSON.parse( pathItem.hub_items?.gpt)['chatgpt-tasks']
+      const gpt = JSON.parse(pathItem.hub_items?.gpt)['chatgpt-tasks']
       if (gpt) {
         //const list = gpt.map(e => e.import_data)
 
@@ -8105,7 +8118,7 @@ checkbox1.setAttribute('hidden', "");
         document.getElementById('sku-menu').removeAttribute('hidden')
         document.getElementById('sku-menu2').removeAttribute('hidden')
       }
-      
+
       if (pathItem.hub_items?.menus?.chatgpt_logs_toggle) {
         document.getElementById('ai-logs').removeAttribute('hidden')
       }
