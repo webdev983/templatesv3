@@ -1216,7 +1216,7 @@
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">🚀 Import Menu2</span></summary>
         <button class="b-2" style="margin-left: 30px; margin-top: 10px;" onclick="add_import_row(event)">➕</button>
         <table class="table-1" style="margin-left: 30px; margin-top: 10px;">
-          <tr id="import2-row">
+          <tr id="import2-row" hidden>
             <td>
               <span class="l-3 b-dark-blue" id="import_toggle">🔴</span>
             </td>
@@ -8053,6 +8053,12 @@ checkbox1.setAttribute('hidden', "");
 
       }
     }
+    const add_import_row = async(event)=>{
+      const row = getElementById1('import2-row[hidden]')
+      const cloned = row.cloneNode(true)
+      cloned.removeAttribute('hidden')
+      row.parentNode.append(cloned)
+    }
     const handleImportMenu2 = async () => {
       const splited = pathItemPath.split('/')
       splited.pop()
@@ -8092,21 +8098,7 @@ checkbox1.setAttribute('hidden', "");
         cloned.textContent = cloned.textContent + ' ' + value
       }
       importComponent.remove()
-      const gpt = JSON.parse(pathItem.hub_items?.gpt)['chatgpt-tasks']
-      if (gpt) {
-        for(const task of gpt){
-          for(const element of task.import_data){
-            const {import_page,import_name} = element
-            const cloned = row.cloneNode(true)
-            row.parentNode.append(cloned)
-            nameEl = cloned.querySelector('#select_import_name')
-            compEl = cloned.querySelector('#import-component-select')
-            nameEl.selectedIndex = Array.from(nameEl.children).findIndex(option => option.id === import_name);
-            compEl.selectedIndex =  Array.from(compEl.children).findIndex(option => option.id === import_page);
-          }
-        }
-
-      }
+      
     }
     const handleMenus = async () => {
       const table = document.getElementById('menu_toggle')
@@ -8127,6 +8119,10 @@ checkbox1.setAttribute('hidden', "");
       if (pathItem.hub_items?.menus?.sku_menu_toggle) {
         document.getElementById('sku-menu').removeAttribute('hidden')
         document.getElementById('sku-menu2').removeAttribute('hidden')
+      }
+      if (pathItem.hub_items?.menus?.import_menu_toggle) {
+        document.getElementById('import-menu-2').removeAttribute('hidden')
+        await handleImportMenu2()
       }
 
       if (pathItem.hub_items?.menus?.chatgpt_logs_toggle) {
@@ -8450,10 +8446,7 @@ checkbox1.setAttribute('hidden', "");
         console.log(e.message)
       }
       await loadFromDb()
-      if (pathItem.hub_items?.menus?.import_menu_toggle) {
-        document.getElementById('import-menu-2').removeAttribute('hidden')
-        await handleImportMenu2()
-      }
+      
       clearInterval(interval);
       lastActionTime.textContent = timerElement.textContent;
       loadingScreen.style.display = 'none';
