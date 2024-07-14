@@ -743,7 +743,7 @@
                 <td>
                   <input type="checkbox" id="script_execute_select" hidden>
                   <label id="script_status" class="l-3">🔴</label>
-                  <label class="l-3" style="margin: 10px;">import  product buttons pictures</label>
+                  <label class="l-3" style="margin: 10px;">import product buttons pictures</label>
                 </td>
                 <td>
                   <span class="l-3">🦾</span>
@@ -777,7 +777,7 @@
                 <td>
                   <input type="checkbox" id="script_execute_select" hidden>
                   <label id="script_status" class="l-3">🔴</label>
-                  <label class="l-3" style="margin: 10px;">import  product pictures</label>
+                  <label class="l-3" style="margin: 10px;">import product pictures</label>
                 </td>
                 <td>
                   <span class="l-3">🦾</span>
@@ -1216,35 +1216,35 @@
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">🚀 Import Menu2</span></summary>
         <button class="b-2" style="margin-left: 30px; margin-top: 10px;" onclick="add_import_row(event)">➕</button>
         <table class="table-1" style="margin-left: 30px; margin-top: 10px;">
-          <tr>
-          <td>
-            <span class="l-3 b-dark-blue" id="import_toggle">🔴</span>
-          </td>
-          <td>
-            <select id="select_import_name" class="select-1">
-              <option>⬇️ Select</option>
-              <option id="import_name">🚀</option>
-          </select>
-        </td>
-          <td>
-            <select id="import-component-select" class="select-1">
-            <option>⬇️ Select</option>
-            <option id="import-component-name">🧩</option>
-          </select>
+          <tr id="import2-row">
+            <td>
+              <span class="l-3 b-dark-blue" id="import_toggle">🔴</span>
+            </td>
+            <td>
+              <select id="select_import_name" class="select-1">
+                <option>⬇️ Select</option>
+                <option id="import_name">🚀</option>
+              </select>
+            </td>
+            <td>
+              <select id="import-component-select" class="select-1">
+                <option>⬇️ Select</option>
+                <option id="import-component-name">🧩</option>
+              </select>
 
-          </td>
-          <td>
-            <details id="import-menu-2" style="margin-bottom: 7px;">
-              <summary class="summary-L-3"><span class="l-3 b-dark-blue">🚀</span></summary>
-              <textarea></textarea>
-              <br>
-              <button class="b-4">💾 Save</button>
-            </details>
-          </td>
+            </td>
+            <td>
+              <details id="import-menu-2" style="margin-bottom: 7px;">
+                <summary class="summary-L-3"><span class="l-3 b-dark-blue">🚀</span></summary>
+                <textarea></textarea>
+                <br>
+                <button class="b-4">💾 Save</button>
+              </details>
+            </td>
 
-          <td>
-            <button class="b-3">🗑️</button>
-          </td>
+            <td>
+              <button class="b-3">🗑️</button>
+            </td>
 
           <tr>
         </table>
@@ -2442,13 +2442,13 @@
             <details style="margin-bottom: 7px;">
               <summary class="summary-L-3"><span class="l-3 b-dark-blue">color</span></summary>
               <select class="select-1" style="display: block; margin-bottom: 7px; margin-left: 18px;" multiple="">
-                <option > none</option>
-                <option > black</option>
-                <option > white</option>
-                <option > blue</option>
+                <option> none</option>
+                <option> black</option>
+                <option> white</option>
+                <option> blue</option>
               </select>
             </details>
-        </td>
+          </td>
           <td>
             <div data-file-name-show="Product-Content">
               <label class="l-3">
@@ -2463,21 +2463,21 @@
             <details style="margin-bottom: 7px;">
               <summary class="summary-L-3"><span class="l-3 b-dark-blue">color</span></summary>
               <select class="select-1" style="display: block; margin-bottom: 7px; margin-left: 18px;" multiple="">
-                <option > none</option>
-                <option > black</option>
-                <option > white</option>
-                <option > blue</option>
+                <option> none</option>
+                <option> black</option>
+                <option> white</option>
+                <option> blue</option>
               </select>
             </details>
             <details style="margin-bottom: 7px;">
-                <summary class="summary-L-3"><span class="l-3 b-dark-blue">color</span></summary>
-                <select class="select-1" style="display: block; margin-bottom: 7px; margin-left: 18px;" multiple="">
-                  <option > none</option>
-                  <option > black</option>
-                  <option > white</option>
-                  <option > blue</option>
-                </select>
-              </details>
+              <summary class="summary-L-3"><span class="l-3 b-dark-blue">color</span></summary>
+              <select class="select-1" style="display: block; margin-bottom: 7px; margin-left: 18px;" multiple="">
+                <option> none</option>
+                <option> black</option>
+                <option> white</option>
+                <option> blue</option>
+              </select>
+            </details>
           </td>
 
         </tr>
@@ -2987,7 +2987,7 @@
           const attributes = generated.getAttributeNames().filter(attr => !['id', 'class'].includes(attr));
           if (attributes.length) {
             element.removeAttribute('hidden')
-            element.textContent = attributes.map(att=>{
+            element.textContent = attributes.map(att => {
               const value = generated.getAttribute(att)
               return value ? att + '=' + value : att
             }).join(' ')
@@ -8053,7 +8053,38 @@ checkbox1.setAttribute('hidden', "");
 
       }
     }
+    const handleImportMenu2 = async () => {
+      const splited = pathItemPath.split('/')
+      splited.pop()
+      const fpath = splited.join('/') + '/'
+      const response2 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${fpath}`);
+      const data2 = await response2.json();
+      const subContentElements = data2.items.map(item => item => item.lsi1.split(';')[0].split('|')[1]).filter(item => item.endsWith('-Content'))
+      const data_imports = querySelectorAll1('[data-import]')
+      const data_importValues = Array.from(data_imports).map(z => z.getAttribute('data-import'))
+      const row = getElementById1('import2-row')
+      const importName = row.querySelector('#import_name')
+      const importComponent = row.querySelector('import-component-name')
+      for(const value of data_importValues){
+        const cloned = importName.cloneNode(true)
+        importName.parentNode.append(cloned)
+        cloned.id = value
+        cloned.textContent = cloned.textContent + ' '+ value
+      }
+      importName.remove()
+      for(const value of subContentElements){
+        const cloned = importComponent.cloneNode(true)
+        importComponent.parentNode.append(cloned)
+        cloned.id = value
+        cloned.textContent = cloned.textContent + ' '+ value
+      }
+      importComponent.remove()
+      const gpt = pathItem.hub_items?.gpt
+      if (gpt) {
+        const list = gpt.map(e => e.import_data)
 
+      }
+    }
     const handleMenus = async () => {
       const table = document.getElementById('menu_toggle')
       if (!pathItem.hub_items) {
@@ -8076,6 +8107,7 @@ checkbox1.setAttribute('hidden', "");
       }
       if (pathItem.hub_items?.menus?.import_menu_toggle) {
         document.getElementById('import-menu-2').removeAttribute('hidden')
+        await handleImportMenu2()
       }
       if (pathItem.hub_items?.menus?.chatgpt_logs_toggle) {
         document.getElementById('ai-logs').removeAttribute('hidden')
@@ -16157,7 +16189,7 @@ headers: {
       const condition = target.closest('tr').getAttribute('condition')
       const getItem = {
         id: 'sku:' + pathItemSku,
-        sk: 'site_price:' + pathItemPath.split('/')[0].toLowerCase() + ';' + condition + ';' + sk.replace('sku-variables;', '') ,
+        sk: 'site_price:' + pathItemPath.split('/')[0].toLowerCase() + ';' + condition + ';' + sk.replace('sku-variables;', ''),
 
 
       }
@@ -16266,7 +16298,7 @@ headers: {
       const defaultWareHouse = warehouses.find(e => e.default)
       const generateSkuV = (defaultWareHouse) => {
         const conditions1 = defaultWareHouse.conditions
-        if(!conditions1){
+        if (!conditions1) {
           return
         }
         for (const condition of conditions1) {
@@ -16297,7 +16329,7 @@ headers: {
               qI.textContent = foundV?.qty || 0
               pI.textContent = foundV?.price || 0
             }
-            const siteValue = skuSiteValue.find(e => e.sk.startsWith('site_price:' + pathItemPath.split('/')[0].toLowerCase() + ';' + condition + ';' + comb ))
+            const siteValue = skuSiteValue.find(e => e.sk.startsWith('site_price:' + pathItemPath.split('/')[0].toLowerCase() + ';' + condition + ';' + comb))
             const sI = clonedRow.querySelector('#sku-variable-price-all-current')
             const osI = clonedRow.querySelector('#sku-variable-price-all-old')
             sI.setAttribute('warehouse', defaultWareHouse.sk)
@@ -16324,7 +16356,7 @@ headers: {
       }
       const generateShippingM = async (defaultWareHouse) => {
         const shippingIds = defaultWareHouse.shippingMethodes
-        if(!shippingIds){
+        if (!shippingIds) {
           return
         }
         const ids = removeDuplicates(shippingIds.map(e => e.id))
@@ -16340,7 +16372,7 @@ headers: {
           cloned.id = el.sk
           original.parentNode.append(cloned)
           const originalSubRow = cloned.querySelector('#ship-method-destination-row-0')
-          const element = shippingIds.find(e=>e.id===el.sk)
+          const element = shippingIds.find(e => e.id === el.sk)
           console.log(filtered.sk)
           console.log(shippingIds)
           if (element?.items?.length) {
@@ -16356,7 +16388,7 @@ headers: {
               // Example value to match against option id
               countrySelect.selectedIndex = Array.from(countrySelect.children).findIndex(option => option.id === el);
 
-             
+
               cloned.id = 'ship-method-destination-row-' + i
               originalSubRow.parentNode.append(cloned)
 
@@ -16399,9 +16431,9 @@ headers: {
         cloned.querySelector('#warehouse-max-processing').textContent = element.max || 0
         const locationSelect = cloned.querySelector('#warehouse-country-select')
         locationSelect.selectedIndex =
-         Array.from(locationSelect.children).findIndex(option => option.id === element.location);
+          Array.from(locationSelect.children).findIndex(option => option.id === element.location);
 
-             
+
         cloned.querySelector('#enableWareHouse').onclick = (e) => {
           e.target.textContent = '🟢'
           const option = getElementById1('warehouse_select_label')
