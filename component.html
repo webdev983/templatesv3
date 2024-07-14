@@ -8079,7 +8079,7 @@ checkbox1.setAttribute('hidden', "");
         cloned.textContent = cloned.textContent + ' '+ value
       }
       importComponent.remove()
-      const gpt = pathItem.hub_items?.gpt
+      const gpt =JSON.parse( pathItem.hub_items?.gpt).chatgpt-tasks
       if (gpt) {
         //const list = gpt.map(e => e.import_data)
 
@@ -8105,10 +8105,7 @@ checkbox1.setAttribute('hidden', "");
         document.getElementById('sku-menu').removeAttribute('hidden')
         document.getElementById('sku-menu2').removeAttribute('hidden')
       }
-      if (pathItem.hub_items?.menus?.import_menu_toggle) {
-        document.getElementById('import-menu-2').removeAttribute('hidden')
-        await handleImportMenu2()
-      }
+      
       if (pathItem.hub_items?.menus?.chatgpt_logs_toggle) {
         document.getElementById('ai-logs').removeAttribute('hidden')
       }
@@ -8430,7 +8427,10 @@ checkbox1.setAttribute('hidden', "");
         console.log(e.message)
       }
       await loadFromDb()
-
+      if (pathItem.hub_items?.menus?.import_menu_toggle) {
+        document.getElementById('import-menu-2').removeAttribute('hidden')
+        await handleImportMenu2()
+      }
       clearInterval(interval);
       lastActionTime.textContent = timerElement.textContent;
       loadingScreen.style.display = 'none';
