@@ -16392,8 +16392,8 @@ headers: {
         tr.parentNode.append(cloned)
         cloned.querySelector('#wareHouseInput').textContent = element.value
         cloned.querySelector('#defaultWareHouseInput').checked = !!element.default
-        cloned.querySelector('#warehouse-min-processing').textContent = element.min
-        cloned.querySelector('#warehouse-max-processing').textContent = element.max
+        cloned.querySelector('#warehouse-min-processing').textContent = element.min || 0
+        cloned.querySelector('#warehouse-max-processing').textContent = element.max || 0
         const locationSelect = cloned.querySelector('#warehouse-country-select')
         locationSelect.selectedIndex =
          Array.from(locationSelect.children).findIndex(option => option.id === element.location);
