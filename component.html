@@ -8053,61 +8053,88 @@ checkbox1.setAttribute('hidden', "");
 
       }
     }
-    const add_import_row = async (event,item) => {
+    const add_import_row = async (event, item) => {
       console.log('adding row 1')
       const row = document.querySelector('#import2-row[hidden]')
       const cloned = row.cloneNode(true)
       const selectName = cloned.querySelector('#select_import_name')
       const selectComponent = cloned.querySelector('#import-component-select')
-      
+      const saveButton = cloned.querySelector('#saveImportButton')
+      const textArea = cloned.querySelector('#saveImportText')
+
+
       cloned.removeAttribute('hidden')
-      if(item){
+      if (item) {
         selectName.selectedIndex = Array.from(selectName.children).findIndex(option => option.id === item.name);
-        selectComponent.selectedIndex =  Array.from(selectComponent.children).findIndex(option => option.id === item.cname);
-      }
-      else{
-        item = {
-          id:generateUUID()
+        selectComponent.selectedIndex = Array.from(selectComponent.children).findIndex(option => option.id === item.cname);
+        const value = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${pathItem.id}:import:${item.id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            // Add any additional headers if needed
+          },
+        });
+        const { items } = await value.json()
+        if (items.length) {
+          textArea.value = items[0].value
         }
       }
-      selectName.onchange = (e)=>{
+      else {
+        item = {
+          id: generateUUID()
+        }
+      }
+      saveButton.onclick =async (e) => {
+        const v = textArea.value
+        const body = {
+          id:pathItem.id,
+          sk:`import:${item.id}`,
+          value:v
+
+        }
+        const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/upload', {
+          method: 'POST',
+          body: JSON.stringify(body),
+        });
+      }
+      selectName.onchange = (e) => {
         const selectedName = selectName.options[selectName.selectedIndex].id
         item.name = selectedName
-        if(pathItem.hub_items?.import_items){
-          let f = pathItem.hub_items?.import_items.find(e=>e.id ===item.id)
-          if(f){
+        if (pathItem.hub_items?.import_items) {
+          let f = pathItem.hub_items?.import_items.find(e => e.id === item.id)
+          if (f) {
             f = item
           }
-          else{
+          else {
             pathItem.hub_items.import_items.push(item)
           }
-          
+
         }
-        else{
+        else {
           pathItem.hub_items.import_items = [item]
         }
         updatePathItem()
       }
-      selectComponent.onchange = (e)=>{
+      selectComponent.onchange = (e) => {
         const selectedComponent = selectComponent.options[selectComponent.selectedIndex].id
         item.cname = selectedComponent
-        if(pathItem.hub_items?.import_items){
-          let f = pathItem.hub_items?.import_items.find(e=>e.id ===item.id)
-          if(f){
+        if (pathItem.hub_items?.import_items) {
+          let f = pathItem.hub_items?.import_items.find(e => e.id === item.id)
+          if (f) {
             f = item
           }
-          else{
+          else {
             pathItem.hub_items.import_items.push(item)
           }
-          
+
         }
-        else{
+        else {
           pathItem.hub_items.import_items = [item]
         }
         updatePathItem()
       }
       row.parentNode.append(cloned)
-      
+
     }
     const handleImportMenu2 = async () => {
       const splited = pathItemPath.split('/')
@@ -8149,9 +8176,9 @@ checkbox1.setAttribute('hidden', "");
       }
       importComponent.remove()
       if (pathItem.hub_items?.import_items) {
-        for(let i=0;i<pathItem.hub_items?.import_items.length;i++){
+        for (let i = 0; i < pathItem.hub_items?.import_items.length; i++) {
           const item = pathItem.hub_items?.import_items[i]
-          add_import_row(undefined,item)
+          add_import_row(undefined, item)
         }
       }
 
