@@ -4960,7 +4960,7 @@
             }
             let f = pathItem.hub_items?.import_items.find(e => e.name === import_name && e.cname === import_page)
             if (!f) {
-              f = await add_import_row()
+              f = await add_import_row(undefined,undefined,import_name,import_page)
             }
             tomorrow.setDate(currentDate.getDate() + 6);
 
@@ -8073,7 +8073,7 @@ checkbox1.setAttribute('hidden', "");
 
       }
     }
-    const add_import_row = async (event, item) => {
+    const add_import_row = async (event, item,name1,name2) => {
       console.log('adding row 1')
       const row = document.querySelector('#import2-row[hidden]')
       const cloned = row.cloneNode(true)
@@ -8084,6 +8084,13 @@ checkbox1.setAttribute('hidden', "");
 
 
       cloned.removeAttribute('hidden')
+      if(name1){
+        item = {
+          id: generateUUID(),
+          name:name1,
+          cname:name2
+        }
+      }
       if (item) {
         selectName.selectedIndex = Array.from(selectName.children).findIndex(option => option.id === item.name);
         selectComponent.selectedIndex = Array.from(selectComponent.children).findIndex(option => option.id === item.cname);
