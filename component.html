@@ -1235,7 +1235,7 @@
             </td>
             <td>
               <details id="import-menu-2" style="margin-bottom: 7px;">
-                <summary class="summary-L-3"><span class="l-3 b-dark-blue">🚀</span></summary>
+                <summary class="summary-L-3" id="importTextToggle"><span class="l-3 b-dark-blue">🚀</span></summary>
                 <textarea id="saveImportText"></textarea>
                 <br>
                 <button class="b-4" id="saveImportButton">💾 Save</button>
@@ -4960,7 +4960,7 @@
             }
             let f = pathItem.hub_items?.import_items.find(e => e.name === import_name && e.cname === import_page)
             if (!f) {
-              f= await add_import_row()
+              f = await add_import_row()
             }
             tomorrow.setDate(currentDate.getDate() + 6);
 
@@ -8087,23 +8087,35 @@ checkbox1.setAttribute('hidden', "");
       if (item) {
         selectName.selectedIndex = Array.from(selectName.children).findIndex(option => option.id === item.name);
         selectComponent.selectedIndex = Array.from(selectComponent.children).findIndex(option => option.id === item.cname);
-        const value = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${pathItem.id}:import:${item.id}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            // Add any additional headers if needed
-          },
-        });
-        const item1 = await value.json()
-        if (item1) {
-          textArea.value = item1[0].value
-        }
+
       }
       else {
         item = {
           id: generateUUID()
         }
       }
+      const toggle = cloned.querySelector('#importTextToggle')
+      toggle.addEventListener('toggle',async function () {
+        if (toggle.open) {
+          // Code to execute when details are opened
+          const value = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${pathItem.id}:import:${item.id}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              // Add any additional headers if needed
+            },
+          });
+          const item1 = await value.json()
+          if (item1) {
+            textArea.value = item1[0].value
+          }
+          // Add your additional actions here
+        } else {
+          // Code to execute when details are closed
+          console.log('Details closed');
+          // Add your actions for when details are closed (if needed)
+        }
+      });
       saveButton.onclick = async (e) => {
         const v = textArea.value
         const tomorrow = new Date();
