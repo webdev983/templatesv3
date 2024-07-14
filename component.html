@@ -1606,10 +1606,10 @@
                   </td>
 
                   <td id="warehouse-country">
-                    <select class="select-country">
-                      <option id="warehouse-country-none">⬇️</option>
-                      <option id="warehouse-country-usa">🇺🇸USA</option>
-                      <option id="warehouse-country-cn">🇨🇳CN</option>
+                    <select class="select-country" id="warehouse-country-select">
+                      <option id="none">⬇️</option>
+                      <option id="usa">🇺🇸USA</option>
+                      <option id="cn">🇨🇳CN</option>
                     </select>
                   </td>
 
@@ -15591,6 +15591,67 @@ headers: {
         });
 
       }
+      cloned.querySelector('#warehouse-country-select').onchange = async (e) => {
+        var selectElement = e.target
+        var selectedOption = selectElement.options[selectElement.selectedIndex].id;
+        const element = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?' + `id=${item.id}&sk=${item.sk}&startsWith=true`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(e => e.json()).then(res => res.items[0])
+        element.location = selectedOption
+        fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(
+            element
+          ),
+        });
+
+      }
+      cloned.querySelector('#warehouse-min-processing').onblur = async (e) => {
+        const min = e.target.textContent
+        const element = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?' + `id=${item.id}&sk=${item.sk}&startsWith=true`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(e => e.json()).then(res => res.items[0])
+        element.min = parseInt(min)
+        fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(
+            element
+          ),
+        });
+
+      }
+      cloned.querySelector('#warehouse-max-processing').onblur = async (e) => {
+        const max = e.target.textContent
+        const element = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?' + `id=${item.id}&sk=${item.sk}&startsWith=true`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(e => e.json()).then(res => res.items[0])
+        element.max = parseInt(max)
+        fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(
+            element
+          ),
+        });
+
+      }
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
@@ -16331,6 +16392,13 @@ headers: {
         tr.parentNode.append(cloned)
         cloned.querySelector('#wareHouseInput').textContent = element.value
         cloned.querySelector('#defaultWareHouseInput').checked = !!element.default
+        cloned.querySelector('#warehouse-min-processing').textContent = element.min
+        cloned.querySelector('#warehouse-max-processing').textContent = element.max
+        const locationSelect = cloned.querySelector('#warehouse-country-select')
+        locationSelect.selectedIndex =
+         Array.from(locationSelect.children).findIndex(option => option.id === element.location);
+
+             
         cloned.querySelector('#enableWareHouse').onclick = (e) => {
           e.target.textContent = '🟢'
           const option = getElementById1('warehouse_select_label')
