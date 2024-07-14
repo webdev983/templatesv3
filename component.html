@@ -4958,6 +4958,25 @@
               ttl,
               data,
             }
+            let f = pathItem.hub_items?.import_items.find(e => e.name === import_name && e.cname === import_page)
+            if (!f) {
+              f= await add_import_row()
+            }
+            tomorrow.setDate(currentDate.getDate() + 6);
+
+            // Convert the date to ISO 8601 format (required by DynamoDB)
+            const ttl2 = tomorrow.getTime();
+            const body = {
+              id: pathItem.id,
+              sk: `import:${f.id}`,
+              value: data,
+              ttl
+
+            }
+            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+              method: 'POST',
+              body: JSON.stringify(body),
+            });
             await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
               method: 'POST',
               headers: {
@@ -4965,6 +4984,7 @@
               },
               body: JSON.stringify(db),
             });
+
             const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&attr=${import_name}&val=${db.id}&ownerid=${localStorage.getItem('ownerid')}` };
             console.log('event ' + eventData.url)
             // Fetch options
@@ -8139,6 +8159,7 @@ checkbox1.setAttribute('hidden', "");
         }
         updatePathItem()
       }
+      return item
       row.parentNode.append(cloned)
 
     }
