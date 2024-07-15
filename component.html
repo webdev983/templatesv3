@@ -2440,7 +2440,7 @@
           </td>
           <td id="item-sku-variable">
             <details style="margin-bottom: 7px;" id="item-sku-variable-details" hidden>
-              <summary class="summary-L-3"><span class="l-3 b-dark-blue" >color</span></summary>
+              <summary class="summary-L-3"><span class="l-3 b-dark-blue">color</span></summary>
               <select class="select-1" style="display: block; margin-bottom: 7px; margin-left: 18px;" multiple="">
                 <option id='none'> none</option>
               </select>
@@ -2463,7 +2463,7 @@
                 <option id='none'> none</option>
               </select>
             </details>
-            
+
           </td>
 
         </tr>
@@ -3094,6 +3094,15 @@
 
   </script>
   <script>
+    var postToDb = (item) => fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(
+        item
+      ),
+    });
     //gallery scripts 
     var cancelGalleryMenu = (event) => {
       event.target.closest('#menu-1').style.display = 'none';
@@ -3110,6 +3119,17 @@
         ),
       });
     }
+    function preSelectOptions(selectElement, selectedValues) {
+      const options = selectElement.querySelectorAll('option');
+      options.forEach(option => {
+        if (selectedValues.includes(option.id)) {
+          option.selected = true;
+        } else {
+          option.selected = false;
+        }
+      });
+    }
+
     var handleSecondaryChange = async (e, item) => {
       const checked = e.target.checked
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -3150,15 +3170,15 @@
       if (pathItemSku) {
         const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=sku-variables;&startsWith=true`)
           .then(response => response.json()).then(res => res.items)
-       
+
         const obj = {}
         for (const item of skuVariables) {
           const splited = item.sk.split(';')
           for (let i = 1; i < splited.length - 1; i++) {
             const splited2 = splited[i].split(':')
-            obj[splited2[0]] ?  (!obj[splited2[0]].includes(splited2[1]) 
-                                && obj[splited2[0]].push(splited2[1])) 
-                                : (obj[splited2[0]] = [splited2[1]])
+            obj[splited2[0]] ? (!obj[splited2[0]].includes(splited2[1])
+              && obj[splited2[0]].push(splited2[1]))
+              : (obj[splited2[0]] = [splited2[1]])
           }
         }
         skuMap = obj
@@ -3196,14 +3216,30 @@
         if (skuMap) {
           const skuVRow = clonedRow.querySelector('#item-sku-variable-details')
           const optionsRow = clonedRow.querySelector('#item-gallery-details')
-          for (const key of Object.keys(skuMap)){
+          if (!item.variables) {
+            item.variables = {}
+          }
+          if (!item.optionsVariables) {
+            item.optionsVariables = {}
+          }
+          for (const key of Object.keys(skuMap)) {
             const cloned = skuVRow.cloneNode(true)
             const cloned2 = optionsRow.cloneNode(true)
             cloned.removeAttribute('hidden')
             cloned2.removeAttribute('hidden')
             cloned.querySelector('summary span').textContent = key
             cloned2.querySelector('summary span').textContent = key
-            for(const value of skuMap[key]){
+            cloned.querySelector('select').onchange = (e) => {
+              const selectedValues = Array.from(e.target.selectedOptions).map(option => option.id);
+              item.variables[key] = selectedValues
+              postToDb(item)
+            }
+            cloned2.querySelector('select').onchange = (e) => {
+              const selectedValues = Array.from(e.target.selectedOptions).map(option => option.id);
+              item.optionsVariables[key] = selectedValues
+              postToDb(item)
+            }
+            for (const value of skuMap[key]) {
               const option = document.createElement('option')
               option.id = value
               option.textContent = value
@@ -3214,6 +3250,10 @@
               option2.textContent = value
               cloned2.querySelector('select').append(option2)
             }
+            preSelectOptions(cloned.querySelector('select'), item.variables[key]);
+
+            // Pre-select options for cloned2 select element
+            preSelectOptions(cloned2.querySelector('select'), item.optionsVariables[key]);
             skuVRow.parentNode.append(cloned)
             optionsRow.parentNode.append(cloned2)
           }
