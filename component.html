@@ -1234,8 +1234,8 @@
 
             </td>
             <td>
-              <details id="import-menu-2" style="margin-bottom: 7px;" >
-                <summary class="summary-L-3" ><span class="l-3 b-dark-blue">🚀</span></summary>
+              <details id="import-menu-2" style="margin-bottom: 7px;">
+                <summary class="summary-L-3"><span class="l-3 b-dark-blue">🚀</span></summary>
                 <textarea id="saveImportText"></textarea>
                 <br>
                 <button class="b-4" id="saveImportButton">💾 Save</button>
@@ -4960,7 +4960,7 @@
             }
             let f = pathItem.hub_items?.import_items.find(e => e.name === import_name && e.cname === import_page)
             if (!f) {
-              f = await add_import_row(undefined,undefined,import_name,import_page)
+              f = await add_import_row(undefined, undefined, import_name, import_page)
             }
             tomorrow.setDate(currentDate.getDate() + 6);
 
@@ -8073,7 +8073,7 @@ checkbox1.setAttribute('hidden', "");
 
       }
     }
-    const add_import_row = async (event, item,name1,name2) => {
+    const add_import_row = async (event, item, name1, name2) => {
       console.log('adding row 1')
       const row = document.querySelector('#import2-row[hidden]')
       const cloned = row.cloneNode(true)
@@ -8084,16 +8084,16 @@ checkbox1.setAttribute('hidden', "");
 
 
       cloned.removeAttribute('hidden')
-      if(name1){
+      if (name1) {
         item = {
           id: generateUUID(),
-          name:name1,
-          cname:name2
+          name: name1,
+          cname: name2
         }
         if (pathItem.hub_items?.import_items) {
-          
-            pathItem.hub_items.import_items.push(item)
-          
+
+          pathItem.hub_items.import_items.push(item)
+
 
         }
         else {
@@ -8112,8 +8112,8 @@ checkbox1.setAttribute('hidden', "");
         }
       }
       const removeButton = cloned.querySelector('#saveImportButton')
-      removeButton.onclick = async(e)=>{
-        pathItem.hub_items.import_items = pathItem.hub_items.import_items.filter(e=>e.id !==item.id)
+      removeButton.onclick = async (e) => {
+        pathItem.hub_items.import_items = pathItem.hub_items.import_items.filter(e => e.id !== item.id)
 
         await updatePathItem()
         cloned.remove()
@@ -8143,7 +8143,9 @@ checkbox1.setAttribute('hidden', "");
         }
       });
       saveButton.onclick = async (e) => {
+
         const v = textArea.value
+        
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 7);
 
@@ -8155,6 +8157,16 @@ checkbox1.setAttribute('hidden', "");
           value: v,
           ttl
 
+        }
+        if (!v) {
+          await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${body.id}:${body.sk}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              // Add any additional headers if needed
+            },
+          });
+          return 
         }
         const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
           method: 'POST',
