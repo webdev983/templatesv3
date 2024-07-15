@@ -3156,7 +3156,9 @@
           const splited = item.sk.split(';')
           for (let i = 1; i < splited.length - 1; i++) {
             const splited2 = splited[i].split(':')
-            obj[splited2[0]] ?  (obj[splited2[0]].push(splited2[1])) : (obj[splited2[0]] = [splited2[1]])
+            obj[splited2[0]] ?  (!obj[splited2[0]].includes(splited2[1]) 
+                                && obj[splited2[0]].push(splited2[1])) 
+                                : (obj[splited2[0]] = [splited2[1]])
           }
         }
         skuMap = obj
