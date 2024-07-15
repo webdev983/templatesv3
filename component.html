@@ -1243,7 +1243,7 @@
             </td>
 
             <td>
-              <button class="b-3">🗑️</button>
+              <button class="b-3" id="delete-import-row">🗑️</button>
             </td>
 
           <tr>
@@ -8110,6 +8110,13 @@ checkbox1.setAttribute('hidden', "");
         item = {
           id: generateUUID()
         }
+      }
+      const removeButton = cloned.querySelector('#saveImportButton')
+      removeButton.onclick = async(e)=>{
+        pathItem.hub_items.import_items = pathItem.hub_items.import_items.filter(e=>e.id !==item.id)
+
+        await updatePathItem()
+        cloned.remove()
       }
       const toggle = cloned.querySelector('#import-menu-2')
       toggle.addEventListener('toggle', async function () {
