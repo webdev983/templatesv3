@@ -2438,18 +2438,15 @@
 
             </div>
           </td>
-          <td>
-            <details style="margin-bottom: 7px;">
-              <summary class="summary-L-3"><span class="l-3 b-dark-blue">color</span></summary>
+          <td id="item-sku-variable">
+            <details style="margin-bottom: 7px;" id="item-sku-variable-details" hidden>
+              <summary class="summary-L-3"><span class="l-3 b-dark-blue" >color</span></summary>
               <select class="select-1" style="display: block; margin-bottom: 7px; margin-left: 18px;" multiple="">
-                <option> none</option>
-                <option> black</option>
-                <option> white</option>
-                <option> blue</option>
+                <option id='none'> none</option>
               </select>
             </details>
           </td>
-          <td>
+          <td id="item-gallery-options">
             <div data-file-name-show="Product-Content">
               <label class="l-3">
                 <input data-picture-main-checkbox type="checkbox">⭐ Main
@@ -2460,24 +2457,13 @@
               </label>
             </div>
 
-            <details style="margin-bottom: 7px;">
+            <details style="margin-bottom: 7px;" id="item-gallery-details" hidden>
               <summary class="summary-L-3"><span class="l-3 b-dark-blue">color</span></summary>
               <select class="select-1" style="display: block; margin-bottom: 7px; margin-left: 18px;" multiple="">
-                <option> none</option>
-                <option> black</option>
-                <option> white</option>
-                <option> blue</option>
+                <option id='none'> none</option>
               </select>
             </details>
-            <details style="margin-bottom: 7px;">
-              <summary class="summary-L-3"><span class="l-3 b-dark-blue">color</span></summary>
-              <select class="select-1" style="display: block; margin-bottom: 7px; margin-left: 18px;" multiple="">
-                <option> none</option>
-                <option> black</option>
-                <option> white</option>
-                <option> blue</option>
-              </select>
-            </details>
+            
           </td>
 
         </tr>
@@ -3160,6 +3146,22 @@
       const table = clonedFieldset.querySelector('#gallery-body');
       const templateRow = clonedFieldset.querySelector('#gallery-item');
       table.innerHTML = ""
+      let skuMap
+      if (pathItemSku) {
+        const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=sku-variables;&startsWith=true`)
+          .then(response => response.json()).then(res => res.items)
+       
+        const obj = {}
+        for (const item of skuVariables) {
+          const splited = item.sk.split(';')
+          for (let i = 1; i < splited.length - 1; i++) {
+            const splited2 = splited[i].split(':')
+            obj[splited2[0]] ?  (obj[splited2[0]].push(splited2[1])) : (obj[splited2[0]] = [splited2[1]])
+          }
+        }
+        skuMap = obj
+
+      }
       // Loop through each image item
       items.forEach((item) => {
         // Clone the template row
@@ -3189,6 +3191,33 @@
             attachedLabel.textContent = 'NO'
           }
         }
+        if (skuMap) {
+          const skuVRow = clonedRow.querySelector('#item-sku-variable-details')
+          const optionsRow = clonedRow.querySelector('#item-gallery-details')
+          for (const key of Object.keys(skuMap)){
+            const cloned = skuVRow.cloneNode(true)
+            const cloned2 = optionsRow.cloneNode(true)
+            cloned.removeAttribute('hidden')
+            cloned2.removeAttribute('hidden')
+            cloned.querySelector('summary span').textContent = key
+            cloned2.querySelector('summary span').textContent = key
+            for(const value of skuMap[key]){
+              const option = document.createElement('option')
+              option.id = value
+              option.textContent = value
+              cloned.querySelector('select').append(option)
+
+              const option2 = document.createElement('option')
+              option2.id = value
+              option2.textContent = value
+              cloned2.querySelector('select').append(option2)
+            }
+            skuVRow.parentNode.append(cloned)
+            optionsRow.parentNode.append(cloned2)
+          }
+
+        }
+
 
         // Set a unique id for the cloned row (assuming you have a property named id in the item)
         clonedRow.id = `image-body-${item.sk}`;
@@ -8145,7 +8174,7 @@ checkbox1.setAttribute('hidden', "");
       saveButton.onclick = async (e) => {
 
         const v = textArea.value
-        
+
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 7);
 
@@ -8166,7 +8195,7 @@ checkbox1.setAttribute('hidden', "");
               // Add any additional headers if needed
             },
           });
-          return 
+          return
         }
         const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
           method: 'POST',
