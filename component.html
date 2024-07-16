@@ -3231,12 +3231,23 @@
             cloned2.querySelector('summary span').textContent = key
             cloned.querySelector('select').onchange = (e) => {
               const selectedValues = Array.from(e.target.selectedOptions).map(option => option.id);
-              item.variables[key] = selectedValues
+              if(selectedValues.includes('none')){
+                item.picture_buttons_sku_variables[key] = []
+              }
+              else{
+                item.picture_buttons_sku_variables[key] = selectedValues
+              }
+              
               postToDb(item)
             }
             cloned2.querySelector('select').onchange = (e) => {
               const selectedValues = Array.from(e.target.selectedOptions).map(option => option.id);
-              item.optionsVariables[key] = selectedValues
+              if(selectedValues.includes('none')){
+                item.gallery_variables_sku_variables[key] = []
+              }
+              else{
+                item.gallery_variables_sku_variables[key] = selectedValues
+              }
               postToDb(item)
             }
             for (const value of skuMap[key]) {
@@ -3250,10 +3261,10 @@
               option2.textContent = value
               cloned2.querySelector('select').append(option2)
             }
-            preSelectOptions(cloned.querySelector('select'), item.variables[key]);
+            preSelectOptions(cloned.querySelector('select'), item.picture_buttons_sku_variables[key]);
 
             // Pre-select options for cloned2 select element
-            preSelectOptions(cloned2.querySelector('select'), item.optionsVariables[key]);
+            preSelectOptions(cloned2.querySelector('select'), item.gallery_variables_sku_variables[key]);
             skuVRow.parentNode.append(cloned)
             optionsRow.parentNode.append(cloned2)
           }
