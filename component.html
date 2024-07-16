@@ -3636,7 +3636,17 @@
 
       return capitalizedString;
     }
-
+    const getConditionsAndWareHouse = (items) => {
+      const sks = items.map(i => i.sk)
+      const list = sks.map(sk => {
+        const splited = sk.split(';')
+        return { condition: splited.shift().split(':')[1], wareHouse: splited.pop().split(':')[1], combination: splited.join(';') }
+      })
+      const conditions = removeDuplicates(list.map(e => e.condition))
+      const warehouse = removeDuplicates(list.map(e => e.wareHouse))
+      const combinations = list.map(e => e.combination)
+      return { conditions, warehouses, combinations }
+    }
     const skuToHtml = async (sku) => {
       //const spec = document.getElementById('spec-status')
       //spec.textContent = '🗂️ Table spec 🟠'
@@ -3652,6 +3662,18 @@
           'Content-Type': 'application/json',
         },
       }).then(e => e.json()).then(({ items }) => items)
+      const article = querySelectorAll1('.product_article')[0]
+      const { conditions, warehouses, combinations } = getConditionsAndWareHouse(qitems)
+      const payload2 = {
+
+        time: (new Date()).getTime().toString(),
+        action: 'setAttribute',
+        target_element: article.id + '-tree',
+        key: 'data-product',
+        value: `${sku};${warehouses.join(',')};${conditions.join(',')}`,
+
+      }
+
 
     }
     const skuToHtmlApi = async () => {
@@ -8990,8 +9012,6 @@ checkbox1.setAttribute('hidden', "");
 
         getElementById1('transform').click()
       }
-
-      document.dispatchEvent(event)
     }
 
     var actionLog = []
