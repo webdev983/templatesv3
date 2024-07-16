@@ -3151,11 +3151,11 @@
       //const id = pathItemSku || pathItem.id
       let mergedItems = []
       const ids = [...Object.keys(cache)]
-      if(pathItemSku){
+      if (pathItemSku) {
         ids.push(pathItemSku)
-        ids.push('sku:'+pathItemSku)
+        ids.push('sku:' + pathItemSku)
       }
-      else{
+      else {
         ids.push(pathItem.id)
       }
       const res = await Promise.all(ids.map(e => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${e}&sk=pics&startsWith=true`, {
@@ -3239,21 +3239,21 @@
             cloned2.querySelector('summary span').textContent = key
             cloned.querySelector('select').onchange = (e) => {
               const selectedValues = Array.from(e.target.selectedOptions).map(option => option.id);
-              if(selectedValues.includes('none')){
+              if (selectedValues.includes('none')) {
                 item.picture_buttons_sku_variables[key] = []
               }
-              else{
+              else {
                 item.picture_buttons_sku_variables[key] = selectedValues
               }
-              
+
               postToDb(item)
             }
             cloned2.querySelector('select').onchange = (e) => {
               const selectedValues = Array.from(e.target.selectedOptions).map(option => option.id);
-              if(selectedValues.includes('none')){
+              if (selectedValues.includes('none')) {
                 item.gallery_variables_sku_variables[key] = []
               }
-              else{
+              else {
                 item.gallery_variables_sku_variables[key] = selectedValues
               }
               postToDb(item)
@@ -3407,7 +3407,7 @@
     }
     async function handleUpload1(event, src) {
 
-      const id = pathItemSku ? ('sku:'+pathItemSku)  : pathItem.id
+      const id = pathItemSku ? ('sku:' + pathItemSku) : pathItem.id
       const fileContent = await file
       const fileName = fileContent.name
 
@@ -5052,7 +5052,7 @@
               ttl,
               data,
             }
-            
+
             tomorrow.setDate(currentDate.getDate() + 6);
 
             // Convert the date to ISO 8601 format (required by DynamoDB)
@@ -8303,7 +8303,24 @@ checkbox1.setAttribute('hidden', "");
       cloned.querySelector('#import_toggle').onclick = async (e) => {
         const { target } = e
         const compid = document.querySelector(`[name="${item.cname}"]`).parentNode.getAttribute('cid')
-        const data = textArea.value
+        const value = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${pathItem.id}:import:${item.id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            // Add any additional headers if needed
+          },
+        });
+        const item1 = await value.json()
+        console.log(item1)
+        let data
+        if (item1) {
+          console.log(item1.value)
+          data = item1.value
+        }
+        else{
+          data = textArea.value
+        }
+        
 
         //clean
         const eventData1 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&cleanAttr=${item.name}&ownerid=${localStorage.getItem('ownerid')}` };
