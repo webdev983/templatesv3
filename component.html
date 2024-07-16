@@ -3825,7 +3825,7 @@
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
       const { items } = await fetch(url).then(e => e.json())
 
-      const eventData1 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&cleanAttr=&ownerid=${localStorage.getItem('ownerid')}` };
+      const eventData1 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&clean=1&ownerid=${localStorage.getItem('ownerid')}` };
       console.log('event ' + eventData1.url)
       // Fetch options
       const options0 = {
@@ -8908,6 +8908,7 @@ checkbox1.setAttribute('hidden', "");
       const generateAnchorHref = urlParams.get('generateanchor')
       const importAttribute = urlParams.get('attr')
       const cleanAttribute = urlParams.get('cleanAttr')
+      const clean = urlParams.get('cleanAttr')
       const importValue = urlParams.get('val')
       const message = urlParams.get('message')
       const generateHtmlFromSku = urlParams.get('generateHtmlFromSku')
@@ -9114,6 +9115,9 @@ checkbox1.setAttribute('hidden', "");
       }
       if (cleanAttribute) {
         await cleanImport(cleanAttribute)
+      }
+      if (clean) {
+        await cleanImport()
       }
       if (importAttribute) {
         await handleImportGpt(importValue, importAttribute)
