@@ -3660,6 +3660,20 @@
       const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Content '
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
       const { items } = await fetch(url).then(e => e.json())
+
+      const eventData1 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&cleanAttr=&ownerid=${localStorage.getItem('ownerid')}` };
+      console.log('event ' + eventData1.url)
+      // Fetch options
+      const options0 = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData1)
+      };
+      await fetch(pup_url, options0);
+
+
       const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&generateHtmlFromSku=${pathItemSku}&ownerid=${localStorage.getItem('ownerid')}` };
 
       // Fetch options
