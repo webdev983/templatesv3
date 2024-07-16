@@ -3148,9 +3148,17 @@
         e.target.closest('fieldset').remove()
       }
       clonedFieldset.querySelector('#upload-button').onclick = (e) => handleUpload1(e, src)
-      const id = pathItemSku || pathItem.id
+      //const id = pathItemSku || pathItem.id
       let mergedItems = []
-      const res = await Promise.all([...Object.keys(cache), id].map(e => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${e}&sk=pics&startsWith=true`, {
+      const ids = [...Object.keys(cache)]
+      if(pathItemSku){
+        ids.push(pathItemSku)
+        ids.push('sku:'+pathItemSku)
+      }
+      else{
+        ids.push(pathItem.id)
+      }
+      const res = await Promise.all(ids.map(e => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${e}&sk=pics&startsWith=true`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -3399,7 +3407,7 @@
     }
     async function handleUpload1(event, src) {
 
-      const id = pathItemSku || pathItem.id
+      const id = pathItemSku ? ('sku:'+pathItemSku)  : pathItem.id
       const fileContent = await file
       const fileName = fileContent.name
 
