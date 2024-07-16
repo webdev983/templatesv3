@@ -5023,6 +5023,10 @@
             const data = content[import_name]
 
             //clean
+            let f = pathItem.hub_items?.import_items && pathItem.hub_items?.import_items.find(e => e.name === import_name && e.cname === import_page)
+            if (!f) {
+              f = await add_import_row(undefined, undefined, import_name, import_page)
+            }
             const eventData1 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&cleanAttr=${import_name}&ownerid=${localStorage.getItem('ownerid')}` };
             console.log('event ' + eventData1.url)
             // Fetch options
@@ -5048,10 +5052,7 @@
               ttl,
               data,
             }
-            let f = pathItem.hub_items?.import_items && pathItem.hub_items?.import_items.find(e => e.name === import_name && e.cname === import_page)
-            if (!f) {
-              f = await add_import_row(undefined, undefined, import_name, import_page)
-            }
+            
             tomorrow.setDate(currentDate.getDate() + 6);
 
             // Convert the date to ISO 8601 format (required by DynamoDB)
