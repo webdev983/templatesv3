@@ -3637,8 +3637,44 @@
       return capitalizedString;
     }
 
+    const skuToHtml =  async (sku) => {
+      //const spec = document.getElementById('spec-status')
+      //spec.textContent = '🗂️ Table spec 🟠'
+      const qitems = await fetch(`${backend_url}?id=sku:${sku}&sk=warehouse_price_qty:&startsWith=true`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+      }).then(e => e.json()).then(({ items }) => items)
+      const pitems = await fetch(`${backend_url}?id=sku:${sku}&sk=warehouse_price_qty:&startsWith=true`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+      }).then(e => e.json()).then(({ items }) => items)
+      
+    }
+    const skuToHtmlApi =  async () => {
+      //const spec = document.getElementById('spec-status')
+      //spec.textContent = '🗂️ Table spec 🟠'
+      const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Content '
+      url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
+      const { items } = await fetch(url).then(e => e.json())
+      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&generateHtmlFromSku=${pathItemSku}&ownerid=${localStorage.getItem('ownerid')}` };
 
-
+      // Fetch options
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData)
+      };
+      console.log(eventData.url)
+      const response = await fetch(pup_url, options);
+      
+    }
+    
     const generateTableSpecApi = async () => {
       //const spec = document.getElementById('spec-status')
       //spec.textContent = '🗂️ Table spec 🟠'
@@ -8509,7 +8545,8 @@ checkbox1.setAttribute('hidden', "");
       script_generate_product_json: () => { },
       script_generate_article_anchor: generateAnchorApi,
       script_chatgpt_: () => { },
-      script_refresh_catalog: refreshCatalogue
+      script_refresh_catalog: refreshCatalogue,
+      script_sku_data_to_html : skuToHtmlApi()
     }
     const onLoad = async () => {
       log1('onload')
@@ -8695,6 +8732,7 @@ checkbox1.setAttribute('hidden', "");
       const cleanAttribute = urlParams.get('cleanAttr')
       const importValue = urlParams.get('val')
       const message = urlParams.get('message')
+      const generateHtmlFromSku = urlParams.get('generateHtmlFromSku')
       ownerid = localStorage.getItem('ownerid') || urlParams.get('ownerid')
       if (urlParams.get('ownerid')) {
         localStorage.setItem('executionToggle', 'true')
@@ -8886,6 +8924,9 @@ checkbox1.setAttribute('hidden', "");
 
       if (generatetable) {
         await generateTable(generatetable)
+      }
+      if(generateHtmlFromSku){
+        await skuToHtml(generateHtmlFromSku)
       }
       if (generatebreadcrumb) {
         await generateBreadCrumb()
@@ -15148,6 +15189,7 @@ elementsToRemove.forEach(element => element.remove());
         breadcrumb.textContent = '🥖 BreadCrumb Menu 🟢'
       }
     }
+    
     /*
     const handleSpecStatus = async () => {
       let exisitingValue = headContentItem && await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${headContentItem.id}:generated-tablespec`, {
@@ -15376,7 +15418,7 @@ headers: {
       });
 
       showSku2(value, true)
-      setDataProduct(value, resultList)
+      //setDataProduct(value, resultList)
     }
 
     const addSku = async (event) => {
@@ -16570,6 +16612,7 @@ headers: {
       getElementById1("sku-empty2").setAttribute('hidden', '')
       const filled = getElementById1('sku_filled')
       filled.removeAttribute('hidden')
+      filled.querySelector('#sku-condition-site-name-value').textContent = pathItemPath.split('/')[0].toLowerCase()
       //get warehouses
       document.querySelector('#sku-value2').textContent = sku
       const warehouses = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=warehouse:&startsWith=true`)
