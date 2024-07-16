@@ -3690,6 +3690,46 @@
       const { conditions, warehouses, combinations } = getConditionsAndWareHouse(qitems)
 
 
+      //price
+
+      const p = article.querySelector('.product_article')
+      let last1 = p.id + '-tree'
+      for (let i = 0; i < pitems.length; i++) {
+        const item = pitems[i]
+        let id
+        if (i !== 0) {
+          id = duplicateId(p.id).id
+          const actionObject = {
+            time: (new Date()).getTime(),
+            action: 'InsertAfter',
+            target_element: last,
+            inserted_element: { originalId: p.id + '-tree', id },
+          };
+          await pushAction(actionObject)
+        }
+        else{
+          id = p.id
+        }
+        const p1 = getElementById1(id)
+        const splited = item.sk.split(';')
+        splited.shift()
+        const condition = splited.shift()
+        setAttAction(p1.id + '-tree', 'data-id', `${sku}:${condition}:${splited.join(';')}`)
+        last1 = id
+        if (item.oldPrice) {
+          const dEl = p1.querySelector('.price_discount')
+          const oEl = p1.querySelector('.price_old')
+          const dV = dEl.querySelector('.price_value')
+          const oV = dEl.querySelector('.price_value')
+          await setTextAction(dV.id + '-tree', item.price)
+          await setTextAction(oV.id + '-tree', item.priceOld)
+        }
+        else {
+          const dEl = p1.querySelector('.price_normal')
+          const nV = dEl.querySelector('.price_value')
+          await setTextAction(nV.id + '-tree', item.price)
+        }
+      }
 
       const keyValues = {}
       for (const combination of combinations) {
@@ -3808,10 +3848,10 @@
             }).then(e => e.json())
             await setAttAction(input.id + '-tree', 'data-id', 'sku;' + keys[i] + ':' + res.items[0].value)
           }
-          else{
+          else {
             await setTextAction(spanEl.id + '-tree', value)
           }
-          
+
         }
       }
 
