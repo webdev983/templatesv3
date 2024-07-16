@@ -3689,7 +3689,7 @@
       const article = querySelectorAll1('.product_article')[0]
       const { conditions, warehouses, combinations } = getConditionsAndWareHouse(qitems)
 
-      
+
 
       const keyValues = {}
       for (const combination of combinations) {
@@ -3704,8 +3704,8 @@
         }
       }
       if (conditions.length > 1) {
-        
-        keyValues.conditions = conditions
+
+        keyValues.condition = conditions
       }
       await setAttAction(article.id + '-tree', 'data-product', `${sku};${warehouses.join(',')};${conditions.join(',')}`)
       const fieldset = article.querySelector('.product_attributes_fieldset')
@@ -3765,7 +3765,19 @@
         const first = keyValues[keys[i]].shift()
         await setTextAction(span.id + '-tree', first)
         await setAttAction(label.id + '-tree', 'for', 'sku;' + keys[i] + ':' + first)
-        await setAttAction(input.id + '-tree', 'data-id', 'sku;' + keys[i] + ':' + first)
+        if (key === 'condition') {
+          const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=${first}&startsWith=true`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json())
+          await setAttAction(input.id + '-tree', 'data-id', 'sku;' + keys[i] + ':' + res.items[0].value)
+        }
+        else {
+          await setAttAction(input.id + '-tree', 'data-id', 'sku;' + keys[i] + ':' + first)
+        }
+
         for (const value of keyValues[keys[i]]) {
           const dupLabelId = duplicateId(label.id).id
           const actionObject = {
@@ -3787,7 +3799,19 @@
           await setAttAction(dupInputId, 'data-id', 'sku;' + keys[i] + ':' + value)
           const labelEl = getElementById1(dupLabelId.replace('-tree', ''))
           const spanEl = labelEl.querySelector('.product_attribute_value')
-          await setTextAction(spanEl.id + '-tree', value)
+          if (key === 'condition') {
+            const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=${value}&startsWith=true`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(e => e.json())
+            await setAttAction(input.id + '-tree', 'data-id', 'sku;' + keys[i] + ':' + res.items[0].value)
+          }
+          else{
+            await setTextAction(spanEl.id + '-tree', value)
+          }
+          
         }
       }
 
