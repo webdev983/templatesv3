@@ -3662,6 +3662,7 @@
           'Content-Type': 'application/json',
         },
       }).then(e => e.json()).then(({ items }) => items)
+      if(qitems.length<2 ) return
       const article = querySelectorAll1('.product_article')[0]
       const { conditions, warehouses, combinations } = getConditionsAndWareHouse(qitems)
       const payload2 = {
@@ -3673,6 +3674,21 @@
         value: `${sku};${warehouses.join(',')};${conditions.join(',')}`,
 
       }
+      const fieldset  =article.querySelector('.product_attributes_fieldset')
+      let last = fieldset.id + '-tree'
+
+      for(let i =1;i<conditions.length;i++){
+        const id = duplicateId(fieldset.id).id
+        actionObject = {
+          time: (new Date()).getTime(),
+          action: 'InsertAfter',
+          target_element: last,
+          inserted_element: { originalId: breadC[0].id + '-tree', id },
+        };
+        await pushAction(actionObject)
+        last = id
+      }
+
 
 
     }
@@ -8843,7 +8859,7 @@ checkbox1.setAttribute('hidden', "");
         document.getElementById('import-menu-2').removeAttribute('hidden')
         await handleImportMenu2()
       }
-      
+      clearInterval(interval);
       lastActionTime.textContent = timerElement.textContent;
       loadingScreen.style.display = 'none';
       if (updateComponentsMap) {
@@ -8998,7 +9014,7 @@ checkbox1.setAttribute('hidden', "");
 
       const event = new CustomEvent("pageloaded")
       document.dispatchEvent(event)
-      clearInterval(interval);
+      
 
       //first menu
       let buttons = querySelectorAll1('button[data-element="code-tree-tag-name-button"]');
