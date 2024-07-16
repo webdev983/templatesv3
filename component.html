@@ -3637,24 +3637,24 @@
       return capitalizedString;
     }
 
-    const skuToHtml =  async (sku) => {
+    const skuToHtml = async (sku) => {
       //const spec = document.getElementById('spec-status')
       //spec.textContent = '🗂️ Table spec 🟠'
       const qitems = await fetch(`${backend_url}?id=sku:${sku}&sk=warehouse_price_qty:&startsWith=true`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       }).then(e => e.json()).then(({ items }) => items)
       const pitems = await fetch(`${backend_url}?id=sku:${sku}&sk=warehouse_price_qty:&startsWith=true`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       }).then(e => e.json()).then(({ items }) => items)
-      
+
     }
-    const skuToHtmlApi =  async () => {
+    const skuToHtmlApi = async () => {
       //const spec = document.getElementById('spec-status')
       //spec.textContent = '🗂️ Table spec 🟠'
       const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Content '
@@ -3672,9 +3672,9 @@
       };
       console.log(eventData.url)
       const response = await fetch(pup_url, options);
-      
+
     }
-    
+
     const generateTableSpecApi = async () => {
       //const spec = document.getElementById('spec-status')
       //spec.textContent = '🗂️ Table spec 🟠'
@@ -8353,10 +8353,10 @@ checkbox1.setAttribute('hidden', "");
           console.log(item1.value)
           data = item1.value
         }
-        else{
+        else {
           data = textArea.value
         }
-        
+
 
         //clean
         const eventData1 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&cleanAttr=${item.name}&ownerid=${localStorage.getItem('ownerid')}` };
@@ -8546,7 +8546,7 @@ checkbox1.setAttribute('hidden', "");
       script_generate_article_anchor: generateAnchorApi,
       script_chatgpt_: () => { },
       script_refresh_catalog: refreshCatalogue,
-      script_sku_data_to_html : skuToHtmlApi()
+      script_sku_data_to_html: skuToHtmlApi()
     }
     const onLoad = async () => {
       log1('onload')
@@ -8925,7 +8925,7 @@ checkbox1.setAttribute('hidden', "");
       if (generatetable) {
         await generateTable(generatetable)
       }
-      if(generateHtmlFromSku){
+      if (generateHtmlFromSku) {
         await skuToHtml(generateHtmlFromSku)
       }
       if (generatebreadcrumb) {
@@ -14326,6 +14326,24 @@ elementsToRemove.forEach(element => element.remove());
 
     }
     const cleanImport = async (attr) => {
+      if (!attr) {
+        const filteredActions = actions.filter(e =>
+          e.action !== 'Add_Component')
+        const actions = actions.filter(e =>
+          e.action == 'Add_Component')
+        const ps = filteredActions.map(
+          action =>
+            fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${action.id}:${action.sk}`, {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+                // Add any additional headers if needed
+              },
+            })
+        );
+        await Promise.all(ps)
+        return
+      }
       const els = querySelectorAll1(`[data-import-${attr}]`)
       for (const el of els) {
         const id = el.id
@@ -15189,7 +15207,7 @@ elementsToRemove.forEach(element => element.remove());
         breadcrumb.textContent = '🥖 BreadCrumb Menu 🟢'
       }
     }
-    
+
     /*
     const handleSpecStatus = async () => {
       let exisitingValue = headContentItem && await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${headContentItem.id}:generated-tablespec`, {
