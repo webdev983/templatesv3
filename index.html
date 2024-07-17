@@ -679,6 +679,13 @@
 
               // Construct the formatted string
               const formattedDate = `${year}-${month}-${day}. ${hours}:${minutes}`;
+              
+              const cloned = orderItem.cloneNode(true)
+              cloned.querySelector('[data-invoice-date-value]').textContent = formattedDate
+              cloned.querySelector('[data-invoice-site-value]').textContent = item.id.split(':')[0]
+              cloned.querySelector('[data-invoice-total-value]').textContent = item.total + '$'
+              cloned.querySelector('[data-invoice-status-value]').textContent = item.lsi1?.split(':')[1]
+              cloned.removeAttribute('hidden')
               const removeRow = cloned.querySelector('#remove-row')
               const restoreRow = cloned.querySelector('#restore-row')
               if (item.ttl) {
@@ -712,12 +719,6 @@
                 })
                 restoreRow.removeAttribute('hidden')
               }
-              const cloned = orderItem.cloneNode(true)
-              cloned.querySelector('[data-invoice-date-value]').textContent = formattedDate
-              cloned.querySelector('[data-invoice-site-value]').textContent = item.id.split(':')[0]
-              cloned.querySelector('[data-invoice-total-value]').textContent = item.total + '$'
-              cloned.querySelector('[data-invoice-status-value]').textContent = item.lsi1?.split(':')[1]
-              cloned.removeAttribute('hidden')
               orderItem.parentNode.append(cloned)
             }
           }
