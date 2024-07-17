@@ -8538,77 +8538,77 @@ checkbox1.setAttribute('hidden', "");
             return items[0]
 
           })
+
+        const compid = res.id
+        const value = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${headContentItem.id}:import:${item.id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            // Add any additional headers if needed
+          },
+        });
+        const item1 = await value.json()
+        console.log(item1)
+        let data
+        if (item1) {
+          console.log(item1.value)
+          data = item1.value
+        }
+        else {
+          data = textArea.value
+        }
+
+
+        //clean
+        const eventData1 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&cleanAttr=${item.name}&ownerid=${localStorage.getItem('ownerid')}` };
+        console.log('event ' + eventData1.url)
+        // Fetch options
+        const options0 = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(eventData1)
+        };
+        await fetch(pup_url, options0);
+        const currentDate = new Date();
+
+        // Add one day to the current date
+        const tomorrow = new Date(currentDate);
+        tomorrow.setDate(currentDate.getDate() + 1);
+
+        // Convert the date to ISO 8601 format (required by DynamoDB)
+        const ttl = tomorrow.getTime();
+        const db = {
+          id: generateUUID(),
+          sk: 'import',
+          ttl,
+          data,
+        }
+        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(db),
+        });
+
+        const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&attr=${item.name}&val=${db.id}&ownerid=${localStorage.getItem('ownerid')}` };
+        console.log('event ' + eventData.url)
+        // Fetch options
+        const options = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(eventData)
+        };
+        const response = await fetch(pup_url, options);
+        target.textContent = '🟢'
+
       }
-      const compid = res.id
-      const value = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${headContentItem.id}:import:${item.id}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          // Add any additional headers if needed
-        },
-      });
-      const item1 = await value.json()
-      console.log(item1)
-      let data
-      if (item1) {
-        console.log(item1.value)
-        data = item1.value
-      }
-      else {
-        data = textArea.value
-      }
-
-
-      //clean
-      const eventData1 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&cleanAttr=${item.name}&ownerid=${localStorage.getItem('ownerid')}` };
-      console.log('event ' + eventData1.url)
-      // Fetch options
-      const options0 = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(eventData1)
-      };
-      await fetch(pup_url, options0);
-      const currentDate = new Date();
-
-      // Add one day to the current date
-      const tomorrow = new Date(currentDate);
-      tomorrow.setDate(currentDate.getDate() + 1);
-
-      // Convert the date to ISO 8601 format (required by DynamoDB)
-      const ttl = tomorrow.getTime();
-      const db = {
-        id: generateUUID(),
-        sk: 'import',
-        ttl,
-        data,
-      }
-      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(db),
-      });
-
-      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&attr=${item.name}&val=${db.id}&ownerid=${localStorage.getItem('ownerid')}` };
-      console.log('event ' + eventData.url)
-      // Fetch options
-      const options = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(eventData)
-      };
-      const response = await fetch(pup_url, options);
-      target.textContent = '🟢'
-
-    }
-    row.parentNode.append(cloned)
-    return item
+      row.parentNode.append(cloned)
+      return item
 
 
     }
