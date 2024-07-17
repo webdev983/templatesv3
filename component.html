@@ -8530,6 +8530,10 @@ checkbox1.setAttribute('hidden', "");
 
       cloned.querySelector('#import_toggle').onclick = async (e) => {
         const { target } = e
+        if(target.textContent === '🟠'){
+          return
+        }
+        target.textContent = '🟠'
         const absolutePath = getAbsolutePath(pathItemPath, item.componentPath)
         url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${absolutePath}&token=${localStorage.getItem('token')}`;
 
