@@ -1867,7 +1867,8 @@
       const response2 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${fpath}`);
       //list of sub paths
       const data2 = await response2.json();
-      const items1 = [...data1.items, ...data2.items]
+      const items1 = [...data1.items.filter(e=>!e.lsi1.includes('A-Modules'))
+                      , ...data2.items]
 
       let replaceByIditems = []
       let doNotReplaceItems = []
