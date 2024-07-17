@@ -1222,11 +1222,11 @@
             </td>
             <td>
               <span id="import-name"></span>
-              
+
             </td>
             <td>
               <span id="import-component"></span>
-              
+
 
             </td>
             <td>
@@ -5274,7 +5274,7 @@
             const data = content[import_name]
 
             //clean
-            let f = pathItem.hub_items?.import_items && pathItem.hub_items?.import_items.find(e => e.name === import_name && e.cname === import_page)
+            let f = pathItem.hub_items?.import_items && pathItem.hub_items?.import_items.find(e => e.name === import_name && e.component === import_page)
             if (!f) {
               f = await add_import_row(undefined, undefined, import_name, import_page)
             }
@@ -5737,7 +5737,7 @@
         file_path.textContent = path;
         clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
         clonedItem.onclick = (e) => {
-          e.target.closest('li').remove(); 
+          e.target.closest('li').remove();
           selected.filter(el => {
             if (el === itemId) {
               // Return false to exclude the element from the filtered array
@@ -8431,8 +8431,8 @@ checkbox1.setAttribute('hidden', "");
       console.log('adding row 1')
       const row = document.querySelector('#import2-row[hidden]')
       const cloned = row.cloneNode(true)
-      const selectName = cloned.querySelector('#select_import_name')
-      const selectComponent = cloned.querySelector('#import-component-select')
+      const spanName = cloned.querySelector('#import-name')
+      const spanComponent = cloned.querySelector('#import-component')
       const saveButton = cloned.querySelector('#saveImportButton')
       const textArea = cloned.querySelector('#saveImportText')
 
@@ -8442,7 +8442,7 @@ checkbox1.setAttribute('hidden', "");
         item = {
           id: generateUUID(),
           name: name1,
-          cname: name2
+          component: name2
         }
         if (pathItem.hub_items?.import_items) {
 
@@ -8456,8 +8456,8 @@ checkbox1.setAttribute('hidden', "");
         updatePathItem()
       }
       if (item) {
-        selectName.selectedIndex = Array.from(selectName.children).findIndex(option => option.id === item.name);
-        selectComponent.selectedIndex = Array.from(selectComponent.children).findIndex(option => option.id === item.cname);
+        spanName.textContent = item.name
+        spanComponent = item.component
 
       }
       else {
@@ -8476,7 +8476,7 @@ checkbox1.setAttribute('hidden', "");
       toggle.addEventListener('toggle', async function () {
         if (toggle.open) {
           // Code to execute when details are opened
-          const value = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${pathItem.id}:import:${item.id}`, {
+          const value = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${headContentItem.id}:import:${item.id}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -8506,7 +8506,7 @@ checkbox1.setAttribute('hidden', "");
         // Convert the date to ISO 8601 format (required by DynamoDB)
         const ttl = tomorrow.getTime();
         const body = {
-          id: pathItem.id,
+          id: headContentItem.id,
           sk: `import:${item.id}`,
           value: v,
           ttl
@@ -8527,146 +8527,122 @@ checkbox1.setAttribute('hidden', "");
           body: JSON.stringify(body),
         });
       }
-      selectName.onchange = (e) => {
-        const selectedName = selectName.options[selectName.selectedIndex].id
-        item.name = selectedName
-        if (pathItem.hub_items?.import_items) {
-          let f = pathItem.hub_items?.import_items.find(e => e.id === item.id)
-          if (f) {
-            f = item
-          }
-          else {
-            pathItem.hub_items.import_items.push(item)
-          }
 
-        }
-        else {
-          pathItem.hub_items.import_items = [item]
-        }
-        updatePathItem()
-      }
-      selectComponent.onchange = (e) => {
-        const selectedComponent = selectComponent.options[selectComponent.selectedIndex].id
-        item.cname = selectedComponent
-        if (pathItem.hub_items?.import_items) {
-          let f = pathItem.hub_items?.import_items.find(e => e.id === item.id)
-          if (f) {
-            f = item
-          }
-          else {
-            pathItem.hub_items.import_items.push(item)
-          }
-
-        }
-        else {
-          pathItem.hub_items.import_items = [item]
-        }
-        updatePathItem()
-      }
       cloned.querySelector('#import_toggle').onclick = async (e) => {
         const { target } = e
-        const compid = document.querySelector(`[name="${item.cname}"]`).parentNode.getAttribute('cid')
-        const value = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${pathItem.id}:import:${item.id}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            // Add any additional headers if needed
-          },
-        });
-        const item1 = await value.json()
-        console.log(item1)
-        let data
-        if (item1) {
-          console.log(item1.value)
-          data = item1.value
-        }
-        else {
-          data = textArea.value
-        }
+        const absolutePath = getAbsolutePath(pathItemPath, item.componentPath)
+        url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${absolutePath}&token=${localStorage.getItem('token')}`;
 
+        const res = await fetch(url).then(res => res.json())
+          .then(async ({ items }) => {
+            return items[0]
 
-        //clean
-        const eventData1 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&cleanAttr=${item.name}&ownerid=${localStorage.getItem('ownerid')}` };
-        console.log('event ' + eventData1.url)
-        // Fetch options
-        const options0 = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(eventData1)
-        };
-        await fetch(pup_url, options0);
-        const currentDate = new Date();
-
-        // Add one day to the current date
-        const tomorrow = new Date(currentDate);
-        tomorrow.setDate(currentDate.getDate() + 1);
-
-        // Convert the date to ISO 8601 format (required by DynamoDB)
-        const ttl = tomorrow.getTime();
-        const db = {
-          id: generateUUID(),
-          sk: 'import',
-          ttl,
-          data,
-        }
-        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(db),
-        });
-
-        const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&attr=${item.name}&val=${db.id}&ownerid=${localStorage.getItem('ownerid')}` };
-        console.log('event ' + eventData.url)
-        // Fetch options
-        const options = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(eventData)
-        };
-        const response = await fetch(pup_url, options);
-        target.textContent = '🟢'
-
+          })
       }
-      row.parentNode.append(cloned)
-      return item
+      const compid = res.id
+      const value = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${headContentItem.id}:import:${item.id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          // Add any additional headers if needed
+        },
+      });
+      const item1 = await value.json()
+      console.log(item1)
+      let data
+      if (item1) {
+        console.log(item1.value)
+        data = item1.value
+      }
+      else {
+        data = textArea.value
+      }
+
+
+      //clean
+      const eventData1 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&cleanAttr=${item.name}&ownerid=${localStorage.getItem('ownerid')}` };
+      console.log('event ' + eventData1.url)
+      // Fetch options
+      const options0 = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData1)
+      };
+      await fetch(pup_url, options0);
+      const currentDate = new Date();
+
+      // Add one day to the current date
+      const tomorrow = new Date(currentDate);
+      tomorrow.setDate(currentDate.getDate() + 1);
+
+      // Convert the date to ISO 8601 format (required by DynamoDB)
+      const ttl = tomorrow.getTime();
+      const db = {
+        id: generateUUID(),
+        sk: 'import',
+        ttl,
+        data,
+      }
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(db),
+      });
+
+      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&attr=${item.name}&val=${db.id}&ownerid=${localStorage.getItem('ownerid')}` };
+      console.log('event ' + eventData.url)
+      // Fetch options
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData)
+      };
+      const response = await fetch(pup_url, options);
+      target.textContent = '🟢'
+
+    }
+    row.parentNode.append(cloned)
+    return item
 
 
     }
+    var imports1 = []
     const handleImportMenu2 = async () => {
       const splited = pathItemPath.split('/')
       splited.pop()
       const fpath = splited.join('/') + '/'
       const response2 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${fpath}`);
       const data2 = await response2.json();
-      const subContentElements = data2.items.map(item => item.lsi1.split(';')[0].split('|')[1]).filter(item => item.endsWith('-Content'))
-      const data_imports = querySelectorAll1('*')
-      const data_importValues = Array.from(data_imports).map(element => {
-        // Get all attribute names of the current element
-        const attributeNames = element.getAttributeNames();
+      let imports2 = []
+      if (imports1.length) {
+        imports2 = imports1.map(item => {
+          const found = data2.items.find(e => e.lsi1.split(';')[0].split('|')[1] === item.component)
+          const compLsi1 = found.lsi1.split(';')[0]
+          const currentLsi = pathItemPath.replace(';publish:published', "")
+          const relativePath = getRelativePath(currentLsi, convertToOldPath(compLsi1));
+          return { ...item, componentPath: relativePath, id: generateUUID() }
+        })
+      }
 
-        // Find the attribute that starts with 'data-import-'
-        const data_importAttribute = attributeNames.find(attr => attr.startsWith('data-import-'));
-
-        // If such attribute exists, extract its value
-        if (data_importAttribute) {
-          return data_importAttribute.replace('data-import-', ''); // Remove 'data-import-' prefix
-        }
-
-        return null; // Return null if no matching attribute found
-      }).filter(value => value);
       const row = getElementById1('import2-row')
-      
+
       if (pathItem.hub_items?.import_items) {
-        for (let i = 0; i < pathItem.hub_items?.import_items.length; i++) {
-          const item = pathItem.hub_items?.import_items[i]
-          await add_import_row(undefined, item)
-        }
+        const filtered = imports2.filter(e => pathItem.hub_items?.import_items.find(item => !item.componentPath === e.componentPath && item.name === e.name))
+        pathItem.hub_items?.import_items.push(...filtered)
+      }
+      else {
+        pathItem.hub_items?.import_items = filtered
+      }
+      await updatePathItem()
+      for (let i = 0; i < pathItem.hub_items.import_items.length; i++) {
+        const item = pathItem.hub_items?.import_items[i]
+        await add_import_row(undefined, item)
       }
 
     }
@@ -12719,6 +12695,9 @@ elementsToRemove.forEach(element => element.remove());
           }
           break;
         case 'setAttribute':
+          if (key.startsWith('data-import-')) {
+            imports1.push({ name: key.replace('data-import-', ''), component: componentPath.split('/').pop() })
+          }
           if (options?.apply_to_copies) {
             target_element = target_element.endsWith('-tree') ? target_element : target_element + '-tree'
             const allSelector = '[id^="' + removeLastOccurrence(target_element, '-tree').split(':')[0] + '"]';
