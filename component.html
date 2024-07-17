@@ -3706,29 +3706,29 @@
             inserted_element: { originalId: p.id + '-tree', id },
           };
           await pushAction(actionObject)
-          id = id.replace('-tree','')
+          id = id.replace('-tree', '')
         }
-        else{
-          id = p.id 
+        else {
+          id = p.id
         }
         const p1 = getElementById1(id)
         const splited = item.sk.split(';')
         splited.shift()
         const condition = splited.shift()
         setAttAction(p1.id + '-tree', 'data-id', `${sku}:${condition}:${splited.join(';')}`)
-        last1 = id +'-tree'
+        last1 = id + '-tree'
         if (item.oldPrice) {
           const dEl = p1.querySelector('.price_discount')
           const oEl = p1.querySelector('.price_old')
           const dV = dEl.querySelector('.price_value')
           const oV = oEl.querySelector('.price_value')
-          await setTextAction(dV.id + '-tree', item.price?.toString() ||0)
-          await setTextAction(oV.id + '-tree', item.priceOld?.toString() ||0)
+          await setTextAction(dV.id + '-tree', item.price?.toString() || 0)
+          await setTextAction(oV.id + '-tree', item.priceOld?.toString() || 0)
         }
         else {
           const dEl = p1.querySelector('.price_normal')
           const nV = dEl.querySelector('.price_value')
-          await setTextAction(nV.id + '-tree', item.price?.toString() ||0)
+          await setTextAction(nV.id + '-tree', item.price?.toString() || 0)
         }
       }
 
@@ -17069,6 +17069,67 @@ headers: {
           }
           cloned1.querySelector('#warehouse_value-zd').textContent = e.target.parentNode.parentNode.querySelector('#wareHouseInput').textContent
           option.parentNode.append(cloned1)
+
+        }
+        cloned.querySelector('#warehouse-country-select').onchange = async (e) => {
+          var selectElement = e.target
+          var selectedOption = selectElement.options[selectElement.selectedIndex].id;
+          const element = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?' + `id=${item.id}&sk=${item.sk}&startsWith=true`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json()).then(res => res.items[0])
+          element.location = selectedOption
+          fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+              element
+            ),
+          });
+
+        }
+        cloned.querySelector('#warehouse-min-processing').onblur = async (e) => {
+          const min = e.target.textContent
+          const element = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?' + `id=${item.id}&sk=${item.sk}&startsWith=true`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json()).then(res => res.items[0])
+          element.min = parseInt(min)
+          fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+              element
+            ),
+          });
+
+        }
+        cloned.querySelector('#warehouse-max-processing').onblur = async (e) => {
+          const max = e.target.textContent
+          const element = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?' + `id=${item.id}&sk=${item.sk}&startsWith=true`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json()).then(res => res.items[0])
+          element.max = parseInt(max)
+          fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+              element
+            ),
+          });
 
         }
         cloned.querySelector('#defaultWareHouseInput').onchange = (e) => {
