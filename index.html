@@ -614,7 +614,7 @@
             }
           }
           const loadInvoices = async () => {
-            const orderItem = document.getElementById("order-item")
+            const orderItem = document.getElementById("invoice-item")
             console.log('loading invoices')
             const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=cart:${localStorage.getItem('ownerid')}`, {
               method: 'GET',
@@ -642,10 +642,10 @@
               const formattedDate = `${year}-${month}-${day}. ${hours}:${minutes}`;
 
               const cloned = orderItem.cloneNode(true)
-              cloned.querySelector('[data-order-date-value]').textContent = formattedDate
-              cloned.querySelector('[data-order-site-value]').textContent = item.id.split(':')[0]
-              cloned.querySelector('[data-order-total-value]').textContent = item.total + '$'
-              cloned.querySelector('[data-order-status-value]').textContent = item.lsi1?.split(':')[1]
+              cloned.querySelector('[data-invoice-date-value]').textContent = formattedDate
+              cloned.querySelector('[data-invoice-site-value]').textContent = item.id.split(':')[0]
+              cloned.querySelector('[data-invoice-total-value]').textContent = item.total + '$'
+              cloned.querySelector('[data-invoice-status-value]').textContent = item.lsi1?.split(':')[1]
               cloned.removeAttribute('hidden')
               orderItem.parentNode.append(cloned)
             }
