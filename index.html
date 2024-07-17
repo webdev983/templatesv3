@@ -615,6 +615,39 @@
               cloned.querySelector('[data-order-total-value]').textContent = item.total + '$'
               cloned.querySelector('[data-order-status-value]').textContent = item.lsi1?.split(':')[1]
               cloned.querySelector('[data-order-status-value]').textContent = item.email
+              const removeRow = cloned.querySelector('#remove-row')
+              const restoreRow = cloned.querySelector('#restore-row')
+              if (item.ttl) {
+                restoreRow.removeAttribute('hidden')
+              }
+              restoreRow.onclick = async(e) => {
+                
+                delete item.ttl
+                await fetch(backend_url , {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(
+                    item
+                  ),
+                })
+                restoreRow.setAttribute('hidden','')
+              }
+              removeRow.onclick = async(e) => {
+                const now = new Date();
+                item.ttl = now.getTime() + 5 * 60 * 1000
+                await fetch(backend_url , {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(
+                    item
+                  ),
+                })
+                restoreRow.removeAttribute('hidden')
+              }
               cloned.removeAttribute('hidden')
               orderItem.parentNode.append(cloned)
             }
@@ -646,7 +679,39 @@
 
               // Construct the formatted string
               const formattedDate = `${year}-${month}-${day}. ${hours}:${minutes}`;
-
+              const removeRow = cloned.querySelector('#remove-row')
+              const restoreRow = cloned.querySelector('#restore-row')
+              if (item.ttl) {
+                restoreRow.removeAttribute('hidden')
+              }
+              restoreRow.onclick = async(e) => {
+                
+                delete item.ttl
+                await fetch(backend_url , {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(
+                    item
+                  ),
+                })
+                restoreRow.setAttribute('hidden','')
+              }
+              removeRow.onclick = async(e) => {
+                const now = new Date();
+                item.ttl = now.getTime() + 5 * 60 * 1000
+                await fetch(backend_url , {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(
+                    item
+                  ),
+                })
+                restoreRow.removeAttribute('hidden')
+              }
               const cloned = orderItem.cloneNode(true)
               cloned.querySelector('[data-invoice-date-value]').textContent = formattedDate
               cloned.querySelector('[data-invoice-site-value]').textContent = item.id.split(':')[0]
