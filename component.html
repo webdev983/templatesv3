@@ -3903,7 +3903,7 @@
       tomorrow.setDate(tomorrow.getDate() + 1);
 
       // Convert the date to ISO 8601 format (required by DynamoDB)
-      const ttl = tomorrow.getTime()/1000;
+      const ttl =Math.floor( tomorrow.getTime()/1000)
       const d = await fetch(`${backend_url}?id=${items[0].id}&startsWith=true`, {
         method: 'GET',
         headers: {
@@ -5247,7 +5247,7 @@
           tomorrow.setDate(currentDate.getDate() + 1);
 
           // Convert the date to ISO 8601 format (required by DynamoDB)
-          const ttl = tomorrow.getTime()/1000;
+          const ttl = Math.floor(tomorrow.getTime()/1000);
           const aiPayload = {
             id: pathItem.id,
             sk: `ai-logs:${new Date().getTime()}`,
@@ -5296,7 +5296,7 @@
             tomorrow.setDate(currentDate.getDate() + 1);
 
             // Convert the date to ISO 8601 format (required by DynamoDB)
-            const ttl = tomorrow.getTime()/1000;
+            const ttl = Math.floor(tomorrow.getTime()/1000);
             const db = {
               id: generateUUID(),
               sk: 'import',
@@ -5307,7 +5307,7 @@
             tomorrow.setDate(currentDate.getDate() + 6);
 
             // Convert the date to ISO 8601 format (required by DynamoDB)
-            const ttl2 = tomorrow.getTime()/1000;
+            const ttl2 = Math.floor(tomorrow.getTime()/1000);
             const body = {
               id: headContentItem.id,
               sk: `import:${f.id}`,
@@ -8504,7 +8504,7 @@ checkbox1.setAttribute('hidden', "");
         tomorrow.setDate(tomorrow.getDate() + 7);
 
         // Convert the date to ISO 8601 format (required by DynamoDB)
-        const ttl = tomorrow.getTime()/1000;
+        const ttl = Math.floor(tomorrow.getTime()/1000);
         const body = {
           id: headContentItem.id,
           sk: `import:${item.id}`,
@@ -8582,7 +8582,7 @@ checkbox1.setAttribute('hidden', "");
         tomorrow.setDate(currentDate.getDate() + 1);
 
         // Convert the date to ISO 8601 format (required by DynamoDB)
-        const ttl = tomorrow.getTime()/1000;
+        const ttl =Math.floor( tomorrow.getTime()/1000);
         const db = {
           id: generateUUID(),
           sk: 'import',
@@ -15370,7 +15370,7 @@ elementsToRemove.forEach(element => element.remove());
       tomorrow.setDate(currentDate.getDate() + 1);
 
       // Convert the date to ISO 8601 format (required by DynamoDB)
-      const ttl = tomorrow.getTime()/1000;
+      const ttl = Math.floor(tomorrow.getTime()/1000)
       const db = {
         id: generateUUID(),
         sk: 'import',
