@@ -5730,16 +5730,28 @@
 
       var addSelected = (itemId, path) => {
         const clonedFieldset2 = getElementById1('selectedFilePathList;' + pId)
+        /*
         if (Array.from(clonedFieldset2.children).find(el => el.id === itemId)) {
           return
-        }
+        }*/
         var clonedItem = getElementById1('item').cloneNode(true);
         selected.push(itemId)
         clonedItem.id = itemId;
         const file_path = clonedItem.querySelector('[data-value="file-path"]')
         file_path.textContent = path;
         clonedItem.querySelector('#Pushpin').removeAttribute('hidden')
-        clonedItem.onclick = (e) => { e.target.closest('li').remove(); selected.filter(el => el !== itemId) }
+        clonedItem.onclick = (e) => {
+          e.target.closest('li').remove(); 
+          selected.filter(el => {
+            if (el === itemId) {
+              // Return false to exclude the element from the filtered array
+              // after the first occurrence has been removed
+              itemId = null;
+              return false;
+            }
+            return true;
+          })
+        }
         var firstChild = clonedFieldset2.firstChild;
 
         // Insert clonedItem before the first child
