@@ -17074,60 +17074,60 @@ headers: {
         cloned.querySelector('#warehouse-country-select').onchange = async (e) => {
           var selectElement = e.target
           var selectedOption = selectElement.options[selectElement.selectedIndex].id;
-          const element = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?' + `id=${item.id}&sk=${item.sk}&startsWith=true`, {
+          const element1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?' + `id=${element.id}&sk=${element.sk}&startsWith=true`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
             },
           }).then(e => e.json()).then(res => res.items[0])
-          element.location = selectedOption
+          element1.location = selectedOption
           fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify(
-              element
+              element1
             ),
           });
 
         }
         cloned.querySelector('#warehouse-min-processing').onblur = async (e) => {
           const min = e.target.textContent
-          const element = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?' + `id=${item.id}&sk=${item.sk}&startsWith=true`, {
+          const element1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?' + `id=${element.id}&sk=${element.sk}&startsWith=true`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
             },
           }).then(e => e.json()).then(res => res.items[0])
-          element.min = parseInt(min)
+          element1.min = parseInt(min)
           fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify(
-              element
+              element1
             ),
           });
 
         }
         cloned.querySelector('#warehouse-max-processing').onblur = async (e) => {
           const max = e.target.textContent
-          const element = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?' + `id=${item.id}&sk=${item.sk}&startsWith=true`, {
+          const element1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?' + `id=${element.id}&sk=${element.sk}&startsWith=true`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
             },
           }).then(e => e.json()).then(res => res.items[0])
-          element.max = parseInt(max)
+          element1.max = parseInt(max)
           fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify(
-              element
+              element1
             ),
           });
 
