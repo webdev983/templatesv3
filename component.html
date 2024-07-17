@@ -1221,16 +1221,12 @@
               <span class="l-3 b-dark-blue" id="import_toggle">🔴</span>
             </td>
             <td>
-              <select id="select_import_name" class="select-1">
-                <option>⬇️ Select</option>
-                <option id="import_name">🚀</option>
-              </select>
+              <span id="import-name"></span>
+              
             </td>
             <td>
-              <select id="import-component-select" class="select-1">
-                <option>⬇️ Select</option>
-                <option id="import-component-name">🧩</option>
-              </select>
+              <span id="import-component"></span>
+              
 
             </td>
             <td>
@@ -8665,22 +8661,7 @@ checkbox1.setAttribute('hidden', "");
         return null; // Return null if no matching attribute found
       }).filter(value => value);
       const row = getElementById1('import2-row')
-      const importName = row.querySelector('#import_name')
-      const importComponent = row.querySelector('#import-component-name')
-      for (const value of data_importValues) {
-        const cloned = importName.cloneNode(true)
-        importName.parentNode.append(cloned)
-        cloned.id = value
-        cloned.textContent = cloned.textContent + ' ' + value
-      }
-      importName.remove()
-      for (const value of subContentElements) {
-        const cloned = importComponent.cloneNode(true)
-        importComponent.parentNode.append(cloned)
-        cloned.id = value
-        cloned.textContent = cloned.textContent + ' ' + value
-      }
-      importComponent.remove()
+      
       if (pathItem.hub_items?.import_items) {
         for (let i = 0; i < pathItem.hub_items?.import_items.length; i++) {
           const item = pathItem.hub_items?.import_items[i]
