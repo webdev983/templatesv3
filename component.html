@@ -3741,7 +3741,7 @@
 
         keyValues.condition = conditions
       }
-       setAttAction(article.id + '-tree', 'data-product', `${sku};${warehouses.join(',')};${conditions.join(',')}`)
+      setAttAction(article.id + '-tree', 'data-product', `${sku};${warehouses.join(',')};${conditions.join(',')}`)
       const fieldset = article.querySelector('.product_attributes_fieldset')
       let last = fieldset.id + '-tree'
       const keys = Object.keys(keyValues)
@@ -3750,12 +3750,12 @@
       const label = fieldset.querySelector('.product_attribute_label')
       const span = label.querySelector('.product_attribute_value')
       //first 
-       setTextAction(legend.id + '-tree', keys[0])
+      setTextAction(legend.id + '-tree', keys[0])
       const first = keyValues[keys[0]].shift()
-       setTextAction(span.id + '-tree', first)
-       setAttAction(label.id + '-tree', 'for', 'sku;' + keys[0] + ':' + first)
-       setAttAction(input.id + '-tree', 'data-id', 'sku;' + keys[0] + ':' + first)
-       setAttAction(input.id + '-tree', 'checked', '')
+      setTextAction(span.id + '-tree', first)
+      setAttAction(label.id + '-tree', 'for', 'sku;' + keys[0] + ':' + first)
+      setAttAction(input.id + '-tree', 'data-id', 'sku;' + keys[0] + ':' + first)
+      setAttAction(input.id + '-tree', 'checked', '')
       for (const value of keyValues[keys[0]]) {
         const dupLabelId = duplicateId(label.id).id
         const actionObject = {
@@ -3764,7 +3764,7 @@
           target_element: fieldset.id + '-tree',
           inserted_element: { originalId: label.id + '-tree', id: dupLabelId },
         };
-        
+
         const dupInputId = duplicateId(input.id).id
         const actionObject1 = {
           time: (new Date()).getTime(),
@@ -3774,11 +3774,11 @@
         };
         await pushAction(actionObject1);
         await pushAction(actionObject);
-         setAttAction(label.id + '-tree', 'for', 'sku;' + keys[0] + ':' + value)
-         setAttAction(dupInputId, 'data-id', 'sku;' + keys[0] + ':' + value)
+        setAttAction(label.id + '-tree', 'for', 'sku;' + keys[0] + ':' + value)
+        setAttAction(dupInputId, 'data-id', 'sku;' + keys[0] + ':' + value)
         const labelEl = getElementById1(dupLabelId.replace('-tree', ''))
         const spanEl = labelEl.querySelector('.product_attribute_value')
-         setTextAction(spanEl.id + '-tree', value)
+        setTextAction(spanEl.id + '-tree', value)
       }
       for (let i = 1; i < keys.length; i++) {
         const id = duplicateId(fieldset.id).id
@@ -3790,18 +3790,18 @@
         };
         await pushAction(actionObject)
         last = id
-        const fieldset1 = getElementById1( id.replace('-tree', ''))
+        const fieldset1 = getElementById1(id.replace('-tree', ''))
 
         const legend = fieldset1.querySelector('.product_attributes_legend')
         const input = fieldset1.querySelector('.product_attribute_radio')
         const label = fieldset1.querySelector('.product_attribute_label')
         const span = label.querySelector('.product_attribute_value')
         //first 
-         setTextAction(legend.id + '-tree', keys[i])
+        setTextAction(legend.id + '-tree', keys[i])
         const first = keyValues[keys[i]].shift()
-         setTextAction(span.id + '-tree', first)
-         setAttAction(label.id + '-tree', 'for', 'sku;' + keys[i] + ':' + first)
-        if (key === 'condition') {
+        setTextAction(span.id + '-tree', first)
+        setAttAction(label.id + '-tree', 'for', 'sku;' + keys[i] + ':' + first)
+        if (keys[i] === 'condition') {
           const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=${first}&startsWith=true`, {
             method: 'GET',
             headers: {
@@ -3822,7 +3822,7 @@
             target_element: fieldset1.id + '-tree',
             inserted_element: { originalId: label.id + '-tree', id: dupLabelId },
           };
-          
+
           const dupInputId = duplicateId(input.id).id
           const actionObject1 = {
             time: (new Date()).getTime(),
@@ -3832,21 +3832,21 @@
           };
           await pushAction(actionObject1);
           await pushAction(actionObject);
-           setAttAction(label.id + '-tree', 'for', 'sku;' + keys[i] + ':' + value)
-           setAttAction(dupInputId, 'data-id', 'sku;' + keys[i] + ':' + value)
+          setAttAction(label.id + '-tree', 'for', 'sku;' + keys[i] + ':' + value)
+          setAttAction(dupInputId, 'data-id', 'sku;' + keys[i] + ':' + value)
           const labelEl = getElementById1(dupLabelId.replace('-tree', ''))
           const spanEl = labelEl.querySelector('.product_attribute_value')
-          if (key === 'condition') {
+          if (keys[i] === 'condition') {
             const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=${value}&startsWith=true`, {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
               },
             }).then(e => e.json())
-             setAttAction(input.id + '-tree', 'data-id', 'sku;' + keys[i] + ':' + res.items[0].value)
+            setAttAction(input.id + '-tree', 'data-id', 'sku;' + keys[i] + ':' + res.items[0].value)
           }
           else {
-             setTextAction(spanEl.id + '-tree', value)
+            setTextAction(spanEl.id + '-tree', value)
           }
           setAttAction(input.id + '-tree', 'checked', '')
 
