@@ -3318,6 +3318,8 @@
       const sk = imageSrc.replace('https://s3.amazonaws.com/checkout-admin-panel/', "")
       const imgId = event.target.closest('[data-menu]').id.replace('gallery-menu-wrapper;', '')
       try {
+        console.log(id)
+        console.log(sk)
         await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:${sk}`, {
           method: 'DELETE',
           headers: {
@@ -3327,7 +3329,7 @@
         });
       }
       catch (e) {
-        log1('error ' + JSON.stringify(e))
+        console.log('error ' + JSON.stringify(e))
       }
       try {
         await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/upload?id=' + sk, {
@@ -3335,7 +3337,7 @@
         });
       }
       catch (e) {
-        log1(JSON.stringify(e))
+        console.log(JSON.stringify(e))
       }
       //to cont
       //setImg('https://via.placeholder.com/300/0000FF/FFFFFF?text=Article-Image', imgId)
