@@ -3903,7 +3903,7 @@
       tomorrow.setDate(tomorrow.getDate() + 1);
 
       // Convert the date to ISO 8601 format (required by DynamoDB)
-      const ttl =Math.floor( tomorrow.getTime()/1000)
+      const ttl = Math.floor(tomorrow.getTime() / 1000)
       const d = await fetch(`${backend_url}?id=${items[0].id}&startsWith=true`, {
         method: 'GET',
         headers: {
@@ -5247,7 +5247,7 @@
           tomorrow.setDate(currentDate.getDate() + 1);
 
           // Convert the date to ISO 8601 format (required by DynamoDB)
-          const ttl = Math.floor(tomorrow.getTime()/1000);
+          const ttl = Math.floor(tomorrow.getTime() / 1000);
           const aiPayload = {
             id: pathItem.id,
             sk: `ai-logs:${new Date().getTime()}`,
@@ -5296,7 +5296,7 @@
             tomorrow.setDate(currentDate.getDate() + 1);
 
             // Convert the date to ISO 8601 format (required by DynamoDB)
-            const ttl = Math.floor(tomorrow.getTime()/1000);
+            const ttl = Math.floor(tomorrow.getTime() / 1000);
             const db = {
               id: generateUUID(),
               sk: 'import',
@@ -5307,12 +5307,12 @@
             tomorrow.setDate(currentDate.getDate() + 6);
 
             // Convert the date to ISO 8601 format (required by DynamoDB)
-            const ttl2 = Math.floor(tomorrow.getTime()/1000);
+            const ttl2 = Math.floor(tomorrow.getTime() / 1000);
             const body = {
               id: headContentItem.id,
               sk: `import:${f.id}`,
               value: data,
-              ttl:ttl2
+              ttl: ttl2
 
             }
             await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -8504,7 +8504,7 @@ checkbox1.setAttribute('hidden', "");
         tomorrow.setDate(tomorrow.getDate() + 7);
 
         // Convert the date to ISO 8601 format (required by DynamoDB)
-        const ttl = Math.floor(tomorrow.getTime()/1000);
+        const ttl = Math.floor(tomorrow.getTime() / 1000);
         const body = {
           id: headContentItem.id,
           sk: `import:${item.id}`,
@@ -8530,7 +8530,7 @@ checkbox1.setAttribute('hidden', "");
 
       cloned.querySelector('#import_toggle').onclick = async (e) => {
         const { target } = e
-        if(target.textContent === '🟠'){
+        if (target.textContent === '🟠') {
           return
         }
         target.textContent = '🟠'
@@ -8582,7 +8582,7 @@ checkbox1.setAttribute('hidden', "");
         tomorrow.setDate(currentDate.getDate() + 1);
 
         // Convert the date to ISO 8601 format (required by DynamoDB)
-        const ttl =Math.floor( tomorrow.getTime()/1000);
+        const ttl = Math.floor(tomorrow.getTime() / 1000);
         const db = {
           id: generateUUID(),
           sk: 'import',
@@ -8623,7 +8623,7 @@ checkbox1.setAttribute('hidden', "");
       const fpath = splited.join('/') + '/'
       const response2 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${localStorage.getItem('ownerid')}&gsi1lsi1=true&lsi1=${fpath}`);
       const data2 = await response2.json();
-      console.log('imp1'+JSON.stringify(imports1))
+      console.log('imp1' + JSON.stringify(imports1))
       let imports2 = []
       if (imports1.length) {
         imports2 = imports1.map(item => {
@@ -8635,7 +8635,7 @@ checkbox1.setAttribute('hidden', "");
           return { ...item, componentPath: relativePath, id: generateUUID() }
         })
       }
-      console.log('imp2 '+JSON.stringify(imports2))
+      console.log('imp2 ' + JSON.stringify(imports2))
       const row = getElementById1('import2-row')
 
       if (pathItem.hub_items?.import_items?.length) {
@@ -8645,7 +8645,7 @@ checkbox1.setAttribute('hidden', "");
       else {
         pathItem.hub_items.import_items = imports2
       }
-      console.log('imp2 '+JSON.stringify(pathItem.hub_items?.import_items))
+      console.log('imp2 ' + JSON.stringify(pathItem.hub_items?.import_items))
       await updatePathItem()
       for (let i = 0; i < pathItem.hub_items.import_items.length; i++) {
         const item = pathItem.hub_items?.import_items[i]
@@ -15370,7 +15370,7 @@ elementsToRemove.forEach(element => element.remove());
       tomorrow.setDate(currentDate.getDate() + 1);
 
       // Convert the date to ISO 8601 format (required by DynamoDB)
-      const ttl = Math.floor(tomorrow.getTime()/1000)
+      const ttl = Math.floor(tomorrow.getTime() / 1000)
       const db = {
         id: generateUUID(),
         sk: 'import',
@@ -16521,6 +16521,7 @@ headers: {
             },
             body: JSON.stringify(item),
           });
+          /*
           const originalRow = getElementById1('sku-variable-row')
 
           const comb = combination.toLowerCase()
@@ -16541,8 +16542,17 @@ headers: {
           }
           span.remove()
           originalRow.parentNode.append(clonedRow)
+          */
         }
       }
+      const checkedWareHouses = querySelectorAll1('#warehouse-zd[checked]')
+      const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(e => e.json()).then(res => res.items[0])
+      generateSkuV(item)
       event.target.closest('details').removeAttribute('open')
     }
     const setQty = async (event) => {
