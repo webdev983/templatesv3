@@ -3753,7 +3753,7 @@
       await setTextAction(legend.id + '-tree', keys[0])
       const first = keyValues[keys[0]].shift()
       await setTextAction(span.id + '-tree', first)
-      await setAttAction(label.id + '-tree', 'for', 'sku;' + keys[0] + ':' + first)
+      await setAttAction(label.id + '-tree', 'for', sku+';' + keys[0] + ':' + first)
       
       
       for (const value of keyValues[keys[0]]) {
@@ -3776,8 +3776,8 @@
         
         
         
-        await setAttAction(dupLabelId, 'for', 'sku;' + keys[0] + ':' + value)
-        await setAttAction(dupInputId, 'data-id', 'sku;' + keys[0] + ':' + value)
+        await setAttAction(dupLabelId, 'for', sku+';'  + keys[0] + ':' + value)
+        await setAttAction(dupInputId, 'data-id', sku+';'  + keys[0] + ':' + value)
         const labelEl = getElementById1(dupLabelId.replace('-tree', ''))
         const spanEl = labelEl.querySelector('.product_attribute_value')
         await setTextAction(spanEl.id + '-tree', value)
@@ -3803,7 +3803,7 @@
         await setTextAction(legend.id + '-tree', keys[i])
         const first = keyValues[keys[i]].shift()
         await setTextAction(span.id + '-tree', first)
-        await setAttAction(label.id + '-tree', 'for', 'sku;' + keys[i] + ':' + first)
+        await setAttAction(label.id + '-tree', 'for', sku+';' + keys[i] + ':' + first)
         
 
         if (keys[i] === 'condition') {
@@ -3813,10 +3813,10 @@
               'Content-Type': 'application/json',
             },
           }).then(e => e.json())
-          await setAttAction(input.id + '-tree', 'data-id', 'sku;' + keys[i] + ':' + res.items[0].value)
+          await setAttAction(input.id + '-tree', 'data-id', sku+';' + keys[i] + ':' + res.items[0].value)
         }
         else {
-          await setAttAction(input.id + '-tree', 'data-id', 'sku;' + keys[i] + ':' + first)
+          await setAttAction(input.id + '-tree', 'data-id', sku+';'  + keys[i] + ':' + first)
         }
 
         for (const value of keyValues[keys[i]]) {
@@ -3839,8 +3839,8 @@
 
           
           await pushAction(actionObject);
-          await setAttAction(dupLabelId, 'for', 'sku;' + keys[i] + ':' + value)
-          await setAttAction(dupInputId, 'data-id', 'sku;' + keys[i] + ':' + value)
+          await setAttAction(dupLabelId, 'for', sku+';'  + keys[i] + ':' + value)
+          await setAttAction(dupInputId, 'data-id', sku+';'  + keys[i] + ':' + value)
           const labelEl = getElementById1(dupLabelId.replace('-tree', ''))
           const spanEl = labelEl.querySelector('.product_attribute_value')
           if (keys[i] === 'condition') {
@@ -3850,7 +3850,7 @@
                 'Content-Type': 'application/json',
               },
             }).then(e => e.json())
-            await setAttAction(input.id + '-tree', 'data-id', 'sku;' + keys[i] + ':' + res.items[0].value)
+            await setAttAction(input.id + '-tree', 'data-id', sku+';'  + keys[i] + ':' + res.items[0].value)
           }
           else {
             await setTextAction(spanEl.id + '-tree', value)
@@ -3859,7 +3859,7 @@
         }
         await setAttAction(input.id + '-tree', 'checked', '')
       }
-      await setAttAction(input.id + '-tree', 'data-id', 'sku;' + keys[0] + ':' + first)
+      await setAttAction(input.id + '-tree', 'data-id',sku+';'  + keys[0] + ':' + first)
       await setAttAction(input.id + '-tree', 'checked', '')
 
     }
