@@ -8614,6 +8614,28 @@ checkbox1.setAttribute('hidden', "");
 
     }
     var imports1 = []
+    function removeDuplicatesImport(arr) {
+      // Use a set to track seen objects
+      let seen = new Set();
+
+      // Use Array.reduce() to build the filtered array
+      let filteredArray = arr.reduce((uniqueArray, currentObj) => {
+        // Create a unique key using name and component
+        let key = currentObj.name + '|' + currentObj.component;
+
+        // Check if this key (object) has already been seen
+        if (!seen.has(key)) {
+          // If not seen, add to both seen set and uniqueArray
+          seen.add(key);
+          uniqueArray.push(currentObj);
+        }
+
+        return uniqueArray;
+      }, []);
+
+      return filteredArray;
+    }
+
     const handleImportMenu2 = async () => {
       const splited = pathItemPath.split('/')
       splited.pop()
@@ -8642,6 +8664,7 @@ checkbox1.setAttribute('hidden', "");
       else {
         pathItem.hub_items.import_items = imports2
       }
+      pathItem.hub_items.import_items = removeDuplicatesImport(pathItem.hub_items.import_items)
       console.log('imp2 ' + JSON.stringify(pathItem.hub_items?.import_items))
       await updatePathItem()
       for (let i = 0; i < pathItem.hub_items.import_items.length; i++) {
@@ -16839,17 +16862,17 @@ headers: {
     const generateSkuV = async (defaultWareHouse) => {
       const sku = pathItemSku
       const conditions1 = defaultWareHouse.conditions
-      let warehouses =  fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=warehouse:&startsWith=true`)
+      let warehouses = fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=warehouse:&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
 
-      let conditions =  fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=condition:&startsWith=true`)
+      let conditions = fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=condition:&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
 
-      let skuVariables =  fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=sku-variables;&startsWith=true`)
+      let skuVariables = fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=sku-variables;&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
-      let skuQtyValue =  fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=warehouse_price_qty:&startsWith=true`)
+      let skuQtyValue = fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=warehouse_price_qty:&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
-      let skuSiteValue =  fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=site_price:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`)
+      let skuSiteValue = fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=site_price:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
       //await Promise.all([warehouses,conditions,skuVariables,skuQtyValue,skuSiteValue])
       warehouses = await warehouses
@@ -16865,11 +16888,11 @@ headers: {
         const conditionValue = conditions.find(e => e.sk === condition).value
         console.log(conditionValue)
         const originalRow = getElementById1('sku-table').querySelector('#sku-variable-row[hidden]')
-        getElementById1('sku-table').querySelectorAll('#sku-variable-row:not([hidden])').forEach(e=>e.remove())
+        getElementById1('sku-table').querySelectorAll('#sku-variable-row:not([hidden])').forEach(e => e.remove())
         for (const element of skuVariables) {
 
 
-          
+
           const item = element
           const comb = item.sk.replace('sku-variables;', "")
           const clonedRow = originalRow.cloneNode(true)
