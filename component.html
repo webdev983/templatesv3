@@ -3759,14 +3759,6 @@
       for (const value of keyValues[keys[0]]) {
         const dupLabelId = duplicateId(label.id).id
         const dupInputId = duplicateId(input.id).id
-        const actionObject = {
-          time: (new Date()).getTime(),
-          action: 'Append',
-          target_element: fieldset.id + '-tree',
-          inserted_element: { originalId: label.id + '-tree', id: dupLabelId },
-        };
-
-        
         const actionObject1 = {
           time: (new Date()).getTime(),
           action: 'Append',
@@ -3774,7 +3766,16 @@
           inserted_element: { originalId: input.id + '-tree', id: dupInputId },
         };
         await pushAction(actionObject1);
+        const actionObject = {
+          time: (new Date()).getTime(),
+          action: 'Append',
+          target_element: fieldset.id + '-tree',
+          inserted_element: { originalId: label.id + '-tree', id: dupLabelId },
+        };
         await pushAction(actionObject);
+        
+        
+        
         await setAttAction(dupLabelId, 'for', 'sku;' + keys[0] + ':' + value)
         await setAttAction(dupInputId, 'data-id', 'sku;' + keys[0] + ':' + value)
         const labelEl = getElementById1(dupLabelId.replace('-tree', ''))
@@ -3820,13 +3821,7 @@
 
         for (const value of keyValues[keys[i]]) {
           const dupLabelId = duplicateId(label.id).id
-          const actionObject = {
-            time: (new Date()).getTime(),
-            action: 'Append',
-            target_element: fieldset1.id + '-tree',
-            inserted_element: { originalId: label.id + '-tree', id: dupLabelId },
-          };
-
+          
           const dupInputId = duplicateId(input.id).id
           const actionObject1 = {
             time: (new Date()).getTime(),
@@ -3835,6 +3830,14 @@
             inserted_element: { originalId: input.id + '-tree', id: dupInputId },
           };
           await pushAction(actionObject1);
+          const actionObject = {
+            time: (new Date()).getTime(),
+            action: 'Append',
+            target_element: fieldset1.id + '-tree',
+            inserted_element: { originalId: label.id + '-tree', id: dupLabelId },
+          };
+
+          
           await pushAction(actionObject);
           await setAttAction(dupLabelId, 'for', 'sku;' + keys[i] + ':' + value)
           await setAttAction(dupInputId, 'data-id', 'sku;' + keys[i] + ':' + value)
