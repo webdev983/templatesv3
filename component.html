@@ -3320,7 +3320,7 @@
       try {
         console.log(id)
         console.log(sk)
-        await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id.replaceAll(':',"~")}:${sk}`, {
+        await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id.replaceAll(':', "~")}:${sk}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -3755,9 +3755,9 @@
       await setTextAction(legend.id + '-tree', keys[0])
       const first = keyValues[keys[0]].shift()
       await setTextAction(span.id + '-tree', first)
-      await setAttAction(label.id + '-tree', 'for', sku+';' + keys[0] + ':' + first)
-      await setAttAction(input.id + '-tree', 'name', sku+';' + keys[0] )
-      await setAttAction(input.id + '-tree', 'data-id',sku+';'  + keys[0] + ':' + first)
+      await setAttAction(label.id + '-tree', 'for', sku + ';' + keys[0] + ':' + first)
+      await setAttAction(input.id + '-tree', 'name', sku + ';' + keys[0])
+      await setAttAction(input.id + '-tree', 'data-id', sku + ';' + keys[0] + ':' + first)
       for (const value of keyValues[keys[0]]) {
         const dupLabelId = duplicateId(label.id).id
         const dupInputId = duplicateId(input.id).id
@@ -3775,16 +3775,16 @@
           inserted_element: { originalId: label.id + '-tree', id: dupLabelId },
         };
         await pushAction(actionObject);
-        
-        
-        await setAttAction(dupInputId, 'name', sku+';' + keys[0] )
-        await setAttAction(dupLabelId, 'for', sku+';'  + keys[0] + ':' + value)
-        await setAttAction(dupInputId, 'data-id', sku+';'  + keys[0] + ':' + value)
+
+
+        await setAttAction(dupInputId, 'name', sku + ';' + keys[0])
+        await setAttAction(dupLabelId, 'for', sku + ';' + keys[0] + ':' + value)
+        await setAttAction(dupInputId, 'data-id', sku + ';' + keys[0] + ':' + value)
         const labelEl = getElementById1(dupLabelId.replace('-tree', ''))
         const spanEl = labelEl.querySelector('.product_attribute_value')
         await setTextAction(spanEl.id + '-tree', value)
       }
-      
+
       for (let i = 1; i < keys.length; i++) {
         const id = duplicateId(fieldset.id).id
         actionObject = {
@@ -3805,8 +3805,8 @@
         await setTextAction(legend.id + '-tree', keys[i])
         const first = keyValues[keys[i]].shift()
         await setTextAction(span.id + '-tree', first)
-        await setAttAction(label.id + '-tree', 'for', sku+';' + keys[i] + ':' + first)
-        await setAttAction(input.id + '-tree', 'name', sku+';' + keys[i] )
+        await setAttAction(label.id + '-tree', 'for', sku + ';' + keys[i] + ':' + first)
+        await setAttAction(input.id + '-tree', 'name', sku + ';' + keys[i])
 
         if (keys[i] === 'condition') {
           const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=${first}&startsWith=true`, {
@@ -3815,15 +3815,15 @@
               'Content-Type': 'application/json',
             },
           }).then(e => e.json())
-          await setAttAction(input.id + '-tree', 'data-id', sku+';' + keys[i] + ':' + res.items[0].value)
+          await setAttAction(input.id + '-tree', 'data-id', sku + ';' + keys[i] + ':' + res.items[0].value)
         }
         else {
-          await setAttAction(input.id + '-tree', 'data-id', sku+';'  + keys[i] + ':' + first)
+          await setAttAction(input.id + '-tree', 'data-id', sku + ';' + keys[i] + ':' + first)
         }
 
         for (const value of keyValues[keys[i]]) {
           const dupLabelId = duplicateId(label.id).id
-          
+
           const dupInputId = duplicateId(input.id).id
           const actionObject1 = {
             time: (new Date()).getTime(),
@@ -3839,11 +3839,11 @@
             inserted_element: { originalId: label.id + '-tree', id: dupLabelId },
           };
 
-          
+
           await pushAction(actionObject);
-          await setAttAction(dupLabelId, 'for', sku+';'  + keys[i] + ':' + value)
-          await setAttAction(dupInputId, 'data-id', sku+';'  + keys[i] + ':' + value)
-          await setAttAction(dupInputId, 'name', sku+';' + keys[i] )
+          await setAttAction(dupLabelId, 'for', sku + ';' + keys[i] + ':' + value)
+          await setAttAction(dupInputId, 'data-id', sku + ';' + keys[i] + ':' + value)
+          await setAttAction(dupInputId, 'name', sku + ';' + keys[i])
           const labelEl = getElementById1(dupLabelId.replace('-tree', ''))
           const spanEl = labelEl.querySelector('.product_attribute_value')
           if (keys[i] === 'condition') {
@@ -3853,18 +3853,84 @@
                 'Content-Type': 'application/json',
               },
             }).then(e => e.json())
-            await setAttAction(input.id + '-tree', 'data-id', sku+';'  + keys[i] + ':' + res.items[0].value)
+            await setAttAction(input.id + '-tree', 'data-id', sku + ';' + keys[i] + ':' + res.items[0].value)
           }
           else {
             await setTextAction(spanEl.id + '-tree', value)
           }
-          
+
         }
         await setAttAction(input.id + '-tree', 'checked', '')
       }
-      
+
       await setAttAction(input.id + '-tree', 'checked', '')
 
+    }
+    const skuToButtonPicturesApi = async () => {
+      /*
+      const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Content '
+      url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
+      const { items } = await fetch(url).then(e => e.json())
+
+      const eventData1 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&clean=1&ownerid=${localStorage.getItem('ownerid')}` };
+      console.log('event ' + eventData1.url)
+      // Fetch options
+      const options0 = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData1)
+      };
+      await fetch(pup_url, options0);
+
+
+      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&generateHtmlFromSku=${pathItemSku}&ownerid=${localStorage.getItem('ownerid')}` };
+
+      // Fetch options
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData)
+      };
+      console.log(eventData.url)
+      const response = await fetch(pup_url, options);
+      */
+    }
+    const skuToPicturesApi = async () => {
+      /*
+      const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Content '
+      url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
+      const { items } = await fetch(url).then(e => e.json())
+
+      const eventData1 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&clean=1&ownerid=${localStorage.getItem('ownerid')}` };
+      console.log('event ' + eventData1.url)
+      // Fetch options
+      const options0 = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData1)
+      };
+      await fetch(pup_url, options0);
+
+
+      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&generateHtmlFromSku=${pathItemSku}&ownerid=${localStorage.getItem('ownerid')}` };
+
+      // Fetch options
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData)
+      };
+      console.log(eventData.url)
+      const response = await fetch(pup_url, options);
+      */
     }
     const skuToHtmlApi = async () => {
       //const spec = document.getElementById('spec-status')
@@ -8775,7 +8841,9 @@ checkbox1.setAttribute('hidden', "");
       script_generate_article_anchor: generateAnchorApi,
       script_chatgpt_: () => { },
       script_refresh_catalog: refreshCatalogue,
-      script_sku_data_to_html: skuToHtmlApi
+      script_sku_data_to_html: skuToHtmlApi,
+      script_import_product_pictures: skuToPicturesApi,
+      script_import_product_buttons_pictures:skuToButtonPicturesApi
     }
     const onLoad = async () => {
       log1('onload')
