@@ -16908,7 +16908,7 @@ headers: {
           'Content-Type': 'application/json',
         },
       }).then(e => e.json()).then(res => res.items[0])
-      generateSkuV(item)
+      await generateSkuV(item)
       event.target.closest('details').removeAttribute('open')
     }
     const setQty = async (event) => {
@@ -17402,7 +17402,7 @@ headers: {
         option.parentNode.append(cloned1)
         getElementById1('sku-condition-warehouse-qty-value').textContent = defaultWareHouse.value
         generateShippingM(defaultWareHouse)
-        generateSkuV(defaultWareHouse)
+        await generateSkuV(defaultWareHouse)
       }
 
 
@@ -17425,7 +17425,7 @@ headers: {
           Array.from(locationSelect.children).findIndex(option => option.id === element.location);
 
 
-        cloned.querySelector('#enableWareHouse').onclick = (e) => {
+        cloned.querySelector('#enableWareHouse').onclick =async (e) => {
           e.target.textContent = '🟢'
           const option = getElementById1('warehouse_select_label')
           const cloned1 = option.cloneNode(true)
@@ -17434,7 +17434,7 @@ headers: {
           console.log(option.parentNode.children.length)
           if (option.parentNode.children.length === 1) {
             cloned1.querySelector('input').setAttribute('checked', "")
-            generateSkuV(element)
+            await generateSkuV(element)
             generateShippingM(element)
           }
           cloned1.querySelector('#warehouse_value-zd').textContent = e.target.parentNode.parentNode.querySelector('#wareHouseInput').textContent
@@ -17586,12 +17586,12 @@ headers: {
             if (item.conditions) {
               if (!item.conditions.includes(element.sk)) {
                 item.conditions = [...item.conditions, element.sk]
-                generateSkuV(item)
+                await generateSkuV(item)
               }
             }
             else {
               item.conditions = [element.sk]
-              generateSkuV(item)
+              await generateSkuV(item)
             }
             await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
               method: 'POST',
@@ -17676,7 +17676,7 @@ headers: {
               ),
             });
             e.target.textContent = '🟢'
-            generateShippingM(item)
+            await generateShippingM(item)
           }
         }
       }
