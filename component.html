@@ -1449,8 +1449,8 @@
                     contenteditable>0</strong>
                 </td>
                 <td id="price_comparison_price_anchor" hidden>
-                  <span class="l-3" id="price_comparison_price">0</span>
-                  <span class="l-3" id="price_comparison_anchor">https:/</span>
+                  <span class="l-3" id="price_comparison_price" contenteditable>0</span>
+                  <span class="l-3" id="price_comparison_anchor" contenteditable>https:/</span>
                 </td>
               </tr>
             </table>
@@ -17712,6 +17712,7 @@ headers: {
           const original2 = document.querySelectorAll('#price_comparison_price_anchor[hidden]')
           original2.forEach(original => {
             const cloned2 = original.cloneNode(true)
+            cloned2.setAttribute('key',element.value)
             original.parentNode.append(cloned2)
             cloned2.removeAttribute('hidden')
           })
