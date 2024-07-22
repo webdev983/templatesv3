@@ -16651,7 +16651,7 @@ headers: {
 
         e.target.textContent = '🟢'
       }
-      cloned.querySelector('#image-input').addEventListener('change', (e) => {
+      cloned.querySelector('#image-input').addEventListener('change', async (e) => {
         console.log('changed')
 
         const uploadButton = cloned.querySelector('#upload-button1');
@@ -16660,7 +16660,7 @@ headers: {
         if (e.target.files && e.target.files.length > 0) {
           // If a file is chosen, show the file name and make the upload button visible
           file = e.target.files[0]
-          
+
 
 
           uploadButton.removeAttribute('hidden'); // Make the upload button visible
@@ -17684,7 +17684,7 @@ headers: {
           cloned.querySelector('#comp-image').removeAttribute('hidden')
         }
         setImage()
-        cloned.querySelector('#image-input').addEventListener('change', (e) => {
+        cloned.querySelector('#image-input').addEventListener('change', async (e) => {
           console.log('changed')
 
           const uploadButton = cloned.querySelector('#upload-button1');
@@ -17698,38 +17698,38 @@ headers: {
             uploadButton.removeAttribute('hidden'); // Make the upload button visible
 
             file = e.target.files[0]
-            uploadButton.onclick = async () => {
-              const id = ownerid
-              const fileContent = await file
 
-              const fileName = fileContent.name
-              console.log(fileName)
+            const id = ownerid
+            const fileContent = await file
 
-              try {
+            const fileName = fileContent.name
+            console.log(fileName)
 
-                const path = await upload(fileName, fileContent)
-                log1(path)
-                //push to db image
-                // Send a POST request using fetch
-                element = {
-                  ...element,
-                  path
-                }
-                const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify(element),
-                });
-                cloned.querySelector('#comp-image').src = 'https://s3.amazonaws.com/checkout-admin-panel/' + path
-                cloned.querySelector('#comp-image').removeAttribute('hidden')
+            try {
 
-
-              } catch (error) {
+              const path = await upload(fileName, fileContent)
+              log1(path)
+              //push to db image
+              // Send a POST request using fetch
+              element = {
+                ...element,
+                path
               }
+              const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(element),
+              });
+              cloned.querySelector('#comp-image').src = 'https://s3.amazonaws.com/checkout-admin-panel/' + path
+              cloned.querySelector('#comp-image').removeAttribute('hidden')
+
+
+            } catch (error) {
             }
           }
+
         })
 
         cloned.querySelector('#enable-comparision').onclick = async (e) => {
