@@ -3140,7 +3140,9 @@
 
   </script>
   <script>
-    var postToDb = (item) => fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+    var postToDb = (item) =>{ 
+      console.log(JSON.stringify(item))
+      return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -3148,7 +3150,7 @@
       body: JSON.stringify(
         item
       ),
-    });
+    });}
     //gallery scripts 
     var cancelGalleryMenu = (event) => {
       event.target.closest('#menu-1').style.display = 'none';
@@ -17777,6 +17779,7 @@ headers: {
               postToDb(item)
             }
             cAnchor.onblur = (e) => {
+              
               const newAnchor = cAnchor.textContent
               if (!item[element.value]) {
                 item[element.value] = { price: 0, anchor: 'http' }
