@@ -17730,7 +17730,7 @@ headers: {
 
         })
 
-        
+        const ball =cloned.querySelector('#enable-comparision')
         const enableComp = async (e,runned) => {
 
           const original = document.querySelector('#price_comparison_price_anchor_head[hidden]')
@@ -17786,10 +17786,11 @@ headers: {
             }
           })
           !runned && postToDb({ ...element, runned: true })
-          cloned.querySelector('#enable-comparision').textContent = '🟢'
+          ball.textContent = '🟢'
 
         }
-        cloned.querySelector('#enable-comparision').onclick = enableComp
+        
+        ball.onclick = enableComp
         if(element.runned){
           enableComp(undefined,true)
 
