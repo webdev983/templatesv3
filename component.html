@@ -17760,7 +17760,7 @@ headers: {
             const cPrice = cloned2.querySelector('#price_comparison_price')
 
             const cAnchor = cloned2.querySelector('#price_comparison_anchor')
-            const sk = cloned2.closest('tr').getAttribute('sk')
+            const sk = original.closest('tr').getAttribute('sk')
             if (!sk) {
               return
             }
@@ -17780,12 +17780,12 @@ headers: {
 
             cPrice.onblur = async (e) => {
               console.log('blur')
-              const item1= await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            }).then(e => e.json()).then(({ items }) => items[0])
+              const item1 = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              }).then(e => e.json()).then(({ items }) => items[0])
               const newPrice = cPrice.textContent
               if (!item[element.value]) {
                 item[element.value] = { price: 0, anchor: 'http' }
@@ -17796,11 +17796,11 @@ headers: {
             cAnchor.onblur = (e) => {
               console.log('blur')
               const item = fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            }).then(e => e.json()).then(({ items }) => items[0])
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              }).then(e => e.json()).then(({ items }) => items[0])
               const newAnchor = cAnchor.textContent
               if (!item[element.value]) {
                 item[element.value] = { price: 0, anchor: 'http' }
