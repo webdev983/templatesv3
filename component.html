@@ -17779,6 +17779,13 @@ headers: {
             }
 
             cPrice.onblur = async (e) => {
+              console.log('blur')
+              const item1= await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(e => e.json()).then(({ items }) => items[0])
               const newPrice = cPrice.textContent
               if (!item[element.value]) {
                 item[element.value] = { price: 0, anchor: 'http' }
@@ -17787,7 +17794,13 @@ headers: {
               postToDb(item)
             }
             cAnchor.onblur = (e) => {
-
+              console.log('blur')
+              const item = fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(e => e.json()).then(({ items }) => items[0])
               const newAnchor = cAnchor.textContent
               if (!item[element.value]) {
                 item[element.value] = { price: 0, anchor: 'http' }
