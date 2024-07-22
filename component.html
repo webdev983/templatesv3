@@ -1375,6 +1375,11 @@
             <button onclick="removeSku2(event)" class="b-3">🗑️ Remove</button>
           </fieldset>
 
+          <details  style="margin-bottom: 7px;">
+            <summary class="summary-L-3"><span class="l-3 b-dark-blue">💡</span><span class="l-3">dyson  type: |value| vacuum, color: |value|</span></summary>
+          </details>
+    
+
           <div id="warehouse_select2" style="margin-left: 25px;">
             <label class="l-3" id="warehouse_select_label" hidden><input type="radio" name="warehouse_select"
                 id="warehouse-zd" /><span>🏬</span><span id="warehouse_value-zd"></span></label>
@@ -3141,18 +3146,15 @@
 
   </script>
   <script>
-    var postToDb = (item) => {
-      console.log(JSON.stringify(item))
-      return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(
-          item
-        ),
-      });
-    }
+    var postToDb = (item) => fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(
+        item
+      ),
+    });
     //gallery scripts 
     var cancelGalleryMenu = (event) => {
       event.target.closest('#menu-1').style.display = 'none';
@@ -16623,19 +16625,18 @@ headers: {
             return
           }
           const cAnchor = cloned2.querySelector('#price_comparison_anchor')
-
+          const item1 = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json()).then(({ items }) => items[0])
           if (item1[item.value]) {
             cPrice.textContent = item1[item.value].price
             cAnchor.textContent = item1[item.value].anchor
           }
 
           cPrice.onblur = async (e) => {
-            const item1 = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            }).then(e => e.json()).then(({ items }) => items[0])
             const newPrice = cPrice.textContent
             if (!item1[item.value]) {
               items1[item.value] = { price: 0, anchor: 'http' }
@@ -16643,13 +16644,7 @@ headers: {
             item1[item.value].price = newPrice
             postToDb(item1)
           }
-          cAnchor.onblur = async (e) => {
-            const item1 = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            }).then(e => e.json()).then(({ items }) => items[0])
+          cAnchor.onblur = (e) => {
             const newAnchor = cAnchor.textContent
             if (!item1[item.value]) {
               item1[item.value] = { price: 0, anchor: 'http' }
@@ -16909,7 +16904,7 @@ headers: {
           'Content-Type': 'application/json',
         },
       }).then(e => e.json()).then(res => res.items[0])
-      await generateSkuV(item)
+      generateSkuV(item)
       event.target.closest('details').removeAttribute('open')
     }
     const setQty = async (event) => {
@@ -17403,7 +17398,7 @@ headers: {
         option.parentNode.append(cloned1)
         getElementById1('sku-condition-warehouse-qty-value').textContent = defaultWareHouse.value
         generateShippingM(defaultWareHouse)
-        await generateSkuV(defaultWareHouse)
+        generateSkuV(defaultWareHouse)
       }
 
 
@@ -17426,7 +17421,7 @@ headers: {
           Array.from(locationSelect.children).findIndex(option => option.id === element.location);
 
 
-        cloned.querySelector('#enableWareHouse').onclick =async (e) => {
+        cloned.querySelector('#enableWareHouse').onclick = (e) => {
           e.target.textContent = '🟢'
           const option = getElementById1('warehouse_select_label')
           const cloned1 = option.cloneNode(true)
@@ -17435,7 +17430,7 @@ headers: {
           console.log(option.parentNode.children.length)
           if (option.parentNode.children.length === 1) {
             cloned1.querySelector('input').setAttribute('checked', "")
-            await generateSkuV(element)
+            generateSkuV(element)
             generateShippingM(element)
           }
           cloned1.querySelector('#warehouse_value-zd').textContent = e.target.parentNode.parentNode.querySelector('#wareHouseInput').textContent
@@ -17587,12 +17582,12 @@ headers: {
             if (item.conditions) {
               if (!item.conditions.includes(element.sk)) {
                 item.conditions = [...item.conditions, element.sk]
-                await generateSkuV(item)
+                generateSkuV(item)
               }
             }
             else {
               item.conditions = [element.sk]
-              await generateSkuV(item)
+              generateSkuV(item)
             }
             await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
               method: 'POST',
@@ -17677,7 +17672,7 @@ headers: {
               ),
             });
             e.target.textContent = '🟢'
-            await generateShippingM(item)
+            generateShippingM(item)
           }
         }
       }
@@ -17741,134 +17736,69 @@ headers: {
 
         })
 
-        const ball = cloned.querySelector('#enable-comparision');
+        
+        const enableComp = async (e,runned) => {
 
-        const enableComp = async (e, runned) => {
-          try {
-            const original1 = document.querySelector('#price_comparison_price_anchor_head[hidden]');
-            const cloned = original1.cloneNode(true);
-            cloned.removeAttribute('hidden');
-            original1.parentNode.append(cloned);
-            cloned.querySelector('#price_comparison_site').textContent = element.value;
-
-            const original2 = document.querySelectorAll('#price_comparison_price_anchor[hidden]');
-            // Assuming original2 is a NodeList or array of elements to iterate over
+          const original = document.querySelector('#price_comparison_price_anchor_head[hidden]')
+          const cloned = original.cloneNode(true)
+          cloned.removeAttribute('hidden')
+          original.parentNode.append(cloned)
+          cloned.removeAttribute('hidden')
+          cloned.querySelector('#price_comparison_site').textContent = element.value
 
 
-            for (let i = 0; i < original2.length; i++) {
-              const original = original2[i];
-              const cloned2 = original.cloneNode(true);
-              cloned2.setAttribute('key', element.value);
-              original.parentNode.append(cloned2);
-              cloned2.removeAttribute('hidden');
-              const cPrice = cloned2.querySelector('#price_comparison_price');
-              const cAnchor = cloned2.querySelector('#price_comparison_anchor');
-              const sk = original.parentNode.getAttribute('sk');
-              console.log('sk ' + sk);
+          const original2 = document.querySelectorAll('#price_comparison_price_anchor[hidden]')
+          original2.forEach(async original => {
+            const cloned2 = original.cloneNode(true)
+            cloned2.setAttribute('key', element.value)
+            original.parentNode.append(cloned2)
+            cloned2.removeAttribute('hidden')
+            const cPrice = cloned2.querySelector('#price_comparison_price')
 
-              if (!sk) {
-                continue; // Skip this iteration if sk is not available
-              }
+            const cAnchor = cloned2.querySelector('#price_comparison_anchor')
+            const sk = cloned2.closest('tr').getAttribute('sk')
+            if (!sk) {
+              return
+            }
+            const item = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(e => e.json()).then(({ items }) => items[0])
 
-              try {
-                const response = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
-                  method: 'GET',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                });
-                const { items } = await response.json();
-                const item = items[0];
-                console.log('itemss1 ' + JSON.stringify(item));
-
-                if (item[element.value]) {
-                  cPrice.textContent = item[element.value].price;
-                  cAnchor.textContent = item[element.value].anchor;
-                }
-
-                // Function to update price
-                const updatePrice = async (newPrice) => {
-                  try {
-                    const response = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
-                      method: 'GET',
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                    });
-                    const { items } = await response.json();
-                    const item = items[0];
-
-                    if (!item[element.value]) {
-                      item[element.value] = { price: 0, anchor: 'http' };
-                    }
-                    item[element.value].price = newPrice;
-
-                    await postToDb(item); // Assuming postToDb function is defined
-                  } catch (error) {
-                    console.error('Error updating price:', error);
-                  }
-                };
-
-                // Function to update anchor
-                const updateAnchor = async (newAnchor) => {
-                  try {
-                    const response = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
-                      method: 'GET',
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                    });
-                    const { items } = await response.json();
-                    const item = items[0];
-
-                    if (!item[element.value]) {
-                      item[element.value] = { price: 0, anchor: 'http' };
-                    }
-                    item[element.value].anchor = newAnchor;
-
-                    await postToDb(item); // Assuming postToDb function is defined
-                  } catch (error) {
-                    console.error('Error updating anchor:', error);
-                  }
-                };
-
-                // Event listener for price input blur
-                console.log('Adding listener for price input');
-                cPrice.addEventListener('blur', async (e) => {
-                  console.log('Blur event for price input');
-                  const newPrice = cPrice.textContent.trim();
-                  await updatePrice(newPrice);
-                });
-
-                // Event listener for anchor input blur
-                cAnchor.addEventListener('blur', async (e) => {
-                  console.log('Blur event for anchor input');
-                  const newAnchor = cAnchor.textContent.trim();
-                  await updateAnchor(newAnchor);
-                });
-              } catch (error) {
-                console.error('Error fetching data:', error);
-                // Handle error as needed
-              }
+            console.log(sk)
+            console.log(sku)
+            if (item[element.value]) {
+              cPrice.textContent = item[element.value].price
+              cAnchor.textContent = item[element.value].anchor
             }
 
-            if (!runned) {
-              await postToDb({ ...element, runned: true });
+            cPrice.onblur = async (e) => {
+              const newPrice = cPrice.textContent
+              if (!item[element.value]) {
+                item[element.value] = { price: 0, anchor: 'http' }
+              }
+              item[element.value].price = newPrice
+              postToDb(item)
             }
+            cAnchor.onblur = (e) => {
+              const newAnchor = cAnchor.textContent
+              if (!item[element.value]) {
+                item[element.value] = { price: 0, anchor: 'http' }
+              }
+              item[element.value].anchor = newAnchor
+              postToDb(item)
+            }
+          })
+          !runned && postToDb({ ...element, runned: true })
+          cloned.querySelector('#enable-comparision').textContent = '🟢'
 
-            ball.textContent = '🟢';
-          } catch (error) {
-            console.error('Error in enableComp function:', error);
-            // Handle error appropriately
-          }
-        };
+        }
+        cloned.querySelector('#enable-comparision').onclick = enableComp
+        if(element.runned){
+          enableComp(undefined,true)
 
-        ball.addEventListener('click', (e) => {
-          enableComp(e, false); // Pass 'false' to indicate it's not initially runned
-        });
-
-        if (element.runned) {
-          await enableComp(undefined, true); // Invoke enableComp with 'true' if 'element.runned' is true
         }
       }
 
