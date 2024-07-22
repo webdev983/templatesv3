@@ -16633,7 +16633,7 @@ headers: {
           cPrice.onblur = async (e) => {
             const newPrice = cPrice.textContent
             if (!item1[item.value]) {
-              items1[item.value] = {price:0,anchor:'http'}
+              items1[item.value] = { price: 0, anchor: 'http' }
             }
             item1[item.value].price = newPrice
             postToDb(item1)
@@ -16641,7 +16641,7 @@ headers: {
           cAnchor.onblur = (e) => {
             const newAnchor = cAnchor.textContent
             if (!item1[item.value]) {
-              item1[item.value] = {price:0,anchor:'http'}
+              item1[item.value] = { price: 0, anchor: 'http' }
             }
             item1[item.value].anchor = newAnchor
             postToDb(item1)
@@ -17730,7 +17730,8 @@ headers: {
 
         })
 
-        cloned.querySelector('#enable-comparision').onclick = async (e) => {
+        
+        const enableComp = async (e,runned) => {
 
           const original = document.querySelector('#price_comparison_price_anchor_head[hidden]')
           const cloned = original.cloneNode(true)
@@ -17759,7 +17760,7 @@ headers: {
                 'Content-Type': 'application/json',
               },
             }).then(e => e.json()).then(({ items }) => items[0])
-            
+
             console.log(sk)
             console.log(sku)
             if (item[element.value]) {
@@ -17770,7 +17771,7 @@ headers: {
             cPrice.onblur = async (e) => {
               const newPrice = cPrice.textContent
               if (!item[element.value]) {
-                item[element.value] = {price:0,anchor:'http'}
+                item[element.value] = { price: 0, anchor: 'http' }
               }
               item[element.value].price = newPrice
               postToDb(item)
@@ -17778,17 +17779,21 @@ headers: {
             cAnchor.onblur = (e) => {
               const newAnchor = cAnchor.textContent
               if (!item[element.value]) {
-                item[element.value] = {price:0,anchor:'http'}
+                item[element.value] = { price: 0, anchor: 'http' }
               }
               item[element.value].anchor = newAnchor
               postToDb(item)
             }
           })
+          !runned && postToDb({ ...element, runned: true })
+          cloned.querySelector('#enable-comparision').textContent = '🟢'
 
-          e.target.textContent = '🟢'
         }
+        cloned.querySelector('#enable-comparision').onclick = enableComp
+        if(element.runned){
+          enableComp(undefined,true)
 
-
+        }
       }
 
       /*
