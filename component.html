@@ -17795,9 +17795,9 @@ headers: {
               item[element.value].price = newPrice
               postToDb(item)
             }
-            cAnchor.onblur = (e) => {
+            cAnchor.onblur = async(e) => {
               console.log('blur')
-              const item = fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
+              const item =await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
                 method: 'GET',
                 headers: {
                   'Content-Type': 'application/json',
