@@ -1829,18 +1829,18 @@
           </details>
 
           <details style="margin-left: 25px; margin-top: 10px;">
-            <summary class="summary-L-3" style="margin-top: 5px; "><span class="l-3">➕ select comparision</span><span>
+            <summary class="summary-L-3" style="margin-top: 5px; "><span class="l-3">➕ select comparison</span><span>
             </summary>
-            <button class="b-4" onclick="addCondition(event)">add</button>
+            <button class="b-4" onclick="addComparison(event)">add</button>
 
             <table id="comparision-table" class="table-1" style="margin-left: 30px; margin-top: 10px;">
               <tbody>
-                <tr id="comparision-row">
+                <tr id="comparision-row" hidden>
                   <td>
                     <span class="l-3 enable-condition" id="enable-comparision">🔴</span>
                   </td>
                   <td>
-                    <span class="l-3 condition-name" onblur="setcomparisionName(event)" contenteditable>amazon</span>
+                    <span class="l-3 condition-name" onblur="setSkuItemValue(event)" contenteditable>amazon</span>
                   </td>
                   <td>
                     <div id="select_picture">
@@ -3943,18 +3943,18 @@
       const response = await fetch(pup_url, options);
       */
     }
-    const skuToPicturesItem = async (sku,secondary) => {
+    const skuToPicturesItem = async (sku, secondary) => {
       const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pathItem.id}&sk=pics&startsWith=true`;
-      const {items} = await fetch(url).then(e => e.json())
+      const { items } = await fetch(url).then(e => e.json())
       let pics
-      if(secondary){
-        pics = items.filter(e=>e.secondary)
+      if (secondary) {
+        pics = items.filter(e => e.secondary)
       }
-      else{
-        pics = items.filter(e=>e.main)
+      else {
+        pics = items.filter(e => e.main)
       }
-      
-      
+
+
       const imageElement = querySelectorAll1('.product_lead_img')[0]
 
     }
@@ -9316,7 +9316,7 @@ checkbox1.setAttribute('hidden', "");
       }
       if (skuToPicturesItem) {
         const secondary = urlParams.get('secondary')
-        await skuToPictures(skuToPicturesItem,secondary)
+        await skuToPictures(skuToPicturesItem, secondary)
       }
       if (message) {
         const ip = urlParams.get('ip')
@@ -16568,6 +16568,56 @@ headers: {
 
       original.parentNode.insertBefore(cloned, original)
 
+    }
+    const addComparison = async (event) => {
+
+      const filled = getElementById1('sku_filled')
+      const tr = filled.querySelector('#comparasion-row[hidden]')
+
+      const cloned = tr.cloneNode(true)
+      cloned.removeAttribute('hidden')
+      tr.parentNode.append(cloned)
+      const item = {
+        id: ownerid,
+        sk: 'comparasion:' + (new Date()).getTime().toString(),
+        value: 'comparasion'
+      }
+      cloned.setAttribute('sk', item.sk)
+      cloned.querySelector('#enableCondition').onclick = (e) => {
+        /*
+        e.target.textContent = '🟢'
+        const original = getElementById1('sku-table').querySelector('#sku-variable-condition[hidden]')
+        const cloned = original.cloneNode(true)
+        cloned.removeAttribute('hidden')
+        const v = e.target.parentNode.parentNode.querySelector('#conditionInput').textContent
+        cloned.querySelector('#sku-variable-condition-value').textContent = v
+        original.parentNode.insertBefore(cloned, original)
+
+        const original2 = getElementById1('sku-table').querySelector('#all-td[hidden]')
+        const cloned2 = original2.cloneNode(true)
+        cloned2.removeAttribute('hidden')
+        const condSk = e.target.parentNode.parentNode.getAttribute('sk')
+        cloned2.setAttribute('condition', condSk)
+        original2.parentNode.insertBefore(cloned2, original2)
+
+        const originals = getElementById1('sku-table').querySelectorAll('#sku-variable-td[hidden]')
+        originals.forEach(original => {
+          const cloned = original.cloneNode(true)
+          cloned.setAttribute('condition', condSk)
+          cloned.removeAttribute('hidden')
+
+          original.parentNode.insertBefore(cloned, original)
+        })
+        */
+        //generateConditionTable(v,condSk)
+      }
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(item),
+      });
     }
     const addCondition = async (event) => {
 
