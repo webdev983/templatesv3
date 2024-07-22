@@ -1173,23 +1173,25 @@
       <details style="margin-bottom: 7px;" data-list hidden>
         <summary class="summary-L-3"><span class="l-3" data-list-emoji>📣</span><span> </span><span
             class="l-3 b-dark-blue" data-list-name> Meta</span></summary>
-            <div style="margin-left: 30px; margin-top: 10px; margin-bottom: 10px;">
-               <label class="l-3"> <input type="checkbox">🔖type</label>
-               <label class="l-3"> <input type="checkbox">🔖size</label>
-               <label class="l-3"> <input type="checkbox">🔖color</label>
-               <button class="b-3" style="margin-left: 10px;">🚀 push selected to list</button>
+        <div style="margin-left: 30px; margin-top: 10px; margin-bottom: 10px;">
+          <label class="l-3"> <input type="checkbox">🔖type</label>
+          <label class="l-3"> <input type="checkbox">🔖size</label>
+          <label class="l-3"> <input type="checkbox">🔖color</label>
+          <button class="b-3" style="margin-left: 10px;">🚀 push selected to list</button>
 
-            </div>
-  
+        </div>
+
         <table class="table-1" style="margin-left: 30px;">
           <tr data-lists-element>
             <td class="l-3"><label class="l-3" style="margin-right: 5px;" data-lists-element-status>🔴</label>
               <label class="l-3" data-lists-element-key></label>
             </td>
             <td>
-              <button class="b-3 arrow">→</button>                  
-                <span id="sku-variable-xz"><span class="l-3">🔖</span><span id="sku-attribute-key-xz" class="sku-key">color</span><span class="sku-value">:</span><span id="sku-attribute-value-xz" class="sku-value">black</span><span class="sku-value">;</span></span><span id="sku-variable-xz">
-              </td>
+              <button class="b-3 arrow">→</button>
+              <span id="sku-variable-xz"><span class="l-3">🔖</span><span id="sku-attribute-key-xz"
+                  class="sku-key">color</span><span class="sku-value">:</span><span id="sku-attribute-value-xz"
+                  class="sku-value">black</span><span class="sku-value">;</span></span><span id="sku-variable-xz">
+            </td>
             <td class="l-3">
               <span data-lists-element-value contenteditable></span>
             </td>
@@ -1420,7 +1422,9 @@
               </tr>
               <tr id="sku-variable-row" hidden>
                 <th>
-                  <span class="l-3">🔖</span><span id="sku-variable-xz"><span id="sku-attribute-key-xz" class="l-3 sku-attribute"></span><span class="l-3">:</span><span id="sku-attribute-value-xz" class="l-3"></span><span class="l-3" style="margin-right: 5px;">;</span></span>
+                  <span class="l-3">🔖</span><span id="sku-variable-xz"><span id="sku-attribute-key-xz"
+                      class="l-3 sku-attribute"></span><span class="l-3">:</span><span id="sku-attribute-value-xz"
+                      class="l-3"></span><span class="l-3" style="margin-right: 5px;">;</span></span>
                 </th>
                 <th>
                   <span id="sku-attribute-condition"></span>
@@ -1496,7 +1500,7 @@
                     <strong onBlur="setPriceSite(event)" id="sku-variable-price-site-current" class="price-normal"
                       contenteditable>0</strong>
                   </td>
-                  
+
                 </tr>
               </tbody>
             </table>
@@ -1843,14 +1847,14 @@
                       <input type="file" id="image-input" accept="image/*" hidden />
                       <label for="image-input" id="select-file-button" class="file-upload-button b-3">➕ logo</label>
                     </div>
-              
+
                   </td>
                   <td>
                     <button class="b-3 condition-rename" onclick="removeComparasion(event)">🗑</button>
                   </td>
                 </tr>
               </tbody>
- 
+
 
             </table>
           </details>
@@ -3939,9 +3943,24 @@
       const response = await fetch(pup_url, options);
       */
     }
+    const skuToPicturesItem = async (sku,secondary) => {
+      const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pathItem.id}&sk=pics&startsWith=true`;
+      const {items} = await fetch(url).then(e => e.json())
+      let pics
+      if(secondary){
+        pics = items.filter(e=>e.secondary)
+      }
+      else{
+        pics = items.filter(e=>e.main)
+      }
+      
+      
+      const imageElement = querySelectorAll1('.product_lead_img')[0]
+
+    }
     const skuToPicturesApi = async () => {
       const lsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Content'
-      const lsiD = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Gallery-Content'
+      const lsiD = pathItem.lsi1.split('|')[0] + '/Content/Main|Product_gallery-Content'
       const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${lsi}`;
       const url2 = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${lsiD}`;
       const res = await fetch(url).then(e => e.json())
@@ -3959,7 +3978,7 @@
       await fetch(pup_url, options0);
 
 
-      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res.items[0].id}&skuToPictures=${pathItemSku}&ownerid=${localStorage.getItem('ownerid')}` };
+      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res2.items[0].id}&skuToPictures=${pathItemSku}&secondary=true&ownerid=${localStorage.getItem('ownerid')}` };
 
       // Fetch options
       const options = {
@@ -8896,7 +8915,7 @@ checkbox1.setAttribute('hidden', "");
       script_refresh_catalog: refreshCatalogue,
       script_sku_data_to_html: skuToHtmlApi,
       script_import_product_pictures: skuToPicturesApi,
-      script_import_product_buttons_pictures:skuToButtonPicturesApi
+      script_import_product_buttons_pictures: skuToButtonPicturesApi
     }
     const onLoad = async () => {
       log1('onload')
@@ -9083,6 +9102,7 @@ checkbox1.setAttribute('hidden', "");
       const clean = urlParams.get('clean')
       const importValue = urlParams.get('val')
       const message = urlParams.get('message')
+      const skuToPicturesItem = urlParams.get('skuToPictures')
       const generateHtmlFromSku = urlParams.get('generateHtmlFromSku')
       ownerid = localStorage.getItem('ownerid') || urlParams.get('ownerid')
       if (urlParams.get('ownerid')) {
@@ -9293,6 +9313,10 @@ checkbox1.setAttribute('hidden', "");
       }
       if (importAttribute) {
         await handleImportGpt(importValue, importAttribute)
+      }
+      if (skuToPicturesItem) {
+        const secondary = urlParams.get('secondary')
+        await skuToPictures(skuToPicturesItem,secondary)
       }
       if (message) {
         const ip = urlParams.get('ip')
