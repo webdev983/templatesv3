@@ -1857,7 +1857,7 @@
 
                       <label for="image-input" id="select-file-button" class="file-upload-button b-3">➕ logo</label>
                     </div>
-                    <button hidden id="upload-button1" >upload button </button>
+                    <button hidden id="upload-button1">upload button </button>
                     <img hidden id="comp-image"></img>
                   </td>
                   <td>
@@ -16596,8 +16596,27 @@ headers: {
       cloned.setAttribute('sk', item.sk)
       let file
       const setImage = () => {
-        cloned.querySelector('#comp-image').src ='https://s3.amazonaws.com/checkout-admin-panel/'+ item.path
+        cloned.querySelector('#comp-image').src = 'https://s3.amazonaws.com/checkout-admin-panel/' + item.path
         cloned.querySelector('#comp-image').removeAttribute('hidden')
+      }
+      cloned.querySelector('#enable-comparision').onclick = async (e) => {
+
+        const original = document.querySelector('#price_comparison_price_anchor_head[hidden]')
+        const cloned = original.cloneNode(true)
+        cloned.removeAttribute('hidden')
+        original.parentNode.append(cloned)
+        cloned.removeAttribute('hidden')
+        cloned.querySelector('#price_comparison_site').textContent = item.value
+
+
+        const original2 = document.querySelectorAll('#price_comparison_price_anchor[hidden]')
+        original2.forEach(original => {
+          const cloned2 = original.cloneNode(true)
+          original.parentNode.append(cloned2)
+          cloned2.removeAttribute('hidden')
+        })
+
+        e.target.textContent = '🟢'
       }
       cloned.querySelector('#image-input').addEventListener('change', (e) => {
         console.log('changed')
@@ -16609,16 +16628,16 @@ headers: {
           // If a file is chosen, show the file name and make the upload button visible
           file = e.target.files[0]
           const fileName = e.target.files[0].name; // Get the name of the file
-          
+
 
           uploadButton.removeAttribute('hidden'); // Make the upload button visible
 
-          
+
           uploadButton.onclick = async () => {
             const id = ownerid
             const fileContent = await file
             const fileName = fileContent.name
-            console.log('filename' +fileName)
+            console.log('filename' + fileName)
 
             try {
 
@@ -16643,34 +16662,35 @@ headers: {
             } catch (error) {
             }
           }
-        }})
-        /*
-        e.target.textContent = '🟢'
-        const original = getElementById1('sku-table').querySelector('#sku-variable-condition[hidden]')
+        }
+      })
+      /*
+      e.target.textContent = '🟢'
+      const original = getElementById1('sku-table').querySelector('#sku-variable-condition[hidden]')
+      const cloned = original.cloneNode(true)
+      cloned.removeAttribute('hidden')
+      const v = e.target.parentNode.parentNode.querySelector('#conditionInput').textContent
+      cloned.querySelector('#sku-variable-condition-value').textContent = v
+      original.parentNode.insertBefore(cloned, original)
+
+      const original2 = getElementById1('sku-table').querySelector('#all-td[hidden]')
+      const cloned2 = original2.cloneNode(true)
+      cloned2.removeAttribute('hidden')
+      const condSk = e.target.parentNode.parentNode.getAttribute('sk')
+      cloned2.setAttribute('condition', condSk)
+      original2.parentNode.insertBefore(cloned2, original2)
+
+      const originals = getElementById1('sku-table').querySelectorAll('#sku-variable-td[hidden]')
+      originals.forEach(original => {
         const cloned = original.cloneNode(true)
+        cloned.setAttribute('condition', condSk)
         cloned.removeAttribute('hidden')
-        const v = e.target.parentNode.parentNode.querySelector('#conditionInput').textContent
-        cloned.querySelector('#sku-variable-condition-value').textContent = v
+
         original.parentNode.insertBefore(cloned, original)
+      })
+      */
+      //generateConditionTable(v,condSk)
 
-        const original2 = getElementById1('sku-table').querySelector('#all-td[hidden]')
-        const cloned2 = original2.cloneNode(true)
-        cloned2.removeAttribute('hidden')
-        const condSk = e.target.parentNode.parentNode.getAttribute('sk')
-        cloned2.setAttribute('condition', condSk)
-        original2.parentNode.insertBefore(cloned2, original2)
-
-        const originals = getElementById1('sku-table').querySelectorAll('#sku-variable-td[hidden]')
-        originals.forEach(original => {
-          const cloned = original.cloneNode(true)
-          cloned.setAttribute('condition', condSk)
-          cloned.removeAttribute('hidden')
-
-          original.parentNode.insertBefore(cloned, original)
-        })
-        */
-        //generateConditionTable(v,condSk)
-      
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
@@ -17159,7 +17179,7 @@ headers: {
         const originalRow = getElementById1('sku-table').querySelector('#sku-variable-row[hidden]')
         getElementById1('sku-table').querySelectorAll('#sku-variable-row:not([hidden])').forEach(e => e.remove())
         for (const element of skuVariables) {
-          console.log('var'+JSON.stringify(element))
+          console.log('var' + JSON.stringify(element))
 
 
           const item = element
@@ -17627,7 +17647,7 @@ headers: {
         cloned.querySelector('#comparision-input').textContent = element.value
         let file
         const setImage = () => {
-          cloned.querySelector('#comp-image').setAttribute('src','https://s3.amazonaws.com/checkout-admin-panel/'+element.path)
+          cloned.querySelector('#comp-image').setAttribute('src', 'https://s3.amazonaws.com/checkout-admin-panel/' + element.path)
           cloned.querySelector('#comp-image').removeAttribute('hidden')
         }
         setImage()
@@ -17648,7 +17668,7 @@ headers: {
             uploadButton.onclick = async () => {
               const id = ownerid
               const fileContent = await file
-              
+
               const fileName = fileContent.name
               console.log(fileName)
 
@@ -17669,7 +17689,7 @@ headers: {
                   },
                   body: JSON.stringify(element),
                 });
-                cloned.querySelector('#comp-image').src ='https://s3.amazonaws.com/checkout-admin-panel/'+path
+                cloned.querySelector('#comp-image').src = 'https://s3.amazonaws.com/checkout-admin-panel/' + path
                 cloned.querySelector('#comp-image').removeAttribute('hidden')
 
 
@@ -17678,28 +17698,28 @@ headers: {
             }
           }
         })
-        
+
         cloned.querySelector('#enable-comparision').onclick = async (e) => {
 
-            const original = document.querySelector('#price_comparison_price_anchor_head[hidden]')
-            const cloned = original.cloneNode(true)
-            cloned.removeAttribute('hidden')
-            original.parentNode.append(cloned)
-            cloned.removeAttribute('hidden')
-            cloned.querySelector('#price_comparison_site').textContent = element.value
-            
+          const original = document.querySelector('#price_comparison_price_anchor_head[hidden]')
+          const cloned = original.cloneNode(true)
+          cloned.removeAttribute('hidden')
+          original.parentNode.append(cloned)
+          cloned.removeAttribute('hidden')
+          cloned.querySelector('#price_comparison_site').textContent = element.value
 
-            const original2 = document.querySelectorAll('#price_comparison_price_anchor[hidden]')
-            original2.forEach(original=>{ 
-              const cloned2 = original.cloneNode(true)
-              original.parentNode.append(cloned2)
-              cloned2.removeAttribute('hidden')
-            })
-            
-            e.target.textContent = '🟢'
-          }
-        
-        
+
+          const original2 = document.querySelectorAll('#price_comparison_price_anchor[hidden]')
+          original2.forEach(original => {
+            const cloned2 = original.cloneNode(true)
+            original.parentNode.append(cloned2)
+            cloned2.removeAttribute('hidden')
+          })
+
+          e.target.textContent = '🟢'
+        }
+
+
       }
 
       /*
