@@ -17760,6 +17760,10 @@ headers: {
             const cPrice = cloned2.querySelector('#price_comparison_price')
 
             const cAnchor = cloned2.querySelector('#price_comparison_anchor')
+            if(original.closest('tr').hasAttribute('hidden')){
+              console.log('hidden')
+              return
+            }
             const sk = original.closest('tr').getAttribute('sk')
             
             const item = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
