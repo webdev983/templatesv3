@@ -1450,8 +1450,8 @@
                     contenteditable>0</strong>
                 </td>
                 <td id="price_comparison_price_anchor" hidden>
-                  <div class="l-3" id="price_comparison_price" contenteditable>0</span>
-                  <div class="l-3" id="price_comparison_anchor" contenteditable>https:/</span>
+                  <span class="l-3" id="price_comparison_price" contenteditable>0</span>
+                  <span class="l-3" id="price_comparison_anchor" contenteditable>https:/</span>
                 </td>
               </tr>
             </table>
@@ -17764,10 +17764,11 @@ headers: {
                 return;
               }
 
-              const sk = original.closest('tr').getAttribute('sk');
+              
 
               // Function to update price
               const updatePrice = async (newPrice) => {
+                const sk = original.closest('tr').getAttribute('sk');
                 try {
                   const response = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
                     method: 'GET',
@@ -17791,6 +17792,7 @@ headers: {
 
               // Function to update anchor
               const updateAnchor = async (newAnchor) => {
+                const sk = original.closest('tr').getAttribute('sk');
                 try {
                   const response = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
                     method: 'GET',
