@@ -3140,17 +3140,18 @@
 
   </script>
   <script>
-    var postToDb = (item) =>{ 
+    var postToDb = (item) => {
       console.log(JSON.stringify(item))
       return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(
-        item
-      ),
-    });}
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+          item
+        ),
+      });
+    }
     //gallery scripts 
     var cancelGalleryMenu = (event) => {
       event.target.closest('#menu-1').style.display = 'none';
@@ -16621,18 +16622,19 @@ headers: {
             return
           }
           const cAnchor = cloned2.querySelector('#price_comparison_anchor')
-          const item1 = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }).then(e => e.json()).then(({ items }) => items[0])
+
           if (item1[item.value]) {
             cPrice.textContent = item1[item.value].price
             cAnchor.textContent = item1[item.value].anchor
           }
 
           cPrice.onblur = async (e) => {
+            const item1 = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(e => e.json()).then(({ items }) => items[0])
             const newPrice = cPrice.textContent
             if (!item1[item.value]) {
               items1[item.value] = { price: 0, anchor: 'http' }
@@ -16640,7 +16642,13 @@ headers: {
             item1[item.value].price = newPrice
             postToDb(item1)
           }
-          cAnchor.onblur = (e) => {
+          cAnchor.onblur = async (e) => {
+            const item1 = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(e => e.json()).then(({ items }) => items[0])
             const newAnchor = cAnchor.textContent
             if (!item1[item.value]) {
               item1[item.value] = { price: 0, anchor: 'http' }
@@ -17732,8 +17740,8 @@ headers: {
 
         })
 
-        const ball =cloned.querySelector('#enable-comparision')
-        const enableComp = async (e,runned) => {
+        const ball = cloned.querySelector('#enable-comparision')
+        const enableComp = async (e, runned) => {
 
           const original = document.querySelector('#price_comparison_price_anchor_head[hidden]')
           const cloned = original.cloneNode(true)
@@ -17779,7 +17787,7 @@ headers: {
               postToDb(item)
             }
             cAnchor.onblur = (e) => {
-              
+
               const newAnchor = cAnchor.textContent
               if (!item[element.value]) {
                 item[element.value] = { price: 0, anchor: 'http' }
@@ -17792,10 +17800,10 @@ headers: {
           ball.textContent = '🟢'
 
         }
-        
+
         ball.onclick = enableComp
-        if(element.runned){
-          enableComp(undefined,true)
+        if (element.runned) {
+          enableComp(undefined, true)
 
         }
       }
