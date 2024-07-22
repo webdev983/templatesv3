@@ -17760,13 +17760,13 @@ headers: {
             const cPrice = cloned2.querySelector('#price_comparison_price')
 
             const cAnchor = cloned2.querySelector('#price_comparison_anchor')
-            if(original.closest('tr').hasAttribute('hidden')){
+            if (original.closest('tr').hasAttribute('hidden')) {
               console.log('hidden')
               return
             }
             const sk = original.closest('tr').getAttribute('sk')
-            
-            
+
+
 
             console.log(sk)
             console.log(sku)
@@ -17775,36 +17775,74 @@ headers: {
               cAnchor.textContent = item[element.value].anchor
             }
             console.log('h')
-            cPrice.onblur = async (e) => {
-              console.log('blur')
-              const item1 = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              }).then(e => e.json()).then(({ items }) => items[0])
-              const newPrice = cPrice.textContent
-              if (!item1[element.value]) {
-                item1[element.value] = { price: 0, anchor: 'http' }
+            const updatePrice = async (newPrice) => {
+              try {
+                // Fetch item details
+                const response = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
+                  method: 'GET',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                });
+                const { items } = await response.json();
+                const item = items[0];
+
+                // Update price in item object
+                if (!item[element.value]) {
+                  item[element.value] = { price: 0, anchor: 'http' };
+                }
+                item[element.value].price = newPrice;
+
+                // Post updated item to database
+                await postToDb(item);
+              } catch (error) {
+                console.error('Error updating price:', error);
+                // Handle error
               }
-              item1[element.value].price = newPrice
-              postToDb(item)
-            }
-            cAnchor.onblur = async(e) => {
-              console.log('blur')
-              const item1 =await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              }).then(e => e.json()).then(({ items }) => items[0])
-              const newAnchor = cAnchor.textContent
-              if (!item1[element.value]) {
-                item1[element.value] = { price: 0, anchor: 'http' }
+            };
+
+            // Function to fetch item details and update anchor
+            const updateAnchor = async (newAnchor) => {
+              try {
+                // Fetch item details
+                const response = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
+                  method: 'GET',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                });
+                const { items } = await response.json();
+                const item = items[0];
+
+                // Update anchor in item object
+                if (!item[element.value]) {
+                  item[element.value] = { price: 0, anchor: 'http' };
+                }
+                item[element.value].anchor = newAnchor;
+
+                // Post updated item to database
+                await postToDb(item);
+              } catch (error) {
+                console.error('Error updating anchor:', error);
+                // Handle error
               }
-              item1[element.value].anchor = newAnchor
-              postToDb(item)
-            }
+            };
+
+            // Assuming cPrice and cAnchor are references to your DOM elements
+
+            // Add event listener for price input blur
+            cPrice.addEventListener('blur', async (e) => {
+              console.log('Blur event for price input');
+              const newPrice = cPrice.textContent.trim(); // Get the new price value
+              await updatePrice(newPrice); // Call function to update price
+            });
+
+            // Add event listener for anchor input blur
+            cAnchor.addEventListener('blur', async (e) => {
+              console.log('Blur event for anchor input');
+              const newAnchor = cAnchor.textContent.trim(); // Get the new anchor value
+              await updateAnchor(newAnchor); // Call function to update anchor
+            });
           })
           !runned && postToDb({ ...element, runned: true })
           ball.textContent = '🟢'
