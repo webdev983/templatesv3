@@ -16610,10 +16610,41 @@ headers: {
 
 
         const original2 = document.querySelectorAll('#price_comparison_price_anchor[hidden]')
-        original2.forEach(original => {
+        original2.forEach(async original => {
           const cloned2 = original.cloneNode(true)
+          cloned2.setAttribute('key', item.value)
           original.parentNode.append(cloned2)
           cloned2.removeAttribute('hidden')
+          const cPrice = cloned2.querySelector('#price_comparison_price')
+          const sk = e.closest('tr').getAttribute('sk')
+          const cAnchor = cloned2.querySelector('#price_comparison_anchor')
+          const item1 = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json()).then(({ items }) => items[0])
+          if (item1[item.value]) {
+            cPrice.textContent = item1[item.value].price
+            cAnchor.textContent = item1[item.value].anchor
+          }
+          
+          cPrice.onblur = async (e) => {
+            const newPrice = cPrice.textContent
+            if (!item1[item.value]) {
+              items1[item.value] = {}
+            }
+            item1[item.value].price = newPrice
+            postToDb(item1)
+          }
+          cAnchor.onblur = (e) => {
+            const newAnchor = cAnchor.textContent
+            if (!item1[item.value]) {
+              item1[item.value] = {}
+            }
+            item1[item.value].price = newAnchor
+            postToDb(item1)
+          }
         })
 
         e.target.textContent = '🟢'
@@ -17710,11 +17741,42 @@ headers: {
 
 
           const original2 = document.querySelectorAll('#price_comparison_price_anchor[hidden]')
-          original2.forEach(original => {
+          original2.forEach(async original => {
             const cloned2 = original.cloneNode(true)
-            cloned2.setAttribute('key',element.value)
+            cloned2.setAttribute('key', element.value)
             original.parentNode.append(cloned2)
             cloned2.removeAttribute('hidden')
+            const cPrice = cloned2.querySelector('#price_comparison_price')
+
+            const cAnchor = cloned2.querySelector('#price_comparison_anchor')
+            const sk = e.closest('tr').getAttribute('sk')
+            const item = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(e => e.json()).then(({ items }) => items[0])
+            if (item[element.value]) {
+              cPrice.textContent = item[element.value].price
+              cAnchor.textContent = item[element.value].anchor
+            }
+           
+            cPrice.onblur = async (e) => {
+              const newPrice = cPrice.textContent
+              if (!item[element.value]) {
+                item[element.value] = {}
+              }
+              item[element.value].price = newPrice
+              postToDb(item)
+            }
+            cAnchor.onblur = (e) => {
+              const newAnchor = cAnchor.textContent
+              if (!item[element.value]) {
+                item[element.value] = {}
+              }
+              item[element.value].price = newAnchor
+              postToDb(item)
+            }
           })
 
           e.target.textContent = '🟢'
