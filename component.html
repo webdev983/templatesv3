@@ -1850,7 +1850,7 @@
                       <label for="image-input" id="select-file-button" class="file-upload-button b-3">➕ logo</label>
                     </div>
                     <button id="upload-button1">upload button </button>
-
+                    <img hidden id="comp-image"></img>
                   </td>
                   <td>
                     <button class="b-3 condition-rename" onclick="removecomparision(event)">🗑</button>
@@ -16587,6 +16587,10 @@ headers: {
       }
       cloned.setAttribute('sk', item.sk)
       let file
+      const setImage = ()=>{
+        cloned.querySelector('#comp-image').src = item.src
+        cloned.querySelector('#comp-image').removeAttribute('hidden')
+      }
       cloned.querySelector('#image-input').onchange = (e) => {
 
 
@@ -16602,7 +16606,7 @@ headers: {
 
           file = event.target.files[0]
           uploadButton.onclick = async() => {
-            const id = pathItemSku ? ('sku:' + pathItemSku) : pathItem.id
+            const id = ownerid
             const fileContent = await file
             const fileName = fileContent.name
 
@@ -16613,9 +16617,8 @@ headers: {
               //push to db image
               // Send a POST request using fetch
               const payload = {
-                id,
-                sk: path,
-                date: getFormatedDate()
+                ...item,
+                path
               }
               const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
                 method: 'POST',
