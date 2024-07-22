@@ -17740,119 +17740,110 @@ headers: {
 
         })
 
-        const ball = cloned.querySelector('#enable-comparision')
+        const ball = cloned.querySelector('#enable-comparision');
+
         const enableComp = async (e, runned) => {
+          try {
+            const original = document.querySelector('#price_comparison_price_anchor_head[hidden]');
+            const cloned = original.cloneNode(true);
+            cloned.removeAttribute('hidden');
+            original.parentNode.append(cloned);
+            cloned.querySelector('#price_comparison_site').textContent = element.value;
 
-          const original = document.querySelector('#price_comparison_price_anchor_head[hidden]')
-          const cloned = original.cloneNode(true)
-          cloned.removeAttribute('hidden')
-          original.parentNode.append(cloned)
-          cloned.removeAttribute('hidden')
-          cloned.querySelector('#price_comparison_site').textContent = element.value
+            const original2 = document.querySelectorAll('#price_comparison_price_anchor[hidden]');
+            original2.forEach(async original => {
+              const cloned2 = original.cloneNode(true);
+              cloned2.setAttribute('key', element.value);
+              original.parentNode.append(cloned2);
+              cloned2.removeAttribute('hidden');
+              const cPrice = cloned2.querySelector('#price_comparison_price');
+              const cAnchor = cloned2.querySelector('#price_comparison_anchor');
 
-
-          const original2 = document.querySelectorAll('#price_comparison_price_anchor[hidden]')
-          original2.forEach(async original => {
-            const cloned2 = original.cloneNode(true)
-            cloned2.setAttribute('key', element.value)
-            original.parentNode.append(cloned2)
-            cloned2.removeAttribute('hidden')
-            const cPrice = cloned2.querySelector('#price_comparison_price')
-
-            const cAnchor = cloned2.querySelector('#price_comparison_anchor')
-            if (original.closest('tr').hasAttribute('hidden')) {
-              console.log('hidden')
-              return
-            }
-            const sk = original.closest('tr').getAttribute('sk')
-
-
-
-            console.log(sk)
-            console.log(sku)
-            if (item[element.value]) {
-              cPrice.textContent = item[element.value].price
-              cAnchor.textContent = item[element.value].anchor
-            }
-            console.log('h')
-            const updatePrice = async (newPrice) => {
-              try {
-                // Fetch item details
-                const response = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
-                  method: 'GET',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                });
-                const { items } = await response.json();
-                const item = items[0];
-
-                // Update price in item object
-                if (!item[element.value]) {
-                  item[element.value] = { price: 0, anchor: 'http' };
-                }
-                item[element.value].price = newPrice;
-
-                // Post updated item to database
-                await postToDb(item);
-              } catch (error) {
-                console.error('Error updating price:', error);
-                // Handle error
+              if (original.closest('tr').hasAttribute('hidden')) {
+                console.log('Row is hidden');
+                return;
               }
-            };
 
-            // Function to fetch item details and update anchor
-            const updateAnchor = async (newAnchor) => {
-              try {
-                // Fetch item details
-                const response = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
-                  method: 'GET',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                });
-                const { items } = await response.json();
-                const item = items[0];
+              const sk = original.closest('tr').getAttribute('sk');
 
-                // Update anchor in item object
-                if (!item[element.value]) {
-                  item[element.value] = { price: 0, anchor: 'http' };
+              // Function to update price
+              const updatePrice = async (newPrice) => {
+                try {
+                  const response = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
+                    method: 'GET',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                  });
+                  const { items } = await response.json();
+                  const item = items[0];
+
+                  if (!item[element.value]) {
+                    item[element.value] = { price: 0, anchor: 'http' };
+                  }
+                  item[element.value].price = newPrice;
+
+                  await postToDb(item); // Assuming postToDb function is defined
+                } catch (error) {
+                  console.error('Error updating price:', error);
                 }
-                item[element.value].anchor = newAnchor;
+              };
 
-                // Post updated item to database
-                await postToDb(item);
-              } catch (error) {
-                console.error('Error updating anchor:', error);
-                // Handle error
-              }
-            };
+              // Function to update anchor
+              const updateAnchor = async (newAnchor) => {
+                try {
+                  const response = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
+                    method: 'GET',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                  });
+                  const { items } = await response.json();
+                  const item = items[0];
 
-            // Assuming cPrice and cAnchor are references to your DOM elements
+                  if (!item[element.value]) {
+                    item[element.value] = { price: 0, anchor: 'http' };
+                  }
+                  item[element.value].anchor = newAnchor;
 
-            // Add event listener for price input blur
-            cPrice.addEventListener('blur', async (e) => {
-              console.log('Blur event for price input');
-              const newPrice = cPrice.textContent.trim(); // Get the new price value
-              await updatePrice(newPrice); // Call function to update price
+                  await postToDb(item); // Assuming postToDb function is defined
+                } catch (error) {
+                  console.error('Error updating anchor:', error);
+                }
+              };
+
+              // Event listener for price input blur
+              cPrice.addEventListener('blur', async (e) => {
+                console.log('Blur event for price input');
+                const newPrice = cPrice.textContent.trim();
+                await updatePrice(newPrice);
+              });
+
+              // Event listener for anchor input blur
+              cAnchor.addEventListener('blur', async (e) => {
+                console.log('Blur event for anchor input');
+                const newAnchor = cAnchor.textContent.trim();
+                await updateAnchor(newAnchor);
+              });
             });
 
-            // Add event listener for anchor input blur
-            cAnchor.addEventListener('blur', async (e) => {
-              console.log('Blur event for anchor input');
-              const newAnchor = cAnchor.textContent.trim(); // Get the new anchor value
-              await updateAnchor(newAnchor); // Call function to update anchor
-            });
-          })
-          !runned && postToDb({ ...element, runned: true })
-          ball.textContent = '🟢'
+            if (!runned) {
+              await postToDb({ ...element, runned: true });
+            }
 
-        }
+            ball.textContent = '🟢';
+          } catch (error) {
+            console.error('Error in enableComp function:', error);
+            // Handle error appropriately
+          }
+        };
 
-        ball.onclick = enableComp
+        ball.addEventListener('click', (e) => {
+          enableComp(e, false); // Pass 'false' to indicate it's not initially runned
+        });
+
         if (element.runned) {
-          enableComp(undefined, true)
-
+          enableComp(undefined, true); // Invoke enableComp with 'true' if 'element.runned' is true
         }
       }
 
