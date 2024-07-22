@@ -17759,6 +17759,9 @@ headers: {
               const cPrice = cloned2.querySelector('#price_comparison_price');
               const cAnchor = cloned2.querySelector('#price_comparison_anchor');
               const sk = original.closest('tr').getAttribute('sk');
+              if(!sk){
+                return
+              }
               const response = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
                 method: 'GET',
                 headers: {
