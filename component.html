@@ -1840,13 +1840,16 @@
                     <span class="l-3 enable-condition" id="enable-comparision">🔴</span>
                   </td>
                   <td>
-                    <span class="l-3 condition-name" id="comparision-input" onblur="setSkuItemValue(event)" contenteditable>amazon</span>
+                    <span class="l-3 condition-name" id="comparision-input" onblur="setSkuItemValue(event)"
+                      contenteditable>amazon</span>
                   </td>
                   <td>
                     <div id="select_picture">
                       <input type="file" id="image-input" accept="image/*" hidden />
+
                       <label for="image-input" id="select-file-button" class="file-upload-button b-3">➕ logo</label>
                     </div>
+                    <button id="upload-button1">upload button </button>
 
                   </td>
                   <td>
@@ -16583,7 +16586,51 @@ headers: {
         value: 'comparision'
       }
       cloned.setAttribute('sk', item.sk)
-      cloned.querySelector('#enableCondition').onclick = (e) => {
+      let file
+      cloned.querySelector('#image-input').onchange = (e) => {
+
+
+        const uploadButton = clonedFieldset.querySelector('#upload-button1');
+
+        // Check if a file is selected
+        if (this.files && this.files.length > 0) {
+          // If a file is chosen, show the file name and make the upload button visible
+          const fileName = this.files[0].name; // Get the name of the file
+
+
+          uploadButton.removeAttribute('hidden'); // Make the upload button visible
+
+          file = event.target.files[0]
+          uploadButton.onclick = async() => {
+            const id = pathItemSku ? ('sku:' + pathItemSku) : pathItem.id
+            const fileContent = await file
+            const fileName = fileContent.name
+
+            try {
+
+              const path = await upload(fileName, fileContent)
+              log1(path)
+              //push to db image
+              // Send a POST request using fetch
+              const payload = {
+                id,
+                sk: path,
+                date: getFormatedDate()
+              }
+              const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+              });
+              loadImages(event.target.closest('[data-menu]'), src)
+
+
+            } catch (error) {
+            }
+          }
+        }
         /*
         e.target.textContent = '🟢'
         const original = getElementById1('sku-table').querySelector('#sku-variable-condition[hidden]')
@@ -17602,7 +17649,7 @@ headers: {
         }
         */
       }
-      
+
       /*
     const item1 = getElementById1("sku-item-1")
     const cloned1 = item1.cloneNode(true)
