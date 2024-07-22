@@ -16599,12 +16599,13 @@ headers: {
         // Check if a file is selected
         if (e.target.files && e.target.files.length > 0) {
           // If a file is chosen, show the file name and make the upload button visible
+          file = e.target.files[0]
           const fileName = e.target.files[0].name; // Get the name of the file
-
+          console.log('filename' +fileName)
 
           uploadButton.removeAttribute('hidden'); // Make the upload button visible
 
-          file = e.target
+          
           uploadButton.onclick = async () => {
             const id = ownerid
             const fileContent = await file
