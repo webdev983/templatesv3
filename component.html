@@ -17758,10 +17758,22 @@ headers: {
               cloned2.removeAttribute('hidden');
               const cPrice = cloned2.querySelector('#price_comparison_price');
               const cAnchor = cloned2.querySelector('#price_comparison_anchor');
+              const sk = original.closest('tr').getAttribute('sk');
+              const response = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              });
+              const { items } = await response.json();
+              const item = items[0];
+              if (item[element.value]) {
+                cPrice.textContent = item[element.value].price
+                cAnchor.textContent = item[element.value].anchor
+              }
 
-              
 
-              
+
 
               // Function to update price
               const updatePrice = async (newPrice) => {
