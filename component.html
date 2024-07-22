@@ -17744,14 +17744,14 @@ headers: {
 
         const enableComp = async (e, runned) => {
           try {
-            const original = document.querySelector('#price_comparison_price_anchor_head[hidden]');
-            const cloned = original.cloneNode(true);
+            const original1 = document.querySelector('#price_comparison_price_anchor_head[hidden]');
+            const cloned = original1.cloneNode(true);
             cloned.removeAttribute('hidden');
-            original.parentNode.append(cloned);
+            original1.parentNode.append(cloned);
             cloned.querySelector('#price_comparison_site').textContent = element.value;
 
             const original2 = document.querySelectorAll('#price_comparison_price_anchor[hidden]');
-            original2.forEach(async original => {
+            original2.forEach(async (original) => {
               const cloned2 = original.cloneNode(true);
               cloned2.setAttribute('key', element.value);
               original.parentNode.append(cloned2);
@@ -17759,10 +17759,7 @@ headers: {
               const cPrice = cloned2.querySelector('#price_comparison_price');
               const cAnchor = cloned2.querySelector('#price_comparison_anchor');
 
-              if (original.closest('tr').hasAttribute('hidden')) {
-                console.log('Row is hidden');
-                return;
-              }
+              
 
               
 
