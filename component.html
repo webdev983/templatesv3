@@ -16580,7 +16580,7 @@ headers: {
       const cloned = tr.cloneNode(true)
       cloned.removeAttribute('hidden')
       tr.parentNode.append(cloned)
-      const item = {
+      let item = {
         id: ownerid,
         sk: 'comparision:' + (new Date()).getTime().toString(),
         value: 'comparision'
@@ -16616,7 +16616,7 @@ headers: {
               log1(path)
               //push to db image
               // Send a POST request using fetch
-              const payload = {
+               item = {
                 ...item,
                 path
               }
@@ -16625,9 +16625,9 @@ headers: {
                 headers: {
                   'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(payload),
+                body: JSON.stringify(item),
               });
-              loadImages(event.target.closest('[data-menu]'), src)
+              setImage()
 
 
             } catch (error) {
