@@ -17619,9 +17619,10 @@ headers: {
         cloned.querySelector('#comparision-input').textContent = element.value
         let file
         const setImage = () => {
-          cloned.querySelector('#comp-image').src = element.path
+          cloned.querySelector('#comp-image').setAttribute('src',element.path)
           cloned.querySelector('#comp-image').removeAttribute('hidden')
         }
+        setImage()
         cloned.querySelector('#image-input').addEventListener('change', (e) => {
           console.log('changed')
 
@@ -17660,7 +17661,8 @@ headers: {
                   },
                   body: JSON.stringify(element),
                 });
-                setImage()
+                cloned.querySelector('#comp-image').setAttribute('src',path)
+                cloned.querySelector('#comp-image').removeAttribute('hidden')
 
 
               } catch (error) {
