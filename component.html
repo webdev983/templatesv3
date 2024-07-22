@@ -17751,7 +17751,11 @@ headers: {
             cloned.querySelector('#price_comparison_site').textContent = element.value;
 
             const original2 = document.querySelectorAll('#price_comparison_price_anchor[hidden]');
-            original2.forEach(async (original) => {
+            // Assuming original2 is a NodeList or array of elements to iterate over
+
+
+            for (let i = 0; i < original2.length; i++) {
+              const original = original2[i];
               const cloned2 = original.cloneNode(true);
               cloned2.setAttribute('key', element.value);
               original.parentNode.append(cloned2);
@@ -17759,90 +17763,93 @@ headers: {
               const cPrice = cloned2.querySelector('#price_comparison_price');
               const cAnchor = cloned2.querySelector('#price_comparison_anchor');
               const sk = original.closest('tr').getAttribute('sk');
-              console.log('sk '+sk )
-              if(!sk){
-                return
-              }
-              const response = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              });
-              const { items } = await response.json();
-              const item = items[0];
-              console.log('itemss1 '+JSON.stringify(item))
-              if (item[element.value]) {
-                cPrice.textContent = item[element.value].price
-                cAnchor.textContent = item[element.value].anchor
+              console.log('sk ' + sk);
+
+              if (!sk) {
+                continue; // Skip this iteration if sk is not available
               }
 
+              try {
+                const response = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
+                  method: 'GET',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                });
+                const { items } = await response.json();
+                const item = items[0];
+                console.log('itemss1 ' + JSON.stringify(item));
 
-
-
-              // Function to update price
-              const updatePrice = async (newPrice) => {
-                const sk = original.closest('tr').getAttribute('sk');
-                try {
-                  const response = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
-                    method: 'GET',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                  });
-                  const { items } = await response.json();
-                  const item = items[0];
-
-                  if (!item[element.value]) {
-                    item[element.value] = { price: 0, anchor: 'http' };
-                  }
-                  item[element.value].price = newPrice;
-
-                  await postToDb(item); // Assuming postToDb function is defined
-                } catch (error) {
-                  console.error('Error updating price:', error);
+                if (item[element.value]) {
+                  cPrice.textContent = item[element.value].price;
+                  cAnchor.textContent = item[element.value].anchor;
                 }
-              };
 
-              // Function to update anchor
-              const updateAnchor = async (newAnchor) => {
-                const sk = original.closest('tr').getAttribute('sk');
-                try {
-                  const response = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
-                    method: 'GET',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                  });
-                  const { items } = await response.json();
-                  const item = items[0];
+                // Function to update price
+                const updatePrice = async (newPrice) => {
+                  try {
+                    const response = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
+                      method: 'GET',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                    });
+                    const { items } = await response.json();
+                    const item = items[0];
 
-                  if (!item[element.value]) {
-                    item[element.value] = { price: 0, anchor: 'http' };
+                    if (!item[element.value]) {
+                      item[element.value] = { price: 0, anchor: 'http' };
+                    }
+                    item[element.value].price = newPrice;
+
+                    await postToDb(item); // Assuming postToDb function is defined
+                  } catch (error) {
+                    console.error('Error updating price:', error);
                   }
-                  item[element.value].anchor = newAnchor;
+                };
 
-                  await postToDb(item); // Assuming postToDb function is defined
-                } catch (error) {
-                  console.error('Error updating anchor:', error);
-                }
-              };
+                // Function to update anchor
+                const updateAnchor = async (newAnchor) => {
+                  try {
+                    const response = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
+                      method: 'GET',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                    });
+                    const { items } = await response.json();
+                    const item = items[0];
 
-              // Event listener for price input blur
-              console.log('adding listener')
-              cPrice.addEventListener('blur', async (e) => {
-                console.log('Blur event for price input');
-                const newPrice = cPrice.textContent.trim();
-                await updatePrice(newPrice);
-              });
+                    if (!item[element.value]) {
+                      item[element.value] = { price: 0, anchor: 'http' };
+                    }
+                    item[element.value].anchor = newAnchor;
 
-              // Event listener for anchor input blur
-              cAnchor.addEventListener('blur', async (e) => {
-                console.log('Blur event for anchor input');
-                const newAnchor = cAnchor.textContent.trim();
-                await updateAnchor(newAnchor);
-              });
-            });
+                    await postToDb(item); // Assuming postToDb function is defined
+                  } catch (error) {
+                    console.error('Error updating anchor:', error);
+                  }
+                };
+
+                // Event listener for price input blur
+                console.log('Adding listener for price input');
+                cPrice.addEventListener('blur', async (e) => {
+                  console.log('Blur event for price input');
+                  const newPrice = cPrice.textContent.trim();
+                  await updatePrice(newPrice);
+                });
+
+                // Event listener for anchor input blur
+                cAnchor.addEventListener('blur', async (e) => {
+                  console.log('Blur event for anchor input');
+                  const newAnchor = cAnchor.textContent.trim();
+                  await updateAnchor(newAnchor);
+                });
+              } catch (error) {
+                console.error('Error fetching data:', error);
+                // Handle error as needed
+              }
+            }
 
             if (!runned) {
               await postToDb({ ...element, runned: true });
