@@ -17680,8 +17680,19 @@ headers: {
         })
         
         cloned.querySelector('#enable-comparision').onclick = async (e) => {
-          
+
+            const original = document.getElementById('price_comparison_price_anchor_head[hidden]')
+            const cloned = original.cloneNode(true)
+            cloned.removeAttribute('hidden')
+            original.parentNode.append(cloned)
+            cloned.removeAttribute('hidden')
+            cloned.querySelector('#price_comparison_site').textContent = element.value
             
+
+            const original2 = document.getElementById('price_comparison_price_anchor[hidden]')
+            const cloned2 = original.cloneNode(true)
+            original2.parentNode.append(cloned2)
+            cloned2.removeAttribute('hidden')
             e.target.textContent = '🟢'
           }
         
