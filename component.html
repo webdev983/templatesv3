@@ -1840,7 +1840,7 @@
                     <span class="l-3 enable-condition" id="enable-comparision">🔴</span>
                   </td>
                   <td>
-                    <span class="l-3 condition-name" onblur="setSkuItemValue(event)" contenteditable>amazon</span>
+                    <span class="l-3 condition-name" id="comparision-input" onblur="setSkuItemValue(event)" contenteditable>amazon</span>
                   </td>
                   <td>
                     <div id="select_picture">
@@ -17167,6 +17167,8 @@ headers: {
         .then(response => response.json()).then(res => res.items)
       const shippingMethodes = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=shippingMethode:&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
+      const comparisions = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=comparision:&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
       const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=sku-variables;&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
       const skuQtyValue = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=warehouse_price_qty:&startsWith=true`)
@@ -17556,6 +17558,51 @@ headers: {
           }
         }
       }
+      for (const element of comparisions) {
+        const tr = filled.querySelector('#comparision-row[hidden]')
+        const cloned = tr.cloneNode(true)
+        cloned.setAttribute('sk', element.sk)
+        cloned.removeAttribute('hidden')
+        tr.parentNode.append(cloned)
+        cloned.querySelector('#comparision-input').textContent = element.value
+        /*
+        cloned.querySelector('#enableShip').onclick = async (e) => {
+          const checkedWareHouses = querySelectorAll1('#warehouse-zd[checked]')
+          if (checkedWareHouses.length) {
+            const checkedWareHouse = checkedWareHouses[0]
+            const sk = checkedWareHouse.parentNode.id
+            const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(e => e.json()).then(res => res.items[0])
+            //item.shippingMethodes = item.shippingMethodes ? [...item.shippingMethodes, element.sk] : [element.sk]
+            if (item.shippingMethodes) {
+              if (!item.shippingMethodes.includes(element.sk)) {
+                item.shippingMethodes = [...item.shippingMethodes, { id: element.sk }]
+              }
+            }
+            else {
+              item.shippingMethodes = [{ id: element.sk }]
+            }
+            console.log(JSON.stringify(item))
+            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(
+                item
+              ),
+            });
+            e.target.textContent = '🟢'
+            generateShippingM(item)
+          }
+        }
+        */
+      }
+      
       /*
     const item1 = getElementById1("sku-item-1")
     const cloned1 = item1.cloneNode(true)
