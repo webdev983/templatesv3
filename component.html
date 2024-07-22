@@ -17766,12 +17766,7 @@ headers: {
             }
             const sk = original.closest('tr').getAttribute('sk')
             
-            const item = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            }).then(e => e.json()).then(({ items }) => items[0])
+            
 
             console.log(sk)
             console.log(sku)
@@ -17789,25 +17784,25 @@ headers: {
                 },
               }).then(e => e.json()).then(({ items }) => items[0])
               const newPrice = cPrice.textContent
-              if (!item[element.value]) {
-                item[element.value] = { price: 0, anchor: 'http' }
+              if (!item1[element.value]) {
+                item1[element.value] = { price: 0, anchor: 'http' }
               }
-              item[element.value].price = newPrice
+              item1[element.value].price = newPrice
               postToDb(item)
             }
             cAnchor.onblur = async(e) => {
               console.log('blur')
-              const item =await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
+              const item1 =await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
                 method: 'GET',
                 headers: {
                   'Content-Type': 'application/json',
                 },
               }).then(e => e.json()).then(({ items }) => items[0])
               const newAnchor = cAnchor.textContent
-              if (!item[element.value]) {
-                item[element.value] = { price: 0, anchor: 'http' }
+              if (!item1[element.value]) {
+                item1[element.value] = { price: 0, anchor: 'http' }
               }
-              item[element.value].anchor = newAnchor
+              item1[element.value].anchor = newAnchor
               postToDb(item)
             }
           })
