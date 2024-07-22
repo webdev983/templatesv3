@@ -3940,12 +3940,13 @@
       */
     }
     const skuToPicturesApi = async () => {
-      /*
-      const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Content '
-      url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
-      const { items } = await fetch(url).then(e => e.json())
-
-      const eventData1 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&clean=1&ownerid=${localStorage.getItem('ownerid')}` };
+      const lsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Content'
+      const lsiD = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Gallery-Content'
+      const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${lsi}`;
+      const url2 = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${lsiD}`;
+      const res = await fetch(url).then(e => e.json())
+      const res2 = await fetch(url2).then(e => e.json())
+      const eventData1 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res.items[0].id}&clean=1&ownerid=${localStorage.getItem('ownerid')}` };
       console.log('event ' + eventData1.url)
       // Fetch options
       const options0 = {
@@ -3958,7 +3959,7 @@
       await fetch(pup_url, options0);
 
 
-      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&generateHtmlFromSku=${pathItemSku}&ownerid=${localStorage.getItem('ownerid')}` };
+      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res.items[0].id}&skuToPictures=${pathItemSku}&ownerid=${localStorage.getItem('ownerid')}` };
 
       // Fetch options
       const options = {
@@ -3970,12 +3971,24 @@
       };
       console.log(eventData.url)
       const response = await fetch(pup_url, options);
-      */
+
+      const eventData2 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res2.items[0].id}&skuToPictures=${pathItemSku}&ownerid=${localStorage.getItem('ownerid')}` };
+
+      // Fetch options
+      const options2 = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData2)
+      };
+      console.log(eventData2.url)
+      const response2 = await fetch(pup_url, options);
     }
     const skuToHtmlApi = async () => {
       //const spec = document.getElementById('spec-status')
       //spec.textContent = '🗂️ Table spec 🟠'
-      const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Content '
+      const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Content'
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
       const { items } = await fetch(url).then(e => e.json())
 
