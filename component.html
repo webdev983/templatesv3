@@ -3991,6 +3991,7 @@
         }
 
       })
+      console.log(JSON.stringify(varMap))
       const fieldset = querySelectorAll1('.product_attributes_fieldset')[0]
       const keys = Object.keys(varMap)
       const firstLegend = keys[0]
@@ -4030,7 +4031,7 @@
       await pushAction(el4)
       const image = fieldset.querySelector('.product_attribute_value_image')
       const key = varMap[firstLegend][variables[0]]
-      await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
+      key && await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
       const last = fieldset.querySelector('.product_attribute_label').id + '-tree'
       for (let i = 1; i < variables.length; i++) {
         let newId = duplicateId(image.id).id
@@ -4137,7 +4138,7 @@
           // Select image for product_attribute_value_image
           const image = fieldset.querySelector('.product_attribute_value_image');
           const key = varMap[currentLegend][currentVar];
-          await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''));
+          key && await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''));
 
           
 
