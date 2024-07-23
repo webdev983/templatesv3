@@ -3976,17 +3976,17 @@
 
       const withSku = items.filter(e => Object.keys(e.picture_buttons_sku_variables).length)
       const varMap = {}
-      skuVariables.map(e => e.sk.replace('skuVariables', '')).forEach(combination => {
+      skuVariables.map(e => e.sk.replace('sku-variables;', '')).forEach(combination => {
         const splited = combination.split(';')
         for (const el of splited) {
           const [key, value] = el.split(':')
           const foundPic = withSku.find(element => element.picture_buttons_sku_variables[key]?.includes(value)) || ''
 
           if (!varMap[key]) {
-            varMap[key] = { value: foundPic.sk }
+            varMap[key] = { [value]: foundPic.sk }
           }
           else {
-            varMap[key].value = foundPic.sk
+            varMap[key][value] = foundPic.sk
           }
         }
 
@@ -4080,15 +4080,16 @@
 
       }
       let lastF = fieldset.id +'-tree'
+      const fieldset1 = fieldset
       for (let k = 1; k < keys.length; k++) {
         const currentLegend = keys[k];
         const variables = Object.keys(varMap[currentLegend]);
-        let newId = duplicateId(fieldset.id).id
+        let newId = duplicateId(fieldset1.id).id
         const actionObject = {
           time: (new Date()).getTime(),
           action: 'InsertAfter',
           target_element: last,
-          inserted_element: { originalId: fieldset.id + '-tree', id: newId },
+          inserted_element: { originalId: fieldset1.id + '-tree', id: newId },
         };
         await pushAction(actionObject)
         let lastF = newId
