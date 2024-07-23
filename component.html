@@ -1263,7 +1263,7 @@
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">📣 Promo</span></summary>
         <span>dadasd</span>
       </details>
-        
+
 
       <details id="import-menu" hidden style="margin-bottom: 7px;">
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">🚀 Import Menu</span></summary>
@@ -1380,11 +1380,12 @@
             <button onclick="removeSku2(event)" class="b-3">🗑️ Remove</button>
           </fieldset>
 
-          <details  style="margin-left: 30px; margin-top: 10px;">
-            <summary class="summary-L-3"><span class="l-3 b-dark-blue">H1: </span><span class="l-3">dyson  type: |value| vacuum, color: |value|</span></summary>
+          <details style="margin-left: 30px; margin-top: 10px;">
+            <summary class="summary-L-3"><span class="l-3 b-dark-blue">H1: </span><span class="l-3">dyson type: |value|
+                vacuum, color: |value|</span></summary>
             <span style="margin-left: 30px;">under construuction</span>
           </details>
-    
+
 
           <div id="warehouse_select2" style="margin-left: 30px; margin-top: 10px;">
             <label class="l-3" id="warehouse_select_label" hidden><input type="radio" name="warehouse_select"
@@ -3977,12 +3978,24 @@
         pics = items.filter(e => e.main)
         image = querySelectorAll1('.product_lead_img')[0]
       }
-      if(!pics.length){
+      if (!pics.length) {
         return
       }
       const key = pics[0].sk
       await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
       let lastEl = image.id + "-tree"
+      const var1 = pics[0].gallery_variables_sku_variables
+      const payload2 = {
+
+        time: (new Date()).getTime().toString(),
+        action: 'setAttribute',
+        target_element: lastEl,
+        key: 'combinations',
+        value: JSON.stringify(var1),
+
+      }
+      pushAction(payload2)
+      /*
       for (let i = 1; i < pics.length; i++) {
         let newId = duplicateId(image.id).id
         const actionObject = {
@@ -3995,9 +4008,8 @@
         const key = pics[i].sk
         await selectImage1(newId, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
         lastEl = newId
-      }
+      }*/
 
-      const imageElement = querySelectorAll1('.product_lead_img')[0]
 
     }
     const skuToPicturesApi = async () => {
@@ -17764,7 +17776,7 @@ headers: {
         })
 
         const c1 = cloned
-        const enableComp = async (e,runned) => {
+        const enableComp = async (e, runned) => {
 
           const original = document.querySelector('#price_comparison_price_anchor_head[hidden]')
           const cloned = original.cloneNode(true)
@@ -17823,8 +17835,8 @@ headers: {
 
         }
         cloned.querySelector('#enable-comparision').onclick = enableComp
-        if(element.runned){
-          enableComp(undefined,true)
+        if (element.runned) {
+          enableComp(undefined, true)
 
         }
       }
