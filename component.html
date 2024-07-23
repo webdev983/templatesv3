@@ -3966,6 +3966,8 @@
       */
     }
     const skuToPictures = async (sku, secondary) => {
+      const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=sku-variables;&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
       const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=pics&startsWith=true`;
       const { items } = await fetch(url).then(e => e.json())
       let pics
@@ -3981,30 +3983,76 @@
       if (!pics.length) {
         return
       }
-      const key = pics[0].sk
+      const withoutSku = pics.filter(e => !Object.key(e.gallery_variables_sku_variables).length)
+      const withSku = pics.filter(e => Object.key(e.gallery_variables_sku_variables).length)
+      const varibleMap = skuVariables.map(e => e.sk.replace('skuVariables', '')).map(combination => {
+        const splited = combination.split(';')
+
+        const pics = []
+        for (const pic of withSku) {
+          let matched = 1
+          for (const element of splited) {
+            const [key, value] = element.split(':')
+            if (!pic.gallery_variables_sku_variables[key]) {
+              continue
+            }
+            else if (pic.gallery_variables_sku_variables[key].includes(value)) {
+              continue
+            }
+            else {
+              matched = 0
+              break;
+            }
+          }
+          if (matched) {
+            pics.push(pic)
+          }
+        }
+        return { combination, pics }
+      })
+      const key = varibleMap[0].pics[0]
       await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
       let lastEl = image.id + "-tree"
-      const var1 = pics[0].gallery_variables_sku_variables
+
       const payload2 = {
 
         time: (new Date()).getTime().toString(),
         action: 'setAttribute',
         target_element: lastEl,
-        key: 'combinations',
-        value: JSON.stringify(var1),
+        key: 'varMap',
+        value: JSON.stringify(varibleMap[0]),
 
       }
       pushAction(payload2)
-      const payload3 = {
-
-        time: (new Date()).getTime().toString(),
-        action: 'setAttribute',
-        target_element: lastEl,
-        key: 'combinations',
-        value: JSON.stringify(pics.map(e=>e.gallery_variables_sku_variables)),
-
+      if (secondary) {
+        for (let i = 1; i < varibleMap[0].pics.length; i++) {
+          let newId = duplicateId(image.id).id
+          const actionObject = {
+            time: (new Date()).getTime(),
+            action: 'InsertAfter',
+            target_element: lastEl,
+            inserted_element: { originalId: image.id + '-tree', id: newId },
+          };
+          await pushAction(actionObject)
+          const key = varibleMap[0].pics[i]
+          await selectImage1(newId, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
+          lastEl = newId
+        }
+        for (let i = 1; i < withoutSku.length; i++) {
+          let newId = duplicateId(image.id).id
+          const actionObject = {
+            time: (new Date()).getTime(),
+            action: 'InsertAfter',
+            target_element: lastEl,
+            inserted_element: { originalId: image.id + '-tree', id: newId },
+          };
+          await pushAction(actionObject)
+          const key = pics[i].sk
+          await selectImage1(newId, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
+          lastEl = newId
+        }
       }
-      pushAction(payload3)
+
       /*
       for (let i = 1; i < pics.length; i++) {
         let newId = duplicateId(image.id).id
