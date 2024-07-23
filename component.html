@@ -4030,8 +4030,8 @@
       }
       await pushAction(el4)
       const image = fieldset.querySelector('.product_attribute_value_image')
-      const key = varMap[firstLegend][variables[0]]
-      key && await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
+      const key = varMap[firstLegend][firstVar]
+      key && await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''),'150',`button_image_sku:${firstLegend}:${firstVar}`)
       let last = fieldset.querySelector('.product_attribute_label').id + '-tree'
       for (let i = 1; i < variables.length; i++) {
         let newId = duplicateId(image.id).id
@@ -4042,7 +4042,7 @@
           inserted_element: { originalId: fieldset.querySelector('.product_attribute_radio').id + '-tree', id: newId },
         };
         await pushAction(actionObject)
-
+        
         let newId2 = duplicateId(image.id).id
         const actionObject2 = {
           time: (new Date()).getTime(),
@@ -4076,6 +4076,7 @@
           value: `sku:${variables[i]}`,
 
         }
+        key && await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''),'150',`button_image_sku:${firstLegend}:${variables[i]}`);
         last = newId2
 
       }
@@ -4139,7 +4140,7 @@
           // Select image for product_attribute_value_image
           const image = fieldset.querySelector('.product_attribute_value_image');
           const key = varMap[currentLegend][currentVar];
-          key && await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''));
+          key && await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''),'150',`button_image_sku:${currentLegend}:${currentVar}`);
 
           
 
@@ -14872,11 +14873,11 @@ elementsToRemove.forEach(element => element.remove());
       }
 
     }
-    async function selectImage1(imgId, imageSrc, imageUUID, custom) {
+    async function selectImage1(imgId, imageSrc, imageUUID, custom,name) {
       console.log('selecting image'+imageSrc)
       const imageElement = getElementById1(removeLastOccurrence(imgId, '-tree'))
-      const name = imageElement.getAttribute('data-builder-image-name')
-      const defaultRes = imageElement.getAttribute('data-builder-image-default')
+      const name = imageElement.getAttribute('data-builder-image-name') || name
+      const defaultRes = imageElement.getAttribute('data-builder-image-default') || '150w'
 
       const site = pathItemPath.split('/')[0]
       let randomString = generateRandomString(3)
