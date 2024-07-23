@@ -4029,9 +4029,18 @@
 
       }
       await pushAction(el4)
+      const el5 = {
+        time: (new Date()).getTime(),
+        action: 'setAttribute',
+        target_element: fieldset.querySelector('.product_attribute_radio').id + '-tree',
+        key: 'name',
+        value: `${firstLegend}`,
+
+      }
+      await pushAction(el5)
       const image = fieldset.querySelector('.product_attribute_value_image')
       const key = varMap[firstLegend][firstVar]
-      key && await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''),'150',`button_image_sku:${firstLegend}:${firstVar}`)
+      key && await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''), '150', `button_image_sku:${firstLegend}:${firstVar}`)
       let last = fieldset.querySelector('.product_attribute_label').id + '-tree'
       for (let i = 1; i < variables.length; i++) {
         let newId = duplicateId(image.id).id
@@ -4042,7 +4051,7 @@
           inserted_element: { originalId: fieldset.querySelector('.product_attribute_radio').id + '-tree', id: newId },
         };
         await pushAction(actionObject)
-        
+
         let newId2 = duplicateId(image.id).id
         const actionObject2 = {
           time: (new Date()).getTime(),
@@ -4077,11 +4086,11 @@
 
         }
         const key = varMap[firstLegend][variables[i]]
-        key && await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''),'150',`button_image_sku:${firstLegend}:${variables[i]}`);
+        key && await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''), '150', `button_image_sku:${firstLegend}:${variables[i]}`);
         last = newId2
 
       }
-      let lastF = fieldset.id +'-tree'
+      let lastF = fieldset.id + '-tree'
       const fieldset1 = fieldset
       for (let k = 1; k < keys.length; k++) {
         const currentLegend = keys[k];
@@ -4095,7 +4104,7 @@
         };
         await pushAction(actionObject)
         lastF = newId
-        const fieldset = getElementById1(newId.replace('-tree',''))
+        const fieldset = getElementById1(newId.replace('-tree', ''))
         // Push action for currentLegend text content
         const el = {
           time: (new Date()).getTime(),
@@ -4104,6 +4113,15 @@
           value: currentLegend,
         };
         await pushAction(el);
+        const el5 = {
+          time: (new Date()).getTime(),
+          action: 'setAttribute',
+          target_element: fieldset.querySelector('.product_attribute_radio').id + '-tree',
+          key: 'name',
+          value: `${currentLegend}`,
+
+        }
+        await pushAction(el5)
         let last = fieldset.querySelector('.product_attribute_label').id + '-tree';
         // Iterate over variables for the current legend
         for (let i = 0; i < variables.length; i++) {
@@ -4141,9 +4159,9 @@
           // Select image for product_attribute_value_image
           const image = fieldset.querySelector('.product_attribute_value_image');
           const key = varMap[currentLegend][currentVar];
-          key && await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''),'150',`button_image_sku:${currentLegend}:${currentVar}`);
+          key && await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''), '150', `button_image_sku:${currentLegend}:${currentVar}`);
 
-          
+
 
           // Duplicate ID logic (assuming it's defined elsewhere)
           let newId = duplicateId(image.id).id;
@@ -14874,8 +14892,8 @@ elementsToRemove.forEach(element => element.remove());
       }
 
     }
-    async function selectImage1(imgId, imageSrc, imageUUID, custom,name1) {
-      console.log('selecting image'+imageSrc)
+    async function selectImage1(imgId, imageSrc, imageUUID, custom, name1) {
+      console.log('selecting image' + imageSrc)
       const imageElement = getElementById1(removeLastOccurrence(imgId, '-tree'))
       const name = imageElement.getAttribute('data-builder-image-name') || name1
       const defaultRes = imageElement.getAttribute('data-builder-image-default') || '150w'
