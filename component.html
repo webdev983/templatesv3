@@ -1263,7 +1263,7 @@
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">📣 Promo</span></summary>
         <span>dadasd</span>
       </details>
-        
+
 
       <details id="import-menu" hidden style="margin-bottom: 7px;">
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">🚀 Import Menu</span></summary>
@@ -1405,7 +1405,7 @@
 
 
           </details>
-    
+
 
           <div id="warehouse_select2" style="margin-left: 30px; margin-top: 10px;">
             <label class="l-3" id="warehouse_select_label" hidden><input type="radio" name="warehouse_select"
@@ -3953,7 +3953,7 @@
 
     }
     const skuToButtonPicturesApi = async () => {
-      /*
+
       const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Content '
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
       const { items } = await fetch(url).then(e => e.json())
@@ -3968,10 +3968,10 @@
         },
         body: JSON.stringify(eventData1)
       };
-      await fetch(pup_url, options0);
+      //await fetch(pup_url, options0);
 
 
-      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&generateHtmlFromSku=${pathItemSku}&ownerid=${localStorage.getItem('ownerid')}` };
+      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&skuToButtonPics=${pathItemSku}&ownerid=${localStorage.getItem('ownerid')}` };
 
       // Fetch options
       const options = {
@@ -3983,21 +3983,379 @@
       };
       console.log(eventData.url)
       const response = await fetch(pup_url, options);
-      */
+
     }
-    const skuToPicturesItem = async (sku, secondary) => {
-      const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pathItem.id}&sk=pics&startsWith=true`;
+    const skuToButtonPictures = async (sku) => {
+      const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=sku-variables;&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
+      const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=pics&startsWith=true`;
+      const { items } = await fetch(url).then(e => e.json())
+
+
+
+
+      const withSku = items.filter(e => Object.keys(e.picture_buttons_sku_variables).length)
+      const varMap = {}
+      skuVariables.map(e => e.sk.replace('sku-variables;', '')).forEach(combination => {
+        const splited = combination.split(';')
+        splited.pop()
+        for (const el of splited) {
+          const [key, value] = el.split(':')
+          const foundPic = withSku.find(element => element.picture_buttons_sku_variables[key]?.includes(value)) || ''
+
+          if (!varMap[key]) {
+            varMap[key] = { [value]: foundPic.sk }
+          }
+          else {
+            varMap[key][value] = foundPic.sk
+          }
+        }
+
+      })
+      console.log(JSON.stringify(varMap))
+      const fieldset = querySelectorAll1('.product_attributes_fieldset')[0]
+      const keys = Object.keys(varMap)
+      const firstLegend = keys[0]
+      const variables = Object.keys(varMap[firstLegend])
+      const firstVar = variables[0]
+
+      let lastF = fieldset.id + '-tree'
+      const fieldset1 = fieldset
+      for (let k = 1; k < keys.length; k++) {
+        const currentLegend = keys[k];
+        const variables = Object.keys(varMap[currentLegend]);
+        let newId = duplicateId(fieldset1.id).id
+        const actionObject = {
+          time: (new Date()).getTime(),
+          action: 'InsertAfter',
+          target_element: lastF,
+          inserted_element: { originalId: fieldset1.id + '-tree', id: newId },
+        };
+        await pushAction(actionObject)
+        lastF = newId
+        const fieldset = getElementById1(newId.replace('-tree', ''))
+        // Push action for currentLegend text content
+        const el = {
+          time: (new Date()).getTime(),
+          action: 'textContent',
+          target_element: fieldset.querySelector('.product_attributes_legend').id + '-tree',
+          value: currentLegend,
+        };
+        await pushAction(el);
+        const el5 = {
+          time: (new Date()).getTime(),
+          action: 'setAttribute',
+          target_element: fieldset.querySelector('.product_attribute_radio').id + '-tree',
+          key: 'name',
+          value: `${currentLegend}`,
+
+        }
+        await pushAction(el5)
+        let last = fieldset.querySelector('.product_attribute_label').id + '-tree';
+        // Iterate over variables for the current legend
+        for (let i = 0; i < variables.length; i++) {
+          const currentVar = variables[i];
+
+          // Push action for currentVar text content
+          const el2 = {
+            time: (new Date()).getTime(),
+            action: 'textContent',
+            target_element: fieldset.querySelector('.product_attribute_value').id + '-tree',
+            value: currentVar,
+          };
+          await pushAction(el2);
+
+          // Set 'for' attribute in product_attribute_label
+          const el3 = {
+            time: (new Date()).getTime(),
+            action: 'setAttribute',
+            target_element: fieldset.querySelector('.product_attribute_label').id + '-tree',
+            key: 'for',
+            value: `sku:${currentVar}`,
+          };
+          await pushAction(el3);
+
+          // Set data-id attribute in product_attribute_radio
+          const el4 = {
+            time: (new Date()).getTime(),
+            action: 'setAttribute',
+            target_element: fieldset.querySelector('.product_attribute_radio').id + '-tree',
+            key: 'data-id',
+            value: `sku:${currentVar}`,
+          };
+          await pushAction(el4);
+
+          // Select image for product_attribute_value_image
+          const image = fieldset.querySelector('.product_attribute_value_image');
+          const key = varMap[currentLegend][currentVar];
+          key && await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''), '150', `button_image_sku:${currentLegend}:${currentVar}`);
+
+
+
+          // Duplicate ID logic (assuming it's defined elsewhere)
+          let newId = duplicateId(fieldset.querySelector('.product_attribute_radio').id).id;
+
+          // Push action to insert after last
+          const actionObject = {
+            time: (new Date()).getTime(),
+            action: 'InsertAfter',
+            target_element: last,
+            inserted_element: { originalId: fieldset.querySelector('.product_attribute_radio').id + '-tree', id: newId },
+          };
+          await pushAction(actionObject);
+
+          // Update last for the next iteration
+          last = actionObject.inserted_element.id;
+
+          // Duplicate ID logic for label
+          let newId2 = duplicateId(fieldset.querySelector('.product_attribute_label').id).id;
+
+          // Push action to insert after newId
+          const actionObject2 = {
+            time: (new Date()).getTime(),
+            action: 'InsertAfter',
+            target_element: newId,
+            inserted_element: { originalId: fieldset.querySelector('.product_attribute_label').id + '-tree', id: newId2 },
+          };
+          await pushAction(actionObject2);
+
+          // Get label element by ID
+          const label = getElementById1(newId2.replace('-tree', ''));
+
+          // Push action for label text content
+          const el5 = {
+            time: (new Date()).getTime(),
+            action: 'textContent',
+            target_element: label.querySelector('.product_attribute_value').id + '-tree',
+            value: currentVar,
+          };
+          await pushAction(el5);
+
+          // Set 'for' attribute in label
+          const el6 = {
+            time: (new Date()).getTime(),
+            action: 'setAttribute',
+            target_element: label.id + '-tree',
+            key: 'for',
+            value: `sku:${currentVar}`,
+          };
+          await pushAction(el6);
+
+          // Set data-id attribute in newId
+          const el7 = {
+            time: (new Date()).getTime(),
+            action: 'setAttribute',
+            target_element: newId,
+            key: 'data-id',
+            value: `sku:${currentVar}`,
+          };
+          await pushAction(el7);
+
+          // Update last for the next iteration
+          last = newId2;
+        }
+      }
+      const el = {
+        time: (new Date()).getTime(),
+        action: 'textContent',
+        target_element: fieldset.querySelector('.product_attributes_legend').id + '-tree',
+        value: firstLegend,
+      }
+      await pushAction(el)
+      const el2 = {
+        time: (new Date()).getTime(),
+        action: 'textContent',
+        target_element: fieldset.querySelector('.product_attribute_value').id + '-tree',
+        value: firstVar,
+      }
+      await pushAction(el2)
+      const el3 = {
+        time: (new Date()).getTime(),
+        action: 'setAttribute',
+        target_element: fieldset.querySelector('.product_attribute_label').id + '-tree',
+        key: 'for',
+        value: `sku:${firstVar}`,
+
+      }
+      await pushAction(el3)
+      const el4 = {
+        time: (new Date()).getTime(),
+        action: 'setAttribute',
+        target_element: fieldset.querySelector('.product_attribute_radio').id + '-tree',
+        key: 'data-id',
+        value: `sku:${firstVar}`,
+
+      }
+      await pushAction(el4)
+      const el5 = {
+        time: (new Date()).getTime(),
+        action: 'setAttribute',
+        target_element: fieldset.querySelector('.product_attribute_radio').id + '-tree',
+        key: 'name',
+        value: `${firstLegend}`,
+
+      }
+      await pushAction(el5)
+      const image = fieldset.querySelector('.product_attribute_value_image')
+      const key = varMap[firstLegend][firstVar]
+      key && await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''), '150', `button_image_sku:${firstLegend}:${firstVar}`)
+      let last = fieldset.querySelector('.product_attribute_label').id + '-tree'
+      for (let i = 1; i < variables.length; i++) {
+        let newId = duplicateId(fieldset.querySelector('.product_attribute_radio').id).id
+        const actionObject = {
+          time: (new Date()).getTime(),
+          action: 'InsertAfter',
+          target_element: last,
+          inserted_element: { originalId: fieldset.querySelector('.product_attribute_radio').id + '-tree', id: newId },
+        };
+        await pushAction(actionObject)
+
+        let newId2 = duplicateId(fieldset.querySelector('.product_attribute_label').id).id
+        const actionObject2 = {
+          time: (new Date()).getTime(),
+          action: 'InsertAfter',
+          target_element: newId,
+          inserted_element: { originalId: fieldset.querySelector('.product_attribute_label').id + '-tree', id: newId2 },
+        };
+        await pushAction(actionObject2)
+        const label2 = getElementById1(newId2.replace('-tree', ''))
+        const el2 = {
+          time: (new Date()).getTime(),
+          action: 'textContent',
+          target_element: label2.querySelector('.product_attribute_value').id + '-tree',
+          value: variables[i],
+        }
+        await pushAction(el2)
+        const el3 = {
+          time: (new Date()).getTime(),
+          action: 'setAttribute',
+          target_element: label2.id + '-tree',
+          key: 'for',
+          value: `sku:${variables[i]}`,
+
+        }
+        await pushAction(el3)
+        const el4 = {
+          time: (new Date()).getTime(),
+          action: 'setAttribute',
+          target_element: newId,
+          key: 'data-id',
+          value: `sku:${variables[i]}`,
+
+        }
+        const image1 = label2.querySelector('.product_attribute_value_image')
+        const key1 = varMap[firstLegend][variables[i]]
+        await selectImage1(image1.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key1, key1.split('.')[0].replace('pics', ''), '150', `button_image_sku:${firstLegend}:${variables[i]}`);
+        last = newId2
+
+      }
+
+
+    }
+    const skuToPictures = async (sku, secondary) => {
+      const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=sku-variables;&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
+      const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=pics&startsWith=true`;
       const { items } = await fetch(url).then(e => e.json())
       let pics
+      let image
       if (secondary) {
         pics = items.filter(e => e.secondary)
+        image = querySelectorAll1('.product_thumbnail')[0]
       }
       else {
         pics = items.filter(e => e.main)
+        image = querySelectorAll1('.product_lead_img')[0]
+      }
+      if (!pics.length) {
+        return
+      }
+      const withoutSku = pics.filter(e => !Object.keys(e.gallery_variables_sku_variables).length)
+      const withSku = pics.filter(e => Object.keys(e.gallery_variables_sku_variables).length)
+      const varibleMap = skuVariables.map(e => e.sk.replace('skuVariables', '')).map(combination => {
+        const splited = combination.split(';')
+
+        const pics = []
+        for (const pic of withSku) {
+          let matched = 1
+          for (const element of splited) {
+            const [key, value] = element.split(':')
+            if (!pic.gallery_variables_sku_variables[key]) {
+              continue
+            }
+            else if (pic.gallery_variables_sku_variables[key].includes(value)) {
+              continue
+            }
+            else {
+              matched = 0
+              break;
+            }
+          }
+          if (matched) {
+            pics.push(pic)
+          }
+        }
+        return { combination, pics: pics.map(e => e.sk) }
+      })
+      console.log(JSON.stringify(varibleMap))
+      const key = varibleMap[0].pics[0]
+      await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
+      let lastEl = image.id + "-tree"
+
+      const payload2 = {
+
+        time: (new Date()).getTime().toString(),
+        action: 'setAttribute',
+        target_element: lastEl,
+        key: 'varMap',
+        value: JSON.stringify(varibleMap),
+
+      }
+      pushAction(payload2)
+      if (secondary) {
+        for (let i = 1; i < varibleMap[0].pics.length; i++) {
+          let newId = duplicateId(image.id).id
+          const actionObject = {
+            time: (new Date()).getTime(),
+            action: 'InsertAfter',
+            target_element: lastEl,
+            inserted_element: { originalId: image.id + '-tree', id: newId },
+          };
+          await pushAction(actionObject)
+          const key = varibleMap[0].pics[i]
+          await selectImage1(newId, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
+          lastEl = newId
+        }
+        for (let i = 1; i < withoutSku.length; i++) {
+          let newId = duplicateId(image.id).id
+          const actionObject = {
+            time: (new Date()).getTime(),
+            action: 'InsertAfter',
+            target_element: lastEl,
+            inserted_element: { originalId: image.id + '-tree', id: newId },
+          };
+          await pushAction(actionObject)
+          const key = pics[i].sk
+          await selectImage1(newId, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
+          lastEl = newId
+        }
       }
 
+      /*
+      for (let i = 1; i < pics.length; i++) {
+        let newId = duplicateId(image.id).id
+        const actionObject = {
+          time: (new Date()).getTime(),
+          action: 'InsertAfter',
+          target_element: lastEl,
+          inserted_element: { originalId: image.id + '-tree', id: newId },
+        };
+        await pushAction(actionObject)
+        const key = pics[i].sk
+        await selectImage1(newId, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
+        lastEl = newId
+      }*/
 
-      const imageElement = querySelectorAll1('.product_lead_img')[0]
 
     }
     const skuToPicturesApi = async () => {
@@ -4008,7 +4366,7 @@
       const res = await fetch(url).then(e => e.json())
       const res2 = await fetch(url2).then(e => e.json())
       const eventData1 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res.items[0].id}&clean=1&ownerid=${localStorage.getItem('ownerid')}` };
-      console.log('event ' + eventData1.url)
+      console.log('clean ' + eventData1.url)
       // Fetch options
       const options0 = {
         method: 'POST',
@@ -4018,6 +4376,17 @@
         body: JSON.stringify(eventData1)
       };
       await fetch(pup_url, options0);
+      const eventData3 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res2.items[0].id}&clean=1&ownerid=${localStorage.getItem('ownerid')}` };
+      console.log('clean ' + eventData3.url)
+      // Fetch options
+      const options3 = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData3)
+      };
+      await fetch(pup_url, options3);
 
 
       const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res2.items[0].id}&skuToPictures=${pathItemSku}&secondary=true&ownerid=${localStorage.getItem('ownerid')}` };
@@ -4030,10 +4399,10 @@
         },
         body: JSON.stringify(eventData)
       };
-      console.log(eventData.url)
+      console.log('secondary' + eventData.url)
       const response = await fetch(pup_url, options);
 
-      const eventData2 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res2.items[0].id}&skuToPictures=${pathItemSku}&ownerid=${localStorage.getItem('ownerid')}` };
+      const eventData2 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res.items[0].id}&skuToPictures=${pathItemSku}&ownerid=${localStorage.getItem('ownerid')}` };
 
       // Fetch options
       const options2 = {
@@ -4043,8 +4412,9 @@
         },
         body: JSON.stringify(eventData2)
       };
-      console.log(eventData2.url)
+      console.log('main' + eventData2.url)
       const response2 = await fetch(pup_url, options);
+      console.log('done')
     }
     const skuToHtmlApi = async () => {
       //const spec = document.getElementById('spec-status')
@@ -9145,6 +9515,7 @@ checkbox1.setAttribute('hidden', "");
       const importValue = urlParams.get('val')
       const message = urlParams.get('message')
       const skuToPicturesItem = urlParams.get('skuToPictures')
+      const skuToButtonPics = urlParams.get('skuToButtonPics')
       const generateHtmlFromSku = urlParams.get('generateHtmlFromSku')
       ownerid = localStorage.getItem('ownerid') || urlParams.get('ownerid')
       if (urlParams.get('ownerid')) {
@@ -9359,6 +9730,10 @@ checkbox1.setAttribute('hidden', "");
       if (skuToPicturesItem) {
         const secondary = urlParams.get('secondary')
         await skuToPictures(skuToPicturesItem, secondary)
+      }
+      if (skuToButtonPics) {
+        //const secondary = urlParams.get('secondary')
+        await skuToButtonPictures(skuToButtonPics)
       }
       if (message) {
         const ip = urlParams.get('ip')
@@ -14539,11 +14914,11 @@ elementsToRemove.forEach(element => element.remove());
       }
 
     }
-    async function selectImage1(imgId, imageSrc, imageUUID) {
-
+    async function selectImage1(imgId, imageSrc, imageUUID, custom, name1) {
+      console.log('selecting image' + imageSrc + 'for id ' + imgId)
       const imageElement = getElementById1(removeLastOccurrence(imgId, '-tree'))
-      const name = imageElement.getAttribute('data-builder-image-name')
-      const defaultRes = imageElement.getAttribute('data-builder-image-default')
+      const name = imageElement.getAttribute('data-builder-image-name') || name1
+      const defaultRes = imageElement.getAttribute('data-builder-image-default') || '150w'
 
       const site = pathItemPath.split('/')[0]
       let randomString = generateRandomString(3)
@@ -14571,6 +14946,9 @@ elementsToRemove.forEach(element => element.remove());
         imageSrc,
         defaultRes,
         pagePath: splited.join('/')
+      }
+      if (custom) {
+        body.customRes = "150"
       }
       const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/resize', {
         method: 'POST',
@@ -17448,7 +17826,7 @@ headers: {
           Array.from(locationSelect.children).findIndex(option => option.id === element.location);
 
 
-        cloned.querySelector('#enableWareHouse').onclick = (e) => {
+        cloned.querySelector('#enableWareHouse').onclick = async (e) => {
           e.target.textContent = '🟢'
           const option = getElementById1('warehouse_select_label')
           const cloned1 = option.cloneNode(true)
@@ -17763,8 +18141,8 @@ headers: {
 
         })
 
-        
-        const enableComp = async (e,runned) => {
+        const c1 = cloned
+        const enableComp = async (e, runned) => {
 
           const original = document.querySelector('#price_comparison_price_anchor_head[hidden]')
           const cloned = original.cloneNode(true)
@@ -17819,12 +18197,12 @@ headers: {
             }
           })
           !runned && postToDb({ ...element, runned: true })
-          cloned.querySelector('#enable-comparision').textContent = '🟢'
+          c1.querySelector('#enable-comparision').textContent = '🟢'
 
         }
         cloned.querySelector('#enable-comparision').onclick = enableComp
-        if(element.runned){
-          enableComp(undefined,true)
+        if (element.runned) {
+          enableComp(undefined, true)
 
         }
       }
