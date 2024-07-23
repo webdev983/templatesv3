@@ -3933,7 +3933,7 @@
 
     }
     const skuToButtonPicturesApi = async () => {
-      /*
+
       const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Content '
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
       const { items } = await fetch(url).then(e => e.json())
@@ -3951,7 +3951,7 @@
       await fetch(pup_url, options0);
 
 
-      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&generateHtmlFromSku=${pathItemSku}&ownerid=${localStorage.getItem('ownerid')}` };
+      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${items[0].id}&skuToButtonPics=${pathItemSku}&ownerid=${localStorage.getItem('ownerid')}` };
 
       // Fetch options
       const options = {
@@ -3963,7 +3963,250 @@
       };
       console.log(eventData.url)
       const response = await fetch(pup_url, options);
-      */
+
+    }
+    const skuToButtonPictures = async (sku) => {
+      const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=sku-variables;&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
+      const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=pics&startsWith=true`;
+      const { items } = await fetch(url).then(e => e.json())
+
+
+
+
+      const withSku = pics.filter(e => Object.keys(e.picture_buttons_sku_variables).length)
+      const varMap = {}
+      skuVariables.map(e => e.sk.replace('skuVariables', '')).forEach(combination => {
+        const splited = combination.split(';')
+        for (const el of splited) {
+          const [key, value] = el.split(':')
+          const foundPic = withSku.find(element => element.picture_buttons_sku_variables[key].includes(value))
+
+          if (!varMap[key]) {
+            varMap[key] = { value: foundPic.sk }
+          }
+          else {
+            varMap[key].value = foundPic.sk
+          }
+        }
+
+      })
+      const fieldset = querySelectorAll1('.product_attributes_fieldset')[0]
+      const keys = Object.keys(varMap)
+      const firstLegend = keys[0]
+      const variables = Object.keys(varMap[firstLegend])
+      const firstVar = variables[0]
+      const el = {
+        time: (new Date()).getTime(),
+        action: 'textContent',
+        target_element: fieldset.querySelector('.product_attributes_legend').id + '-tree',
+        value: firstLegend,
+      }
+      await pushAction(el)
+      const el2 = {
+        time: (new Date()).getTime(),
+        action: 'textContent',
+        target_element: fieldset.querySelector('.product_attribute_value').id + '-tree',
+        value: firstVar,
+      }
+      await pushAction(el2)
+      const el3 = {
+        time: (new Date()).getTime(),
+        action: 'setAttribute',
+        target_element: fieldset.querySelector('.product_attribute_label').id + '-tree',
+        key: 'for',
+        value: `sku:${firstVar}`,
+
+      }
+      await pushAction(el3)
+      const el4 = {
+        time: (new Date()).getTime(),
+        action: 'setAttribute',
+        target_element: fieldset.querySelector('.product_attribute_radio').id + '-tree',
+        key: 'data-id',
+        value: `sku:${firstVar}`,
+
+      }
+      await pushAction(el4)
+      const image = fieldset.querySelector('.product_attribute_value_image')
+      const key = varMap[firstLegend][variables[0]]
+      await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
+      const last = fieldset.querySelector('.product_attribute_label').id + '-tree'
+      for (let i = 1; i < variables.length; i++) {
+        let newId = duplicateId(image.id).id
+        const actionObject = {
+          time: (new Date()).getTime(),
+          action: 'InsertAfter',
+          target_element: last,
+          inserted_element: { originalId: fieldset.querySelector('.product_attribute_radio').id + '-tree', id: newId },
+        };
+        await pushAction(actionObject)
+
+        let newId2 = duplicateId(image.id).id
+        const actionObject2 = {
+          time: (new Date()).getTime(),
+          action: 'InsertAfter',
+          target_element: newId,
+          inserted_element: { originalId: fieldset.querySelector('.product_attribute_label').id + '-tree', id: newId2 },
+        };
+        await pushAction(actionObject2)
+        const label = getElementById1(newId2.replace('-tree', ''))
+        const el2 = {
+          time: (new Date()).getTime(),
+          action: 'textContent',
+          target_element: label.querySelector('.product_attribute_value').id + '-tree',
+          value: variables[i],
+        }
+        await pushAction(el2)
+        const el3 = {
+          time: (new Date()).getTime(),
+          action: 'setAttribute',
+          target_element: label.querySelector('.product_attribute_label').id + '-tree',
+          key: 'for',
+          value: `sku:${variables[i]}`,
+
+        }
+        await pushAction(el3)
+        const el4 = {
+          time: (new Date()).getTime(),
+          action: 'setAttribute',
+          target_element: newId,
+          key: 'data-id',
+          value: `sku:${variables[i]}`,
+
+        }
+        last = newId2
+
+      }
+      let lastF = fieldset.id +'-tree'
+      for (let k = 1; k < keys.length; k++) {
+        const currentLegend = keys[k];
+        const variables = Object.keys(varMap[currentLegend]);
+        let newId = duplicateId(fieldset.id).id
+        const actionObject = {
+          time: (new Date()).getTime(),
+          action: 'InsertAfter',
+          target_element: last,
+          inserted_element: { originalId: fieldset.id + '-tree', id: newId },
+        };
+        await pushAction(actionObject)
+        let lastF = newId
+        const fieldset = getElementById(newId.replace('-tree',''))
+        // Push action for currentLegend text content
+        const el = {
+          time: (new Date()).getTime(),
+          action: 'textContent',
+          target_element: fieldset.querySelector('.product_attributes_legend').id + '-tree',
+          value: currentLegend,
+        };
+        await pushAction(el);
+
+        // Iterate over variables for the current legend
+        for (let i = 0; i < variables.length; i++) {
+          const currentVar = variables[i];
+
+          // Push action for currentVar text content
+          const el2 = {
+            time: (new Date()).getTime(),
+            action: 'textContent',
+            target_element: fieldset.querySelector('.product_attribute_value').id + '-tree',
+            value: currentVar,
+          };
+          await pushAction(el2);
+
+          // Set 'for' attribute in product_attribute_label
+          const el3 = {
+            time: (new Date()).getTime(),
+            action: 'setAttribute',
+            target_element: fieldset.querySelector('.product_attribute_label').id + '-tree',
+            key: 'for',
+            value: `sku:${currentVar}`,
+          };
+          await pushAction(el3);
+
+          // Set data-id attribute in product_attribute_radio
+          const el4 = {
+            time: (new Date()).getTime(),
+            action: 'setAttribute',
+            target_element: fieldset.querySelector('.product_attribute_radio').id + '-tree',
+            key: 'data-id',
+            value: `sku:${currentVar}`,
+          };
+          await pushAction(el4);
+
+          // Select image for product_attribute_value_image
+          const image = fieldset.querySelector('.product_attribute_value_image');
+          const key = varMap[currentLegend][currentVar];
+          await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''));
+
+          let last = fieldset.querySelector('.product_attribute_label').id + '-tree';
+
+          // Duplicate ID logic (assuming it's defined elsewhere)
+          let newId = duplicateId(image.id).id;
+
+          // Push action to insert after last
+          const actionObject = {
+            time: (new Date()).getTime(),
+            action: 'InsertAfter',
+            target_element: last,
+            inserted_element: { originalId: fieldset.querySelector('.product_attribute_radio').id + '-tree', id: newId },
+          };
+          await pushAction(actionObject);
+
+          // Update last for the next iteration
+          last = actionObject.inserted_element.id;
+
+          // Duplicate ID logic for label
+          let newId2 = duplicateId(image.id).id;
+
+          // Push action to insert after newId
+          const actionObject2 = {
+            time: (new Date()).getTime(),
+            action: 'InsertAfter',
+            target_element: newId,
+            inserted_element: { originalId: fieldset.querySelector('.product_attribute_label').id + '-tree', id: newId2 },
+          };
+          await pushAction(actionObject2);
+
+          // Get label element by ID
+          const label = getElementById1(newId2.replace('-tree', ''));
+
+          // Push action for label text content
+          const el5 = {
+            time: (new Date()).getTime(),
+            action: 'textContent',
+            target_element: label.querySelector('.product_attribute_value').id + '-tree',
+            value: currentVar,
+          };
+          await pushAction(el5);
+
+          // Set 'for' attribute in label
+          const el6 = {
+            time: (new Date()).getTime(),
+            action: 'setAttribute',
+            target_element: label.querySelector('.product_attribute_label').id + '-tree',
+            key: 'for',
+            value: `sku:${currentVar}`,
+          };
+          await pushAction(el6);
+
+          // Set data-id attribute in newId
+          const el7 = {
+            time: (new Date()).getTime(),
+            action: 'setAttribute',
+            target_element: newId,
+            key: 'data-id',
+            value: `sku:${currentVar}`,
+          };
+          await pushAction(el7);
+
+          // Update last for the next iteration
+          last = newId2;
+        }
+      }
+
+
+
     }
     const skuToPictures = async (sku, secondary) => {
       const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=sku-variables;&startsWith=true`)
@@ -4008,7 +4251,7 @@
             pics.push(pic)
           }
         }
-        return { combination,pics: pics.map(e=>e.sk) }
+        return { combination, pics: pics.map(e => e.sk) }
       })
       console.log(JSON.stringify(varibleMap))
       const key = varibleMap[0].pics[0]
@@ -4112,7 +4355,7 @@
         },
         body: JSON.stringify(eventData)
       };
-      console.log('secondary'+eventData.url)
+      console.log('secondary' + eventData.url)
       const response = await fetch(pup_url, options);
 
       const eventData2 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res.items[0].id}&skuToPictures=${pathItemSku}&ownerid=${localStorage.getItem('ownerid')}` };
@@ -4125,7 +4368,7 @@
         },
         body: JSON.stringify(eventData2)
       };
-      console.log('main'+eventData2.url)
+      console.log('main' + eventData2.url)
       const response2 = await fetch(pup_url, options);
       console.log('done')
     }
@@ -9228,6 +9471,7 @@ checkbox1.setAttribute('hidden', "");
       const importValue = urlParams.get('val')
       const message = urlParams.get('message')
       const skuToPicturesItem = urlParams.get('skuToPictures')
+      const skuToButtonPics = urlParams.get('skuToButtonPics')
       const generateHtmlFromSku = urlParams.get('generateHtmlFromSku')
       ownerid = localStorage.getItem('ownerid') || urlParams.get('ownerid')
       if (urlParams.get('ownerid')) {
@@ -9442,6 +9686,10 @@ checkbox1.setAttribute('hidden', "");
       if (skuToPicturesItem) {
         const secondary = urlParams.get('secondary')
         await skuToPictures(skuToPicturesItem, secondary)
+      }
+      if (skuToButtonPics) {
+        //const secondary = urlParams.get('secondary')
+        await skuToButtonPictures(skuToButtonPics)
       }
       if (message) {
         const ip = urlParams.get('ip')
@@ -14622,7 +14870,7 @@ elementsToRemove.forEach(element => element.remove());
       }
 
     }
-    async function selectImage1(imgId, imageSrc, imageUUID) {
+    async function selectImage1(imgId, imageSrc, imageUUID, custom) {
 
       const imageElement = getElementById1(removeLastOccurrence(imgId, '-tree'))
       const name = imageElement.getAttribute('data-builder-image-name')
@@ -14654,6 +14902,9 @@ elementsToRemove.forEach(element => element.remove());
         imageSrc,
         defaultRes,
         pagePath: splited.join('/')
+      }
+      if (custom) {
+        body.customRes = "150"
       }
       const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/resize', {
         method: 'POST',
