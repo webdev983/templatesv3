@@ -3968,30 +3968,32 @@
       const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=pics&startsWith=true`;
       const { items } = await fetch(url).then(e => e.json())
       let pics
+      let image
       if (secondary) {
         pics = items.filter(e => e.secondary)
+        image = querySelectorAll1('.product_image_thumbnail')[0]
       }
       else {
         pics = items.filter(e => e.main)
-        const image = querySelectorAll1('.product_lead_img')[0]
-        const key = pics[0].sk
-        await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
-        let lastEl = image.id + "-tree"
-        for (let i = 1; i < pics.length; i++) {
-          let newId = duplicateId(image.id).id
-          const actionObject = {
-            time: (new Date()).getTime(),
-            action: 'InsertAfter',
-            target_element: lastEl,
-            inserted_element: { originalId: image.id + '-tree', id: newId },
-          };
-          await pushAction(actionObject)
-          const key = pics[i].sk
-          await selectImage1(newId, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
-          lastEl = newId
-        }
+        image = querySelectorAll1('.product_lead_img')[0]
       }
-
+      
+      const key = pics[0].sk
+      await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
+      let lastEl = image.id + "-tree"
+      for (let i = 1; i < pics.length; i++) {
+        let newId = duplicateId(image.id).id
+        const actionObject = {
+          time: (new Date()).getTime(),
+          action: 'InsertAfter',
+          target_element: lastEl,
+          inserted_element: { originalId: image.id + '-tree', id: newId },
+        };
+        await pushAction(actionObject)
+        const key = pics[i].sk
+        await selectImage1(newId, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
+        lastEl = newId
+      }
 
       const imageElement = querySelectorAll1('.product_lead_img')[0]
 
