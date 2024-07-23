@@ -4079,7 +4079,7 @@
       const res = await fetch(url).then(e => e.json())
       const res2 = await fetch(url2).then(e => e.json())
       const eventData1 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res.items[0].id}&clean=1&ownerid=${localStorage.getItem('ownerid')}` };
-      console.log('event ' + eventData1.url)
+      console.log('clean ' + eventData1.url)
       // Fetch options
       const options0 = {
         method: 'POST',
@@ -4090,7 +4090,7 @@
       };
       await fetch(pup_url, options0);
       const eventData3 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res2.items[0].id}&clean=1&ownerid=${localStorage.getItem('ownerid')}` };
-      console.log('event ' + eventData3.url)
+      console.log('clean ' + eventData3.url)
       // Fetch options
       const options3 = {
         method: 'POST',
@@ -4112,7 +4112,7 @@
         },
         body: JSON.stringify(eventData)
       };
-      console.log(eventData.url)
+      console.log('secondary'+eventData.url)
       const response = await fetch(pup_url, options);
 
       const eventData2 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res.items[0].id}&skuToPictures=${pathItemSku}&ownerid=${localStorage.getItem('ownerid')}` };
@@ -4125,8 +4125,9 @@
         },
         body: JSON.stringify(eventData2)
       };
-      console.log(eventData2.url)
+      console.log('main'+eventData2.url)
       const response2 = await fetch(pup_url, options);
+      console.log('done')
     }
     const skuToHtmlApi = async () => {
       //const spec = document.getElementById('spec-status')
