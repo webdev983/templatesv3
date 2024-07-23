@@ -3978,6 +3978,7 @@
       const varMap = {}
       skuVariables.map(e => e.sk.replace('sku-variables;', '')).forEach(combination => {
         const splited = combination.split(';')
+        splited.pop()
         for (const el of splited) {
           const [key, value] = el.split(':')
           const foundPic = withSku.find(element => element.picture_buttons_sku_variables[key]?.includes(value)) || ''
