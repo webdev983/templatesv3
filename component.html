@@ -3977,7 +3977,9 @@
         pics = items.filter(e => e.main)
         image = querySelectorAll1('.product_lead_img')[0]
       }
-      
+      if(!pics.length){
+        return
+      }
       const key = pics[0].sk
       await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
       let lastEl = image.id + "-tree"
