@@ -3842,6 +3842,7 @@
       const label = fieldset.querySelector('.product_attribute_label')
       const span = label.querySelector('.product_attribute_value')
       //first 
+      await setAttAction(fieldset.id + '-tree','legend', keys[0])
       await setTextAction(legend.id + '-tree', keys[0])
       const first = keyValues[keys[0]].shift()
       await setTextAction(span.id + '-tree', first)
@@ -3886,7 +3887,7 @@
         await pushAction(actionObject)
         last = id
         const fieldset1 = getElementById1(id.replace('-tree', ''))
-
+        await setAttAction(fieldset1.id + '-tree','legend', keys[i])
         const legend = fieldset1.querySelector('.product_attributes_legend')
         const input = fieldset1.querySelector('.product_attribute_radio')
         const label = fieldset1.querySelector('.product_attribute_label')
