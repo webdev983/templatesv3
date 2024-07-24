@@ -3813,14 +3813,14 @@
         const oV = oEl.querySelector('.price_value')
         await setTextAction(dV.id + '-tree', item.price?.toString() || 0)
         await setTextAction(oV.id + '-tree', item.oldPrice?.toString() || 0)
-        await setAttAction(dV.id + '-tree', 'discountPrices',prices)
-        await setAttAction(oV.id + '-tree', 'oldPrices',oldPrices)
+        await setAttAction(dV.id + '-tree', 'discountPrices',JSON.stringify(prices))
+        await setAttAction(oV.id + '-tree', 'oldPrices',JSON.stringify(oldPrices))
       }
       else {
         const dEl = p1.querySelector('.price_normal')
         const nV = dEl.querySelector('.price_value')
         await setTextAction(nV.id + '-tree', item.price?.toString() || 0)
-        await setAttAction(nV.id + '-tree', 'prices', prices)
+        await setAttAction(nV.id + '-tree', 'prices', JSON.stringify(prices))
       }
 
 
