@@ -4097,8 +4097,8 @@
         }
         let transformedPics = pics.map(e => e.sk)
           .map(async sk => {
-            const imageSrc ='https://s3.amazonaws.com/checkout-admin-panel/' +sk
-            const name = 'button_image_sku:'+combination
+            const imageSrc = 'https://s3.amazonaws.com/checkout-admin-panel/' + sk
+            const name = 'button_image_sku:' + combination
             let url1 = 'https://' + site + '/pics/' + randomString + '_' + name
             function checkSrcStartsWithUrl1() {
               const elements = document.querySelectorAll('[src^="' + url1 + '"]');
@@ -4110,13 +4110,14 @@
             }
             let newName = randomString + '_' + name
             const { src, data_src } = await resizeApi(newName, imageSrc, defaultRes)
+            return {src, data_src ,imageUUID:sk.split('.')[0].replace('pics', '')}
           })
         transformedPics = Promise.all(transformedPics)
         return { combination, pics: transformedPics }
       })
       console.log(JSON.stringify(varibleMap))
-      const key = varibleMap[0].pics[0]
-      await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
+      const {src, data_src ,imageUUID} = varibleMap[0].pics[0]
+      await setImg1(imageUUID,src,data_src,image)
       let lastEl = image.id + "-tree"
 
       const payload2 = {
@@ -4140,7 +4141,7 @@
           };
           await pushAction(actionObject)
           const key = varibleMap[0].pics[i]
-          await selectImage1(newId, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
+          await setImg1(imageUUID,src,data_src,image)
           lastEl = newId
         }
         for (let i = 1; i < withoutSku.length; i++) {
@@ -14757,29 +14758,7 @@ elementsToRemove.forEach(element => element.remove());
       });
       const { src, data_src } = await response.json()
     }
-    async function selectImage1(imgId, imageSrc, imageUUID, custom, name1, noPrefix) {
-      console.log('selecting image' + imageSrc + 'for id ' + imgId)
-      const imageElement = getElementById1(removeLastOccurrence(imgId, '-tree'))
-      const name = imageElement.getAttribute('data-builder-image-name') || name1
-      const defaultRes = imageElement.getAttribute('data-builder-image-default') || custom
-
-
-      let randomString = generateRandomString(3)
-      let url1 = 'https://' + site + '/pics/' + randomString + '_' + name
-      function checkSrcStartsWithUrl1() {
-        const elements = document.querySelectorAll('[src^="' + url1 + '"]');
-        return elements.length > 0;
-      }
-      while (checkSrcStartsWithUrl1()) {
-        randomString = generateRandomString(3);
-        url1 = 'https://' + site.toLowerCase() + '/pics/' + randomString + '_' + name;
-      }
-
-      // resize
-      let newName = noPrefix ? name : randomString + '_' + name
-      const { src, data_src } = await resizeApi(newName, imageSrc, defaultRes, custom)
-
-
+    const setImg1 = async(imageUUID,src,data_src,imageElement) =>{
       const payload = {
 
         time: (new Date()).getTime().toString(),
@@ -14814,6 +14793,31 @@ elementsToRemove.forEach(element => element.remove());
       await pushAction(payload4)
       // Add your logic for selecting the image here
       await setSrcSet(imageElement)
+    }
+    async function selectImage1(imgId, imageSrc, imageUUID, custom, name1, noPrefix) {
+      console.log('selecting image' + imageSrc + 'for id ' + imgId)
+      const imageElement = getElementById1(removeLastOccurrence(imgId, '-tree'))
+      const name = imageElement.getAttribute('data-builder-image-name') || name1
+      const defaultRes = imageElement.getAttribute('data-builder-image-default') || custom
+
+
+      let randomString = generateRandomString(3)
+      let url1 = 'https://' + site + '/pics/' + randomString + '_' + name
+      function checkSrcStartsWithUrl1() {
+        const elements = document.querySelectorAll('[src^="' + url1 + '"]');
+        return elements.length > 0;
+      }
+      while (checkSrcStartsWithUrl1()) {
+        randomString = generateRandomString(3);
+        url1 = 'https://' + site.toLowerCase() + '/pics/' + randomString + '_' + name;
+      }
+
+      // resize
+      let newName = noPrefix ? name : randomString + '_' + name
+      const { src, data_src } = await resizeApi(newName, imageSrc, defaultRes, custom)
+
+
+      await setImg1(imageUUID,src,data_src,imageElement)
 
 
       // Add a "selected" label to the selected image
