@@ -4072,7 +4072,7 @@
       }
       const withoutSku = pics.filter(e => !Object.keys(e.gallery_variables_sku_variables).length)
       const withSku = pics.filter(e => Object.keys(e.gallery_variables_sku_variables).length)
-      const varibleMap = skuVariables.map(e => e.sk.replace('skuVariables', '')).map(combination => {
+      let varibleMap = skuVariables.map( e => e.sk.replace('skuVariables', '')).map(async combination => {
         const splited = combination.split(';')
 
         const pics = []
@@ -4112,9 +4112,10 @@
             const { src, data_src } = await resizeApi(newName, imageSrc, defaultRes)
             return {src, data_src ,imageUUID:sk.split('.')[0].replace('pics', '')}
           })
-        transformedPics = Promise.all(transformedPics)
+        transformedPics =await Promise.all(transformedPics)
         return { combination, pics: transformedPics }
       })
+      varibleMap = await Promise.all(varibleMap)
       console.log(JSON.stringify(varibleMap))
       const {src, data_src ,imageUUID} = varibleMap[0].pics[0]
       await setImg1(imageUUID,src,data_src,image)
