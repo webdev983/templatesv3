@@ -3796,14 +3796,14 @@
         const splited = e.sk.split(';')
         splited.shift()
         splited.shift()
-        const comb = splited.join(';')
+        const comb = sku+';'+ splited.join(';')
         return {combination:comb,price:e.price}
       })
       const oldPrices = pitems.map(e=>{
         const splited = e.sk.split(';')
         splited.shift()
         splited.shift()
-        const comb = splited.join(';')
+        const comb =sku+';'+ splited.join(';')
         return {combination:comb,price:e.oldPrice}
       })
       if (item.oldPrice) {
@@ -4079,7 +4079,7 @@
       }
       const withoutSku = pics.filter(e => !Object.keys(e.gallery_variables_sku_variables).length)
       const withSku = pics.filter(e => Object.keys(e.gallery_variables_sku_variables).length)
-      let varibleMap = skuVariables.map(e => e.sk.replace('skuVariables', '')).map(async combination => {
+      let varibleMap = skuVariables.map(e => e.sk.replace('sku-variables;', '')).map(async combination => {
         const splited = combination.split(';')
 
         const pics = []
