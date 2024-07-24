@@ -4018,31 +4018,35 @@
 
       })
       console.log(JSON.stringify(varMap))
-      
+
       const keys = Object.keys(varMap)
-      
-     
+
+
       for (let k = 0; k < keys.length; k++) {
         const currentLegend = keys[k];
         const variables = Object.keys(varMap[currentLegend]);
         let newId = duplicateId(fieldset1.id).id
         const fieldset = querySelectorAll1(`[legend="${currentLegend}"]`)
         // Push action for currentLegend text content
-        
+
         // Iterate over variables for the current legend
         for (let i = 0; i < variables.length; i++) {
           const currentVar = variables[i];
 
-          
+
 
           // Select image for product_attribute_value_image
           const image = fieldset.querySelector(`[for="${sku};${currentLegend}:${currentVar}"]`);
           const key = varMap[currentLegend][currentVar];
-          key && await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''), '150', `button_image_sku:${currentLegend}:${currentVar}`,true);
+          key && await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''), '150', `button_image_sku:${currentLegend}:${currentVar}`, true);
+          const el = {
+            time: (new Date()).getTime(),
+            action: 'removeAttribute',
+            target_element: image.id + '-tree',
+            key: "hidden"
+          }
+          await pushAction(el)
 
-
-
-          
         }
       }
 
