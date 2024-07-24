@@ -4379,7 +4379,7 @@
         },
         body: JSON.stringify(eventData1)
       };
-      await fetch(pup_url, options0);
+      //await fetch(pup_url, options0);
       const eventData3 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res2.items[0].id}&clean=1&ownerid=${localStorage.getItem('ownerid')}` };
       console.log('clean ' + eventData3.url)
       // Fetch options
@@ -4390,7 +4390,7 @@
         },
         body: JSON.stringify(eventData3)
       };
-      await fetch(pup_url, options3);
+      //await fetch(pup_url, options3);
 
 
       const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res2.items[0].id}&skuToPictures=${pathItemSku}&secondary=true&ownerid=${localStorage.getItem('ownerid')}` };
@@ -14918,7 +14918,7 @@ elementsToRemove.forEach(element => element.remove());
       }
 
     }
-    async function selectImage1(imgId, imageSrc, imageUUID, custom, name1) {
+    async function selectImage1(imgId, imageSrc, imageUUID, custom, name1,noPrefix) {
       console.log('selecting image' + imageSrc + 'for id ' + imgId)
       const imageElement = getElementById1(removeLastOccurrence(imgId, '-tree'))
       const name = imageElement.getAttribute('data-builder-image-name') || name1
@@ -14943,10 +14943,11 @@ elementsToRemove.forEach(element => element.remove());
         splited.splice(index);
       }
       // resize
+      let newName = noPrefix ? name : randomString + '_' + name
       const body = {
         site,
 
-        name: randomString + '_' + name,
+        name: newName,
         imageSrc,
         defaultRes,
         pagePath: splited.join('/')
