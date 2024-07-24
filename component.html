@@ -4095,7 +4095,24 @@
             pics.push(pic)
           }
         }
-        return { combination, pics: pics.map(e => e.sk) }
+        let transformedPics = pics.map(e => e.sk)
+          .map(async sk => {
+            const imageSrc ='https://s3.amazonaws.com/checkout-admin-panel/' +sk
+            const name = 'button_image_sku:'+combination
+            let url1 = 'https://' + site + '/pics/' + randomString + '_' + name
+            function checkSrcStartsWithUrl1() {
+              const elements = document.querySelectorAll('[src^="' + url1 + '"]');
+              return elements.length > 0;
+            }
+            while (checkSrcStartsWithUrl1()) {
+              randomString = generateRandomString(3);
+              url1 = 'https://' + site.toLowerCase() + '/pics/' + randomString + '_' + name;
+            }
+            let newName = randomString + '_' + name
+            const { src, data_src } = await resizeApi(newName, imageSrc, defaultRes)
+          })
+        transformedPics = Promise.all(transformedPics)
+        return { combination, pics: transformedPics }
       })
       console.log(JSON.stringify(varibleMap))
       const key = varibleMap[0].pics[0]
@@ -14714,23 +14731,8 @@ elementsToRemove.forEach(element => element.remove());
       }
 
     }
-    async function selectImage1(imgId, imageSrc, imageUUID, custom, name1, noPrefix) {
-      console.log('selecting image' + imageSrc + 'for id ' + imgId)
-      const imageElement = getElementById1(removeLastOccurrence(imgId, '-tree'))
-      const name = imageElement.getAttribute('data-builder-image-name') || name1
-      const defaultRes = imageElement.getAttribute('data-builder-image-default') || '150w'
-
+    const resizeApi = async (newName, imageSrc, defaultRes, custom) => {
       const site = pathItemPath.split('/')[0]
-      let randomString = generateRandomString(3)
-      let url1 = 'https://' + site + '/pics/' + randomString + '_' + name
-      function checkSrcStartsWithUrl1() {
-        const elements = document.querySelectorAll('[src^="' + url1 + '"]');
-        return elements.length > 0;
-      }
-      while (checkSrcStartsWithUrl1()) {
-        randomString = generateRandomString(3);
-        url1 = 'https://' + site.toLowerCase() + '/pics/' + randomString + '_' + name;
-      }
       const splited = pathItemPath.split('/')
       splited.pop()
       splited.shift()
@@ -14738,8 +14740,6 @@ elementsToRemove.forEach(element => element.remove());
       if (index !== -1) {
         splited.splice(index);
       }
-      // resize
-      let newName = noPrefix ? name : randomString + '_' + name
       const body = {
         site,
 
@@ -14756,6 +14756,29 @@ elementsToRemove.forEach(element => element.remove());
         body: JSON.stringify(body),
       });
       const { src, data_src } = await response.json()
+    }
+    async function selectImage1(imgId, imageSrc, imageUUID, custom, name1, noPrefix) {
+      console.log('selecting image' + imageSrc + 'for id ' + imgId)
+      const imageElement = getElementById1(removeLastOccurrence(imgId, '-tree'))
+      const name = imageElement.getAttribute('data-builder-image-name') || name1
+      const defaultRes = imageElement.getAttribute('data-builder-image-default') || custom
+
+
+      let randomString = generateRandomString(3)
+      let url1 = 'https://' + site + '/pics/' + randomString + '_' + name
+      function checkSrcStartsWithUrl1() {
+        const elements = document.querySelectorAll('[src^="' + url1 + '"]');
+        return elements.length > 0;
+      }
+      while (checkSrcStartsWithUrl1()) {
+        randomString = generateRandomString(3);
+        url1 = 'https://' + site.toLowerCase() + '/pics/' + randomString + '_' + name;
+      }
+
+      // resize
+      let newName = noPrefix ? name : randomString + '_' + name
+      const { src, data_src } = await resizeApi(newName, imageSrc, defaultRes, custom)
+
 
       const payload = {
 
