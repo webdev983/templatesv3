@@ -1380,16 +1380,17 @@
             <button onclick="removeSku2(event)" class="b-3">🗑️ Remove</button>
           </fieldset>
 
-          <details  style="margin-left: 30px; margin-top: 10px;">
-            <summary class="summary-L-3"><span class="l-3 b-dark-blue">H1: </span><span class="l-3">dyson  type: |value| vacuum, color: |value|</span></summary>
+          <details style="margin-left: 30px; margin-top: 10px;">
+            <summary class="summary-L-3"><span class="l-3 b-dark-blue">H1: </span><span class="l-3">dyson type: |value|
+                vacuum, color: |value|</span></summary>
 
             <div style="margin-left: 30px;">
-    
+
               <div class="variable-builder-div">
-                <span class="l-3">🏗️</span> 
+                <span class="l-3">🏗️</span>
                 <input type="text" class="variable-builder-input">
               </div>
-    
+
               <div class="variable-builder-div">
                 <button class="b-3" id="file-list-link-by-name" style="margin-top: 5px;">🔖color</button>
                 <button class="b-3" id="file-list-link-by-name" style="margin-top: 5px;">🔖size</button>
@@ -1397,13 +1398,14 @@
                 <label class="l-3"><input type="checkbox">🔑 include key</label>
                 <label class="l-3"><input type="checkbox">🗂️ catalog influense</label>
 
-             </div>
-             <div class="variable-builder-div-multi">
-              <button class="b-3" id="file-list-link-by-name" style=" white-space: nowrap; margin-right: 5px;">🖌️ regular text</button>
-              <input type="text" class="variable-builder-input-multi">
               </div>
-                </div>
-    
+              <div class="variable-builder-div-multi">
+                <button class="b-3" id="file-list-link-by-name" style=" white-space: nowrap; margin-right: 5px;">🖌️
+                  regular text</button>
+                <input type="text" class="variable-builder-input-multi">
+              </div>
+            </div>
+
 
 
           </details>
@@ -17568,7 +17570,18 @@ headers: {
         },
       }).then(e => e.json()).then(res => res.items[0])
       const pushItem = { ...getItem, ...item, }
-      old ? (pushItem.oldPrice = parseFloat(value)) : (pushItem.price = parseFloat(value))
+      let parsedValue = parseFloat(value);
+      if (!isNaN(parsedValue)) {
+        // Convert to fixed two decimal places
+        let formattedValue = parsedValue.toFixed(2);
+
+        // Now set the appropriate property
+        if (old) {
+          pushItem.oldPrice = parseFloat(formattedValue);
+        } else {
+          pushItem.price = parseFloat(formattedValue);
+        }
+      }
       console.log(JSON.stringify(pushItem))
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
