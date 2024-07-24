@@ -3842,7 +3842,7 @@
       const label = fieldset.querySelector('.product_attribute_label')
       const span = label.querySelector('.product_attribute_value')
       //first 
-      await setAttAction(fieldset.id + '-tree','legend', keys[0])
+      await setAttAction(fieldset.id + '-tree', 'legend', keys[0])
       await setTextAction(legend.id + '-tree', keys[0])
       const first = keyValues[keys[0]].shift()
       await setTextAction(span.id + '-tree', first)
@@ -3887,7 +3887,7 @@
         await pushAction(actionObject)
         last = id
         const fieldset1 = getElementById1(id.replace('-tree', ''))
-        await setAttAction(fieldset1.id + '-tree','legend', keys[i])
+        await setAttAction(fieldset1.id + '-tree', 'legend', keys[i])
         const legend = fieldset1.querySelector('.product_attributes_legend')
         const input = fieldset1.querySelector('.product_attribute_radio')
         const label = fieldset1.querySelector('.product_attribute_label')
@@ -4018,241 +4018,32 @@
 
       })
       console.log(JSON.stringify(varMap))
-      const fieldset = querySelectorAll1('.product_attributes_fieldset')[0]
+      
       const keys = Object.keys(varMap)
-      const firstLegend = keys[0]
-      const variables = Object.keys(varMap[firstLegend])
-      const firstVar = variables[0]
-
-      let lastF = fieldset.id + '-tree'
-      const fieldset1 = fieldset
-      for (let k = 1; k < keys.length; k++) {
+      
+     
+      for (let k = 0; k < keys.length; k++) {
         const currentLegend = keys[k];
         const variables = Object.keys(varMap[currentLegend]);
         let newId = duplicateId(fieldset1.id).id
-        const actionObject = {
-          time: (new Date()).getTime(),
-          action: 'InsertAfter',
-          target_element: lastF,
-          inserted_element: { originalId: fieldset1.id + '-tree', id: newId },
-        };
-        await pushAction(actionObject)
-        lastF = newId
-        const fieldset = getElementById1(newId.replace('-tree', ''))
+        const fieldset = querySelectorAll1(`[legend="${currentLegend}"]`)
         // Push action for currentLegend text content
-        const el = {
-          time: (new Date()).getTime(),
-          action: 'textContent',
-          target_element: fieldset.querySelector('.product_attributes_legend').id + '-tree',
-          value: currentLegend,
-        };
-        await pushAction(el);
-        const el5 = {
-          time: (new Date()).getTime(),
-          action: 'setAttribute',
-          target_element: fieldset.querySelector('.product_attribute_radio').id + '-tree',
-          key: 'name',
-          value: `${currentLegend}`,
-
-        }
-        await pushAction(el5)
-        let last = fieldset.querySelector('.product_attribute_label').id + '-tree';
+        
         // Iterate over variables for the current legend
         for (let i = 0; i < variables.length; i++) {
           const currentVar = variables[i];
 
-          // Push action for currentVar text content
-          const el2 = {
-            time: (new Date()).getTime(),
-            action: 'textContent',
-            target_element: fieldset.querySelector('.product_attribute_value').id + '-tree',
-            value: currentVar,
-          };
-          await pushAction(el2);
-
-          // Set 'for' attribute in product_attribute_label
-          const el3 = {
-            time: (new Date()).getTime(),
-            action: 'setAttribute',
-            target_element: fieldset.querySelector('.product_attribute_label').id + '-tree',
-            key: 'for',
-            value: `sku:${currentVar}`,
-          };
-          await pushAction(el3);
-
-          // Set data-id attribute in product_attribute_radio
-          const el4 = {
-            time: (new Date()).getTime(),
-            action: 'setAttribute',
-            target_element: fieldset.querySelector('.product_attribute_radio').id + '-tree',
-            key: 'data-id',
-            value: `sku:${currentVar}`,
-          };
-          await pushAction(el4);
+          
 
           // Select image for product_attribute_value_image
-          const image = fieldset.querySelector('.product_attribute_value_image');
+          const image = fieldset.querySelector(`[for="${sku};${currentLegend}:${currentVar}"]`);
           const key = varMap[currentLegend][currentVar];
-          key && await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''), '150', `button_image_sku:${currentLegend}:${currentVar}`);
+          key && await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''), '150', `button_image_sku:${currentLegend}:${currentVar}`,true);
 
 
 
-          // Duplicate ID logic (assuming it's defined elsewhere)
-          let newId = duplicateId(fieldset.querySelector('.product_attribute_radio').id).id;
-
-          // Push action to insert after last
-          const actionObject = {
-            time: (new Date()).getTime(),
-            action: 'InsertAfter',
-            target_element: last,
-            inserted_element: { originalId: fieldset.querySelector('.product_attribute_radio').id + '-tree', id: newId },
-          };
-          await pushAction(actionObject);
-
-          // Update last for the next iteration
-          last = actionObject.inserted_element.id;
-
-          // Duplicate ID logic for label
-          let newId2 = duplicateId(fieldset.querySelector('.product_attribute_label').id).id;
-
-          // Push action to insert after newId
-          const actionObject2 = {
-            time: (new Date()).getTime(),
-            action: 'InsertAfter',
-            target_element: newId,
-            inserted_element: { originalId: fieldset.querySelector('.product_attribute_label').id + '-tree', id: newId2 },
-          };
-          await pushAction(actionObject2);
-
-          // Get label element by ID
-          const label = getElementById1(newId2.replace('-tree', ''));
-
-          // Push action for label text content
-          const el5 = {
-            time: (new Date()).getTime(),
-            action: 'textContent',
-            target_element: label.querySelector('.product_attribute_value').id + '-tree',
-            value: currentVar,
-          };
-          await pushAction(el5);
-
-          // Set 'for' attribute in label
-          const el6 = {
-            time: (new Date()).getTime(),
-            action: 'setAttribute',
-            target_element: label.id + '-tree',
-            key: 'for',
-            value: `sku:${currentVar}`,
-          };
-          await pushAction(el6);
-
-          // Set data-id attribute in newId
-          const el7 = {
-            time: (new Date()).getTime(),
-            action: 'setAttribute',
-            target_element: newId,
-            key: 'data-id',
-            value: `sku:${currentVar}`,
-          };
-          await pushAction(el7);
-
-          // Update last for the next iteration
-          last = newId2;
+          
         }
-      }
-      const el = {
-        time: (new Date()).getTime(),
-        action: 'textContent',
-        target_element: fieldset.querySelector('.product_attributes_legend').id + '-tree',
-        value: firstLegend,
-      }
-      await pushAction(el)
-      const el2 = {
-        time: (new Date()).getTime(),
-        action: 'textContent',
-        target_element: fieldset.querySelector('.product_attribute_value').id + '-tree',
-        value: firstVar,
-      }
-      await pushAction(el2)
-      const el3 = {
-        time: (new Date()).getTime(),
-        action: 'setAttribute',
-        target_element: fieldset.querySelector('.product_attribute_label').id + '-tree',
-        key: 'for',
-        value: `sku:${firstVar}`,
-
-      }
-      await pushAction(el3)
-      const el4 = {
-        time: (new Date()).getTime(),
-        action: 'setAttribute',
-        target_element: fieldset.querySelector('.product_attribute_radio').id + '-tree',
-        key: 'data-id',
-        value: `sku:${firstVar}`,
-
-      }
-      await pushAction(el4)
-      const el5 = {
-        time: (new Date()).getTime(),
-        action: 'setAttribute',
-        target_element: fieldset.querySelector('.product_attribute_radio').id + '-tree',
-        key: 'name',
-        value: `${firstLegend}`,
-
-      }
-      await pushAction(el5)
-      const image = fieldset.querySelector('.product_attribute_value_image')
-      const key = varMap[firstLegend][firstVar]
-      key && await selectImage1(image.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''), '150', `button_image_sku:${firstLegend}:${firstVar}`)
-      let last = fieldset.querySelector('.product_attribute_label').id + '-tree'
-      for (let i = 1; i < variables.length; i++) {
-        let newId = duplicateId(fieldset.querySelector('.product_attribute_radio').id).id
-        const actionObject = {
-          time: (new Date()).getTime(),
-          action: 'InsertAfter',
-          target_element: last,
-          inserted_element: { originalId: fieldset.querySelector('.product_attribute_radio').id + '-tree', id: newId },
-        };
-        await pushAction(actionObject)
-
-        let newId2 = duplicateId(fieldset.querySelector('.product_attribute_label').id).id
-        const actionObject2 = {
-          time: (new Date()).getTime(),
-          action: 'InsertAfter',
-          target_element: newId,
-          inserted_element: { originalId: fieldset.querySelector('.product_attribute_label').id + '-tree', id: newId2 },
-        };
-        await pushAction(actionObject2)
-        const label2 = getElementById1(newId2.replace('-tree', ''))
-        const el2 = {
-          time: (new Date()).getTime(),
-          action: 'textContent',
-          target_element: label2.querySelector('.product_attribute_value').id + '-tree',
-          value: variables[i],
-        }
-        await pushAction(el2)
-        const el3 = {
-          time: (new Date()).getTime(),
-          action: 'setAttribute',
-          target_element: label2.id + '-tree',
-          key: 'for',
-          value: `sku:${variables[i]}`,
-
-        }
-        await pushAction(el3)
-        const el4 = {
-          time: (new Date()).getTime(),
-          action: 'setAttribute',
-          target_element: newId,
-          key: 'data-id',
-          value: `sku:${variables[i]}`,
-
-        }
-        const image1 = label2.querySelector('.product_attribute_value_image')
-        const key1 = varMap[firstLegend][variables[i]]
-        await selectImage1(image1.id, 'https://s3.amazonaws.com/checkout-admin-panel/' + key1, key1.split('.')[0].replace('pics', ''), '150', `button_image_sku:${firstLegend}:${variables[i]}`);
-        last = newId2
-
       }
 
 
@@ -14919,7 +14710,7 @@ elementsToRemove.forEach(element => element.remove());
       }
 
     }
-    async function selectImage1(imgId, imageSrc, imageUUID, custom, name1,noPrefix) {
+    async function selectImage1(imgId, imageSrc, imageUUID, custom, name1, noPrefix) {
       console.log('selecting image' + imageSrc + 'for id ' + imgId)
       const imageElement = getElementById1(removeLastOccurrence(imgId, '-tree'))
       const name = imageElement.getAttribute('data-builder-image-name') || name1
