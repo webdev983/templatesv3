@@ -3779,43 +3779,50 @@
 
       const p = article.querySelector('.price')
       let last1 = p.id + '-tree'
-      for (let i = 0; i < pitems.length; i++) {
-        const item = pitems[i]
-        let id
-        if (i !== 0) {
-          id = duplicateId(p.id).id
-          const actionObject = {
-            time: (new Date()).getTime(),
-            action: 'InsertAfter',
-            target_element: last1,
-            inserted_element: { originalId: p.id + '-tree', id },
-          };
-          await pushAction(actionObject)
-          id = id.replace('-tree', '')
-        }
-        else {
-          id = p.id
-        }
-        const p1 = getElementById1(id)
-        const splited = item.sk.split(';')
+
+      const item = pitems[i]
+
+
+
+      id = p.id
+
+      const p1 = getElementById1(id)
+      const splited = item.sk.split(';')
+      splited.shift()
+      const condition = splited.shift()
+      await setAttAction(p1.id + '-tree', 'data-id', `${sku}:${condition}:${splited.join(';')}`)
+      last1 = id + '-tree'
+      const prices = pitems.map(e=>{
+        const splited = e.sk.split(';')
         splited.shift()
-        const condition = splited.shift()
-        await setAttAction(p1.id + '-tree', 'data-id', `${sku}:${condition}:${splited.join(';')}`)
-        last1 = id + '-tree'
-        if (item.oldPrice) {
-          const dEl = p1.querySelector('.price_discount')
-          const oEl = p1.querySelector('.price_old')
-          const dV = dEl.querySelector('.price_value')
-          const oV = oEl.querySelector('.price_value')
-          await setTextAction(dV.id + '-tree', item.price?.toString() || 0)
-          await setTextAction(oV.id + '-tree', item.oldPrice?.toString() || 0)
-        }
-        else {
-          const dEl = p1.querySelector('.price_normal')
-          const nV = dEl.querySelector('.price_value')
-          await setTextAction(nV.id + '-tree', item.price?.toString() || 0)
-        }
+        splited.shift()
+        const comb = splited.join(';')
+        return {combination:comb,price:e.price}
+      })
+      const oldPrices = pitems.map(e=>{
+        const splited = e.sk.split(';')
+        splited.shift()
+        splited.shift()
+        const comb = splited.join(';')
+        return {combination:comb,price:e.oldPrice}
+      })
+      if (item.oldPrice) {
+        const dEl = p1.querySelector('.price_discount')
+        const oEl = p1.querySelector('.price_old')
+        const dV = dEl.querySelector('.price_value')
+        const oV = oEl.querySelector('.price_value')
+        await setTextAction(dV.id + '-tree', item.price?.toString() || 0)
+        await setTextAction(oV.id + '-tree', item.oldPrice?.toString() || 0)
+        await setAttAction(dV.id + '-tree', 'discountPrices',prices)
+        await setAttAction(oV.id + '-tree', 'oldPrices',oldPrices)
       }
+      else {
+        const dEl = p1.querySelector('.price_normal')
+        const nV = dEl.querySelector('.price_value')
+        await setTextAction(nV.id + '-tree', item.price?.toString() || 0)
+        await setAttAction(p1.id + '-tree', 'prices', prices)
+      }
+
 
       const keyValues = {}
       for (const combination of combinations) {
@@ -4072,7 +4079,7 @@
       }
       const withoutSku = pics.filter(e => !Object.keys(e.gallery_variables_sku_variables).length)
       const withSku = pics.filter(e => Object.keys(e.gallery_variables_sku_variables).length)
-      let varibleMap = skuVariables.map( e => e.sk.replace('skuVariables', '')).map(async combination => {
+      let varibleMap = skuVariables.map(e => e.sk.replace('skuVariables', '')).map(async combination => {
         const splited = combination.split(';')
 
         const pics = []
@@ -4112,15 +4119,15 @@
             }
             let newName = randomString + '_' + name
             const { src, data_src } = await resizeApi(newName, imageSrc, '300w')
-            return {src, data_src ,imageUUID:sk.split('.')[0].replace('pics', '')}
+            return { src, data_src, imageUUID: sk.split('.')[0].replace('pics', '') }
           })
-        transformedPics =await Promise.all(transformedPics)
+        transformedPics = await Promise.all(transformedPics)
         return { combination, pics: transformedPics }
       })
       varibleMap = await Promise.all(varibleMap)
       console.log(JSON.stringify(varibleMap))
-      const {src, data_src ,imageUUID} = varibleMap[0].pics[0]
-      await setImg1(imageUUID,src,data_src,image)
+      const { src, data_src, imageUUID } = varibleMap[0].pics[0]
+      await setImg1(imageUUID, src, data_src, image)
       let lastEl = image.id + "-tree"
 
       const payload2 = {
@@ -4144,7 +4151,7 @@
           };
           await pushAction(actionObject)
           const key = varibleMap[0].pics[i]
-          await setImg1(imageUUID,src,data_src,image)
+          await setImg1(imageUUID, src, data_src, image)
           lastEl = newId
         }
         for (let i = 1; i < withoutSku.length; i++) {
@@ -14762,8 +14769,8 @@ elementsToRemove.forEach(element => element.remove());
       const { src, data_src } = await response.json()
       return { src, data_src }
     }
-    const setImg1 = async(imageUUID,src,data_src,imageElement) =>{
-      const imgId = imageElement.id +'-tree'
+    const setImg1 = async (imageUUID, src, data_src, imageElement) => {
+      const imgId = imageElement.id + '-tree'
       const payload = {
 
         time: (new Date()).getTime().toString(),
@@ -14822,7 +14829,7 @@ elementsToRemove.forEach(element => element.remove());
       const { src, data_src } = await resizeApi(newName, imageSrc, defaultRes, custom)
 
 
-      await setImg1(imageUUID,src,data_src,imageElement)
+      await setImg1(imageUUID, src, data_src, imageElement)
 
 
       // Add a "selected" label to the selected image
