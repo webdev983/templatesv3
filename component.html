@@ -1547,16 +1547,18 @@
               </tbody>
             </table>
             <script>
-              const container = document.getElementById('price_comparison_anchor');
-      
-              container.addEventListener('input', () => {
-                  if (container.innerText.trim() !== '') {
-                      container.classList.add('not-empty');
-                  } else {
-                      container.classList.remove('not-empty');
-                  }
-              });
-          </script>
+        const containers = document.querySelectorAll('.link-div-editable');
+
+containers.forEach(container => {
+    container.addEventListener('blur', () => {
+        if (container.innerText.trim() !== '') {
+            container.classList.add('not-empty');
+        } else {
+            container.classList.remove('not-empty');
+        }
+    });
+});
+</script>
       
           </div>
           <hr style="border-bottom: 2px solid #ffcc81; margin-top: 20px; margin-bottom: 20px;">
