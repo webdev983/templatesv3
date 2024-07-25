@@ -17646,7 +17646,7 @@ headers: {
             cloned1.id = cloned1.id + ';' + combKeys[i]
             if(headParams[combKeys[i]]){
               cloned1.querySelector('input').value = headParams[combKeys[i]].value || ''
-              headParams[combKeys[i]].key && (cloned2.querySelector('#include-key').setAttribute('checked',''))
+              headParams[combKeys[i]].key && (cloned2.querySelector('#include-key').querySelector('input').setAttribute('checked',''))
             }
             else{
               headParams[combKeys[i]] = {}
@@ -17657,7 +17657,7 @@ headers: {
               postToDb(headParams)
 
             }
-            cloned2.querySelector('#include-key').onchange = (e) => {
+            cloned2.querySelector('#include-key').querySelector('input').onchange = (e) => {
               const checked = e.target.checked
               headParams[combKeys[i]].key = checked
               postToDb(headParams)
