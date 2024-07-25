@@ -1384,8 +1384,8 @@
           </fieldset>
 
           <details id="details-1" style="margin-left: 30px; margin-top: 10px;">
-            <summary id="summary-1" class="summary-L-3"><span id="h1-status">🔴</span><span class="l-3 b-dark-blue">H1: </span><span id="h1"
-                class="l-3">dyson type: |value|
+            <summary id="summary-1" class="summary-L-3"><span id="h1-status">🔴</span><span class="l-3 b-dark-blue">H1:
+              </span><span id="h1" class="l-3">dyson type: |value|
                 vacuum, color: |value|</span></summary>
 
             <div id="h1-edit" style="margin-left: 30px;">
@@ -17617,61 +17617,67 @@ headers: {
       const h1_input = document.querySelector('#h1-input')
       const h1_checkboxes = document.querySelector('#h1-checkboxes')
       let headParamsId = `sku:${sku}`
-      if(document.getElementById('saveParamsToSite').checked){
+      if (document.getElementById('saveParamsToSite').checked) {
         headParamsId = headContentItem.id
       }
       let headParams = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${headParamsId}&sk=headingParams&startsWith=true`)
-        .then(response => response.json()).then(res => res.items[0] || {id:headParamsId,sk:'headingParams'})
+        .then(response => response.json()).then(res => res.items[0] || { id: headParamsId, sk: 'headingParams' })
 
-      if(headParams.head){
+      if (headParams.head) {
         h1_input.querySelector('input').textContent = headParams.head
       }
       h1_input.querySelector('input').onblur = (e) => {
         headParams.head = e.target.value
         postToDb(headParams)
       }
+      const generate = () => {
+        const cloned1 = h1_input.cloneNode(true)
+        const cloned2 = h1_checkboxes.cloneNode(true)
+        cloned2.querySelector('#h1-checkbox-label').textContent = '🔖' + combKeys[i]
+
+        cloned2.removeAttribute('hidden')
+        cloned2.id = cloned2.id + ';' + combKeys[i]
+        cloned1.id = cloned1.id + ';' + combKeys[i]
+        if (headParams[combKeys[i]]) {
+          cloned1.querySelector('input').value = headParams[combKeys[i]].value || ''
+          headParams[combKeys[i]].key && (cloned2.querySelector('#include-key').querySelector('input').setAttribute('checked', ''))
+          headParams[combKeys[i]].cat && (cloned2.querySelector('#inf-cat').querySelector('input').setAttribute('checked', ''))
+        }
+        else {
+          headParams[combKeys[i]] = {}
+        }
+        cloned1.querySelector('input').onblur = (e) => {
+          const { value } = e.target
+          headParams[combKeys[i]].value = value
+          postToDb(headParams)
+
+        }
+        cloned2.querySelector('#include-key').querySelector('input').onchange = (e) => {
+          const checked = e.target.checked
+          headParams[combKeys[i]].key = checked
+          postToDb(headParams)
+        }
+        cloned2.querySelector('#inf-cat').querySelector('input').onchange = (e) => {
+          const checked = e.target.checked
+          headParams[combKeys[i]].cat = checked
+          postToDb(headParams)
+        }
+
+
+        h1EditDiv.append(cloned2)
+        h1EditDiv.append(cloned1)
+      }
       for (let i = 0; i < combKeys.length; i++) {
         const cloned = originalKeyLabel.cloneNode(true)
         cloned.querySelector('span').textContent = '🔖' + combKeys[i]
         cloned.id = 'check;' + combKeys[i]
+        if(headParams[combKeys[i]].value){
+          generate()
+        }
         cloned.querySelector('input').onchange = (e) => {
           const { target } = e
-          if (target.checked || headParams[combKeys[i]].value) {
-            const cloned1 = h1_input.cloneNode(true)
-            const cloned2 = h1_checkboxes.cloneNode(true)
-            cloned2.querySelector('#h1-checkbox-label').textContent = '🔖' + combKeys[i]
-
-            cloned2.removeAttribute('hidden')
-            cloned2.id = cloned2.id + ';' + combKeys[i]
-            cloned1.id = cloned1.id + ';' + combKeys[i]
-            if(headParams[combKeys[i]]){
-              cloned1.querySelector('input').value = headParams[combKeys[i]].value || ''
-              headParams[combKeys[i]].key && (cloned2.querySelector('#include-key').querySelector('input').setAttribute('checked',''))
-              headParams[combKeys[i]].cat && (cloned2.querySelector('#inf-cat').querySelector('input').setAttribute('checked',''))
-            }
-            else{
-              headParams[combKeys[i]] = {}
-            }
-            cloned1.querySelector('input').onblur = (e) => {
-              const {value} = e.target
-              headParams[combKeys[i]].value = value
-              postToDb(headParams)
-
-            }
-            cloned2.querySelector('#include-key').querySelector('input').onchange = (e) => {
-              const checked = e.target.checked
-              headParams[combKeys[i]].key = checked
-              postToDb(headParams)
-            }
-            cloned2.querySelector('#inf-cat').querySelector('input').onchange = (e) => {
-              const checked = e.target.checked
-              headParams[combKeys[i]].cat = checked
-              postToDb(headParams)
-            }
-
-
-            h1EditDiv.append(cloned2)
-            h1EditDiv.append(cloned1)
+          if (target.checked) {
+              generate()
           }
           else {
             document.getElementById(`h1-checkboxes;${combKeys[i]}`)?.remove()
