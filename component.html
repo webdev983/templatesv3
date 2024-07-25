@@ -17623,9 +17623,9 @@ headers: {
       let headParams = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${headParamsId}&sk=headingParams&startsWith=true`)
         .then(response => response.json()).then(res => res.items[0] || { id: headParamsId, sk: 'headingParams' })
 
-      
+
       h1_input.querySelector('input').value = headParams.head || ''
-      
+
       h1_input.querySelector('input').onblur = (e) => {
         headParams.head = e.target.value
         postToDb(headParams)
@@ -17670,12 +17670,12 @@ headers: {
         h1EditDiv.append(cloned2)
         h1EditDiv.append(cloned1)
       }
-      const generateHead = ()=>{
-        
-        h1Span.textContent = headParams.head + ' '+combKeys.map(key=>{
+      const generateHead = () => {
+
+        h1Span.textContent = headParams.head + ' ' + combKeys.map(key => {
           let res = ''
-          if(headParams[key].key){
-            res = '#'+key+ ': '
+          if (headParams[key].key) {
+            res = '#' + key + ': '
           }
           res = res + `${key}-value# ${headParams[key].value}`
           return res
@@ -17686,14 +17686,14 @@ headers: {
         const cloned = originalKeyLabel.cloneNode(true)
         cloned.querySelector('span').textContent = '🔖' + combKeys[i]
         cloned.id = 'check;' + combKeys[i]
-        if(headParams[combKeys[i]].value){
-          cloned.querySelector('input').setAttribute('checked','')
+        if (headParams[combKeys[i]].value) {
+          cloned.querySelector('input').setAttribute('checked', '')
           generate(i)
         }
         cloned.querySelector('input').onchange = (e) => {
           const { target } = e
           if (target.checked) {
-              generate(i)
+            generate(i)
           }
           else {
             document.getElementById(`h1-checkboxes;${combKeys[i]}`)?.remove()
@@ -17703,6 +17703,69 @@ headers: {
         insertAfter(cloned, originalKeyLabel)
       }
       originalKeyLabel.remove()
+
+      document.getElementById('h1-status').onclick = async (e) => {
+        const { target } = e
+        if (target.textContent === '🟠') {
+          return
+        }
+        target.textContent = '🟠'
+        const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Content'
+        log1(tableLsi)
+        url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
+        const { items } = await fetch(url).then(e => e.json())
+        const compid = items[0].id
+        const data = h1Span.textContent
+
+
+        //clean
+        const eventData1 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&cleanAttr=h1&ownerid=${localStorage.getItem('ownerid')}` };
+        console.log('event ' + eventData1.url)
+        // Fetch options
+        const options0 = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(eventData1)
+        };
+        await fetch(pup_url, options0);
+        const currentDate = new Date();
+
+        // Add one day to the current date
+        const tomorrow = new Date(currentDate);
+        tomorrow.setDate(currentDate.getDate() + 1);
+
+        // Convert the date to ISO 8601 format (required by DynamoDB)
+        const ttl = Math.floor(tomorrow.getTime() / 1000);
+        const db = {
+          id: generateUUID(),
+          sk: 'import',
+          ttl,
+          data,
+        }
+        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(db),
+        });
+
+        const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&attr=h1&val=${db.id}&ownerid=${localStorage.getItem('ownerid')}` };
+        console.log('event ' + eventData.url)
+        // Fetch options
+        const options = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(eventData)
+        };
+        const response = await fetch(pup_url, options);
+        target.textContent = '🟢'
+
+      }
       /*
       let setWareHouse
       
