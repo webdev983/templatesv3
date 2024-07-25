@@ -17647,7 +17647,7 @@ headers: {
       let headParams = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${headParamsId}&sk=headingParams&startsWith=true`)
         .then(response => response.json()).then(res => res.items[0] )
      
-      if (headParams2.loadFromHead) {
+      if (!headParams.loadFromHead) {
         saveToSite.setAttribute('checked','')
       } else {
         saveToSite.removeAttribute('checked')
