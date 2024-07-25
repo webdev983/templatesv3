@@ -17623,9 +17623,9 @@ headers: {
       let headParams = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${headParamsId}&sk=headingParams&startsWith=true`)
         .then(response => response.json()).then(res => res.items[0] || { id: headParamsId, sk: 'headingParams' })
 
-      if (headParams.head) {
-        h1_input.querySelector('input').value = headParams.head
-      }
+      
+      h1_input.querySelector('input').value = headParams.head || ''
+      
       h1_input.querySelector('input').onblur = (e) => {
         headParams.head = e.target.value
         postToDb(headParams)
