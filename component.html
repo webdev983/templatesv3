@@ -17667,6 +17667,17 @@ headers: {
         h1EditDiv.append(cloned2)
         h1EditDiv.append(cloned1)
       }
+      const generateHead = ()=>{
+        const keys=Object.keys(headParams).filter(e=>e!=='id' && e!=='sk' && e!=='head')
+        h1Span.textContent = headParams.head + ' '+keys.map(key=>{
+          let res = ''
+          if(headParams[key].key){
+            res = '#'+key+ ': '
+          }
+          res = res + `${key}-value# ${headParams[key].value}`
+          return res
+        }).join(' ')
+      }
       for (let i = 0; i < combKeys.length; i++) {
         const cloned = originalKeyLabel.cloneNode(true)
         cloned.querySelector('span').textContent = '🔖' + combKeys[i]
