@@ -16599,6 +16599,19 @@ headers: {
       });
       tr.remove()
     }
+    const removecomparision =  async (event) => {
+      const target = event.target
+      const tr = target.closest('tr')
+      const sk = tr.getAttribute('sk')
+      fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${ownerid}:${sk}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          // Add any additional headers if needed
+        },
+      });
+      tr.remove()
+    }
     const setSkuItemValue = async (event) => {
       const target = event.target
       const value = target.textContent
