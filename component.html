@@ -15082,7 +15082,7 @@ elementsToRemove.forEach(element => element.remove());
           action: 'setAttribute',
           target_element: allAttrs[0].id + '-tree',
           key: 'data-heading_placeholder',
-          value:JSON.stringify(inputValue),
+          value: JSON.stringify(inputValue),
 
         }
         await pushAction(payload2)
@@ -17641,13 +17641,24 @@ headers: {
       const h1_input = document.querySelector('#h1-input')
       const h1_checkboxes = document.querySelector('#h1-checkboxes')
       let headParamsId = `sku:${sku}`
-      if (document.getElementById('saveParamsToSite').checked) {
+      const saveToSite = document.getElementById('saveParamsToSite')
+      if (saveToSite.checked) {
         headParamsId = headContentItem.id
       }
+
       let headParams = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${headParamsId}&sk=headingParams&startsWith=true`)
         .then(response => response.json()).then(res => res.items[0] || { id: headParamsId, sk: 'headingParams' })
 
+      saveToSite.onchange = (e) => {
+        const { checked } = e.target
+        if (checked) {
+          headParams.id = headContentItem.id
 
+        }
+        else{
+          headParams.id = `sku:${sku}`
+        }
+      }
       h1_input.querySelector('input').value = headParams.head || ''
 
       h1_input.querySelector('input').onblur = (e) => {
@@ -17742,7 +17753,7 @@ headers: {
         const atts = headParams
         delete atts.id
         delete atts.sk
-        const data = {text:h1Span.textContent,...atts}
+        const data = { text: h1Span.textContent, ...atts }
 
 
         //clean
