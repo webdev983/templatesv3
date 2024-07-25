@@ -15091,6 +15091,18 @@ elementsToRemove.forEach(element => element.remove());
 
         }
         await pushAction(el)
+        if (attr === 'h1-attribute') {
+          const payload2 = {
+
+            time: (new Date()).getTime().toString(),
+            action: 'setAttribute',
+            target_element: allAttrs[0].id + '-tree',
+            key: 'heading_placeholder',
+            value: inputValue,
+
+          }
+          await pushAction(payload2)
+        }
         return
       }
 
