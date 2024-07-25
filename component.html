@@ -1390,7 +1390,7 @@
 
             <div id="h1-edit" style="margin-left: 30px;">
               <div id="h1-edit-controls" style="margin-top: 8px; margin-bottom: 8px;">
-                <label class="l-3"><input type="checkbox">🌐 save to site</label>
+                <label class="l-3"><input type="checkbox" id="saveParamsToSite">🌐 save to site</label>
                 <label class="l-3" id="comb-key">
                   <input type="checkbox">
                   <span id="label-text">🔖key</span>
@@ -17616,12 +17616,19 @@ headers: {
       //originalKeyLabel.id = 'check;' + combKeys[0]*
       const h1_input = document.querySelector('#h1-input')
       const h1_checkboxes = document.querySelector('#h1-checkboxes')
-      let headParams = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=headingParams&startsWith=true`)
-        .then(response => response.json()).then(res => res.items[0] || {id:`sku:${sku}`,sk:'headingParams'})
+      let headParamsId = `sku:${sku}`
+      if(document.getElementById('saveParamsToSite').checked){
+        headParamsId = headContentItem.id
+      }
+      let headParams = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${headParamsId}&sk=headingParams&startsWith=true`)
+        .then(response => response.json()).then(res => res.items[0] || {id:headParamsId,sk:'headingParams'})
 
-
+      if(headParams.head){
+        h1_input.textContent = headParams.head
+      }
       h1_input.querySelector('input').onblur = (e) => {
-
+        headParams.head = e.target.value
+        postToDb(headParams)
       }
       for (let i = 0; i < combKeys.length; i++) {
         const cloned = originalKeyLabel.cloneNode(true)
@@ -17637,12 +17644,23 @@ headers: {
             cloned2.removeAttribute('hidden')
             cloned2.id = cloned2.id + ';' + combKeys[i]
             cloned1.id = cloned1.id + ';' + combKeys[i]
-
+            if(headParams[combKeys[i]]){
+              cloned1.querySelector('input').value = headParams[combKeys[i]].value || ''
+              headParams[combKeys[i]].key && (cloned2.querySelector('#include-key').checked = true)
+            }
+            else{
+              headParams[combKeys[i]] = {}
+            }
             cloned1.querySelector('input').onblur = (e) => {
+              const {value} = e.target
+              headParams[combKeys[i]].value = value
+              postToDb(headParams)
 
             }
             cloned2.querySelector('#include-key').onchange = (e) => {
-
+              const checked = e.target.checked
+              headParams[combKeys[i]].key = checked
+              postToDb(headParams)
             }
 
 
