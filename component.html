@@ -17644,10 +17644,11 @@ headers: {
 
       let headParams2 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=headingParams&startsWith=true`)
         .then(response => response.json()).then(res => res.items[0] || { id: `sku:${sku}`, sk: 'headingParams' })
-      let headParams = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${headParamsId}&sk=headingParams&startsWith=true`)
-        .then(response => response.json()).then(res => res.items[0])
+      let headParams1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${headParamsId}&sk=headingParams&startsWith=true`)
+        .then(response => response.json()).then(res => res.items[0] || { id: headParamsId, sk: 'headingParams' })
+      let headParams = headParams1
       const saveToSite = document.getElementById('saveParamsToSite')
-      if (headParams?.loadFromHead) {
+      if (headParams1?.loadFromHead) {
         saveToSite.setAttribute('checked', '')
       } else {
         saveToSite.removeAttribute('checked')
@@ -17656,13 +17657,16 @@ headers: {
       }
       saveToSite.onchange = (e) => {
         const { checked } = e.target
+        
         if (checked) {
-          headParams.id = headContentItem.id
+          
+          headParams1.loadFromHead = true
 
         }
         else {
-          headParams.id = `sku:${sku}`
+          headParams1.loadFromHead = false
         }
+        postToDb(headParams1)
       }
       h1_input.querySelector('input').value = headParams.head || ''
 
