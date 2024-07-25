@@ -17630,7 +17630,7 @@ headers: {
         headParams.head = e.target.value
         postToDb(headParams)
       }
-      const generate = () => {
+      const generate = (i) => {
         const cloned1 = h1_input.cloneNode(true)
         const cloned2 = h1_checkboxes.cloneNode(true)
         cloned2.querySelector('#h1-checkbox-label').textContent = '🔖' + combKeys[i]
@@ -17672,12 +17672,12 @@ headers: {
         cloned.querySelector('span').textContent = '🔖' + combKeys[i]
         cloned.id = 'check;' + combKeys[i]
         if(headParams[combKeys[i]].value){
-          generate()
+          generate(i)
         }
         cloned.querySelector('input').onchange = (e) => {
           const { target } = e
           if (target.checked) {
-              generate()
+              generate(i)
           }
           else {
             document.getElementById(`h1-checkboxes;${combKeys[i]}`)?.remove()
