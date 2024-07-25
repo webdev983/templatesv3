@@ -15064,7 +15064,30 @@ elementsToRemove.forEach(element => element.remove());
       }).then(el => el.json())
       inputValue = items1.data
       let sku1 = pathItemSku || selectedSku
+      if (attr === 'h1-attribute') {
+        const allAttrs = querySelectorAll1(`[data-import-${attr}]`)
 
+
+        const el = {
+          time: (new Date()).getTime(),
+          action: 'innerHtml',
+          target_element: allAttrs[0].id + '-tree',
+          insertedCode: inputValue.text,
+
+        }
+        await pushAction(el)
+        const payload2 = {
+
+          time: (new Date()).getTime().toString(),
+          action: 'setAttribute',
+          target_element: allAttrs[0].id + '-tree',
+          key: 'data-heading_placeholder',
+          value:JSON.stringify(inputValue),
+
+        }
+        await pushAction(payload2)
+        return
+      }
       if (attr === 'meta_description') {
         const id1 = querySelectorAll1('meta[name="description"]')[0].id
         const payload2 = {
@@ -15081,7 +15104,7 @@ elementsToRemove.forEach(element => element.remove());
       }
       if (!inputValue.startsWith('<')) {
         const allAttrs = querySelectorAll1(`[data-import-${attr}]`)
-        allAttrs[0]
+
 
         const el = {
           time: (new Date()).getTime(),
@@ -15091,18 +15114,7 @@ elementsToRemove.forEach(element => element.remove());
 
         }
         await pushAction(el)
-        if (attr === 'h1-attribute') {
-          const payload2 = {
 
-            time: (new Date()).getTime().toString(),
-            action: 'setAttribute',
-            target_element: allAttrs[0].id + '-tree',
-            key: 'heading_placeholder',
-            value: inputValue,
-
-          }
-          await pushAction(payload2)
-        }
         return
       }
 
@@ -17727,7 +17739,10 @@ headers: {
         url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
         const { items } = await fetch(url).then(e => e.json())
         const compid = items[0].id
-        const data = h1Span.textContent
+        const atts = headParams
+        delete atts.id
+        delete atts.sk
+        const data = {text:h1Span.textContent,...atts}
 
 
         //clean
