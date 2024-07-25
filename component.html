@@ -1391,7 +1391,10 @@
             <div id="h1-edit" style="margin-left: 30px;">
               <div id="h1-edit-controls" style="margin-top: 8px; margin-bottom: 8px;">
                 <label class="l-3"><input type="checkbox">🌐 save to site</label>
-                <label class="l-3" id="comb-key"><input type="checkbox"></input>🔖key</label>
+                <label class="l-3" id="comb-key">
+                  <input type="checkbox">
+                  <span id="label-text">🔖key</span>
+                </label>
 
               </div>
               <div id="h1-input" class="h1-input-div">
@@ -17609,13 +17612,13 @@ headers: {
       splited.pop()
       const combKeys = splited.map(element => element.split(':')[0])
       const originalKeyLabel = document.getElementById('comb-key')
-      originalKeyLabel.textContent = '🔖'+ combKeys[0]
-      originalKeyLabel.id= 'check;'+combKeys[0]
+      originalKeyLabel.querySelector('span').textContent = '🔖' + combKeys[0]
+      originalKeyLabel.id = 'check;' + combKeys[0]
       for (let i = 1; i < combKeys.length; i++) {
-          const cloned = originalKeyLabel.cloneNode(true)
-          cloned.textContent = '🔖'+combKeys[i]
-          cloned.id ='check;'+ combKeys[i]
-          insertAfter(cloned,originalKeyLabel)
+        const cloned = originalKeyLabel.cloneNode(true)
+        cloned.querySelector('span').textContent = '🔖' + combKeys[i]
+        cloned.id = 'check;' + combKeys[i]
+        insertAfter(cloned, originalKeyLabel)
       }
       /*
       let setWareHouse
