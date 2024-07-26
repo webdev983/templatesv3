@@ -17722,6 +17722,7 @@ headers: {
         h1Span.textContent = headParams.head + ' ' + combKeys.map(key => {
           let res = ''
           if(!headParams[key]?.value){
+
             return
           }
           if (headParams[key].key) {
@@ -17736,8 +17737,9 @@ headers: {
         const cloned = originalKeyLabel.cloneNode(true)
         cloned.querySelector('span').textContent = '🔖' + combKeys[i]
         cloned.id = 'check;' + combKeys[i]
-        if (headParams[combKeys[i]]?.value) {
+        if (headParams[combKeys[i]] && headParams[combKeys[i]].value) {
           cloned.querySelector('input').setAttribute('checked', '')
+          console.log('generating '+combKeys[i])
           generate(i)
         }
         cloned.querySelector('input').onchange = (e) => {
