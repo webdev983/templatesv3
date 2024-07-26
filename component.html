@@ -17721,12 +17721,15 @@ headers: {
 
         h1Span.textContent = headParams.head + ' ' + combKeys.map(key => {
           let res = ''
+          if(!headParams[key].value){
+            return
+          }
           if (headParams[key].key) {
             res = '#' + key + ': '
           }
           res = res + `${key}-value# ${headParams[key].value}`
           return res
-        }).join(' ')
+        }).filter(e=>e).join(' ')
       }
       generateHead()
       for (let i = 0; i < combKeys.length; i++) {
