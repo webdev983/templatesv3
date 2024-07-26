@@ -17756,7 +17756,7 @@ headers: {
         insertAfter(cloned, originalKeyLabel)
       }
       originalKeyLabel.remove()
-
+      headContentItem.scripts?.h1?.runned && (document.getElementById('h1-status').textContent = '🟢')
       document.getElementById('h1-status').onclick = async (e) => {
         const { target } = e
         if (target.textContent === '🟠') {
@@ -17819,6 +17819,8 @@ headers: {
           body: JSON.stringify(eventData)
         };
         const response = await fetch(pup_url, options);
+        headContentItem.scripts.h1 = { runned: date.getTime() }
+        await updateHeadContentItem()
         target.textContent = '🟢'
 
       }
