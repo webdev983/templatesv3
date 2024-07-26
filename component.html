@@ -17721,7 +17721,7 @@ headers: {
 
         h1Span.textContent = headParams.head + ' ' + combKeys.map(key => {
           let res = ''
-          if(!headParams[key]?.value){
+          if(!headParams[key]){
 
             return
           }
@@ -17745,6 +17745,7 @@ headers: {
         cloned.querySelector('input').onchange = (e) => {
           const { target } = e
           if (target.checked) {
+            headParams[combKeys[i]] ={}
             generate(i)
           }
           else {
@@ -17752,6 +17753,7 @@ headers: {
             document.getElementById(`h1-input;${combKeys[i]}`)?.remove()
             delete headParams[combKeys[i]]
           }
+          postToDb(headParams)
         }
         insertAfter(cloned, originalKeyLabel)
       }
