@@ -5361,7 +5361,45 @@
             'Content-Type': 'application/json',
           },
         }).then(el => el.json()).then(e => e.items)
+        const getSelectedCombinations = (selected) => {
+          let newCombs = skuVariables.map(
+            element => {
+              const splited = element.sk.replace('sku-variables;', '').split(';')
+              const newArr = []
+              for (const element2 of splited) {
+                const [k, v] = element2.split(':')
+                if (selected.includes(k)) {
+                  newArr.push(element2)
+                }
+              }
+              const newComb = newArr.join(';')
+              return newComb
+            }
+          )
+          newCombs = removeDuplicates(newCombs)
+          return newCombs
+        }
+        const pushToListButton = cloned.querySelector('[data-push-to-list]')
 
+        const pushToList = () => {
+          const selected = []
+          cloned.querySelectorAll('[data-select-var-checkbox]').forEach(e => {
+            const value = e.getAttribute('data-select-var-checkbox');
+            if (e.checked) {
+              selected.push(value);
+            }
+          })
+          const newCombs = getSelectedCombinations(selected)
+          for (const comb of newCombs) {
+            const [k, v] = comb.split(':')
+            const clonedListElement = listOriginalElement.cloneNode(true)
+            const span = clonedListElement.querySelector('[data-lists-element-value]')
+            span.textContent = `{${k}}`
+            clonedListElement.querySelector('[data-lists-element-key]').textContent = k
+            listOriginalElement.parentNode.append(clonedListElement)
+          }
+
+        }
         for (const option of list.options) {
           const clonedListElement = listOriginalElement.cloneNode(true)
           listOriginalElement.parentNode.append(clonedListElement)
@@ -5376,39 +5414,7 @@
             td.parentNode.querySelector('[data-lists-element-status-td]').removeAttribute('rowspan')
 
           }
-          const pushToListButton = clonedListElement.querySelector('[data-push-to-list]')
-          const getSelectedCombinations = (selected)=>{
-            let newCombs = skuVariables.map(
-              element => {
-                const splited = element.sk.replace('sku-variables;', '').split(';')
-                const newArr = []
-                for (const element2 of splited) {
-                  const [k, v] = element2.split(':')
-                  if (selected.includes(k)) {
-                    newArr.push(element2)
-                  }
-                }
-                const newComb = newArr.join(';')
-                return newComb
-              }
-            )
-            newCombs = removeDuplicates(newCombs)
-            return newCombs
-          }
-          const pushToList = () => {
-            const selected = []
-            cloned.querySelectorAll('[data-select-var-checkbox]').forEach(e => {
-              const value = e.getAttribute('data-select-var-checkbox');
-              if (e.checked) {
-                selected.push(value);
-              }
-            })
-            const newCombs = getSelectedCombinations(selected)
-            for(const comb of newCombs){
-              const [k,v] = comb.split(':')
-            }
 
-          }
           pushToListButton.onclick = pushToList
           const generateSubRow = (element) => {
             const selected = []
