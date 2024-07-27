@@ -5404,12 +5404,14 @@
             const td = element.closest('td')
             td.setAttribute('rowspan', newCombs.length)
             td.parentNode.querySelector('[data-lists-element-status-td]').setAttribute('rowspan', newCombs.length)
+            generateCombSpans(td.parentNode.querySelector('#sku-variable-xz'),newCombs[0])
             for (let i = 1; i < newCombs.length; i++) {
 
               const cloned3 = clonedListElement.cloneNode(true)
               const arr = cloned3.querySelectorAll('td')
               arr[0].remove()
               arr[1].remove()
+              generateCombSpans(cloned3.querySelector('#sku-variable-xz'),newCombs[i])
               insertAfter(cloned3,clonedListElement)
             }
           }
@@ -16895,6 +16897,19 @@ headers: {
         body: JSON.stringify(item),
       });
     }
+    const generateCombSpans = (span,comb)=>{
+      const elements = comb.split(';')
+      for (const element of elements) {
+          const clonedSpan = span.cloneNode(true)
+
+          const [key, value] = element.split(':')
+          clonedSpan.removeAttribute('hidden')
+          clonedSpan.querySelector('#sku-attribute-key-xz').textContent = key
+          clonedSpan.querySelector('#sku-attribute-value-xz').textContent = value
+          span.parentNode.append(clonedSpan)
+        }
+        span.remove()
+    }
     const generateConditionTable = async (v, sk) => {
       console.log(v)
       const original = document.querySelector('#condition-price-table[hidden]')
@@ -16930,23 +16945,15 @@ headers: {
         const item = existing.items[i]
         const comb = item.sk.replace('sku-variables;', "")
         const clonedRow = originalRow.cloneNode(true)
-        const span = clonedRow.querySelector('#sku-variable-xz[hidden]')
+        
         clonedRow.removeAttribute('hidden')
         clonedRow.setAttribute('sk', item.sk)
         clonedRow.querySelector('#sku-variable-price-warehouse').setAttribute('warehouse', selectElement.parentNode.id)
         clonedRow.querySelector('#sku-variable-price-site').setAttribute('site', pathItemPath.split('/')[0])
-        const elements = comb.split(';')
+        
         elements.pop()
-        for (const element of elements) {
-          const clonedSpan = span.cloneNode(true)
-
-          const [key, value] = element.split(':')
-          clonedSpan.removeAttribute('hidden')
-          clonedSpan.querySelector('#sku-attribute-key-xz').textContent = key
-          clonedSpan.querySelector('#sku-attribute-value-xz').textContent = value
-          span.parentNode.append(clonedSpan)
-        }
-        span.remove()
+        const span = clonedRow.querySelector('#sku-variable-xz[hidden]')
+        generateCombSpans(span,comb)
         originalRow.parentNode.append(clonedRow)
       }
       originalRow.remove()
