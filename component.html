@@ -5390,12 +5390,21 @@
             }
           })
           const newCombs = getSelectedCombinations(selected)
+          let f 
           for (const comb of newCombs) {
             const [k, v] = comb.split(':')
             const clonedListElement = listOriginalElement.cloneNode(true)
             const span = clonedListElement.querySelector('[data-lists-element-value]')
             span.textContent = `{${k}}`
             clonedListElement.querySelector('[data-lists-element-key]').textContent = k
+            if(f){
+              clonedListElement.firstChild.remove()
+            }
+            else(f){
+              f = true
+              clonedListElement.querySelector('[data-lists-element-status-td]').setAttribute('rowspan',newCombs.length)
+
+            }
             listOriginalElement.parentNode.append(clonedListElement)
           }
 
