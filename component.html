@@ -5404,7 +5404,7 @@
             const td = element.closest('td')
             td.setAttribute('rowspan', newCombs.length)
             td.parentNode.querySelector('[data-lists-element-status-td]').setAttribute('rowspan', newCombs.length)
-            
+            td.parentNode.querySelector('#expand_variables_msg').setAttribute('hidden','')
             for (let i = 1; i < newCombs.length; i++) {
 
               const cloned3 = clonedListElement.cloneNode(true)
@@ -5412,6 +5412,7 @@
               arr[0].remove()
               arr[1].remove()
               generateCombSpans(cloned3.querySelector('#sku-variable-xz'),newCombs[i])
+              
               insertAfter(cloned3,clonedListElement)
             }
             generateCombSpans(td.parentNode.querySelector('#sku-variable-xz'),newCombs[0])
