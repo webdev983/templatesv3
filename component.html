@@ -5516,15 +5516,11 @@
                   return;
                 } else if (value === '') {
                   if (exisitingValue.id && exisitingValue.sk) {
-                    fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${exisitingValue.id}:${exisitingValue.sk}`, {
-                      method: 'DELETE',
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                    });
+                    delete newExisitingValue.value[key]
+                    if(!Object.keys(newExisitingValue.value).length){
+                      delete newExisitingValue.value
+                    }
                   }
-                  cloned3.remove();
-                  return;
                 }
 
                 const newExisitingValue = {
