@@ -5402,9 +5402,15 @@
               id: storageId,
               sk: `list:${list.name}:${k}:${comb}`,
             }
+            
             clonedListElement.removeAttribute('hidden')
             const span = clonedListElement.querySelector('[data-lists-element-value]')
             span.textContent = v
+            const found = elements.find(e=>e.sk ===`list:${list.name}:${k}:${comb}`)
+            if(found){
+              exisitingValue = found
+              span.textContent = exisitingValue.value
+            }
             postToDb(exisitingValue)
             span.onblur = async(e) => {
               const value = span.textContent.trim(); // Trim whitespace
