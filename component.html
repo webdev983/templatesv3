@@ -5392,7 +5392,7 @@
           })
           let newCombs = getSelectedCombinations(selected)
           if(!elements.target){
-            newCombs = elements.map(e=>e.sk.split(':')[3])
+            newCombs = elements.map(e=>e.sk.split(':')[3].slice(3).join(':'))
           }
           let f
           for (const comb of newCombs) {
@@ -5408,6 +5408,7 @@
             span.textContent = v
             const found =elements.length && elements.find(e=>e.sk ===`list:${list.name}:${k}:${comb}`)
             if(found){
+              console.log('goood')
               exisitingValue = found
               span.textContent = exisitingValue.value
             }
