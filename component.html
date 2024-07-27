@@ -5369,6 +5369,12 @@
           let exisitingValue = listValues.find(e => e.sk === storageSk)
           listValues = listValues.filter(e => e.sk !== storageSk)
           const skuCheckbox = clonedListElement.querySelector('[data-sku-vars]')
+          const removeSubRow = (element)=>{
+            const td = element.closest('td')
+            td.removeAttribute('rowspan',newCombs.length)
+            td.closest('[data-lists-element-status]').removeAttribute('rowspan')
+
+          }
           const generateSubRow = (element) => {
             const selected = []
             list.querySelectorAll('[data-select-var-checkbox][checked]').forEach(e => {
