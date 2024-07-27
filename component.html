@@ -5435,13 +5435,19 @@
 
           const generateSubRow = (element, setValues) => {
 
-            const selected = []
-            cloned.querySelectorAll('[data-select-var-checkbox]').forEach(e => {
-              const value = e.getAttribute('data-select-var-checkbox');
-              if (e.checked) {
-                selected.push(value);
-              }
-            })
+            let selected = []
+            if (setValues) {
+              selected = setValues
+            }
+            else {
+              cloned.querySelectorAll('[data-select-var-checkbox]').forEach(e => {
+                const value = e.getAttribute('data-select-var-checkbox');
+                if (e.checked) {
+                  selected.push(value);
+                }
+              })
+            }
+
             console.log(selected)
             const newCombs = getSelectedCombinations(selected)
             console.log(newCombs)
@@ -5647,7 +5653,8 @@
             originalValue.remove()
           }
           else if (exisitingValue.value && typeof exisitingValue.value === 'object') {
-            generateSubRow(skuCheckbox, true)
+            const keys = Object.keys(exisitingValue.value)[0].split(';').map(e=>e.split(:)[0])
+            generateSubRow(skuCheckbox, keys)
           }
           else {
             exisitingValue.value && (span.textContent = exisitingValue.value)
