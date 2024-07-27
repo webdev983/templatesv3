@@ -1187,7 +1187,7 @@
                 data-lists-element-status>🔴</label>
               <label class="l-3" data-lists-element-key></label>
             </td>
-            <td><label class="l-3"><input data-sku-vars type="checkbox">📦sku vars</label></td>
+            <td data-sku-var-checkbox-td><label class="l-3"><input data-sku-vars type="checkbox">📦sku vars</label></td>
 
             <td>
               <span class="l-3" id="expand_variables_msg">🔖 variables</span>
@@ -5390,21 +5390,23 @@
             }
           })
           const newCombs = getSelectedCombinations(selected)
-          let f 
+          let f
           for (const comb of newCombs) {
             const [k, v] = comb.split(':')
             const clonedListElement = listOriginalElement.cloneNode(true)
             clonedListElement.removeAttribute('hidden')
             const span = clonedListElement.querySelector('[data-lists-element-value]')
-            span.textContent = `{${k}}`
+            span.textContent = v
             clonedListElement.querySelector('[data-lists-element-key]').textContent = k
-            if(f){
+            if (f) {
               clonedListElement.children[0].remove()
             }
-            else{
+            else {
               f = true
-              clonedListElement.querySelector('[data-lists-element-status-td]').setAttribute('rowspan',newCombs.length)
-
+              clonedListElement.querySelector('[data-lists-element-status-td]').setAttribute('rowspan', newCombs.length)
+              const varsTd = clonedListElement.querySelector('[data-sku-var-checkbox-td]')
+              varsTd.querySelector('input').checked = true
+              varsTd.setAttribute('rowspan', newCombs.length)
             }
             listOriginalElement.parentNode.append(clonedListElement)
           }
