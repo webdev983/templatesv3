@@ -5369,7 +5369,7 @@
           let exisitingValue = listValues.find(e => e.sk === storageSk)
           listValues = listValues.filter(e => e.sk !== storageSk)
           const skuCheckbox = clonedListElement.querySelector('[data-sku-vars]')
-          const removeSubRow = (element)=>{
+          const removeSubRow = (element) => {
             const td = element.closest('td')
             td.removeAttribute('rowspan')
             td.parentNode.querySelector('[data-lists-element-status]').removeAttribute('rowspan')
@@ -5378,8 +5378,10 @@
           const generateSubRow = (element) => {
             const selected = []
             cloned.querySelectorAll('[data-select-var-checkbox]').forEach(e => {
-              const value = e.target.getAttribute('data-select-var-checkbox')
-              e.target.checked && selected.push(value)
+              const value = e.getAttribute('data-select-var-checkbox');
+              if (e.checked) {
+                selected.push(value);
+              }
             })
             console.log(selected)
             let newCombs = skuVariables.map(
@@ -5399,8 +5401,8 @@
             newCombs = removeDuplicates(newCombs)
             console.log(newCombs)
             const td = element.closest('td')
-            td.setAttribute('rowspan',newCombs.length)
-            td.parentNode.querySelector('[data-lists-element-status]').setAttribute('rowspan',newCombs.length)
+            td.setAttribute('rowspan', newCombs.length)
+            td.parentNode.querySelector('[data-lists-element-status]').setAttribute('rowspan', newCombs.length)
 
           }
           skuCheckbox.onchange = (e) => {
@@ -5413,7 +5415,7 @@
 
           }
 
-          
+
           const statusEl = clonedListElement.querySelector('[data-lists-element-status]')
           log1('existing ' + JSON.stringify(exisitingValue))
           if (exisitingValue) {
