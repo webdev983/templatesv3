@@ -5556,7 +5556,6 @@
           }
           skuCheckbox.onchange = (e) => {
             if (e.target.checked) {
-              skuCheckbox.checked = true
               generateSubRow(e.target)
               
             }
@@ -5656,6 +5655,8 @@
           }
           else if (exisitingValue.value && typeof exisitingValue.value === 'object') {
             const keys = Object.keys(exisitingValue.value)[0].split(';').map(e => e.split(':')[0])
+            
+            skuCheckbox.checked = true
             generateSubRow(skuCheckbox, keys)
           }
           else {
