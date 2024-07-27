@@ -5409,10 +5409,13 @@
               varsTd.querySelector('input').checked = true
               varsTd.setAttribute('rowspan', newCombs.length)
             }
+            clonedListElement.querySelector('#expand_variables_msg').setAttribute('hidden', '')
+            generateCombSpans(clonedListElement.querySelector('#sku-variable-xz'), comb)
             listOriginalElement.parentNode.append(clonedListElement)
           }
 
         }
+        pushToListButton.onclick = pushToList
         for (const option of list.options) {
           const clonedListElement = listOriginalElement.cloneNode(true)
           clonedListElement.removeAttribute('hidden')
@@ -5429,7 +5432,7 @@
 
           }
 
-          pushToListButton.onclick = pushToList
+          
           const generateSubRow = (element) => {
             const selected = []
             cloned.querySelectorAll('[data-select-var-checkbox]').forEach(e => {
