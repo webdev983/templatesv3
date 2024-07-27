@@ -1186,7 +1186,7 @@
             <td class="l-3"><label class="l-3" style="margin-right: 5px;" data-lists-element-status>🔴</label>
               <label class="l-3" data-lists-element-key></label>
             </td>
-            <td><label class="l-3"><input type="checkbox">📦sku vars</label></td>
+            <td><label class="l-3"><input data-sku-vars type="checkbox">📦sku vars</label></td>
 
             <td>
               <span class="l-3" id="expand_variables_msg">🔖 variables</span>
@@ -5309,13 +5309,14 @@
         if (storage === "sku") {
           const skuVarDiv = cloned.querySelector('#sku_var_div')
           const originalLabel = skuVarDiv.querySelector('#var-label')
-          if(combKeys.length){
+          if (combKeys.length) {
             skuVarDiv.removeAttribute('hidden')
-            for(const element of combKeys){
+            for (const element of combKeys) {
               const clon = originalLabel.cloneNode(true)
-              clon.querySelector('#var_element').textContent = '🔖'+ element
+              clon.querySelector('#var_element').textContent = '🔖' + element
+              clon.querySelector('input').setAttribute('data-select-var-checkbox', element)
               clon.removeAttribute('hidden')
-              insertAfter(clon,originalLabel)
+              insertAfter(clon, originalLabel)
             }
           }
         }
@@ -5365,9 +5366,46 @@
           listOriginalElement.parentNode.append(clonedListElement)
           const storageSk = `list:${list.name}:${option.name}`
 
-
           let exisitingValue = listValues.find(e => e.sk === storageSk)
           listValues = listValues.filter(e => e.sk !== storageSk)
+          const skuCheckbox = clonedListElement.querySelector('[data-sku-vars]')
+          const generateSubRow = (element) => {
+            const selected = []
+            list.querySelectorAll('[data-select-var-checkbox][checked]').forEach(e => {
+              const value = e.target.getAttribute('data-select-var-checkbox')
+              selected.push(value)
+            })
+            let newCombs = skuVariables.map(
+              element => {
+                const splited = element.sk.replace('sku-variables;', '').split(';')
+                const newArr = []
+                for (const element2 of splited) {
+                  const [k, v] = element2.split(':')
+                  if (selected.includes(k)) {
+                    newArr.push(element2)
+                  }
+                }
+                const newComb = splited.join(';')
+                return newComb
+              }
+            )
+            newCombs = removeDuplicates(newCombs)
+            const td = element.closest('td')
+            td.setAttribute('rowspan',newCombs.length)
+            td.closest('[data-lists-element-status]').setAttribute('rowspan',newCombs.length)
+
+          }
+          skuCheckbox.onchange = (e) => {
+            if (e.target.checked) {
+              generateSubRow(e.target)
+            }
+            else {
+              removeSubRow(e.target)
+            }
+
+          }
+
+          
           const statusEl = clonedListElement.querySelector('[data-lists-element-status]')
           log1('existing ' + JSON.stringify(exisitingValue))
           if (exisitingValue) {
