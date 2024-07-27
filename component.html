@@ -5377,10 +5377,11 @@
           }
           const generateSubRow = (element) => {
             const selected = []
-            cloned.querySelectorAll('[data-select-var-checkbox][checked]').forEach(e => {
+            cloned.querySelectorAll('[data-select-var-checkbox]').forEach(e => {
               const value = e.target.getAttribute('data-select-var-checkbox')
-              selected.push(value)
+              e.target.checked && selected.push(value)
             })
+            console.log(selected)
             let newCombs = skuVariables.map(
               element => {
                 const splited = element.sk.replace('sku-variables;', '').split(';')
