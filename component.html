@@ -1173,10 +1173,9 @@
       <details style="margin-bottom: 7px;" data-list hidden>
         <summary class="summary-L-3"><span class="l-3" data-list-emoji>📣</span><span> </span><span
             class="l-3 b-dark-blue" data-list-name> Meta</span></summary>
-        <div style="margin-left: 30px; margin-top: 10px; margin-bottom: 10px;">
-          <label class="l-3"> <input type="checkbox">🔖type</label>
-          <label class="l-3"> <input type="checkbox">🔖size</label>
-          <label class="l-3"> <input type="checkbox">🔖color</label>
+        <div hidden id="sku_var_div" style="margin-left: 30px; margin-top: 10px; margin-bottom: 10px;">
+          <label hidden id="var-label" class="l-3"> <input type="checkbox"><span id="var_element">🔖type</span></label>
+
           <button class="b-3" style="margin-left: 10px;">🚀 push selected to list</button>
 
         </div>
@@ -3191,14 +3190,15 @@
     var postToDb = (item) => {
       console.log(JSON.stringify(item))
       return fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(
-        item
-      ),
-    });}
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+          item
+        ),
+      });
+    }
     //gallery scripts 
     var cancelGalleryMenu = (event) => {
       event.target.closest('#menu-1').style.display = 'none';
@@ -5286,7 +5286,11 @@
       const list1 = document.querySelector('[data-list][hidden]')
 
       !storageId1 && document.querySelectorAll('[data-list]:not([hidden])').forEach(e => e.remove())
-
+      const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=sku-variables;&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
+      const splited = skuVariables[0].sk.replace('sku-variables;', '').split(';')
+      splited.pop()
+      const combKeys = splited.map(element => element.split(':')[0])
       for (const list of parsedLists['data-lists']) {
         if (!hubItems || !hubItems.menus[list.name]) {
           continue
@@ -5301,11 +5305,26 @@
 
 
         cloned.removeAttribute('hidden')
-
-
-
-
         const storage = list.data_storage
+        if (storage === "sku") {
+          const skuVarDiv = cloned.querySelector('#sku_var_div')
+          const originalLabel = skuVarDiv.querySelector('#var-label')
+          if(combKeys.length){
+            skuVarDiv.removeAttribute('hidden')
+            for(const element of combKeys){
+              const clon = originalLabel.cloneNode(true)
+              clon.querySelector('#var_element').textContent = '🔖'+ element
+              clon.removeAttribute('hidden')
+              insertAfter(clon,originalLabel)
+            }
+          }
+        }
+
+
+
+
+
+
         let storageId = storageId1 ?? ((storage === 'sku') ? (pathItemSku || selectedSku) : headContentItem.id)
         cloned.setAttribute('storageId', storageId)
         cloned.querySelector('[data-list-emoji]').textContent = list.emoji
@@ -14425,7 +14444,7 @@ elementsToRemove.forEach(element => element.remove());
     }
     function removeEmptyValues(obj) {
       for (let prop in obj) {
-        if (obj[prop] === "" || obj[prop] === null ) {
+        if (obj[prop] === "" || obj[prop] === null) {
           delete obj[prop];
         } else if (typeof obj[prop] === "object") {
           removeEmptyValues(obj[prop]); // Recursively call removeEmptyValues for nested objects
@@ -17654,12 +17673,12 @@ headers: {
         saveToSite.setAttribute('checked', '')
       } else {
         saveToSite.removeAttribute('checked')
-        
+
         headParams = headParams2
       }
       saveToSite.onchange = (e) => {
         const { checked } = e.target
-        
+
         if (checked) {
           headParams = headParams1
           headParams1.loadFromHead = true
@@ -17721,7 +17740,7 @@ headers: {
 
         h1Span.textContent = headParams.head + ' ' + combKeys.map(key => {
           let res = ''
-          if(!headParams[key]){
+          if (!headParams[key]) {
 
             return
           }
@@ -17730,22 +17749,22 @@ headers: {
           }
           res = res + `${key}-value# ${headParams[key].value || ''}`
           return res
-        }).filter(e=>e).join(' ')
+        }).filter(e => e).join(' ')
       }
       generateHead()
       for (let i = 0; i < combKeys.length; i++) {
         const cloned = originalKeyLabel.cloneNode(true)
         cloned.querySelector('span').textContent = '🔖' + combKeys[i]
         cloned.id = 'check;' + combKeys[i]
-        if (headParams[combKeys[i]] ) {
+        if (headParams[combKeys[i]]) {
           cloned.querySelector('input').checked = true
-          console.log('generating '+combKeys[i])
+          console.log('generating ' + combKeys[i])
           generate(i)
         }
         cloned.querySelector('input').onchange = (e) => {
           const { target } = e
           if (target.checked) {
-            headParams[combKeys[i]] ={}
+            headParams[combKeys[i]] = {}
             generate(i)
           }
           else {
