@@ -1191,9 +1191,10 @@
 
             <td>
               <span class="l-3" id="expand_variables_msg">🔖 variables</span>
-              <span hidden id="sku-variable-xz"><span class="l-3" id="span-prefix">🔖</span><span id="sku-attribute-key-xz"
-                  class="sku-key">color</span><span class="sku-value">:</span><span id="sku-attribute-value-xz"
-                  class="sku-value">black</span><span class="sku-value">;</span></span><span id="sku-variable-xz">
+              <span hidden id="sku-variable-xz"><span class="l-3" id="span-prefix">🔖</span><span
+                  id="sku-attribute-key-xz" class="sku-key">color</span><span class="sku-value">:</span><span
+                  id="sku-attribute-value-xz" class="sku-value">black</span><span class="sku-value">;</span></span><span
+                id="sku-variable-xz">
             </td>
 
             <td class="l-3">
@@ -5394,9 +5395,40 @@
           for (const comb of newCombs) {
             const [k, v] = comb.split(':')
             const clonedListElement = listOriginalElement.cloneNode(true)
+            let exisitingValue = {
+              id: storageId,
+              sk: `list:${list.name}:${k}:${comb}`,
+            }
             clonedListElement.removeAttribute('hidden')
             const span = clonedListElement.querySelector('[data-lists-element-value]')
             span.textContent = v
+            span.onblur = (e) => {
+              const value = span.textContent.trim(); // Trim whitespace
+
+              if (value === '{' + key + '}') {
+                return; // Return early if value matches specific condition
+              } else if (value === '') {
+                fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${exisitingValue.id}:${exisitingValue.sk}`, {
+                  method: 'DELETE',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    // Add any additional headers if needed
+                  },
+                });
+                clonedListElement.remove(); // Remove clonedListElement if value is empty
+                return;
+              }
+
+              exisitingValue = {
+                ...exisitingValue,
+                value
+              };
+
+              await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                method: 'POST',
+                body: JSON.stringify(exisitingValue),
+              });
+            }
             clonedListElement.querySelector('[data-lists-element-key]').textContent = k
             if (f) {
               clonedListElement.children[0].remove()
@@ -5410,7 +5442,7 @@
               varsTd.setAttribute('rowspan', newCombs.length)
             }
             clonedListElement.querySelector('#expand_variables_msg').setAttribute('hidden', '')
-            generateCombSpans(clonedListElement.querySelector('#sku-variable-xz'), comb,true)
+            generateCombSpans(clonedListElement.querySelector('#sku-variable-xz'), comb, true)
             listOriginalElement.parentNode.append(clonedListElement)
           }
 
@@ -5519,7 +5551,7 @@
                 }
               });
               if (setValues) {
-               newSpan.textContent = exisitingValue.value[newCombs[i]] || 'placeholder'
+                newSpan.textContent = exisitingValue.value[newCombs[i]] || 'placeholder'
               }
 
               // Create a new handleNewSave function for each cloned element
@@ -5557,7 +5589,7 @@
           skuCheckbox.onchange = (e) => {
             if (e.target.checked) {
               generateSubRow(e.target)
-              
+
             }
             else {
               removeSubRow(e.target)
@@ -5655,7 +5687,7 @@
           }
           else if (exisitingValue.value && typeof exisitingValue.value === 'object') {
             const keys = Object.keys(exisitingValue.value)[0].split(';').map(e => e.split(':')[0])
-            
+
             skuCheckbox.checked = true
             generateSubRow(skuCheckbox, keys)
           }
@@ -17043,15 +17075,15 @@ headers: {
         body: JSON.stringify(item),
       });
     }
-    const generateCombSpans = (span, comb,flag) => {
+    const generateCombSpans = (span, comb, flag) => {
       const elements = comb.split(';')
-      let done 
+      let done
       for (const element of elements) {
         const clonedSpan = span.cloneNode(true)
-        if(!done){
+        if (!done) {
           done = true
         }
-        else{
+        else {
           flag && clonedSpan.querySelector('#span-prefix').remove()
         }
         const [key, value] = element.split(':')
