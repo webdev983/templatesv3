@@ -1176,12 +1176,12 @@
         <div hidden id="sku_var_div" style="margin-left: 30px; margin-top: 10px; margin-bottom: 10px;">
           <label hidden id="var-label" class="l-3"> <input type="checkbox"><span id="var_element">🔖type</span></label>
 
-          <button class="b-3" style="margin-left: 10px;">🚀 push selected to list</button>
+          <button class="b-3" style="margin-left: 10px;" data-push-to-list>🚀 push selected to list</button>
 
         </div>
 
         <table class="table-1" style="margin-left: 30px;">
-          <tr data-lists-element>
+          <tr data-lists-element hidden>
 
             <td class="l-3" data-lists-element-status-td><label class="l-3" style="margin-right: 5px;"
                 data-lists-element-status>🔴</label>
@@ -5331,7 +5331,7 @@
         cloned.setAttribute('storageId', storageId)
         cloned.querySelector('[data-list-emoji]').textContent = list.emoji
         cloned.querySelector('[data-list-name]').textContent = list.name
-        const listOriginalElement = cloned.querySelector('[data-lists-element]')
+        const listOriginalElement = cloned.querySelector('[data-lists-element][hidden]')
         const label = cloned.querySelector('[data-list-element-benefit-label]')
         const keys = Object.keys(list)
         const filteredKeys = keys.filter(e => e.startsWith('varlist_'))
@@ -5366,7 +5366,7 @@
           const clonedListElement = listOriginalElement.cloneNode(true)
           listOriginalElement.parentNode.append(clonedListElement)
           const storageSk = `list:${list.name}:${option.name}`
-          clonedListElement.setAttribute('data-lists-element',option.name)
+          clonedListElement.setAttribute('data-lists-element', option.name)
           let exisitingValue = listValues.find(e => e.sk === storageSk)
           listValues = listValues.filter(e => e.sk !== storageSk)
           const skuCheckbox = clonedListElement.querySelector('[data-sku-vars]')
@@ -5376,15 +5376,8 @@
             td.parentNode.querySelector('[data-lists-element-status-td]').removeAttribute('rowspan')
 
           }
-          const generateSubRow = (element) => {
-            const selected = []
-            cloned.querySelectorAll('[data-select-var-checkbox]').forEach(e => {
-              const value = e.getAttribute('data-select-var-checkbox');
-              if (e.checked) {
-                selected.push(value);
-              }
-            })
-            console.log(selected)
+          const pushToListButton = clonedListElement.querySelector('[data-push-to-list]')
+          const getSelectedCombinations = (selected)=>{
             let newCombs = skuVariables.map(
               element => {
                 const splited = element.sk.replace('sku-variables;', '').split(';')
@@ -5400,22 +5393,49 @@
               }
             )
             newCombs = removeDuplicates(newCombs)
+            return newCombs
+          }
+          const pushToList = () => {
+            const selected = []
+            cloned.querySelectorAll('[data-select-var-checkbox]').forEach(e => {
+              const value = e.getAttribute('data-select-var-checkbox');
+              if (e.checked) {
+                selected.push(value);
+              }
+            })
+            const newCombs = getSelectedCombinations(selected)
+            for(const comb of newCombs){
+              const [k,v] = comb.split(':')
+            }
+
+          }
+          pushToListButton.onclick = pushToList
+          const generateSubRow = (element) => {
+            const selected = []
+            cloned.querySelectorAll('[data-select-var-checkbox]').forEach(e => {
+              const value = e.getAttribute('data-select-var-checkbox');
+              if (e.checked) {
+                selected.push(value);
+              }
+            })
+            console.log(selected)
+            const newCombs = getSelectedCombinations(selected)
             console.log(newCombs)
             const td = element.closest('td')
             td.setAttribute('rowspan', newCombs.length)
             td.parentNode.querySelector('[data-lists-element-status-td]').setAttribute('rowspan', newCombs.length)
-            td.parentNode.querySelector('#expand_variables_msg').setAttribute('hidden','')
+            td.parentNode.querySelector('#expand_variables_msg').setAttribute('hidden', '')
             for (let i = 1; i < newCombs.length; i++) {
 
               const cloned3 = clonedListElement.cloneNode(true)
               const arr = cloned3.querySelectorAll('td')
               arr[0].remove()
               arr[1].remove()
-              generateCombSpans(cloned3.querySelector('#sku-variable-xz'),newCombs[i])
-              
-              insertAfter(cloned3,clonedListElement)
+              generateCombSpans(cloned3.querySelector('#sku-variable-xz'), newCombs[i])
+
+              insertAfter(cloned3, clonedListElement)
             }
-            generateCombSpans(td.parentNode.querySelector('#sku-variable-xz'),newCombs[0])
+            generateCombSpans(td.parentNode.querySelector('#sku-variable-xz'), newCombs[0])
           }
           skuCheckbox.onchange = (e) => {
             if (e.target.checked) {
@@ -5651,7 +5671,6 @@
 
         }
 
-        listOriginalElement.remove()
         list1.parentNode.append(cloned)
       }
 
@@ -16899,18 +16918,18 @@ headers: {
         body: JSON.stringify(item),
       });
     }
-    const generateCombSpans = (span,comb)=>{
+    const generateCombSpans = (span, comb) => {
       const elements = comb.split(';')
       for (const element of elements) {
-          const clonedSpan = span.cloneNode(true)
+        const clonedSpan = span.cloneNode(true)
 
-          const [key, value] = element.split(':')
-          clonedSpan.removeAttribute('hidden')
-          clonedSpan.querySelector('#sku-attribute-key-xz').textContent = key
-          clonedSpan.querySelector('#sku-attribute-value-xz').textContent = value
-          span.parentNode.append(clonedSpan)
-        }
-        span.remove()
+        const [key, value] = element.split(':')
+        clonedSpan.removeAttribute('hidden')
+        clonedSpan.querySelector('#sku-attribute-key-xz').textContent = key
+        clonedSpan.querySelector('#sku-attribute-value-xz').textContent = value
+        span.parentNode.append(clonedSpan)
+      }
+      span.remove()
     }
     const generateConditionTable = async (v, sk) => {
       console.log(v)
@@ -16947,15 +16966,15 @@ headers: {
         const item = existing.items[i]
         const comb = item.sk.replace('sku-variables;', "")
         const clonedRow = originalRow.cloneNode(true)
-        
+
         clonedRow.removeAttribute('hidden')
         clonedRow.setAttribute('sk', item.sk)
         clonedRow.querySelector('#sku-variable-price-warehouse').setAttribute('warehouse', selectElement.parentNode.id)
         clonedRow.querySelector('#sku-variable-price-site').setAttribute('site', pathItemPath.split('/')[0])
-        
+
         elements.pop()
         const span = clonedRow.querySelector('#sku-variable-xz[hidden]')
-        generateCombSpans(span,comb)
+        generateCombSpans(span, comb)
         originalRow.parentNode.append(clonedRow)
       }
       originalRow.remove()
