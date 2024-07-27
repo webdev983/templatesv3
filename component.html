@@ -1191,7 +1191,7 @@
 
             <td>
               <span class="l-3" id="expand_variables_msg">🔖 variables</span>
-              <span hidden id="sku-variable-xz"><span class="l-3">🔖</span><span id="sku-attribute-key-xz"
+              <span hidden id="sku-variable-xz"><span class="l-3" id="span-prefix">🔖</span><span id="sku-attribute-key-xz"
                   class="sku-key">color</span><span class="sku-value">:</span><span id="sku-attribute-value-xz"
                   class="sku-value">black</span><span class="sku-value">;</span></span><span id="sku-variable-xz">
             </td>
@@ -17043,11 +17043,17 @@ headers: {
         body: JSON.stringify(item),
       });
     }
-    const generateCombSpans = (span, comb) => {
+    const generateCombSpans = (span, comb,flag) => {
       const elements = comb.split(';')
+      let done 
       for (const element of elements) {
         const clonedSpan = span.cloneNode(true)
-
+        if(!done){
+          done = true
+        }
+        else{
+          clonedSpan.querySelector('#span-prefix').remove()
+        }
         const [key, value] = element.split(':')
         clonedSpan.removeAttribute('hidden')
         clonedSpan.querySelector('#sku-attribute-key-xz').textContent = key
