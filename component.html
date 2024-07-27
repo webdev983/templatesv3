@@ -5327,7 +5327,7 @@
 
 
 
-        let storageId = storageId1 ?? ((storage === 'sku') ? (pathItemSku || selectedSku) : headContentItem.id)
+        let storageId = storageId1 ?? ((storage === 'sku') ? ('sku:' + pathItemSku || 'sku:' + selectedSku) : headContentItem.id)
         cloned.setAttribute('storageId', storageId)
         cloned.querySelector('[data-list-emoji]').textContent = list.emoji
         cloned.querySelector('[data-list-name]').textContent = list.name
@@ -5432,8 +5432,9 @@
 
           }
 
-          
+
           const generateSubRow = (element) => {
+
             const selected = []
             cloned.querySelectorAll('[data-select-var-checkbox]').forEach(e => {
               const value = e.getAttribute('data-select-var-checkbox');
@@ -5448,6 +5449,48 @@
             td.setAttribute('rowspan', newCombs.length)
             td.parentNode.querySelector('[data-lists-element-status-td]').setAttribute('rowspan', newCombs.length)
             td.parentNode.querySelector('#expand_variables_msg').setAttribute('hidden', '')
+            span.removeEventListener('blur', handleSave);
+            span.removeEventListener('keydown', handleSave);
+
+            span.addEventListener('blur', handleNewSave);
+            span.addEventListener('keydown', function (event) {
+              if (event.key === 'Enter') {
+                event.preventDefault();
+                handleNewSave();
+              }
+            });
+            delete exisitingValue.value
+            // Function to handle new save logic
+            async function handleNewSave() {
+              const value = span.textContent.trim(); // Trim whitespace
+              const key = newCombs[0]
+
+              if (value === '{' + key + '}') {
+                return; // Return early if value matches specific condition
+              } else if (value === '') {
+                fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${exisitingValue.id}:${exisitingValue.sk}`, {
+                  method: 'DELETE',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                });
+                clonedListElement.remove(); // Remove clonedListElement if value is empty
+                return;
+              }
+
+              exisitingValue = {
+                ...exisitingValue,
+                value: { ...exisitingValue.value, [key]: value }
+              };
+
+              await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                method: 'POST',
+                body: JSON.stringify(exisitingValue),
+              });
+
+              statusEl.textContent = '🟢';
+            }
+
             for (let i = 1; i < newCombs.length; i++) {
 
               const cloned3 = clonedListElement.cloneNode(true)
@@ -5455,7 +5498,47 @@
               arr[0].remove()
               arr[1].remove()
               generateCombSpans(cloned3.querySelector('#sku-variable-xz'), newCombs[i])
+              const newSpan = cloned3.querySelector('[data-lists-element-value]');
+              newSpan.addEventListener('blur', handleNewSave);
+              newSpan.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter') {
+                  event.preventDefault();
+                  handleNewSave();
+                }
+              });
 
+              // Create a new handleNewSave function for each cloned element
+              async function handleNewSave() {
+                const value = newSpan.textContent.trim();
+                const key = newCombs[i]
+
+                if (value === '{' + key + '}') {
+                  return;
+                } else if (value === '') {
+                  if (exisitingValue.id && exisitingValue.sk) {
+                    fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${exisitingValue.id}:${exisitingValue.sk}`, {
+                      method: 'DELETE',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                    });
+                  }
+                  cloned3.remove();
+                  return;
+                }
+
+                const newExisitingValue = {
+                  ...exisitingValue,
+                  value: { ...exisitingValue.value, [key]: value }
+                };
+
+                await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                  method: 'POST',
+                  body: JSON.stringify(newExisitingValue),
+                });
+
+                cloned3.querySelector('[data-lists-element-status]').textContent = '🟢';
+              }
               insertAfter(cloned3, clonedListElement)
             }
             generateCombSpans(td.parentNode.querySelector('#sku-variable-xz'), newCombs[0])
