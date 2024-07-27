@@ -5433,7 +5433,7 @@
           }
 
 
-          const generateSubRow = (element) => {
+          const generateSubRow = (element, setValues) => {
 
             const selected = []
             cloned.querySelectorAll('[data-select-var-checkbox]').forEach(e => {
@@ -5459,7 +5459,13 @@
                 handleNewSave();
               }
             });
-            delete exisitingValue.value
+            if (setValues) {
+              span.textContent = exisitingValue.value[newCombs[0]]
+            }
+            else {
+              delete exisitingValue.value
+            }
+
             // Function to handle new save logic
             async function handleNewSave() {
               const value = span.textContent.trim(); // Trim whitespace
@@ -5506,6 +5512,9 @@
                   handleNewSave();
                 }
               });
+              if (setValues) {
+                newSpan.textContent = exisitingValue.value[newCombs[i]]
+              }
 
               // Create a new handleNewSave function for each cloned element
               async function handleNewSave() {
@@ -5517,7 +5526,7 @@
                 } else if (value === '') {
                   if (exisitingValue.id && exisitingValue.sk) {
                     delete newExisitingValue.value[key]
-                    if(!Object.keys(newExisitingValue.value).length){
+                    if (!Object.keys(newExisitingValue.value).length) {
                       delete newExisitingValue.value
                     }
                   }
@@ -5636,6 +5645,9 @@
 
             });
             originalValue.remove()
+          }
+          else if (exisitingValue.value && typeof exisitingValue.value === 'object') {
+            generateSubRow(skuCheckbox, true)
           }
           else {
             exisitingValue.value && (span.textContent = exisitingValue.value)
