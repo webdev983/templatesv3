@@ -5382,15 +5382,18 @@
         }
         const pushToListButton = cloned.querySelector('[data-push-to-list]')
 
-        const pushToList = () => {
-          const selected = []
+        const pushToList = (elements) => {
+          let selected = []
           cloned.querySelectorAll('[data-select-var-checkbox]').forEach(e => {
             const value = e.getAttribute('data-select-var-checkbox');
             if (e.checked) {
               selected.push(value);
             }
           })
-          const newCombs = getSelectedCombinations(selected)
+          let newCombs = getSelectedCombinations(selected)
+          if(elements){
+            newCombs = elements.map(e=>e.sk.split(':')[3])
+          }
           let f
           for (const comb of newCombs) {
             const [k, v] = comb.split(':')
@@ -5727,11 +5730,15 @@
 
 
         }
+        const addedValues = []
         for (const el of listValues) {
           const clonedListElement = listOriginalElement.cloneNode(true)
           clonedListElement.removeAttribute('hidden')
-          const storageSk = listValues.sk
-
+          const storageSk = el.sk
+          if(el.sk.split(':').length ===4){
+            addedValues.push(el)
+            continue
+          }
 
           let exisitingValue = el
           const statusEl = clonedListElement.querySelector('[data-lists-element-status]')
@@ -5825,7 +5832,7 @@
           listOriginalElement.parentNode.append(clonedListElement)
 
         }
-
+        pushToList(addedValues)
         list1.parentNode.append(cloned)
       }
 
