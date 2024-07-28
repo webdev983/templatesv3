@@ -5518,7 +5518,16 @@
               const value = span.textContent.trim(); // Trim whitespace
               const key = newCombs[0]
 
-              
+              if (value === '{' + key + '}') {
+                return; // Return early if value matches specific condition
+              } else if (value === '') {
+                if (exisitingValue.id && exisitingValue.sk) {
+                    delete newExisitingValue.value[key]
+                    if (!Object.keys(newExisitingValue.value).length) {
+                      delete newExisitingValue.value
+                    }
+                  }
+              }
 
               exisitingValue = {
                 ...exisitingValue,
@@ -5557,7 +5566,16 @@
                 const value = newSpan.textContent.trim();
                 const key = newCombs[i]
 
-                
+                if (value === '{' + key + '}') {
+                  return;
+                } else if (value === '') {
+                  if (exisitingValue.id && exisitingValue.sk) {
+                    delete newExisitingValue.value[key]
+                    if (!Object.keys(newExisitingValue.value).length) {
+                      delete newExisitingValue.value
+                    }
+                  }
+                }
 
                 const newExisitingValue = {
                   ...exisitingValue,
