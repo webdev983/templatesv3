@@ -5380,6 +5380,24 @@
           newCombs = removeDuplicates(newCombs)
           return newCombs
         }
+        const getSelectedCombinations2 = (selected) => {
+          let newCombs = skuVariables.map(
+            element => {
+              const splited = element.sk.replace('sku-variables;', '').split(';')
+              const newArr = []
+              for (const element2 of splited) {
+                const [k, v] = element2.split(':')
+                if (selected.includes(k)) {
+                  newArr.push(element2)
+                }
+              }
+              const newComb = newArr
+              return newComb
+            }
+          ).flat()
+          newCombs = removeDuplicates(newCombs)
+          return newCombs
+        }
         const pushToListButton = cloned.querySelector('[data-push-to-list]')
 
         const pushToList = (elements) => {
@@ -5390,7 +5408,7 @@
               selected.push(value);
             }
           })
-          let newCombs = getSelectedCombinations(selected)
+          let newCombs = getSelectedCombinations2(selected)
           if(!elements.target){
             newCombs = elements.map(e=>e.sk.split(':').slice(3).join(':'))
           }
