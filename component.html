@@ -17248,6 +17248,7 @@ headers: {
       let done
       for (const element of elements) {
         const clonedSpan = span.cloneNode(true)
+        clonedSpan.removeAttribute('hidden')
         if (!done) {
           done = true
         }
@@ -17260,7 +17261,7 @@ headers: {
         clonedSpan.querySelector('#sku-attribute-value-xz').textContent = value
         span.parentNode.append(clonedSpan)
       }
-      span.remove()
+      span.setAttribute('hidden','')
     }
     const generateConditionTable = async (v, sk) => {
       console.log(v)
