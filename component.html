@@ -5494,7 +5494,7 @@
             newCombs = elements.map(e => e.sk.split(':').slice(3).join(':'))
           }
           newCombs.sort()
-          console.log('combs'+JSON.stringify(newCombs))
+          console.log('combs' + JSON.stringify(newCombs))
           let f
           for (const comb of newCombs) {
             const [k, v] = comb.split(':')
@@ -5518,7 +5518,31 @@
             span.onblur = async (e) => {
               const value = span.textContent.trim(); // Trim whitespace
 
-              
+              if (value === '') {
+                const listName = list.name;
+                const optionName = k;
+
+
+                // If checkbox is unchecked, hide all elements except the first one
+                const elements = document.querySelectorAll(`[sk^="list:${listName}:${optionName}:"]`);
+                const set = Array.from(elements).map(e => e.querySelector('[data-lists-element-value]').textContent).filter(e => e)
+                if (!set.length) {
+                  elements.forEach(async (el, index) => {
+                    const dUrl = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${storageId.replaceAll(':', '~')}:${el.getAttribute('sk')}`
+                    console.log(dUrl)
+                    await fetch(dUrl, {
+                      method: 'DELETE',
+                      headers: {
+                        'Content-Type': 'application/json',
+                        // Add any additional headers if needed
+                      },
+                    });
+                    el.remove()
+                  });
+                  return;
+                }
+
+              }
 
               exisitingValue = {
                 ...exisitingValue,
@@ -5531,13 +5555,13 @@
               });
             }
             clonedListElement.querySelector('[data-lists-element-key]').textContent = k
-            if (f ===k) {
+            if (f === k) {
               clonedListElement.children[0].remove()
               clonedListElement.children[0].remove()
             }
             else {
               f = k
-              const length = newCombs.filter(e=>e.startsWith(k+':')).length
+              const length = newCombs.filter(e => e.startsWith(k + ':')).length
               clonedListElement.querySelector('[data-lists-element-status-td]').setAttribute('rowspan', length)
               const varsTd = clonedListElement.querySelector('[data-sku-var-checkbox-td]')
               varsTd.querySelector('input').checked = true
@@ -5551,7 +5575,7 @@
                 // If checkbox is unchecked, hide all elements except the first one
                 const elements = document.querySelectorAll(`[sk^="list:${listName}:${optionName}:"]`);
                 elements.forEach(async (el, index) => {
-                  const dUrl = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${storageId.replaceAll(':','~')}:${el.getAttribute('sk')}`
+                  const dUrl = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${storageId.replaceAll(':', '~')}:${el.getAttribute('sk')}`
                   console.log(dUrl)
                   await fetch(dUrl, {
                     method: 'DELETE',
