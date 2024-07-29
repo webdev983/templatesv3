@@ -1528,9 +1528,9 @@
                 </td>
 
                 <td id="sku-condition-site-name">
-                  <del class="l-3" contenteditable>💲</del>
+                  <del class="l-3" contenteditable id="site-old-all">💲</del>
                   <span class="l-3" id="sku-condition-site-name-value"></span>
-                  <ins class="l-3" contenteditable>💲</ins>
+                  <ins id="site-new-all" class="l-3" contenteditable>💲</ins>
 
                 </td>
                 <td id="price_comparison_price_anchor_head" hidden>
@@ -18075,6 +18075,18 @@ headers: {
 
       //
       filled.querySelector('#sku-condition-site-name-value').textContent = pathItemPath.split('/')[0].toLowerCase()
+      filled.querySelector('#site-old-all').onblur =(el)=>{
+        document.querySelectorAll('#sku-variable-price-all-old[warehouse]').forEach(e=>{
+            e.textContent = el.target.textContent
+            e.onblur({ target: e })
+          })
+      }
+      filled.querySelector('#site-new-all').onblur =(el)=>{
+        document.querySelectorAll('#sku-variable-price-all-current[warehouse]').forEach(e=>{
+            e.textContent = el.target.textContent
+            e.onblur({ target: e })
+          })
+      }
       //get warehouses
       document.querySelector('#sku-value2').textContent = sku
       const warehouses = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=warehouse:&startsWith=true`)
