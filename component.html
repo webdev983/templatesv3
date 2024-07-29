@@ -5558,7 +5558,7 @@
                 // If checkbox is unchecked, hide all elements except the first one
                 const elements = document.querySelectorAll(`[sk^="list:${listName}:${optionName}:"]`);
                 elements.forEach(async (el, index) => {
-                  const dUrl = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${storageId}:${el.getAttribute('sk')}`
+                  const dUrl = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${storageId.replaceAll(':','~')}:${el.getAttribute('sk')}`
                   console.log(dUrl)
                   await fetch(dUrl, {
                     method: 'DELETE',
