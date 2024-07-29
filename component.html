@@ -18405,7 +18405,9 @@ headers: {
         cloned1.querySelector('#warehouse_value-zd').textContent = defaultWareHouse.value
         option.parentNode.append(cloned1)
         getElementById1('sku-condition-warehouse-qty-value').textContent = defaultWareHouse.value
-        getElementById1('sku-condition-warehouse-qty-value').textContent = defaultWareHouse.value
+        getElementById1('allWareHouseValue').onblur = (el)=>{
+          document.querySelectorAll('[warehouse]').forEach(e=>e.textContent = el.target.value)
+        }
         generateShippingM(defaultWareHouse)
         generateSkuV(defaultWareHouse)
       }
