@@ -5366,7 +5366,7 @@
       const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=sku-variables;&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
       let combKeys = []
-      if (skuVariables/length) {
+      if (skuVariables.length) {
         const splited = skuVariables[0].sk.replace('sku-variables;', '').split(';')
         splited.pop()
         combKeys = splited.map(element => element.split(':')[0])
