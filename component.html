@@ -1221,7 +1221,8 @@
                 data-lists-element-status>🔴</label>
               <label class="l-3" data-lists-element-key></label>
             </td>
-            <td hidden data-sku-var-checkbox-td><label class="l-3"><input data-sku-vars type="checkbox">📦sku vars</label></td>
+            <td hidden data-sku-var-checkbox-td><label class="l-3"><input data-sku-vars type="checkbox">📦sku
+                vars</label></td>
 
             <td data-var-td hidden>
               <span class="l-3" id="expand_variables_msg">🔖 variables</span>
@@ -5373,9 +5374,13 @@
       !storageId1 && document.querySelectorAll('[data-list]:not([hidden])').forEach(e => e.remove())
       const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=sku-variables;&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
-      const splited = skuVariables[0].sk.replace('sku-variables;', '').split(';')
-      splited.pop()
-      const combKeys = splited.map(element => element.split(':')[0])
+      let combKeys = []
+      if (skuVariables) {
+        const splited = skuVariables[0].sk.replace('sku-variables;', '').split(';')
+        splited.pop()
+        combKeys = splited.map(element => element.split(':')[0])
+      }
+
       for (const list of parsedLists['data-lists']) {
         if (!hubItems || !hubItems.menus[list.name]) {
           continue
@@ -5494,8 +5499,8 @@
             }
           })
           let newCombs = getSelectedCombinations2(selected)
-          if(!elements.target){
-            newCombs = elements.map(e=>e.sk.split(':').slice(3).join(':'))
+          if (!elements.target) {
+            newCombs = elements.map(e => e.sk.split(':').slice(3).join(':'))
           }
           let f
           for (const comb of newCombs) {
@@ -5505,18 +5510,18 @@
               id: storageId,
               sk: `list:${list.name}:${k}:${comb}`,
             }
-            
+
             clonedListElement.removeAttribute('hidden')
             const span = clonedListElement.querySelector('[data-lists-element-value]')
             span.textContent = v
-            const found =elements.length && elements.find(e=>e.sk ===`list:${list.name}:${k}:${comb}`)
-            if(found){
+            const found = elements.length && elements.find(e => e.sk === `list:${list.name}:${k}:${comb}`)
+            if (found) {
               console.log('goood')
               exisitingValue = found
               span.textContent = found.value
             }
             postToDb(exisitingValue)
-            span.onblur = async(e) => {
+            span.onblur = async (e) => {
               const value = span.textContent.trim(); // Trim whitespace
 
               if (value === '') {
@@ -5625,11 +5630,11 @@
                 return; // Return early if value matches specific condition
               } else if (value === '') {
                 if (exisitingValue.id && exisitingValue.sk) {
-                    delete newExisitingValue.value[key]
-                    if (!Object.keys(newExisitingValue.value).length) {
-                      delete newExisitingValue.value
-                    }
+                  delete newExisitingValue.value[key]
+                  if (!Object.keys(newExisitingValue.value).length) {
+                    delete newExisitingValue.value
                   }
+                }
               }
 
               exisitingValue = {
@@ -5844,7 +5849,7 @@
           const clonedListElement = listOriginalElement.cloneNode(true)
           clonedListElement.removeAttribute('hidden')
           const storageSk = el.sk
-          if(el.sk.split(':').length >=4){
+          if (el.sk.split(':').length >= 4) {
             addedValues.push(el)
             continue
           }
