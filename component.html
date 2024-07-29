@@ -1523,7 +1523,7 @@
                 </td>
 
                 <td id="sku-condition-warehouse-qty">
-                  <span class="l-3" contenteditable>🏬</span>
+                  <span id="allWareHouseValue" class="l-3" contenteditable>🏬</span>
                   <span id="sku-condition-warehouse-qty-value" class="l-3"></span>
                 </td>
 
@@ -7943,7 +7943,7 @@
                     //fileNameSpan.textContent = fileName; // Set the text content to the file name
                     //fileNameSpan.removeAttribute('hidden'); // Make the file name span visible
                     for (let file of this.files) {
-                      
+
                       const id = pathItemSku ? ('sku:' + pathItemSku) : pathItem.id
                       const fileContent = await file
                       const fileName = fileContent.name
@@ -7970,7 +7970,7 @@
 
                       } catch (error) {
                       }
-                      
+
                     }
                     //uploadButton.removeAttribute('hidden'); // Make the upload button visible
 
@@ -18177,7 +18177,17 @@ headers: {
           generateHead()
         }
 
+        let insertPosition = h1EditDiv.children.length;
+        for (let j = 0; j < i; j++) {
+          const existingElement = h1EditDiv.querySelector(`#h1-checkboxes;${combKeys[j]}`);
+          if (existingElement) {
+            insertPosition = Array.from(h1EditDiv.children).indexOf(existingElement) + 2;
+          }
+        }
 
+        // Insert the new elements at the correct position
+        h1EditDiv.insertBefore(cloned1, h1EditDiv.children[insertPosition]);
+        h1EditDiv.insertBefore(cloned2, cloned1);
         h1EditDiv.append(cloned2)
         h1EditDiv.append(cloned1)
       }
@@ -18391,6 +18401,7 @@ headers: {
         }
         cloned1.querySelector('#warehouse_value-zd').textContent = defaultWareHouse.value
         option.parentNode.append(cloned1)
+        getElementById1('sku-condition-warehouse-qty-value').textContent = defaultWareHouse.value
         getElementById1('sku-condition-warehouse-qty-value').textContent = defaultWareHouse.value
         generateShippingM(defaultWareHouse)
         generateSkuV(defaultWareHouse)
