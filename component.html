@@ -5610,7 +5610,15 @@
             const td = element.closest('td')
             td.removeAttribute('rowspan')
             td.parentNode.querySelector('[data-lists-element-status-td]').removeAttribute('rowspan')
-
+            const tr = td.closest('tr')
+            const data_Name = tr.getAttribute('data-lists-element')
+            const arr =Array.from(document.querySelectorAll(`[data-lists-element=${data_Name}]`))
+            const f = arr.shift()
+            arr.forEach(e=>{
+              e.remove()
+            })
+            exisitingValue.value = f.querySelector('[data-lists-element-value]').textContent
+            postToDb(exisitingValue)
           }
 
 
