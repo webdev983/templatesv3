@@ -3319,7 +3319,7 @@
       clonedFieldset.querySelector('#remove-galeryMenu').onclick = (e) => {
         e.target.closest('fieldset').remove()
       }
-      clonedFieldset.querySelector('#upload-button').onclick = (e) => handleUpload1(e, src)
+      //clonedFieldset.querySelector('#upload-button').onclick = (e) => handleUpload1(e, src)
       //const id = pathItemSku || pathItem.id
       let mergedItems = []
       const ids = [...Object.keys(cache)]
@@ -7940,12 +7940,42 @@
                   if (this.files && this.files.length > 0) {
                     // If a file is chosen, show the file name and make the upload button visible
                     var fileName = this.files[0].name; // Get the name of the file
-                    fileNameSpan.textContent = fileName; // Set the text content to the file name
-                    fileNameSpan.removeAttribute('hidden'); // Make the file name span visible
+                    //fileNameSpan.textContent = fileName; // Set the text content to the file name
+                    //fileNameSpan.removeAttribute('hidden'); // Make the file name span visible
+                    for (let file of this.files) {
+                      
+                      const id = pathItemSku ? ('sku:' + pathItemSku) : pathItem.id
+                      const fileContent = await file
+                      const fileName = fileContent.name
 
-                    uploadButton.removeAttribute('hidden'); // Make the upload button visible
+                      try {
 
-                    file = event.target.files[0]
+                        const path = await upload(fileName, fileContent)
+                        log1(path)
+                        //push to db image
+                        // Send a POST request using fetch
+                        const payload = {
+                          id,
+                          sk: path,
+                          date: getFormatedDate()
+                        }
+                        const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify(payload),
+                        });
+
+
+                      } catch (error) {
+                      }
+                      
+                    }
+                    //uploadButton.removeAttribute('hidden'); // Make the upload button visible
+
+                    loadImages(event.target.closest('[data-menu]'), src)
+
                   } else {
                     // If no file is chosen, hide the file name span and the upload button
                     fileNameSpan.hidden = true;
@@ -17260,7 +17290,7 @@ headers: {
         clonedSpan.querySelector('#sku-attribute-value-xz').textContent = value
         span.parentNode.append(clonedSpan)
       }
-      span.setAttribute('hidden','')
+      span.setAttribute('hidden', '')
     }
     const generateConditionTable = async (v, sk) => {
       console.log(v)
