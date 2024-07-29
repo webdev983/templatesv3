@@ -5502,7 +5502,7 @@
             let exisitingValue = {
               id: storageId,
               sk: `list:${list.name}:${k}:${comb}`,
-              value:v
+              value: v
             }
 
             clonedListElement.removeAttribute('hidden')
@@ -5612,39 +5612,29 @@
             td.parentNode.querySelector('[data-lists-element-status-td]').removeAttribute('rowspan')
             const tr = td.closest('tr')
             const data_Name = tr.getAttribute('data-lists-element')
-            const arr =Array.from(document.querySelectorAll(`[data-lists-element=${data_Name}]`))
+            const arr = Array.from(document.querySelectorAll(`[data-lists-element=${data_Name}]`))
             const f = arr.shift()
-            arr.forEach(e=>{
+            arr.forEach(e => {
               e.remove()
             })
             exisitingValue.value = f.querySelector('[data-lists-element-value]').textContent
             postToDb(exisitingValue)
             tr.querySelector('#expand_variables_msg').removeAttribute('hidden')
-            const list =array.from(tr.querySelectorAll('#sku-variable-xz'))
-            list.shift().setAttribute('hidden','')
-            list.forEach(e=>e.remove())
+            const list = array.from(tr.querySelectorAll('#sku-variable-xz'))
+            list.shift().setAttribute('hidden', '')
+            list.forEach(e => e.remove())
           }
 
 
           const generateSubRow = (element, setValues) => {
 
             let selected = []
-            if (setValues) {
-              selected = setValues
-            }
-            else {
-              cloned.querySelectorAll('[data-select-var-checkbox]').forEach(e => {
-                const value = e.getAttribute('data-select-var-checkbox');
-                if (e.checked) {
-                  selected.push(value);
-                }
-              })
-            }
+
+            selected = setValues
+
 
             console.log(selected)
-            if(!selected.length){
-              return
-            }
+
             const newCombs = getSelectedCombinations(selected)
             console.log(newCombs)
             const td = element.closest('td')
@@ -5750,7 +5740,18 @@
           }
           skuCheckbox.onchange = (e) => {
             if (e.target.checked) {
-              generateSubRow(e.target)
+              let selected = []
+              cloned.querySelectorAll('[data-select-var-checkbox]').forEach(e => {
+                const value = e.getAttribute('data-select-var-checkbox');
+                if (e.checked) {
+                  selected.push(value);
+                }
+              })
+              if (!selected.length) {
+                e.target.checked = false
+                return
+              }
+              generateSubRow(e.target, selected)
 
             }
             else {
