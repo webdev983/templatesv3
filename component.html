@@ -5547,10 +5547,11 @@
             }
             else {
               f = k
-              clonedListElement.querySelector('[data-lists-element-status-td]').setAttribute('rowspan', newCombs.length)
+              const length = newCombs.filter(e=>e.startsWith(k+':')).length
+              clonedListElement.querySelector('[data-lists-element-status-td]').setAttribute('rowspan', length)
               const varsTd = clonedListElement.querySelector('[data-sku-var-checkbox-td]')
               varsTd.querySelector('input').checked = true
-              varsTd.setAttribute('rowspan', newCombs.length)
+              varsTd.setAttribute('rowspan', length)
               varsTd.querySelector('input').onchange = (e) => {
                 const checked = e.target.checked;
                 const listName = list.name;
