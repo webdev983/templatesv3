@@ -1444,9 +1444,9 @@
             </div>
           </details>
 
-          <details  style="margin-left: 30px; margin-top: 10px;">
+          <details style="margin-left: 30px; margin-top: 10px;">
             <summary class="summary-L-3"><span class="l-3 b-dark-blue">👨‍🚀 Reviews</span></summary>
-            <table  class="table-reviews" style="margin-left: 30px; margin-top: 10px;">
+            <table class="table-reviews" style="margin-left: 30px; margin-top: 10px;">
               <tr>
                 <td>sku</td>
                 <td>oxteb.com fake</td>
@@ -1458,22 +1458,22 @@
                   <textarea id="sku-reviews" class="textarea-reviews"></textarea>
                   <br>
                   <button class="b-4">💾 Save</button>
-    
+
                 </td>
                 <td>
                   <textarea id="fake-reviews" class="textarea-reviews"></textarea>
                   <button class="b-4">💾 Save</button>
-    
+
                 </td>
                 <td>
                   <textarea id="real-reviews" class="textarea-reviews"></textarea>
                   <button class="b-4">💾 Save</button>
-    
+
                 </td>
 
               </tr>
-              </table>
-         </details>
+            </table>
+          </details>
 
 
 
@@ -1990,7 +1990,7 @@
             </table>
           </details>
 
-    
+
 
         </div>
 
@@ -5503,6 +5503,7 @@
             }
 
             clonedListElement.removeAttribute('hidden')
+            clonedListElement.setAttribute('sk', exisitingValue.sk)
             const span = clonedListElement.querySelector('[data-lists-element-value]')
             span.textContent = v
             const found = elements.length && elements.find(e => e.sk === `list:${list.name}:${k}:${comb}`)
@@ -5548,6 +5549,26 @@
               const varsTd = clonedListElement.querySelector('[data-sku-var-checkbox-td]')
               varsTd.querySelector('input').checked = true
               varsTd.setAttribute('rowspan', newCombs.length)
+              varsTd.querySelector('input').onchange = (e) => {
+                const checked = e.target.checked;
+                const listName = list.name;
+                const optionName = k;
+
+
+                // If checkbox is unchecked, hide all elements except the first one
+                const elements = document.querySelectorAll(`[sk^="list:${listName}:${optionName}:"]`);
+                elements.forEach(async (el, index) => {
+                  await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${exisitingValue.id}:${el.getAttribute('sk')}`, {
+                    method: 'DELETE',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      // Add any additional headers if needed
+                    },
+                  });
+                  el.remove()
+                });
+
+              }
             }
             clonedListElement.querySelector('#expand_variables_msg').setAttribute('hidden', '')
             generateCombSpans(clonedListElement.querySelector('#sku-variable-xz'), comb, true)
@@ -18255,7 +18276,7 @@ headers: {
         }
         const ids = removeDuplicates(shippingIds.map(e => e.id))
         console.log(ids)
-        const filtered = ids.map(id1 => shippingMethodes.find(e => e.sk === id1)).filter(e=>e)
+        const filtered = ids.map(id1 => shippingMethodes.find(e => e.sk === id1)).filter(e => e)
         console.log(JSON.stringify(filtered))
         const originals = querySelectorAll1('#shipping-des-item')
         const original = originals[0]
