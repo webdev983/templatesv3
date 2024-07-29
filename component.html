@@ -18075,17 +18075,17 @@ headers: {
 
       //
       filled.querySelector('#sku-condition-site-name-value').textContent = pathItemPath.split('/')[0].toLowerCase()
-      filled.querySelector('#site-old-all').onblur =(el)=>{
-        document.querySelectorAll('#sku-variable-price-all-old[warehouse]').forEach(e=>{
-            e.textContent = el.target.textContent
-            e.onblur({ target: e })
-          })
+      filled.querySelector('#site-old-all').onblur = (el) => {
+        document.querySelectorAll('#sku-variable-price-all-old[warehouse]').forEach(e => {
+          e.textContent = el.target.textContent
+          e.onblur({ target: e })
+        })
       }
-      filled.querySelector('#site-new-all').onblur =(el)=>{
-        document.querySelectorAll('#sku-variable-price-all-current[warehouse]').forEach(e=>{
-            e.textContent = el.target.textContent
-            e.onblur({ target: e })
-          })
+      filled.querySelector('#site-new-all').onblur = (el) => {
+        document.querySelectorAll('#sku-variable-price-all-current[warehouse]').forEach(e => {
+          e.textContent = el.target.textContent
+          e.onblur({ target: e })
+        })
       }
       //get warehouses
       document.querySelector('#sku-value2').textContent = sku
@@ -18133,7 +18133,7 @@ headers: {
 
         headParams = headParams2
       }
-      if(!headParams.order){
+      if (!headParams.order) {
         headParams.order = []
       }
       saveToSite.onchange = (e) => {
@@ -18217,10 +18217,10 @@ headers: {
         const cloned = originalKeyLabel.cloneNode(true)
         cloned.querySelector('span').textContent = '🔖' + combKeys[i]
         cloned.id = 'check;' + combKeys[i]
-        if(headParams.order.includes(combKeys[i])){
+        if (headParams.order.includes(combKeys[i])) {
           cloned.querySelector('input').checked = true
         }
-       
+
         cloned.querySelector('input').onchange = (e) => {
           const { target } = e
           if (target.checked) {
@@ -18241,7 +18241,7 @@ headers: {
       }
       for (const key of headParams.order) {
         const i = combKeys.indexOf(key)
-        
+
         console.log('generating ' + combKeys[i])
 
         generate(i)
@@ -18417,8 +18417,8 @@ headers: {
         cloned1.querySelector('#warehouse_value-zd').textContent = defaultWareHouse.value
         option.parentNode.append(cloned1)
         getElementById1('sku-condition-warehouse-qty-value').textContent = defaultWareHouse.value
-        getElementById1('allWareHouseValue').onblur = (el)=>{
-          document.querySelectorAll('#sku-variable-price-warehouse-value-all[warehouse]').forEach(e=>{
+        getElementById1('allWareHouseValue').onblur = (el) => {
+          document.querySelectorAll('#sku-variable-price-warehouse-value-all[warehouse]').forEach(e => {
             e.textContent = el.target.textContent
             e.onblur({ target: e })
           })
@@ -18768,12 +18768,12 @@ headers: {
           const original = document.querySelector('#price_comparison_price_anchor_head[hidden]')
           const cloned = original.cloneNode(true)
           cloned.removeAttribute('hidden')
-          cloned.setAttribute('site',element.value)
+          cloned.setAttribute('site', element.value)
           original.parentNode.append(cloned)
           cloned.removeAttribute('hidden')
           cloned.querySelector('#price_comparison_site').textContent = element.value
 
-
+         
           const original2 = document.querySelectorAll('#price_comparison_price_anchor[hidden]')
           original2.forEach(async original => {
             const cloned2 = original.cloneNode(true)
