@@ -5631,7 +5631,7 @@
 
             selected = setValues
 
-
+            const name = element.closest('tr').getAttribute('data-lists-element')
             console.log(selected)
 
             const newCombs = getSelectedCombinations(selected)
@@ -5651,7 +5651,7 @@
               }
             });
             if (setValues) {
-              span.textContent = exisitingValue.value[newCombs[0]] || 'placeholder'
+              span.textContent = exisitingValue.value?[newCombs[0]] || `{${name}}`
             }
             else {
               delete exisitingValue.value
@@ -5662,7 +5662,7 @@
               const value = span.textContent.trim(); // Trim whitespace
               const key = newCombs[0]
 
-              if (value === '{' + key + '}') {
+              if (value === '{' + name + '}') {
                 return; // Return early if value matches specific condition
               } else if (value === '') {
                 if (exisitingValue.id && exisitingValue.sk) {
@@ -5702,7 +5702,7 @@
                 }
               });
               if (setValues) {
-                newSpan.textContent = exisitingValue.value[newCombs[i]] || 'placeholder'
+                newSpan.textContent = exisitingValue.value[newCombs[i]] || `{${name}}`
               }
 
               // Create a new handleNewSave function for each cloned element
@@ -18769,7 +18769,7 @@ headers: {
           original.parentNode.append(cloned)
           cloned.removeAttribute('hidden')
           cloned.querySelector('#price_comparison_site').textContent = element.value
-
+          //todo
           cloned.querySelector('#price_comparison_price_head').onblur = (e) => {
             document.querySelectorAll('#sku-variable-price-all-old[warehouse]').forEach(e => {
               e.textContent = el.target.textContent
