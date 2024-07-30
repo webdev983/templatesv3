@@ -4612,12 +4612,12 @@
       }
       lastEl = compEl.id + '-tree'
       for (let i = 1; i < skuVariables.length; i++) {
-        const newId = duplicateId(compEl.id).id
+        const newId = duplicateId(lastEl.id).id
         const actionObject = {
           time: (new Date()).getTime(),
           action: 'InsertAfter',
           target_element: lastEl,
-          inserted_element: { originalId: compEl.id + '-tree', id: newId },
+          inserted_element: { originalId: lastEl.id, id: newId },
         };
         await pushAction(actionObject)
         const compEl = getElementById1(newId.replace('-tree', ''))
