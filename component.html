@@ -5726,11 +5726,8 @@
                   value: { ...exisitingValue.value, [key]: value }
                 };
 
-                await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                  method: 'POST',
-                  body: JSON.stringify(newExisitingValue),
-                });
-
+                
+                await postToDb(newExisitingValue)
                 //cloned3.querySelector('[data-lists-element-status]').textContent = '🟢';
               }
               insertAfter(cloned3, clonedListElement)
@@ -5879,7 +5876,10 @@
                 }
 
                 log1(JSON.stringify(exisitingValue))
-                await postToDb(exisitingValue)
+                await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                  method: 'POST',
+                  body: JSON.stringify(exisitingValue),
+                });
                 statusEl.textContent = '🟢'
 
               });
