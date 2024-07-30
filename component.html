@@ -4583,7 +4583,66 @@
         .then(response => response.json()).then(res => res.items)
       const comparisions = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=comparision:&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
-
+      const comparisionPics = comparisions.map(element => {
+        return
+        element.value,
+          
+      })
+      const compEl = querySelectorAll1('.price_compare_site_list')[0]
+      const firstComparision = comparisionPics.shift()
+      const firstSite = compEl.querySelector('.price_compare_site')
+      const generateForSite = async (siteEl, comparision, skuVar) => {
+        const priceEl = siteEl.querySelector('.price_value')
+        const nameEl = siteEl.querySelector('.compare_price_site_name_value')
+        const picEl = siteEl.querySelector('.price_compare_site_logo')
+        setTextAction(nameEl.id + '-tree', comparision)
+        setTextAction(priceEl.id + '-tree', skuVar[comparision].price)
+        await setAttAction(priceEl.id + '-tree', 'src', skuVar[comparision].anchor)
+      }
+      await generateForSite(firstSite, firstComparision, skuVariables[0])
+      let lastEl = firstSite.id + '-tree'
+      for (const comparison of comparisionPics) {
+        const newId = duplicateId(compEl.id).id
+        const actionObject = {
+          time: (new Date()).getTime(),
+          action: 'InsertAfter',
+          target_element: lastEl,
+          inserted_element: { originalId: firstSite.id + '-tree', id: newId },
+        };
+        await pushAction(actionObject)
+        const site = getElementById1(newId.replace('-tree', ''))
+        await generateForSite(site, comparison, skuVariables[0])
+        lastEl = newId
+      }
+      lastEl = compEl.id + '-tree'
+      for (let i = 1; i < skuVariables.length; i++) {
+        const newId = duplicateId(compEl.id).id
+        const actionObject = {
+          time: (new Date()).getTime(),
+          action: 'InsertAfter',
+          target_element: lastEl,
+          inserted_element: { originalId: compEl.id + '-tree', id: newId },
+        };
+        await pushAction(actionObject)
+        const compEl = getElementById1(newId.replace('-tree', ''))
+        const firstSite = compEl.querySelector('.price_compare_site')
+        await generateForSite(firstSite, firstComparision, skuVariables[i])
+        let lastEl2 = firstSite.id + '-tree'
+        for (const comparison of comparisionPics) {
+          const newId = duplicateId(compEl.id).id
+          const actionObject = {
+            time: (new Date()).getTime(),
+            action: 'InsertAfter',
+            target_element: lastEl2,
+            inserted_element: { originalId: firstSite.id + '-tree', id: newId },
+          };
+          await pushAction(actionObject)
+          const site = getElementById1(newId.replace('-tree', ''))
+          await generateForSite(site, comparison, skuVariables[i])
+          lastEl2 = newId
+        }
+        lastEl = newId
+      }
     }
     const generateAnchorApi = async () => {
       const absolutes = pathItem.hub_items.anchor.map(e => getAbsolutePath(pathItemPath, e))
