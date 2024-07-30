@@ -5879,10 +5879,7 @@
                 }
 
                 log1(JSON.stringify(exisitingValue))
-                await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                  method: 'POST',
-                  body: JSON.stringify(exisitingValue),
-                });
+                await postToDb(exisitingValue)
                 statusEl.textContent = '🟢'
 
               });
@@ -18773,7 +18770,12 @@ headers: {
           cloned.removeAttribute('hidden')
           cloned.querySelector('#price_comparison_site').textContent = element.value
 
-         
+          cloned.querySelector('#price_comparison_price_head').onblur = (e) => {
+            document.querySelectorAll('#sku-variable-price-all-old[warehouse]').forEach(e => {
+              e.textContent = el.target.textContent
+              e.onblur({ target: e })
+            })
+          }
           const original2 = document.querySelectorAll('#price_comparison_price_anchor[hidden]')
           original2.forEach(async original => {
             const cloned2 = original.cloneNode(true)
