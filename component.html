@@ -4583,7 +4583,7 @@
         .then(response => response.json()).then(res => res.items)
       const comparisions = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=comparision:&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
-      const comparisionPics = comparisions.map(element => element.value)
+      const comparisionPics = comparisions.filter(e=>e.runned).map(element => element.value)
       const compEl = querySelectorAll1('.price_compare_site_list')[0]
       const firstComparision = comparisionPics.shift()
       const firstSite = compEl.querySelector('.price_compare_site')
@@ -4592,8 +4592,8 @@
         const nameEl = siteEl.querySelector('.compare_price_site_name_value')
         const picEl = siteEl.querySelector('.price_compare_site_logo')
         setTextAction(nameEl.id + '-tree', comparision)
-        setTextAction(priceEl.id + '-tree', skuVar[comparision].price)
-        await setAttAction(priceEl.id + '-tree', 'src', skuVar[comparision].anchor)
+        setTextAction(priceEl.id + '-tree', skuVar[comparision]?.price)
+        await setAttAction(priceEl.id + '-tree', 'src', skuVar[comparision]?.anchor)
       }
       await generateForSite(firstSite, firstComparision, skuVariables[0])
       let lastEl = firstSite.id + '-tree'
