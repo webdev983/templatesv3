@@ -17400,7 +17400,15 @@ headers: {
             return
           }
           const cAnchor = cloned2.querySelector('#price_comparison_anchor')
-          const item1 = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
+          const condition = cloned2.closest('tr').getAttribute('condition')
+          const checkedWareHouse = querySelectorAll1('#warehouse-zd[checked]')[0]?.parentNode.id || cloned2.getAttribute('warehouse')
+          const getItem = {
+            id: 'sku:' + pathItemSku,
+            sk: 'warehouse_price_qty:' + condition + ';' + sk.replace('sku-variables;', '') + checkedWareHouse,
+
+
+          }
+          const item1 = await fetch(`${backend_url}?id=sku:${sku}&sk=${getItem.sk}&startsWith=true`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -18842,7 +18850,7 @@ headers: {
             const cAnchor = cloned2.querySelector('#price_comparison_anchor')
             const sk = cloned2.closest('tr').getAttribute('sk')
             const condition = cloned2.closest('tr').getAttribute('condition')
-            
+
             const checkedWareHouse = querySelectorAll1('#warehouse-zd[checked]')[0]?.parentNode.id || cloned2.getAttribute('warehouse')
             if (!sk) {
               return
