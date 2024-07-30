@@ -1534,10 +1534,12 @@
 
                 </td>
                 <td id="price_comparison_price_anchor_head" hidden>
-                  <span class="l-3" contenteditable id="price_comparison_price_head">🌐</span>
+                  <span class="l-3" contenteditable id="price_comparison_price_head"
+                    onblur="setCompPriceAll(event)">🌐</span>
 
                   <span class="l-3" id="price_comparison_site">amazon</span>
-                  <span class="l-3" contenteditable id="price_comparison_anchor_head">⚓️</span>
+                  <span class="l-3" contenteditable id="price_comparison_anchor_head"
+                    onblur="setCompAnchAll(event)">⚓️</span>
 
 
                 </td>
@@ -17704,6 +17706,24 @@ headers: {
       }
       await postToDb(pushItem)
     }
+    const setCompPriceAll = async (event) => {
+      const { target } = event
+      const site = target.closest('td').getAttribute('site')
+      document.querySelectorAll(`#price_comparison_price_anchor[key="${site}"]`).forEach(e => {
+        const pEl = e.querySelector('#price_comparison_price')
+        pEl.textContent = target.textContent
+        pEl.onblur({ target: pEl })
+      })
+    }
+    const setCompAnchorAll = async (event) => {
+      const { target } = event
+      const site = target.closest('td').getAttribute('site')
+      document.querySelectorAll(`#price_comparison_price_anchor[key="${site}"]`).forEach(e => {
+        const pEl = e.querySelector('#price_comparison_anchor')
+        pEl.textContent = target.textContent
+        pEl.onblur({ target: pEl })
+      })
+    }
     const setCompAnchor = async (event) => {
       const { target } = event
       const sk = target.closest('tr').getAttribute('sk')
@@ -18831,7 +18851,7 @@ headers: {
           original.parentNode.append(cloned)
           cloned.removeAttribute('hidden')
           cloned.querySelector('#price_comparison_site').textContent = element.value
-          
+
           cloned.querySelector('#price_comparison_price_head').onblur = (el) => {
             document.querySelectorAll(`#price_comparison_price_anchor[key="${element.value}"]`).forEach(e => {
               const pEl = e.querySelector('#price_comparison_price')
@@ -18850,7 +18870,7 @@ headers: {
             const cAnchor = cloned2.querySelector('#price_comparison_anchor')
             const sk = original.closest('tr').getAttribute('sk')
             const condition = cloned2.closest('tr').getAttribute('condition')
-            console.log('ff sk '+ sk)
+            console.log('ff sk ' + sk)
             const checkedWareHouse = querySelectorAll1('#warehouse-zd[checked]')[0]?.parentNode.id || cloned2.getAttribute('warehouse')
             if (!sk) {
               return
