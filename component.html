@@ -17672,7 +17672,7 @@ headers: {
           'Content-Type': 'application/json',
         },
       }).then(e => e.json()).then(res => res.items[0])
-      generateSkuV(item)
+      await generateSkuV(item)
       event.target.closest('details').removeAttribute('open')
     }
     const setCompPrice = async (event) => {
@@ -18483,7 +18483,7 @@ headers: {
           })
         }
         generateShippingM(defaultWareHouse)
-        generateSkuV(defaultWareHouse)
+        await generateSkuV(defaultWareHouse)
       }
 
 
@@ -18515,7 +18515,7 @@ headers: {
           console.log(option.parentNode.children.length)
           if (option.parentNode.children.length === 1) {
             cloned1.querySelector('input').setAttribute('checked', "")
-            generateSkuV(element)
+            await generateSkuV(element)
             generateShippingM(element)
           }
           cloned1.querySelector('#warehouse_value-zd').textContent = e.target.parentNode.parentNode.querySelector('#wareHouseInput').textContent
@@ -18667,12 +18667,12 @@ headers: {
             if (item.conditions) {
               if (!item.conditions.includes(element.sk)) {
                 item.conditions = [...item.conditions, element.sk]
-                generateSkuV(item)
+                await generateSkuV(item)
               }
             }
             else {
               item.conditions = [element.sk]
-              generateSkuV(item)
+              await generateSkuV(item)
             }
             await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
               method: 'POST',
