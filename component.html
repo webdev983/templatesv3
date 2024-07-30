@@ -4620,20 +4620,20 @@
           inserted_element: { originalId: lastEl, id: newId },
         };
         await pushAction(actionObject)
-        const compEl = getElementById1(newId.replace('-tree', ''))
-        const firstSite = compEl.querySelector('.price_compare_site')
+        const compEl2 = getElementById1(newId.replace('-tree', ''))
+        const firstSite = compEl2.querySelector('.price_compare_site')
         await generateForSite(firstSite, firstComparision, skuVariables[i])
         let lastEl2 = firstSite.id + '-tree'
         for (const comparison of comparisionPics) {
-          const newId = duplicateId(firstSite.id).id
+          const newId2 = duplicateId(firstSite.id).id
           const actionObject = {
             time: (new Date()).getTime(),
             action: 'InsertAfter',
             target_element: lastEl2,
-            inserted_element: { originalId: firstSite.id + '-tree', id: newId },
+            inserted_element: { originalId: firstSite.id + '-tree', id: newId2 },
           };
           await pushAction(actionObject)
-          const site = getElementById1(newId.replace('-tree', ''))
+          const site = getElementById1(newId2.replace('-tree', ''))
           await generateForSite(site, comparison, skuVariables[i])
           lastEl2 = newId
         }
