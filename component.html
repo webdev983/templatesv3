@@ -17380,6 +17380,7 @@ headers: {
         const original = document.querySelector('#price_comparison_price_anchor_head[hidden]')
         const cloned = original.cloneNode(true)
         cloned.removeAttribute('hidden')
+        cloned.setAttribute('site', item.value)
         original.parentNode.append(cloned)
         cloned.removeAttribute('hidden')
         cloned.querySelector('#price_comparison_site').textContent = item.value
@@ -17409,6 +17410,7 @@ headers: {
           }
 
           cPrice.onblur = async (e) => {
+            console.log('blured')
             const newPrice = cPrice.textContent
             if (!item1[item.value]) {
               items1[item.value] = { price: 0, anchor: 'http' }
@@ -17417,6 +17419,7 @@ headers: {
             postToDb(item1)
           }
           cAnchor.onblur = (e) => {
+            console.log('blured')
             const newAnchor = cAnchor.textContent
             if (!item1[item.value]) {
               item1[item.value] = { price: 0, anchor: 'http' }
@@ -18786,12 +18789,13 @@ headers: {
           cloned.removeAttribute('hidden')
           cloned.querySelector('#price_comparison_site').textContent = element.value
           //todo
+          /*
           cloned.querySelector('#price_comparison_price_head').onblur = (e) => {
             document.querySelectorAll('#sku-variable-price-all-old[warehouse]').forEach(e => {
               e.textContent = el.target.textContent
               e.onblur({ target: e })
             })
-          }
+          }*/
           const original2 = document.querySelectorAll('#price_comparison_price_anchor[hidden]')
           original2.forEach(async original => {
             const cloned2 = original.cloneNode(true)
@@ -18820,6 +18824,7 @@ headers: {
             }
 
             cPrice.onblur = async (e) => {
+              console.log('blured')
               const newPrice = cPrice.textContent
               if (!item[element.value]) {
                 item[element.value] = { price: 0, anchor: 'http' }
@@ -18828,6 +18833,7 @@ headers: {
               postToDb(item)
             }
             cAnchor.onblur = (e) => {
+              console.log('blured')
               const newAnchor = cAnchor.textContent
               if (!item[element.value]) {
                 item[element.value] = { price: 0, anchor: 'http' }
