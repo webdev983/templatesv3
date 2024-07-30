@@ -1534,10 +1534,10 @@
 
                 </td>
                 <td id="price_comparison_price_anchor_head" hidden>
-                  <span class="l-3" contenteditable  id="price_comparison_price_head">🌐</span>
+                  <span class="l-3" contenteditable id="price_comparison_price_head">🌐</span>
 
                   <span class="l-3" id="price_comparison_site">amazon</span>
-                  <span class="l-3" contenteditable  id="price_comparison_anchor_head">⚓️</span>
+                  <span class="l-3" contenteditable id="price_comparison_anchor_head">⚓️</span>
 
 
                 </td>
@@ -1566,8 +1566,10 @@
                     class="price-normal table-price-r" contenteditable>0</strong>
                 </td>
                 <td id="price_comparison_price_anchor" hidden>
-                  <div class="l-3 table-price-l price-normal" onblur="setCompPrice(event)" id="price_comparison_price" contenteditable>0</div>
-                  <div class="l-3 link-div-editable" onblur="setCompAnchor(event)" style="float: right;" id="price_comparison_anchor" contenteditable>
+                  <div class="l-3 table-price-l price-normal" onblur="setCompPrice(event)" id="price_comparison_price"
+                    contenteditable>0</div>
+                  <div class="l-3 link-div-editable" onblur="setCompAnchor(event)" style="float: right;"
+                    id="price_comparison_anchor" contenteditable>
                   </div>
                 </td>
               </tr>
@@ -17409,7 +17411,7 @@ headers: {
             cAnchor.textContent = item1[item.value].anchor
           }
 
-          
+
         })
 
         e.target.textContent = '🟢'
@@ -17665,7 +17667,7 @@ headers: {
       generateSkuV(item)
       event.target.closest('details').removeAttribute('open')
     }
-    const setCompPrice = async (event)=>{
+    const setCompPrice = async (event) => {
       const { target } = event
       const sk = target.closest('tr').getAttribute('sk')
       const condition = target.closest('tr').getAttribute('condition')
@@ -17674,7 +17676,7 @@ headers: {
       const getItem = {
         id: 'sku:' + pathItemSku,
         sk: 'warehouse_price_qty:' + condition + ';' + sk.replace('sku-variables;', '') + checkedWareHouse,
-        
+
 
       }
       const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${getItem.id}&sk=${getItem.sk}&startsWith=true`, {
@@ -17685,16 +17687,16 @@ headers: {
       }).then(e => e.json()).then(res => res.items[0])
       const key = target.closest('td').getAttribute('key')
 
-      const pushItem = { ...getItem, ...item}
-      if(pushItem[key]){
+      const pushItem = { ...getItem, ...item }
+      if (pushItem[key]) {
         pushItem[key].price = value
       }
-      else{
-        pushItem[key] = {price:value}
+      else {
+        pushItem[key] = { price: value }
       }
       await postToDb(pushItem)
     }
-    const setCompAnchor = async (event)=>{
+    const setCompAnchor = async (event) => {
       const { target } = event
       const sk = target.closest('tr').getAttribute('sk')
       const condition = target.closest('tr').getAttribute('condition')
@@ -17703,7 +17705,7 @@ headers: {
       const getItem = {
         id: 'sku:' + pathItemSku,
         sk: 'warehouse_price_qty:' + condition + ';' + sk.replace('sku-variables;', '') + checkedWareHouse,
-        
+
 
       }
       const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${getItem.id}&sk=${getItem.sk}&startsWith=true`, {
@@ -17715,11 +17717,11 @@ headers: {
       const key = target.closest('td').getAttribute('key')
 
       const pushItem = { ...getItem, ...item, }
-      if(pushItem[key]){
+      if (pushItem[key]) {
         pushItem[key].anchor = value
       }
-      else{
-        pushItem[key] = {anchor:value}
+      else {
+        pushItem[key] = { anchor: value }
       }
       await postToDb(pushItem)
     }
@@ -18839,23 +18841,32 @@ headers: {
 
             const cAnchor = cloned2.querySelector('#price_comparison_anchor')
             const sk = cloned2.closest('tr').getAttribute('sk')
+            const condition = cloned2.closest('tr').getAttribute('condition')
+            
+            const checkedWareHouse = querySelectorAll1('#warehouse-zd[checked]')[0]?.parentNode.id || cloned2.getAttribute('warehouse')
             if (!sk) {
               return
             }
-            const item = await fetch(`${backend_url}?id=sku:${sku}&sk=${sk}&startsWith=true`, {
+            const getItem = {
+              id: 'sku:' + pathItemSku,
+              sk: 'warehouse_price_qty:' + condition + ';' + sk.replace('sku-variables;', '') + checkedWareHouse,
+
+
+            }
+            const item = await fetch(`${backend_url}?id=sku:${sku}&sk=${getItem.sk}&startsWith=true`, {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
               },
             }).then(e => e.json()).then(({ items }) => items[0])
 
-            console.log('ffitem '+element.value+ ' '+JSON.stringify(item))
+            console.log('ffitem ' + element.value + ' ' + JSON.stringify(item))
             if (item[element.value]) {
               cPrice.textContent = item[element.value].price
               cAnchor.textContent = item[element.value].anchor
             }
 
-            
+
           })
           !runned && postToDb({ ...element, runned: true })
           c1.querySelector('#enable-comparision').textContent = '🟢'
