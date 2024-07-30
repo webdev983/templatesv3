@@ -4578,6 +4578,13 @@
       });
 
     }
+    const generateComparison = async (event) => {
+      const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=sku-variables;&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
+      const comparisions = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=comparision:&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
+
+    }
     const generateAnchorApi = async () => {
       const absolutes = pathItem.hub_items.anchor.map(e => getAbsolutePath(pathItemPath, e))
       const { pLink } = getLinks()
@@ -9660,7 +9667,7 @@ checkbox1.setAttribute('hidden', "");
         await generateTableApi(textContents)
       },
       script_cleaner: () => { },
-      script_generate_comparision:generateComparison,
+      script_generate_comparision: generateComparison,
       script_generate_product_json: () => { },
       script_generate_article_anchor: generateAnchorApi,
       script_chatgpt_: () => { },
@@ -17390,13 +17397,7 @@ headers: {
       original.parentNode.insertBefore(cloned, original)
 
     }
-    const generateComparison = async (event) => {
-      const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=sku-variables;&startsWith=true`)
-        .then(response => response.json()).then(res => res.items)
-      const comparisions = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=comparision:&startsWith=true`)
-        .then(response => response.json()).then(res => res.items)
 
-    }
     const addComparison = async (event) => {
 
       const filled = getElementById1('sku_filled')
