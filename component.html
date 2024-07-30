@@ -1534,10 +1534,10 @@
 
                 </td>
                 <td id="price_comparison_price_anchor_head" hidden>
-                  <span class="l-3" contenteditable id="price_comparison_price_head">🌐</span>
+                  <span class="l-3" contenteditable onblur="setCompPrice(event)" id="price_comparison_price_head">🌐</span>
 
                   <span class="l-3" id="price_comparison_site">amazon</span>
-                  <span class="l-3" contenteditable id="price_comparison_anchor_head">⚓️</span>
+                  <span class="l-3" contenteditable onblur="setCompAnchor(event)" id="price_comparison_anchor_head">⚓️</span>
 
 
                 </td>
@@ -17409,24 +17409,7 @@ headers: {
             cAnchor.textContent = item1[item.value].anchor
           }
 
-          cPrice.onblur = async (e) => {
-            console.log('blured')
-            const newPrice = cPrice.textContent
-            if (!item1[item.value]) {
-              items1[item.value] = { price: 0, anchor: 'http' }
-            }
-            item1[item.value].price = newPrice
-            postToDb(item1)
-          }
-          cAnchor.onblur = (e) => {
-            console.log('blured')
-            const newAnchor = cAnchor.textContent
-            if (!item1[item.value]) {
-              item1[item.value] = { price: 0, anchor: 'http' }
-            }
-            item1[item.value].anchor = newAnchor
-            postToDb(item1)
-          }
+          
         })
 
         e.target.textContent = '🟢'
@@ -17682,6 +17665,64 @@ headers: {
       generateSkuV(item)
       event.target.closest('details').removeAttribute('open')
     }
+    const setCompPrice = async (event)=>{
+      const { target } = event
+      const sk = target.closest('tr').getAttribute('sk')
+      const condition = target.closest('tr').getAttribute('condition')
+      const value = target.textContent
+      const checkedWareHouse = querySelectorAll1('#warehouse-zd[checked]')[0]?.parentNode.id || target.getAttribute('warehouse')
+      const getItem = {
+        id: 'sku:' + pathItemSku,
+        sk: 'warehouse_price_qty:' + condition + ';' + sk.replace('sku-variables;', '') + checkedWareHouse,
+        
+
+      }
+      const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${getItem.id}&sk=${getItem.sk}&startsWith=true`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(e => e.json()).then(res => res.items[0])
+      const key = target.closest('td').getAttribute('key')
+
+      const pushItem = { ...getItem, ...item}
+      if(pushItem[key]){
+        pushItem[key].price = value
+      }
+      else{
+        pushItem[key] = {price:value}
+      }
+      await postToDb(pushItem)
+    }
+    const setCompAnchor = async (event)=>{
+      const { target } = event
+      const sk = target.closest('tr').getAttribute('sk')
+      const condition = target.closest('tr').getAttribute('condition')
+      const value = target.textContent
+      const checkedWareHouse = querySelectorAll1('#warehouse-zd[checked]')[0]?.parentNode.id || target.getAttribute('warehouse')
+      const getItem = {
+        id: 'sku:' + pathItemSku,
+        sk: 'warehouse_price_qty:' + condition + ';' + sk.replace('sku-variables;', '') + checkedWareHouse,
+        
+
+      }
+      const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${getItem.id}&sk=${getItem.sk}&startsWith=true`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(e => e.json()).then(res => res.items[0])
+      const key = target.closest('td').getAttribute('key')
+
+      const pushItem = { ...getItem, ...item, }
+      if(pushItem[key]){
+        pushItem[key].anchor = value
+      }
+      else{
+        pushItem[key] = {anchor:value}
+      }
+      await postToDb(pushItem)
+    }
     const setQty = async (event) => {
       const { target } = event
       const sk = target.closest('tr').getAttribute('sk')
@@ -17701,15 +17742,7 @@ headers: {
         },
       }).then(e => e.json()).then(res => res.items[0])
       const pushItem = { ...getItem, ...item, qty: parseFloat(value) }
-      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(
-          pushItem
-        ),
-      });
+      await postToDb(pushItem)
     }
     const setAllQty = async (event) => {
       const { target } = event
@@ -18823,24 +18856,7 @@ headers: {
               cAnchor.textContent = item[element.value].anchor
             }
 
-            cPrice.onblur = async (e) => {
-              console.log('blured')
-              const newPrice = cPrice.textContent
-              if (!item[element.value]) {
-                item[element.value] = { price: 0, anchor: 'http' }
-              }
-              item[element.value].price = newPrice
-              postToDb(item)
-            }
-            cAnchor.onblur = (e) => {
-              console.log('blured')
-              const newAnchor = cAnchor.textContent
-              if (!item[element.value]) {
-                item[element.value] = { price: 0, anchor: 'http' }
-              }
-              item[element.value].anchor = newAnchor
-              postToDb(item)
-            }
+            
           })
           !runned && postToDb({ ...element, runned: true })
           c1.querySelector('#enable-comparision').textContent = '🟢'
