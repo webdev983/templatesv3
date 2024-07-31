@@ -4611,19 +4611,16 @@
       }
       setAttAction(compEl.id + '-tree', 'data-sku-variable',pathItemSku+':'+ skuVariables[0].sk)
       await generateForSite(firstSite, firstComparision, skuVariables[0])
-      let lastEl = firstSite.id + '-tree'
+      let lastEl = firstSite
       for (const comparison of comparisionPics) {
         const newId = duplicateId(firstSite.id).id
-        const actionObject = {
-          time: (new Date()).getTime(),
-          action: 'InsertAfter',
-          target_element: lastEl,
-          inserted_element: { originalId: firstSite.id + '-tree', id: newId },
-        };
-        await pushAction(actionObject)
+        
+        const cloned = firstSite.cloneNode(true)
+        cloned.id = newId
+        insertAfter(cloned,lastEl)
         const site = getElementById1(newId.replace('-tree', ''))
         await generateForSite(site, comparison, skuVariables[0])
-        lastEl = newId
+        lastEl = cloned
       }
       lastEl = compEl.id + '-tree'
       /*
