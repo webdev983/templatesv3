@@ -4616,10 +4616,9 @@
         const newId = duplicateId(firstSite.id).id
         
         const cloned = firstSite.cloneNode(true)
-        cloned.id = newId
+        cloned.id = newId.replace('-tree', '')
         insertAfter(cloned,lastEl)
-        const site = getElementById1(newId.replace('-tree', ''))
-        await generateForSite(site, comparison, skuVariables[0])
+        await generateForSite(cloned, comparison, skuVariables[0])
         lastEl = cloned
       }
       lastEl = compEl.id + '-tree'
