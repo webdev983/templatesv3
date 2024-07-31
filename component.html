@@ -17519,7 +17519,7 @@ headers: {
           const checkedWareHouse = querySelectorAll1('#warehouse-zd[checked]')[0]?.parentNode.id || cloned2.getAttribute('warehouse')
           const getItem = {
             id: 'sku:' + pathItemSku,
-            sk
+            sk:`condition:${condition};${sk}`
 
 
           }
@@ -17529,9 +17529,9 @@ headers: {
               'Content-Type': 'application/json',
             },
           }).then(e => e.json()).then(({ items }) => items[0])
-          if (item1[item.value]) {
-            cPrice.textContent = item1[item.value].price
-            cAnchor.textContent = item1[item.value].anchor
+          if (item1[item.sk]) {
+            cPrice.textContent = item1[item.sk].price
+            cAnchor.textContent = item1[item.sk].anchor
           }
 
 
@@ -18991,7 +18991,7 @@ headers: {
             }
             const getItem = {
               id: 'sku:' + pathItemSku,
-              sk
+              sk:`condition:${condition};${sk}`
 
 
             }
@@ -19003,10 +19003,10 @@ headers: {
             }).then(e => e.json()).then(({ items }) => items[0])
 
             console.log('ffitem ' + element.value + ' ' + JSON.stringify(item))
-            if (item[element.value]) {
-              cPrice.textContent = item[element.value].price
-              cAnchor.textContent = item[element.value].anchor
-              item[element.value].anchor && cAnchor.classList.add('filled')
+            if (item[element.sk]) {
+              cPrice.textContent = item[element.sk].price
+              cAnchor.textContent = item[element.sk].anchor
+              item[element.sk].anchor && cAnchor.classList.add('filled')
             }
 
 
