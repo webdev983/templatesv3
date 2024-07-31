@@ -4585,7 +4585,7 @@
 
     }
     const generateComparison = async (event) => {
-      const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=sku-variables;&startsWith=true`)
+      const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=comparison:&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
       const comparisions = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=comparision:&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
@@ -4626,7 +4626,7 @@
         lastEl = newId
       }
       lastEl = compEl.id + '-tree'
-      
+      /*
       for (let i = 1; i < skuVariables.length; i++) {
         const newId = duplicateId(lastEl.replace('-tree', '')).id
         const actionObject = {
@@ -4657,7 +4657,7 @@
           lastEl2 = newId
         }
         lastEl = newId
-      }
+      }*/
     }
     const generateAnchorApi = async () => {
       const absolutes = pathItem.hub_items.anchor.map(e => getAbsolutePath(pathItemPath, e))
