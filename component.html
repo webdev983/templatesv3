@@ -4599,10 +4599,16 @@
         const nameEl = siteEl.querySelector('.compare_price_site_name_value')
         const picEl = siteEl.querySelector('.price_compare_site_logo')
         const anchor = siteEl.querySelector('.price_compare_site_anchor')
+        nameEl.textContent = comparision.value
+        priceEl.textContent = skuVar[comparision.value]?.price
+        anchor.setAttribute('href',skuVar[comparision.value]?.anchor)
+        picEl.setAttribute('src',comparision.pic)
+        /*
         setTextAction(nameEl.id + '-tree', comparision.value)
         setTextAction(priceEl.id + '-tree', skuVar[comparision.value]?.price)
         setAttAction(anchor.id + '-tree', 'href', skuVar[comparision.value]?.anchor)
         setAttAction(picEl.id + '-tree', 'src', comparision.pic)
+        */
       }
       setAttAction(compEl.id + '-tree', 'data-sku-variable',pathItemSku+':'+ skuVariables[0].sk)
       await generateForSite(firstSite, firstComparision, skuVariables[0])
@@ -4621,6 +4627,7 @@
         lastEl = newId
       }
       lastEl = compEl.id + '-tree'
+      
       for (let i = 1; i < skuVariables.length; i++) {
         const newId = duplicateId(lastEl.replace('-tree', '')).id
         const actionObject = {
