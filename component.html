@@ -3340,7 +3340,7 @@
         }
       });
     }
-    var saveSkuReviews = (event) => {
+    var saveSkuReviews =async (event) => {
       const json = JSON.parse(document.getElementById('textarea-reviews').value)
       for (const element of json) {
         const { dbtimestamp, reviewer, rating, title, date, review } = element
@@ -3377,7 +3377,7 @@
       return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
     }
 
-    var saveFakeReviews = (event) => {
+    var saveFakeReviews = async(event) => {
       const json = JSON.parse(document.getElementById('fake-reviews').value)
       for (const element of json) {
         const { dbtimestamp, reviewer, rating, title, date, review } = element
@@ -3393,7 +3393,7 @@
         await postToDb(pushEl)
       }
     }
-    var setFakeReviewsDates = (event) => {
+    var setFakeReviewsDates = async(event) => {
       const reviewsEL = document.getElementById('real-reviews')
       const json = JSON.parse(reviewsEL.value)
       const days = parseInt(document.getElementById('input-days').value)
@@ -3404,7 +3404,7 @@
       })
       reviewsEL.value = JSON.stringify(newJson)
     }
-    var saveReviews = (event) => {
+    var saveReviews =async (event) => {
       const json = JSON.parse(document.getElementById('real-reviews').value)
       for (const element of json) {
         const { dbtimestamp, reviewer, rating, title, date, review } = element
