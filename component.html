@@ -18340,25 +18340,25 @@ headers: {
 
     }
     const setReviews = async() => {
-      const reviews = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=review:&startsWith=true`)
+      const reviews = (await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=review:&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
-        .map(element=>{
+        ).map(element=>{
           const { sk, reviewer, rating, title, date, review } = element
           return {
             dbtimestamp:sk.replace('review:',''),reviewer, rating, title, date, review
           }
         })
-      const fakeReviews = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=fake-review&startsWith=true`)
+      const fakeReviews = (await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=fake-review&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
-        .map(element=>{
+        ).map(element=>{
           const { sk, reviewer, rating, title, date, review } = element
           return {
             dbtimestamp:sk.replace('fake-review:',''),reviewer, rating, title, date, review
           }
         })
-      const skuReviews = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=review:&startsWith=true`)
+      const skuReviews = (await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=review:&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
-        .map(element=>{
+        ).map(element=>{
           const { sk, reviewer, rating, title, date, review } = element
           return {
             dbtimestamp:sk.replace('review:',''),reviewer, rating, title, date, review
