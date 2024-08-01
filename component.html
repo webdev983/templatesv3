@@ -4599,7 +4599,25 @@
         const picEl = siteEl.querySelector('.price_compare_site_logo')
         const anchor = siteEl.querySelector('.price_compare_site_anchor')
         nameEl.textContent = comparision.value
+        const anchors = skuVariables.map(skuVar => {
+          const el = comparisionPics.map(comparision => {
+
+            const anchor = skuVar[comparision.sk]?.anchor
+
+            return { sk: skuVar.sk, anchor }
+          })
+        })
+        const prices= skuVariables.map(skuVar => {
+          const el = comparisionPics.map(comparision => {
+
+            const price = skuVar[comparision.sk]?.price
+
+            return { sk: skuVar.sk, price }
+          })
+        })
         priceEl.textContent = skuVar[comparision.sk]?.price
+        priceEl.setAttribute('data-price-variables',prices)
+        anchor.setAttribute('data-anchor-variables',anchors)
         anchor.setAttribute('href', skuVar[comparision.sk]?.anchor)
         picEl.setAttribute('src', comparision.pic)
         /*
@@ -4609,7 +4627,7 @@
         setAttAction(picEl.id + '-tree', 'src', comparision.pic)
         */
       }
-      setAttAction(compEl.id + '-tree', 'data-sku-variable', pathItemSku + ':' + skuVariables[0].sk)
+      //setAttAction(compEl.id + '-tree', 'data-sku-variable', pathItemSku + ':' + skuVariables[0].sk)
       //await generateForSite(firstSite, firstComparision, skuVariables[0])
       let lastEl = firstSite
       for (const comparison of comparisionPics) {
@@ -4628,11 +4646,11 @@
           const price = skuVar[comparision.sk]?.price
           const anchor = skuVar[comparision.sk]?.anchor
           const pic = comparision.pic
-          return {name,price,anchor,pic}
+          return { name, price, anchor, pic }
         })
-        return {sk:skuVar.sk,values:el}
+        return { sk: skuVar.sk, values: el }
       })
-      compEl.setAttribute('data-comparisions',JSON.stringify(data_sku_items))
+      compEl.setAttribute('data-comparisions', JSON.stringify(data_sku_items))
       /*
       for (let i = 1; i < skuVariables.length; i++) {
         const newId = duplicateId(lastEl.replace('-tree', '')).id
