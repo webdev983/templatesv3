@@ -3394,7 +3394,7 @@
       }
     }
     var setFakeReviewsDates = async(event) => {
-      const reviewsEL = document.getElementById('real-reviews')
+      const reviewsEL = document.getElementById('fake-reviews')
       const json = JSON.parse(reviewsEL.value)
       const days = parseInt(document.getElementById('input-days').value)
       const newJson = json.map(element => {
@@ -3402,7 +3402,7 @@
         element.date = newD
         return element
       })
-      reviewsEL.value = JSON.stringify(newJson)
+      reviewsEL.value = JSON.stringify(newJson,null,4)
     }
     var saveReviews =async (event) => {
       const json = JSON.parse(document.getElementById('real-reviews').value)
