@@ -1489,19 +1489,19 @@
                 <td>
                   <textarea id="sku-reviews" class="textarea-reviews"></textarea>
                   <br>
-                  <button class="b-4">💾 Save</button>
+                  <button class="b-4" onclick="saveSkuReviews(event)">💾 Save</button>
 
                 </td>
                 <td>
                   <textarea id="fake-reviews" class="textarea-reviews"></textarea>
-                  <button class="b-4">💾 Save</button>
-                  <button class="b-4">📅 add dates</button>
+                  <button class="b-4" onclick="saveFakeReviews(event)">💾 Save</button>
+                  <button class="b-4" onclick="setFakeReviewsDates(event)">📅 add dates</button>
                   <input type="number" class="input-days" value="180" min="1" max="1800">
 
                 </td>
                 <td>
                   <textarea id="real-reviews" class="textarea-reviews"></textarea>
-                  <button class="b-4">💾 Save</button>
+                  <button class="b-4" onclick="saveReviews(event)">💾 Save</button>
 
                 </td>
 
@@ -3340,7 +3340,86 @@
         }
       });
     }
+    var saveSkuReviews = (event) => {
+      const json = JSON.parse(document.getElementById('textarea-reviews').value)
+      for (const element of json) {
+        const { dbtimestamp, reviewer, rating, title, date, review } = element
+        const pushEl = {
+          id: `sku:${pathItemSku}`,
+          sk: `review:${dbtimestamp}`,
+          reviewer,
+          rating,
+          title,
+          date,
+          review
+        }
+        await postToDb(pushEl)
+      }
+    }
+    function getRandomDateInFuture(daysAhead) {
+      // Get today's date
+      const today = new Date();
 
+      // Calculate a random number of days from 0 to daysAhead
+      const randomDays = Math.floor(Math.random() * (daysAhead + 1));
+
+      // Create a new date object that is randomDays ahead of today
+      const futureDate = new Date(today.getTime() + randomDays * 24 * 60 * 60 * 1000);
+
+      // Format the date in YYYY-MM-DDTHH:MM:SS
+      const year = futureDate.getFullYear();
+      const month = String(futureDate.getMonth() + 1).padStart(2, '0');
+      const day = String(futureDate.getDate()).padStart(2, '0');
+      const hours = String(futureDate.getHours()).padStart(2, '0');
+      const minutes = String(futureDate.getMinutes()).padStart(2, '0');
+      const seconds = String(futureDate.getSeconds()).padStart(2, '0');
+
+      return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+    }
+
+    var saveFakeReviews = (event) => {
+      const json = JSON.parse(document.getElementById('fake-reviews').value)
+      for (const element of json) {
+        const { dbtimestamp, reviewer, rating, title, date, review } = element
+        const pushEl = {
+          id: headContentItem.id,
+          sk: `fake-review:${dbtimestamp}`,
+          reviewer,
+          rating,
+          title,
+          date,
+          review
+        }
+        await postToDb(pushEl)
+      }
+    }
+    var setFakeReviewsDates = (event) => {
+      const reviewsEL = document.getElementById('real-reviews')
+      const json = JSON.parse(reviewsEL.value)
+      const days = parseInt(document.getElementById('input-days').value)
+      const newJson = json.map(element => {
+        const newD = getRandomDateInFuture(days)
+        element.date = newD
+        return element
+      })
+      reviewsEL.value = JSON.stringify(newJson)
+    }
+    var saveReviews = (event) => {
+      const json = JSON.parse(document.getElementById('real-reviews').value)
+      for (const element of json) {
+        const { dbtimestamp, reviewer, rating, title, date, review } = element
+        const pushEl = {
+          id: headContentItem.id,
+          sk: `review:${dbtimestamp}`,
+          reviewer,
+          rating,
+          title,
+          date,
+          review
+        }
+        await postToDb(pushEl)
+      }
+    }
     var handleSecondaryChange = async (e, item) => {
       const checked = e.target.checked
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
@@ -4600,26 +4679,26 @@
         const anchor = siteEl.querySelector('.price_compare_site_anchor')
         nameEl.textContent = comparision.value
         const anchors = skuVariables.map(skuVar => {
-          
 
-            const anchor = skuVar[comparision.sk]?.anchor
 
-            return { sk: skuVar.sk, anchor }
-          
-          
+          const anchor = skuVar[comparision.sk]?.anchor
+
+          return { sk: skuVar.sk, anchor }
+
+
         })
-        const prices= skuVariables.map(skuVar => {
-          
+        const prices = skuVariables.map(skuVar => {
 
-            const price = skuVar[comparision.sk]?.price
 
-            return { sk: skuVar.sk,price }
-          
-         
+          const price = skuVar[comparision.sk]?.price
+
+          return { sk: skuVar.sk, price }
+
+
         })
         priceEl.textContent = skuVar[comparision.sk]?.price
-        priceEl.setAttribute('data-price-variables',JSON.stringify(prices))
-        anchor.setAttribute('data-anchor-variables',JSON.stringify(anchors))
+        priceEl.setAttribute('data-price-variables', JSON.stringify(prices))
+        anchor.setAttribute('data-anchor-variables', JSON.stringify(anchors))
         anchor.setAttribute('href', skuVar[comparision.sk]?.anchor)
         picEl.setAttribute('src', comparision.pic)
         /*
@@ -4632,7 +4711,7 @@
       //setAttAction(compEl.id + '-tree', 'data-sku-variable', pathItemSku + ':' + skuVariables[0].sk)
       await generateForSite(firstSite, firstComparision, skuVariables[0])
       let lastEl = firstSite
-      
+
       for (const comparison of comparisionPics) {
         const newId = duplicateId(firstSite.id).id
 
@@ -18260,7 +18339,38 @@ headers: {
       }
 
     }
-
+    const setReviews = () => {
+      const reviews = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=review:&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
+        .map(element=>{
+          const { sk, reviewer, rating, title, date, review } = element
+          return {
+            dbtimestamp:sk.replace('review:',''),reviewer, rating, title, date, review
+          }
+        })
+      const fakeReviews = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=fake-review&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
+        .map(element=>{
+          const { sk, reviewer, rating, title, date, review } = element
+          return {
+            dbtimestamp:sk.replace('fake-review:',''),reviewer, rating, title, date, review
+          }
+        })
+      const skuReviews = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=review:&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
+        .map(element=>{
+          const { sk, reviewer, rating, title, date, review } = element
+          return {
+            dbtimestamp:sk.replace('review:',''),reviewer, rating, title, date, review
+          }
+        })
+      const reviewsEL = document.getElementById('real-reviews')
+      const fakeREl = document.getElementById('fake-reviews')
+      const skuREl = document.getElementById('textarea-reviews')
+      reviewsEL.value = JSON.stringify(reviews)
+      fakeREl.value = JSON.stringify(fakeReviews)
+      skuREl.value = JSON.stringify(skuReviews)
+    }
     const showSku2 = async (sku) => {
       pathItemSku = sku
       log1('showing sku original ' + sku)
@@ -18342,7 +18452,7 @@ headers: {
       const h1_input = document.querySelector('#h1-input')
       const h1_checkboxes = document.querySelector('#h1-checkboxes')
       let headParamsId = headContentItem.id
-
+      await setReviews()
       let headParams2 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=headingParams&startsWith=true`)
         .then(response => response.json()).then(res => res.items[0] || { id: `sku:${sku}`, sk: 'headingParams', order: [] })
       let headParams1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${headParamsId}&sk=headingParams&startsWith=true`)
