@@ -4694,6 +4694,46 @@
       }
 
     }
+    const pushReviews = async () => {
+      const reviews = (await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${headContentItem.id}&sk=review:&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
+      ).map(element => {
+        const { sk, reviewer, rating, title, date, review } = element
+        return {
+          dbtimestamp: sk.replace('review:', ''), reviewer, rating, title, date, review
+        }
+      })
+      const fakeReviews = (await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${headContentItem.id}&sk=fake-review&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
+      ).map(element => {
+        const { sk, reviewer, rating, title, date, review } = element
+        return {
+          dbtimestamp: sk.replace('fake-review:', ''), reviewer, rating, title, date, review
+        }
+      })
+      const totalReviews = [...reviews, ...fakeReviews]
+      totalReviews.sort((a, b) => new Date(b.dbstimestamp) - new Date(a.dbstimestamp));
+      const original = querySelectorAll1('.product_review')[0]
+      for(let i=0;i<totalReviews.length;i++){
+        const {dbtimestamp, reviewer, rating, title, date, review} = totalReviews[i]
+        let node = original
+        if(i!=0){
+          node = original.cloneNode(true)
+          insertAfter(node,original)
+        }
+        node.querySelector('.review_author_name').textContent = reviewer
+        node.querySelector('.product_review_time').textContent = date
+        node.querySelector('.rating_star').setAttribute('data-star',rating)
+        node.querySelector('.product_review_rating').textContent = rating
+        node.querySelector('.product_review_heading').textContent = title
+        node.querySelector('.review_text').textContent = review
+        if(i>5){
+          node.setAttribute('hidden','')
+        }
+
+      }
+
+    }
     const generateBreadCrumbApi = async () => {
 
       const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Page|BreadCrumb-Content'
@@ -9926,6 +9966,7 @@ checkbox1.setAttribute('hidden', "");
       script_head_transfer: () => generateSchema(true),
       scrip_eval: runScripts,
       script_breadcrumb_generation: generateBreadCrumbApi,
+      push_reviews: pushReviews,
       script_transfer: generateSchema,
       script_product_spec_table: async () => {
 
