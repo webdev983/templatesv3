@@ -3340,10 +3340,26 @@
         }
       });
     }
+    function getCurrentDateTime() {
+      // Create a new Date object representing the current date and time
+      const now = new Date();
+
+      // Extract the year, month, day, hours, minutes, and seconds
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed, so add 1
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+
+      // Format the date and time as YYYY-MM-DDTHH:MM:SS
+      return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+    }
     var saveSkuReviews = async (event) => {
       const json = JSON.parse(document.getElementById('sku-reviews').value)
       for (const element of json) {
-        const { dbtimestamp, reviewer, rating, title, date, review } = element
+        let { dbtimestamp, reviewer, rating, title, date, review } = element
+        dbtimestamp = dbtimestamp || getCurrentDateTime()
         const pushEl = {
           id: `sku:${pathItemSku}`,
           sk: `review:${dbtimestamp}`,
@@ -3381,7 +3397,8 @@
     var saveFakeReviews = async (event) => {
       const json = JSON.parse(document.getElementById('fake-reviews').value)
       for (const element of json) {
-        const { dbtimestamp, reviewer, rating, title, date, review } = element
+        let { dbtimestamp, reviewer, rating, title, date, review } = element
+        dbtimestamp = dbtimestamp || getCurrentDateTime()
         const pushEl = {
           id: headContentItem.id,
           sk: `fake-review:${dbtimestamp}`,
@@ -3408,7 +3425,8 @@
     var saveReviews = async (event) => {
       const json = JSON.parse(document.getElementById('real-reviews').value)
       for (const element of json) {
-        const { dbtimestamp, reviewer, rating, title, date, review } = element
+        let { dbtimestamp, reviewer, rating, title, date, review } = element
+        dbtimestamp = dbtimestamp || getCurrentDateTime()
         const pushEl = {
           id: headContentItem.id,
           sk: `review:${dbtimestamp}`,
