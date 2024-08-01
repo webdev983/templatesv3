@@ -3369,6 +3369,18 @@
     }
     var saveSkuReviews = async (event) => {
       const json = JSON.parse(document.getElementById('sku-reviews').value)
+      const p = (await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=review:&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
+      ).map(element => 
+        fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${element.id}:${element.sk}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            // Add any additional headers if needed
+          },
+        });
+      )
+      await Promise.all(p)
       for (const element of json) {
         let { dbtimestamp, reviewer, rating, title, date, review } = element
         dbtimestamp = dbtimestamp || getCurrentDateTime()
@@ -3410,6 +3422,18 @@
 
     var saveFakeReviews = async (event) => {
       const json = JSON.parse(document.getElementById('fake-reviews').value)
+      const p = (await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${headContentItem.id}&sk=fake-review:&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
+      ).map(element => 
+        fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${element.id}:${element.sk}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            // Add any additional headers if needed
+          },
+        });
+      )
+      await Promise.all(p)
       for (const element of json) {
         let { dbtimestamp, reviewer, rating, title, date, review } = element
         dbtimestamp = dbtimestamp || getCurrentDateTime()
@@ -3440,6 +3464,18 @@
     }
     var saveReviews = async (event) => {
       const json = JSON.parse(document.getElementById('real-reviews').value)
+      const p = (await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${headContentItem.id}&sk=review:&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
+      ).map(element => 
+        fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${element.id}:${element.sk}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            // Add any additional headers if needed
+          },
+        });
+      )
+      await Promise.all(p)
       for (const element of json) {
         let { dbtimestamp, reviewer, rating, title, date, review } = element
         dbtimestamp = dbtimestamp || getCurrentDateTime()
