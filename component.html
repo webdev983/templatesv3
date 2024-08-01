@@ -3356,26 +3356,27 @@
         await postToDb(pushEl)
       }
     }
-    function getRandomDateInFuture(daysAhead) {
-      // Get today's date
-      const today = new Date();
+    function getRandomDateInPast(daysAgo) {
+    // Get today's date
+    const today = new Date();
 
-      // Calculate a random number of days from 0 to daysAhead
-      const randomDays = Math.floor(Math.random() * (daysAhead + 1));
+    // Calculate a random number of days from 0 to daysAgo
+    const randomDays = Math.floor(Math.random() * (daysAgo + 1));
 
-      // Create a new date object that is randomDays ahead of today
-      const futureDate = new Date(today.getTime() + randomDays * 24 * 60 * 60 * 1000);
+    // Create a new date object that is randomDays behind today
+    const pastDate = new Date(today.getTime() - randomDays * 24 * 60 * 60 * 1000);
 
-      // Format the date in YYYY-MM-DDTHH:MM:SS
-      const year = futureDate.getFullYear();
-      const month = String(futureDate.getMonth() + 1).padStart(2, '0');
-      const day = String(futureDate.getDate()).padStart(2, '0');
-      const hours = String(futureDate.getHours()).padStart(2, '0');
-      const minutes = String(futureDate.getMinutes()).padStart(2, '0');
-      const seconds = String(futureDate.getSeconds()).padStart(2, '0');
+    // Format the date in YYYY-MM-DDTHH:MM:SS
+    const year = pastDate.getFullYear();
+    const month = String(pastDate.getMonth() + 1).padStart(2, '0');
+    const day = String(pastDate.getDate()).padStart(2, '0');
+    const hours = String(pastDate.getHours()).padStart(2, '0');
+    const minutes = String(pastDate.getMinutes()).padStart(2, '0');
+    const seconds = String(pastDate.getSeconds()).padStart(2, '0');
 
-      return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-    }
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+}
+
 
     var saveFakeReviews = async(event) => {
       const json = JSON.parse(document.getElementById('fake-reviews').value)
@@ -3398,7 +3399,7 @@
       const json = JSON.parse(reviewsEL.value)
       const days = parseInt(document.getElementById('input-days').value)
       const newJson = json.map(element => {
-        const newD = getRandomDateInFuture(days)
+        const newD = getRandomDateInPast(days)
         element.date = newD
         return element
       })
