@@ -1498,7 +1498,7 @@
                   <button class="b-4">📅 add dates</button>
                   <input type="number" class="input-days" value="180" min="1" max="1800">
 
-                </td> 
+                </td>
                 <td>
                   <textarea id="real-reviews" class="textarea-reviews"></textarea>
                   <button class="b-4">💾 Save</button>
@@ -4589,7 +4589,7 @@
         .then(response => response.json()).then(res => res.items)
       const comparisions = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=comparision:&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
-      const comparisionPics = comparisions.filter(e => e.runned).map(element =>{return{value:element.value,sk:element.sk,pic:'https://s3.amazonaws.com/checkout-admin-panel/'+element.path}})
+      const comparisionPics = comparisions.filter(e => e.runned).map(element => { return { value: element.value, sk: element.sk, pic: 'https://s3.amazonaws.com/checkout-admin-panel/' + element.path } })
       const compEl = querySelectorAll1('.price_compare_site_list')[0]
       const firstComparision = comparisionPics.shift()
       const firstSite = compEl.querySelector('.price_compare_site')
@@ -4600,8 +4600,8 @@
         const anchor = siteEl.querySelector('.price_compare_site_anchor')
         nameEl.textContent = comparision.value
         priceEl.textContent = skuVar[comparision.sk]?.price
-        anchor.setAttribute('href',skuVar[comparision.sk]?.anchor)
-        picEl.setAttribute('src',comparision.pic)
+        anchor.setAttribute('href', skuVar[comparision.sk]?.anchor)
+        picEl.setAttribute('src', comparision.pic)
         /*
         setTextAction(nameEl.id + '-tree', comparision.value)
         setTextAction(priceEl.id + '-tree', skuVar[comparision.value]?.price)
@@ -4609,19 +4609,29 @@
         setAttAction(picEl.id + '-tree', 'src', comparision.pic)
         */
       }
-      setAttAction(compEl.id + '-tree', 'data-sku-variable',pathItemSku+':'+ skuVariables[0].sk)
-      await generateForSite(firstSite, firstComparision, skuVariables[0])
+      setAttAction(compEl.id + '-tree', 'data-sku-variable', pathItemSku + ':' + skuVariables[0].sk)
+      //await generateForSite(firstSite, firstComparision, skuVariables[0])
       let lastEl = firstSite
       for (const comparison of comparisionPics) {
         const newId = duplicateId(firstSite.id).id
-        
+
         const cloned = firstSite.cloneNode(true)
         cloned.id = newId.replace('-tree', '')
-        insertAfter(cloned,lastEl)
+        insertAfter(cloned, lastEl)
         await generateForSite(cloned, comparison, skuVariables[0])
         lastEl = cloned
       }
       lastEl = compEl.id + '-tree'
+      const data_sku_items = skuVariables.map(skuVar => {
+        const el = comparisionPics.map(comparision => {
+          const name = comparision.value
+          const price = skuVar[comparision.sk]?.price
+          const anchor = skuVar[comparision.sk]?.anchor
+          const pic = comparision.pic
+        })
+        return {skuVar,values:el}
+      })
+      compEl.setAttribute('data-comparisions',JSON.stringify(data_sku_items))
       /*
       for (let i = 1; i < skuVariables.length; i++) {
         const newId = duplicateId(lastEl.replace('-tree', '')).id
@@ -17514,7 +17524,7 @@ headers: {
           const checkedWareHouse = querySelectorAll1('#warehouse-zd[checked]')[0]?.parentNode.id || cloned2.getAttribute('warehouse')
           const getItem = {
             id: 'sku:' + pathItemSku,
-            sk:`comparison:${condition};${sk}`
+            sk: `comparison:${condition};${sk}`
 
 
           }
@@ -17793,7 +17803,7 @@ headers: {
       const checkedWareHouse = querySelectorAll1('#warehouse-zd[checked]')[0]?.parentNode.id || target.getAttribute('warehouse')
       const getItem = {
         id: 'sku:' + pathItemSku,
-        sk:`comparison:${condition};${sk}`
+        sk: `comparison:${condition};${sk}`
 
 
       }
@@ -17842,7 +17852,7 @@ headers: {
       const checkedWareHouse = querySelectorAll1('#warehouse-zd[checked]')[0]?.parentNode.id || target.getAttribute('warehouse')
       const getItem = {
         id: 'sku:' + pathItemSku,
-        sk:`comparison:${condition};${sk}`
+        sk: `comparison:${condition};${sk}`
 
 
       }
@@ -18988,7 +18998,7 @@ headers: {
             }
             const getItem = {
               id: 'sku:' + pathItemSku,
-              sk:`comparison:${condition};${sk}`
+              sk: `comparison:${condition};${sk}`
 
 
             }
