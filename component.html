@@ -3360,6 +3360,7 @@
       for (const element of json) {
         let { dbtimestamp, reviewer, rating, title, date, review } = element
         dbtimestamp = dbtimestamp || getCurrentDateTime()
+        element.dbtimestamp = dbtimestamp
         const pushEl = {
           id: `sku:${pathItemSku}`,
           sk: `review:${dbtimestamp}`,
@@ -3371,6 +3372,7 @@
         }
         await postToDb(pushEl)
       }
+      document.getElementById('sku-reviews').value = JSON.stringify(json,null,4)
     }
     function getRandomDateInPast(daysAgo) {
       // Get today's date
@@ -3399,6 +3401,7 @@
       for (const element of json) {
         let { dbtimestamp, reviewer, rating, title, date, review } = element
         dbtimestamp = dbtimestamp || getCurrentDateTime()
+        element.dbtimestamp = dbtimestamp
         const pushEl = {
           id: headContentItem.id,
           sk: `fake-review:${dbtimestamp}`,
@@ -3410,6 +3413,7 @@
         }
         await postToDb(pushEl)
       }
+      document.getElementById('fake-reviews').value = JSON.stringify(json,null,4)
     }
     var setFakeReviewsDates = async (event) => {
       const reviewsEL = document.getElementById('fake-reviews')
@@ -3427,6 +3431,7 @@
       for (const element of json) {
         let { dbtimestamp, reviewer, rating, title, date, review } = element
         dbtimestamp = dbtimestamp || getCurrentDateTime()
+        element.dbtimestamp = dbtimestamp
         const pushEl = {
           id: headContentItem.id,
           sk: `review:${dbtimestamp}`,
@@ -3438,6 +3443,7 @@
         }
         await postToDb(pushEl)
       }
+      document.getElementById('real-reviews').value = JSON.stringify(json,null,4)
     }
     var handleSecondaryChange = async (e, item) => {
       const checked = e.target.checked
