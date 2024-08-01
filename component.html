@@ -3340,7 +3340,7 @@
         }
       });
     }
-    var saveSkuReviews =async (event) => {
+    var saveSkuReviews = async (event) => {
       const json = JSON.parse(document.getElementById('sku-reviews').value)
       for (const element of json) {
         const { dbtimestamp, reviewer, rating, title, date, review } = element
@@ -3357,28 +3357,28 @@
       }
     }
     function getRandomDateInPast(daysAgo) {
-    // Get today's date
-    const today = new Date();
+      // Get today's date
+      const today = new Date();
 
-    // Calculate a random number of days from 0 to daysAgo
-    const randomDays = Math.floor(Math.random() * (daysAgo + 1));
+      // Calculate a random number of days from 0 to daysAgo
+      const randomDays = Math.floor(Math.random() * (daysAgo + 1));
 
-    // Create a new date object that is randomDays behind today
-    const pastDate = new Date(today.getTime() - randomDays * 24 * 60 * 60 * 1000);
+      // Create a new date object that is randomDays behind today
+      const pastDate = new Date(today.getTime() - randomDays * 24 * 60 * 60 * 1000);
 
-    // Format the date in YYYY-MM-DDTHH:MM:SS
-    const year = pastDate.getFullYear();
-    const month = String(pastDate.getMonth() + 1).padStart(2, '0');
-    const day = String(pastDate.getDate()).padStart(2, '0');
-    const hours = String(pastDate.getHours()).padStart(2, '0');
-    const minutes = String(pastDate.getMinutes()).padStart(2, '0');
-    const seconds = String(pastDate.getSeconds()).padStart(2, '0');
+      // Format the date in YYYY-MM-DDTHH:MM:SS
+      const year = pastDate.getFullYear();
+      const month = String(pastDate.getMonth() + 1).padStart(2, '0');
+      const day = String(pastDate.getDate()).padStart(2, '0');
+      const hours = String(pastDate.getHours()).padStart(2, '0');
+      const minutes = String(pastDate.getMinutes()).padStart(2, '0');
+      const seconds = String(pastDate.getSeconds()).padStart(2, '0');
 
-    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-}
+      return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+    }
 
 
-    var saveFakeReviews = async(event) => {
+    var saveFakeReviews = async (event) => {
       const json = JSON.parse(document.getElementById('fake-reviews').value)
       for (const element of json) {
         const { dbtimestamp, reviewer, rating, title, date, review } = element
@@ -3394,7 +3394,7 @@
         await postToDb(pushEl)
       }
     }
-    var setFakeReviewsDates = async(event) => {
+    var setFakeReviewsDates = async (event) => {
       const reviewsEL = document.getElementById('fake-reviews')
       const json = JSON.parse(reviewsEL.value)
       const days = parseInt(document.getElementById('input-days').value)
@@ -3403,9 +3403,9 @@
         element.date = newD
         return element
       })
-      reviewsEL.value = JSON.stringify(newJson,null,4)
+      reviewsEL.value = JSON.stringify(newJson, null, 4)
     }
-    var saveReviews =async (event) => {
+    var saveReviews = async (event) => {
       const json = JSON.parse(document.getElementById('real-reviews').value)
       for (const element of json) {
         const { dbtimestamp, reviewer, rating, title, date, review } = element
@@ -18340,37 +18340,37 @@ headers: {
       }
 
     }
-    const setReviews = async() => {
+    const setReviews = async () => {
       const reviews = (await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${headContentItem.id}&sk=review:&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
-        ).map(element=>{
-          const { sk, reviewer, rating, title, date, review } = element
-          return {
-            dbtimestamp:sk.replace('review:',''),reviewer, rating, title, date, review
-          }
-        })
+      ).map(element => {
+        const { sk, reviewer, rating, title, date, review } = element
+        return {
+          dbtimestamp: sk.replace('review:', ''), reviewer, rating, title, date, review
+        }
+      })
       const fakeReviews = (await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${headContentItem.id}&sk=fake-review&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
-        ).map(element=>{
-          const { sk, reviewer, rating, title, date, review } = element
-          return {
-            dbtimestamp:sk.replace('fake-review:',''),reviewer, rating, title, date, review
-          }
-        })
+      ).map(element => {
+        const { sk, reviewer, rating, title, date, review } = element
+        return {
+          dbtimestamp: sk.replace('fake-review:', ''), reviewer, rating, title, date, review
+        }
+      })
       const skuReviews = (await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=review:&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
-        ).map(element=>{
-          const { sk, reviewer, rating, title, date, review } = element
-          return {
-            dbtimestamp:sk.replace('review:',''),reviewer, rating, title, date, review
-          }
-        })
+      ).map(element => {
+        const { sk, reviewer, rating, title, date, review } = element
+        return {
+          dbtimestamp: sk.replace('review:', ''), reviewer, rating, title, date, review
+        }
+      })
       const reviewsEL = document.getElementById('real-reviews')
       const fakeREl = document.getElementById('fake-reviews')
       const skuREl = document.getElementById('sku-reviews')
-      reviewsEL.value = JSON.stringify(reviews,null,4)
-      fakeREl.value = JSON.stringify(fakeReviews,null,4)
-      skuREl.value = JSON.stringify(skuReviews,null,4)
+      reviewsEL.value = JSON.stringify(reviews, null, 4)
+      fakeREl.value = JSON.stringify(fakeReviews, null, 4)
+      skuREl.value = JSON.stringify(skuReviews, null, 4)
     }
     const showSku2 = async (sku) => {
       pathItemSku = sku
