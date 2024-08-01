@@ -3340,6 +3340,7 @@
         }
       });
     }
+    let last
     function getCurrentDateTime() {
       // Create a new Date object representing the current date and time
       const now = new Date();
@@ -3351,9 +3352,20 @@
       const hours = String(now.getHours()).padStart(2, '0');
       const minutes = String(now.getMinutes()).padStart(2, '0');
       const seconds = String(now.getSeconds()).padStart(2, '0');
-
+      let res = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+      while (res <= last) {
+        now.setSeconds(now.getSeconds() + 1)
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed, so add 1
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        res = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+      }
+      last = res
       // Format the date and time as YYYY-MM-DDTHH:MM:SS
-      return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+      return res
     }
     var saveSkuReviews = async (event) => {
       const json = JSON.parse(document.getElementById('sku-reviews').value)
@@ -3372,7 +3384,7 @@
         }
         await postToDb(pushEl)
       }
-      document.getElementById('sku-reviews').value = JSON.stringify(json,null,4)
+      document.getElementById('sku-reviews').value = JSON.stringify(json, null, 4)
     }
     function getRandomDateInPast(daysAgo) {
       // Get today's date
@@ -3413,7 +3425,7 @@
         }
         await postToDb(pushEl)
       }
-      document.getElementById('fake-reviews').value = JSON.stringify(json,null,4)
+      document.getElementById('fake-reviews').value = JSON.stringify(json, null, 4)
     }
     var setFakeReviewsDates = async (event) => {
       const reviewsEL = document.getElementById('fake-reviews')
@@ -3443,7 +3455,7 @@
         }
         await postToDb(pushEl)
       }
-      document.getElementById('real-reviews').value = JSON.stringify(json,null,4)
+      document.getElementById('real-reviews').value = JSON.stringify(json, null, 4)
     }
     var handleSecondaryChange = async (e, item) => {
       const checked = e.target.checked
