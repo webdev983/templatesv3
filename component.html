@@ -15381,7 +15381,8 @@ elementsToRemove.forEach(element => element.remove());
       for (const row of rows) {
         const key = row.querySelector('[data-lists-element-key]')?.textContent || lastKey
         lastKey = key
-        const value = row.querySelector('[data-list-element-selection]')?.value || row.querySelector('[data-lists-element-value]').textContent || ''
+        let value = row.querySelector('[data-list-element-selection]')?.value || row.querySelector('[data-lists-element-value]').textContent || ''
+        value ==='none' && (value = row.querySelector('[data-lists-element-value]').textContent)
         const comb = row.querySelector('[comb]')?.getAttribute('comb')
 
         if (comb) {
