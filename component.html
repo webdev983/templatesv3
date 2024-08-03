@@ -4424,16 +4424,17 @@
       const { src, data_src, imageUUID } = varibleMap[0].pics[0]
       await setImg1(imageUUID, src, data_src, image)
       let lastEl = image.id + "-tree"
-
+      const list = varibleMap.reduce((acc, element) => {
+        acc[element.combination] = element.pics;
+        return acc;
+      }, {});
       const payload2 = {
 
         time: (new Date()).getTime().toString(),
         action: 'setAttribute',
         target_element: lastEl,
         key: 'data-var-img',
-        value: JSON.stringify(varibleMap.map(element => {
-          return { [element.combination]: element.pics }
-        })),
+        value: JSON.stringify(list),
 
       }
       pushAction(payload2)
@@ -4584,7 +4585,7 @@
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
       const { items } = await fetch(url).then(e => e.json())
       const specid = generateUUID()
-      const data = getFromProductSpecs().filter(e=>e.key)
+      const data = getFromProductSpecs().filter(e => e.key)
       console.log(JSON.stringify(data))
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
@@ -6088,7 +6089,7 @@
               arr[0].remove()
               arr[1].remove()
               const el = cloned3.querySelector('#sku-variable-xz')
-              el.setAttribute('comb',newCombs[i])
+              el.setAttribute('comb', newCombs[i])
               generateCombSpans(el, newCombs[i])
               const newSpan = cloned3.querySelector('[data-lists-element-value]');
               newSpan.addEventListener('blur', handleNewSave);
@@ -6138,7 +6139,7 @@
               insertAfter(cloned3, clonedListElement)
             }
             const el = td.parentNode.querySelector('#sku-variable-xz')
-            el.setAttribute('comb',newCombs[0])
+            el.setAttribute('comb', newCombs[0])
             generateCombSpans(el, newCombs[0])
           }
           skuCheckbox.onchange = (e) => {
@@ -15382,7 +15383,7 @@ elementsToRemove.forEach(element => element.remove());
         const key = row.querySelector('[data-lists-element-key]')?.textContent || lastKey
         lastKey = key
         let value = row.querySelector('[data-list-element-selection]')?.value || row.querySelector('[data-lists-element-value]').textContent || ''
-        value ==='none' && (value = row.querySelector('[data-lists-element-value]').textContent)
+        value === 'none' && (value = row.querySelector('[data-lists-element-value]').textContent)
         const comb = row.querySelector('[comb]')?.getAttribute('comb')
 
         if (comb) {
@@ -17759,7 +17760,7 @@ headers: {
 
         elements.pop()
         const span = clonedRow.querySelector('#sku-variable-xz[hidden]')
-        span.setAttribute('comb',comb)
+        span.setAttribute('comb', comb)
         generateCombSpans(span, comb)
         originalRow.parentNode.append(clonedRow)
       }
