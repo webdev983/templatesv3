@@ -4092,14 +4092,14 @@
         splited.shift()
         splited.shift()
         const comb = sku + ';' + splited.join(';')
-        return { combination: comb, price: e.price }
+        return { [comb]: e.price }
       })
       const oldPrices = pitems.map(e => {
         const splited = e.sk.split(';')
         splited.shift()
         splited.shift()
         const comb = sku + ';' + splited.join(';')
-        return { combination: comb, price: e.oldPrice }
+        return { [comb]: e.oldPrice }
       })
       if (item.oldPrice) {
         const dEl = p1.querySelector('.price_discount')
@@ -4108,14 +4108,14 @@
         const oV = oEl.querySelector('.price_value')
         await setTextAction(dV.id + '-tree', item.price?.toString() || 0)
         await setTextAction(oV.id + '-tree', item.oldPrice?.toString() || 0)
-        await setAttAction(dEl.id + '-tree', 'discountPrices', JSON.stringify(prices))
-        await setAttAction(oEl.id + '-tree', 'oldPrices', JSON.stringify(oldPrices))
+        await setAttAction(dEl.id + '-tree', 'data-var-price', JSON.stringify(prices))
+        await setAttAction(oEl.id + '-tree', 'data-var-price', JSON.stringify(oldPrices))
       }
       else {
         const dEl = p1.querySelector('.price_normal')
         const nV = dEl.querySelector('.price_value')
         await setTextAction(nV.id + '-tree', item.price?.toString() || 0)
-        await setAttAction(dEl.id + '-tree', 'prices', JSON.stringify(prices))
+        await setAttAction(dEl.id + '-tree', 'data-var-price', JSON.stringify(prices))
       }
 
 
@@ -4430,7 +4430,7 @@
         time: (new Date()).getTime().toString(),
         action: 'setAttribute',
         target_element: lastEl,
-        key: 'varMap',
+        key: 'data-var-img',
         value: JSON.stringify(varibleMap),
 
       }
