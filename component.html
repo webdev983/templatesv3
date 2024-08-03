@@ -4431,7 +4431,9 @@
         action: 'setAttribute',
         target_element: lastEl,
         key: 'data-var-img',
-        value: JSON.stringify(varibleMap),
+        value: JSON.stringify(varibleMap.map(element=>{
+          return {[element.combination]:element.pics}
+        })),
 
       }
       pushAction(payload2)
