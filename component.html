@@ -4431,8 +4431,8 @@
         action: 'setAttribute',
         target_element: lastEl,
         key: 'data-var-img',
-        value: JSON.stringify(varibleMap.map(element=>{
-          return {[element.combination]:element.pics}
+        value: JSON.stringify(varibleMap.map(element => {
+          return { [element.combination]: element.pics }
         })),
 
       }
@@ -4716,21 +4716,21 @@
       const totalReviews = [...reviews, ...fakeReviews]
       totalReviews.sort((a, b) => new Date(b.dbstimestamp) - new Date(a.dbstimestamp));
       const original = querySelectorAll1('.product_review')[0]
-      for(let i=0;i<totalReviews.length;i++){
-        const {dbtimestamp, reviewer, rating, title, date, review} = totalReviews[i]
+      for (let i = 0; i < totalReviews.length; i++) {
+        const { dbtimestamp, reviewer, rating, title, date, review } = totalReviews[i]
         let node = original
-        if(i!=0){
+        if (i != 0) {
           node = original.cloneNode(true)
-          insertAfter(node,original)
+          insertAfter(node, original)
         }
         node.querySelector('.review_author_name').textContent = reviewer
         node.querySelector('.product_review_time').textContent = date
-        node.querySelector('.rating_star').setAttribute('data-star',rating)
+        node.querySelector('.rating_star').setAttribute('data-star', rating)
         node.querySelector('.product_review_rating').textContent = rating
         node.querySelector('.product_review_heading').textContent = title
         node.querySelector('.review_text').textContent = review
-        if(i>5){
-          node.setAttribute('hidden','')
+        if (i > 5) {
+          node.setAttribute('hidden', '')
         }
 
       }
@@ -4813,7 +4813,7 @@
 
           const anchor = skuVar[comparision.sk]?.anchor
 
-          return { [skuVar.sk.replace('comparison:','')]: anchor }
+          return { [skuVar.sk.replace('comparison:', '')]: anchor }
 
 
         })
@@ -4822,7 +4822,7 @@
 
           const price = skuVar[comparision.sk]?.price
 
-          return { [skuVar.sk.replace('comparison:','')]: price }
+          return { [skuVar.sk.replace('comparison:', '')]: price }
 
 
         })
@@ -15902,7 +15902,7 @@ elementsToRemove.forEach(element => element.remove());
           time: (new Date()).getTime().toString(),
           action: 'setAttribute',
           target_element: allAttrs[0].id + '-tree',
-          key: 'data-heading_placeholder',
+          key: 'data-var-tc',
           value: JSON.stringify(inputValue),
 
         }
@@ -18714,6 +18714,8 @@ headers: {
       originalKeyLabel.remove()
       headContentItem.scripts?.h1?.runned && (document.getElementById('h1-status').textContent = '🟢')
       document.getElementById('h1-status').onclick = async (e) => {
+        const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=sku-variables;&startsWith=true`)
+          .then(response => response.json()).then(res => res.items)
         const { target } = e
         if (target.textContent === '🟠') {
           return
@@ -18727,7 +18729,55 @@ headers: {
         const atts = headParams
         delete atts.id
         delete atts.sk
-        const data = { text: h1Span.textContent, ...atts }
+        const toR = h1Span.textContent
+        const pattern = /(\w+)-value#/g;
+
+        // Find all matches
+        const matches = [...text.matchAll(pattern)].map(match => match[0]);
+
+        const attrs = matches.map(e => e.replace('-value#', ""))
+        const rs = {}
+        for (const skuVar of skuVariables) {
+          const { sk } = skuVar
+          const r = sk.replace('sku-variables;', '')
+          const s = r.split(';')
+          s.pop()
+          for (const item of s) {
+            const [k, v] = item.split(':')
+            if (attrs.includes(k)) {
+              if (rs[k]) {
+                if (!rs[k].includes(v)) {
+                  rs[k].push(v)
+                }
+              } else {
+                rs[k] = [v]
+              }
+            }
+
+          }
+
+        }
+        const data1 = []
+        for (const key of Object.keys(rs)) {
+          const legend = key
+          const attributes = rs[key]
+          data1.push({
+            legend,
+            items: attributes.map(e => e.trim())
+          })
+        }
+        const combinations = generateCombinations(data1)
+        const replaced = combinations.map(combination=>{
+          let replaced1 = toR
+          const s= combination.split(';')
+          s.pop()
+          for(const element of s){
+            const [k,v] = element.split(':')
+            replaced1 = replaced1.replace(k+'-value#',v)
+          }
+          return {[combination]:replaced1}
+        })
+        const data = { text: replaced, ...atts }
 
 
         //clean
