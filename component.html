@@ -4656,14 +4656,29 @@
 
       }
       await pushAction(el1)
-      const el2 = {
-        time: (new Date()).getTime(),
-        action: 'textContent',
-        target_element: td.id + '-tree',
-        value: data[0].value,
+      if (data[0].value) {
+        const el2 = {
+          time: (new Date()).getTime(),
+          action: 'textContent',
+          target_element: td.id + '-tree',
+          value: data[0].value,
 
+        }
+        await pushAction(el2)
       }
-      await pushAction(el2)
+      else {
+        const keys = Object.keys(data[0].values)
+        const el2 = {
+          time: (new Date()).getTime(),
+          action: 'textContent',
+          target_element: td.id + '-tree',
+          value: data[0].values[keys[0]],
+
+        }
+        await pushAction(el2)
+        await setAttAction(td.id + '-tree', 'data-var-tc', JSON.stringify(data[0].values))
+      }
+
       for (let i = 1; i < data.length; i++) {
         const id = duplicateId(original.id).id
         actionObject = {
@@ -4684,16 +4699,32 @@
 
         }
         await pushAction(el1)
-        const el2 = {
-          time: (new Date()).getTime(),
-          action: 'textContent',
-          target_element: td.id + '-tree',
-          value: data[i].value,
+        if (data[i].value) {
+          const el2 = {
+            time: (new Date()).getTime(),
+            action: 'textContent',
+            target_element: td.id + '-tree',
+            value: data[i].value,
 
+          }
+          await pushAction(el2)
         }
-        await pushAction(el2)
-        last = id
+        else {
+          const keys = Object.keys(data[i].values)
+          const el2 = {
+            time: (new Date()).getTime(),
+            action: 'textContent',
+            target_element: td.id + '-tree',
+            value: data[i].values[keys[0]],
+
+          }
+          await pushAction(el2)
+          await setAttAction(td.id + '-tree', 'data-var-tc', JSON.stringify(data[i].values))
+        }
       }
+
+      last = id
+    }
 
     }
     const pushReviews = async () => {
@@ -5943,7 +5974,7 @@
             }
             clonedListElement.querySelector('#expand_variables_msg').setAttribute('hidden', '')
             const el = clonedListElement.querySelector('#sku-variable-xz')
-            el.setAttribute('comb',comb)
+            el.setAttribute('comb', comb)
             generateCombSpans(el, comb, true)
             listOriginalElement.parentNode.append(clonedListElement)
           }
@@ -15344,18 +15375,18 @@ elementsToRemove.forEach(element => element.remove());
         const key = row.querySelector('[data-lists-element-key]').textContent
         const value = row.querySelector('[data-list-element-selection]')?.value || row.querySelector('[data-lists-element-value]').textContent || ''
         const comb = row.querySelector('[comb]').getAttribute('comb')
-        
-        if(comb ){
-          const found = map.find(e=>e.key ===key)
-          if(found){
+
+        if (comb) {
+          const found = map.find(e => e.key === key)
+          if (found) {
             found.values[comb] = value
           }
-          else{
-            map.push({ key, values:{[comb]:value} })
+          else {
+            map.push({ key, values: { [comb]: value } })
           }
-          
+
         }
-        else{
+        else {
           map.push({ key, value })
 
         }
@@ -18784,15 +18815,15 @@ headers: {
           })
         }
         const combinations = generateCombinations(data1)
-        const replaced = combinations.map(combination=>{
+        const replaced = combinations.map(combination => {
           let replaced1 = toR
-          const s= combination.split(';')
+          const s = combination.split(';')
           s.pop()
-          for(const element of s){
-            const [k,v] = element.split(':')
-            replaced1 = replaced1.replace(k+'-value#',v)
+          for (const element of s) {
+            const [k, v] = element.split(':')
+            replaced1 = replaced1.replace(k + '-value#', v)
           }
-          return {[combination]:replaced1}
+          return { [combination]: replaced1 }
         })
         const data = { text: replaced, ...atts }
 
