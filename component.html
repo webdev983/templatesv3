@@ -15888,12 +15888,12 @@ elementsToRemove.forEach(element => element.remove());
       if (attr === 'h1-attribute') {
         const allAttrs = querySelectorAll1(`[data-import-${attr}]`)
 
-
+        const keys = Object.keys(inputValue.text[0])
         const el = {
           time: (new Date()).getTime(),
           action: 'innerHtml',
           target_element: allAttrs[0].id + '-tree',
-          insertedCode: JSON.stringify(inputValue.text),
+          insertedCode: JSON.stringify(inputValue.text[0][keys[0]]),
 
         }
         await pushAction(el)
