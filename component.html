@@ -6087,7 +6087,9 @@
               const arr = cloned3.querySelectorAll('td')
               arr[0].remove()
               arr[1].remove()
-              generateCombSpans(cloned3.querySelector('#sku-variable-xz'), newCombs[i])
+              const el = cloned3.querySelector('#sku-variable-xz')
+              el.setAttribute('comb',newCombs[i])
+              generateCombSpans(el, newCombs[i])
               const newSpan = cloned3.querySelector('[data-lists-element-value]');
               newSpan.addEventListener('blur', handleNewSave);
               newSpan.addEventListener('keydown', function (event) {
@@ -6135,7 +6137,9 @@
               }
               insertAfter(cloned3, clonedListElement)
             }
-            generateCombSpans(td.parentNode.querySelector('#sku-variable-xz'), newCombs[0])
+            const el = td.parentNode.querySelector('#sku-variable-xz')
+            el.setAttribute('comb',newCombs[0])
+            generateCombSpans(el, newCombs[0])
           }
           skuCheckbox.onchange = (e) => {
             if (e.target.checked) {
@@ -17754,6 +17758,7 @@ headers: {
 
         elements.pop()
         const span = clonedRow.querySelector('#sku-variable-xz[hidden]')
+        span.setAttribute('comb',comb)
         generateCombSpans(span, comb)
         originalRow.parentNode.append(clonedRow)
       }
