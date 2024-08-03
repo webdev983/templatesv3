@@ -4811,7 +4811,7 @@
 
           const anchor = skuVar[comparision.sk]?.anchor
 
-          return { sk: skuVar.sk, anchor }
+          return { [skuVar.sk.replace('comparison:','')]: anchor }
 
 
         })
@@ -4820,13 +4820,13 @@
 
           const price = skuVar[comparision.sk]?.price
 
-          return { sk: skuVar.sk, price }
+          return { [skuVar.sk.replace('comparison:','')]: price }
 
 
         })
         priceEl.textContent = skuVar[comparision.sk]?.price
-        priceEl.setAttribute('data-price-variables', JSON.stringify(prices))
-        anchor.setAttribute('data-anchor-variables', JSON.stringify(anchors))
+        priceEl.setAttribute('data-var-price', JSON.stringify(prices))
+        anchor.setAttribute('data-var-anchor', JSON.stringify(anchors))
         anchor.setAttribute('href', skuVar[comparision.sk]?.anchor)
         picEl.setAttribute('src', comparision.pic)
         /*
