@@ -897,6 +897,33 @@
                   <label class="l-3"><input type="checkbox" id="execute_in_template" />🚧</label>
                 </td>
               </tr>
+              <tr id="script_publish_sku_images">
+                <td>
+                  <input type="checkbox" id="script_execute_select" hidden>
+                  <label id="script_status" class="l-3">🔴</label>
+                  <label class="l-3" style="margin: 10px;">publish sku images</label>
+                </td>
+                <td>
+                  <span class="l-3">🦾</span>
+                  <span class="l-3" id="last_script_execute_time">never</span>
+                </td>
+                <td>
+                  <span id="queue_number_container">
+                    <span class="l-3">🔀 </span>
+                    <span class="l-3  queue" contenteditable id="queue_number">~</span>
+                  </span>
+                </td>
+
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_on_red_checkbox" />🟥</label>
+                </td>
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_requires_reload" />🔃</label>
+                </td>
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_in_template" />🚧</label>
+                </td>
+              </tr>
               <tr id="script_transfer">
                 <td>
                   <input type="checkbox" id="script_execute_select" hidden>
@@ -9555,6 +9582,45 @@ checkbox1.setAttribute('hidden', "");
 
       }
     }
+    var publishSkuImages = () => {
+      const sku = pathItemSku
+      const picitems = await fetch(`${backend_url}?id=sku:${sku}&sk=pics&startsWith=true`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(e => e.json()).then(({ items }) => items)
+      let randomStrings = []
+      const site = pathItemPath.split('/')[0]
+      let p = picitems.map(element => {
+        const sk = element.sk
+        const imageSrc = 'https://s3.amazonaws.com/checkout-admin-panel/' + sk
+        const name = 'product_image'
+        
+        let randomString = generateRandomString(3)
+        let url1 = 'https://' + site + '/pics/' + randomString + '_' + name
+        
+        while (randomStrings.includes(randomString)) {
+          randomString = generateRandomString(3);
+         
+        }
+        randomStrings.push(randomString)
+        let newName = randomString + '_' + name
+        const { src, data_src } = await resizeApi(newName, imageSrc, '300w')
+        return { src, data_src, imageUUID: sk.split('.')[0].replace('pics', '') }
+      })
+      p = await Promise.all(p)
+      const promise = p.map(element=>
+        postToDb({
+          id:`sku:${sku}`,
+          sk:`crope:${site}:${element.imageUUID}`,
+          list:element.data_src
+        })
+      )
+      await Promise.all(promise)
+      
+
+    }
     var generateSchema = (head) => {
       const url = pathItem.lsi1.split(';')[0].replace('|', '/')
       const date = new Date()
@@ -10009,6 +10075,7 @@ checkbox1.setAttribute('hidden', "");
       scrip_eval: runScripts,
       script_breadcrumb_generation: generateBreadCrumbApi,
       push_reviews: pushReviews,
+      script_publish_sku_images: publishSkuImages,
       script_transfer: generateSchema,
       script_product_spec_table: async () => {
 
