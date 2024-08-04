@@ -9611,15 +9611,20 @@ checkbox1.setAttribute('hidden', "");
       })
       p = await Promise.all(p)
       console.log(JSON.stringify(p))
-      /*
+      
       const promise = p.map(element=>
         postToDb({
           id:`sku:${sku}`,
           sk:`crop:${site}:${element.imageUUID}`,
-          list:element.data_src
+          list:element.data_src.map(src=>{
+            const splited = element.src.split('_')
+            splited.pop()
+            splited.push(src)
+            return splited.join('_')
+          })
         })
       )
-      await Promise.all(promise)*/
+      await Promise.all(promise)
       
 
     }
