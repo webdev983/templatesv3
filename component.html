@@ -4399,6 +4399,8 @@
       if (!pics.length) {
         return
       }
+      const cropedImages = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=crop:&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
       const withoutSku = pics.filter(e => !Object.keys(e.gallery_variables_sku_variables).length)
       const withSku = pics.filter(e => Object.keys(e.gallery_variables_sku_variables).length)
       let varibleMap = skuVariables.map(e => e.sk.replace('sku-variables;', '')).map(async combination => {
@@ -4426,21 +4428,9 @@
         }
         let transformedPics = pics.map(e => e.sk)
           .map(async sk => {
-            const imageSrc = 'https://s3.amazonaws.com/checkout-admin-panel/' + sk
-            const name = 'button_image_sku:' + combination
-            const site = pathItemPath.split('/')[0]
-            let randomString = generateRandomString(3)
-            let url1 = 'https://' + site + '/pics/' + randomString + '_' + name
-            function checkSrcStartsWithUrl1() {
-              const elements = document.querySelectorAll('[src^="' + url1 + '"]');
-              return elements.length > 0;
-            }
-            while (checkSrcStartsWithUrl1()) {
-              randomString = generateRandomString(3);
-              url1 = 'https://' + site.toLowerCase() + '/pics/' + randomString + '_' + name;
-            }
-            let newName = randomString + '_' + name
-            const { src, data_src } = await resizeApi(newName, imageSrc, '300w')
+            const uuid = sk.split('.')[0].replace('pics', '')
+            const found = cropedImages.find(e => e.sk.endsWith(':' + uuid))
+            return found.list.join(',')
             return { src, data_src, imageUUID: sk.split('.')[0].replace('pics', '') }
           })
         transformedPics = await Promise.all(transformedPics)
@@ -4449,7 +4439,7 @@
       varibleMap = await Promise.all(varibleMap)
       console.log(JSON.stringify(varibleMap))
       const { src, data_src, imageUUID } = varibleMap[0].pics[0]
-      await setImg1(imageUUID, src, data_src, image)
+      //await setImg1(imageUUID, src, data_src, image)
       let lastEl = image.id + "-tree"
       const list = varibleMap.reduce((acc, element) => {
         acc[element.combination] = element.pics;
@@ -4465,6 +4455,16 @@
 
       }
       pushAction(payload2)
+      const payload3 = {
+
+        time: (new Date()).getTime().toString(),
+        action: 'setAttribute',
+        target_element: lastEl,
+        key: 'srcset',
+        value: varibleMap[0].pics[0],
+
+      }
+      pushAction(payload3)
       if (secondary) {
         for (let i = 1; i < varibleMap[0].pics.length; i++) {
           let newId = duplicateId(image.id).id
@@ -4475,11 +4475,22 @@
             inserted_element: { originalId: image.id + '-tree', id: newId },
           };
           await pushAction(actionObject)
-          const key = varibleMap[0].pics[i]
-          await setImg1(imageUUID, src, data_src, image)
+
+
+          const payload3 = {
+
+            time: (new Date()).getTime().toString(),
+            action: 'setAttribute',
+            target_element: lastEl,
+            key: 'srcset',
+            value: varibleMap[0].pics[i],
+
+          }
+          pushAction(payload3)
+          //await setImg1(imageUUID, src, data_src, image)
           lastEl = newId
         }
-        for (let i = 1; i < withoutSku.length; i++) {
+        for (let i = 0; i < withoutSku.length; i++) {
           let newId = duplicateId(image.id).id
           const actionObject = {
             time: (new Date()).getTime(),
@@ -4488,8 +4499,21 @@
             inserted_element: { originalId: image.id + '-tree', id: newId },
           };
           await pushAction(actionObject)
-          const key = pics[i].sk
-          await selectImage1(newId, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
+          //const key = pics[i].sk
+          const uuid = pics[i].sk.split('.')[0].replace('pics', '')
+          const found = cropedImages.find(e => e.sk.endsWith(':' + uuid))
+          const set = found.list.join(',')
+          const payload3 = {
+
+            time: (new Date()).getTime().toString(),
+            action: 'setAttribute',
+            target_element: newId,
+            key: 'srcset',
+            value: set,
+
+          }
+          pushAction(payload3)
+          // await selectImage1(newId, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
           lastEl = newId
         }
       }
@@ -9582,7 +9606,7 @@ checkbox1.setAttribute('hidden', "");
 
       }
     }
-    var publishSkuImages = async() => {
+    var publishSkuImages = async () => {
       const sku = pathItemSku
       const picitems = await fetch(`${backend_url}?id=sku:${sku}&sk=pics&startsWith=true`, {
         method: 'GET',
@@ -9596,13 +9620,13 @@ checkbox1.setAttribute('hidden', "");
         const sk = element.sk
         const imageSrc = 'https://s3.amazonaws.com/checkout-admin-panel/' + sk
         const name = 'product_image'
-        
+
         let randomString = generateRandomString(3)
         let url1 = 'https://' + site + '/pics/' + randomString + '_' + name
-        
+
         while (randomStrings.includes(randomString)) {
           randomString = generateRandomString(3);
-         
+
         }
         randomStrings.push(randomString)
         let newName = randomString + '_' + name
@@ -9611,12 +9635,12 @@ checkbox1.setAttribute('hidden', "");
       })
       p = await Promise.all(p)
       console.log(JSON.stringify(p))
-      
-      const promise = p.map(element=>
+
+      const promise = p.map(element =>
         postToDb({
-          id:`sku:${sku}`,
-          sk:`crop:${site}:${element.imageUUID}`,
-          list:element.data_src.split(',').map(src=>{
+          id: `sku:${sku}`,
+          sk: `crop:${site}:${element.imageUUID}`,
+          list: element.data_src.split(',').map(src => {
             const splited = element.src.split('_')
             splited.pop()
             splited.push(src)
@@ -9625,7 +9649,7 @@ checkbox1.setAttribute('hidden', "");
         })
       )
       await Promise.all(promise)
-      
+
 
     }
     var generateSchema = (head) => {
@@ -11067,7 +11091,7 @@ checkbox1.setAttribute('hidden', "");
               await funcDictionary[id]()
               existing.querySelector('#script_status').textContent = '🟢'
               const date = new Date()
-              if(!headContentItem.scripts[id]){
+              if (!headContentItem.scripts[id]) {
                 headContentItem.scripts[id] = {}
               }
               headContentItem.scripts[id].runned = date.getTime()
