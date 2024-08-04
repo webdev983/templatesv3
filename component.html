@@ -11060,6 +11060,9 @@ checkbox1.setAttribute('hidden', "");
               await funcDictionary[id]()
               existing.querySelector('#script_status').textContent = '🟢'
               const date = new Date()
+              if(!headContentItem.scripts[id]){
+                headContentItem.scripts[id] = {}
+              }
               headContentItem.scripts[id].runned = date.getTime()
               existing.querySelector('#last_script_execute_time').textContent = formatDate(date)
               updateHeadContentItem()
