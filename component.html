@@ -9677,7 +9677,9 @@ checkbox1.setAttribute('hidden', "");
           list: element.data_src.split(',').map(src => {
             const splited = element.src.split('_')
             splited.pop()
-            splited.push(src)
+            const [p,s] = src.split('.')
+            const l = p+'w'
+            splited.push([l,s].join('.'))
             return splited.join('_')
           })
         })
