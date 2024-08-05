@@ -4386,23 +4386,28 @@
         .then(response => response.json()).then(res => res.items)
       const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=pics&startsWith=true`;
       const { items } = await fetch(url).then(e => e.json())
-      let pics
+      let pics= items.filter(e => e.secondary)
       let image
+      let mainPics = items.filter(e => e.main)
       if (secondary) {
-        pics = items.filter(e => e.secondary)
+        
+        if (!pics.length) {
+          return
+        }
         image = querySelectorAll1('.product_thumbnail')[0]
       }
       else {
-        pics = items.filter(e => e.main)
+        if (!mainPics.length) {
+          return
+        }
         image = querySelectorAll1('.product_lead_img')[0]
       }
-      if (!pics.length) {
-        return
-      }
+      
       const cropedImages = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=crop:&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
       const withoutSku = pics.filter(e => !Object.keys(e.gallery_variables_sku_variables).length)
       const withSku = pics.filter(e => Object.keys(e.gallery_variables_sku_variables).length)
+      const mainwithSku = mainPics.filter(e => Object.keys(e.gallery_variables_sku_variables).length)
       const skToPic = (sk) => {
         const uuid = sk.split('.')[0].replace('pics', '')
         const found = cropedImages.find(e => e.sk.endsWith(':' + uuid))
@@ -4428,6 +4433,29 @@
           }
           else {
             picsWithCondition[combination] = [r]
+          }
+        }
+
+      }
+      const mainpicsWithCondition = {}
+      console.log(JSON.stringify(withSku))
+      for (const element of mainwithSku) {
+        const keys = Object.keys(element.gallery_variables_sku_variables)
+        const data = []
+        for (const key of keys) {
+          data.push({
+            legend: key,
+            items: element.gallery_variables_sku_variables[key]
+          })
+        }
+        const combinations = generateCombinations(data)
+        for (const combination of combinations) {
+          const r = skToPic(element.sk)
+          if (mainpicsWithCondition[combination]?.length) {
+            mainpicsWithCondition[combination].push(r)
+          }
+          else {
+            mainpicsWithCondition[combination] = [r]
           }
         }
 
@@ -4471,7 +4499,7 @@
         return { combination: sku + ';' + combination, pics: transformedPics }
       })
       */
-      const keys = Object.keys(picsWithCondition)
+      let keys = Object.keys(mainpicsWithCondition)
       function filterObjectByIndex(obj, index) {
         let result = {};
         for (let key in obj) {
@@ -4493,7 +4521,7 @@
         action: 'setAttribute',
         target_element: lastEl,
         key: 'data-var-img',
-        value: JSON.stringify(filterObjectByIndex(picsWithCondition, 0)),
+        value: JSON.stringify(filterObjectByIndex(mainpicsWithCondition, 0)),
 
       }
       await pushAction(payload2)
@@ -4503,12 +4531,14 @@
         action: 'setAttribute',
         target_element: lastEl,
         key: 'srcset',
-        value: picsWithCondition[keys[0]][0],
+        value: mainpicsWithCondition[keys[0]][0],
 
       }
       await pushAction(payload3)
+      keys = Object.keys(picsWithCondition)
+      console.log('with '+JSON.stringify(picsWithCondition))
       if (secondary) {
-        for (let i = 1; i < picsWithCondition[keys[0]].length; i++) {
+        for (let i = 0; i < picsWithCondition[keys[0]].length; i++) {
           let newId = duplicateId(image.id).id
           const actionObject = {
             time: (new Date()).getTime(),
@@ -9697,7 +9727,7 @@ checkbox1.setAttribute('hidden', "");
             const [p, s] = src.split('.')
             const l = p + 'w'
             splited.push([l, s].join('.'))
-            return splited.join('_') +' '+l
+            return splited.join('_') + ' ' + l
           })
         })
       )
