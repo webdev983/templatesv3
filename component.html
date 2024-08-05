@@ -4432,10 +4432,10 @@
         }
 
       }
-      
-     
+
+
       console.log('res 5 ' + JSON.stringify(picsWithCondition))
-      return
+
       /*
       let varibleMap = skuVariables.map(e => e.sk.replace('sku-variables;', '')).map(async combination => {
         const splited = combination.split(';')
@@ -4471,22 +4471,29 @@
         return { combination: sku + ';' + combination, pics: transformedPics }
       })
       */
-      varibleMap = await Promise.all(varibleMap)
-      console.log(JSON.stringify(varibleMap))
-      const { src, data_src, imageUUID } = varibleMap[0].pics[0]
-      //await setImg1(imageUUID, src, data_src, image)
+      const keys = Object.keys(picsWithCondition)
+      function filterObjectByIndex(obj, index) {
+        let result = {};
+        for (let key in obj) {
+          if (obj.hasOwnProperty(key)) {
+            let urls = obj[key];
+            if (index < urls.length) {
+              result[key] = urls[index];
+            } else {
+              result[key] = [];  // or handle the index out of bounds scenario as needed
+            }
+          }
+        }
+        return result;
+      }
       let lastEl = image.id + "-tree"
-      const list = varibleMap.reduce((acc, element) => {
-        acc[element.combination] = element.pics;
-        return acc;
-      }, {});
       const payload2 = {
 
         time: (new Date()).getTime().toString(),
         action: 'setAttribute',
         target_element: lastEl,
         key: 'data-var-img',
-        value: JSON.stringify(list),
+        value: JSON.stringify(filterObjectByIndex(picsWithCondition, 0)),
 
       }
       pushAction(payload2)
@@ -4496,12 +4503,12 @@
         action: 'setAttribute',
         target_element: lastEl,
         key: 'srcset',
-        value: varibleMap[0].pics[0],
+        value: picsWithCondition[keys[0]][0],
 
       }
       pushAction(payload3)
       if (secondary) {
-        for (let i = 1; i < varibleMap[0].pics.length; i++) {
+        for (let i = 1; i < picsWithCondition[keys[0]].length; i++) {
           let newId = duplicateId(image.id).id
           const actionObject = {
             time: (new Date()).getTime(),
@@ -4518,11 +4525,20 @@
             action: 'setAttribute',
             target_element: newId,
             key: 'srcset',
-            value: varibleMap[0].pics[i],
+            value: picsWithCondition[keys[0]][i],
 
           }
           pushAction(payload3)
-          //await setImg1(imageUUID, src, data_src, image)
+          const payload2 = {
+
+            time: (new Date()).getTime().toString(),
+            action: 'setAttribute',
+            target_element: newId,
+            key: 'data-var-img',
+            value: JSON.stringify(filterObjectByIndex(picsWithCondition, i)),
+
+          }
+          pushAction(payload2)
           lastEl = newId
         }
         for (let i = 0; i < withoutSku.length; i++) {
@@ -9678,9 +9694,9 @@ checkbox1.setAttribute('hidden', "");
           list: element.data_src.split(',').map(src => {
             const splited = element.src.split('_')
             splited.pop()
-            const [p,s] = src.split('.')
-            const l = p+'w'
-            splited.push([l,s].join('.'))
+            const [p, s] = src.split('.')
+            const l = p + 'w'
+            splited.push([l, s].join('.'))
             return splited.join('_')
           })
         })
