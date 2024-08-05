@@ -4403,6 +4403,28 @@
         .then(response => response.json()).then(res => res.items)
       const withoutSku = pics.filter(e => !Object.keys(e.gallery_variables_sku_variables).length)
       const withSku = pics.filter(e => Object.keys(e.gallery_variables_sku_variables).length)
+      const picsWithCondition ={}
+      for(const element of withSku){
+        const keys = Object.keys(pic.gallery_variables_sku_variables)
+        const data = []
+        for(const key of keys){
+          data.push({
+            legend:key,
+            items: pic.gallery_variables_sku_variables[key]
+          })
+        }
+        const combinations = generateCombinations(data)
+        for(const combination of combinations){
+          if(picsWithCondition[combination]){
+            picsWithCondition[combination].push(element)
+          }
+          else{
+            picsWithCondition[combination] = [element]
+          }
+        }
+      }
+      console.log(JSON.stringify(picsWithCondition))
+      return
       let varibleMap = skuVariables.map(e => e.sk.replace('sku-variables;', '')).map(async combination => {
         const splited = combination.split(';')
 
