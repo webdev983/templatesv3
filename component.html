@@ -4403,6 +4403,12 @@
         .then(response => response.json()).then(res => res.items)
       const withoutSku = pics.filter(e => !Object.keys(e.gallery_variables_sku_variables).length)
       const withSku = pics.filter(e => Object.keys(e.gallery_variables_sku_variables).length)
+      const skToPic = (sk) => {
+        const uuid = sk.split('.')[0].replace('pics', '')
+        const found = cropedImages.find(e => e.sk.endsWith(':' + uuid))
+        return found.list.join(',')
+        return { src, data_src, imageUUID: sk.split('.')[0].replace('pics', '') }
+      }
       const picsWithCondition = {}
       for (const element of withSku) {
         const keys = Object.keys(element.gallery_variables_sku_variables)
@@ -4425,12 +4431,7 @@
         }
 
       }
-      const skToPic = (sk) => {
-        const uuid = sk.split('.')[0].replace('pics', '')
-        const found = cropedImages.find(e => e.sk.endsWith(':' + uuid))
-        return found.list.join(',')
-        return { src, data_src, imageUUID: sk.split('.')[0].replace('pics', '') }
-      }
+      
      
       console.log('res 5 ' + JSON.stringify(picsWithCondition))
       return
