@@ -4496,7 +4496,7 @@
         value: JSON.stringify(filterObjectByIndex(picsWithCondition, 0)),
 
       }
-      pushAction(payload2)
+      await pushAction(payload2)
       const payload3 = {
 
         time: (new Date()).getTime().toString(),
@@ -4506,7 +4506,7 @@
         value: picsWithCondition[keys[0]][0],
 
       }
-      pushAction(payload3)
+      await pushAction(payload3)
       if (secondary) {
         for (let i = 1; i < picsWithCondition[keys[0]].length; i++) {
           let newId = duplicateId(image.id).id
@@ -4528,7 +4528,7 @@
             value: picsWithCondition[keys[0]][i],
 
           }
-          pushAction(payload3)
+          await pushAction(payload3)
           const payload2 = {
 
             time: (new Date()).getTime().toString(),
@@ -4538,7 +4538,7 @@
             value: JSON.stringify(filterObjectByIndex(picsWithCondition, i)),
 
           }
-          pushAction(payload2)
+          await pushAction(payload2)
           lastEl = newId
         }
         for (let i = 0; i < withoutSku.length; i++) {
@@ -4563,7 +4563,7 @@
             value: set,
 
           }
-          pushAction(payload3)
+          await pushAction(payload3)
           // await selectImage1(newId, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
           lastEl = newId
         }
