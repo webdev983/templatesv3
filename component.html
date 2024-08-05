@@ -4403,27 +4403,36 @@
         .then(response => response.json()).then(res => res.items)
       const withoutSku = pics.filter(e => !Object.keys(e.gallery_variables_sku_variables).length)
       const withSku = pics.filter(e => Object.keys(e.gallery_variables_sku_variables).length)
-      const picsWithCondition ={}
-      for(const element of withSku){
+      const picsWithCondition = {}
+      for (const element of withSku) {
         const keys = Object.keys(element.gallery_variables_sku_variables)
         const data = []
-        for(const key of keys){
+        for (const key of keys) {
           data.push({
-            legend:key,
+            legend: key,
             items: element.gallery_variables_sku_variables[key]
           })
         }
         const combinations = generateCombinations(data)
-        for(const combination of combinations){
-          if(picsWithCondition[combination]){
-            picsWithCondition[combination].push(element)
+        for (const combination of combinations) {
+          const r = skToPic(element.sk)
+          if (picsWithCondition[combination]) {
+            picsWithCondition[combination].push(r)
           }
-          else{
-            picsWithCondition[combination] = [element]
+          else {
+            picsWithCondition[combination] = [r]
           }
         }
+
       }
-      console.log('res 5 '+JSON.stringify(picsWithCondition))
+      const skToPic = (sk) => {
+        const uuid = sk.split('.')[0].replace('pics', '')
+        const found = cropedImages.find(e => e.sk.endsWith(':' + uuid))
+        return found.list.join(',')
+        return { src, data_src, imageUUID: sk.split('.')[0].replace('pics', '') }
+      }
+      transformedPics = await Promise.all(transformedPics)
+      console.log('res 5 ' + JSON.stringify(picsWithCondition))
       return
       let varibleMap = skuVariables.map(e => e.sk.replace('sku-variables;', '')).map(async combination => {
         const splited = combination.split(';')
