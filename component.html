@@ -4386,11 +4386,11 @@
         .then(response => response.json()).then(res => res.items)
       const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=pics&startsWith=true`;
       const { items } = await fetch(url).then(e => e.json())
-      let pics= items.filter(e => e.secondary)
+      let pics = items.filter(e => e.secondary)
       let image
       let mainPics = items.filter(e => e.main)
       if (secondary) {
-        
+
         if (!pics.length) {
           return
         }
@@ -4402,12 +4402,26 @@
         }
         image = querySelectorAll1('.product_lead_img')[0]
       }
-      
+
       const cropedImages = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=crop:&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
-      const withoutSku = pics.filter(e => !Object.keys(e.gallery_variables_sku_variables).length)
-      const withSku = pics.filter(e => Object.keys(e.gallery_variables_sku_variables).length)
-      const mainwithSku = mainPics.filter(e => Object.keys(e.gallery_variables_sku_variables).length)
+
+      const withSku = pics.filter(e =>
+        e.gallery_variables_sku_variables && Object.keys(e.gallery_variables_sku_variables).some(key =>
+          e.gallery_variables_sku_variables[key].length > 0
+        )
+      );
+      const withoutSku = pics.filter(e =>
+        !e.gallery_variables_sku_variables || Object.keys(e.gallery_variables_sku_variables).every(key =>
+          e.gallery_variables_sku_variables[key].length === 0
+        )
+      );
+
+      const mainwithSku = mainPics.filter(e =>
+        e.gallery_variables_sku_variables && Object.keys(e.gallery_variables_sku_variables).some(key =>
+          e.gallery_variables_sku_variables[key].length > 0
+        )
+      );
       const skToPic = (sk) => {
         const uuid = sk.split('.')[0].replace('pics', '')
         const found = cropedImages.find(e => e.sk.endsWith(':' + uuid))
@@ -4536,7 +4550,7 @@
       }
       await pushAction(payload3)
       //keys = Object.keys(picsWithCondition)
-      console.log('with '+JSON.stringify(picsWithCondition))
+      console.log('with ' + JSON.stringify(picsWithCondition))
       if (secondary) {
         for (let i = 0; i < picsWithCondition[keys[0]].length; i++) {
           let newId = duplicateId(image.id).id
@@ -4598,7 +4612,7 @@
           // await selectImage1(newId, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
           lastEl = newId
         }
-        
+
       }
 
       /*
