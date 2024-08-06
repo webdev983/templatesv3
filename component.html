@@ -13848,7 +13848,7 @@ checkbox1.setAttribute('hidden', "");
           }
           //case insert tag
           if (inserted_element?.tagName) {
-            const handleInsert = (treeElement, componentElement, replaceCopyId) => {
+            const handleInsert = (treeElement, componentElement, replaceCopyId, apply_to_copies) => {
               log1('handling' + treeElement + ' ' + componentElement + ' ' + replaceCopyId)
               const newEl = document.createElement(inserted_element.tagName)
 
@@ -13862,24 +13862,37 @@ checkbox1.setAttribute('hidden', "");
 
               const splited = componentElement.id.split(';')
 
-
-
-
-
-
-              newEl.id = replaceCopyId ? inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') : inserted_element.id
-
-              log1(newEl.id)
+              const copyId = splited[splited.length - 1].split(':')[1]
 
               const component_el = getElementById1('tree-element')
               const newEl2 = component_el.cloneNode(true)
+
+
+              if (replaceCopyId) {
+                newEl2.id = inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid')
+
+              }
+              else if (apply_to_copies) {
+                if (copyId) {
+                  newEl2.id = inserted_element.id.split(':')[0] + ':' + copyId + '-tree'
+                }
+                else {
+                  newEl2.id = inserted_element.id + '-tree'
+                }
+              }
+              else {
+                newEl2.id = inserted_element.id+ '-tree'
+              }
+              log1(newEl.id)
+
+              
               const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
               button2.textContent = '🏷️' + inserted_element.tagName;
               const button = newEl2.querySelector("[data-element='code-tree-show-hide-button']")
               button.addEventListener('mouseover', mouseOverTree);
 
               button.addEventListener('mouseout', mouseOutTree);
-              newEl2.id = replaceCopyId ? inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') + '-tree' : inserted_element.id + '-tree'
+              newEl.id = removeLastOccurrence(newEl2.id, '-tree')
               if (splited.length > 1) {
                 newEl.id = splited[0] + ';' + newEl.id
                 newEl2.id = splited[0] + ';' + newEl2.id
@@ -13913,6 +13926,31 @@ checkbox1.setAttribute('hidden', "");
                 const compEl = getElementById1(mId + ':' + replaceId)
                 handleInsert(treeEl, compEl, true)
               })
+              break;
+            }else if (options?.apply_to_copies) {
+              log1('inSL')
+              const mId = target_element.replace('-tree', '').split(':')[0]
+              const treeEls = []
+              const compEls = []
+              const existing = []
+              const elementsWithIdAndAttribute = querySelectorAll1('[id^="' + mId + '"]')
+                .forEach(
+                  el => {
+                    if (el.id.endsWith('tree')) {
+                      return
+                    }
+                    log1('ffooound152 ' + el.id)
+
+                    treeEls.push(getElementById1(el.id + '-tree'));
+                    compEls.push(el)
+
+
+                  }
+                );
+
+              for (let i = 0; i < treeEls.length; i++) {
+                handleInsert(treeEls[i], compEls[i], false, true)
+              }
               break;
             }
 
