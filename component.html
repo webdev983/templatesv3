@@ -13369,7 +13369,7 @@ checkbox1.setAttribute('hidden', "");
 
 
 
-            const handleInsert = (treeElement, componentElement, replaceCopyId) => {
+            const handleInsert = (treeElement, componentElement, replaceCopyId, apply_to_copies) => {
               log1('handling' + treeElement + ' ' + componentElement + ' ' + replaceCopyId)
               const newEl = document.createElement(inserted_element.tagName)
 
@@ -13387,12 +13387,24 @@ checkbox1.setAttribute('hidden', "");
               const splited = componentElement.id.split(';')
 
 
+              const copyId = splited[splited.length - 1].split(':')[1]
 
 
+              if (replaceCopyId) {
+                newEl.id = inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid')
 
-
-              newEl.id = replaceCopyId ? inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') : inserted_element.id
-
+              }
+              else if (apply_to_copies) {
+                if (copyId) {
+                  newEl.id = inserted_element.id.split(':')[0] + ':' + copyId + '-tree'
+                }
+                else {
+                  newEl.id = inserted_element.id + '-tree'
+                }
+              }
+              else {
+                newEl.id = inserted_element.id
+              }
               log1(newEl.id)
 
               const component_el = getElementById1('tree-element')
@@ -13400,7 +13412,7 @@ checkbox1.setAttribute('hidden', "");
               const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
               button2.textContent = '🏷️' + inserted_element.tagName;
 
-              newEl2.id = replaceCopyId ? inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid') + '-tree' : inserted_element.id + '-tree'
+              newEl2.id = removeLastOccurrence(newEl.id, '-tree')
               if (inserted_element.tagName === 'script' || inserted_element.tagName === 'style') {
                 const button = newEl2.querySelector('[data-element="redirect-to-component"]')
                 button.removeAttribute('hidden')
@@ -13482,6 +13494,32 @@ checkbox1.setAttribute('hidden', "");
                 const compEl = getElementById1(mId + ':' + replaceId)
                 handleInsert(treeEl, compEl, true)
               })
+              break;
+            }
+            else if (options?.apply_to_copies) {
+              log1('inSL')
+              const mId = target_element.replace('-tree', '').split(':')[0]
+              const treeEls = []
+              const compEls = []
+              const existing = []
+              const elementsWithIdAndAttribute = querySelectorAll1('[id^="' + mId + '"]')
+                .forEach(
+                  el => {
+                    if (el.id.endsWith('tree')) {
+                      return
+                    }
+                    log1('ffooound152 ' + el.id)
+
+                    treeEls.push(getElementById1(el.id + '-tree'));
+                    compEls.push(el)
+
+
+                  }
+                );
+
+              for (let i = 0; i < treeEls.length; i++) {
+                handleInsert(treeEls[i], compEls[i], false, true)
+              }
               break;
             }
             /*
