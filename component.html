@@ -13389,30 +13389,30 @@ checkbox1.setAttribute('hidden', "");
 
               const copyId = splited[splited.length - 1].split(':')[1]
 
-
+              const newEl2 = component_el.cloneNode(true)
               if (replaceCopyId) {
-                newEl.id = inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid')
+                newEl2.id = inserted_element.id.split(':')[0] + ':' + componentElement.getAttribute('data-replaceid')
 
               }
               else if (apply_to_copies) {
                 if (copyId) {
-                  newEl.id = inserted_element.id.split(':')[0] + ':' + copyId + '-tree'
+                  newEl2.id = inserted_element.id.split(':')[0] + ':' + copyId + '-tree'
                 }
                 else {
-                  newEl.id = inserted_element.id + '-tree'
+                  newEl2.id = inserted_element.id + '-tree'
                 }
               }
               else {
-                newEl.id = inserted_element.id
+                newEl2.id = inserted_element.id+ '-tree'
               }
               log1(newEl.id)
 
               const component_el = getElementById1('tree-element')
-              const newEl2 = component_el.cloneNode(true)
+              
               const button2 = newEl2.querySelector("[data-element='code-tree-tag-name-button']")
               button2.textContent = '🏷️' + inserted_element.tagName;
 
-              newEl2.id = removeLastOccurrence(newEl.id, '-tree')
+              newEl.id = removeLastOccurrence(newEl.id, '-tree')
               if (inserted_element.tagName === 'script' || inserted_element.tagName === 'style') {
                 const button = newEl2.querySelector('[data-element="redirect-to-component"]')
                 button.removeAttribute('hidden')
