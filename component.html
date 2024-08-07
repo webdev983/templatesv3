@@ -4227,7 +4227,7 @@
         //first 
         await setTextAction(legend.id + '-tree', keys[i])
         const first = keyValues[keys[i]].shift()
-        await setTextAction(span.id + '-tree', first)
+        
         await setAttAction(label.id + '-tree', 'for', sku + ';' + keys[i] + ':' + first)
         await setAttAction(input.id + '-tree', 'name', sku + ';' + keys[i])
 
@@ -4238,11 +4238,13 @@
               'Content-Type': 'application/json',
             },
           }).then(e => e.json())
-          await setAttAction(input.id + '-tree', 'data-id', sku + ';' + keys[i] + ':' + res.items[0].value)
+          await setTextAction(span.id + '-tree', res.items[0].value)
         }
         else {
-          await setAttAction(input.id + '-tree', 'data-id', sku + ';' + keys[i] + ':' + first)
+          await setTextAction(span.id + '-tree', first)
+          
         }
+        await setAttAction(input.id + '-tree', 'data-id', sku + ';' + keys[i] + ':' + first)
 
         for (const value of keyValues[keys[i]]) {
           const dupLabelId = duplicateId(label.id).id
