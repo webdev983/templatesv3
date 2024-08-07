@@ -16293,13 +16293,18 @@ elementsToRemove.forEach(element => element.remove());
 
         }
         await pushAction(el)
+        const obj = {}
+        for(const el of inputValue.text){
+          const keys = Object.keys(el)
+          obj[keys[0]] = el[keys[0]]
+        }
         const payload2 = {
 
           time: (new Date()).getTime().toString(),
           action: 'setAttribute',
           target_element: allAttrs[0].id + '-tree',
           key: 'data-var-tc',
-          value: JSON.stringify(inputValue.text),
+          value: JSON.stringify(obj),
 
         }
         await pushAction(payload2)
