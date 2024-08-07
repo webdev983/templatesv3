@@ -7670,12 +7670,17 @@
           // The digit is '9', so we need to increment the prefix
           return getNextCounter(prefix + 'A'); // Treat as if the digit rolled over to 'A'
         }
+      } else if (/[A-Ya-y]/.test(lastChar)) {
+        // The last character is a letter (but not 'Z')
+        let nextChar = String.fromCharCode(lastChar.charCodeAt(0) + 1);
+        return prefix + nextChar;
       } else {
-        // The last character is a letter (not 'Z')
+        // The last character is not alphanumeric
         let nextChar = String.fromCharCode(lastChar.charCodeAt(0) + 1);
         return prefix + nextChar;
       }
     }
+
     const getLastReusableId = async () => {
       let newCounter = 'AA'
       const data = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/re_use_counter:counter')
