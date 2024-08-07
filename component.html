@@ -4117,20 +4117,30 @@
       const condition = splited.shift()
       await setAttAction(p1.id + '-tree', 'data-id', `${sku}:${condition}:${splited.join(';')}`)
 
-      const prices = pitems.map(e => {
+      const prices1 = pitems.map(e => {
         const splited = e.sk.split(';')
         splited.shift()
         splited.shift()
         const comb = sku + ';' + splited.join(';')
         return { [comb]: e.price }
       })
-      const oldPrices = pitems.map(e => {
+      const oldPrices1 = pitems.map(e => {
         const splited = e.sk.split(';')
         splited.shift()
         splited.shift()
         const comb = sku + ';' + splited.join(';')
         return { [comb]: e.oldPrice }
       })
+      const prices = {}
+      const oldPrices = {}
+      for(const el of prices1){
+        const keys = Object.keys(el)
+        prices[keys[0]] = el[keys[0]]
+      }
+      for(const el of oldPrices1){
+        const keys = Object.keys(el)
+        oldPrices[keys[0]] = el[keys[0]]
+      }
       if (item.oldPrice) {
         const dEl = p1.querySelector('.price_discount')
         const oEl = p1.querySelector('.price_old')
