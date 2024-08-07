@@ -4055,7 +4055,7 @@
         const conditionEl = splited.shift()
         const splited2 = conditionEl.split(':')
         splited2.shift()
-        return { condition:splited2.join(':'), wareHouse: splited.pop().split(':')[1], combination: splited }
+        return { condition: splited2.join(':'), wareHouse: splited.pop().split(':')[1], combination: splited }
       })
       const conditions = removeDuplicates(list.map(e => e.condition))
       const warehouses = removeDuplicates(list.map(e => e.wareHouse))
@@ -4138,11 +4138,11 @@
       })
       const prices = {}
       const oldPrices = {}
-      for(const el of prices1){
+      for (const el of prices1) {
         const keys = Object.keys(el)
         prices[keys[0]] = el[keys[0]]
       }
-      for(const el of oldPrices1){
+      for (const el of oldPrices1) {
         const keys = Object.keys(el)
         oldPrices[keys[0]] = el[keys[0]]
       }
@@ -4242,7 +4242,7 @@
         //first 
         await setTextAction(legend.id + '-tree', keys[i])
         const first = keyValues[keys[i]].shift()
-        
+
         await setAttAction(label.id + '-tree', 'for', sku + ';' + keys[i] + ':' + first)
         await setAttAction(input.id + '-tree', 'name', sku + ';' + keys[i])
 
@@ -4257,7 +4257,7 @@
         }
         else {
           await setTextAction(span.id + '-tree', first)
-          
+
         }
         await setAttAction(input.id + '-tree', 'data-id', sku + ';' + keys[i] + ':' + first)
 
@@ -7633,27 +7633,45 @@
       return relativePath;
     }
     function getNextCounter(counter) {
-      let prefix = counter.substring(0, counter.length - 1);
-      let lastChar = counter[counter.length - 1];
+      let prefix = counter.slice(0, -1); // Get all but the last character
+      let lastChar = counter[counter.length - 1]; // Get the last character
 
       if (lastChar === 'Z') {
-        if (prefix === 'A') {
-          return 'A0';
-        } else {
-          let prefixCharCode = prefix.charCodeAt(0);
-          let nextPrefix = String.fromCharCode(prefixCharCode + 1);
-          return nextPrefix + 'A';
+        // Increment the prefix
+        let prefixLength = prefix.length;
+        let newPrefix = '';
+        let carry = true; // We have a carry because we need to increment the prefix
+
+        for (let i = prefixLength - 1; i >= 0; i--) {
+          let char = prefix[i];
+          if (carry) {
+            if (char === 'Z') {
+              newPrefix = 'A' + newPrefix;
+            } else {
+              newPrefix = String.fromCharCode(char.charCodeAt(0) + 1) + newPrefix;
+              carry = false;
+            }
+          } else {
+            newPrefix = char + newPrefix;
+          }
         }
+
+        if (carry) {
+          newPrefix = 'A' + newPrefix;
+        }
+
+        return newPrefix + 'A'; // Start from 'A' after prefix increment
       } else if (/\d/.test(lastChar)) {
+        // If the last character is a digit
         let num = parseInt(lastChar);
         if (num < 9) {
-          return prefix + (num + 1);
+          return prefix + (num + 1); // Increment the digit
         } else {
-          let prefixCharCode = prefix.charCodeAt(0);
-          let nextPrefix = String.fromCharCode(prefixCharCode + 1);
-          return nextPrefix + 'A';
+          // The digit is '9', so we need to increment the prefix
+          return getNextCounter(prefix + 'A'); // Treat as if the digit rolled over to 'A'
         }
       } else {
+        // The last character is a letter (not 'Z')
         let nextChar = String.fromCharCode(lastChar.charCodeAt(0) + 1);
         return prefix + nextChar;
       }
@@ -15001,8 +15019,8 @@ elementsToRemove.forEach(element => element.remove());
       return { s3link, pLink }
     }
     function escapeCSSSelector(str) {
-    return str.replace(/([!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g, '\\$1');
-}
+      return str.replace(/([!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g, '\\$1');
+    }
     var loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative, treeElement, reusableId, attachId) => {
       log1('load from db' + id + 'reusable' + reusableId + 'attachid' + attachId)
       log1('err2 ' + p)
@@ -15158,7 +15176,7 @@ elementsToRemove.forEach(element => element.remove());
         el.setAttribute('path', items.find(e => e.sk === 'path').lsi1)
         const logSearch = reusableId1 + newId
         log1('searching log ' + logSearch)
-        
+
         const logE = document.querySelectorAll(`[log-id="${escapeCSSSelector(logSearch)}"]`).forEach(e => e.textContent = e.textContent.replace('{name}', name))
         document.querySelectorAll(`[data-log-id="${logSearch}"]`).forEach(e => {
           e.querySelector("#action-add-component-name").textContent = name
@@ -16313,7 +16331,7 @@ elementsToRemove.forEach(element => element.remove());
         }
         await pushAction(el)
         const obj = {}
-        for(const el of inputValue.text){
+        for (const el of inputValue.text) {
           const keys = Object.keys(el)
           obj[keys[0]] = el[keys[0]]
         }
