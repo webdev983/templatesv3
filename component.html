@@ -4047,7 +4047,10 @@
       const sks = items.map(i => i.sk)
       const list = sks.map(sk => {
         const splited = sk.split(';')
-        return { condition: splited.shift().split(':')[1], wareHouse: splited.pop().split(':')[1], combination: splited }
+        const conditionEl = splited.shift()
+        const splited2 = conditionEl.split(':')
+        splited2.shift()
+        return { condition:splited2.join(':'), wareHouse: splited.pop().split(':')[1], combination: splited }
       })
       const conditions = removeDuplicates(list.map(e => e.condition))
       const warehouses = removeDuplicates(list.map(e => e.wareHouse))
