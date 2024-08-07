@@ -15000,6 +15000,9 @@ elementsToRemove.forEach(element => element.remove());
       const pLink = 'https://' + s.toLowerCase() + '/' + key.replace('index.html', '')
       return { s3link, pLink }
     }
+    function escapeCSSSelector(str) {
+    return str.replace(/([!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g, '\\$1');
+}
     var loadFromDb = async (id, newId, p, timestamp, upperReplaceActions, ignore, noComp11, noSubComp, lvl, upperRemoveActions, replaceId, pathForRelative, treeElement, reusableId, attachId) => {
       log1('load from db' + id + 'reusable' + reusableId + 'attachid' + attachId)
       log1('err2 ' + p)
@@ -15155,7 +15158,8 @@ elementsToRemove.forEach(element => element.remove());
         el.setAttribute('path', items.find(e => e.sk === 'path').lsi1)
         const logSearch = reusableId1 + newId
         log1('searching log ' + logSearch)
-        const logE = document.querySelectorAll(`[log-id="${logSearch}"]`).forEach(e => e.textContent = e.textContent.replace('{name}', name))
+        
+        const logE = document.querySelectorAll(`[log-id="${escapeCSSSelector(logSearch)}"]`).forEach(e => e.textContent = e.textContent.replace('{name}', name))
         document.querySelectorAll(`[data-log-id="${logSearch}"]`).forEach(e => {
           e.querySelector("#action-add-component-name").textContent = name
           e.querySelector("#action-add-component-id").textContent = id
