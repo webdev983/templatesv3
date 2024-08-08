@@ -1492,8 +1492,8 @@
                     <ul>
                       <form>
                         <span class="l-4">💾</span>
-                        <label class="l-4"><input checked="" type="site" type="radio" onchange="changePGType(event)"  name="product-group-text-save">site</label>
-                        <label class="l-4"><input type="radio" type="global" onchange="changePGType(event)" name="product-group-text-save">global</label>
+                        <label class="l-4"><input checked="" vtype="site" type="radio" onchange="changePGType(event)"  name="product-group-text-save">site</label>
+                        <label class="l-4"><input type="radio" vtype="global" onchange="changePGType(event)" name="product-group-text-save">global</label>
                       </form>
 
 
@@ -18487,7 +18487,7 @@ headers: {
         const sk = target.closest('tr').getAttribute('sk')
         const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`)
           .then(response => response.json()).then(res => res.items[0])
-        collection.pgType = target.getAttribute('type')
+        collection.pgType = target.getAttribute('vtype')
         postToDb(collection)
       }
 
