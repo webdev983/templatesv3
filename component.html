@@ -1492,8 +1492,8 @@
                     <ul>
                       <form>
                         <span class="l-4">💾</span>
-                        <label class="l-4"><input checked="" type="radio" onchange="changePGType(event)"  name="product-group-text-save">site</label>
-                        <label class="l-4"><input type="radio" onchange="changePGType(event)" name="product-group-text-save">global</label>
+                        <label class="l-4"><input checked="" type="site" type="radio" onchange="changePGType(event)"  name="product-group-text-save">site</label>
+                        <label class="l-4"><input type="radio" type="global" onchange="changePGType(event)" name="product-group-text-save">global</label>
                       </form>
 
 
@@ -1521,9 +1521,9 @@
             class="input-uuid"></label>
         <form style="margin-left: 25px; margin-top: 10px;">
           <span class="l-3">💾</span>
-          <label class="l-3"><input checked="" value="site" onchange="changePGType(event)" type="radio"
+          <label class="l-3"><input checked="" onchange="changePGType(event)" type="radio"
               name="product-group-text-save">site</label>
-          <label class="l-3"><input value="global" id="global-input" type="radio" onchange="changePGType(event)"
+          <label class="l-3"><input  id="global-input" type="radio" onchange="changePGType(event)"
               name="product-group-text-save">global</label>
         </form>
 
@@ -18487,7 +18487,7 @@ headers: {
         const sk = target.closest('tr').getAttribute('sk')
         const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`)
           .then(response => response.json()).then(res => res.items[0])
-        collection.pgType = target.value
+        collection.pgType = target.getAttribute('type')
         postToDb(collection)
       }
 
