@@ -1521,8 +1521,10 @@
             class="input-uuid"></label>
         <form style="margin-left: 25px; margin-top: 10px;">
           <span class="l-3">💾</span>
-          <label class="l-3"><input checked="" type="radio" name="product-group-text-save">site</label>
-          <label class="l-3"><input type="radio" name="product-group-text-save">global</label>
+          <label class="l-3"><input checked="" value="site" onchange="changePGType(event)" type="radio"
+              name="product-group-text-save">site</label>
+          <label class="l-3"><input value="global" id="global-input" type="radio" onchange="changePGType(event)"
+              name="product-group-text-save">global</label>
         </form>
 
         <table class="table-1" style="margin-left: 30px; margin-top: 10px;">
@@ -18435,51 +18437,61 @@ headers: {
         body: JSON.stringify(item),
       });
     }
-    const setCollectionValue = async(event)=>{
-      const {target} = event
+    const setCollectionValue = async (event) => {
+      const { target } = event
       const sk = target.closest('tr').getAttribute('sk')
       const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`)
         .then(response => response.json()).then(res => res.items[0])
       collection.value = target.textContent
       postToDb(collection)
     }
-    const changeMulti = async(event)=>{
-      const {target} = event
+    const changeMulti = async (event) => {
+      const { target } = event
       const sk = target.closest('tr').getAttribute('sk')
       const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`)
         .then(response => response.json()).then(res => res.items[0])
       collection.multi = target.checked
       postToDb(collection)
     }
-    const removeProductGroup = (event)=>{
-      const {target} = event
+    const removeProductGroup = (event) => {
+      const { target } = event
       const sk = target.closest('tr').getAttribute('sk')
       fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${ownerid}:${sk}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            // Add any additional headers if needed
-          },
-        })
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          // Add any additional headers if needed
+        },
+      })
 
     }
-    const changeHeading =async (event)=>{
-      const {target} = event
+    const changeHeading = async (event) => {
+      const { target } = event
       const sk = target.closest('tr').getAttribute('sk')
       const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`)
         .then(response => response.json()).then(res => res.items[0])
       collection.heading = target.value
       postToDb(collection)
     }
-    const changeLeadP = async (event)=>{
-      const {target} = event
+    const changeLeadP = async (event) => {
+      const { target } = event
       const sk = target.closest('tr').getAttribute('sk')
       const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`)
         .then(response => response.json()).then(res => res.items[0])
       collection.leadP = target.value
       postToDb(collection)
     }
-    const showCollection =async () => {
+    const changePGType = async () => {
+      const { target } = event
+      if (target.checked) {
+        const sk = target.closest('tr').getAttribute('sk')
+        const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`)
+          .then(response => response.json()).then(res => res.items[0])
+        collection.pgType = target.value
+      }
+
+    }
+    const showCollection = async () => {
       const filled = getElementById1('product-group-table')
       const tr = filled.querySelector('#product-group-row[hidden]')
       const collections = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=collection:&startsWith=true`)
@@ -18487,10 +18499,13 @@ headers: {
       for (const collection of collections) {
         const cloned = tr.cloneNode(true)
         cloned.removeAttribute('hidden')
-        cloned.querySelector('#product-group-input').textContent = collection.value ||''
+        cloned.querySelector('#product-group-input').textContent = collection.value || ''
         cloned.querySelector('#multi-input').checked = collection.multi || false
         cloned.querySelector('#heading-value').value = collection.heading
         cloned.querySelector('#lead-p-value').value = collection.leadP
+        if(collection.pgType ==='global'){
+          cloned.querySelector('#global-input').checked = true
+        }
         tr.parentNode.append(cloned)
         cloned.setAttribute('sk', collection.sk)
       }
