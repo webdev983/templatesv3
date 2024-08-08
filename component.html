@@ -1483,7 +1483,7 @@
                     contenteditable>catalog</span>
                 </td>
                 <td>
-                <td><label><input type="checkbox">multi</label></td>
+                <td><label><input onchange="changeMulti(event)" type="checkbox">multi</label></td>
                 </td>
                 <td>
                   <details style="margin-left: 25px; margin-top: 10px;">
@@ -18441,6 +18441,14 @@ headers: {
       const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=collection:&startsWith=true`)
         .then(response => response.json()).then(res => res.items[0])
       collection.value = target.textContent
+      postToDb(collection)
+    }
+    const changeMulti = (event)=>{
+      const {target} = event
+      const sk = target.closest('tr').getAttribute('sk')
+      const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=collection:&startsWith=true`)
+        .then(response => response.json()).then(res => res.items[0])
+      collection.multi = target.checked
       postToDb(collection)
     }
     const showCollection = () => {
