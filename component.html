@@ -1483,7 +1483,7 @@
                     contenteditable>catalog</span>
                 </td>
                 <td>
-                <td><label><input onchange="changeMulti(event)" type="checkbox">multi</label></td>
+                <td><label><input id="multi-input" onchange="changeMulti(event)" type="checkbox">multi</label></td>
                 </td>
                 <td>
                   <details style="margin-left: 25px; margin-top: 10px;">
@@ -18459,6 +18459,8 @@ headers: {
       for (const collection of collections) {
         const cloned = tr.cloneNode(true)
         cloned.removeAttribute('hidden')
+        cloned.querySelector('#product-group-input').textContent = collection.value ||''
+        cloned.querySelector('#multi-input').checked = collection.multi || false
         tr.parentNode.append(cloned)
         cloned.setAttribute('sk', collection.sk)
       }
