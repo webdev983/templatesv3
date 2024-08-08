@@ -1479,7 +1479,7 @@
                   <span class="l-3 enable-condition" id="enable-product-group">🔴</span>
                 </td>
                 <td>
-                  <span class="l-3 condition-name" onblur="setSkuItemValue(event)" id="product-group-input"
+                  <span class="l-3 condition-name" onblur="setConditionValue(event)" id="product-group-input"
                     contenteditable>catalog</span>
                 </td>
                 <td>
@@ -10333,6 +10333,7 @@ checkbox1.setAttribute('hidden', "");
 
       if (pathItem.hub_items?.menus?.collection_menu_toggle) {
         document.getElementById('collection-menu').removeAttribute('hidden')
+        showCollection()
       }
 
       if (pathItem.hub_items?.menus?.chatgpt_logs_toggle) {
@@ -18434,6 +18435,18 @@ headers: {
         body: JSON.stringify(item),
       });
     }
+    const showCollection = () => {
+      const filled = getElementById1('product-group-table')
+      const tr = filled.querySelector('#product-group-row[hidden]')
+      const collections = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=collection:&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
+      for (const collection of collections) {
+        const cloned = tr.cloneNode(true)
+        cloned.removeAttribute('hidden')
+        tr.parentNode.append(cloned)
+        cloned.setAttribute('sk', collection.sk)
+      }
+    }
     const addCondition = async (event) => {
 
       const filled = getElementById1('sku_filled')
@@ -18498,8 +18511,8 @@ headers: {
       cloned.setAttribute('sk', item.sk)
       cloned.querySelector('#enable-product-group').onclick = (e) => {
         e.target.textContent = '🟢'
-       
-        
+
+
         //generateConditionTable(v,condSk)
       }
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
