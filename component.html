@@ -1499,11 +1499,11 @@
 
                       <li><span>heading</span>
                         <br>
-                        <textarea></textarea>
+                        <textarea id="heading-value" onblur="changeHeading(event)"></textarea>
                       </li>
                       <li><span>lead paragraph</span>
                         <br>
-                        <textarea></textarea>
+                        <textarea id="lead-p-value" onblur="changeLeadP(event)"></textarea>
                       </li>
                     </ul>
                   </details>
@@ -18463,6 +18463,22 @@ headers: {
         })
 
     }
+    const changeHeading = (event)=>{
+      const {target} = event
+      const sk = target.closest('tr').getAttribute('sk')
+      const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`)
+        .then(response => response.json()).then(res => res.items[0])
+      collection.heading = target.value
+      postToDb(collection)
+    }
+    const changeLeadP = (event)=>{
+      const {target} = event
+      const sk = target.closest('tr').getAttribute('sk')
+      const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`)
+        .then(response => response.json()).then(res => res.items[0])
+      collection.leadP = target.value
+      postToDb(collection)
+    }
     const showCollection =async () => {
       const filled = getElementById1('product-group-table')
       const tr = filled.querySelector('#product-group-row[hidden]')
@@ -18473,6 +18489,8 @@ headers: {
         cloned.removeAttribute('hidden')
         cloned.querySelector('#product-group-input').textContent = collection.value ||''
         cloned.querySelector('#multi-input').checked = collection.multi || false
+        cloned.querySelector('#heading-value').value = collection.heading
+        cloned.querySelector('#lead-p-value').value = collection.leadP
         tr.parentNode.append(cloned)
         cloned.setAttribute('sk', collection.sk)
       }
