@@ -1509,7 +1509,7 @@
                   </details>
                 </td>
                 <td>
-                  <button class="b-3 condition-rename" onclick="removeremoveProductGroup(event)">🗑</button>
+                  <button class="b-3 condition-rename" onclick="removeProductGroup(event)">🗑</button>
                 </td>
               </tr>
             </tbody>
@@ -18450,6 +18450,18 @@ headers: {
         .then(response => response.json()).then(res => res.items[0])
       collection.multi = target.checked
       postToDb(collection)
+    }
+    const removeProductGroup = (event)=>{
+      const {target} = event
+      const sk = target.closest('tr').getAttribute('sk')
+      fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${ownerid}:${sk}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            // Add any additional headers if needed
+          },
+        })
+
     }
     const showCollection =async () => {
       const filled = getElementById1('product-group-table')
