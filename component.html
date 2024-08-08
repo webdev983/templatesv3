@@ -1566,9 +1566,9 @@
             <td><label class="l-3"><input type="checkbox">select</label></td>
 
           </tr>
-          <tr>
+          <tr id="sku-item" hidden>
             <td hidden><input type="checkbox"></td>
-            <td>sku1</td>
+            <td id="sku-name">sku1</td>
             <td style="display: flex; justify-content: center; align-items: center;">
               <div style="display:inline-block;" hidden>
               </div>
@@ -18509,6 +18509,15 @@ headers: {
         }
         tr.parentNode.append(cloned)
         cloned.setAttribute('sk', collection.sk)
+      }
+      //load skus
+      url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=sku:${ownerid}&gsi1lsi1=true`;
+      const { items } = await fetch(url).then(e => e.json())
+      const original = getElementById1('sku-item')
+      for(const item of items){
+        const cloned = original.cloneNode(true)
+        cloned.querySelector('#sku-name').textContent = item.id.replace('sku:','')
+        original.parentNode.append(cloned)
       }
     }
     const addCondition = async (event) => {
