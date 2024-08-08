@@ -1566,7 +1566,7 @@
             <td><label class="l-3"><input type="checkbox">select</label></td>
 
           </tr>
-          <tr id="sku-item" hidden>
+          <tr id="sku-collection-item" hidden>
             <td hidden><input type="checkbox"></td>
             <td id="sku-name">sku1</td>
             <td style="display: flex; justify-content: center; align-items: center;">
@@ -18514,7 +18514,7 @@ headers: {
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=sku:${ownerid}`;
       const { items } = await fetch(url).then(e => e.json())
       console.log('items are '+JSON.stringify(items))
-      const original = getElementById1('sku-item')
+      const original = getElementById1('sku-collection-item')
       for(const item of items){
         const cloned = original.cloneNode(true)
         cloned.querySelector('#sku-name').textContent = item.id.replace('sku:','')
