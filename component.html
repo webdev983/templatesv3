@@ -18435,7 +18435,7 @@ headers: {
         body: JSON.stringify(item),
       });
     }
-    const setCollectionValue = (event)=>{
+    const setCollectionValue = async(event)=>{
       const {target} = event
       const sk = target.closest('tr').getAttribute('sk')
       const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=collection:&startsWith=true`)
@@ -18443,7 +18443,7 @@ headers: {
       collection.value = target.textContent
       postToDb(collection)
     }
-    const changeMulti = (event)=>{
+    const changeMulti = async(event)=>{
       const {target} = event
       const sk = target.closest('tr').getAttribute('sk')
       const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=collection:&startsWith=true`)
@@ -18451,7 +18451,7 @@ headers: {
       collection.multi = target.checked
       postToDb(collection)
     }
-    const showCollection = () => {
+    const showCollection =async () => {
       const filled = getElementById1('product-group-table')
       const tr = filled.querySelector('#product-group-row[hidden]')
       const collections = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=collection:&startsWith=true`)
