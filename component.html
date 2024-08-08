@@ -1479,7 +1479,7 @@
                   <span class="l-3 enable-condition" id="enable-product-group">🔴</span>
                 </td>
                 <td>
-                  <span class="l-3 condition-name" onblur="setConditionValue(event)" id="product-group-input"
+                  <span class="l-3 condition-name" onblur="setCollectionValue(event)" id="product-group-input"
                     contenteditable>catalog</span>
                 </td>
                 <td>
@@ -18434,6 +18434,14 @@ headers: {
         },
         body: JSON.stringify(item),
       });
+    }
+    const setCollectionValue = (event)=>{
+      const {target} = event
+      const sk = target.closest('tr').getAttribute('sk')
+      const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=collection:&startsWith=true`)
+        .then(response => response.json()).then(res => res.items[0])
+      collection.value = target.textContent
+      postToDb(collection)
     }
     const showCollection = () => {
       const filled = getElementById1('product-group-table')
