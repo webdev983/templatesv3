@@ -18517,8 +18517,12 @@ headers: {
       //load collections
       const filled = getElementById1('product-group-table')
       const tr = filled.querySelector('#product-group-row[hidden]')
-      const collections = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=collection:${ownerid}`)
+      const collections1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=collection:${ownerid}`)
         .then(response => response.json()).then(res => res.items)
+      const collections =await Promise.all(collections1.map(collection=>
+       fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=${collection.sk}&startsWith=true`)
+        .then(response => response.json()).then(res => res.items[0])
+      ))
       for (const collection of collections) {
         const cloned = tr.cloneNode(true)
         cloned.removeAttribute('hidden')
