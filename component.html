@@ -18450,7 +18450,8 @@ headers: {
     const setCollectionValue = async (event) => {
       const { target } = event
       const sk = target.closest('tr').getAttribute('sk')
-      const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`)
+      const id = target.closest('tr').getAttribute('id')
+      const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=${sk}&startsWith=true`)
         .then(response => response.json()).then(res => res.items[0])
       collection.value = target.textContent
       postToDb(collection)
@@ -18458,7 +18459,8 @@ headers: {
     const changeMulti = async (event) => {
       const { target } = event
       const sk = target.closest('tr').getAttribute('sk')
-      const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`)
+      const id = target.closest('tr').getAttribute('id')
+      const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=${sk}&startsWith=true`)
         .then(response => response.json()).then(res => res.items[0])
       collection.multi = target.checked
       postToDb(collection)
@@ -18466,7 +18468,8 @@ headers: {
     const removeProductGroup = (event) => {
       const { target } = event
       const sk = target.closest('tr').getAttribute('sk')
-      fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${ownerid}:${sk}`, {
+      const id = target.closest('tr').getAttribute('id')
+      fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:${sk}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -18478,7 +18481,9 @@ headers: {
     const changeHeading = async (event) => {
       const { target } = event
       const sk = target.closest('tr').getAttribute('sk')
-      const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`)
+      
+      const id = target.closest('tr').getAttribute('id')
+      const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=${sk}&startsWith=true`)
         .then(response => response.json()).then(res => res.items[0])
       collection.heading = target.value
       postToDb(collection)
@@ -18486,7 +18491,9 @@ headers: {
     const changeLeadP = async (event) => {
       const { target } = event
       const sk = target.closest('tr').getAttribute('sk')
-      const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`)
+      
+      const id = target.closest('tr').getAttribute('id')
+      const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=${sk}&startsWith=true`)
         .then(response => response.json()).then(res => res.items[0])
       collection.leadP = target.value
       postToDb(collection)
@@ -18495,7 +18502,9 @@ headers: {
       const { target } = event
       if (target.checked) {
         const sk = target.closest('tr').getAttribute('sk')
-        const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`)
+        
+      const id = target.closest('tr').getAttribute('id')
+        const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=${sk}&startsWith=true`)
           .then(response => response.json()).then(res => res.items[0])
         collection.pgType = target.getAttribute('vtype')
         postToDb(collection)
@@ -18536,6 +18545,7 @@ headers: {
         }
         tr.parentNode.append(cloned)
         cloned.setAttribute('sk', collection.sk)
+        cloned.setAttribute('id', collection.id)
         cloned.querySelector('#enable-product-group').onclick = (e) => {
           e.target.textContent = '🟢'
 
