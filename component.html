@@ -1519,8 +1519,10 @@
                     <ul>
                       <form>
                         <span class="l-4">💾</span>
-                        <label class="l-4"><input checked="" id="site-input" vtype="site" type="radio" onchange="changePGType(event)"  name="product-group-text-save">site</label>
-                        <label class="l-4"><input type="radio" id="global-input" vtype="global" onchange="changePGType(event)" name="product-group-text-save">global</label>
+                        <label class="l-4"><input checked="" id="site-input" vtype="site" type="radio"
+                            onchange="changePGType(event)" name="product-group-text-save">site</label>
+                        <label class="l-4"><input type="radio" id="global-input" vtype="global"
+                            onchange="changePGType(event)" name="product-group-text-save">global</label>
                       </form>
 
 
@@ -1548,7 +1550,7 @@
             class="input-uuid"></label>
 
         <table class="table-1" style="margin-left: 30px; margin-top: 10px;">
-          <tr>
+          <tr id="sku-collection-header">
             <td>sku</td>
             <td>
               <span class="l-3">🔗</span><span class="l-3">related products</span>
@@ -18500,6 +18502,19 @@ headers: {
 
     }
     const showCollection = async () => {
+      
+      //load skus
+      url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=sku:${ownerid}`;
+      const { items } = await fetch(url).then(e => e.json())
+      console.log('items are ' + JSON.stringify(items))
+      const original = getElementById1('sku-collection-item')
+      for (const item of items) {
+        const cloned = original.cloneNode(true)
+        cloned.querySelector('#sku-name').textContent = item.id.replace('sku:', '')
+        cloned.removeAttribute('hidden')
+        original.parentNode.append(cloned)
+      }
+      //load collections
       const filled = getElementById1('product-group-table')
       const tr = filled.querySelector('#product-group-row[hidden]')
       const collections = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=collection:&startsWith=true`)
@@ -18511,22 +18526,17 @@ headers: {
         cloned.querySelector('#multi-input').checked = collection.multi || false
         cloned.querySelector('#heading-value').value = collection.heading
         cloned.querySelector('#lead-p-value').value = collection.leadP
-        if(collection.pgType ==='global'){
+        if (collection.pgType === 'global') {
           cloned.querySelector('#global-input').checked = true
         }
         tr.parentNode.append(cloned)
         cloned.setAttribute('sk', collection.sk)
-      }
-      //load skus
-      url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=sku:${ownerid}`;
-      const { items } = await fetch(url).then(e => e.json())
-      console.log('items are '+JSON.stringify(items))
-      const original = getElementById1('sku-collection-item')
-      for(const item of items){
-        const cloned = original.cloneNode(true)
-        cloned.querySelector('#sku-name').textContent = item.id.replace('sku:','')
-        cloned.removeAttribute('hidden')
-        original.parentNode.append(cloned)
+        cloned.querySelector('#enable-product-group').onclick = (e) => {
+          e.target.textContent = '🟢'
+
+
+          //generateConditionTable(v,condSk)
+        }
       }
     }
     const addCondition = async (event) => {
@@ -21478,6 +21488,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         const fieldsetId = fieldset.id;
         const fieldsetAction = fieldset.getAttribute('action');
         const apply_to_copies = fieldset.getAttribute('copiesOfInserting');
+        
         log1("Fieldset ID:", fieldsetId);
         log1("Fieldset Action:", fieldsetAction);
         const splited = fieldsetId.split(';')
@@ -21503,6 +21514,8 @@ element.setAttribute('data-product', [first, name].join(';'))
           }
 
         }
+        const addIz = fieldset.querySelector('#add-iz').checked
+        
         const positionChecked = fieldset.querySelector('#position-checkbox').checked
         if (positionChecked) {
           const positionV = fieldset.querySelector('#position-number').value
@@ -21516,6 +21529,10 @@ element.setAttribute('data-product', [first, name].join(';'))
 
         else {
           el.inserted_element = { type: 'tag', tagValue: chosenTag.tagValue, tagName: chosenTag.tagName, id: generateUUID() }
+        }
+        if (addIz) {
+          el.inserted_element.id = "iz"
+
         }
         pushAction(el)
         fieldset.remove()
