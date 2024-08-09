@@ -18517,7 +18517,7 @@ headers: {
       //load collections
       const filled = getElementById1('product-group-table')
       const tr = filled.querySelector('#product-group-row[hidden]')
-      const collections = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=collection:&startsWith=true`)
+      const collections = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=collection:${ownerid}`)
         .then(response => response.json()).then(res => res.items)
       for (const collection of collections) {
         const cloned = tr.cloneNode(true)
@@ -18596,9 +18596,10 @@ headers: {
       cloned.removeAttribute('hidden')
       tr.parentNode.append(cloned)
       const item = {
-        id: ownerid,
-        sk: 'collection:' + (new Date()).getTime().toString(),
-        value: 'collection'
+        id: 'collection:'+generateUUID(),
+        sk: 'created:' + (new Date()).getTime().toString(),
+        ownerUUID: 'collection:'+ownerid,
+        value:'collection'
       }
       cloned.setAttribute('sk', item.sk)
       cloned.querySelector('#enable-product-group').onclick = (e) => {
