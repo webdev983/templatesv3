@@ -1570,11 +1570,11 @@
                 </table>
 
               </div>
-              <button  hidden class="b-2">❌</button>
-              <button  class="b-2">➕</button>
+              <button hidden class="b-2">❌</button>
+              <button class="b-2">➕</button>
               <label hidden class="l-3"><input type="checkbox">select</label>
             </td>
-            <td> <label  class="l-3"><input type="checkbox">select</label></td>
+            <td> <label class="l-3"><input type="checkbox">select</label></td>
 
           </tr>
 
@@ -1603,15 +1603,16 @@
           </fieldset>
 
           <details id="details-1" style="margin-left: 30px; margin-top: 10px;">
-            <summary id="summary-1" class="summary-L-3"><span  id="h1-status" class="l-2">🔴</span>
+            <summary id="summary-1" class="summary-L-3"><span id="h1-status" class="l-2">🔴</span>
               <span class="l-3 b-dark-blue">H1:
-              </span><span id="h1" class="l-3"></span></summary>
-              <script>
-                document.getElementById("h1-status").addEventListener("click", function(event) {
-                  event.preventDefault(); 
-                  event.stopPropagation(); 
-                });
-              </script>
+              </span><span id="h1" class="l-3"></span>
+            </summary>
+            <script>
+              document.getElementById("h1-status").addEventListener("click", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+              });
+            </script>
 
             <div id="h1-edit" style="margin-left: 30px;">
               <div id="h1-edit-controls" style="margin-top: 8px; margin-bottom: 8px;">
@@ -1632,12 +1633,12 @@
               </div>
             </div>
             <hr style="border-bottom: 2px solid #ffcc81; margin-top: 20px; margin-bottom: 20px;">
-            <span  class="l-3 b-dark-blue" style="margin-left: 30px;">H1 no vars</span >
+            <span class="l-3 b-dark-blue" style="margin-left: 30px;">H1 no vars</span>
 
-            <div  class="h1-input-div">
+            <div class="h1-input-div">
               <input id="h1-no-vars-input" type="text" class="h1-input">
             </div>
-        </details>
+          </details>
 
           <details style="margin-left: 30px; margin-top: 10px;">
             <summary class="summary-L-3"><span class="l-3 b-dark-blue">🔗 related products</span></summary>
@@ -18502,7 +18503,7 @@ headers: {
 
     }
     const showCollection = async () => {
-      
+
       //load skus
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=sku:${ownerid}`;
       const { items } = await fetch(url).then(e => e.json())
@@ -18519,9 +18520,9 @@ headers: {
       const tr = filled.querySelector('#product-group-row[hidden]')
       const collections1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=collection:${ownerid}`)
         .then(response => response.json()).then(res => res.items)
-      const collections =await Promise.all(collections1.map(collection=>
-       fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=${collection.sk}&startsWith=true`)
-        .then(response => response.json()).then(res => res.items[0])
+      const collections = await Promise.all(collections1.map(collection =>
+        fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=${collection.sk}&startsWith=true`)
+          .then(response => response.json()).then(res => res.items[0])
       ))
       for (const collection of collections) {
         const cloned = tr.cloneNode(true)
@@ -18600,10 +18601,10 @@ headers: {
       cloned.removeAttribute('hidden')
       tr.parentNode.append(cloned)
       const item = {
-        id: 'collection:'+generateUUID(),
+        id: 'collection:' + generateUUID(),
         sk: 'created:' + (new Date()).getTime().toString(),
-        ownerUUID: 'collection:'+ownerid,
-        value:'collection'
+        ownerUUID: 'collection:' + ownerid,
+        value: 'collection'
       }
       cloned.setAttribute('sk', item.sk)
       cloned.querySelector('#enable-product-group').onclick = (e) => {
@@ -21493,7 +21494,7 @@ element.setAttribute('data-product', [first, name].join(';'))
         const fieldsetId = fieldset.id;
         const fieldsetAction = fieldset.getAttribute('action');
         const apply_to_copies = fieldset.getAttribute('copiesOfInserting');
-        
+
         log1("Fieldset ID:", fieldsetId);
         log1("Fieldset Action:", fieldsetAction);
         const splited = fieldsetId.split(';')
@@ -21520,7 +21521,7 @@ element.setAttribute('data-product', [first, name].join(';'))
 
         }
         const addIz = fieldset.querySelector('#add-iz').checked
-        
+
         const positionChecked = fieldset.querySelector('#position-checkbox').checked
         if (positionChecked) {
           const positionV = fieldset.querySelector('#position-number').value
