@@ -18608,6 +18608,7 @@ headers: {
         const original1 = cloned.querySelector('#related_product_sku')
         url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=relatedProducts&startsWith=true`;
         const res = await fetch(url).then(e => e.json())
+        /*
         if (res.items[0]) {
           for (const item1 of res.items[0].list) {
             const cloned2 = original1.cloneNode(true)
@@ -18616,7 +18617,8 @@ headers: {
             cloned2.querySelector('#related_product_sku_name').textContent = item1
             cloned2.setAttribute('sku',item1)
           }
-        }
+        }*/
+        console.log(JSON.stringify(res.items))
 
         cloned.querySelector('#add_related_product').onclick = () => {
           const cancel = cloned.querySelector('#add_cancel')
