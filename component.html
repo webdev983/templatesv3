@@ -18607,9 +18607,12 @@ headers: {
         cloned.setAttribute('sku', sku)
         cloned.querySelector('#add_related_product').onclick = () => {
           const cancel = cloned.querySelector('#add_cancel')
+          cloned.querySelector('#add_related_product').setAttribute('hidden')
           cancel.removeAttribute('hidden')
           table.querySelectorAll('td[sku]').forEach(e=>{
-            if(e.getAttribute('sku')!==sku){
+            const fSku = e.getAttribute('sku')
+            console.log(fSku)
+            if(fSku!==sku){
               const checkbox = e.querySelector('#select_related_product').querySelector('input')
               checkbox.removeAttribute('hidden')
             }
