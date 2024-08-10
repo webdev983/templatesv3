@@ -1555,7 +1555,7 @@
             <td>
               <span class="l-3">🔗</span><span class="l-3">related products</span>
             </td>
-            <td id="checkbox-header" hidden><label><input type="checkbox"><span class="l-3">.</span></label></td>
+            <td id="checkbox-header" hidden><label><input type="checkbox"><span id="span-3" class="l-3">.</span></label></td>
 
           </tr>
           <tr id="sku-collection-item" hidden>
@@ -18540,13 +18540,14 @@ headers: {
       }
 
     }
-    const generateCollectionColumn = async (collectionId) => {
+    const generateCollectionColumn = async (collectionId,collectionName) => {
       const collection = document.getElementById('sku-collection-table')
       const header = collection.querySelector('#checkbox-header[hidden]')
       const cloned = header.cloneNode(true)
       header.parentNode.insertBefore(cloned, header)
       cloned.setAttribute('collectionId', collectionId)
       cloned.removeAttribute('hidden')
+      cloned.querySelector('#span-3').textContent = collectionName
       let selected = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collectionId}&sk=selected&startsWith=true`)
         .then(response => response.json()).then(res => res.items[0])
       
@@ -18628,7 +18629,7 @@ headers: {
         const enableG = () => {
           enableButton.textContent = '🟢'
           postToDb({ id: collection.id, sk: 'enabled' })
-          generateCollectionColumn(collection.id)
+          generateCollectionColumn(collection.id, collectionName?.value || 'catalogue')
           //generateConditionTable(v,condSk)
         }
         const enabled = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=enabled&startsWith=true`)
