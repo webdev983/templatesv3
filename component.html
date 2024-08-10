@@ -1555,7 +1555,8 @@
             <td>
               <span class="l-3">🔗</span><span class="l-3">related products</span>
             </td>
-            <td id="checkbox-header" hidden><label><input type="checkbox"><span id="span-3" class="l-3">.</span></label></td>
+            <td id="checkbox-header" hidden><label><input type="checkbox"><span id="span-3" class="l-3">.</span></label>
+            </td>
 
           </tr>
           <tr id="sku-collection-item" hidden>
@@ -18466,17 +18467,22 @@ headers: {
       collection.multi = target.checked
       postToDb(collection)
     }
-    const removeProductGroup = (event) => {
+    const removeProductGroup = async (event) => {
       const { target } = event
       const sk = target.closest('tr').getAttribute('sk')
-      const id = target.closest('tr').getAttribute('id')
-      fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${id}:${sk}`, {
+
+      const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`)
+        .then(response => response.json())
+      const p = items.map(item => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id}:${item.sk}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
           // Add any additional headers if needed
         },
-      })
+      }))
+      await Promise.all(p)
+      target.remove()
+
 
     }
     const changeHeading = async (event) => {
@@ -18540,7 +18546,7 @@ headers: {
       }
 
     }
-    const generateCollectionColumn = async (collectionId,collectionName) => {
+    const generateCollectionColumn = async (collectionId, collectionName) => {
       const collection = document.getElementById('sku-collection-table')
       const header = collection.querySelector('#checkbox-header[hidden]')
       const cloned = header.cloneNode(true)
@@ -18550,34 +18556,34 @@ headers: {
       cloned.querySelector('#span-3').textContent = collectionName
       let selected = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collectionId}&sk=selected&startsWith=true`)
         .then(response => response.json()).then(res => res.items[0])
-      
-      if(!selected) {
+
+      if (!selected) {
         selected = {
           id: collectionId,
           sk: 'selected',
           items: []
         }
       }
-      
+
       collection.querySelectorAll('#checkbox-td[hidden]').forEach(element => {
 
         const cloned = element.cloneNode(true)
-       
+
         element.parentNode.insertBefore(cloned, element)
         cloned.removeAttribute('hidden')
         cloned.setAttribute('collectionId', collectionId)
         const tr = cloned.closest('tr')
         const sku = tr.getAttribute('sku')
         const input = cloned.querySelector('input')
-        if(selected.items.includes(sku)){
+        if (selected.items.includes(sku)) {
           input.checked = true
         }
         input.onclick = (e) => {
-          if(e.target.checked){
+          if (e.target.checked) {
             selected.items.push(sku)
           }
-          else{
-            selected.items = selected.items.filter(e=>e!==sku)
+          else {
+            selected.items = selected.items.filter(e => e !== sku)
           }
           postToDb(selected)
         }
