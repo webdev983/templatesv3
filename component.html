@@ -1549,13 +1549,13 @@
         <label style="margin-left: 25px; padding-top: 10px;"><span class="l-3">📦search</span><input type="text"
             class="input-uuid"></label>
 
-        <table class="table-1" style="margin-left: 30px; margin-top: 10px;">
+        <table id="sku-collection-table" class="table-1" style="margin-left: 30px; margin-top: 10px;">
           <tr id="sku-collection-header">
             <td>sku</td>
             <td>
               <span class="l-3">🔗</span><span class="l-3">related products</span>
             </td>
-            <td><label><input type="checkbox"><span class="l-3">.</span></label></td>
+            <td hidden><label><input type="checkbox"><span class="l-3">.</span></label></td>
 
           </tr>
           <tr id="sku-collection-item">
@@ -1574,7 +1574,7 @@
               <button class="b-2">➕</button>
               <label hidden class="l-3"><input type="checkbox">select</label>
             </td>
-            <td> <label class="l-3"><input type="checkbox">select</label></td>
+            <td hidden> <label class="l-3"><input type="checkbox">select</label></td>
 
           </tr>
 
@@ -18451,11 +18451,11 @@ headers: {
       const { target } = event
       const sk = target.closest('tr').getAttribute('sk')
       const id = target.closest('tr').getAttribute('id')
-     
-      
 
 
-      postToDb({ id, sk:'collectionName',value:target.textContent })
+
+
+      postToDb({ id, sk: 'collectionName', value: target.textContent })
     }
     const changeMulti = async (event) => {
       const { target } = event
@@ -18527,18 +18527,22 @@ headers: {
           const heading = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=heading;${site}&startsWith=true`)
             .then(response => response.json()).then(res => res.items[0])
           leadEl.value = lead?.value || ''
-          headingEl.value = heading?.value|| ''
+          headingEl.value = heading?.value || ''
         }
         else {
           const lead = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=leadP;global&startsWith=true`)
             .then(response => response.json()).then(res => res.items[0])
           const heading = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=heading;global&startsWith=true`)
             .then(response => response.json()).then(res => res.items[0])
-          leadEl.value = lead?.value|| ''
-          headingEl.value = heading?.value|| ''
+          leadEl.value = lead?.value || ''
+          headingEl.value = heading?.value || ''
         }
       }
 
+    }
+    const generateCollectionColumn = (collectionId) => {
+      const collection = document.getElementById('sku-collection-table')
+      
     }
     const showCollection = async () => {
 
@@ -18581,8 +18585,8 @@ headers: {
         cloned.setAttribute('id', collection.id)
         cloned.querySelector('#enable-product-group').onclick = (e) => {
           e.target.textContent = '🟢'
-
-
+          postToDb({ id: collection.id, sk: 'enabled' })
+          generateCollectionColumn(collection.id)
           //generateConditionTable(v,condSk)
         }
       }
