@@ -1555,7 +1555,8 @@
             <td>
               <span class="l-3">🔗</span><span class="l-3 b-dark-blue">related products</span>
             </td>
-            <td id="checkbox-header" hidden><label><input type="checkbox"><span id="span-3" class="l-3 b-dark-blue">.</span></label>
+            <td id="checkbox-header" hidden><label><input type="checkbox"><span id="span-3"
+                  class="l-3 b-dark-blue">.</span></label>
             </td>
 
           </tr>
@@ -1571,9 +1572,9 @@
                 </table>
 
               </div>
-              <button hidden class="b-2">❌</button>
-              <button class="b-2">➕</button>
-              <label hidden class="l-3"><input type="checkbox">select</label>
+              <button hidden id="add_cancel" class="b-2">❌</button>
+              <button id="add_related_product" class="b-2">➕</button>
+              <label hidden id="select_related_product" class="l-3"><input type="checkbox">select</label>
             </td>
             <td hidden id="checkbox-td"> <label class="l-3"><input type="checkbox">select</label></td>
 
@@ -18596,12 +18597,24 @@ headers: {
       const { items } = await fetch(url).then(e => e.json())
       console.log('items are ' + JSON.stringify(items))
       const original = getElementById1('sku-collection-item')
+      const table = getElementById1('sku-collection-table')
       for (const item of items) {
         const cloned = original.cloneNode(true)
-        cloned.querySelector('#sku-name').textContent = item.id.replace('sku:', '')
+        const sku = item.id.replace('sku:', '')
+        cloned.querySelector('#sku-name').textContent = sku
         cloned.removeAttribute('hidden')
-        cloned.setAttribute('sku', item.id.replace('sku:', ''))
-        original.parentNode.append(cloned)
+        cloned.setAttribute('sku', sku)
+        cloned.querySelector('#add_related_product').onclick = () => {
+          const cancel = cloned.querySelector('#add_cancel')
+          cancel.removeAttribute('hidden')
+          table.querySelectorAll('td[sku]').forEach(e=>{
+            if(e.getAttribute('sku')!==sku){
+              const checkbox = e.querySelector('#select_related_product').querySelector('input')
+              checkbox.removeAttribute('hidden')
+            }
+          })
+        }
+        table.append(cloned)
       }
       //load collections
       const filled = getElementById1('product-group-table')
@@ -18634,7 +18647,7 @@ headers: {
         const enableButton = cloned.querySelector('#enable-product-group')
         const enableG = () => {
           if (enableButton.textContent === '🟢') {
-            fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${collection.id.replace(':','~')}:enabled`, {
+            fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${collection.id.replace(':', '~')}:enabled`, {
               method: 'DELETE',
               headers: {
                 'Content-Type': 'application/json',
