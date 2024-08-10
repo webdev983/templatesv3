@@ -18451,20 +18451,11 @@ headers: {
       const { target } = event
       const sk = target.closest('tr').getAttribute('sk')
       const id = target.closest('tr').getAttribute('id')
-      const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=collectionName:&startsWith=true`)
-        .then(response => response.json()).then(res => res.items[0])
-      if (collection) {
-        await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${collection.id}:${collection.sk}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            // Add any additional headers if needed
-          },
-        })
-      }
+     
+      
 
 
-      postToDb({ id, sk:'collectionName:'+ target.textContent })
+      postToDb({ id, sk:'collectionName',value:target.textContent })
     }
     const changeMulti = async (event) => {
       const { target } = event
@@ -18574,9 +18565,9 @@ headers: {
       for (const collection of collections) {
         const cloned = tr.cloneNode(true)
         cloned.removeAttribute('hidden')
-        const collectionName = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=collectionName:&startsWith=true`)
+        const collectionName = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=collectionName&startsWith=true`)
           .then(response => response.json()).then(res => res.items[0])
-        cloned.querySelector('#product-group-input').textContent = collectionName?.sk.replace('collectionName:', '') || 'catalogue'
+        cloned.querySelector('#product-group-input').textContent = collectionName?.value || 'catalogue'
         //cloned.querySelector('#multi-input').checked = collection.multi || false
         const lead = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=leadP;global&startsWith=true`)
           .then(response => response.json()).then(res => res.items[0])
