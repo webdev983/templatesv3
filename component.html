@@ -18540,18 +18540,45 @@ headers: {
       }
 
     }
-    const generateCollectionColumn = (collectionId) => {
+    const generateCollectionColumn = async (collectionId) => {
       const collection = document.getElementById('sku-collection-table')
       const header = collection.querySelector('#checkbox-header[hidden]')
       const cloned = header.cloneNode(true)
-      header.parentNode.insertBefore(cloned,header)
+      header.parentNode.insertBefore(cloned, header)
       cloned.setAttribute('collectionId', collectionId)
       cloned.removeAttribute('hidden')
+      let selected = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collectionId}&sk=selected&startsWith=true`)
+        .then(response => response.json()).then(res => res.items[0])
+      
+      if(!selected) {
+        selected = {
+          id: collectionId,
+          sk: 'selected',
+          items: []
+        }
+      }
+      
       collection.querySelectorAll('#checkbox-td[hidden]').forEach(element => {
+
         const cloned = element.cloneNode(true)
-        element.parentNode.insertBefore(cloned,element)
+       
+        element.parentNode.insertBefore(cloned, element)
         cloned.removeAttribute('hidden')
         cloned.setAttribute('collectionId', collectionId)
+        const tr = cloned.closest(tr)
+        const sku = tr.getAttribute('sku')
+        const input = cloned.querySelector('input')
+        if(selected.items.includes(sku)){
+          input.checked = true
+        }
+        input.onclick = (e) => {
+          if(e.target.checked){
+            selected.items.push(sku)
+          }
+          else{
+            selected.items = elected.items.filter(e=>e!==sku)
+          }
+        }
       })
     }
     const showCollection = async () => {
@@ -18565,6 +18592,7 @@ headers: {
         const cloned = original.cloneNode(true)
         cloned.querySelector('#sku-name').textContent = item.id.replace('sku:', '')
         cloned.removeAttribute('hidden')
+        cloned.setAttribute('sku', item.id.replace('sku:', ''))
         original.parentNode.append(cloned)
       }
       //load collections
