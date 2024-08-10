@@ -17501,7 +17501,8 @@ headers: {
 
       const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${value}&sk=created:&startsWith=true`)
         .then(response => response.json())
-      postToDb({
+        const pSiteLabel = getElementById1("published-site-label")
+        postToDb({
         id: 'sku:' + value,
         sk: 'addedSite:' + pathItemPath.split('/')[0],
         value: pSiteLabel.getAttribute('href')
@@ -17537,7 +17538,7 @@ headers: {
       });
 
       showSku2(value, true)
-      const pSiteLabel = getElementById1("published-site-label")
+      
 
       
       //setDataProduct(value, resultList)
