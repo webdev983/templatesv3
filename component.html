@@ -18571,13 +18571,13 @@ headers: {
       for (const collection of collections) {
         const cloned = tr.cloneNode(true)
         cloned.removeAttribute('hidden')
-        const collectionName = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=collectionName:&startsWith=true`)
+        const collectionName = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=collectionName:&startsWith=true`)
           .then(response => response.json()).then(res => res.items[0])
         cloned.querySelector('#product-group-input').textContent = collectionName.sk.replace('collectionName:', '')
         //cloned.querySelector('#multi-input').checked = collection.multi || false
-        const lead = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=leadP;global&startsWith=true`)
+        const lead = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=leadP;global&startsWith=true`)
           .then(response => response.json()).then(res => res.items[0])
-        const heading = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=heading;global&startsWith=true`)
+        const heading = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=heading;global&startsWith=true`)
           .then(response => response.json()).then(res => res.items[0])
         cloned.querySelector('#heading-value').value = heading.value
         cloned.querySelector('#lead-p-value').value = lead.value
