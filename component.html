@@ -18605,14 +18605,22 @@ headers: {
         cloned.querySelector('#sku-name').textContent = sku
         cloned.removeAttribute('hidden')
         cloned.setAttribute('sku', sku)
-        const original1 = cloned.querySelector('#related_product_sku')
+        const original1 = cloned.querySelector('#related_product_sku[hidden]')
 
-       
+
         cloned.querySelector('#add_cancel').onclick = (e) => {
-          e.target.setAttribute('hidden','')
+          e.target.setAttribute('hidden', '')
           cloned.querySelector('#add_related_product').removeAttribute('hidden')
+          table.querySelectorAll('#sku-collection-item[sku]').forEach(e => {
+
+            const label = e.querySelector('#select_related_product')
+            label.setAttribute('hidden', '')
+            label.querySelector('input').checked = false
+            cloned.querySelectorAll('#related_product_sku:not([hidden])').forEach(e=>e.remove());
+
+          })
         }
-        cloned.querySelector('#add_related_product').onclick =async () => {
+        cloned.querySelector('#add_related_product').onclick = async () => {
           const cancel = cloned.querySelector('#add_cancel')
           cloned.querySelector('#add_related_product').setAttribute('hidden', '')
           cancel.removeAttribute('hidden')
@@ -18645,10 +18653,10 @@ headers: {
             if (fSku !== sku) {
               const label = e.querySelector('#select_related_product')
               label.removeAttribute('hidden')
-              if(res.items[0].list.includes(fSku)){
+              if (res.items[0].list.includes(fSku)) {
                 label.querySelector('input').checked = true
               }
-              else{
+              else {
                 label.querySelector('input').checked = false
               }
               label.querySelector('input').onclick = async (e) => {
