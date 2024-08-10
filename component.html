@@ -15956,6 +15956,7 @@ elementsToRemove.forEach(element => element.remove());
       removeAttributesStartWith: ["data-visual", "data-builder", "data-replaceid", "data-transfer", "data-b", "data-import", "data-parentid"]
     }
     const publish = async (e, updateContent) => {
+     
       const date = new Date()
       if (visualOn) {
         localStorage.removeItem('visualOn')
@@ -16078,7 +16079,11 @@ elementsToRemove.forEach(element => element.remove());
       el3.setAttribute('href', r.link)
       pSiteLabel.removeAttribute('hidden')
       pSiteLabel.setAttribute('href', r.link?.replace('s3.amazonaws.com/', '').replace('index.html', ''))
-
+      postToDb({
+        id:'sku:'+pathItemSku,
+        sk:'addedSite:'+pathItemPath.split('/')[0],
+        value: r.link?.replace('s3.amazonaws.com/', '').replace('index.html', '')
+      })
       el4.removeAttribute('hidden', '')
       el5.removeAttribute('hidden', '')
 
