@@ -18605,6 +18605,18 @@ headers: {
         cloned.querySelector('#sku-name').textContent = sku
         cloned.removeAttribute('hidden')
         cloned.setAttribute('sku', sku)
+        const original1 = cloned.querySelector('#related_product_sku')
+        url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=relatedProducts&startsWith=true`;
+        const { items } = await fetch(url).then(e => e.json())
+        if (items[0]) {
+          for (const item of items[0].list) {
+            const cloned2 = original1.cloneNode(true)
+            cloned2.removeAttribute('hidden')
+            original1.parentNode.append(cloned2)
+            cloned2.querySelector('#related_product_sku_name').textContent = fSku
+          }
+        }
+
         cloned.querySelector('#add_related_product').onclick = () => {
           const cancel = cloned.querySelector('#add_cancel')
           cloned.querySelector('#add_related_product').setAttribute('hidden', '')
@@ -18615,8 +18627,8 @@ headers: {
             if (fSku !== sku) {
               const label = e.querySelector('#select_related_product')
               label.removeAttribute('hidden')
-              const original1 = cloned.querySelector('#related_product_sku')
-              label.querySelector('input').onclick =async (e) => {
+
+              label.querySelector('input').onclick = async (e) => {
                 if (e.target.checked) {
                   const cloned2 = original1.cloneNode(true)
                   cloned2.removeAttribute('hidden')
@@ -18625,15 +18637,15 @@ headers: {
                   url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=relatedProducts&startsWith=true`;
                   const { items } = await fetch(url).then(e => e.json())
                   let list
-                  if(items.length){
+                  if (items.length) {
                     list = items[0]
                     list.list.push(fSku)
                   }
-                  else{
+                  else {
                     list = {
-                      id: 'sku:'+fSku,
+                      id: 'sku:' + fSku,
                       sk: 'relatedProducts',
-                      list:[fSku]
+                      list: [fSku]
                     }
                   }
                   postToDb(list)
