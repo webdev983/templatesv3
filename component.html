@@ -18542,12 +18542,12 @@ headers: {
     }
     const generateCollectionColumn = (collectionId) => {
       const collection = document.getElementById('sku-collection-table')
-      const header = collection.querySelector('#checkbox-header')
+      const header = collection.querySelector('#checkbox-header[hidden]')
       const cloned = header.cloneNode(true)
       header.parentNode.insertBefore(cloned,header)
       cloned.setAttribute('collectionId', collectionId)
       cloned.removeAttribute('hidden')
-      collection.querySelectorAll('#checkbox-td').forEach(element => {
+      collection.querySelectorAll('#checkbox-td[hidden]').forEach(element => {
         const cloned = element.cloneNode(true)
         element.parentNode.insertBefore(cloned,element)
         cloned.removeAttribute('hidden')
