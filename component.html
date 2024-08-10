@@ -18451,10 +18451,17 @@ headers: {
       const { target } = event
       const sk = target.closest('tr').getAttribute('sk')
       const id = target.closest('tr').getAttribute('id')
-      const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=${sk}&startsWith=true`)
+      const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=collectionName:&startsWith=true`)
         .then(response => response.json()).then(res => res.items[0])
-      collection.value = target.textContent
-      postToDb(collection)
+      await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${collection.id}:${collection.sk}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          // Add any additional headers if needed
+        },
+      })
+
+      postToDb({ id, sk: target.textContent })
     }
     const changeMulti = async (event) => {
       const { target } = event
@@ -18481,33 +18488,61 @@ headers: {
     const changeHeading = async (event) => {
       const { target } = event
       const sk = target.closest('tr').getAttribute('sk')
-      
+
       const id = target.closest('tr').getAttribute('id')
-      const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=${sk}&startsWith=true`)
-        .then(response => response.json()).then(res => res.items[0])
-      collection.heading = target.value
-      postToDb(collection)
+      const td = target.closest('td')
+      const siteChecked = td.querySelector('#site-input').checked
+      let toP = { id, value: target.value }
+      if (siteChecked) {
+        const site = pathItemPath.split('/')[0].toLowerCase()
+        toP.sk = `heading;${site}`
+      }
+      else {
+        toP.sk = `heading;global`
+      }
+      postToDb(toP)
     }
     const changeLeadP = async (event) => {
       const { target } = event
       const sk = target.closest('tr').getAttribute('sk')
-      
+
       const id = target.closest('tr').getAttribute('id')
-      const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=${sk}&startsWith=true`)
-        .then(response => response.json()).then(res => res.items[0])
-      collection.leadP = target.value
-      postToDb(collection)
+      const td = target.closest('td')
+      const siteChecked = td.querySelector('#site-input').checked
+      let toP = { id, value: target.value }
+      if (siteChecked) {
+        const site = pathItemPath.split('/')[0].toLowerCase()
+        toP.sk = `leadP;${site}`
+      }
+      else {
+        toP.sk = `leadP;global`
+      }
+      postToDb(toP)
     }
     const changePGType = async () => {
       const { target } = event
-      if (target.checked) {
-        const sk = target.closest('tr').getAttribute('sk')
-        
       const id = target.closest('tr').getAttribute('id')
-        const collection = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=${sk}&startsWith=true`)
-          .then(response => response.json()).then(res => res.items[0])
-        collection.pgType = target.getAttribute('vtype')
-        postToDb(collection)
+      const td = target.closest('td')
+      const leadEl = td.querySelector('#lead-p-value')
+      const headingEl = td.querySelector('#heading-value')
+      if (target.checked) {
+        if (target.getAttribute('vtype') === 'site') {
+          const site = pathItemPath.split('/')[0].toLowerCase()
+          const lead = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=leadP;${site}&startsWith=true`)
+            .then(response => response.json()).then(res => res.items[0])
+          const heading = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=heading;${site}&startsWith=true`)
+            .then(response => response.json()).then(res => res.items[0])
+          leadEl.value = lead.value
+          headingEl.value = heading.value
+        }
+        else {
+          const lead = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=leadP;global&startsWith=true`)
+            .then(response => response.json()).then(res => res.items[0])
+          const heading = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=heading;global&startsWith=true`)
+            .then(response => response.json()).then(res => res.items[0])
+          leadEl.value = lead.value
+          headingEl.value = heading.value
+        }
       }
 
     }
