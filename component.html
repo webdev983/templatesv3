@@ -17501,6 +17501,11 @@ headers: {
 
       const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${value}&sk=created:&startsWith=true`)
         .then(response => response.json())
+      postToDb({
+        id: 'sku:' + value,
+        sk: 'addedSite:' + pathItemPath.split('/')[0],
+        value: pSiteLabel.getAttribute('href')
+      })
       if (items.length) {
         if (items[0].ownerUUID.replace('sku:', '') === ownerid) {
           await setSku(value)
@@ -17513,11 +17518,7 @@ headers: {
           getElementById1('input-sku2').value = ''
 
         }
-        postToDb({
-          id: 'sku:' + value,
-          sk: 'addedSite:' + pathItemPath.split('/')[0],
-          value: pSiteLabel.getAttribute('href')
-        })
+
         return
 
 
@@ -17538,11 +17539,7 @@ headers: {
       showSku2(value, true)
       const pSiteLabel = getElementById1("published-site-label")
 
-      postToDb({
-        id: 'sku:' + value,
-        sk: 'addedSite:' + pathItemPath.split('/')[0],
-        value: pSiteLabel.getAttribute('href')
-      })
+      
       //setDataProduct(value, resultList)
     }
 
