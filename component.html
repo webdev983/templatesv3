@@ -18606,34 +18606,38 @@ headers: {
         cloned.removeAttribute('hidden')
         cloned.setAttribute('sku', sku)
         const original1 = cloned.querySelector('#related_product_sku')
-        url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=relatedProducts&startsWith=true`;
-        const res = await fetch(url).then(e => e.json())
 
-        if (res.items[0]) {
-          for (const item1 of res.items[0].list) {
-            const cloned2 = original1.cloneNode(true)
-            cloned2.removeAttribute('hidden')
-            //original1.parentNode.append(cloned2)
-            insertAfter(cloned2, original1)
-            cloned2.querySelector('#related_product_sku_name').textContent = item1
-            cloned2.setAttribute('sku', item1)
-            cloned2.querySelector('button').onclick = async (e) => {
-              url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=relatedProducts&startsWith=true`;
-              const { items } = await fetch(url).then(e => e.json())
-              const item = items[0]
-              item.list = item.list.filter(e => e !== item1)
-              await postToDb(item)
-
-              cloned2.remove()
-            }
-          }
-        }
         console.log('items' + JSON.stringify(res.items))
-
+        cloned.querySelector('#add_cancel').onclick = (e) => {
+          e.target.setAttribute('hidden','')
+          cloned.querySelector('#add_related_product').removeAttribute('hidden')
+        }
         cloned.querySelector('#add_related_product').onclick = () => {
           const cancel = cloned.querySelector('#add_cancel')
           cloned.querySelector('#add_related_product').setAttribute('hidden', '')
           cancel.removeAttribute('hidden')
+          url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=relatedProducts&startsWith=true`;
+          const res = await fetch(url).then(e => e.json())
+
+          if (res.items[0]) {
+            for (const item1 of res.items[0].list) {
+              const cloned2 = original1.cloneNode(true)
+              cloned2.removeAttribute('hidden')
+              //original1.parentNode.append(cloned2)
+              insertAfter(cloned2, original1)
+              cloned2.querySelector('#related_product_sku_name').textContent = item1
+              cloned2.setAttribute('sku', item1)
+              cloned2.querySelector('button').onclick = async (e) => {
+                url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=relatedProducts&startsWith=true`;
+                const { items } = await fetch(url).then(e => e.json())
+                const item = items[0]
+                item.list = item.list.filter(e => e !== item1)
+                await postToDb(item)
+
+                cloned2.remove()
+              }
+            }
+          }
           table.querySelectorAll('#sku-collection-item[sku]').forEach(e => {
             const fSku = e.getAttribute('sku')
             console.log(fSku)
