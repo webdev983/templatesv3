@@ -19453,7 +19453,21 @@ headers: {
       const h1Span = document.getElementById('h1');
       const h1EditDiv = document.getElementById('h1-edit');
       const details = document.getElementById('details-1');
+      const h1SpanNoVars = document.getElementById('h1-no-vars-input');
+      const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=headingNoVars&startsWith=true`)
+        .then(response => response.json())
+      if(items.length){
+        h1SpanNoVars.value = items[0].value
+      }
+      h1SpanNoVars.onblur = (e)=>{
+        const {value} = e.target
+        postToDb({
+          id:'sku:'+sku,
+          sk: 'headingNoVars',
+          value
+        })
 
+      }
       // Event listener for details toggle
       details.addEventListener('toggle', function () {
         if (details.open) {
