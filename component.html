@@ -18593,12 +18593,19 @@ headers: {
         tr.parentNode.append(cloned)
         cloned.setAttribute('sk', collection.sk)
         cloned.setAttribute('id', collection.id)
-        cloned.querySelector('#enable-product-group').onclick = (e) => {
-          e.target.textContent = '🟢'
+        
+       
+        const enableButton = cloned.querySelector('#enable-product-group')
+        const enableG =  () => {
+          enableButton.textContent = '🟢'
           postToDb({ id: collection.id, sk: 'enabled' })
           generateCollectionColumn(collection.id)
           //generateConditionTable(v,condSk)
         }
+        const enabled = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=enabled&startsWith=true`)
+          .then(response => response.json()).then(res => res.items[0])
+        enableButton.onclick =enableG
+        
       }
     }
     const addCondition = async (event) => {
