@@ -15956,7 +15956,7 @@ elementsToRemove.forEach(element => element.remove());
       removeAttributesStartWith: ["data-visual", "data-builder", "data-replaceid", "data-transfer", "data-b", "data-import", "data-parentid"]
     }
     const publish = async (e, updateContent) => {
-     
+
       const date = new Date()
       if (visualOn) {
         localStorage.removeItem('visualOn')
@@ -16080,8 +16080,8 @@ elementsToRemove.forEach(element => element.remove());
       pSiteLabel.removeAttribute('hidden')
       pSiteLabel.setAttribute('href', r.link?.replace('s3.amazonaws.com/', '').replace('index.html', ''))
       postToDb({
-        id:'sku:'+pathItemSku,
-        sk:'addedSite:'+pathItemPath.split('/')[0],
+        id: 'sku:' + pathItemSku,
+        sk: 'addedSite:' + pathItemPath.split('/')[0],
         value: r.link?.replace('s3.amazonaws.com/', '').replace('index.html', '')
       })
       el4.removeAttribute('hidden', '')
@@ -17513,6 +17513,11 @@ headers: {
           getElementById1('input-sku2').value = ''
 
         }
+        postToDb({
+          id: 'sku:' + value,
+          sk: 'addedSite:' + pathItemPath.split('/')[0],
+          value: pSiteLabel.getAttribute('href')
+        })
         return
 
 
@@ -17532,11 +17537,11 @@ headers: {
 
       showSku2(value, true)
       const pSiteLabel = getElementById1("published-site-label")
-      
+
       postToDb({
-        id:'sku:'+value,
-        sk:'addedSite:'+pathItemPath.split('/')[0],
-        value:pSiteLabel.getAttribute('href')
+        id: 'sku:' + value,
+        sk: 'addedSite:' + pathItemPath.split('/')[0],
+        value: pSiteLabel.getAttribute('href')
       })
       //setDataProduct(value, resultList)
     }
@@ -18628,7 +18633,7 @@ headers: {
             const label = e.querySelector('#select_related_product')
             label.setAttribute('hidden', '')
             label.querySelector('input').checked = false
-            cloned.querySelectorAll('#related_product_sku:not([hidden])').forEach(e=>e.remove());
+            cloned.querySelectorAll('#related_product_sku:not([hidden])').forEach(e => e.remove());
             e.querySelector('#add_related_product').removeAttribute('hidden')
           })
         }
