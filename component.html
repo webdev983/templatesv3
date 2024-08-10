@@ -1519,9 +1519,9 @@
                     <ul>
                       <form>
                         <span class="l-4">💾</span>
-                        <label class="l-4"><input checked="" id="site-input" vtype="site" type="radio"
+                        <label class="l-4"><input id="site-input" vtype="site" type="radio"
                             onchange="changePGType(event)" name="product-group-text-save">site</label>
-                        <label class="l-4"><input type="radio" id="global-input" vtype="global"
+                        <label class="l-4"><input type="radio" checked="" id="global-input" vtype="global"
                             onchange="changePGType(event)" name="product-group-text-save">global</label>
                       </form>
 
@@ -18571,13 +18571,17 @@ headers: {
       for (const collection of collections) {
         const cloned = tr.cloneNode(true)
         cloned.removeAttribute('hidden')
-        cloned.querySelector('#product-group-input').textContent = collection.value || ''
+        const collectionName = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=collectionName:&startsWith=true`)
+          .then(response => response.json()).then(res => res.items[0])
+        cloned.querySelector('#product-group-input').textContent = collectionName.sk.replace('collectionName:', '')
         //cloned.querySelector('#multi-input').checked = collection.multi || false
-        cloned.querySelector('#heading-value').value = collection.heading
-        cloned.querySelector('#lead-p-value').value = collection.leadP
-        if (collection.pgType === 'global') {
-          cloned.querySelector('#global-input').checked = true
-        }
+        const lead = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=leadP;global&startsWith=true`)
+          .then(response => response.json()).then(res => res.items[0])
+        const heading = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=heading;global&startsWith=true`)
+          .then(response => response.json()).then(res => res.items[0])
+        cloned.querySelector('#heading-value').value = heading.value
+        cloned.querySelector('#lead-p-value').value = lead.value
+
         tr.parentNode.append(cloned)
         cloned.setAttribute('sk', collection.sk)
         cloned.setAttribute('id', collection.id)
