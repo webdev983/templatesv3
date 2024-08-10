@@ -18474,6 +18474,7 @@ headers: {
 
       const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&startsWith=true`)
         .then(response => response.json())
+      console.log(JSON.stringify(items))
       const p = items.map(item => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id}:${item.sk}`, {
         method: 'DELETE',
         headers: {
