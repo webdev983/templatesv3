@@ -16081,7 +16081,7 @@ elementsToRemove.forEach(element => element.remove());
       pSiteLabel.setAttribute('href', r.link?.replace('s3.amazonaws.com/', '').replace('index.html', ''))
       postToDb({
         id: 'sku:' + pathItemSku,
-        sk: 'addedSite:' + pathItemPath.split('/')[0],
+        sk: 'addedSite:' + pathItemPath.split('/')[0].toLowerCase(),
         value: r.link?.replace('s3.amazonaws.com/', '').replace('index.html', '')
       })
       el4.removeAttribute('hidden', '')
@@ -17504,7 +17504,7 @@ headers: {
         const pSiteLabel = getElementById1("published-site-label")
         postToDb({
         id: 'sku:' + value,
-        sk: 'addedSite:' + pathItemPath.split('/')[0],
+        sk: 'addedSite:' + pathItemPath.split('/')[0].toLowerCase(),
         value: pSiteLabel.getAttribute('href')
       })
       if (items.length) {
