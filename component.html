@@ -1555,7 +1555,7 @@
             <td>
               <span class="l-3">🔗</span><span class="l-3">related products</span>
             </td>
-            <td hidden><label><input type="checkbox"><span class="l-3">.</span></label></td>
+            <td id="checkbox-header" hidden><label><input type="checkbox"><span class="l-3">.</span></label></td>
 
           </tr>
           <tr id="sku-collection-item">
@@ -1574,7 +1574,7 @@
               <button class="b-2">➕</button>
               <label hidden class="l-3"><input type="checkbox">select</label>
             </td>
-            <td hidden> <label class="l-3"><input type="checkbox">select</label></td>
+            <td hidden id="checkbox-td"> <label class="l-3"><input type="checkbox">select</label></td>
 
           </tr>
 
@@ -18542,7 +18542,17 @@ headers: {
     }
     const generateCollectionColumn = (collectionId) => {
       const collection = document.getElementById('sku-collection-table')
-      
+      const header = collection.querySelector('#checkbox-header')
+      const cloned = header.cloneNode(true)
+      header.insertBefore(cloned)
+      cloned.setAttribute('collectionId', collectionId)
+      cloned.removeAttribute('hidden')
+      collection.querySelectorAll('#checkbox-td').forEach(element => {
+        const cloned = element.cloneNode(true)
+        element.insertBefore(cloned)
+        cloned.removeAttribute('hidden')
+        cloned.setAttribute('collectionId', collectionId)
+      })
     }
     const showCollection = async () => {
 
