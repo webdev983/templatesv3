@@ -19494,12 +19494,12 @@ headers: {
     }
     const generateSkuV = async (defaultWareHouse) => {
       const sku = pathItemSku
-      const conditions1 = defaultWareHouse.conditions
+      const conditions1 = defaultWareHouse.conditions || [null]
       let warehouses = fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=warehouse:&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
 
       let conditions = fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=condition:&startsWith=true`)
-        .then(response => response.json()).then(res => res.items ||[])
+        .then(response => response.json()).then(res => res.items)
 
       let skuVariables = fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=sku-variables;&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
@@ -19516,7 +19516,7 @@ headers: {
 
 
       for (const condition of conditions1) {
-        const conditionValue = conditions.find(e => e.sk === condition).value
+        const conditionValue = conditions.find(e => e.sk === condition)?.value || ''
         console.log(conditionValue)
         const originalRow = getElementById1('sku-table').querySelector('#sku-variable-row[hidden]')
         getElementById1('sku-table').querySelectorAll('#sku-variable-row:not([hidden])').forEach(e => e.remove())
