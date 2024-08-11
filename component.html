@@ -10042,10 +10042,13 @@ checkbox1.setAttribute('hidden', "");
           const oldprice = Math.min(...prices.map(obj => parseInt(obj.oldPrice)));
           cloned.querySelector('.price_old').querySelector('.price_value').textContent = oldprice
           cloned.querySelector('.price_discount').querySelector('.price_value').textContent = price
+          cloned.querySelector('.price_normal').remove()
         }
         else {
           const price = Math.min(...prices.map(obj => parseInt(obj.price)));
           cloned.querySelector('.price_normal').querySelector('.price_value').textContent = price
+          cloned.querySelector('.price_discount').remove()
+          cloned.querySelector('.price_old').remove()
         }
         originalCart.parentNode.append(cloned)
         
