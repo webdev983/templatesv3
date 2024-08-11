@@ -19499,7 +19499,7 @@ headers: {
         .then(response => response.json()).then(res => res.items)
 
       let conditions = fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=condition:&startsWith=true`)
-        .then(response => response.json()).then(res => res.items)
+        .then(response => response.json()).then(res => res.items ||[])
 
       let skuVariables = fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=sku-variables;&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
