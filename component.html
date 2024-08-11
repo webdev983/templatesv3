@@ -9982,12 +9982,14 @@ checkbox1.setAttribute('hidden', "");
       for (const col1 of cols) {
         const [coltype, col] = col1.getAttribute('data-builder-collection').split(':')
         const collName = col
-
-        mains = {
+        if(col){
+          mains = {
           id: 'collections',
           sk: coltype,
         }
         await postToDb(mains)
+        }
+        
       }
 
 
