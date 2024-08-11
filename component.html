@@ -18731,15 +18731,7 @@ headers: {
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=collections&startsWith=true`;
       const res = await fetch(url).then(e => e.json())
       const types = res.items.map(e => e.sk)
-      /*
-      const selected = original.querySelector('.select-collection-type')
-      for (const type of types) {
-        const el = document.createElement('option')
-        el.id = type
-        el.textContent = type
-        el.value = type
-        selected.append(el)
-      }*/
+      
       for (const item of items) {
         const cloned = original.cloneNode(true)
         const sku = item.id.replace('sku:', '')
@@ -18747,23 +18739,7 @@ headers: {
         cloned.removeAttribute('hidden')
         cloned.setAttribute('sku', sku)
         const original1 = cloned.querySelector('#related_product_sku[hidden]')
-        if (item.id) {
-          url1 = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku}&sk=collectionType&startsWith=true`;
-          const res = await fetch(url1).then(e => e.json())
-          if (res.items) {
-            const type = res.items[0]?.lsi1
-            const select = cloned.querySelector('.select-collection-type')
-            if (select && type) {
-              // Loop through the options to find the one that matches the type
-              for (let option of select.options) {
-                if (option.value === type) {
-                  option.selected = true;
-                  break;
-                }
-              }
-            }
-          }
-        }
+        
 
 
         cloned.querySelector('#add_cancel').onclick = (e) => {
@@ -18859,6 +18835,15 @@ headers: {
       //load collections
       const filled = getElementById1('product-group-table')
       const tr = filled.querySelector('#product-group-row[hidden]')
+      
+      const selected = tr.querySelector('.select-collection-type')
+      for (const type of types) {
+        const el = document.createElement('option')
+        el.id = type
+        el.textContent = type
+        el.value = type
+        selected.append(el)
+      }
       const collections1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=collection:${ownerid}`)
         .then(response => response.json()).then(res => res.items)
       const collections = await Promise.all(collections1.map(collection =>
@@ -18878,7 +18863,23 @@ headers: {
           .then(response => response.json()).then(res => res.items[0])
         cloned.querySelector('#heading-value').value = heading?.value || ''
         cloned.querySelector('#lead-p-value').value = lead?.value || ''
-
+        if (collection.id) {
+          url1 = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=collectionType&startsWith=true`;
+          const res = await fetch(url1).then(e => e.json())
+          if (res.items) {
+            const type = res.items[0]?.lsi1
+            const select = cloned.querySelector('.select-collection-type')
+            if (select && type) {
+              // Loop through the options to find the one that matches the type
+              for (let option of select.options) {
+                if (option.value === type) {
+                  option.selected = true;
+                  break;
+                }
+              }
+            }
+          }
+        }
         tr.parentNode.append(cloned)
         cloned.setAttribute('sk', collection.sk)
         cloned.setAttribute('id', collection.id)
