@@ -10033,8 +10033,22 @@ checkbox1.setAttribute('hidden', "");
             'Content-Type': 'application/json',
           },
         }).then(e => e.json()).then(({ items }) => items)
-
-
+        const images = await fetch(`${backend_url}?id=sku:${element}&sk=pics&startsWith=true`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(e => e.json())
+        const image = images.items.find(e=>e.main)
+        const uuid = image.sk.replace('pics','').split('.')[0]
+        const croped = await fetch(`${backend_url}?id=sku:${element}&sk=crop:${pathItemPath.split('/')[0].toLowerCase()}:${uuid}&startsWith=true`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(e => e.json())
+        const src = croped[0]?.list[0]
+        const img = cloned.querySelector('.product_lead_img').setAttribute('src',src)
         cloned.querySelector('.product_heading').textContent = novar
         cloned.querySelectorAll('.product_anchor').forEach(e => e.setAttribute('href', anchor))
         if (prices[0].oldPrice) {
