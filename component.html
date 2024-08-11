@@ -9949,6 +9949,57 @@ checkbox1.setAttribute('hidden', "");
 
 
     }
+    var generateRelated = async () => {
+      const section = querySelectorAll1('.related_products_section')[0]
+      const originalCart = section.querySelector('.catalog_product')
+      //get related products
+      const list = await fetch(`${backend_url}?id=sku:${pathItemSku}&sk=relatedProducts&startsWith=true`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(e => e.json()).then(({ items }) => items[0]?.list)
+      for (const element of list) {
+        const cloned = originalCart.cloneNode(true)
+        const anchor = await fetch(`${backend_url}?id=sku:${element}&sk=addedSite:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(e => e.json()).then(({ items }) => items[0]?.value)
+        if(!anchor){
+          continue
+        }
+        const novar = await fetch(`${backend_url}?id=sku:${element}&sk=headingNoVars&startsWith=true`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(e => e.json()).then(({ items }) => items[0]?.value)
+        
+        const prices = await fetch(`${backend_url}?id=sku:${element}&sk=site_price:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(e => e.json()).then(({ items }) => items)
+       
+        
+        cloned.querySelector('.product_heading').textContent = novar
+        cloned.querySelectorAll('.product_anchor').forEach(e=>e.setAttribute('href',anchor))
+        if(prices[0].oldPrice){
+          const price = Math.min(...prices.map(obj =>parseInt(obj.price)));
+          const oldprice = Math.min(...prices.map(obj =>parseInt(obj.oldPrice)));
+          cloned.querySelector('.price_old').querySelector('.price_value').textContent = oldPrice
+          cloned.querySelector('.price_discount').querySelector('.price_value').textContent = price
+        }
+        else{
+          const price = Math.min(...prices.map(obj =>parseInt(obj.price)));
+          cloned.querySelector('.price_normal').querySelector('.price_value').textContent = price
+        }
+        cloned.querySelector('').textContent = price
+      }
+    }
     var generateSchema = (head) => {
       const url = pathItem.lsi1.split(';')[0].replace('|', '/')
       const date = new Date()
@@ -10408,6 +10459,7 @@ checkbox1.setAttribute('hidden', "");
       script_breadcrumb_generation: generateBreadCrumbApi,
       push_reviews: pushReviews,
       script_publish_sku_images: publishSkuImages,
+      script_generate_related_products: generateRelated,
       script_transfer: generateSchema,
       script_product_spec_table: async () => {
 
@@ -17506,8 +17558,8 @@ headers: {
 
       const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${value}&sk=created:&startsWith=true`)
         .then(response => response.json())
-        const pSiteLabel = getElementById1("published-site-label")
-        postToDb({
+      const pSiteLabel = getElementById1("published-site-label")
+      postToDb({
         id: 'sku:' + value,
         sk: 'addedSite:' + pathItemPath.split('/')[0].toLowerCase(),
         value: pSiteLabel.getAttribute('href')
@@ -17543,9 +17595,9 @@ headers: {
       });
 
       showSku2(value, true)
-      
 
-      
+
+
       //setDataProduct(value, resultList)
     }
 
@@ -19461,13 +19513,13 @@ headers: {
       const h1SpanNoVars = document.getElementById('h1-no-vars-input');
       const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=headingNoVars&startsWith=true`)
         .then(response => response.json())
-      if(items.length){
+      if (items.length) {
         h1SpanNoVars.value = items[0].value
       }
-      h1SpanNoVars.onblur = (e)=>{
-        const {value} = e.target
+      h1SpanNoVars.onblur = (e) => {
+        const { value } = e.target
         postToDb({
-          id:'sku:'+sku,
+          id: 'sku:' + sku,
           sk: 'headingNoVars',
           value
         })
