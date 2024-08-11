@@ -19682,11 +19682,9 @@ headers: {
       let addedConditions = skuQtyValue.map(element =>
         element.sk.split(';')[0].split(':')[1] + ':' + element.sk.split(';')[0].split(':')[2]
       )
-      addedConditions = removeDuplicates(addedConditions)
+      addedConditions = removeDuplicates(addedConditions) 
 
-      const splited = skuVariables[0].sk.replace('sku-variables;', '').split(';')
-      splited.pop()
-      const combKeys = splited.map(element => element.split(':')[0])
+      
       const originalKeyLabel = document.getElementById('comb-key')
       //originalKeyLabel.querySelector('span').textContent = '🔖' + combKeys[0]
       //originalKeyLabel.id = 'check;' + combKeys[0]*
@@ -19730,7 +19728,11 @@ headers: {
         headParams.head = e.target.value
         postToDb(headParams)
       }
+     
       const generate = (i) => {
+        const splited = skuVariables[0].sk.replace('sku-variables;', '').split(';')
+        splited.pop()
+        const combKeys = splited.map(element => element.split(':')[0])
         const cloned1 = h1_input.cloneNode(true)
         const cloned2 = h1_checkboxes.cloneNode(true)
         cloned2.querySelector('#h1-checkbox-label').textContent = '🔖' + combKeys[i]
@@ -19786,7 +19788,10 @@ headers: {
         }).filter(e => e).join(' ')
       }
       generateHead()
-
+      if(skuVariables.length){
+      const splited = skuVariables[0].sk.replace('sku-variables;', '').split(';')
+      splited.pop()
+      const combKeys = splited.map(element => element.split(':')[0])
       for (let i = 0; i < combKeys.length; i++) {
         const cloned = originalKeyLabel.cloneNode(true)
         cloned.querySelector('span').textContent = '🔖' + combKeys[i]
@@ -19821,6 +19826,7 @@ headers: {
         generate(i)
 
       }
+    }
       originalKeyLabel.remove()
       headContentItem.scripts?.h1?.runned && (document.getElementById('h1-status').textContent = '🟢')
       document.getElementById('h1-status').onclick = async (e) => {
