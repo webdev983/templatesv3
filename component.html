@@ -992,6 +992,35 @@
                 </td>
 
               </tr>
+              <tr id="script_generate_collection">
+                <td>
+                  <input type="checkbox" id="script_execute_select" hidden>
+                  <label id="script_status" class="l-3">🔴</label>
+                  <label class="l-3" style="margin: 10px;">generate collection ✉️</label>
+                </td>
+                <td>
+                  <span class="l-3">🦾</span>
+                  <span class="l-3" id="last_script_execute_time">never</span>
+                </td>
+                <td>
+                  <span id="queue_number_container">
+                    <span class="l-3">🔀 </span>
+                    <span class="l-3 queue" contenteditable id="queue_number">~</span>
+                  </span>
+                </td>
+
+                <td>
+                </td>
+
+                <td>
+                </td>
+
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_in_template" />🚧</label>
+
+                </td>
+
+              </tr>
 
               <tr id="script_product_spec_table">
                 <td>
@@ -9949,6 +9978,10 @@ checkbox1.setAttribute('hidden', "");
 
 
     }
+    var generateCollection = async () => {
+      const col = querySelectorAll1('[data-builder-collection]')[0]
+      const collName = col.getAttribute('data-builder-collection')
+    }
     var generateRelated = async () => {
       console.log('generating ')
       const section = querySelectorAll1('.related_products_section')[0]
@@ -9969,8 +10002,8 @@ checkbox1.setAttribute('hidden', "");
             'Content-Type': 'application/json',
           },
         }).then(e => e.json()).then(({ items }) => items[0]?.value)
-        if(!anchor){
-          console.log('no anch '+element)
+        if (!anchor) {
+          console.log('no anch ' + element)
           continue
         }
         const novar = await fetch(`${backend_url}?id=sku:${element}&sk=headingNoVars&startsWith=true`, {
@@ -9979,25 +10012,25 @@ checkbox1.setAttribute('hidden', "");
             'Content-Type': 'application/json',
           },
         }).then(e => e.json()).then(({ items }) => items[0]?.value)
-        
+
         const prices = await fetch(`${backend_url}?id=sku:${element}&sk=site_price:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
           },
         }).then(e => e.json()).then(({ items }) => items)
-       
-        
+
+
         cloned.querySelector('.product_heading').textContent = novar
-        cloned.querySelectorAll('.product_anchor').forEach(e=>e.setAttribute('href',anchor))
-        if(prices[0].oldPrice){
-          const price = Math.min(...prices.map(obj =>parseInt(obj.price)));
-          const oldprice = Math.min(...prices.map(obj =>parseInt(obj.oldPrice)));
+        cloned.querySelectorAll('.product_anchor').forEach(e => e.setAttribute('href', anchor))
+        if (prices[0].oldPrice) {
+          const price = Math.min(...prices.map(obj => parseInt(obj.price)));
+          const oldprice = Math.min(...prices.map(obj => parseInt(obj.oldPrice)));
           cloned.querySelector('.price_old').querySelector('.price_value').textContent = oldPrice
           cloned.querySelector('.price_discount').querySelector('.price_value').textContent = price
         }
-        else{
-          const price = Math.min(...prices.map(obj =>parseInt(obj.price)));
+        else {
+          const price = Math.min(...prices.map(obj => parseInt(obj.price)));
           cloned.querySelector('.price_normal').querySelector('.price_value').textContent = price
         }
         cloned.querySelector('').textContent = price
@@ -10468,6 +10501,7 @@ checkbox1.setAttribute('hidden', "");
 
         await generateTableSpecApi()
       },
+      script_generate_collection: generateCollection,
       script_article_table_of_contents: async () => {
         const headingElements = querySelectorAll1('[data-table-of-contents-heading]')
         const textContents = Array.from(headingElements).map(e => e.textContent)
@@ -18876,7 +18910,7 @@ headers: {
         body: JSON.stringify(item),
       });
     }
-    const addCollection = async (event) => {
+    const addCollection = async (event, value) => {
 
       const filled = getElementById1('product-group-table')
       const tr = filled.querySelector('#product-group-row[hidden]')
@@ -18888,13 +18922,27 @@ headers: {
         id: 'collection:' + generateUUID(),
         sk: 'created:' + (new Date()).getTime().toString(),
         ownerUUID: 'collection:' + ownerid,
-        value: 'collection'
+        value: value || 'collection'
       }
       cloned.setAttribute('sk', item.sk)
-      cloned.querySelector('#enable-product-group').onclick = (e) => {
-        e.target.textContent = '🟢'
+      const enableButton = cloned.querySelector('#enable-product-group')
+      enableButton.onclick = (e) => {
+        //e.target.textContent = '🟢'
 
-
+        if (enableButton.textContent === '🟢') {
+          fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${collection.id.replace(':', '~')}:enabled`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              // Add any additional headers if needed
+            },
+          })
+          enableButton.textContent = '🔴'
+          return
+        }
+        enableButton.textContent = '🟢'
+        postToDb({ id: collection.id, sk: 'enabled' })
+        generateCollectionColumn(collection.id, cloned.querySelector('#product-group-input').textContent || 'catalogue')
         //generateConditionTable(v,condSk)
       }
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
