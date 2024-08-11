@@ -9979,8 +9979,8 @@ checkbox1.setAttribute('hidden', "");
     var generateCollection = async () => {
       const cols = querySelectorAll1('[data-builder-collection]')
       for (const col1 of cols) {
-        const [coltype, col] = col1.split(':')
-        const collName = col.getAttribute('data-builder-collection')
+        const [coltype, col] = col1.getAttribute('data-builder-collection').split(':')
+        const collName = col
 
         mains = {
           id: 'collections',
@@ -18746,9 +18746,9 @@ headers: {
         cloned.removeAttribute('hidden')
         cloned.setAttribute('sku', sku)
         const original1 = cloned.querySelector('#related_product_sku[hidden]')
-        if (sku) {
-          url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku}&sk=collectionType&startsWith=true`;
-          const res = await fetch(url).then(e => e.json())
+        if (item.id) {
+          url1 = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku}&sk=collectionType&startsWith=true`;
+          const res = await fetch(url1).then(e => e.json())
           if (res.items) {
             const type = res.items[0]?.lsi1
             const select = cloned.querySelector('.select-collection-type')
