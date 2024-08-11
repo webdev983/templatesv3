@@ -9959,6 +9959,7 @@ checkbox1.setAttribute('hidden', "");
           'Content-Type': 'application/json',
         },
       }).then(e => e.json()).then(({ items }) => items[0]?.list)
+      console.log(JSON.stringify(list))
       for (const element of list) {
         const cloned = originalCart.cloneNode(true)
         const anchor = await fetch(`${backend_url}?id=sku:${element}&sk=addedSite:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`, {
@@ -9968,6 +9969,7 @@ checkbox1.setAttribute('hidden', "");
           },
         }).then(e => e.json()).then(({ items }) => items[0]?.value)
         if(!anchor){
+          console.log('no anch '+element)
           continue
         }
         const novar = await fetch(`${backend_url}?id=sku:${element}&sk=headingNoVars&startsWith=true`, {
