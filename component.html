@@ -10038,7 +10038,7 @@ checkbox1.setAttribute('hidden', "");
         if (prices[0].oldPrice) {
           const price = Math.min(...prices.map(obj => parseInt(obj.price)));
           const oldprice = Math.min(...prices.map(obj => parseInt(obj.oldPrice)));
-          cloned.querySelector('.price_old').querySelector('.price_value').textContent = oldPrice
+          cloned.querySelector('.price_old').querySelector('.price_value').textContent = oldprice
           cloned.querySelector('.price_discount').querySelector('.price_value').textContent = price
         }
         else {
@@ -18732,7 +18732,7 @@ headers: {
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=collections&startsWith=true`;
       const res = await fetch(url).then(e => e.json())
       const types = res.items.map(e => e.sk)
-      
+
       for (const item of items) {
         const cloned = original.cloneNode(true)
         const sku = item.id.replace('sku:', '')
@@ -18740,7 +18740,7 @@ headers: {
         cloned.removeAttribute('hidden')
         cloned.setAttribute('sku', sku)
         const original1 = cloned.querySelector('#related_product_sku[hidden]')
-        
+
 
 
         cloned.querySelector('#add_cancel').onclick = (e) => {
@@ -18836,7 +18836,7 @@ headers: {
       //load collections
       const filled = getElementById1('product-group-table')
       const tr = filled.querySelector('#product-group-row[hidden]')
-      
+
       const selected = tr.querySelector('.select-collection-type')
       for (const type of types) {
         const el = document.createElement('option')
@@ -19509,7 +19509,7 @@ headers: {
       skuVariables = await skuVariables
       skuQtyValue = await skuQtyValue
       skuSiteValue = await skuSiteValue
-      
+
 
       for (const condition of conditions1) {
         const conditionValue = conditions.find(e => e.sk === condition).value
@@ -19682,9 +19682,9 @@ headers: {
       let addedConditions = skuQtyValue.map(element =>
         element.sk.split(';')[0].split(':')[1] + ':' + element.sk.split(';')[0].split(':')[2]
       )
-      addedConditions = removeDuplicates(addedConditions) 
+      addedConditions = removeDuplicates(addedConditions)
 
-      
+
       const originalKeyLabel = document.getElementById('comb-key')
       //originalKeyLabel.querySelector('span').textContent = '🔖' + combKeys[0]
       //originalKeyLabel.id = 'check;' + combKeys[0]*
@@ -19728,7 +19728,7 @@ headers: {
         headParams.head = e.target.value
         postToDb(headParams)
       }
-     
+
       const generate = (i) => {
         const splited = skuVariables[0].sk.replace('sku-variables;', '').split(';')
         splited.pop()
@@ -19788,45 +19788,45 @@ headers: {
         }).filter(e => e).join(' ')
       }
       generateHead()
-      if(skuVariables.length){
-      const splited = skuVariables[0].sk.replace('sku-variables;', '').split(';')
-      splited.pop()
-      const combKeys = splited.map(element => element.split(':')[0])
-      for (let i = 0; i < combKeys.length; i++) {
-        const cloned = originalKeyLabel.cloneNode(true)
-        cloned.querySelector('span').textContent = '🔖' + combKeys[i]
-        cloned.id = 'check;' + combKeys[i]
-        if (headParams.order.includes(combKeys[i])) {
-          cloned.querySelector('input').checked = true
-        }
-
-        cloned.querySelector('input').onchange = (e) => {
-          const { target } = e
-          if (target.checked) {
-            headParams.order.push(combKeys[i])
-            headParams[combKeys[i]] = {}
-            generate(i)
+      if (skuVariables.length) {
+        const splited = skuVariables[0].sk.replace('sku-variables;', '').split(';')
+        splited.pop()
+        const combKeys = splited.map(element => element.split(':')[0])
+        for (let i = 0; i < combKeys.length; i++) {
+          const cloned = originalKeyLabel.cloneNode(true)
+          cloned.querySelector('span').textContent = '🔖' + combKeys[i]
+          cloned.id = 'check;' + combKeys[i]
+          if (headParams.order.includes(combKeys[i])) {
+            cloned.querySelector('input').checked = true
           }
-          else {
-            headParams.order = headParams.order.filter(e => e !== combKeys[i])
-            document.getElementById(`h1-checkboxes;${combKeys[i]}`)?.remove()
-            document.getElementById(`h1-input;${combKeys[i]}`)?.remove()
-            delete headParams[combKeys[i]]
+
+          cloned.querySelector('input').onchange = (e) => {
+            const { target } = e
+            if (target.checked) {
+              headParams.order.push(combKeys[i])
+              headParams[combKeys[i]] = {}
+              generate(i)
+            }
+            else {
+              headParams.order = headParams.order.filter(e => e !== combKeys[i])
+              document.getElementById(`h1-checkboxes;${combKeys[i]}`)?.remove()
+              document.getElementById(`h1-input;${combKeys[i]}`)?.remove()
+              delete headParams[combKeys[i]]
+            }
+            generateHead()
+            postToDb(headParams)
           }
-          generateHead()
-          postToDb(headParams)
+          insertAfter(cloned, originalKeyLabel)
         }
-        insertAfter(cloned, originalKeyLabel)
+        for (const key of headParams.order) {
+          const i = combKeys.indexOf(key)
+
+          console.log('generating ' + combKeys[i])
+
+          generate(i)
+
+        }
       }
-      for (const key of headParams.order) {
-        const i = combKeys.indexOf(key)
-
-        console.log('generating ' + combKeys[i])
-
-        generate(i)
-
-      }
-    }
       originalKeyLabel.remove()
       headContentItem.scripts?.h1?.runned && (document.getElementById('h1-status').textContent = '🟢')
       document.getElementById('h1-status').onclick = async (e) => {
