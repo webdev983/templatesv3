@@ -18749,17 +18749,20 @@ headers: {
 
         url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku}&sk=collectionType&startsWith=true`;
         const res = await fetch(url).then(e => e.json())
-        const type = res.items[0]?.lsi1
-        const select = cloned.querySelector('.select-collection-type')
-        if (select && type) {
-          // Loop through the options to find the one that matches the type
-          for (let option of select.options) {
-            if (option.value === type) {
-              option.selected = true;
-              break;
+        if (res.items) {
+          const type = res.items[0]?.lsi1
+          const select = cloned.querySelector('.select-collection-type')
+          if (select && type) {
+            // Loop through the options to find the one that matches the type
+            for (let option of select.options) {
+              if (option.value === type) {
+                option.selected = true;
+                break;
+              }
             }
           }
         }
+
         cloned.querySelector('#add_cancel').onclick = (e) => {
           e.target.setAttribute('hidden', '')
           cloned.querySelector('#add_related_product').removeAttribute('hidden')
