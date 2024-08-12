@@ -10061,6 +10061,17 @@ checkbox1.setAttribute('hidden', "");
             },
           }).then(e => e.json()).then(({ items }) => items[0]?.list)
         }
+        else if(name ==='attached_collection'){
+          const d = await fetch(`${backend_url}?id=${pathItem.collection}&sk=selected&startsWith=true`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json())
+          const items = d.items[0].items
+          console.log('for name2' + JSON.stringify(items))
+          list = items
+        }
         else {
           url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=${name}:${ownerid}&gsi1lsi1=true&lsi1=${name}`;
 
