@@ -19067,12 +19067,13 @@ headers: {
         pathItem.collection = collection.id
         postToDb(pathItem)
       }
-      collection.addDate = (new Date()).getTime()
+      const addDate = (new Date()).getTime()
       postToDb(collection)
       postToDb({
         id: collection.id,
         sk: 'addedSite:' + pathItemPath.split('/')[0].toLowerCase(),
-        value: getElementById1('published-site-label').getAttribute('href')
+        value: getElementById1('published-site-label').getAttribute('href'),
+        addDate
       })
     }
     const addCollection = async (event, value) => {
