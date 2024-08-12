@@ -10053,6 +10053,7 @@ checkbox1.setAttribute('hidden', "");
         const originalCart = section.querySelector('.catalog_product')
         //get related products
         let list
+        console.log('name '+name)
         if (name === 'related_products') {
           list = await fetch(`${backend_url}?id=sku:${pathItemSku}&sk=relatedProducts&startsWith=true`, {
             method: 'GET',
@@ -10069,7 +10070,7 @@ checkbox1.setAttribute('hidden', "");
               return items[0]
 
             })
-          console.log('for name' + name + JSON.stringify(res))
+          console.log('for name ' + name+ ' ' + JSON.stringify(res))
           if (!res) {
             continue
           }
