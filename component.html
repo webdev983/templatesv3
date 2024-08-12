@@ -1527,7 +1527,7 @@
         <div style="margin-top:5px; padding-bottom: 10px;">
           <label class="l-2 b-dark-blue">collection: </label>
           <label class="l-2" id="collection-value">main_promo</label>
-          <button class="b-3" id="collection-remove">🗑️</button>
+          <button class="b-3" id="collection-remove" onclick="removeCollection(event)">🗑️</button>
         </div>
         <details style="margin-left: 25px; margin-top: 10px; padding-top: 10px; padding-bottom: 10px;">
           <summary class="summary-L-3" style="margin-top: 5px; "><span class="l-3">➕ select group</span><span>
@@ -19033,7 +19033,10 @@ headers: {
           enableButton.textContent = '🟢'
           postToDb({ id: collection.id, sk: 'enabled' })
           generateCollectionColumn(collection.id, collectionName?.value || 'catalogue')
-          attachCollection(collection, true, collectionName?.value)
+          if(collection.id ===pathItem.collection){
+
+            attachCollection(collection, true, collectionName?.value)
+          }
           //generateConditionTable(v,condSk)
         }
         const enabled = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=enabled&startsWith=true`)
@@ -19096,6 +19099,7 @@ headers: {
     const attachCollection = (collection, flag, name) => {
       console.log('attaching' + JSON.stringify(collection))
       const cV = getElementById1('collection-value')
+      cV.setAttribute('collection')
       cV.textContent = name
       cV.classList.add('collection-attached')
       const el = getElementById1(collection.id)
@@ -19106,13 +19110,15 @@ headers: {
         postToDb(pathItem)
       }
       const addDate = (new Date()).getTime()
-      postToDb(collection)
       postToDb({
         id: collection.id,
         sk: 'addedSite:' + pathItemPath.split('/')[0].toLowerCase(),
         value: getElementById1('published-site-label').getAttribute('href'),
         addDate
       })
+    }
+    const removeCollection = async (event)=>{
+
     }
     const addCollection = async (event, value) => {
 
