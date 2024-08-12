@@ -10009,7 +10009,7 @@ checkbox1.setAttribute('hidden', "");
       console.log('generating ')
       const sections = querySelectorAll1('[data-builder-collection]')
       for (const section of sections) {
-        console.log('section '+section.id)
+        console.log('section ' + section.id)
         const [name, number] = section.getAttribute('data-builder-collection').split(':')
         const originalCart = section.querySelector('.catalog_product')
         //get related products
@@ -10030,24 +10030,25 @@ checkbox1.setAttribute('hidden', "");
               return items[0]
 
             })
-          console.log('for name'+name +JSON.stringify(res))
-          if(!res){
+          console.log('for name' + name + JSON.stringify(res))
+          if (!res) {
             continue
           }
           const colId = res.id
-          const {items} = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${colId}:selected`, {
+          const d = await fetch(`${backend_url}?id=${colId}&sk=selected&startsWith=true`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
-              // Add any additional headers if needed
             },
-          });
-          console.log('for name2'+ JSON.stringify(items))
+          }).then(e => e.json())
+          console.log('fx '+JSON.stringify(d))
+          const items = d.items[0].items
+          console.log('for name2' + JSON.stringify(items))
           list = items
           continue
         }
 
-        console.log('list is'+JSON.stringify(list))
+        console.log('list is' + JSON.stringify(list))
         for (let i = 0; i < parseInt(number); i++) {
           console.log('in')
           const element = list[i]
