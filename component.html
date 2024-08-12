@@ -18935,7 +18935,7 @@ headers: {
           enableButton.textContent = '🟢'
           postToDb({ id: collection.id, sk: 'enabled' })
           generateCollectionColumn(collection.id, collectionName?.value || 'catalogue')
-          attachCollection(collection, true)
+          attachCollection(collection, true,collectionName?.value)
           //generateConditionTable(v,condSk)
         }
         const enabled = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=enabled&startsWith=true`)
@@ -18995,10 +18995,10 @@ headers: {
         body: JSON.stringify(item),
       });
     }
-    const attachCollection = (collection, flag) => {
+    const attachCollection = (collection, flag,name) => {
       console.log('attaching' + JSON.stringify(collection))
       const cV = getElementById1('collection-value')
-      cV.textContent = collection.value
+      cV.textContent = name
       cV.classList.add('collection-attached')
       const el = getElementById1(collection.id)
       el.querySelector('#product-group-input').classList.add('collection-attached')
@@ -19041,7 +19041,7 @@ headers: {
         enableButton.textContent = '🟢'
         postToDb({ id: item.id, sk: 'enabled' })
         generateCollectionColumn(item.id, cloned.querySelector('#product-group-input').textContent || 'catalogue')
-        attachCollection(item)
+        attachCollection(item,false,cloned.querySelector('#product-group-input').textContent)
         //generateConditionTable(v,condSk)
       }
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
