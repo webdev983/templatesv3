@@ -10102,8 +10102,14 @@ checkbox1.setAttribute('hidden', "");
         console.log('list is' + JSON.stringify(list))
         try {
 
-
-          for (let i = 0; i < parseInt(number); i++) {
+          let max
+          if (number === '∞') {
+            max = list.length
+          }
+          else {
+            max = parseInt(number)
+          }
+          for (let i = 0; i < max; i++) {
             console.log('in')
             const element = list[i]
             const cloned = originalCart.cloneNode(true)
