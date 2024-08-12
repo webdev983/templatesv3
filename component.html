@@ -19110,7 +19110,9 @@ headers: {
 
       pathItem.collection = collection.id
       postToDb(pathItem)
-
+      const checkbox = getElementById1('attach-to-page')
+      checkbox.checked = false
+      checkbox.disabled = true
       const addDate = (new Date()).getTime()
       postToDb({
         id: collection.id,
@@ -19120,7 +19122,16 @@ headers: {
       })
     }
     const removeCollection = async (event) => {
-
+      const i = event.target.closest('#collection-value')
+      i.classList.removeAttribute('collection-attached')
+      const id = i.getAttribute('collection')
+      getElementById1(id).classList.removeAttribute('collection-attached')
+      delete pathItem.collection
+      i.textContent = ''
+      const checkbox = getElementById1('attach-to-page')
+      checkbox.checked = true
+      checkbox.disabled = false
+      postToDb(pathItem)
     }
     const addCollection = async (event, value) => {
 
