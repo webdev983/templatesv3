@@ -10030,7 +10030,7 @@ checkbox1.setAttribute('hidden', "");
       for (const col1 of cols) {
         const [coltype, col] = col1.getAttribute('data-builder-collection').split(':')
         const collName = col
-        if (col && coltype && coltype!=='related_products') {
+        if (col && coltype && coltype !== 'related_products') {
           mains = {
             id: 'collections',
             sk: coltype,
@@ -10138,11 +10138,11 @@ checkbox1.setAttribute('hidden', "");
             const img = cloned.querySelector('.product_lead_img').setAttribute('src', src)
             const heading = cloned.querySelector('.product_heading')
             heading.textContent = novar
-            const a =heading.querySelector('a')
-            if(a){
+            const a = heading.querySelector('a')
+            if (a) {
               a.setAttribute('href', anchor)
             }
-            else{
+            else {
               heading.setAttribute('href', anchor)
             }
             cloned.querySelectorAll('.product_anchor').forEach(e => e.setAttribute('href', anchor))
@@ -19020,7 +19020,7 @@ headers: {
         const enableButton = cloned.querySelector('#enable-product-group')
         const enabled = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=enabled&startsWith=true`)
           .then(response => response.json()).then(res => res.items[0])
-        const enableG = (e,flag) => {
+        const enableG = (e, flag) => {
           if (enableButton.textContent === '🟢') {
             fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${collection.id.replace(':', '~')}:enabled`, {
               method: 'DELETE',
@@ -19035,16 +19035,16 @@ headers: {
           enableButton.textContent = '🟢'
           postToDb({ id: collection.id, sk: 'enabled' })
           generateCollectionColumn(collection.id, collectionName?.value || 'catalogue')
-          console.log('flaaag'+ flag)
-          if((collection.id ===pathItem.collection && flag) ||!flag){
+          console.log('flaaag' + flag)
+          if ((collection.id === pathItem.collection && flag) || !flag) {
 
             attachCollection(collection, true, collectionName?.value)
           }
           //generateConditionTable(v,condSk)
         }
-       
+
         if (enabled) {
-          enableG(undefined,true)
+          enableG(undefined, true)
         }
         enableButton.onclick = enableG
 
@@ -19101,16 +19101,16 @@ headers: {
     const attachCollection = (collection, flag, name) => {
       console.log('attaching' + JSON.stringify(collection))
       const cV = getElementById1('collection-value')
-      cV.setAttribute('collection',collection.id)
+      cV.setAttribute('collection', collection.id)
       cV.textContent = name
       cV.classList.add('collection-attached')
       const el = getElementById1(collection.id)
       el.querySelector('#product-group-input').classList.add('collection-attached')
-      if (!flag) {
 
-        pathItem.collection = collection.id
-        postToDb(pathItem)
-      }
+
+      pathItem.collection = collection.id
+      postToDb(pathItem)
+
       const addDate = (new Date()).getTime()
       postToDb({
         id: collection.id,
@@ -19119,7 +19119,7 @@ headers: {
         addDate
       })
     }
-    const removeCollection = async (event)=>{
+    const removeCollection = async (event) => {
 
     }
     const addCollection = async (event, value) => {
