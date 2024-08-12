@@ -19020,7 +19020,7 @@ headers: {
         const enableButton = cloned.querySelector('#enable-product-group')
         const enabled = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=enabled&startsWith=true`)
           .then(response => response.json()).then(res => res.items[0])
-        const enableG = (flag) => {
+        const enableG = (e,flag) => {
           if (enableButton.textContent === '🟢') {
             fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${collection.id.replace(':', '~')}:enabled`, {
               method: 'DELETE',
@@ -19043,7 +19043,7 @@ headers: {
         }
        
         if (enabled) {
-          enableG(true)
+          enableG(undefined,true)
         }
         enableButton.onclick = enableG
 
