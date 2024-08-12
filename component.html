@@ -10000,7 +10000,7 @@ checkbox1.setAttribute('hidden', "");
       for (const col1 of cols) {
         const [coltype, col] = col1.getAttribute('data-builder-collection').split(':')
         const collName = col
-        if (col && coltype) {
+        if (col && coltype && coltype!=='related_products') {
           mains = {
             id: 'collections',
             sk: coltype,
@@ -10050,85 +10050,85 @@ checkbox1.setAttribute('hidden', "");
               'Content-Type': 'application/json',
             },
           }).then(e => e.json())
-          console.log('fx '+JSON.stringify(d))
+          console.log('fx ' + JSON.stringify(d))
           const items = d.items[0].items
           console.log('for name2' + JSON.stringify(items))
           list = items
-          
+
         }
 
         console.log('list is' + JSON.stringify(list))
-        try{
+        try {
 
-        
-        for (let i = 0; i < parseInt(number); i++) {
-          console.log('in')
-          const element = list[i]
-          const cloned = originalCart.cloneNode(true)
-          const anchor = await fetch(`${backend_url}?id=sku:${element}&sk=addedSite:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }).then(e => e.json()).then(({ items }) => items[0]?.value)
-          if (!anchor) {
-            console.log('no anch ' + element)
-            continue
-          }
-          const novar = await fetch(`${backend_url}?id=sku:${element}&sk=headingNoVars&startsWith=true`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }).then(e => e.json()).then(({ items }) => items[0]?.value)
 
-          const prices = await fetch(`${backend_url}?id=sku:${element}&sk=site_price:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }).then(e => e.json()).then(({ items }) => items)
-          const images = await fetch(`${backend_url}?id=sku:${element}&sk=pics&startsWith=true`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }).then(e => e.json())
-          const image = images.items.find(e => e.main)
-          const uuid = image.sk.replace('pics', '').split('.')[0]
-          console.log('uuid:' + uuid)
-          const croped = await fetch(`${backend_url}?id=sku:${element}&sk=crop:&startsWith=true`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }).then(e => e.json())
-          console.log(JSON.stringify(croped))
-          const src = croped.items.find(z => z.sk.endsWith(uuid))?.list[0].split(' ')[0]
-          const img = cloned.querySelector('.product_lead_img').setAttribute('src', src)
-          cloned.querySelector('.product_heading').textContent = novar
-          cloned.querySelectorAll('.product_anchor').forEach(e => e.setAttribute('href', anchor))
-          if (prices[0].oldPrice) {
-            const price = Math.min(...prices.map(obj => parseInt(obj.price)));
-            const oldprice = Math.min(...prices.map(obj => parseInt(obj.oldPrice)));
-            cloned.querySelector('.price_old').querySelector('.price_value').textContent = oldprice
-            cloned.querySelector('.price_discount').querySelector('.price_value').textContent = price
-            cloned.querySelector('.price_normal').remove()
-          }
-          else {
-            const price = Math.min(...prices.map(obj => parseInt(obj.price)));
-            cloned.querySelector('.price_normal').querySelector('.price_value').textContent = price
-            cloned.querySelector('.price_discount').remove()
-            cloned.querySelector('.price_old').remove()
-          }
-          originalCart.parentNode.append(cloned)
+          for (let i = 0; i < parseInt(number); i++) {
+            console.log('in')
+            const element = list[i]
+            const cloned = originalCart.cloneNode(true)
+            const anchor = await fetch(`${backend_url}?id=sku:${element}&sk=addedSite:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(e => e.json()).then(({ items }) => items[0]?.value)
+            if (!anchor) {
+              console.log('no anch ' + element)
+              continue
+            }
+            const novar = await fetch(`${backend_url}?id=sku:${element}&sk=headingNoVars&startsWith=true`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(e => e.json()).then(({ items }) => items[0]?.value)
 
+            const prices = await fetch(`${backend_url}?id=sku:${element}&sk=site_price:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(e => e.json()).then(({ items }) => items)
+            const images = await fetch(`${backend_url}?id=sku:${element}&sk=pics&startsWith=true`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(e => e.json())
+            const image = images.items.find(e => e.main)
+            const uuid = image.sk.replace('pics', '').split('.')[0]
+            console.log('uuid:' + uuid)
+            const croped = await fetch(`${backend_url}?id=sku:${element}&sk=crop:&startsWith=true`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(e => e.json())
+            console.log(JSON.stringify(croped))
+            const src = croped.items.find(z => z.sk.endsWith(uuid))?.list[0].split(' ')[0]
+            const img = cloned.querySelector('.product_lead_img').setAttribute('src', src)
+            cloned.querySelector('.product_heading').textContent = novar
+            cloned.querySelectorAll('.product_anchor').forEach(e => e.setAttribute('href', anchor))
+            if (prices[0].oldPrice) {
+              const price = Math.min(...prices.map(obj => parseInt(obj.price)));
+              const oldprice = Math.min(...prices.map(obj => parseInt(obj.oldPrice)));
+              cloned.querySelector('.price_old').querySelector('.price_value').textContent = oldprice
+              cloned.querySelector('.price_discount').querySelector('.price_value').textContent = price
+              cloned.querySelector('.price_normal').remove()
+            }
+            else {
+              const price = Math.min(...prices.map(obj => parseInt(obj.price)));
+              cloned.querySelector('.price_normal').querySelector('.price_value').textContent = price
+              cloned.querySelector('.price_discount').remove()
+              cloned.querySelector('.price_old').remove()
+            }
+            originalCart.parentNode.append(cloned)
+
+          }
+          originalCart.remove()
         }
-        originalCart.remove()
-      }
-      catch(e){
-        console.log('prooob '+e.message)
-      }
+        catch (e) {
+          console.log('prooob ' + e.message)
+        }
       }
     }
     var generateSchema = (head) => {
