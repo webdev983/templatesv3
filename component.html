@@ -19018,7 +19018,9 @@ headers: {
 
 
         const enableButton = cloned.querySelector('#enable-product-group')
-        const enableG = () => {
+        const enabled = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=enabled&startsWith=true`)
+          .then(response => response.json()).then(res => res.items[0])
+        const enableG = (flag) => {
           if (enableButton.textContent === '🟢') {
             fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${collection.id.replace(':', '~')}:enabled`, {
               method: 'DELETE',
@@ -19033,16 +19035,15 @@ headers: {
           enableButton.textContent = '🟢'
           postToDb({ id: collection.id, sk: 'enabled' })
           generateCollectionColumn(collection.id, collectionName?.value || 'catalogue')
-          if(collection.id ===pathItem.collection){
+          if(collection.id ===pathItem.collection && flag){
 
             attachCollection(collection, true, collectionName?.value)
           }
           //generateConditionTable(v,condSk)
         }
-        const enabled = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=enabled&startsWith=true`)
-          .then(response => response.json()).then(res => res.items[0])
+       
         if (enabled) {
-          enableG()
+          enableG(true)
         }
         enableButton.onclick = enableG
 
