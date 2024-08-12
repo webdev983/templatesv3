@@ -10061,7 +10061,7 @@ checkbox1.setAttribute('hidden', "");
             },
           }).then(e => e.json()).then(({ items }) => items[0]?.list)
         }
-        else if(name ==='attached_collection'){
+        else if (name === 'attached_collection') {
           const d = await fetch(`${backend_url}?id=${pathItem.collection}&sk=selected&startsWith=true`, {
             method: 'GET',
             headers: {
@@ -10100,9 +10100,15 @@ checkbox1.setAttribute('hidden', "");
 
         console.log('list is' + JSON.stringify(list))
         try {
+          let max
+          if (number === '∞') {
+            max = list.length
+          }
+          else {
+            max = parseInt(number)
+          }
 
-
-          for (let i = 0; i < parseInt(number); i++) {
+          for (let i = 0; i < max; i++) {
             console.log('in')
             const element = list[i]
             const cloned = originalCart.cloneNode(true)
@@ -19048,11 +19054,11 @@ headers: {
           generateCollectionColumn(collection.id, collectionName?.value || 'catalogue')
           console.log('flaaag' + flag)
           const attach = getElementById1('attach-to-page').checked
-          if ((collection.id === pathItem.collection && flag) ) {
+          if ((collection.id === pathItem.collection && flag)) {
 
             attachCollection(collection, true, collectionName?.value)
           }
-          else if(!flag){
+          else if (!flag) {
             attach && attachCollection(collection, true, collectionName?.value)
           }
           //generateConditionTable(v,condSk)
@@ -19143,7 +19149,7 @@ headers: {
       i.classList.remove('collection-attached')
       const id = i.getAttribute('collection')
       const wrapper = getElementById1('attached-collection-wrapper')
-      wrapper.setAttribute('hidden',"")
+      wrapper.setAttribute('hidden', "")
       getElementById1(id).querySelector('#product-group-input').classList.remove('collection-attached')
       delete pathItem.collection
       i.textContent = ''
