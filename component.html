@@ -10016,78 +10016,120 @@ checkbox1.setAttribute('hidden', "");
     }
     var generateRelated = async () => {
       console.log('generating ')
-      const section = querySelectorAll1('.related_products_section')[0]
-      const originalCart = section.querySelector('.catalog_product')
-      //get related products
-      const list = await fetch(`${backend_url}?id=sku:${pathItemSku}&sk=relatedProducts&startsWith=true`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }).then(e => e.json()).then(({ items }) => items[0]?.list)
-      console.log(JSON.stringify(list))
-      for (const element of list) {
-        const cloned = originalCart.cloneNode(true)
-        const anchor = await fetch(`${backend_url}?id=sku:${element}&sk=addedSite:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }).then(e => e.json()).then(({ items }) => items[0]?.value)
-        if (!anchor) {
-          console.log('no anch ' + element)
-          continue
-        }
-        const novar = await fetch(`${backend_url}?id=sku:${element}&sk=headingNoVars&startsWith=true`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }).then(e => e.json()).then(({ items }) => items[0]?.value)
-
-        const prices = await fetch(`${backend_url}?id=sku:${element}&sk=site_price:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }).then(e => e.json()).then(({ items }) => items)
-        const images = await fetch(`${backend_url}?id=sku:${element}&sk=pics&startsWith=true`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }).then(e => e.json())
-        const image = images.items.find(e => e.main)
-        const uuid = image.sk.replace('pics', '').split('.')[0]
-        console.log('uuid:' + uuid)
-        const croped = await fetch(`${backend_url}?id=sku:${element}&sk=crop:&startsWith=true`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }).then(e => e.json())
-        console.log(JSON.stringify(croped))
-        const src = croped.items.find(z => z.sk.endsWith(uuid))?.list[0].split(' ')[0]
-        const img = cloned.querySelector('.product_lead_img').setAttribute('src', src)
-        cloned.querySelector('.product_heading').textContent = novar
-        cloned.querySelectorAll('.product_anchor').forEach(e => e.setAttribute('href', anchor))
-        if (prices[0].oldPrice) {
-          const price = Math.min(...prices.map(obj => parseInt(obj.price)));
-          const oldprice = Math.min(...prices.map(obj => parseInt(obj.oldPrice)));
-          cloned.querySelector('.price_old').querySelector('.price_value').textContent = oldprice
-          cloned.querySelector('.price_discount').querySelector('.price_value').textContent = price
-          cloned.querySelector('.price_normal').remove()
+      const sections = querySelectorAll1('[data-builder-collection]')
+      for (const section of sections) {
+        console.log('section ' + section.id)
+        const [name, number] = section.getAttribute('data-builder-collection').split(':')
+        const originalCart = section.querySelector('.catalog_product')
+        //get related products
+        let list
+        if (name === 'related_products') {
+          list = await fetch(`${backend_url}?id=sku:${pathItemSku}&sk=relatedProducts&startsWith=true`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json()).then(({ items }) => items[0]?.list)
         }
         else {
-          const price = Math.min(...prices.map(obj => parseInt(obj.price)));
-          cloned.querySelector('.price_normal').querySelector('.price_value').textContent = price
-          cloned.querySelector('.price_discount').remove()
-          cloned.querySelector('.price_old').remove()
-        }
-        originalCart.parentNode.append(cloned)
+          url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=${name}:${ownerid}&gsi1lsi1=true&lsi1=${name}`;
 
+          const res = await fetch(url).then(res => res.json())
+            .then(async ({ items }) => {
+              return items[0]
+
+            })
+          console.log('for name' + name + JSON.stringify(res))
+          if (!res) {
+            continue
+          }
+          const colId = res.id
+          const d = await fetch(`${backend_url}?id=${colId}&sk=selected&startsWith=true`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json())
+          console.log('fx '+JSON.stringify(d))
+          const items = d.items[0].items
+          console.log('for name2' + JSON.stringify(items))
+          list = items
+          
+        }
+
+        console.log('list is' + JSON.stringify(list))
+        try{
+
+        
+        for (let i = 0; i < parseInt(number); i++) {
+          console.log('in')
+          const element = list[i]
+          const cloned = originalCart.cloneNode(true)
+          const anchor = await fetch(`${backend_url}?id=sku:${element}&sk=addedSite:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json()).then(({ items }) => items[0]?.value)
+          if (!anchor) {
+            console.log('no anch ' + element)
+            continue
+          }
+          const novar = await fetch(`${backend_url}?id=sku:${element}&sk=headingNoVars&startsWith=true`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json()).then(({ items }) => items[0]?.value)
+
+          const prices = await fetch(`${backend_url}?id=sku:${element}&sk=site_price:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json()).then(({ items }) => items)
+          const images = await fetch(`${backend_url}?id=sku:${element}&sk=pics&startsWith=true`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json())
+          const image = images.items.find(e => e.main)
+          const uuid = image.sk.replace('pics', '').split('.')[0]
+          console.log('uuid:' + uuid)
+          const croped = await fetch(`${backend_url}?id=sku:${element}&sk=crop:&startsWith=true`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json())
+          console.log(JSON.stringify(croped))
+          const src = croped.items.find(z => z.sk.endsWith(uuid))?.list[0].split(' ')[0]
+          const img = cloned.querySelector('.product_lead_img').setAttribute('src', src)
+          cloned.querySelector('.product_heading').textContent = novar
+          cloned.querySelectorAll('.product_anchor').forEach(e => e.setAttribute('href', anchor))
+          if (prices[0].oldPrice) {
+            const price = Math.min(...prices.map(obj => parseInt(obj.price)));
+            const oldprice = Math.min(...prices.map(obj => parseInt(obj.oldPrice)));
+            cloned.querySelector('.price_old').querySelector('.price_value').textContent = oldprice
+            cloned.querySelector('.price_discount').querySelector('.price_value').textContent = price
+            cloned.querySelector('.price_normal').remove()
+          }
+          else {
+            const price = Math.min(...prices.map(obj => parseInt(obj.price)));
+            cloned.querySelector('.price_normal').querySelector('.price_value').textContent = price
+            cloned.querySelector('.price_discount').remove()
+            cloned.querySelector('.price_old').remove()
+          }
+          originalCart.parentNode.append(cloned)
+
+        }
+        originalCart.remove()
       }
-      originalCart.remove()
+      catch(e){
+        console.log('prooob '+e.message)
+      }
+      }
     }
     var generateSchema = (head) => {
       const url = pathItem.lsi1.split(';')[0].replace('|', '/')
@@ -10444,6 +10486,7 @@ checkbox1.setAttribute('hidden', "");
         imports2 = imports1.map(item => {
           console.log(JSON.stringify(item))
           const found = data2.items.find(e => e.lsi1.split(';')[0].split('|')[1] === item.component)
+          console.log(item.component)
           const compLsi1 = found.lsi1.split(';')[0]
           const currentLsi = pathItemPath.replace(';publish:published', "")
           const relativePath = getRelativePath(currentLsi, convertToOldPath(compLsi1));
@@ -17660,7 +17703,7 @@ headers: {
         sk: 'addedSite:' + pathItemPath.split('/')[0].toLowerCase(),
         value: pSiteLabel.getAttribute('href')
       })
-      
+
       if (items.length) {
         if (items[0].ownerUUID.replace('sku:', '') === ownerid) {
           await setSku(value)
@@ -18952,7 +18995,7 @@ headers: {
           enableButton.textContent = '🟢'
           postToDb({ id: collection.id, sk: 'enabled' })
           generateCollectionColumn(collection.id, collectionName?.value || 'catalogue')
-          attachCollection(collection, true,collectionName?.value)
+          attachCollection(collection, true, collectionName?.value)
           //generateConditionTable(v,condSk)
         }
         const enabled = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=enabled&startsWith=true`)
@@ -19012,7 +19055,7 @@ headers: {
         body: JSON.stringify(item),
       });
     }
-    const attachCollection = (collection, flag,name) => {
+    const attachCollection = (collection, flag, name) => {
       console.log('attaching' + JSON.stringify(collection))
       const cV = getElementById1('collection-value')
       cV.textContent = name
@@ -19029,7 +19072,7 @@ headers: {
       postToDb({
         id: collection.id,
         sk: 'addedSite:' + pathItemPath.split('/')[0].toLowerCase(),
-        value: r.link?.replace('s3.amazonaws.com/', '').replace('index.html', '')
+        value: getElementById1('published-site-label').getAttribute('href')
       })
     }
     const addCollection = async (event, value) => {
@@ -19065,7 +19108,7 @@ headers: {
         enableButton.textContent = '🟢'
         postToDb({ id: item.id, sk: 'enabled' })
         generateCollectionColumn(item.id, cloned.querySelector('#product-group-input').textContent || 'catalogue')
-        attachCollection(item,false,cloned.querySelector('#product-group-input').textContent)
+        attachCollection(item, false, cloned.querySelector('#product-group-input').textContent)
         //generateConditionTable(v,condSk)
       }
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
