@@ -17646,11 +17646,14 @@ headers: {
         sk: 'addedSite:' + pathItemPath.split('/')[0].toLowerCase(),
         value: pSiteLabel.getAttribute('href')
       })
+      
       if (items.length) {
         if (items[0].ownerUUID.replace('sku:', '') === ownerid) {
           await setSku(value)
           showSku2(value)
-
+          const skuItem = items[0]
+          skuItem.addDate = (new Date()).getTime()
+          postToDb(skuItem)
           return
           //alert('adding sku in progress')
         }
@@ -19007,6 +19010,8 @@ headers: {
         pathItem.collection = collection.id
         postToDb(pathItem)
       }
+      collection.addDate = (new Date()).getTime()
+      postToDb(collection)
     }
     const addCollection = async (event, value) => {
 
