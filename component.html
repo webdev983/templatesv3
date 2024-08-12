@@ -3745,6 +3745,30 @@
         ),
       });
     }
+    var handlePromoChange = async (e, item) => {
+      const checked = e.target.checked
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+          { ...item, promo: checked }
+        ),
+      });
+    }
+    var handleCatalogueChange = async (e, item) => {
+      const checked = e.target.checked
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+          { ...item, catalogue: checked }
+        ),
+      });
+    }
     var loadImages = async (clonedFieldset, src) => {
 
       clonedFieldset.querySelector('#remove-galeryMenu').onclick = (e) => {
@@ -3806,6 +3830,12 @@
         const secondaryCheckbox = clonedRow.querySelector('[data-picture-secondary-checkbox]')
         secondaryCheckbox.checked = !!item.secondary
         secondaryCheckbox.onchange = e => handleSecondaryChange(e, item)
+        const promoCheckbox = clonedRow.querySelector('[data-picture-promo-checkbox]')
+        promoCheckbox.checked = !!item.main
+        promoCheckbox.onchange = (e) => handlePromoChange(e, item)
+        const catalogueCheckbox = clonedRow.querySelector('[data-picture-catalog-checkbox]')
+        catalogueCheckbox.checked = !!item.main
+        catalogueCheckbox.onchange = (e) => handleCatalogueChange(e, item)
         clonedRow.removeAttribute('hidden'); // Show the cloned row
         clonedRow.querySelector('[data-select-image]').onclick = selectImage
         //clonedRow.querySelector('[data-show-menu]').onclick = showMenu
