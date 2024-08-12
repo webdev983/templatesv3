@@ -10007,7 +10007,8 @@ checkbox1.setAttribute('hidden', "");
     }
     var generateRelated = async () => {
       console.log('generating ')
-      const section = querySelectorAll1('.related_products_section')[0]
+      const section = querySelectorAll1('[data-builder-collection^="related_products:"]')[0]
+      const number = section.getAttribute('data-builder-collection').split(':')[1]
       const originalCart = section.querySelector('.catalog_product')
       //get related products
       const list = await fetch(`${backend_url}?id=sku:${pathItemSku}&sk=relatedProducts&startsWith=true`, {
@@ -10017,7 +10018,8 @@ checkbox1.setAttribute('hidden', "");
         },
       }).then(e => e.json()).then(({ items }) => items[0]?.list)
       console.log(JSON.stringify(list))
-      for (const element of list) {
+      for (let i=0;i<parseInt(number);i++) {
+        const element = list[i]
         const cloned = originalCart.cloneNode(true)
         const anchor = await fetch(`${backend_url}?id=sku:${element}&sk=addedSite:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`, {
           method: 'GET',
