@@ -10136,7 +10136,15 @@ checkbox1.setAttribute('hidden', "");
             console.log(JSON.stringify(croped))
             const src = croped.items.find(z => z.sk.endsWith(uuid))?.list[0].split(' ')[0]
             const img = cloned.querySelector('.product_lead_img').setAttribute('src', src)
-            cloned.querySelector('.product_heading').textContent = novar
+            const heading = cloned.querySelector('.product_heading')
+            heading.textContent = novar
+            const a =heading.querySelector('a')
+            if(a){
+              a.setAttribute('href', anchor)
+            }
+            else{
+              heading.setAttribute('href', anchor)
+            }
             cloned.querySelectorAll('.product_anchor').forEach(e => e.setAttribute('href', anchor))
             if (prices[0].oldPrice) {
               const price = Math.min(...prices.map(obj => parseInt(obj.price)));
