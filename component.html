@@ -1524,7 +1524,7 @@
       </details>
       <details id="collection-menu" hidden style="margin-bottom: 7px;">
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">💐 collections</span></summary>
-        <div hidden style="margin-top:5px; padding-bottom: 10px;">
+        <div id="attached-collection-wrapper" hidden style="margin-top:5px; padding-bottom: 10px;">
           <label class="l-2 b-dark-blue">collection: </label>
           <label class="l-2" id="collection-value"></label>
           <button class="b-3" id="collection-remove" onclick="removeCollection(event)">🗑️</button>
@@ -19054,9 +19054,12 @@ headers: {
           postToDb({ id: collection.id, sk: 'enabled' })
           generateCollectionColumn(collection.id, collectionName?.value || 'catalogue')
           console.log('flaaag' + flag)
-          if ((collection.id === pathItem.collection && flag) || !flag) {
+          const attach = getElementById1('attach-to-page').checked
+          if ((collection.id === pathItem.collection && flag)) {
 
             attachCollection(collection, true, collectionName?.value)
+          }else if (!flag) {
+            attach && attachCollection(collection, true, collectionName?.value)
           }
           //generateConditionTable(v,condSk)
         }
@@ -19120,8 +19123,12 @@ headers: {
       console.log('attaching' + JSON.stringify(collection))
       const cV = getElementById1('collection-value')
       cV.setAttribute('collection', collection.id)
+      
       cV.textContent = name
+
       cV.classList.add('collection-attached')
+      const wrapper = getElementById1('attached-collection-wrapper')
+      wrapper.removeAttribute('hidden')
       const el = getElementById1(collection.id)
       el.querySelector('#product-group-input').classList.add('collection-attached')
 
@@ -19143,6 +19150,8 @@ headers: {
       const i = event.target.parentNode.querySelector('#collection-value')
       i.classList.remove('collection-attached')
       const id = i.getAttribute('collection')
+      const wrapper = getElementById1('attached-collection-wrapper')
+      wrapper.setAttribute('hidden', "")
       getElementById1(id).querySelector('#product-group-input').classList.remove('collection-attached')
       delete pathItem.collection
       i.textContent = ''
@@ -19184,7 +19193,7 @@ headers: {
         enableButton.textContent = '🟢'
         postToDb({ id: item.id, sk: 'enabled' })
         generateCollectionColumn(item.id, cloned.querySelector('#product-group-input').textContent || 'catalogue')
-        attachCollection(item, false, cloned.querySelector('#product-group-input').textContent)
+        attach && attachCollection(item, false, cloned.querySelector('#product-group-input').textContent)
         //generateConditionTable(v,condSk)
       }
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
