@@ -1534,7 +1534,7 @@
           </summary>
           
           <button class="b-4" onclick="addCollection(event)">add</button>
-          <label class="l-3"><input type="checkbox">attach to page</label>
+          <label class="l-3"><input id="attach-to-page" type="checkbox">attach to page</label>
 
           <table id="product-group-table" class="table-1" style="margin-left: 30px; margin-top: 10px;">
             <tbody>
@@ -18935,6 +18935,10 @@ headers: {
           enableButton.textContent = '🟢'
           postToDb({ id: collection.id, sk: 'enabled' })
           generateCollectionColumn(collection.id, collectionName?.value || 'catalogue')
+          if(pathItemPath.collection === collection.id){
+            getElementById1(collection.id).classList.add('collection-attached')
+          }
+          attachCollection(item)
           //generateConditionTable(v,condSk)
         }
         const enabled = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=enabled&startsWith=true`)
@@ -18994,11 +18998,19 @@ headers: {
         body: JSON.stringify(item),
       });
     }
+    const attachCollection = (collection)=>{
+      const cV = getElementById1('collection-value')
+      cV.textContent = collection.value
+      cV.classList.add('collection-attached')
+      getElementById1(collection.id).querySelector('#product-group-input').classList.add('collection-attached')
+      pathItem.collection = collection.id
+      postToDb(pathItem)
+    }
     const addCollection = async (event, value) => {
 
       const filled = getElementById1('product-group-table')
       const tr = filled.querySelector('#product-group-row[hidden]')
-
+      
       const cloned = tr.cloneNode(true)
       cloned.removeAttribute('hidden')
       tr.parentNode.append(cloned)
@@ -19012,9 +19024,9 @@ headers: {
       const enableButton = cloned.querySelector('#enable-product-group')
       enableButton.onclick = (e) => {
         //e.target.textContent = '🟢'
-
+        const attach = getElementById1('attach-to-page').checked
         if (enableButton.textContent === '🟢') {
-          fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${collection.id.replace(':', '~')}:enabled`, {
+          fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id.replace(':', '~')}:enabled`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',
@@ -19025,8 +19037,9 @@ headers: {
           return
         }
         enableButton.textContent = '🟢'
-        postToDb({ id: collection.id, sk: 'enabled' })
-        generateCollectionColumn(collection.id, cloned.querySelector('#product-group-input').textContent || 'catalogue')
+        postToDb({ id: item.id, sk: 'enabled' })
+        generateCollectionColumn(item.id, cloned.querySelector('#product-group-input').textContent || 'catalogue')
+        attachCollection(item)
         //generateConditionTable(v,condSk)
       }
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
