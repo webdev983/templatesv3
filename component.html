@@ -16223,6 +16223,11 @@ elementsToRemove.forEach(element => element.remove());
         sk: 'addedSite:' + pathItemPath.split('/')[0].toLowerCase(),
         value: r.link?.replace('s3.amazonaws.com/', '').replace('index.html', '')
       })
+      postToDb({
+        id: pathItem.collection,
+        sk: 'addedSite:' + pathItemPath.split('/')[0].toLowerCase(),
+        value: r.link?.replace('s3.amazonaws.com/', '').replace('index.html', '')
+      })
       el4.removeAttribute('hidden', '')
       el5.removeAttribute('hidden', '')
 
@@ -19012,6 +19017,11 @@ headers: {
       }
       collection.addDate = (new Date()).getTime()
       postToDb(collection)
+      postToDb({
+        id: collection.id,
+        sk: 'addedSite:' + pathItemPath.split('/')[0].toLowerCase(),
+        value: r.link?.replace('s3.amazonaws.com/', '').replace('index.html', '')
+      })
     }
     const addCollection = async (event, value) => {
 
