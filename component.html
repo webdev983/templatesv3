@@ -18935,12 +18935,7 @@ headers: {
           enableButton.textContent = '🟢'
           postToDb({ id: collection.id, sk: 'enabled' })
           generateCollectionColumn(collection.id, collectionName?.value || 'catalogue')
-          if (pathItemPath.collection === collection.id) {
-            getElementById1(collection.id).querySelector('#product-group-input').classList.add('collection-attached')
-            const cV = getElementById1('collection-value')
-            cV.textContent = collection.value
-            cV.classList.add('collection-attached')
-          }
+          attachCollection(collection, true)
           //generateConditionTable(v,condSk)
         }
         const enabled = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=enabled&startsWith=true`)
@@ -19000,14 +18995,18 @@ headers: {
         body: JSON.stringify(item),
       });
     }
-    const attachCollection = (collection) => {
+    const attachCollection = (collection, flag) => {
+      console.log('attaching' + JSON.stringify(collection))
       const cV = getElementById1('collection-value')
       cV.textContent = collection.value
       cV.classList.add('collection-attached')
       const el = getElementById1(collection.id)
       el.querySelector('#product-group-input').classList.add('collection-attached')
-      pathItem.collection = collection.id
-      postToDb(pathItem)
+      if (!flag) {
+
+        pathItem.collection = collection.id
+        postToDb(pathItem)
+      }
     }
     const addCollection = async (event, value) => {
 
