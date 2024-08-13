@@ -20084,12 +20084,16 @@ headers: {
           })
         }
         const combinations = generateCombinations(data1)
+        console.log(JSON.stringify(combinations))
         const replaced = combinations.map(combination => {
           let replaced1 = toR
           const s = combination.split(';')
           s.pop()
           for (const element of s) {
             const [k, v] = element.split(':')
+            console.log(k+' v '+v)
+            console.log(replaced1)
+            console.log('replacing '+ k + '-value#' + ' with '+v)
             replaced1 = replaced1.replace(k + '-value#', v)
           }
           return { [combination]: replaced1 }
