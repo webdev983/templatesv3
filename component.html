@@ -6896,13 +6896,8 @@
           console.log('chat gpt task: \n' + task)
           const res = await sendGptRequest(gptToken, task, element.model)
           console.log(JSON.stringify(res))
-          let content
-          try {
-            content = JSON.parse(res.choices[0].message.content.replace(/\\"/g, '"').replace(/\\n/g, '\\n'))
-          }
-          catch (e) {
-            content = JSON.parse(res.choices[0].message.content.replace(/\\n/g, '\n').replace(/\\"/g, '"'))
-          }
+         
+          
           console.log('content ' + JSON.stringify(content))
           const currentDate = new Date();
 
@@ -6916,7 +6911,6 @@
             id: pathItem.id,
             sk: `ai-logs:${new Date().getTime()}`,
             task,
-            content,
             gptResponse: res,
             ttl
           }
@@ -6927,7 +6921,13 @@
             },
             body: JSON.stringify(aiPayload),
           });
-
+          let content
+          try {
+            content = JSON.parse(res.choices[0].message.content.replace(/\\"/g, '"').replace(/\\n/g, '\\n'))
+          }
+          catch (e) {
+            content = JSON.parse(res.choices[0].message.content.replace(/\\n/g, '\n').replace(/\\"/g, '"'))
+          }
           const element0 = document.getElementById('ai-logs')
           //element0.removeAttribute('hidden')
           element0.querySelector('textarea').value = [element0.querySelector('textarea').value, JSON.stringify(res, null, 2) + JSON.stringify(task) + '\n\n' + JSON.stringify(content)].join('\n\n=============================================\n\n')
