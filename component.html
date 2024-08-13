@@ -6896,9 +6896,9 @@
           console.log('chat gpt task: \n' + task)
           const res = await sendGptRequest(gptToken, task, element.model)
           console.log(JSON.stringify(res))
-         
-          
-          
+
+
+
           const currentDate = new Date();
 
           // Add one day to the current date
@@ -16764,8 +16764,9 @@ elementsToRemove.forEach(element => element.remove());
       inputValue = items1.data
       let sku1 = pathItemSku || selectedSku
       if (attr === 'h1-attribute') {
-        const allAttrs = querySelectorAll1(`[data-import-${attr}]`)
-
+        const allAttrs1 = querySelectorAll1(`[data-import-${attr}]`)
+        const allAttrs2 = querySelectorAll1(`[data-import_${attr}]`)
+        const allAttrs = [...allAttrs1, ...allAttrs2]
         const keys = Object.keys(inputValue.text[0])
         const el = {
           time: (new Date()).getTime(),
@@ -16807,7 +16808,9 @@ elementsToRemove.forEach(element => element.remove());
         return
       }
       if (!inputValue.startsWith('<')) {
-        const allAttrs = querySelectorAll1(`[data-import-${attr}]`)
+        const allAttrs1 = querySelectorAll1(`[data-import-${attr}]`)
+        const allAttrs2 = querySelectorAll1(`[data-import_${attr}]`)
+        const allAttrs = [...allAttrs1, ...allAttrs2]
 
 
         const el = {
@@ -16849,7 +16852,9 @@ elementsToRemove.forEach(element => element.remove());
       }
       const div = document.createElement('div')
       div.innerHTML = inputValue
-      const allAttrs = querySelectorAll1(`[data-import-${attr}]`)
+      const allAttrs1 = querySelectorAll1(`[data-import-${attr}]`)
+      const allAttrs2 = querySelectorAll1(`[data-import_${attr}]`)
+      const allAttrs = [...allAttrs1, ...allAttrs2]
       const map = allAttrs.map(element => {
         const value = element.getAttribute(`data-import-${attr}`)
         return { tag: value, element, set: false, index: 1 }
