@@ -4797,18 +4797,19 @@
         console.log('with ' + JSON.stringify(picsWithCondition))
       }
       else {
-        const sk = withoutSku.find(e=>e.main).sk
-        if(sk){
-        const payload3 = {
+        console.log(JSON.stringify(withoutSku))
+        const sk = withoutSku.find(e => e.main).sk
+        if (sk) {
+          const payload3 = {
 
-          time: (new Date()).getTime().toString(),
-          action: 'setAttribute',
-          target_element: lastEl,
-          key: 'srcset',
-          value: skToPic(sk),
+            time: (new Date()).getTime().toString(),
+            action: 'setAttribute',
+            target_element: lastEl,
+            key: 'srcset',
+            value: skToPic(sk),
 
-        }
-        await pushAction(payload3)
+          }
+          await pushAction(payload3)
 
         }
       }
