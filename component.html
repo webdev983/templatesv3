@@ -6922,11 +6922,37 @@
             body: JSON.stringify(aiPayload),
           });
           let content
+          function extractAndParseContent(content) {
+            // Remove the triple backticks and the surrounding 'json' notation
+            const cleanedContent = content
+              .replace(/^```json/, '')  // Remove leading '```json'
+              .replace(/```$/, '')      // Remove trailing '```'
+              .trim();                  // Remove any leading or trailing whitespace
+
+            // Fix escape characters
+            const fixedContent = cleanedContent
+              .replace(/\\"/g, '"')   // Replace escaped quotes with regular quotes
+              .replace(/\\n/g, '\n'); // Replace escaped newlines with actual newlines
+
+            // Parse the JSON string
+            try {
+              return JSON.parse(fixedContent);
+            } catch (error) {
+              console.error("Error parsing JSON:", error);
+              return null;
+            }
+          }
           try {
             content = JSON.parse(res.choices[0].message.content.replace(/\\"/g, '"').replace(/\\n/g, '\\n'))
           }
           catch (e) {
-            content = JSON.parse(res.choices[0].message.content.replace(/\\n/g, '\n').replace(/\\"/g, '"'))
+            try {
+              content = JSON.parse(res.choices[0].message.content.replace(/\\n/g, '\n').replace(/\\"/g, '"'))
+            }
+            catch (e) {
+              content = extractAndParseContent(res.choices[0].message.content)
+            }
+
           }
           const element0 = document.getElementById('ai-logs')
           //element0.removeAttribute('hidden')
@@ -16698,7 +16724,7 @@ elementsToRemove.forEach(element => element.remove());
         await Promise.all(ps)
         return
       }
-      const els = [...querySelectorAll1(`[data-import-${attr}]`),...querySelectorAll1(`[data-import_${attr}]`)]
+      const els = [...querySelectorAll1(`[data-import-${attr}]`), ...querySelectorAll1(`[data-import_${attr}]`)]
       for (const el of els) {
         const id = el.id
         console.log('to remove id ' + id)
@@ -16856,7 +16882,7 @@ elementsToRemove.forEach(element => element.remove());
       const allAttrs2 = querySelectorAll1(`[data-import_${attr}]`)
       const allAttrs = [...allAttrs1, ...allAttrs2]
       const map = allAttrs.map(element => {
-        const value = element.getAttribute(`data-import-${attr}`) ||element.getAttribute(`data-import_${attr}`)
+        const value = element.getAttribute(`data-import-${attr}`) || element.getAttribute(`data-import_${attr}`)
         return { tag: value, element, set: false, index: 1 }
       })
       log1('map is ' + JSON.stringify(map))
