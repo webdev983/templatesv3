@@ -16698,7 +16698,7 @@ elementsToRemove.forEach(element => element.remove());
         await Promise.all(ps)
         return
       }
-      const els = querySelectorAll1(`[data-import-${attr}]`)
+      const els = [...querySelectorAll1(`[data-import-${attr}]`),...querySelectorAll1(`[data-import_${attr}]`)]
       for (const el of els) {
         const id = el.id
         console.log('to remove id ' + id)
