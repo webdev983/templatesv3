@@ -4276,11 +4276,18 @@
       const list = sks.map(sk => {
         const splited = sk.split(';')
         const conditionEl = splited.shift()
-        const splited2 = conditionEl.split(':')
-        splited2.shift()
-        return { condition: splited2.join(':'), wareHouse: splited.pop().split(':')[1], combination: splited }
+
+
+        let condition
+        if (conditionEl !== 'null') {
+          const splited2 = conditionEl.split(':')
+          splited2.shift()
+          condition = splited2.join(':')
+        }
+
+        return { condition, wareHouse: splited.pop().split(':')[1], combination: splited }
       })
-      const conditions = removeDuplicates(list.map(e => e.condition))
+      const conditions = removeDuplicates(list.map(e => e.condition)).filter(e=>e)
       const warehouses = removeDuplicates(list.map(e => e.wareHouse))
       const combinations = list.map(e => e.combination)
       return { conditions, warehouses, combinations }
@@ -4634,7 +4641,7 @@
       let mainPics = items.filter(e => e.main)
       if (secondary) {
 
-        
+
         image = querySelectorAll1('.product_thumbnail')[0]
       }
       else {
@@ -4814,7 +4821,7 @@
       }
 
       if (secondary) {
-        for (let i = 0; i < picsWithCondition[keys[0]]?.length ||0; i++) {
+        for (let i = 0; i < picsWithCondition[keys[0]]?.length || 0; i++) {
           let newId = duplicateId(image.id).id
           const actionObject = {
             time: (new Date()).getTime(),
