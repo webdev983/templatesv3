@@ -5945,7 +5945,7 @@
         const rows = el.querySelectorAll('[data-lists-element]')
         for (const row of rows) {
           const key = row.querySelector('[data-lists-element-key]')?.textContent
-          if(!key){
+          if (!key) {
             continue
           }
           const value = row.querySelector('[data-list-element-selection]')?.value || row.querySelector('[data-lists-element-value]').textContent || ''
@@ -6896,7 +6896,13 @@
           console.log('chat gpt task: \n' + task)
           const res = await sendGptRequest(gptToken, task, element.model)
           console.log(JSON.stringify(res))
-          const content = JSON.parse(res.choices[0].message.content.replace(/\\"/g, '"').replace(/\\n/g, '\\n')).replace(/\\"/g, '"');
+          let content
+          try {
+            content = JSON.parse(res.choices[0].message.content.replace(/\\"/g, '"').replace(/\\n/g, '\\n'))
+          }
+          catch (e) {
+            content = JSON.parse(res.choices[0].message.content.replace(/\\n/g, '\n').replace(/\\"/g, '"'))
+          }
           console.log('content ' + JSON.stringify(content))
           const currentDate = new Date();
 
