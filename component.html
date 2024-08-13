@@ -16856,7 +16856,7 @@ elementsToRemove.forEach(element => element.remove());
       const allAttrs2 = querySelectorAll1(`[data-import_${attr}]`)
       const allAttrs = [...allAttrs1, ...allAttrs2]
       const map = allAttrs.map(element => {
-        const value = element.getAttribute(`data-import-${attr}`)
+        const value = element.getAttribute(`data-import-${attr}`) ||element.getAttribute(`data-import_${attr}`)
         return { tag: value, element, set: false, index: 1 }
       })
       log1('map is ' + JSON.stringify(map))
