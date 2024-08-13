@@ -4279,16 +4279,16 @@
 
 
         let condition
-        if (conditionEl !== 'null') {
-          const splited2 = conditionEl.split(':')
-          splited2.shift()
-          condition = splited2.join(':')
-        }
+
+        const splited2 = conditionEl.split(':')
+        splited2.shift()
+        condition = splited2.join(':')
+
 
         return { condition, wareHouse: splited.pop().split(':')[1], combination: splited }
       })
-      const conditions = removeDuplicates(list.map(e => e.condition)).filter(e=>e)
-      console.log('prob condition'+JSON.stringify(conditions))
+      const conditions = removeDuplicates(list.map(e => e.condition)).filter(e => e !== 'null')
+      console.log('prob condition' + JSON.stringify(conditions))
       const warehouses = removeDuplicates(list.map(e => e.wareHouse))
       const combinations = list.map(e => e.combination)
       return { conditions, warehouses, combinations }
