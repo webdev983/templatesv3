@@ -5179,6 +5179,7 @@
       const totalReviews = [...reviews, ...fakeReviews]
       totalReviews.sort((a, b) => new Date(b.dbstimestamp) - new Date(a.dbstimestamp));
       const original = querySelectorAll1('.product_review')[0]
+      let total
       for (let i = 0; i < totalReviews.length; i++) {
         const { dbtimestamp, reviewer, rating, title, date, review } = totalReviews[i]
         let node = original
@@ -5192,11 +5193,20 @@
         node.querySelector('.product_review_rating').textContent = rating
         node.querySelector('.product_review_heading').textContent = title
         node.querySelector('.review_text').textContent = review
+        total+=parseInt(rating)
         if (i > 5) {
           node.setAttribute('hidden', '')
         }
 
       }
+      const totalR = querySelectorAll1('.reviews_count')[0]
+      totalR.textContent = totalReviews.length
+
+      const averageR = querySelectorAll1('.rating_summary')[0]
+      averageR.textContent = total/totalReviews.length
+      const startE = querySelectorAll1('.rating_summary')[0]
+      startE.setAttribute('data-star',total/totalReviews.length)
+      
 
     }
     const generateBreadCrumbApi = async () => {
@@ -16412,12 +16422,14 @@ elementsToRemove.forEach(element => element.remove());
       postToDb({
         id: 'sku:' + pathItemSku,
         sk: 'addedSite:' + pathItemPath.split('/')[0].toLowerCase(),
-        value: r.link?.replace('s3.amazonaws.com/', '').replace('index.html', '')
+        value: r.link?.replace('s3.amazonaws.com/', '').replace('index.html', ''),
+        addDate:(new Date()).getTime()
       })
       postToDb({
         id: pathItem.collection,
         sk: 'addedSite:' + pathItemPath.split('/')[0].toLowerCase(),
-        value: r.link?.replace('s3.amazonaws.com/', '').replace('index.html', '')
+        value: r.link?.replace('s3.amazonaws.com/', '').replace('index.html', ''),
+        addDate:(new Date()).getTime()
       })
       el4.removeAttribute('hidden', '')
       el5.removeAttribute('hidden', '')
