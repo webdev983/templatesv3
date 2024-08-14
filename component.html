@@ -5206,7 +5206,7 @@
       averageR.textContent = total/totalReviews.length
       const startE = querySelectorAll1('.rating_summary')[0]
       startE.setAttribute('data-star',total/totalReviews.length)
-      
+
 
     }
     const generateBreadCrumbApi = async () => {
@@ -10077,6 +10077,9 @@ checkbox1.setAttribute('hidden', "");
         },
       }).then(e => e.json()).then(({ items }) => items)
       let randomStrings = []
+      if(!picitems.length){
+        throw Error('no pics')
+      }
       const site = pathItemPath.split('/')[0].toLowerCase()
       let p = picitems.map(async element => {
         const sk = element.sk
