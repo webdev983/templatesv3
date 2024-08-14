@@ -4966,6 +4966,9 @@
     const skuToHtmlApi = async () => {
       //const spec = document.getElementById('spec-status')
       //spec.textContent = '🗂️ Table spec 🟠'
+      if(!pathItemSku){
+        throw new Error('no sku')
+      }
       const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Content'
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
       const { items } = await fetch(url).then(e => e.json())
@@ -5015,6 +5018,9 @@
         }
       }
       )
+      if(!data.length){
+        throw  new Error('no data')
+      }
       console.log('se' + JSON.stringify(data))
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
@@ -10078,7 +10084,7 @@ checkbox1.setAttribute('hidden', "");
       }).then(e => e.json()).then(({ items }) => items)
       let randomStrings = []
       if(!picitems.length){
-        throw Error('no pics')
+        throw new Error('no pics')
       }
       const site = pathItemPath.split('/')[0].toLowerCase()
       let p = picitems.map(async element => {
