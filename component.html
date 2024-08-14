@@ -3522,7 +3522,7 @@
         headers: {
           'Content-Type': 'application/json',
         },
-      }).then(e => e.json()).then(e=>e.items[0])
+      }).then(e => e.json()).then(e => e.items[0])
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
@@ -3718,7 +3718,7 @@
         headers: {
           'Content-Type': 'application/json',
         },
-      }).then(e => e.json()).then(e=>e.items[0])
+      }).then(e => e.json()).then(e => e.items[0])
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
@@ -3736,7 +3736,7 @@
         headers: {
           'Content-Type': 'application/json',
         },
-      }).then(e => e.json()).then(e=>e.items[0])
+      }).then(e => e.json()).then(e => e.items[0])
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
@@ -3754,7 +3754,7 @@
         headers: {
           'Content-Type': 'application/json',
         },
-      }).then(e => e.json()).then(e=>e.items[0])
+      }).then(e => e.json()).then(e => e.items[0])
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
@@ -17823,7 +17823,7 @@ headers: {
         id: 'sku:' + value,
         sk: 'addedSite:' + pathItemPath.split('/')[0].toLowerCase(),
         value: pSiteLabel.getAttribute('href'),
-        addDate:(new Date()).getTime()
+        addDate: (new Date()).getTime()
       })
 
       if (items.length) {
@@ -19420,6 +19420,9 @@ headers: {
     }
     const setCompPriceAll = async (event) => {
       const { target } = event
+      if (target.closest('tr').hasAttribute('hidden')) {
+        return
+      }
       const site = target.closest('td').getAttribute('site')
       console.log(site)
       document.querySelectorAll(`#price_comparison_price_anchor[key="${site}"]`).forEach(e => {
@@ -19431,6 +19434,9 @@ headers: {
     }
     const setCompAnchAll = async (event) => {
       const { target } = event
+      if (target.closest('tr').hasAttribute('hidden')) {
+        return
+      }
       const site = target.closest('td').getAttribute('site')
       document.querySelectorAll(`#price_comparison_price_anchor[key="${site}"]`).forEach(e => {
         const pEl = e.querySelector('#price_comparison_anchor')
@@ -19778,6 +19784,7 @@ headers: {
         const conditionValue = conditions.find(e => e.sk === condition)?.value || ''
         console.log(conditionValue)
         const originalRow = getElementById1('sku-table').querySelector('#sku-variable-row[hidden]')
+
         getElementById1('sku-table').querySelectorAll('#sku-variable-row:not([hidden])').forEach(e => e.remove())
         for (const element of skuVariables) {
           console.log('var' + JSON.stringify(element))
@@ -19914,12 +19921,18 @@ headers: {
       filled.querySelector('#sku-condition-site-name-value').textContent = pathItemPath.split('/')[0].toLowerCase()
       filled.querySelector('#site-old-all').onblur = (el) => {
         document.querySelectorAll('#sku-variable-price-all-old[warehouse]').forEach(e => {
+          if (e.closest('tr').hasAttribute('hidden')) {
+            return
+          }
           e.textContent = el.target.textContent
           e.onblur({ target: e })
         })
       }
       filled.querySelector('#site-new-all').onblur = (el) => {
         document.querySelectorAll('#sku-variable-price-all-current[warehouse]').forEach(e => {
+          if (e.closest('tr').hasAttribute('hidden')) {
+            return
+          }
           e.textContent = el.target.textContent
           e.onblur({ target: e })
         })
