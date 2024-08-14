@@ -18604,8 +18604,9 @@ headers: {
       wareHouseEl.textContent = selectedText
 
       siteEl.textContent = pathItemPath.split('/')[0]
-      const originalRow = cloned.querySelector('#sku-variable-row[hidden]')
-
+      const originalRow1 = cloned.querySelector('#sku-variable-row[hidden]')
+      const originalRow = originalRow1.cloneNode(true)
+      existing.items.length && originalRow1.remove()
       cloned.querySelector('#sku-variable-price-warehouse-all').setAttribute('warehouse', selectElement.parentNode.id)
       cloned.querySelector('#sku-variable-price-all').setAttribute('site', pathItemPath.split('/')[0])
       //get combinations
