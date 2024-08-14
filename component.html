@@ -19391,6 +19391,9 @@ headers: {
     }
     const setCompPrice = async (event) => {
       const { target } = event
+      if (target.closest('tr').hasAttribute('hidden')) {
+        return
+      }
       const sk = target.closest('tr').getAttribute('sk')
       const condition = target.closest('tr').getAttribute('condition')
       const value = target.textContent
@@ -19420,9 +19423,7 @@ headers: {
     }
     const setCompPriceAll = async (event) => {
       const { target } = event
-      if (target.closest('tr').hasAttribute('hidden')) {
-        return
-      }
+      
       const site = target.closest('td').getAttribute('site')
       console.log(site)
       document.querySelectorAll(`#price_comparison_price_anchor[key="${site}"]`).forEach(e => {
@@ -19434,9 +19435,7 @@ headers: {
     }
     const setCompAnchAll = async (event) => {
       const { target } = event
-      if (target.closest('tr').hasAttribute('hidden')) {
-        return
-      }
+      
       const site = target.closest('td').getAttribute('site')
       document.querySelectorAll(`#price_comparison_price_anchor[key="${site}"]`).forEach(e => {
         const pEl = e.querySelector('#price_comparison_anchor')
@@ -19446,6 +19445,9 @@ headers: {
     }
     const setCompAnchor = async (event) => {
       const { target } = event
+      if (target.closest('tr').hasAttribute('hidden')) {
+        return
+      }
       const sk = target.closest('tr').getAttribute('sk')
       const condition = target.closest('tr').getAttribute('condition')
       const value = target.textContent
@@ -19476,6 +19478,9 @@ headers: {
     }
     const setQty = async (event) => {
       const { target } = event
+      if (target.closest('tr').hasAttribute('hidden')) {
+        return
+      }
       const sk = target.closest('tr').getAttribute('sk')
       const condition = target.closest('tr').getAttribute('condition')
       const value = target.textContent
