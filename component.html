@@ -5007,15 +5007,15 @@
       const { items } = await fetch(url).then(e => e.json())
       const specid = generateUUID()
       const data = getFromProductSpecs().filter(e => {
-        if(e.key){
-          if(e.value && e.value.includes('{')){
+        if (e.key) {
+          if (e.value && e.value.includes('{')) {
             return false
           }
           return true
         }
       }
       )
-      console.log('se'+JSON.stringify(data))
+      console.log('se' + JSON.stringify(data))
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
 
@@ -6963,12 +6963,27 @@
           element0.querySelector('textarea').value = [element0.querySelector('textarea').value, JSON.stringify(res, null, 2) + JSON.stringify(task) + '\n\n' + JSON.stringify(content)].join('\n\n=============================================\n\n')
           for (const toImport of element.import_data) {
             const { import_page, import_name } = toImport
+            let f = pathItem.hub_items?.import_items && pathItem.hub_items?.import_items.find(e => e.name === import_name && e.component === import_page)
+            let compid = document.querySelector(`[name="${import_page}"]`)?.parentNode.getAttribute('cid')
+            if (!compid && f) {
+              const absolutePath = getAbsolutePath(pathItemPath, f.componentPath)
+              url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${absolutePath}&token=${localStorage.getItem('token')}`;
 
-            const compid = document.querySelector(`[name="${import_page}"]`).parentNode.getAttribute('cid')
+              const res = await fetch(url).then(res => res.json())
+                .then(async ({ items }) => {
+                  return items[0]
+
+                })
+
+              compid = res?.id
+              if(!compid){
+                alert('first load')
+              }
+            }
             const data = content[import_name]
 
             //clean
-            let f = pathItem.hub_items?.import_items && pathItem.hub_items?.import_items.find(e => e.name === import_name && e.component === import_page)
+
             if (!f) {
               f = await add_import_row(undefined, undefined, import_name, import_page)
             }
@@ -19431,7 +19446,7 @@ headers: {
     }
     const setCompPriceAll = async (event) => {
       const { target } = event
-      
+
       const site = target.closest('td').getAttribute('site')
       console.log(site)
       document.querySelectorAll(`#price_comparison_price_anchor[key="${site}"]`).forEach(e => {
@@ -19443,7 +19458,7 @@ headers: {
     }
     const setCompAnchAll = async (event) => {
       const { target } = event
-      
+
       const site = target.closest('td').getAttribute('site')
       document.querySelectorAll(`#price_comparison_price_anchor[key="${site}"]`).forEach(e => {
         const pEl = e.querySelector('#price_comparison_anchor')
