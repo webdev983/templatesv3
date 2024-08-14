@@ -5006,8 +5006,8 @@
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
       const { items } = await fetch(url).then(e => e.json())
       const specid = generateUUID()
-      const data = getFromProductSpecs().filter(e => e.key && e.key !==`{${e.value}}`)
-      console.log(JSON.stringify(data))
+      const data = getFromProductSpecs().filter(e => e.key && !e.value.includes('{'))
+      console.log('se'+JSON.stringify(data))
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
 
