@@ -6913,6 +6913,9 @@
           status.textContent = '🟠'
           task = replacePlaceHolders(task)
           task = replaceVars(task)
+          if(task.includes('{') && task.includes('}')){
+            throw new Error('missing data'+ task)
+          }
           console.log('chat gpt task: \n' + task)
           const res = await sendGptRequest(gptToken, task, element.model)
           console.log(JSON.stringify(res))
@@ -20160,6 +20163,11 @@ headers: {
         const { target } = e
         if (target.textContent === '🟠') {
           return
+        } 
+        const toR = h1Span.textContent
+        if(!toR){
+          alert('insert header')
+          return
         }
         target.textContent = '🟠'
         const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Content'
@@ -20170,7 +20178,7 @@ headers: {
         const atts = headParams
         delete atts.id
         delete atts.sk
-        const toR = h1Span.textContent
+       
         const pattern = /(\w+)-value#/g;
 
         // Find all matches
