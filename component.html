@@ -992,7 +992,7 @@
                 </td>
 
               </tr>
-              
+
 
               <tr id="script_product_spec_table">
                 <td>
@@ -3517,13 +3517,19 @@
     }
     var handleMainChange = async (e, item) => {
       const checked = e.target.checked
+      const item1 = await fetch(`${backend_url}?id=${item.id}&sk=${item.sk}&startsWith=true`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(e => e.json()).then(e=>e.items[0])
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-          { ...item, main: checked }
+          { ...item1, main: checked }
         ),
       });
     }
@@ -3707,37 +3713,55 @@
     }
     var handleSecondaryChange = async (e, item) => {
       const checked = e.target.checked
+      const item1 = await fetch(`${backend_url}?id=${item.id}&sk=${item.sk}&startsWith=true`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(e => e.json()).then(e=>e.items[0])
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-          { ...item, secondary: checked }
+          { ...item1, secondary: checked }
         ),
       });
     }
     var handlePromoChange = async (e, item) => {
       const checked = e.target.checked
+      const item1 = await fetch(`${backend_url}?id=${item.id}&sk=${item.sk}&startsWith=true`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(e => e.json()).then(e=>e.items[0])
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-          { ...item, promo: checked }
+          { ...item1, promo: checked }
         ),
       });
     }
     var handleCatalogueChange = async (e, item) => {
       const checked = e.target.checked
+      const item1 = await fetch(`${backend_url}?id=${item.id}&sk=${item.sk}&startsWith=true`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(e => e.json()).then(e=>e.items[0])
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-          { ...item, catalogue: checked }
+          { ...item1, catalogue: checked }
         ),
       });
     }
@@ -10189,11 +10213,11 @@ checkbox1.setAttribute('hidden', "");
             const src = croped.items.find(z => z.sk.endsWith(uuid))?.list[0].split(' ')[0]
             const img = cloned.querySelector('.product_lead_img').setAttribute('src', src)
             const heading = cloned.querySelector('.product_heading')
-           
+
             const a = heading.querySelector('a')
             if (a) {
               a.textContent = novar
-            
+
             }
             else {
               heading.textContent = novar
