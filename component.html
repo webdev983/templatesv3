@@ -992,35 +992,7 @@
                 </td>
 
               </tr>
-              <tr id="script_generate_collection">
-                <td>
-                  <input type="checkbox" id="script_execute_select" hidden>
-                  <label id="script_status" class="l-3">🔴</label>
-                  <label class="l-3" style="margin: 10px;">generate collection ✉️</label>
-                </td>
-                <td>
-                  <span class="l-3">🦾</span>
-                  <span class="l-3" id="last_script_execute_time">never</span>
-                </td>
-                <td>
-                  <span id="queue_number_container">
-                    <span class="l-3">🔀 </span>
-                    <span class="l-3 queue" contenteditable id="queue_number">~</span>
-                  </span>
-                </td>
-
-                <td>
-                </td>
-
-                <td>
-                </td>
-
-                <td>
-                  <label class="l-3"><input type="checkbox" id="execute_in_template" />🚧</label>
-
-                </td>
-
-              </tr>
+              
 
               <tr id="script_product_spec_table">
                 <td>
@@ -10653,6 +10625,7 @@ checkbox1.setAttribute('hidden', "");
 
       if (pathItem.hub_items?.menus?.collection_menu_toggle) {
         document.getElementById('collection-menu').removeAttribute('hidden')
+        await generateCollection()
         showCollection()
       }
 
@@ -10715,7 +10688,7 @@ checkbox1.setAttribute('hidden', "");
 
         await generateTableSpecApi()
       },
-      script_generate_collection: generateCollection,
+      //script_generate_collection: generateCollection,
       script_article_table_of_contents: async () => {
         const headingElements = querySelectorAll1('[data-table-of-contents-heading]')
         const textContents = Array.from(headingElements).map(e => e.textContent)
