@@ -5389,7 +5389,23 @@
 
 
         })
-        priceEl.textContent = parseInt(skuVar[comparision.sk]?.price).toFixed(2)
+        const integer = priceEl.querySelector('.product_price_integer')
+        if (integer) {
+          const decimal= priceEl.querySelector('.product_price_integer')
+          const separator= priceEl.querySelector('.product_price_separator')
+          await setTextAction(decimal.id + '-tree', item.price.toString().split('.')[0] || 0)
+          await setTextAction(separator.id + '-tree', '.')
+          await setTextAction(integer.id + '-tree', item.price.toString().split('.')[1] || '00')
+
+          integer.textContent = parseInt(skuVar[comparision.sk]?.price).toFixed(2).split('.')[0]
+          separator.textContent = '.'
+          decimal.textContent = parseInt(skuVar[comparision.sk]?.price).toFixed(2).split('.')[1]
+        }
+        else {
+          priceEl.textContent = parseInt(skuVar[comparision.sk]?.price).toFixed(2)
+         
+        }
+        //priceEl.textContent = parseInt(skuVar[comparision.sk]?.price).toFixed(2)
         priceEl.setAttribute('data-var-price', JSON.stringify(prices))
         anchor.setAttribute('data-var-anchor', JSON.stringify(anchors))
         anchor.setAttribute('href', skuVar[comparision.sk]?.anchor)
