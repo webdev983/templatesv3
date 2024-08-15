@@ -4411,14 +4411,14 @@
         const oV = oEl.querySelector('.price_value')
         const integer = dV.querySelector('.product_price_integer')
         if (integer) {
-          const decimal = dV.querySelector('.product_price_integer')
+          const decimal = dV.querySelector('.product_price_decimal')
           const separator = dV.querySelector('.product_price_separator')
           await setTextAction(decimal.id + '-tree', item.price.toString().split('.')[0] || 0)
           await setTextAction(separator.id + '-tree', '.')
           await setTextAction(integer.id + '-tree', item.price.toString().split('.')[1] || '00')
 
           const integer1 = oV.querySelector('.product_price_integer')
-          const decimal1 = oV.querySelector('.product_price_integer')
+          const decimal1 = oV.querySelector('.product_price_decimal')
           const separator1 = oV.querySelector('.product_price_separator')
           await setTextAction(decimal1.id + '-tree', item.oldPrice.toString().split('.')[0] || 0)
           await setTextAction(separator1.id + '-tree', item.oldPrice || 0)
@@ -4438,7 +4438,7 @@
         const nV = dEl.querySelector('.price_value')
         const integer = nV.querySelector('.product_price_integer')
         if (integer) {
-          const decimal = nV.querySelector('.product_price_integer')
+          const decimal = nV.querySelector('.product_price_decimal')
           const separator = nV.querySelector('.product_price_separator')
           await setTextAction(decimal.id + '-tree', item.price.toString().split('.')[0] || 0)
           await setTextAction(separator.id + '-tree', '.')
@@ -10373,13 +10373,14 @@ checkbox1.setAttribute('hidden', "");
               const ov = cloned.querySelector('.price_discount').querySelector('.price_value')
               const integer = pV.querySelector('.product_price_integer')
               if (integer) {
-                const decimal = pV.querySelector('.product_price_integer')
+                console.log('setting integer')
+                const decimal = pV.querySelector('.product_price_decimal')
                 const separator = pV.querySelector('.product_price_separator')
                 integer.textContent = price.toFixed(2).split('.')[0]
                 separator.textContent = '.'
                 decimal.textContent = price.toFixed(2).split('.')[1]
                 const integer1   = pV.querySelector('.product_price_integer')
-                const decimal1 = pV.querySelector('.product_price_integer')
+                const decimal1 = pV.querySelector('.product_price_decimal')
                 const separator1 = pV.querySelector('.product_price_separator')
                 integer1.textContent = oldprice.toFixed(2).split('.')[0]
                 separator1.textContent = '.'
@@ -10398,7 +10399,7 @@ checkbox1.setAttribute('hidden', "");
               
               const integer = pV.querySelector('.product_price_integer')
               if (integer) {
-                const decimal = pV.querySelector('.product_price_integer')
+                const decimal = pV.querySelector('.product_price_decimal')
                 const separator = pV.querySelector('.product_price_separator')
                 integer.textContent = price.toFixed(2).split('.')[0]
                 separator.textContent = '.'
