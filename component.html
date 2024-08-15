@@ -1630,8 +1630,10 @@
               </summary>
               <form style="padding: 10px;">
                 <span class="l-4">💾</span>
-                <label class="l-4"><input type="radio" checked="" id="global-input" vtype="global" name="product-group-text-save">global</label>
-                <label class="l-4"><input type="radio"            id="site-input" vtype="site"     name="product-group-text-save">site</label>
+                <label class="l-4"><input type="radio" checked="" id="global-input" vtype="global"
+                    name="product-group-text-save">global</label>
+                <label class="l-4"><input type="radio" id="site-input" vtype="site"
+                    name="product-group-text-save">site</label>
               </form>
               <div id="data-sku-var-buttons" style="padding: 10px;">
                 <button class="b-3" id="data-sku-var-buttons">color</button>
@@ -2187,14 +2189,14 @@
                       contenteditable>condition</span>
                   </td>
                   <td>
-                  <select class="select-country">
-                    <option id="none">⬇️</option>
-                    <option id="https://schema.org/NewCondition">new</option>
-                    <option id="https://schema.org/RefurbishedCondition">refurbished</option>
-                    <option id="https://schema.org/UsedCondition">used</option>
-                    <option id="https://schema.org/DamagedCondition">damaged</optio>
-                  </select>
-                </td>
+                    <select class="select-country">
+                      <option id="none">⬇️</option>
+                      <option id="https://schema.org/NewCondition">new</option>
+                      <option id="https://schema.org/RefurbishedCondition">refurbished</option>
+                      <option id="https://schema.org/UsedCondition">used</option>
+                      <option id="https://schema.org/DamagedCondition">damaged</optio>
+                    </select>
+                  </td>
                   <td>
                     <button class="b-3 condition-rename" onclick="removeSkuParam(event)">🗑</button>
                   </td>
@@ -4340,6 +4342,7 @@
       }
       await pushAction(el)
     }
+
     const skuToHtml = async (sku) => {
       //const spec = document.getElementById('spec-status')
       //spec.textContent = '🗂️ Table spec 🟠'
@@ -4406,16 +4409,45 @@
         const oEl = p1.querySelector('.price_old')
         const dV = dEl.querySelector('.price_value')
         const oV = oEl.querySelector('.price_value')
-        await setTextAction(dV.id + '-tree', item.price || 0)
-        await setTextAction(oV.id + '-tree', item.oldPrice || 0)
+        const integer = dV.querySelector('.product_price_integer')
+        if (integer) {
+          const decimal= dV.querySelector('.product_price_integer')
+          const separator= dV.querySelector('.product_price_separator')
+          await setTextAction(decimal.id + '-tree', item.price.toString().split('.')[0] || 0)
+          await setTextAction(separator.id + '-tree', '.')
+          await setTextAction(integer.id + '-tree', item.price.toString().split('.')[1] || '00')
+
+          const integer1 = oV.querySelector('.product_price_integer')
+          const decimal1 = oV.querySelector('.product_price_integer')
+          const separator1 = oV.querySelector('.product_price_separator')
+          await setTextAction(decimal1.id + '-tree', item.oldPrice.toString().split('.')[0] || 0)
+          await setTextAction(separator1.id + '-tree', item.oldPrice || 0)
+          await setTextAction(integer1.id + '-tree', item.oldPrice.toString().split('.')[1] || '00')
+        }
+        else {
+          await setTextAction(dV.id + '-tree', item.price || 0)
+          await setTextAction(oV.id + '-tree', item.oldPrice || 0)
+         
+        }
         await setAttAction(dEl.id + '-tree', 'data-var-price', JSON.stringify(prices))
-        await setAttAction(oEl.id + '-tree', 'data-var-price', JSON.stringify(oldPrices))
+          await setAttAction(oEl.id + '-tree', 'data-var-price', JSON.stringify(oldPrices))
+
       }
       else {
         const dEl = p1.querySelector('.price_normal')
         const nV = dEl.querySelector('.price_value')
-        await setTextAction(nV.id + '-tree', item.price || 0)
-        await setAttAction(dEl.id + '-tree', 'data-var-price', JSON.stringify(prices))
+        const integer = nV.querySelector('.product_price_integer')
+        if (integer) {
+          const decimal= nV.querySelector('.product_price_integer')
+          const separator= nV.querySelector('.product_price_separator')
+          await setTextAction(decimal.id + '-tree', item.price.toString().split('.')[0] || 0)
+          await setTextAction(separator.id + '-tree', '.')
+          await setTextAction(integer.id + '-tree', item.price.toString().split('.')[1] || '00')
+        }
+        else {
+          await setTextAction(nV.id + '-tree', item.price || 0)
+          await setAttAction(dEl.id + '-tree', 'data-var-price', JSON.stringify(prices))
+        }
       }
 
 
