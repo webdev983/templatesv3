@@ -5207,6 +5207,9 @@
       totalReviews.sort((a, b) => new Date(b.dbstimestamp) - new Date(a.dbstimestamp));
       const original = querySelectorAll1('.product_review')[0]
       let total
+      const maxEl = querySelectorAll1('[data-builder-visible_reviews]')[0]
+      const max =parseInt(maxEl.getAttribute('data-builder-visible_reviews'))
+      let loadMore
       for (let i = 0; i < totalReviews.length; i++) {
         const { dbtimestamp, reviewer, rating, title, date, review } = totalReviews[i]
         let node = original
@@ -5221,10 +5224,14 @@
         node.querySelector('.product_review_heading').textContent = title
         node.querySelector('.review_text').textContent = review
         total+=parseInt(rating)
-        if (i > 5) {
+        if (i > max) {
+          loadMore = true
           node.setAttribute('hidden', '')
         }
 
+      }
+      if(!loadMore){
+        querySelectorAll1('[load_more_reviews]')[0].setAttribute('hidden','')
       }
       const totalR = querySelectorAll1('.reviews_count')[0]
       totalR.textContent = totalReviews.length
