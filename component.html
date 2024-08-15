@@ -1622,7 +1622,7 @@
           </fieldset>
           <details id="sku-data-menu" class="data-menu">
             <summary class="summary-L-3"><span class="l-3 b-dark-blue">🖨️ Data</span></summary>
-            <details id="heading-with-vars-sku" class="data-menu" >
+            <details id="heading-with-vars-sku" class="data-menu">
               <summary class="summary-L-3">
                 <span id="import-satus" class="l-2">🔴</span>
                 <span class="l-3">heading with vars</span>
@@ -4411,8 +4411,8 @@
         const oV = oEl.querySelector('.price_value')
         const integer = dV.querySelector('.product_price_integer')
         if (integer) {
-          const decimal= dV.querySelector('.product_price_integer')
-          const separator= dV.querySelector('.product_price_separator')
+          const decimal = dV.querySelector('.product_price_integer')
+          const separator = dV.querySelector('.product_price_separator')
           await setTextAction(decimal.id + '-tree', item.price.toString().split('.')[0] || 0)
           await setTextAction(separator.id + '-tree', '.')
           await setTextAction(integer.id + '-tree', item.price.toString().split('.')[1] || '00')
@@ -4427,10 +4427,10 @@
         else {
           await setTextAction(dV.id + '-tree', item.price || 0)
           await setTextAction(oV.id + '-tree', item.oldPrice || 0)
-         
+
         }
         await setAttAction(dEl.id + '-tree', 'data-var-price', JSON.stringify(prices))
-          await setAttAction(oEl.id + '-tree', 'data-var-price', JSON.stringify(oldPrices))
+        await setAttAction(oEl.id + '-tree', 'data-var-price', JSON.stringify(oldPrices))
 
       }
       else {
@@ -4438,8 +4438,8 @@
         const nV = dEl.querySelector('.price_value')
         const integer = nV.querySelector('.product_price_integer')
         if (integer) {
-          const decimal= nV.querySelector('.product_price_integer')
-          const separator= nV.querySelector('.product_price_separator')
+          const decimal = nV.querySelector('.product_price_integer')
+          const separator = nV.querySelector('.product_price_separator')
           await setTextAction(decimal.id + '-tree', item.price.toString().split('.')[0] || 0)
           await setTextAction(separator.id + '-tree', '.')
           await setTextAction(integer.id + '-tree', item.price.toString().split('.')[1] || '00')
@@ -5391,9 +5391,9 @@
         })
         const integer = priceEl.querySelector('.product_price_integer')
         if (integer) {
-          const decimal= priceEl.querySelector('.product_price_integer')
-          const separator= priceEl.querySelector('.product_price_separator')
-          
+          const decimal = priceEl.querySelector('.product_price_integer')
+          const separator = priceEl.querySelector('.product_price_separator')
+
 
           integer.textContent = parseInt(skuVar[comparision.sk]?.price).toFixed(2).split('.')[0]
           separator.textContent = '.'
@@ -5401,7 +5401,7 @@
         }
         else {
           priceEl.textContent = parseInt(skuVar[comparision.sk]?.price).toFixed(2)
-         
+
         }
         //priceEl.textContent = parseInt(skuVar[comparision.sk]?.price).toFixed(2)
         priceEl.setAttribute('data-var-price', JSON.stringify(prices))
@@ -10369,9 +10369,28 @@ checkbox1.setAttribute('hidden', "");
             if (prices[0].oldPrice) {
               const price = Math.min(...prices.map(obj => parseInt(obj.price)));
               const oldprice = Math.min(...prices.map(obj => parseInt(obj.oldPrice)));
-              cloned.querySelector('.price_old').querySelector('.price_value').textContent = oldprice.toFixed(2)
-              cloned.querySelector('.price_discount').querySelector('.price_value').textContent = price.toFixed(2)
-              cloned.querySelector('.price_normal').remove()
+              const pV = cloned.querySelector('.price_old').querySelector('.price_value')
+              const ov = cloned.querySelector('.price_discount').querySelector('.price_value')
+              const integer = pV.querySelector('.product_price_integer')
+              if (integer) {
+                const decimal = pV.querySelector('.product_price_integer')
+                const separator = pV.querySelector('.product_price_separator')
+                integer.textContent = price.toFixed(2).split('.')[0]
+                separator.textContent = '.'
+                decimal.textContent = price.toFixed(2).split('.')[1]
+                const integer1   = pV.querySelector('.product_price_integer')
+                const decimal1 = pV.querySelector('.product_price_integer')
+                const separator1 = pV.querySelector('.product_price_separator')
+                integer1.textContent = oldprice.toFixed(2).split('.')[0]
+                separator1.textContent = '.'
+                decimal1.textContent = oldprice.toFixed(2).split('.')[1]
+              }
+              else {
+                pV.textContent = oldprice.toFixed(2)
+                ov.textContent = price.toFixed(2)
+                cloned.querySelector('.price_normal').remove()
+              }
+
             }
             else {
               const price = Math.min(...prices.map(obj => parseInt(obj.price)));
@@ -22574,12 +22593,12 @@ element.setAttribute('data-product', [first, name].join(';'))
     });
   </script>
 
-<script>
-  document.getElementById("import-satus").addEventListener("click", function (event) {
-    event.preventDefault();
-    event.stopPropagation();
-  });
-</script>
+  <script>
+    document.getElementById("import-satus").addEventListener("click", function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    });
+  </script>
 
 
 </body>
