@@ -10394,7 +10394,19 @@ checkbox1.setAttribute('hidden', "");
             }
             else {
               const price = Math.min(...prices.map(obj => parseInt(obj.price)));
-              cloned.querySelector('.price_normal').querySelector('.price_value').textContent = price.toFixed(2)
+              const pv = cloned.querySelector('.price_normal').querySelector('.price_value')
+              
+              const integer = pV.querySelector('.product_price_integer')
+              if (integer) {
+                const decimal = pV.querySelector('.product_price_integer')
+                const separator = pV.querySelector('.product_price_separator')
+                integer.textContent = price.toFixed(2).split('.')[0]
+                separator.textContent = '.'
+                decimal.textContent = price.toFixed(2).split('.')[1]
+              }
+              else{
+                pv.textContent = price.toFixed(2)
+              }
               cloned.querySelector('.price_discount').remove()
               cloned.querySelector('.price_old').remove()
             }
