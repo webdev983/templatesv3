@@ -1620,7 +1620,7 @@
             <br>
             <button onclick="removeSku2(event)" class="b-3">🗑️ Remove</button>
           </fieldset>
-          <details id="sku-data-menu"  style="margin-left: 30px; padding-top: 10px;">
+          <details id="sku-data-menu" style="margin-left: 30px; padding-top: 10px;">
             <summary class="summary-L-3"><span class="l-3 b-dark-blue">🖨️ Data</span></summary>
             <details id="headingWithVars" style="margin-left: 30px;" >
               <summary class="summary-L-3">
@@ -1636,10 +1636,10 @@
               <div id="sku-var-buttons" style="padding: 10px;">
                 <button class="b-3">color</button>
               </div>
-              <textarea class="textdata" id="textdata" rows="2"></textarea> 
+              <textarea class="textdata" id="textdata" rows="2"></textarea>
             </details>
 
-  
+
           </details>
           <details id="details-1" style="margin-left: 30px; margin-top: 10px;">
             <summary id="summary-1" class="summary-L-3"><span id="h1-status" class="l-2">🔴</span>
@@ -5000,7 +5000,7 @@
     const skuToHtmlApi = async () => {
       //const spec = document.getElementById('spec-status')
       //spec.textContent = '🗂️ Table spec 🟠'
-      if(!pathItemSku){
+      if (!pathItemSku) {
         throw new Error('no sku')
       }
       const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Content'
@@ -5052,8 +5052,8 @@
         }
       }
       )
-      if(!data.length){
-        throw  new Error('no data')
+      if (!data.length) {
+        throw new Error('no data')
       }
       console.log('se' + JSON.stringify(data))
       const tomorrow = new Date();
@@ -5221,7 +5221,7 @@
       const original = querySelectorAll1('.product_review')[0]
       let total
       const maxEl = querySelectorAll1('[data-builder-visible_reviews]')[0]
-      const max =parseInt(maxEl.getAttribute('data-builder-visible_reviews'))
+      const max = parseInt(maxEl.getAttribute('data-builder-visible_reviews'))
       let loadMore
       for (let i = 0; i < totalReviews.length; i++) {
         const { dbtimestamp, reviewer, rating, title, date, review } = totalReviews[i]
@@ -5231,28 +5231,45 @@
           insertAfter(node, original)
         }
         node.querySelector('.review_author_name').textContent = reviewer
-        node.querySelector('.product_review_time').textContent = date
+        function formatDate(dateString) {
+          // Create a Date object from the input date string
+          const date = new Date(dateString);
+
+          // Define options for formatting
+          const options = {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric'
+          };
+
+          // Format the date
+          const formattedDate = date.toLocaleDateString('en-GB', options);
+
+          // Replace the space between day and month with a comma
+          return formattedDate.replace(' ', ', ');
+        }
+        node.querySelector('.product_review_time').textContent = formatDate(date)
         node.querySelector('.rating_star').setAttribute('data-star', rating)
         node.querySelector('.product_review_rating').textContent = rating
         node.querySelector('.product_review_heading').textContent = title
         node.querySelector('.review_text').textContent = review
-        total+=parseInt(rating)
+        total += parseInt(rating)
         if (i > max) {
           loadMore = true
           node.setAttribute('hidden', '')
         }
 
       }
-      if(!loadMore){
-        querySelectorAll1('[load_more_reviews]')[0].setAttribute('hidden','')
+      if (!loadMore) {
+        querySelectorAll1('.load_more_reviews')[0].setAttribute('hidden', '')
       }
       const totalR = querySelectorAll1('.reviews_count')[0]
       totalR.textContent = totalReviews.length
 
       const averageR = querySelectorAll1('.rating_summary')[0]
-      averageR.textContent = total/totalReviews.length
+      averageR.textContent = total / totalReviews.length
       const startE = querySelectorAll1('.rating_summary')[0]
-      startE.setAttribute('data-star',total/totalReviews.length)
+      startE.setAttribute('data-star', total / totalReviews.length)
 
 
     }
@@ -5346,7 +5363,7 @@
 
 
         })
-        priceEl.textContent =parseInt(skuVar[comparision.sk]?.price).toFixed(2)
+        priceEl.textContent = parseInt(skuVar[comparision.sk]?.price).toFixed(2)
         priceEl.setAttribute('data-var-price', JSON.stringify(prices))
         anchor.setAttribute('data-var-anchor', JSON.stringify(anchors))
         anchor.setAttribute('href', skuVar[comparision.sk]?.anchor)
@@ -6954,8 +6971,8 @@
           status.textContent = '🟠'
           task = replacePlaceHolders(task)
           task = replaceVars(task)
-          if(task.includes('{') && task.includes('}')){
-            throw new Error('missing data'+ task)
+          if (task.includes('{') && task.includes('}')) {
+            throw new Error('missing data' + task)
           }
           console.log('chat gpt task: \n' + task)
           const res = await sendGptRequest(gptToken, task, element.model)
@@ -7036,7 +7053,7 @@
                 })
 
               compid = res?.id
-              if(!compid){
+              if (!compid) {
                 alert('first load run tree')
               }
             }
@@ -10127,7 +10144,7 @@ checkbox1.setAttribute('hidden', "");
         },
       }).then(e => e.json()).then(({ items }) => items)
       let randomStrings = []
-      if(!picitems.length){
+      if (!picitems.length) {
         throw new Error('no pics')
       }
       const site = pathItemPath.split('/')[0].toLowerCase()
@@ -10950,10 +10967,10 @@ checkbox1.setAttribute('hidden', "");
       if (!item.execute_in_template && pathItem.lsi1.toLowerCase().includes('seositeshome.com')) {
         return
       }
-      try{
+      try {
         await funcDictionary[item.name]()
       }
-      catch(e){
+      catch (e) {
         item1.querySelector('#script_status').textContent = '🔴'
       }
       const item1 = body.querySelector('#' + item.name)
@@ -16481,13 +16498,13 @@ elementsToRemove.forEach(element => element.remove());
         id: 'sku:' + pathItemSku,
         sk: 'addedSite:' + pathItemPath.split('/')[0].toLowerCase(),
         value: r.link?.replace('s3.amazonaws.com/', '').replace('index.html', ''),
-        addDate:(new Date()).getTime()
+        addDate: (new Date()).getTime()
       })
       postToDb({
         id: pathItem.collection,
         sk: 'addedSite:' + pathItemPath.split('/')[0].toLowerCase(),
         value: r.link?.replace('s3.amazonaws.com/', '').replace('index.html', ''),
-        addDate:(new Date()).getTime()
+        addDate: (new Date()).getTime()
       })
       el4.removeAttribute('hidden', '')
       el5.removeAttribute('hidden', '')
@@ -20209,9 +20226,9 @@ headers: {
         const { target } = e
         if (target.textContent === '🟠') {
           return
-        } 
+        }
         const toR = h1Span.textContent
-        if(!toR){
+        if (!toR) {
           alert('insert header')
           return
         }
@@ -20224,7 +20241,7 @@ headers: {
         const atts = headParams
         delete atts.id
         delete atts.sk
-       
+
         const pattern = /(\w+)-value#/g;
 
         // Find all matches
