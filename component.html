@@ -20089,17 +20089,19 @@ headers: {
         const details = element.querySelectorAll('details')
         for (const detail of details) {
           const id1 = detail.id
+          const attribute = ids1.split('_')[1]
+          //const importI = pathItem.hub_items?.import_items?.find(e => e.name === attribute)
           const textA = detail.querySelector('[data-text-value]')
           const varButton = detail.querySelector('#data-sku-var-button')
           const global = detail.querySelector('#global-input')
-          global.onchange = async(e) => {
-            const sk = global.checked ? (id1 + ':global' ) :  id1 + ':' + pathItemPath.split('/')[0].toLowerCase()
-              const dbItems = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pk}&sk=${sk}&startsWith=true`)
-                .then(response => response.json()).then(res => res.items)
-              if (dbItems.length) {
-                textA.value = dbItems[0].value
-              }
-            
+          global.onchange = async (e) => {
+            const sk = global.checked ? (id1 + ':global') : id1 + ':' + pathItemPath.split('/')[0].toLowerCase()
+            const dbItems = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pk}&sk=${sk}&startsWith=true`)
+              .then(response => response.json()).then(res => res.items)
+            if (dbItems.length) {
+              textA.value = dbItems[0].value
+            }
+
           }
           const dbItems = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pk}&sk=${id1 + ':global'}&startsWith=true`)
             .then(response => response.json()).then(res => res.items)
@@ -20124,6 +20126,78 @@ headers: {
               }
             }
             varButton.remove()
+          }
+          const button = detail.querySelector('#import-satus')
+          button.onclick = async (e) => {
+            const { target } = e
+            if (target.textContent === '🟠') {
+              return
+            }
+            target.textContent = '🟠'
+            const importI = pathItem.hub_items?.import_items?.find(e => e.name === attribute)
+            const absolutePath = getAbsolutePath(pathItemPath, importI.componentPath)
+            url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${absolutePath}&token=${localStorage.getItem('token')}`;
+
+            const res = await fetch(url).then(res => res.json())
+              .then(async ({ items }) => {
+                return items[0]
+
+              })
+
+            const compid = res.id
+            
+            
+            const data = textA.value
+            
+
+
+            //clean
+            const eventData1 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&cleanAttr=${importI.name}&ownerid=${localStorage.getItem('ownerid')}` };
+            console.log('event ' + eventData1.url)
+            // Fetch options
+            const options0 = {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(eventData1)
+            };
+            await fetch(pup_url, options0);
+            const currentDate = new Date();
+
+            // Add one day to the current date
+            const tomorrow = new Date(currentDate);
+            tomorrow.setDate(currentDate.getDate() + 1);
+
+            // Convert the date to ISO 8601 format (required by DynamoDB)
+            const ttl = Math.floor(tomorrow.getTime() / 1000);
+            const db = {
+              id: generateUUID(),
+              sk: 'import',
+              ttl,
+              data,
+            }
+            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(db),
+            });
+
+            const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&attr=${item.name}&val=${db.id}&ownerid=${localStorage.getItem('ownerid')}` };
+            console.log('event ' + eventData.url)
+            // Fetch options
+            const options = {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(eventData)
+            };
+            const response = await fetch(pup_url, options);
+            target.textContent = '🟢'
+
           }
           textA.onblur = (e) => {
             const v = e.target.value
