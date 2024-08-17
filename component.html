@@ -20092,6 +20092,11 @@ headers: {
           const textA = detail.querySelector('[data-text-value]')
           const varButton = detail.querySelector('#data-sku-var-button')
           const global = detail.querySelector('#global-input')
+          const dbItems = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pk}&sk=${id1 + ':global'}&startsWith=true`)
+              .then(response => response.json()).then(res => res.items)
+          if(dbItems.length){
+            textA.value = dbItems[0].value
+          }
           if (varButton) {
             const skuQtyValue = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=warehouse_price_qty:&startsWith=true`)
               .then(response => response.json()).then(res => res.items)
