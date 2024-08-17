@@ -16989,7 +16989,7 @@ elementsToRemove.forEach(element => element.remove());
       }).then(el => el.json())
       inputValue = items1.data
       let sku1 = pathItemSku || selectedSku
-      if (attr === 'h1-attribute') {
+      if (typeof inputValue !=='string') {
         const allAttrs1 = querySelectorAll1(`[data-import-${attr}]`)
         const allAttrs2 = querySelectorAll1(`[data-import_${attr}]`)
         const allAttrs = [...allAttrs1, ...allAttrs2]
@@ -20095,6 +20095,16 @@ headers: {
         console.error('Failed to copy text to clipboard', err);
       }
     }
+    function extractSubstrings(text) {
+      // Regular expression to match substrings starting with '#' and ending with '-var'
+      const regex = /#.*?-var/g;
+
+      // Get all matches from the text
+      const matches = text.match(regex);
+
+      // Return the matches (or an empty array if no matches found)
+      return matches || [];
+    }
 
     const handleDataMenus = async () => {
       const elements = document.querySelectorAll('[id^="data-menu_"]');
@@ -20138,7 +20148,7 @@ headers: {
           const button = detail.querySelector('#import-satus')
           if (dbItems.length) {
             textA.value = dbItems[0].value
-            if(dbItems[0].runned){
+            if (dbItems[0].runned) {
               button.textContent = '🟢'
             }
           }
@@ -20161,7 +20171,7 @@ headers: {
             }
             varButton.remove()
           }
-          
+
           button.onclick = async (e) => {
             const { target } = e
             if (target.textContent === '🟠') {
@@ -20180,9 +20190,63 @@ headers: {
               })
 
             const compid = res.id
+            const value = textA.value
+            let data = textA.value
+            if (value.includes('-var')) {
+              const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=sku-variables;&startsWith=true`)
+                .then(response => response.json()).then(res => res.items)
+              const extracted = extractSubstrings(value)
+              const attrs = extracted.map(e => {
+                const r = e.replace('#', '').replace('-value', '')
+                return r
+              })
+              for (const skuVar of skuVariables) {
+                const { sk } = skuVar
+                const r = sk.replace('sku-variables;', '')
+                const s = r.split(';')
+                s.pop()
+                for (const item of s) {
+                  const [k, v] = item.split(':')
+                  if (attrs.includes(k)) {
+                    if (rs[k]) {
+                      if (!rs[k].includes(v)) {
+                        rs[k].push(v)
+                      }
+                    } else {
+                      rs[k] = [v]
+                    }
+                  }
 
+                }
 
-            const data = textA.value
+              }
+              const data1 = []
+              for (const key of Object.keys(rs)) {
+                const legend = key
+                const attributes = rs[key]
+                data1.push({
+                  legend,
+                  items: attributes.map(e => e.trim())
+                })
+              }
+              const combinations = generateCombinations(data1)
+              const replaced = combinations.map(combination => {
+                let replaced1 = value
+                const s = combination.split(';')
+                s.pop()
+                for (const element of s) {
+                  const [k, v] = element.split(':')
+                  console.log(k + ' v ' + v)
+                  console.log(replaced1)
+                  console.log('replacing ' + k + '-value#' + ' with ' + v)
+                  replaced1 = replaced1.replaceAll(`${k}-value#`, v)
+                  console.log(replaced1)
+                }
+                return { [combination]: replaced1 }
+              })
+              data = { text: replaced, ...atts }
+            }
+
 
 
 
@@ -20236,7 +20300,7 @@ headers: {
             const dbItems = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pk}&sk=${sk}&startsWith=true`)
               .then(response => response.json()).then(res => res.items)
             if (dbItems.length) {
-                await postToDb({...dbItems[0],runned:(new Date()).getTime()})
+              await postToDb({ ...dbItems[0], runned: (new Date()).getTime() })
             }
             target.textContent = '🟢'
 
