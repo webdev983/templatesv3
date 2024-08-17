@@ -10638,13 +10638,14 @@ checkbox1.setAttribute('hidden', "");
         multiV[0].image = src
         const hasVariantItem = { ...multiV[0].hasVariant[0] }
         multiV[0].hasVariant = []
+        multiV[0].variesBy = skuVariables.map(e=>e.sk.replace('sku-variables;', ''))
         for (const skuV of skuVariables) {
           const has = deepCopy(hasVariantItem)
           const queryParams = skuV.sk.replace('sku-variables;', '').split(';').filter(e => e).map(e =>
             e.split(':').join('=')
           ).join('&')
           has.url = url + '?' + queryParams
-          
+          has.sku =pathItemSku+';'+ skuV.replace('sku-variables;', '')
           const sp = skuV.sk.split(';')
           sp.shift()
           sp.pop()
