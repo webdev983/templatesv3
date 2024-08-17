@@ -10582,7 +10582,7 @@ checkbox1.setAttribute('hidden', "");
         single.innerHTML = ''
         const multiV = JSON.parse(multiple.innerHTML)
         const url = getElementById1("published-site-label").getAttribute('href')
-        multiV.url = url
+        multiV[0].url = url
         const images = await fetch(`${backend_url}?id=sku:${pathItemSku}&sk=pics&startsWith=true`, {
           method: 'GET',
           headers: {
@@ -10600,9 +10600,9 @@ checkbox1.setAttribute('hidden', "");
         }).then(e => e.json())
         console.log(JSON.stringify(croped))
         const src = croped.items.find(z => z.sk.endsWith(uuid))?.list[0].split(' ')[0]
-        multiV.image = src
-        const hasVariantItem = { ...multiV.hasVariant[0] }
-        multiV.hasVariant = []
+        multiV[0].image = src
+        const hasVariantItem = { ...multiV[0].hasVariant[0] }
+        multiV[0].hasVariant = []
         for (const skuV of skuVariables) {
           const has = deepCopy(hasVariantItem)
           const queryParams = skuV.sk.replace('sku-variables;', '').split(';').filter(e => e).map(e =>
@@ -10642,7 +10642,7 @@ checkbox1.setAttribute('hidden', "");
           console.log(JSON.stringify(croped))
           const src = croped.items.find(z => z.sk.endsWith(uuid))?.list[0].split(' ')[0]
           has.image = src
-          multiV.hasVariant.push(has)
+          multiV[0].hasVariant.push(has)
 
         }
         multiple.innerHTML = JSON.stringify(multiV)
