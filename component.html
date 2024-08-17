@@ -20084,11 +20084,11 @@ headers: {
         const type = element.id.replace('data-menu_', '')
         let pk
         if (type === 'sku') {
-          pk = pathItemSku
+          pk ='sku:'+ pathItemSku
         }
         const details = element.querySelectorAll('details')
         for (const detail of details) {
-          const id = detail.id
+          const id1 = detail.id
           const textA = detail.querySelector('[data-text-value]')
           const varButton = detail.querySelector('#data-sku-var-button')
           const global = detail.querySelector('#global-input')
@@ -20112,7 +20112,12 @@ headers: {
             varButton.remove()
           }
           textA.onblur = (e) => {
-
+            const v = e.target.value
+            postToDb({
+              id:pk,
+              sk:id1,
+              value:v
+            })
           }
         }
       }
