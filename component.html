@@ -20084,7 +20084,7 @@ headers: {
         const type = element.id.replace('data-menu_', '')
         let pk
         if (type === 'sku') {
-          pk ='sku:'+ pathItemSku
+          pk = 'sku:' + pathItemSku
         }
         const details = element.querySelectorAll('details')
         for (const detail of details) {
@@ -20106,17 +20106,21 @@ headers: {
               varButton.parentNode.append(cloned)
               cloned.textContent = value
               cloned.onclick = (e) => {
-                  copyTextToClipboard(value)
+                copyTextToClipboard(value)
               }
             }
             varButton.remove()
           }
           textA.onblur = (e) => {
             const v = e.target.value
+            let sk = id1 + ':global'
+            if (!global.checked) {
+              sk = id1 + ':' + pathItemPath.split('/')[0].toLowerCase()
+            }
             postToDb({
-              id:pk,
-              sk:id1,
-              value:v
+              id: pk,
+              sk,
+              value: v
             })
           }
         }
