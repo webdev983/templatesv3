@@ -708,6 +708,34 @@
                 </td>
 
               </tr>
+              <tr id="script_generate_schema_org">
+                <td>
+
+                  <input type="checkbox" id="script_execute_select" hidden>
+                  <label id="script_status" class="l-3">🔴</label>
+                  <label class="l-3" style="margin: 10px;">generate schema org</label>
+                </td>
+                <td>
+                  <span class="l-3">🦾</span>
+                  <span class="l-3" id="last_script_execute_time">never</span>
+                </td>
+                <td>
+                  <span id="queue_number_container">
+                    <span class="l-3">🔀 </span>
+                    <span class="l-3  queue" contenteditable id="queue_number">~</span>
+                  </span>
+                </td>
+
+                <td>
+                </td>
+                <td>
+                </td>
+
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_in_template" />🚧</label>
+                </td>
+
+              </tr>
 
 
 
@@ -10437,6 +10465,9 @@ checkbox1.setAttribute('hidden', "");
         }
       }
     }
+    var generateSchemaOrg = ()=>{
+      
+    }
     var generateSchema = (head) => {
       const url = pathItem.lsi1.split(';')[0].replace('|', '/')
       const date = new Date()
@@ -10893,6 +10924,7 @@ checkbox1.setAttribute('hidden', "");
     }
     const funcDictionary = {
       script_head_placeholders_transfer: replacePlaceHolders,
+      script_generate_schema_org: generateSchemaOrg,
       script_head_transfer: () => generateSchema(true),
       scrip_eval: runScripts,
       script_breadcrumb_generation: generateBreadCrumbApi,
