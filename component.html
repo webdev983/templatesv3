@@ -20057,6 +20057,27 @@ headers: {
       fakeREl.value = JSON.stringify(fakeReviews, null, 4)
       skuREl.value = JSON.stringify(skuReviews, null, 4)
     }
+    async function copyTextToClipboard(text) {
+      try {
+        // Check if the Clipboard API is supported
+        if (navigator.clipboard) {
+          await navigator.clipboard.writeText(text);
+          console.log('Text successfully copied to clipboard');
+        } else {
+          // Fallback for older browsers
+          const textarea = document.createElement('textarea');
+          textarea.value = text;
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+          console.log('Text successfully copied to clipboard');
+        }
+      } catch (err) {
+        console.error('Failed to copy text to clipboard', err);
+      }
+    }
+
     const handleDataMenus = async () => {
       const elements = document.querySelectorAll('[id^="data-menu_"]');
       for (const element of elements) {
@@ -20078,14 +20099,14 @@ headers: {
             const splited = element.sk.split(';')
             splited.shift()
             splited.pop()
-            const values = splited.map(e=>e.split(':')[0])
-            console.log('values'+JSON.stringify(values))
-            for(const value of values){
+            const values = splited.map(e => e.split(':')[0])
+            console.log('values' + JSON.stringify(values))
+            for (const value of values) {
               const cloned = varButton.cloneNode(true)
               varButton.parentNode.append(cloned)
               cloned.textContent = value
-              cloned.onclick = (e)=>{
-                textA.textContent = textA.textContent +' '+value+'-vars#'
+              cloned.onclick = (e) => {
+                  copyTextToClipboard(value)
               }
             }
             varButton.remove()
