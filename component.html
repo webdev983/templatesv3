@@ -708,7 +708,7 @@
                 </td>
 
               </tr>
-              <tr id="script_generate_schema_org">
+              <tr id="generate_schema.org_product">
                 <td>
 
                   <input type="checkbox" id="script_execute_select" hidden>
@@ -10465,8 +10465,10 @@ checkbox1.setAttribute('hidden', "");
         }
       }
     }
-    var generateSchemaOrg = ()=>{
-      
+    var generateSchemaOrg = async()=>{
+      const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=sku-variables;&startsWith=true`)
+          .then(response => response.json()).then(res => res.items)
+
     }
     var generateSchema = (head) => {
       const url = pathItem.lsi1.split(';')[0].replace('|', '/')
@@ -10924,7 +10926,7 @@ checkbox1.setAttribute('hidden', "");
     }
     const funcDictionary = {
       script_head_placeholders_transfer: replacePlaceHolders,
-      script_generate_schema_org: generateSchemaOrg,
+       'generate_schema.org_product': generateSchemaOrg,
       script_head_transfer: () => generateSchema(true),
       scrip_eval: runScripts,
       script_breadcrumb_generation: generateBreadCrumbApi,
