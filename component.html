@@ -20117,8 +20117,12 @@ headers: {
           }
           const dbItems = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pk}&sk=${id1 + ':global'}&startsWith=true`)
             .then(response => response.json()).then(res => res.items)
+          const button = detail.querySelector('#import-satus')
           if (dbItems.length) {
             textA.value = dbItems[0].value
+            if(dbItems[0].runned){
+              button.textContent = '🟢'
+            }
           }
           if (varButton) {
             const skuQtyValue = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=warehouse_price_qty:&startsWith=true`)
@@ -20134,12 +20138,12 @@ headers: {
               varButton.parentNode.append(cloned)
               cloned.textContent = value
               cloned.onclick = (e) => {
-                copyTextToClipboard(value+'-vars#')
+                copyTextToClipboard('#' + value + '-var')
               }
             }
             varButton.remove()
           }
-          const button = detail.querySelector('#import-satus')
+          
           button.onclick = async (e) => {
             const { target } = e
             if (target.textContent === '🟠') {
@@ -20147,7 +20151,7 @@ headers: {
             }
             target.textContent = '🟠'
             const importI = pathItem.hub_items?.import_items?.find(e => e.name === attribute)
-            console.log('tsx '+JSON.stringify(importI))
+            console.log('tsx ' + JSON.stringify(importI))
             const absolutePath = getAbsolutePath(pathItemPath, importI.componentPath)
             url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${absolutePath}&token=${localStorage.getItem('token')}`;
 
@@ -20158,10 +20162,10 @@ headers: {
               })
 
             const compid = res.id
-            
-            
+
+
             const data = textA.value
-            
+
 
 
             //clean
@@ -20209,6 +20213,13 @@ headers: {
               body: JSON.stringify(eventData)
             };
             const response = await fetch(pup_url, options);
+
+            const sk = global.checked ? (id1 + ':global') : id1 + ':' + pathItemPath.split('/')[0].toLowerCase()
+            const dbItems = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${pk}&sk=${sk}&startsWith=true`)
+              .then(response => response.json()).then(res => res.items)
+            if (dbItems.length) {
+                await postToDb({...dbItems[0],runned:(new Date()).getTime()})
+            }
             target.textContent = '🟢'
 
           }
