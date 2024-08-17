@@ -20197,6 +20197,7 @@ headers: {
                 const r = e.replace('#', '').replace('-value', '')
                 return r
               })
+              console.log('attributes '+JSON.stringify(attrs))
               const rs = {}
               for (const skuVar of skuVariables) {
                 const { sk } = skuVar
@@ -20218,6 +20219,7 @@ headers: {
                 }
 
               }
+              console.log(JSON.stringify(rs))
               const data1 = []
               for (const key of Object.keys(rs)) {
                 const legend = key
@@ -20228,6 +20230,7 @@ headers: {
                 })
               }
               const combinations = generateCombinations(data1)
+              console.log(JSON.stringify(combinations))
               const replaced = combinations.map(combination => {
                 let replaced1 = value
                 const s = combination.split(';')
