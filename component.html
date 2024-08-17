@@ -10601,8 +10601,8 @@ checkbox1.setAttribute('hidden', "");
         console.log(JSON.stringify(croped))
         const src = croped.items.find(z => z.sk.endsWith(uuid))?.list[0].split(' ')[0]
         multiV.image = src
-        const hasVariantItem = { ...multiple.hasVariant[0] }
-        multiple.hasVariant = []
+        const hasVariantItem = { ...multiV.hasVariant[0] }
+        multiV.hasVariant = []
         for (const skuV of skuVariables) {
           const has = deepCopy(hasVariantItem)
           const queryParams = skuV.sk.replace('sku-variables;', '').split(';').filter(e => e).map(e =>
@@ -10642,7 +10642,7 @@ checkbox1.setAttribute('hidden', "");
           console.log(JSON.stringify(croped))
           const src = croped.items.find(z => z.sk.endsWith(uuid))?.list[0].split(' ')[0]
           has.image = src
-          multiple.hasVariant.push(has)
+          multiV.hasVariant.push(has)
 
         }
         multiple.innerHTML = JSON.stringify(multiV)
