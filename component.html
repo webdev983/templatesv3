@@ -1693,8 +1693,8 @@
               <form style="padding: 10px;">
                 <span class="l-4">💾</span>
                 <label class="l-4"><input type="radio" checked="" id="site-input" vtype="site"
-                  name="product-group-text-save">current site</label>
-                <label class="l-4"><input type="radio"  id="global-input" vtype="global"
+                    name="product-group-text-save">current site</label>
+                <label class="l-4"><input type="radio" id="global-input" vtype="global"
                     name="product-group-text-save">global</label>
               </form>
               <textarea data-text-value class="textdata" id="textdata" rows="2"></textarea>
@@ -1708,8 +1708,8 @@
               <form style="padding: 10px;">
                 <span class="l-4">💾</span>
                 <label class="l-4"><input type="radio" checked="" id="site-input" vtype="site"
-                  name="product-group-text-save">current site</label>
-                <label class="l-4"><input type="radio"  id="global-input" vtype="global"
+                    name="product-group-text-save">current site</label>
+                <label class="l-4"><input type="radio" id="global-input" vtype="global"
                     name="product-group-text-save">global</label>
               </form>
               <div id="data-sku-var-buttons" style="padding: 10px;">
@@ -10601,6 +10601,50 @@ checkbox1.setAttribute('hidden', "");
         console.log(JSON.stringify(croped))
         const src = croped.items.find(z => z.sk.endsWith(uuid))?.list[0].split(' ')[0]
         multiV.image = src
+        const hasVariantItem = { ...multiple.hasVariant[0] }
+        multiple.hasVariant = []
+        for (const skuV of skuVariables) {
+          const has = deepCopy(hasVariantItem)
+          const queryParams = skuV.sk.replace('sku-variables;', '').split(';').filter(e => e).map(e =>
+            e.split(':').join('=')
+          ).join('&')
+          has.url = url + '?' + queryParams
+          
+          const sp = skuV.sk.split(';')
+          sp.shift()
+          sp.pop()
+          let found
+          for (const image of images.filter(e => e.main)) {
+            let match = 1
+            for (const s of sp) {
+              const [k, v] = s
+              if (image.gallery_variables_sku_variables[k] && image.gallery_variables_sku_variables[k] === v) {
+                continue
+              }
+              else {
+                match = 0
+              }
+            }
+            if (match) {
+              found = image
+
+              break;
+            }
+          }
+          const uuid = found.sk.replace('pics', '').split('.')[0]
+          console.log('uuid:' + uuid)
+          const croped = await fetch(`${backend_url}?id=sku:${element}&sk=crop:&startsWith=true`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json())
+          console.log(JSON.stringify(croped))
+          const src = croped.items.find(z => z.sk.endsWith(uuid))?.list[0].split(' ')[0]
+          has.image = src
+          multiple.hasVariant.push(has)
+
+        }
         multiple.innerHTML = JSON.stringify(multiV)
       }
       else {
@@ -10626,6 +10670,7 @@ checkbox1.setAttribute('hidden', "");
         const src = croped.items.find(z => z.sk.endsWith(uuid))?.list[0].split(' ')[0]
         singleV.image = src
         single.innerHTML = JSON.stringify(singleV)
+
       }
 
     }
@@ -22969,6 +23014,7 @@ element.setAttribute('data-product', [first, name].join(';'))
   </script>
 
   <script>
+<<<<<<< HEAD
   const elements = document.querySelectorAll("#import-satus");
 
 // Добавляем обработчик событий для каждого найденного элемента
@@ -22978,6 +23024,12 @@ elements.forEach(function (element) {
   });
 });
 </script>
+=======
+    document.getElementById("import-satus").addEventListener("click", function (event) {
+      event.preventDefault(); // Полностью предотвращаем стандартное поведение <details>
+    });
+  </script>
+>>>>>>> 922c5835 (!)
 
 
 </body>
