@@ -1638,7 +1638,7 @@
               <div id="data-sku-var-buttons" style="padding: 10px;">
                 <button class="b-3" id="data-sku-var-buttons">color</button>
               </div>
-              <textarea class="textdata" id="textdata" rows="2"></textarea>
+              <textarea data-text-value class="textdata" id="textdata" rows="2"></textarea>
             </details>
 
 
@@ -10379,7 +10379,7 @@ checkbox1.setAttribute('hidden', "");
                 integer.textContent = price.toFixed(2).split('.')[0]
                 separator.textContent = '.'
                 decimal.textContent = price.toFixed(2).split('.')[1]
-                const integer1   = ov.querySelector('.product_price_integer')
+                const integer1 = ov.querySelector('.product_price_integer')
                 const decimal1 = ov.querySelector('.product_price_decimal')
                 const separator1 = ov.querySelector('.product_price_separator')
                 integer1.textContent = oldprice.toFixed(2).split('.')[0]
@@ -10389,7 +10389,7 @@ checkbox1.setAttribute('hidden', "");
               else {
                 pV.textContent = oldprice.toFixed(2)
                 ov.textContent = price.toFixed(2)
-                
+
               }
               cloned.querySelector('.price_normal').remove()
 
@@ -10397,7 +10397,7 @@ checkbox1.setAttribute('hidden', "");
             else {
               const price = Math.min(...prices.map(obj => parseInt(obj.price)));
               const pV = cloned.querySelector('.price_normal').querySelector('.price_value')
-              
+
               const integer = pV.querySelector('.product_price_integer')
               if (integer) {
                 const decimal = pV.querySelector('.product_price_decimal')
@@ -10406,7 +10406,7 @@ checkbox1.setAttribute('hidden', "");
                 separator.textContent = '.'
                 decimal.textContent = price.toFixed(2).split('.')[1]
               }
-              else{
+              else {
                 pV.textContent = price.toFixed(2)
               }
               cloned.querySelector('.price_discount').remove()
@@ -11218,6 +11218,7 @@ checkbox1.setAttribute('hidden', "");
       catch (e) {
         console.log(e.message)
       }
+      await handleDataMenus()
       if (toPublish || republish) {
         console.log('publishing')
         await publish()
@@ -20056,6 +20057,44 @@ headers: {
       fakeREl.value = JSON.stringify(fakeReviews, null, 4)
       skuREl.value = JSON.stringify(skuReviews, null, 4)
     }
+    const handleDataMenus = async () => {
+      const elements = document.querySelectorAll('[id^="data-menu_"]');
+      for (const element of elements) {
+        const type = element.id.replace('data-menu_', '')
+        let pk
+        if (type === 'sku') {
+          pk = pathItemSku
+        }
+        const details = element.querySelectorAll('details')
+        for (const detail of details) {
+          const id = detail.id
+          const textA = detail.querySelector('[data-text-value]')
+          const varButton = detail.querySelector('#data-sku-var-buttons')
+          const global = detail.querySelector('#global-input')
+          if (varButton) {
+            const skuQtyValue = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=warehouse_price_qty:&startsWith=true`)
+              .then(response => response.json()).then(res => res.items)
+            const element = skuQtyValue[0]
+            const splited = element.sk.split(';')
+            splited.shift()
+            splited.pop()
+            const values = splited.map(e=>e.split(':')[0])
+            for(const value of values){
+              const cloned = varButton.cloneNode(true)
+              varButton.parentNode.append(cloned)
+              varButton.textContent = value
+              cloned.onclick = (e)=>{
+                textA.textContent = textA.textContent +' '+value+'-vars#'
+              }
+            }
+          }
+          textA.onblur = (e) => {
+
+          }
+        }
+      }
+
+    }
     const showSku2 = async (sku) => {
       pathItemSku = sku
       log1('showing sku original ' + sku)
@@ -20934,106 +20973,6 @@ headers: {
         }
       }
 
-      /*
-    const item1 = getElementById1("sku-item-1")
-    const cloned1 = item1.cloneNode(true)
-    cloned1.id = sku
-    cloned1.removeAttribute('hidden')
-    getElementById1("sku-list").removeAttribute('hidden')
-    cloned1.querySelector("#sku-value").textContent = sku
-    cloned1.querySelector("#remove-sku").removeAttribute('hidden')
-    const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku}&sk=qty;&startsWith=true`)
-      .then(response => response.json())
-    const el = cloned1.querySelectorAll('#sku-item')
-    const parent = cloned1.querySelector('#sku-attribute-list')
-    //if (items.length > 1) {
- 
-    const p = items.map(async item => {
- 
-      const cloned = el[0].cloneNode(true)
-      const v = item.sk.replace('qty;', '')
-      log1("sku i is " + JSON.stringify(item))
-      cloned.querySelector('#sku-attribute-value').textContent = v
-      const psk = `price;${pathItemPath.split('/')[0].toLowerCase()};${v}price`
-      const pItem = await fetch(`${backend_url}?id=${sku}&sk=${psk}&startsWith=true`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }).then(e => e.json()).then(({ items }) => items[0])
- 
-      cloned.querySelector('#sku-qty').textContent = item.qty || 0
-      const oldEl = cloned.querySelector('[data-price_old_value]')
-      const pEl = cloned.querySelector('[data-price_value]')
-      oldEl.textContent = pItem?.oldprice || 0
-      pEl.textContent = pItem?.price || 0
-      pEl.addEventListener('blur', async function () {
-        let value = -1
-        try {
-          value = parseFloat(pEl.textContent)
-        }
-        catch (e) {
- 
-        }
-        if (value < 0) {
-          value = 0
-          pEl.textContent = 0
-        }
- 
- 
-        let nV = pItem
-        if (nV) {
-          nV.price = value
-        }
-        else {
-          nV = {
-            id: sku,
-            sk: psk,
-            price: value
-          }
-        }
-        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-          method: 'POST',
-          body: JSON.stringify(nV),
-        });
-      });
-      oldEl.addEventListener('blur', async function () {
-        let value = -1
-        try {
-          value = parseFloat(oldEl.textContent)
-        }
-        catch (e) {
- 
-        }
-        if (value < 0) {
-          value = 0
-          oldEl.textContent = 0
-        }
- 
- 
-        let nV = pItem
-        if (nV) {
-          nV.oldprice = value
-        }
-        else {
-          nV = {
-            id: sku,
-            sk: psk,
-            oldprice: value
-          }
-        }
-        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-          method: 'POST',
-          body: JSON.stringify(nV),
-        });
-      });
-      parent.appendChild(cloned)
-      cloned.addEventListener('click', e => handleSkuItemClick(cloned, item))
-    })
-    await Promise.all(p)
-    
-    getElementById1("sku-list").appendChild(cloned1)
-    */
 
     }
 
