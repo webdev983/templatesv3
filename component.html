@@ -1659,8 +1659,8 @@
               <form style="padding: 10px;">
                 <span class="l-4">💾</span>
                 <label class="l-4"><input type="radio" checked="" id="site-input" vtype="site"
-                  name="product-group-text-save">current site</label>
-                <label class="l-4"><input type="radio"  id="global-input" vtype="global"
+                    name="product-group-text-save">current site</label>
+                <label class="l-4"><input type="radio" id="global-input" vtype="global"
                     name="product-group-text-save">global</label>
               </form>
               <textarea data-text-value class="textdata" id="textdata" rows="2"></textarea>
@@ -1674,8 +1674,8 @@
               <form style="padding: 10px;">
                 <span class="l-4">💾</span>
                 <label class="l-4"><input type="radio" checked="" id="site-input" vtype="site"
-                  name="product-group-text-save">current site</label>
-                <label class="l-4"><input type="radio"  id="global-input" vtype="global"
+                    name="product-group-text-save">current site</label>
+                <label class="l-4"><input type="radio" id="global-input" vtype="global"
                     name="product-group-text-save">global</label>
               </form>
               <div id="data-sku-var-buttons" style="padding: 10px;">
@@ -10499,9 +10499,60 @@ checkbox1.setAttribute('hidden', "");
         }
       }
     }
-    var generateSchemaOrg = async()=>{
+    var generateSchemaOrg = async () => {
       const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=sku-variables;&startsWith=true`)
-          .then(response => response.json()).then(res => res.items)
+        .then(response => response.json()).then(res => res.items)
+      const single = querySelectorAll1('[data-transfer-receiver="product-single.schema.org"]')
+      const multiple = querySelectorAll1('[data-transfer-receiver="product-multi.schema.org"]')
+      if (skuVariables > 1) {
+        single.innerHTML = ''
+        const multiV = JSON.parse(multiple.innerHTML)
+        const url = getElementById1("published-site-label").getAttribute('href')
+        multiV.url = url
+        const images = await fetch(`${backend_url}?id=sku:${element}&sk=pics&startsWith=true`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(e => e.json())
+        const image = images.items.find(e => e.main)
+        const uuid = image.sk.replace('pics', '').split('.')[0]
+        console.log('uuid:' + uuid)
+        const croped = await fetch(`${backend_url}?id=sku:${element}&sk=crop:&startsWith=true`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(e => e.json())
+        console.log(JSON.stringify(croped))
+        const src = croped.items.find(z => z.sk.endsWith(uuid))?.list[0].split(' ')[0]
+        multiV.image = src
+        multiple.innerHTML = JSON.stringify(multiV)
+      }
+      else {
+        multiple.innerHTML = ''
+        const singleV = JSON.parse(single.innerHTML)
+        singleV.url = getElementById1("published-site-label").getAttribute('href')
+        const images = await fetch(`${backend_url}?id=sku:${element}&sk=pics&startsWith=true`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(e => e.json())
+        const image = images.items.find(e => e.main)
+        const uuid = image.sk.replace('pics', '').split('.')[0]
+        console.log('uuid:' + uuid)
+        const croped = await fetch(`${backend_url}?id=sku:${element}&sk=crop:&startsWith=true`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(e => e.json())
+        console.log(JSON.stringify(croped))
+        const src = croped.items.find(z => z.sk.endsWith(uuid))?.list[0].split(' ')[0]
+        singleV.image = src
+        single.innerHTML = JSON.stringify(singleV)
+      }
 
     }
     var generateSchema = (head) => {
@@ -10960,7 +11011,7 @@ checkbox1.setAttribute('hidden', "");
     }
     const funcDictionary = {
       script_head_placeholders_transfer: replacePlaceHolders,
-       'generate_schema.org_product': generateSchemaOrg,
+      'generate_schema.org_product': generateSchemaOrg,
       script_head_transfer: () => generateSchema(true),
       scrip_eval: runScripts,
       script_breadcrumb_generation: generateBreadCrumbApi,
@@ -17054,7 +17105,7 @@ elementsToRemove.forEach(element => element.remove());
       }).then(el => el.json())
       inputValue = items1.data
       let sku1 = pathItemSku || selectedSku
-      if (typeof inputValue !=='string') {
+      if (typeof inputValue !== 'string') {
         const allAttrs1 = querySelectorAll1(`[data-import-${attr}]`)
         const allAttrs2 = querySelectorAll1(`[data-import_${attr}]`)
         const allAttrs = [...allAttrs1, ...allAttrs2]
@@ -20267,7 +20318,7 @@ headers: {
                 const r = e.replace('#', '').replace('-var', '')
                 return r
               })
-              console.log('attributes '+JSON.stringify(attrs))
+              console.log('attributes ' + JSON.stringify(attrs))
               const rs = {}
               for (const skuVar of skuVariables) {
                 const { sk } = skuVar
