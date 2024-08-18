@@ -10639,6 +10639,8 @@ checkbox1.setAttribute('hidden', "");
       const description = getElementById1('data_product_description-schema-no-vars').querySelector('#textdata').value
       const nameWithVars = getElementById1('data_product_name-schema-with-vars').querySelector('#textdata').value
       const descriptionWithVar = getElementById1('data_product_description-schema-with-vars').querySelector('#textdata').value
+      const skuSiteValue = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=site_price:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
       if (skuVariables.length > 1) {
         single.innerHTML = ''
         single.setAttribute('data-transfer-receiver','product-schema-org')
@@ -10689,6 +10691,8 @@ checkbox1.setAttribute('hidden', "");
           }
           has.name = hasName
           has.description = hasDescription
+          const priceItem = skuSiteValue.find(e=>e.endsWith(sp.join(';')+';'))
+          has.price = priceItem.price
           for (const image of images.items) {
             let match = 1
             for (const s of sp) {
