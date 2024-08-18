@@ -10632,12 +10632,22 @@ checkbox1.setAttribute('hidden', "");
         .then(response => response.json()).then(res => res.items)
       const single = querySelectorAll1('[data-transfer-receiver="product-single-schema-org"]')[0]
       const multiple = querySelectorAll1('[data-transfer-receiver="product-multi-schema-org"]')[0]
+
+
+
+      const name = getElementById1('data_product_name-schema-no-vars').querySelector('#textdata').value
+      const description = getElementById1('data_product_description-schema-no-vars').querySelector('#textdata').value
+      const nameWithVars = getElementById1('data_product_name-schema-with-vars').querySelector('#textdata').value
+      const descriptionWithVar = getElementById1('data_product_description-schema-with-vars').querySelector('#textdata').value
       if (skuVariables.length > 1) {
         single.innerHTML = ''
         single.setAttribute('data-transfer-receiver','product-schema-org')
         const multiV = JSON.parse(multiple.innerHTML)
         const url = getElementById1("published-site-label").getAttribute('href')
         multiV[0].offers.url = url
+
+        multiV[0].name = name
+        multiV[0].description = description
         const images = await fetch(`${backend_url}?id=sku:${pathItemSku}&sk=pics&startsWith=true`, {
           method: 'GET',
           headers: {
@@ -10670,6 +10680,15 @@ checkbox1.setAttribute('hidden', "");
           sp.shift()
           sp.pop()
           let found
+          let hasName = nameWithVars
+          let hasDescription = descriptionWithVar
+          for(const el of sp){
+            const [k,v] = el.split(':')
+            hasName = hasName.replace('#'+k+'-var',v)
+            hasDescription = hasDescription.replace('#'+k+'-var',v)
+          }
+          has.name = hasName
+          has.description = hasDescription
           for (const image of images.items) {
             let match = 1
             for (const s of sp) {
@@ -10711,6 +10730,8 @@ checkbox1.setAttribute('hidden', "");
         multiple.innerHTML = ''
         multiple.setAttribute('data-transfer-receiver','product-schema-org')
         const singleV = JSON.parse(single.innerHTML)
+        singleV.name = name
+        singleV.description = description
         singleV.url = getElementById1("published-site-label").getAttribute('href')
         const images = await fetch(`${backend_url}?id=sku:${pathItemSku}&sk=pics&startsWith=true`, {
           method: 'GET',
