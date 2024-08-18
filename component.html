@@ -10618,7 +10618,7 @@ checkbox1.setAttribute('hidden', "");
         multiV[0].image = src
         const hasVariantItem = { ...multiV[0].hasVariant[0] }
         multiV[0].hasVariant = []
-        multiV[0].variesBy = skuVariables.map(e=>e.sk.replace('sku-variables;', ''))[0].split(';').map(e=>e.split(':')[0])
+        multiV[0].variesBy = skuVariables.map(e=>e.sk.replace('sku-variables;', ''))[0].split(';').map(e=>e.split(':')[0]).filter(e=>e)
         for (const skuV of skuVariables) {
           const has = deepCopy(hasVariantItem)
           const queryParams = skuV.sk.replace('sku-variables;', '').split(';').filter(e => e).map(e =>
@@ -20426,8 +20426,8 @@ headers: {
             }
           }
           if (varButton) {
-            const skuQtyValue = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=warehouse_price_qty:&startsWith=true`)
-              .then(response => response.json()).then(res => res.items)
+            const skuQtyValue = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=sku-variables;&startsWith=true`)
+            .then(response => response.json()).then(res => res.items)
             const element = skuQtyValue[0]
             const splited = element.sk.split(';')
             splited.shift()
