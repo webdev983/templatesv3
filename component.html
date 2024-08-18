@@ -10654,7 +10654,7 @@ checkbox1.setAttribute('hidden', "");
         multiV[0].image = src
         const hasVariantItem = { ...multiV[0].hasVariant[0] }
         multiV[0].hasVariant = []
-        multiV[0].variesBy = skuVariables.map(e=>e.sk.replace('sku-variables;', ''))[0].split(';').map(e=>e.split(':')[0])
+        multiV[0].variesBy = skuVariables.map(e=>e.sk.replace('sku-variables;', ''))[0].split(';').map(e=>e.split(':')[0]).filter(e=>e)
         for (const skuV of skuVariables) {
           const has = deepCopy(hasVariantItem)
           const queryParams = skuV.sk.replace('sku-variables;', '').split(';').filter(e => e).map(e =>
