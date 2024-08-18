@@ -10649,6 +10649,7 @@ checkbox1.setAttribute('hidden', "");
         multiV[0].url = url
 
         multiV[0].name = name
+        multiV[0].productGroupID = pathItemSku
         multiV[0].description = description
         const images = await fetch(`${backend_url}?id=sku:${pathItemSku}&sk=pics&startsWith=true`, {
           method: 'GET',
@@ -10670,7 +10671,7 @@ checkbox1.setAttribute('hidden', "");
         multiV[0].image = src
         const hasVariantItem = { ...multiV[0].hasVariant[0] }
         multiV[0].hasVariant = []
-        multiV[0].variesBy = skuVariables.map(e=>e.sk.replace('sku-variables;', ''))
+        multiV[0].variesBy = skuVariables.map(e=>e.sk.replace('sku-variables;', ''))[0].split(';').map(e=>e.split(':')[0])
         for (const skuV of skuVariables) {
           const has = deepCopy(hasVariantItem)
           const queryParams = skuV.sk.replace('sku-variables;', '').split(';').filter(e => e).map(e =>
@@ -10693,10 +10694,11 @@ checkbox1.setAttribute('hidden', "");
           has.description = hasDescription
           const priceItem = skuSiteValue.find(e=>e.sk.endsWith(sp.join(';')+';'))
           has.offers.price = priceItem.price
-          for (const image of images.items) {
+          for (const image of images.items.filter(e=>e.main)) {
             let match = 1
             for (const s of sp) {
               const [k, v] = s.split(':')
+              console.log('key '+k+' value '+v)
               if (image.gallery_variables_sku_variables[k] && image.gallery_variables_sku_variables[k] === v) {
                 continue
               }
