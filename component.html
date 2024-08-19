@@ -5498,8 +5498,15 @@
 
       const averageR = querySelectorAll1('.rating_summary')[0]
       averageR.textContent = total / totalReviews.length
-      const startE = querySelectorAll1('.rating_summary')[0]
-      startE.setAttribute('data-star', total / totalReviews.length)
+      const startE = querySelectorAll1('.rating_summary')
+      startE.forEach(e=>e.textContent = total / totalReviews.length)
+      const startE2 = querySelectorAll1('.rating_star')
+      startE2.forEach(e=>{
+        if(e.closest('.product_review')){
+          return
+        }
+        e.setAttribute('data-star', total / totalReviews.length)
+    })
 
 
     }
