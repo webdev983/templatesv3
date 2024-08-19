@@ -10716,7 +10716,7 @@ checkbox1.setAttribute('hidden', "");
           has.name = hasName
           has.description = hasDescription
           const priceItem = skuSiteValue.find(e => e.sk.endsWith(sp.join(';') + ';'))
-          has.offers.price = priceItem.price
+          has.offers.price =parseFloat(priceItem.price)
           for (const image of images.items.filter(e => e.main)) {
             let match = 1
             for (const s of sp) {
@@ -10766,7 +10766,7 @@ checkbox1.setAttribute('hidden', "");
         singleV.url = url
         singleV.offers.url = url
         const priceItem = skuSiteValue[0]
-        singleV.offers.price = priceItem.price
+        singleV.offers.price =parseFloat(priceItem.price)
         const images = await fetch(`${backend_url}?id=sku:${pathItemSku}&sk=pics&startsWith=true`, {
           method: 'GET',
           headers: {
