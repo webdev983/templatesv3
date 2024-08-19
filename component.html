@@ -19278,10 +19278,11 @@ headers: {
             cPrice.textContent = item1[item.sk].price
             cAnchor.textContent = item1[item.sk].anchor
           }
+          
 
 
         })
-
+        postToDb({ id:'sku:'+pathItemSku,sk:item.sk })
         e.target.textContent = '🟢'
       }
       cloned.querySelector('#image-input').addEventListener('change', async (e) => {
@@ -21576,12 +21577,18 @@ headers: {
 
 
           })
-          !runned && postToDb({ ...element, runned: true })
+          !runned && postToDb({ id:'sku:'+sku,sk:comparision.id })
           c1.querySelector('#enable-comparision').textContent = '🟢'
 
         }
         cloned.querySelector('#enable-comparision').onclick = enableComp
-        if (element.runned) {
+        const runnedItems = await fetch(`${backend_url}?id=sku:${sku}&sk=${comparision.id}&startsWith=true`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(e => e.json()).then(({ items }) => items)
+        if (runnedItems.length) {
           enableComp(undefined, true)
 
         }
