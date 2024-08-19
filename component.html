@@ -16672,7 +16672,7 @@ elementsToRemove.forEach(element => element.remove());
 
         }
       }
-      console.log('result json '+JSON.stringify(json))
+      console.log('result json ' + JSON.stringify(json))
       return json
     }
     function removeEmptyValues(obj) {
@@ -17378,6 +17378,7 @@ elementsToRemove.forEach(element => element.remove());
         await pushAction(payload2)
         return
       }
+      /*
       if (attr === 'meta_description') {
         const id1 = querySelectorAll1('meta[name="description"]')[0].id
         const payload2 = {
@@ -17391,21 +17392,35 @@ elementsToRemove.forEach(element => element.remove());
         }
         await pushAction(payload2)
         return
-      }
+      }*/
       if (!inputValue.startsWith('<')) {
         const allAttrs1 = querySelectorAll1(`[data-import-${attr}]`)
         const allAttrs2 = querySelectorAll1(`[data-import_${attr}]`)
         const allAttrs = [...allAttrs1, ...allAttrs2]
+        const value = allAttrs[0].getAttribute(`data-import-${attr}`) || allAttrs[0].getAttribute(`data-import_${attr}`)
+        if (value.startsWith('attribute:')) {
+          const payload2 = {
 
+            time: (new Date()).getTime().toString(),
+            action: 'setAttribute',
+            target_element: allAttrs[0].id + '-tree',
+            key: value.replace('attribute:',''),
+            value: inputValue,
 
-        const el = {
-          time: (new Date()).getTime(),
-          action: 'innerHtml',
-          target_element: allAttrs[0].id + '-tree',
-          insertedCode: inputValue,
-
+          }
+          await pushAction(payload2)
         }
-        await pushAction(el)
+        else {
+          const el = {
+            time: (new Date()).getTime(),
+            action: 'innerHtml',
+            target_element: allAttrs[0].id + '-tree',
+            insertedCode: inputValue,
+
+          }
+          await pushAction(el)
+        }
+
 
         return
       }
