@@ -19246,6 +19246,17 @@ headers: {
         cloned.querySelector('#comp-image').removeAttribute('hidden')
       }
       cloned.querySelector('#enable-comparision').onclick = async (e) => {
+        if (e.target.textContent === '🟢') {
+          fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/sku:${pathItemSku}:${item.sk}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              // Add any additional headers if needed
+            },
+          })
+          e.target.textContent = '🔴'
+          return
+        }
 
         const original = document.querySelector('#price_comparison_price_anchor_head[hidden]')
         const cloned = original.cloneNode(true)
@@ -21531,6 +21542,17 @@ headers: {
 
         const c1 = cloned
         const enableComp = async (e, runned) => {
+          if (e.target.textContent === '🟢') {
+            fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/sku:${pathItemSku}:${element.id}`, {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+                // Add any additional headers if needed
+              },
+            })
+            e.target.textContent = '🔴'
+            return
+          }
           console.log('enabling comp')
           const original = document.querySelector('#price_comparison_price_anchor_head[hidden]')
           const cloned = original.cloneNode(true)
