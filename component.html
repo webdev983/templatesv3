@@ -21554,6 +21554,7 @@ headers: {
             return
           }
           console.log('enabling comp')
+          postToDb({ id: 'sku:' + sku, sk: element.id })
           const original = document.querySelector('#price_comparison_price_anchor_head[hidden]')
           const cloned = original.cloneNode(true)
           cloned.removeAttribute('hidden')
@@ -21607,7 +21608,7 @@ headers: {
 
 
           })
-          postToDb({ id: 'sku:' + sku, sk: element.id })
+          
           c1.querySelector('#enable-comparision').textContent = '🟢'
 
         }
