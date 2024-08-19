@@ -5449,7 +5449,7 @@
       const totalReviews = [...reviews, ...fakeReviews]
       totalReviews.sort((a, b) => new Date(b.dbstimestamp) - new Date(a.dbstimestamp));
       const original = querySelectorAll1('.product_review')[0]
-      let total =0
+      let total = 0
       const maxEl = querySelectorAll1('[data-builder-visible_reviews]')[0]
       const max = parseInt(maxEl.getAttribute('data-builder-visible_reviews'))
       let loadMore
@@ -5494,20 +5494,20 @@
         querySelectorAll1('.load_more_reviews')[0].setAttribute('hidden', '')
       }
       const totalR = querySelectorAll1('.reviews_count')
-      totalR.forEach(e=>e.textContent = totalReviews.length)
+      totalR.forEach(e => e.textContent = totalReviews.length)
 
       const averageR = querySelectorAll1('.rating_summary')[0]
       averageR.textContent = total / totalReviews.length
       const startE = querySelectorAll1('.rating_summary')
       const avrgR = total / totalReviews.length
-      startE.forEach(e=>e.textContent = avrgR.toFixed(1))
+      startE.forEach(e => e.textContent = avrgR.toFixed(1))
       const startE2 = querySelectorAll1('.rating_star')
-      startE2.forEach(e=>{
-        if(e.closest('.product_review')){
+      startE2.forEach(e => {
+        if (e.closest('.product_review')) {
           return
         }
         e.setAttribute('data-star', avrgR.toFixed(1))
-    })
+      })
 
 
     }
@@ -10716,9 +10716,15 @@ checkbox1.setAttribute('hidden', "");
           has.name = hasName
           has.description = hasDescription
           const priceItem = skuSiteValue.find(e => e.sk.endsWith(sp.join(';') + ';'))
-          has.offers.price =parseFloat(priceItem.price)
+          has.offers.price = parseFloat(priceItem.price)
           for (const image of images.items.filter(e => e.main)) {
             let match = 1
+            if (!image.gallery_variables_sku_variables) {
+              found = image
+
+
+              break;
+            }
             for (const s of sp) {
               const [k, v] = s.split(':')
               console.log('key ' + k + ' value ' + v)
@@ -10767,7 +10773,7 @@ checkbox1.setAttribute('hidden', "");
         singleV.sku = pathItemSku
         singleV.offers.url = url
         const priceItem = skuSiteValue[0]
-        singleV.offers.price =parseFloat(priceItem?.price)
+        singleV.offers.price = parseFloat(priceItem?.price)
         const images = await fetch(`${backend_url}?id=sku:${pathItemSku}&sk=pics&startsWith=true`, {
           method: 'GET',
           headers: {
@@ -10837,7 +10843,7 @@ checkbox1.setAttribute('hidden', "");
         else {
           traverseJSONAndUpdate(json, '', receiverName, date, head);
         }
-        !head &&(json = cleanJson(json))
+        !head && (json = cleanJson(json))
         // After updating, stringify the JSON object and assign it back to the text content of the schema element
         schema.textContent = JSON.stringify(json, null, 2);
         console.log('OUTPUT SCHEMA JSON ' + JSON.stringify(json))
@@ -16639,10 +16645,10 @@ elementsToRemove.forEach(element => element.remove());
           else {
             // If the current value is a string, check for the data-transfer-sender attribute
             const senderPath = sender ? `${sender}.${currentPath}` : currentPath;
-            
+
             let senderAttribute = querySelectorAll1(`[data-transfer-sender="${senderPath}"]:not([data-b-value=""]`, head);
 
-            console.log('sender path ' + senderPath +' sender value '+senderAttribute[0]?.innerText)
+            console.log('sender path ' + senderPath + ' sender value ' + senderAttribute[0]?.innerText)
             if (senderAttribute.length) {
               if (json[key] === null) {
                 json[key] = parseFloat(senderAttribute[0].innerText) || null;
@@ -17413,7 +17419,7 @@ elementsToRemove.forEach(element => element.remove());
             time: (new Date()).getTime().toString(),
             action: 'setAttribute',
             target_element: allAttrs[0].id + '-tree',
-            key: value.replace('attribute:',''),
+            key: value.replace('attribute:', ''),
             value: inputValue,
 
           }
@@ -19280,11 +19286,11 @@ headers: {
             cPrice.textContent = item1[item.sk].price
             cAnchor.textContent = item1[item.sk].anchor
           }
-          
+
 
 
         })
-        postToDb({ id:'sku:'+pathItemSku,sk:item.sk })
+        postToDb({ id: 'sku:' + pathItemSku, sk: item.sk })
         e.target.textContent = '🟢'
       }
       cloned.querySelector('#image-input').addEventListener('change', async (e) => {
@@ -21579,17 +21585,17 @@ headers: {
 
 
           })
-          !runned && postToDb({ id:'sku:'+sku,sk:element.id })
+          !runned && postToDb({ id: 'sku:' + sku, sk: element.id })
           c1.querySelector('#enable-comparision').textContent = '🟢'
 
         }
         cloned.querySelector('#enable-comparision').onclick = enableComp
         const runnedItems = await fetch(`${backend_url}?id=sku:${sku}&sk=${element.id}&startsWith=true`, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            }).then(e => e.json()).then(({ items }) => items)
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(e => e.json()).then(({ items }) => items)
         if (runnedItems.length) {
           enableComp(undefined, true)
 
