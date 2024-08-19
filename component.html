@@ -16494,6 +16494,7 @@ elementsToRemove.forEach(element => element.remove());
           if (Array.isArray(json[key])) {
             // Find the data-transfer-cloner attribute for the current array
             const clonerAttributes = querySelectorAll1(`[data-transfer-cloner="${sender}.${currentPath}"]:not([data-b-value=""]`, head);
+            const or = deepCopy(json[key][0])
             if (clonerAttributes.length > 0) {
               const arrayOfObjects = [];
               // Iterate through each set of cloned elements
@@ -16514,7 +16515,7 @@ elementsToRemove.forEach(element => element.remove());
 
                 }
                 else {
-                  const objectFromClonedElements = deepCopy(json[key][0])//{ ...json[key][0] };
+                  const objectFromClonedElements = deepCopy(or)//{ ...json[key][0] };
                   // Iterate through each cloned element within the current set
                   if (clonerAttribute.hasAttribute('data-transfer-sender')) {
                     const attributeKey = clonerAttribute.getAttribute('data-transfer-sender').split('.').pop();
