@@ -16638,10 +16638,10 @@ elementsToRemove.forEach(element => element.remove());
           else {
             // If the current value is a string, check for the data-transfer-sender attribute
             const senderPath = sender ? `${sender}.${currentPath}` : currentPath;
-            log1('sender path ' + senderPath)
+            
             let senderAttribute = querySelectorAll1(`[data-transfer-sender="${senderPath}"]:not([data-b-value=""]`, head);
 
-
+            console.log('sender path ' + senderPath +' sender value '+senderAttribute[0].innerText)
             if (senderAttribute.length) {
               if (json[key] === null) {
                 json[key] = parseFloat(senderAttribute[0].innerText) || null;
