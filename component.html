@@ -11230,27 +11230,31 @@ checkbox1.setAttribute('hidden', "");
       script_import_product_buttons_pictures: skuToButtonPicturesApi
     }
     const onLoad = async () => {
-      log1('onload')
+      console.log('onload')
       const onLoad = pathItem.hub_items?.scripts?.onLoad
       const body = document.getElementById(getBodyIdFromType('onLoad'))
       if (!onLoad) {
-        log1('no onload')
+        console.log('no onload')
         return
       }
       for (const item of onLoad) {
+        console.log('name ' + item.name)
         if (!item.execute_in_template && pathItem.lsi1.toLowerCase().includes('seositeshome.com')) {
+          console.log('no execute in template')
           continue
         }
         const item1 = body.querySelector('#' + item.name)
         const status = item1.querySelector('#script_status')
         if (status.textContent === '🟢' && item.execute_on_red_checkbox) {
+          console.log('execute on red')
           continue
         }
-        log1('name ' + item.name)
+        
         try {
           await funcDictionary[item.name]()
         }
         catch (e) {
+          console.log(item.name + 'errored')
           continue
         }
 
