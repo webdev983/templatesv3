@@ -10737,7 +10737,7 @@ checkbox1.setAttribute('hidden', "");
         const singleV = JSON.parse(single.innerHTML)
         singleV.name = name
         singleV.description = description
-        const url =pathToUrl()// getElementById1("published-site-label").getAttribute('href')
+        const url = pathToUrl()// getElementById1("published-site-label").getAttribute('href')
         singleV.url = url
         singleV.offers.url = url
         const priceItem = skuSiteValue[0]
@@ -10804,8 +10804,12 @@ checkbox1.setAttribute('hidden', "");
           delete json['offers-aggregate']
  
         }*/
-        traverseJSONAndUpdate(json, '', receiverName, date, head);
-
+        if (Array.isArray(json)) {
+          traverseJSONAndUpdate(json[0], '', receiverName, date, head);
+        }
+        else {
+          traverseJSONAndUpdate(json, '', receiverName, date, head);
+        }
         json = cleanJson(json)
         // After updating, stringify the JSON object and assign it back to the text content of the schema element
         schema.textContent = JSON.stringify(json, null, 2);
@@ -11278,7 +11282,7 @@ checkbox1.setAttribute('hidden', "");
           await funcDictionary[item.name]()
         }
         catch (e) {
-          console.error(item.name + ' errored ' +e.message)
+          console.error(item.name + ' errored ' + e.message)
           continue
         }
 
