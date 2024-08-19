@@ -10624,8 +10624,8 @@ checkbox1.setAttribute('hidden', "");
       const skuSiteValue = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=site_price:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
       if (skuVariables.length > 1) {
-        single.innerHTML = ''
-        single.setAttribute('data-transfer-receiver','product-schema-org')
+        single.remove()
+        multiple.setAttribute('data-transfer-receiver','product-schema-org')
         const multiV = JSON.parse(multiple.innerHTML)
         const url = getElementById1("published-site-label").getAttribute('href')
         multiV[0].url = url
@@ -10716,8 +10716,8 @@ checkbox1.setAttribute('hidden', "");
         multiple.innerHTML = JSON.stringify(multiV)
       }
       else {
-        multiple.innerHTML = ''
-        multiple.setAttribute('data-transfer-receiver','product-schema-org')
+        multiple.remove()
+        single.setAttribute('data-transfer-receiver','product-schema-org')
         const singleV = JSON.parse(single.innerHTML)
         singleV.name = name
         singleV.description = description
@@ -11254,7 +11254,7 @@ checkbox1.setAttribute('hidden', "");
           await funcDictionary[item.name]()
         }
         catch (e) {
-          console.log(item.name + 'errored')
+          console.log(item.name + ' errored')
           continue
         }
 
