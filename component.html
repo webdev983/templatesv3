@@ -21554,7 +21554,9 @@ headers: {
             return
           }
           console.log('enabling comp')
-          postToDb({ id: 'sku:' + sku, sk: element.id })
+          const p = { id: 'sku:' + sku, sk: element.id }
+          console.log('pushing '+JSON.stringify(p))
+          await postToDb(p)
           const original = document.querySelector('#price_comparison_price_anchor_head[hidden]')
           const cloned = original.cloneNode(true)
           cloned.removeAttribute('hidden')
