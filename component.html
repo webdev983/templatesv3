@@ -10550,7 +10550,8 @@ checkbox1.setAttribute('hidden', "");
               console.log('no anch ' + element)
               continue
             }
-            const novar = await fetch(`${backend_url}?id=sku:${element}&sk=headingNoVars&startsWith=true`, {
+            const st = pathItemPath.split('/')[0].toLowerCase()
+            const novar = await fetch(`${backend_url}?id=sku:${element}&sk=data_heading-without-vars-sku:${st}&startsWith=true`, {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
