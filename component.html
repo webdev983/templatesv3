@@ -4691,6 +4691,10 @@
       await setAttAction(label.id + '-tree', 'for', sku + ';' + keys[0] + ':' + first)
       await setAttAction(input.id + '-tree', 'name', sku + ';' + keys[0])
       await setAttAction(input.id + '-tree', 'data-id', sku + ';' + keys[0] + ':' + first)
+      if (qitems.length < 2) {  
+        await setAttAction(fieldset.id + '-tree', 'hidden', '')
+
+      }
       for (const value of keyValues[keys[0]]) {
         const dupLabelId = duplicateId(label.id).id
         const dupInputId = duplicateId(input.id).id
@@ -5577,16 +5581,16 @@
         .then(response => response.json()).then(res => res.items)
       let comparisions = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=comparision:&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
-      const promise = comparisions.map(async comparision=>{
+      const promise = comparisions.map(async comparision => {
         const res = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=${comparision.sk}&startsWith=true`)
-        .then(response => response.json()).then(res => res.items)
-        if(res.length){
+          .then(response => response.json()).then(res => res.items)
+        if (res.length) {
           return comparision
         }
 
       })
-      comparisions =  await Promise.all(promise)
-      comparisions = comparisions.filter(e=>e)
+      comparisions = await Promise.all(promise)
+      comparisions = comparisions.filter(e => e)
       const comparisionPics = comparisions.map(element => { return { value: element.value, sk: element.sk, pic: 'https://s3.amazonaws.com/checkout-admin-panel/' + element.path } })
       const compEl = querySelectorAll1('.price_compare_site_list')[0]
       const firstComparision = comparisionPics.shift()
@@ -21570,7 +21574,7 @@ headers: {
           }
           console.log('enabling comp')
           const p = { id: 'sku:' + sku, sk: element.sk }
-          console.log('pushing '+JSON.stringify(p))
+          console.log('pushing ' + JSON.stringify(p))
           await postToDb(p)
           const original = document.querySelector('#price_comparison_price_anchor_head[hidden]')
           const cloned = original.cloneNode(true)
@@ -21625,7 +21629,7 @@ headers: {
 
 
           })
-          
+
           c1.querySelector('#enable-comparision').textContent = '🟢'
 
         }
