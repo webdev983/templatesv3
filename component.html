@@ -1707,7 +1707,7 @@
         </table>
       </details>
       <details id="article-collection-menu" hidden style="margin-bottom: 7px;">
-       
+
       </details>
 
 
@@ -2523,12 +2523,12 @@
 
 
       </details>
-     
+
       <details id="article-menu" hidden style="margin-bottom: 7px;">
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">📦 Article</span></summary>
-        
 
-        
+
+
 
 
       </details>
@@ -4772,7 +4772,7 @@
       await setAttAction(label.id + '-tree', 'for', sku + ';' + keys[0] + ':' + first)
       await setAttAction(input.id + '-tree', 'name', sku + ';' + keys[0])
       await setAttAction(input.id + '-tree', 'data-id', sku + ';' + keys[0] + ':' + first)
-      
+
       for (const value of keyValues[keys[0]]) {
         const dupLabelId = duplicateId(label.id).id
         const dupInputId = duplicateId(input.id).id
@@ -4881,7 +4881,7 @@
       }
 
       await setAttAction(input.id + '-tree', 'checked', '')
-      if (qitems.length < 2) {  
+      if (qitems.length < 2) {
         await setAttAction(fieldset.id + '-tree', 'hidden', '')
 
       }
@@ -5149,7 +5149,7 @@
 
         }
         await pushAction(payload3)
-        postToDb({id:`sku:${sku}`,sk:'data_lead-image',crops:payload3.value})
+        postToDb({ id: `sku:${sku}`, sk: 'data_lead-image', crops: payload3.value })
         //keys = Object.keys(picsWithCondition)
         console.log('with ' + JSON.stringify(picsWithCondition))
       }
@@ -5168,7 +5168,7 @@
 
           }
           await pushAction(payload3)
-          postToDb({id:`sku:${sku}`,sk:'data_lead-image',crops:payload3.value})
+          postToDb({ id: `sku:${sku}`, sk: 'data_lead-image', crops: payload3.value })
 
         }
       }
@@ -10587,7 +10587,29 @@ checkbox1.setAttribute('hidden', "");
           const items = d.items[0].items
           console.log('for name2' + JSON.stringify(items))
           list = items.filter(e => e)
+          const site = pathItemPath.split('/')[0].toLowerCase()
+          const leadPUrl = `${backend_url}?id=${pathItem.collection}&sk=data_leadP:${site}&startsWith=true`
+          console.log('getting ' + leadP)
+          const leadP = await fetch(leadPUrl, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json()).then(({ items }) => items[0]?.value)
+
+
+          const headingUrl = `${backend_url}?id=${pathItem.collection}&sk=data_heading:${site}&startsWith=true`
+          console.log('getting ' + headingUrl)
+          const heading = await fetch(headingUrl, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json()).then(({ items }) => items[0]?.value)
+          querySelectorAll1('.collection_products_heading')[0].textContent = heading
+          querySelectorAll1('.collection_products_lead_paragraph')[0].textContent = leadP
         }
+        
         else {
           url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=${name}:${ownerid}&gsi1lsi1=true&lsi1=${name}`;
 
@@ -10629,7 +10651,7 @@ checkbox1.setAttribute('hidden', "");
             const element = list[i]
             const cloned = originalCart.cloneNode(true)
             const anchorUrl = `${backend_url}?id=sku:${element}&sk=addedSite:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`
-            console.log('getting '+anchorUrl)
+            console.log('getting ' + anchorUrl)
             const anchor = await fetch(anchorUrl, {
               method: 'GET',
               headers: {
@@ -11311,7 +11333,7 @@ checkbox1.setAttribute('hidden', "");
       }
       if (pathItem.hub_items?.menus?.article_menu_toggle) {
         document.getElementById('article-menu').removeAttribute('hidden')
-        
+
       }
 
 
@@ -19938,7 +19960,7 @@ headers: {
       const id = i.getAttribute('collection')
       const wrapper = getElementById1('attached-collection-wrapper')
       wrapper.setAttribute('hidden', "")
-      getElementById1('collection-attached').setAttribute('hidden','')
+      getElementById1('collection-attached').setAttribute('hidden', '')
       getElementById1(id).querySelector('#product-group-input').classList.remove('collection-attached')
       delete pathItem.collection
       i.textContent = ''
@@ -20639,7 +20661,7 @@ headers: {
           }
           pk = 'sku:' + pathItemSku
         }
-        else if(type === 'collection'){
+        else if (type === 'collection') {
           if (!pathItem.hub_items?.menus?.collection_menu_toggle) {
             continue
           }
