@@ -19507,10 +19507,10 @@ headers: {
       let toP = { id, value: target.value }
       if (siteChecked) {
         const site = pathItemPath.split('/')[0].toLowerCase()
-        toP.sk = `heading;${site}`
+        toP.sk = `data_heading:${site}`
       }
       else {
-        toP.sk = `heading;global`
+        toP.sk = `data_heading:global`
       }
       postToDb(toP)
     }
@@ -19533,10 +19533,10 @@ headers: {
       let toP = { id, value: target.value }
       if (siteChecked) {
         const site = pathItemPath.split('/')[0].toLowerCase()
-        toP.sk = `leadP;${site}`
+        toP.sk = `data_leadP:${site}`
       }
       else {
-        toP.sk = `leadP;global`
+        toP.sk = `data_leadP:global`
       }
       postToDb(toP)
     }
@@ -19549,17 +19549,17 @@ headers: {
       if (target.checked) {
         if (target.getAttribute('vtype') === 'site') {
           const site = pathItemPath.split('/')[0].toLowerCase()
-          const lead = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=leadP;${site}&startsWith=true`)
+          const lead = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=data_leadP:${site}&startsWith=true`)
             .then(response => response.json()).then(res => res.items[0])
-          const heading = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=heading;${site}&startsWith=true`)
+          const heading = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=data_heading:${site}&startsWith=true`)
             .then(response => response.json()).then(res => res.items[0])
           leadEl.value = lead?.value || ''
           headingEl.value = heading?.value || ''
         }
         else {
-          const lead = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=leadP;global&startsWith=true`)
+          const lead = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=data_leadP:global&startsWith=true`)
             .then(response => response.json()).then(res => res.items[0])
-          const heading = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=heading;global&startsWith=true`)
+          const heading = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=data_heading:global&startsWith=true`)
             .then(response => response.json()).then(res => res.items[0])
           leadEl.value = lead?.value || ''
           headingEl.value = heading?.value || ''
