@@ -531,6 +531,26 @@
               <span class="l-3" id="menu_toggle_last_update_time">never</span>
             </td>
           </tr>
+          <tr id="article_menu_toggle">
+            <td>
+              <label id="menu_toggle_status" class="l-3">🔴</label>
+              <label class="l-3" style="margin: 10px;">Article menu</label>
+            </td>
+            <td hidden>
+              <span class="l-3">🕐</span>
+              <span class="l-3" id="menu_toggle_last_update_time">never</span>
+            </td>
+          </tr>
+          <tr id="article_collection_menu_toggle">
+            <td>
+              <label id="menu_toggle_status" class="l-3">🔴</label>
+              <label class="l-3" style="margin: 10px;">Article collection menu</label>
+            </td>
+            <td hidden>
+              <span class="l-3">🕐</span>
+              <span class="l-3" id="menu_toggle_last_update_time">never</span>
+            </td>
+          </tr>
           <tr id="collection_menu_toggle">
             <td>
               <label id="menu_toggle_status" class="l-3">🔴</label>
@@ -1686,7 +1706,7 @@
 
         </table>
       </details>
-      <details id="article-collection-menu" style="margin-bottom: 7px;">
+      <details id="article-collection-menu" hidden style="margin-bottom: 7px;">
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">💐article collections</span></summary>
         <div id="attached-collection-wrapper" hidden style="margin-top:5px; padding-bottom: 10px;">
           <label class="l-2 b-dark-blue">article collection: </label>
@@ -2644,7 +2664,7 @@
 
 
       </details>
-      <details id="article-menu" style="margin-bottom: 7px;">
+      <details id="article-menu" hidden style="margin-bottom: 7px;">
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">📦 Article</span></summary>
         <div id="sku-empty2">
           <input type="text" class="b-3" id="input-sku2" placeholder="enter sku">
@@ -12231,12 +12251,24 @@ checkbox1.setAttribute('hidden', "");
         document.getElementById('sku-menu').removeAttribute('hidden')
         document.getElementById('sku-menu2').removeAttribute('hidden')
       }
+      if (pathItem.hub_items?.menus?.article_menu_toggle) {
+        document.getElementById('article-menu').removeAttribute('hidden')
+        
+      }
+
 
       if (pathItem.hub_items?.menus?.collection_menu_toggle) {
         document.getElementById('collection-menu').removeAttribute('hidden')
         await generateCollection()
         showCollection()
       }
+      //todo
+      if (pathItem.hub_items?.menus?.article_collection_menu_toggle) {
+        document.getElementById('article-collection-menu').removeAttribute('hidden')
+        //await generateCollection()
+        //showCollection()
+      }
+
 
       if (pathItem.hub_items?.menus?.chatgpt_logs_toggle) {
         document.getElementById('ai-logs').removeAttribute('hidden')
