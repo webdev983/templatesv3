@@ -20632,9 +20632,15 @@ headers: {
         const type = element.id.replace('data-menu_', '')
         let pk
         if (type === 'sku') {
+          if (!pathItem.hub_items?.menus?.sku_menu_toggle) {
+            continue
+          }
           pk = 'sku:' + pathItemSku
         }
         else if(type === 'collection'){
+          if (!pathItem.hub_items?.menus?.collection_menu_toggle) {
+            continue
+          }
           pk = pathItem.collection
         }
         const details = element.querySelectorAll('details')
