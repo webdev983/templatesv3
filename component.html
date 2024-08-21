@@ -2568,7 +2568,7 @@
         <div id="article_filled">
           <span class="l-3" style="margin-left: 30px;">🆔</span>
           <label class="l-2" id="article-value"></label>
-          <button class="b-3" id="remove-article" onclick="removeSku2(event)">🗑️</button>
+          <button class="b-3" id="remove-article" onclick="removeArticle(event)">🗑️</button>
 
           <details id="pics-menu_article" class="data-menu">
             <summary class="summary-L-3"><span class="l-3 b-dark-blue">🖼️ Pics</span></summary>
@@ -18567,6 +18567,52 @@ headers: {
       getElementById1("input-sku").removeAttribute('hidden')
       getElementById1("create-sku").removeAttribute('hidden')
     }
+    const removeArticle = async (event) => {
+
+      const article = pathItemArticle
+      // to do 
+      if (headContentItem) {
+        headContentItem.article = undefined
+        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(headContentItem),
+        });
+        pathItemArticle = undefined
+      }
+      else {
+        pathItem.article = undefined
+        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(pathItem),
+        });
+        pathItemArticle = undefined
+      }
+
+      /*
+      const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${sku}&startsWith=true`)
+        .then(response => response.json())
+      
+      const res = await Promise.all(items.map(async item => {
+        const deleteUrl = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id}:${item.sk}`;
+        const response = await fetch(deleteUrl, {
+      method: 'DELETE',
+      headers: {
+      'Content-Type': 'application/json',
+      // Add any additional headers if needed
+      },
+      
+        });
+      }))*/
+      //to complete
+      getElementById1("article-empty").removeAttribute('hidden')
+      getElementById1("article_filled").setAttribute('hidden', "")
+    }
     const removeSku2 = async (event) => {
 
       const sku = pathItemSku
@@ -21955,8 +22001,8 @@ headers: {
 
     }
     const showArticle = async (article) => {
-     console.log('showing article')
-      pathItemArticle = article 
+      console.log('showing article')
+      pathItemArticle = article
 
       getElementById1("article-empty").setAttribute('hidden', '')
       const filled = getElementById1('article_filled')
