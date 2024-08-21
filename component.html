@@ -20830,6 +20830,12 @@ headers: {
           }
           pk = pathItem.collection
         }
+        else if (type === 'article') {
+          if (!pathItem.hub_items?.menus?.article_menu_toggle) {
+            continue
+          }
+          pk = pathItem.article
+        }
         const details = element.querySelectorAll('details')
         for (const detail of details) {
           const id1 = detail.id
@@ -21951,6 +21957,8 @@ headers: {
       getElementById1("article-empty").setAttribute('hidden', '')
       const filled = getElementById1('article_filled')
       filled.removeAttribute('hidden')
+
+      filled.querySelector('#article-value').textContent = article
       return
       //
       const h1Span = document.getElementById('h1');
