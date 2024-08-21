@@ -2562,7 +2562,7 @@
 
         <div id="article-empty">
           <input type="text" class="b-3" id="input-article" placeholder="enter article">
-          <button class="b-3" id="create-article1" onclick="addSku2(event)">▶️</button>
+          <button class="b-3" id="create-article1" onclick="addArticle(event)">▶️</button>
         </div>
 
         <div id="article_filled">
@@ -18558,6 +18558,30 @@ headers: {
       getElementById1("sku-empty2").removeAttribute('hidden')
       getElementById1("sku_filled").setAttribute('hidden', "")
     }
+    const setArticle = async (value) => {
+      if (pathItemPath.split('/').includes('Stock')) {
+        pathItem.article = value
+        const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(pathItem),
+        });
+
+      }
+      else {
+
+
+        headContentItem.article = value
+        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          body: JSON.stringify(headContentItem),
+        });
+
+
+      }
+    }
     const setSku = async (value) => {
       if (pathItemPath.split('/').includes('Stock')) {
         pathItem.sku = value
@@ -18626,6 +18650,55 @@ headers: {
       });
 
       showSku2(value, true)
+
+
+
+      //setDataProduct(value, resultList)
+    }
+
+    const addArticle= async (event) => {
+      const value = getElementById1('input-article').value.trim().toLowerCase()
+
+      const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=article:${value}&sk=created:&startsWith=true`)
+        .then(response => response.json())
+      //const pSiteLabel = getElementById1("published-site-label")
+      postToDb({
+        id: 'article:' + value,
+        sk: 'addedSite:' + pathItemPath.split('/')[0].toLowerCase(),
+        value: pathToUrl(),
+        addDate: (new Date()).getTime()
+      })
+
+      if (items.length) {
+        if (items[0].ownerUUID.replace('article:', '') === ownerid) {
+          await setArticle(value)
+          showArticle(value)
+          return
+          //alert('adding sku in progress')
+        }
+        else {
+          getElementById1('input-article').value = ''
+
+        }
+
+        return
+
+
+      }
+
+
+      await setArticle(value)
+
+      // add sku 
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: 'article:' + value, sk: 'created:' + new Date().getTime().toString(), ownerUUID: 'article:' + ownerid }),
+      });
+
+      showArticle(value, true)
 
 
 
@@ -20920,6 +20993,907 @@ headers: {
 
     }
     const showSku2 = async (sku) => {
+      pathItemSku = sku
+      log1('showing sku original ' + sku)
+
+      getElementById1("sku-empty2").setAttribute('hidden', '')
+      const filled = getElementById1('sku_filled')
+      filled.removeAttribute('hidden')
+
+      //
+      const h1Span = document.getElementById('h1');
+      const h1EditDiv = document.getElementById('h1-edit');
+      const details = document.getElementById('details-1');
+      const h1SpanNoVars = document.getElementById('h1-no-vars-input');
+      const { items } = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=headingNoVars&startsWith=true`)
+        .then(response => response.json())
+      if (items.length) {
+        h1SpanNoVars.value = items[0].value
+      }
+      h1SpanNoVars.onblur = (e) => {
+        const { value } = e.target
+        postToDb({
+          id: 'sku:' + sku,
+          sk: 'headingNoVars',
+          value
+        })
+
+      }
+      // Event listener for details toggle
+      details.addEventListener('toggle', function () {
+        if (details.open) {
+          // Details is open: move h1Span to h1EditDiv and make editable
+          h1EditDiv.insertBefore(h1Span, h1EditDiv.firstChild);
+          h1Span.setAttribute('contenteditable', true);
+        } else {
+          // Details is closed: move h1Span back to summary
+          document.querySelector('#summary-1').appendChild(h1Span);
+          h1Span.removeAttribute('contenteditable');
+        }
+      });
+
+      // Initial setup: check if details is open on page load
+      if (details.open) {
+        h1EditDiv.insertBefore(h1Span, h1EditDiv.firstChild);
+        h1Span.setAttribute('contenteditable', true);
+      } else {
+        document.querySelector('#summary-1').appendChild(h1Span);
+        h1Span.removeAttribute('contenteditable');
+      }
+
+      //
+      filled.querySelector('#sku-condition-site-name-value').textContent = pathItemPath.split('/')[0].toLowerCase()
+      filled.querySelector('#site-old-all').onblur = (el) => {
+        document.querySelectorAll('#sku-variable-price-all-old[warehouse]').forEach(e => {
+          if (e.closest('tr').hasAttribute('hidden')) {
+            return
+          }
+          e.textContent = el.target.textContent
+          e.onblur({ target: e })
+        })
+      }
+      filled.querySelector('#site-new-all').onblur = (el) => {
+        document.querySelectorAll('#sku-variable-price-all-current[warehouse]').forEach(e => {
+          if (e.closest('tr').hasAttribute('hidden')) {
+            return
+          }
+          e.textContent = el.target.textContent
+          e.onblur({ target: e })
+        })
+      }
+      //get warehouses
+      document.querySelector('#sku-value2').textContent = sku
+      const warehouses = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=warehouse:&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
+      const destinations = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=destination:&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
+      const conditions = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=condition:&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
+      const shippingMethodes = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=shippingMethode:&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
+      const comparisions = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=comparision:&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
+      const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=sku-variables;&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
+      const skuQtyValue = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=warehouse_price_qty:&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
+      const skuSiteValue = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=site_price:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`)
+        .then(response => response.json()).then(res => res.items)
+      let addedConditions = skuQtyValue.map(element =>
+        element.sk.split(';')[0].split(':')[1] + ':' + element.sk.split(';')[0].split(':')[2]
+      )
+      addedConditions = removeDuplicates(addedConditions)
+
+
+      const originalKeyLabel = document.getElementById('comb-key')
+      //originalKeyLabel.querySelector('span').textContent = '🔖' + combKeys[0]
+      //originalKeyLabel.id = 'check;' + combKeys[0]*
+      const h1_input = document.querySelector('#h1-input')
+      const h1_checkboxes = document.querySelector('#h1-checkboxes')
+      let headParamsId = headContentItem.id
+      await setReviews()
+      let headParams2 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=headingParams&startsWith=true`)
+        .then(response => response.json()).then(res => res.items[0] || { id: `sku:${sku}`, sk: 'headingParams', order: [] })
+      let headParams1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${headParamsId}&sk=headingParams&startsWith=true`)
+        .then(response => response.json()).then(res => res.items[0] || { id: headParamsId, sk: 'headingParams', order: [] })
+      let headParams = headParams1
+      const saveToSite = document.getElementById('saveParamsToSite')
+      if (headParams1?.loadFromHead) {
+        saveToSite.setAttribute('checked', '')
+      } else {
+        saveToSite.removeAttribute('checked')
+
+        headParams = headParams2
+      }
+      if (!headParams.order) {
+        headParams.order = []
+      }
+      saveToSite.onchange = (e) => {
+        const { checked } = e.target
+
+        if (checked) {
+          headParams = headParams1
+          headParams1.loadFromHead = true
+
+        }
+        else {
+          headParams1.loadFromHead = false
+          headParams = headParams2
+        }
+        postToDb(headParams1)
+      }
+      h1_input.querySelector('input').value = headParams.head || ''
+
+      h1_input.querySelector('input').onblur = (e) => {
+        headParams.head = e.target.value
+        postToDb(headParams)
+      }
+
+      const generate = (i) => {
+        const splited = skuVariables[0].sk.replace('sku-variables;', '').split(';')
+        splited.pop()
+        const combKeys = splited.map(element => element.split(':')[0])
+        const cloned1 = h1_input.cloneNode(true)
+        const cloned2 = h1_checkboxes.cloneNode(true)
+        cloned2.querySelector('#h1-checkbox-label').textContent = '🔖' + combKeys[i]
+
+        cloned2.removeAttribute('hidden')
+        cloned2.id = cloned2.id + ';' + combKeys[i]
+        cloned1.id = cloned1.id + ';' + combKeys[i]
+        if (headParams[combKeys[i]]) {
+          cloned1.querySelector('input').value = headParams[combKeys[i]].value || ''
+          headParams[combKeys[i]].key && (cloned2.querySelector('#include-key').querySelector('input').setAttribute('checked', ''))
+          headParams[combKeys[i]].cat && (cloned2.querySelector('#inf-cat').querySelector('input').setAttribute('checked', ''))
+        }
+        else {
+          headParams[combKeys[i]] = {}
+        }
+        cloned1.querySelector('input').onblur = (e) => {
+          const { value } = e.target
+          headParams[combKeys[i]].value = value
+          postToDb(headParams)
+          generateHead()
+
+        }
+        cloned2.querySelector('#include-key').querySelector('input').onchange = (e) => {
+          const checked = e.target.checked
+          headParams[combKeys[i]].key = checked
+          postToDb(headParams)
+          generateHead()
+        }
+        cloned2.querySelector('#inf-cat').querySelector('input').onchange = (e) => {
+          const checked = e.target.checked
+          headParams[combKeys[i]].cat = checked
+          postToDb(headParams)
+          generateHead()
+        }
+
+
+        h1EditDiv.append(cloned2)
+        h1EditDiv.append(cloned1)
+      }
+      const generateHead = () => {
+
+        h1Span.textContent = headParams.head + ' ' + headParams.order.map(key => {
+          let res = ''
+          if (!headParams[key]) {
+
+            return
+          }
+          if (headParams[key].key) {
+            res = key + ': '
+          }
+          res = res + `${key}-value# ${headParams[key].value || ''}`
+          return res
+        }).filter(e => e).join(' ')
+      }
+      generateHead()
+      if (skuVariables.length) {
+        const splited = skuVariables[0].sk.replace('sku-variables;', '').split(';')
+        splited.pop()
+        const combKeys = splited.map(element => element.split(':')[0])
+        for (let i = 0; i < combKeys.length; i++) {
+          const cloned = originalKeyLabel.cloneNode(true)
+          cloned.querySelector('span').textContent = '🔖' + combKeys[i]
+          cloned.id = 'check;' + combKeys[i]
+          if (headParams.order.includes(combKeys[i])) {
+            cloned.querySelector('input').checked = true
+          }
+
+          cloned.querySelector('input').onchange = (e) => {
+            const { target } = e
+            if (target.checked) {
+              headParams.order.push(combKeys[i])
+              headParams[combKeys[i]] = {}
+              generate(i)
+            }
+            else {
+              headParams.order = headParams.order.filter(e => e !== combKeys[i])
+              document.getElementById(`h1-checkboxes;${combKeys[i]}`)?.remove()
+              document.getElementById(`h1-input;${combKeys[i]}`)?.remove()
+              delete headParams[combKeys[i]]
+            }
+            generateHead()
+            postToDb(headParams)
+          }
+          insertAfter(cloned, originalKeyLabel)
+        }
+        for (const key of headParams.order) {
+          const i = combKeys.indexOf(key)
+
+          console.log('generating ' + combKeys[i])
+
+          generate(i)
+
+        }
+      }
+      originalKeyLabel.remove()
+      headContentItem.scripts?.h1?.runned && (document.getElementById('h1-status').textContent = '🟢')
+      document.getElementById('h1-status').onclick = async (e) => {
+        const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=sku-variables;&startsWith=true`)
+          .then(response => response.json()).then(res => res.items)
+        const { target } = e
+        if (target.textContent === '🟠') {
+          return
+        }
+        const toR = h1Span.textContent
+        if (!toR) {
+          alert('insert header')
+          return
+        }
+        target.textContent = '🟠'
+        const tableLsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Content'
+        log1(tableLsi)
+        url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${tableLsi}`;
+        const { items } = await fetch(url).then(e => e.json())
+        const compid = items[0].id
+        const atts = headParams
+        delete atts.id
+        delete atts.sk
+
+        const pattern = /(\w+)-value#/g;
+
+        // Find all matches
+        const matches = [...toR.matchAll(pattern)].map(match => match[0]);
+
+        const attrs = matches.map(e => e.replace('-value#', ""))
+        const rs = {}
+        for (const skuVar of skuVariables) {
+          const { sk } = skuVar
+          const r = sk.replace('sku-variables;', '')
+          const s = r.split(';')
+          s.pop()
+          for (const item of s) {
+            const [k, v] = item.split(':')
+            if (attrs.includes(k)) {
+              if (rs[k]) {
+                if (!rs[k].includes(v)) {
+                  rs[k].push(v)
+                }
+              } else {
+                rs[k] = [v]
+              }
+            }
+
+          }
+
+        }
+        console.log('rs: ' + JSON.stringify(rs))
+        const data1 = []
+        for (const key of Object.keys(rs)) {
+          const legend = key
+          const attributes = rs[key]
+          data1.push({
+            legend,
+            items: attributes.map(e => e.trim())
+          })
+        }
+        const combinations = generateCombinations(data1)
+        console.log(JSON.stringify(combinations))
+        const replaced = combinations.map(combination => {
+          let replaced1 = toR
+          const s = combination.split(';')
+          s.pop()
+          for (const element of s) {
+            const [k, v] = element.split(':')
+            console.log(k + ' v ' + v)
+            console.log(replaced1)
+            console.log('replacing ' + k + '-value#' + ' with ' + v)
+            replaced1 = replaced1.replaceAll(`${k}-value#`, v)
+            console.log(replaced1)
+          }
+          return { [combination]: replaced1 }
+        })
+        const data = { text: replaced, ...atts }
+
+
+        //clean
+        const eventData1 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&cleanAttr=h1-attribute&ownerid=${localStorage.getItem('ownerid')}` };
+        console.log('event ' + eventData1.url)
+        // Fetch options
+        const options0 = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(eventData1)
+        };
+        await fetch(pup_url, options0);
+        const currentDate = new Date();
+
+        // Add one day to the current date
+        const tomorrow = new Date(currentDate);
+        tomorrow.setDate(currentDate.getDate() + 1);
+
+        // Convert the date to ISO 8601 format (required by DynamoDB)
+        const ttl = Math.floor(tomorrow.getTime() / 1000);
+        const db = {
+          id: generateUUID(),
+          sk: 'import',
+          ttl,
+          data,
+        }
+        await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(db),
+        });
+
+        const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${compid}&attr=h1-attribute&val=${db.id}&ownerid=${localStorage.getItem('ownerid')}` };
+        console.log('event ' + eventData.url)
+        // Fetch options
+        const options = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(eventData)
+        };
+        const response = await fetch(pup_url, options);
+        const date = new Date()
+        headContentItem.scripts.h1 = { runned: date.getTime() }
+        await updateHeadContentItem()
+        target.textContent = '🟢'
+
+      }
+      /*
+      let setWareHouse
+      
+      if (skuQtyValue.length) {
+        setWareHouse = skuQtyValue[0].sk.split(';').pop()
+        const option = getElementById1('warehouse_select_label')
+        const cloned1 = option.cloneNode(true)
+        cloned1.setAttribute('id', setWareHouse)
+        cloned1.removeAttribute('hidden')
+        console.log(option.parentNode.children.length)
+        if (option.parentNode.children.length === 1) {
+          cloned1.querySelector('input').setAttribute('checked', "")
+        }
+        cloned1.querySelector('#warehouse_value-zd').textContent = warehouses.find(e => e.sk === setWareHouse).value
+        option.parentNode.append(cloned1)
+ 
+      }
+      for (const addedCondition of addedConditions) {
+        const original = getElementById1('sku-table').querySelector('#sku-variable-condition[hidden]')
+        const cloned = original.cloneNode(true)
+        cloned.removeAttribute('hidden')
+        cloned.querySelector('#sku-variable-condition-value').textContent = conditions.find(e => e.sk === addedCondition).value
+        original.parentNode.insertBefore(cloned, original)
+        const original2 = getElementById1('sku-table').querySelector('#all-td[hidden]')
+        const cloned2 = original2.cloneNode(true)
+        cloned2.removeAttribute('hidden')
+        console.log(addedCondition)
+        console.log(JSON.stringify(conditions))
+        const condSk = conditions.find(e => e.sk === addedCondition).sk
+        cloned2.setAttribute('condition', condSk)
+        original2.parentNode.insertBefore(cloned2, original2)
+ 
+        const originals = getElementById1('sku-table').querySelectorAll('#sku-variable-td[hidden]')
+        originals.forEach(original => {
+          const cloned = original.cloneNode(true)
+          cloned.setAttribute('condition', condSk)
+          cloned.removeAttribute('hidden')
+ 
+          original.parentNode.insertBefore(cloned, original)
+        })
+        //generateConditionTable(conditions.find(e => e.sk === addedCondition).value,addedCondition)
+      }*/
+
+      const defaultWareHouse = warehouses.find(e => e.default)
+      const generateShippingM = async (defaultWareHouse) => {
+        const shippingIds = defaultWareHouse.shippingMethodes
+        if (!shippingIds) {
+          return
+        }
+        const ids = removeDuplicates(shippingIds.map(e => e.id))
+        console.log(ids)
+        const filtered = ids.map(id1 => shippingMethodes.find(e => e.sk === id1)).filter(e => e)
+        console.log(JSON.stringify(filtered))
+        const originals = querySelectorAll1('#shipping-des-item')
+        const original = originals[0]
+        for (const el of filtered) {
+          const cloned = original.cloneNode(true)
+          cloned.removeAttribute('hidden')
+          cloned.querySelector('#shipping-type').textContent = el.value
+          cloned.id = el.sk
+          original.parentNode.append(cloned)
+          const originalSubRow = cloned.querySelector('#ship-method-destination-row-0')
+          const element = shippingIds.find(e => e.id === el.sk)
+          console.log(filtered.sk)
+          console.log(shippingIds)
+          if (element?.items?.length) {
+
+
+            for (let i = 0; i < element.items.length; i++) {
+              const el = element.items[i]
+              const cloned = originalSubRow.cloneNode(true)
+              //set values
+
+
+              const countrySelect = cloned.querySelector('#warehouse-destination-value select');
+              // Example value to match against option id
+              countrySelect.selectedIndex = Array.from(countrySelect.children).findIndex(option => option.id === el);
+
+
+              cloned.id = 'ship-method-destination-row-' + i
+              originalSubRow.parentNode.append(cloned)
+
+            }
+            originalSubRow.remove()
+          }
+        }
+        filtered.length && originals.forEach(e => e.remove())
+      }
+      if (defaultWareHouse) {
+        const option = getElementById1('warehouse_select_label')
+        const cloned1 = option.cloneNode(true)
+        cloned1.setAttribute('id', defaultWareHouse.sk)
+        cloned1.removeAttribute('hidden')
+        console.log(option.parentNode.children.length)
+        if (option.parentNode.children.length === 1) {
+          cloned1.querySelector('input').setAttribute('checked', "")
+        }
+        cloned1.querySelector('#warehouse_value-zd').textContent = defaultWareHouse.value
+        option.parentNode.append(cloned1)
+        getElementById1('sku-condition-warehouse-qty-value').textContent = defaultWareHouse.value
+        getElementById1('allWareHouseValue').onblur = (el) => {
+          document.querySelectorAll('#sku-variable-price-warehouse-value-all[warehouse]').forEach(e => {
+            e.textContent = el.target.textContent
+            e.onblur({ target: e })
+          })
+        }
+        generateShippingM(defaultWareHouse)
+        await generateSkuV(defaultWareHouse)
+      }
+
+
+
+
+
+
+      for (const element of warehouses) {
+        const tr = filled.querySelector('#warehouse-row[hidden]')
+        const cloned = tr.cloneNode(true)
+        cloned.setAttribute('sk', element.sk)
+        cloned.removeAttribute('hidden')
+        tr.parentNode.append(cloned)
+        cloned.querySelector('#wareHouseInput').textContent = element.value
+        cloned.querySelector('#defaultWareHouseInput').checked = !!element.default
+        cloned.querySelector('#warehouse-min-processing').textContent = element.min || 0
+        cloned.querySelector('#warehouse-max-processing').textContent = element.max || 0
+        const locationSelect = cloned.querySelector('#warehouse-country-select')
+        locationSelect.selectedIndex =
+          Array.from(locationSelect.children).findIndex(option => option.id === element.location);
+
+
+        cloned.querySelector('#enableWareHouse').onclick = async (e) => {
+          e.target.textContent = '🟢'
+          const option = getElementById1('warehouse_select_label')
+          const cloned1 = option.cloneNode(true)
+          cloned1.setAttribute('id', element.sk)
+          cloned1.removeAttribute('hidden')
+          console.log(option.parentNode.children.length)
+          if (option.parentNode.children.length === 1) {
+            cloned1.querySelector('input').setAttribute('checked', "")
+            await generateSkuV(element)
+            generateShippingM(element)
+          }
+          cloned1.querySelector('#warehouse_value-zd').textContent = e.target.parentNode.parentNode.querySelector('#wareHouseInput').textContent
+          option.parentNode.append(cloned1)
+
+        }
+        cloned.querySelector('#warehouse-country-select').onchange = async (e) => {
+          var selectElement = e.target
+          var selectedOption = selectElement.options[selectElement.selectedIndex].id;
+          const element1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?' + `id=${element.id}&sk=${element.sk}&startsWith=true`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json()).then(res => res.items[0])
+          element1.location = selectedOption
+          fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+              element1
+            ),
+          });
+
+        }
+        cloned.querySelector('#warehouse-min-processing').onblur = async (e) => {
+          const min = e.target.textContent
+          const element1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?' + `id=${element.id}&sk=${element.sk}&startsWith=true`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json()).then(res => res.items[0])
+          element1.min = parseInt(min)
+          fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+              element1
+            ),
+          });
+
+        }
+        cloned.querySelector('#warehouse-max-processing').onblur = async (e) => {
+          const max = e.target.textContent
+          const element1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?' + `id=${element.id}&sk=${element.sk}&startsWith=true`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json()).then(res => res.items[0])
+          element1.max = parseInt(max)
+          fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+              element1
+            ),
+          });
+
+        }
+        cloned.querySelector('#defaultWareHouseInput').onchange = (e) => {
+          const checked = e.target.checked
+          element.default = checked
+          fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+              element
+            ),
+          });
+
+        }
+      }
+      /*
+      for (const element of destinations) {
+        const tr = filled.querySelector('#destination-row[hidden]')
+        const cloned = tr.cloneNode(true)
+        cloned.setAttribute('sk', element.sk)
+        cloned.removeAttribute('hidden')
+        tr.parentNode.append(cloned)
+        cloned.querySelector('#destinationInput').textContent = element.value
+        cloned.querySelector('#enableDestination').onclick = (e) => {
+          e.target.textContent = '🟢'
+          const option = getElementById1('destination_select_option')
+          const cloned1 = option.cloneNode(true)
+          cloned1.removeAttribute('hidden')
+          cloned1.setAttribute('id', element.sk)
+          cloned1.textContent = "🏴󠁥󠁳󠁰󠁶󠁿" + e.target.parentNode.parentNode.querySelector('#destinationInput').textContent
+          option.parentNode.append(cloned1)
+  
+        }
+  
+      }*/
+      for (const element of conditions) {
+        const tr = filled.querySelector('#condition-row[hidden]')
+        const cloned = tr.cloneNode(true)
+        cloned.setAttribute('sk', element.sk)
+        cloned.removeAttribute('hidden')
+        tr.parentNode.append(cloned)
+        cloned.querySelector('#conditionInput').textContent = element.value
+        cloned.querySelector('#enableCondition').onclick = async (e) => {
+          e.target.textContent = '🟢'
+          /*
+          const original = getElementById1('sku-table').querySelector('#sku-variable-condition[hidden]')
+ 
+          const cloned = original.cloneNode(true)
+          cloned.removeAttribute('hidden')
+          const v = e.target.parentNode.parentNode.querySelector('#conditionInput').textContent
+          cloned.querySelector('#sku-variable-condition-value').textContent = v
+          original.parentNode.insertBefore(cloned, original)
+ 
+          const original2 = getElementById1('sku-table').querySelector('#all-td[hidden]')
+          const cloned2 = original2.cloneNode(true)
+          cloned2.removeAttribute('hidden')
+          const condSk = e.target.parentNode.parentNode.getAttribute('sk')
+          cloned2.setAttribute('condition', condSk)
+          original2.parentNode.insertBefore(cloned2, original2)
+ 
+          const originals = getElementById1('sku-table').querySelectorAll('#sku-variable-td[hidden]')
+          originals.forEach(original => {
+            const cloned = original.cloneNode(true)
+            cloned.setAttribute('condition', condSk)
+            cloned.removeAttribute('hidden')
+ 
+            original.parentNode.insertBefore(cloned, original)
+          })
+          */
+          //set default conditions
+          const checkedWareHouses = querySelectorAll1('#warehouse-zd[checked]')
+          if (checkedWareHouses.length) {
+            const checkedWareHouse = checkedWareHouses[0]
+            const sk = checkedWareHouse.parentNode.id
+            const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(e => e.json()).then(res => res.items[0])
+
+            if (item.conditions) {
+              if (!item.conditions.includes(element.sk)) {
+                item.conditions = [...item.conditions, element.sk]
+                await generateSkuV(item)
+              }
+            }
+            else {
+              item.conditions = [element.sk]
+              await generateSkuV(item)
+            }
+            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(
+                item
+              ),
+            });
+          }
+          //generateConditionTable(v)
+        }
+      }
+      for (const element of shippingMethodes) {
+        const tr = filled.querySelector('#ship-row[hidden]')
+        const cloned = tr.cloneNode(true)
+        cloned.setAttribute('sk', element.sk)
+        cloned.removeAttribute('hidden')
+        tr.parentNode.append(cloned)
+        cloned.querySelector('#shipInput').textContent = element.value
+        const originalSubRow = cloned.querySelector('#ship-from-to-row-0')
+        if (element.items?.length) {
+
+
+          for (let i = 0; i < element.items.length; i++) {
+            const el = element.items[i]
+            const cloned = originalSubRow.cloneNode(true)
+            const { country, destination, min, max } = el
+            //set values
+
+
+            const countrySelect = cloned.querySelector('#ship-from-td select');
+            // Example value to match against option id
+            countrySelect.selectedIndex = Array.from(countrySelect.children).findIndex(option => option.id === country);
+
+            // Select and set the selectedIndex for the destination select element
+            const destinationSelect = cloned.querySelector('#ship-to-td select');
+            destinationSelect.selectedIndex = Array.from(destinationSelect.children).findIndex(option => option.id === destination);
+
+            // Select and set the selectedIndex for the min select element
+            const minSelect = cloned.querySelector('#ship-min-td select');
+            minSelect.selectedIndex = Array.from(minSelect.children).findIndex(option => option.id === min);
+
+            // Select and set the selectedIndex for the max select element
+            const maxSelect = cloned.querySelector('#ship-max-td select');
+            maxSelect.selectedIndex = Array.from(maxSelect.children).findIndex(option => option.id === max);
+            cloned.id = 'ship-from-to-row-' + i
+            originalSubRow.parentNode.append(cloned)
+
+          }
+          originalSubRow.remove()
+        }
+        cloned.querySelector('#enableShip').onclick = async (e) => {
+          const checkedWareHouses = querySelectorAll1('#warehouse-zd[checked]')
+          if (checkedWareHouses.length) {
+            const checkedWareHouse = checkedWareHouses[0]
+            const sk = checkedWareHouse.parentNode.id
+            const item = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${ownerid}&sk=${sk}&startsWith=true`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(e => e.json()).then(res => res.items[0])
+            //item.shippingMethodes = item.shippingMethodes ? [...item.shippingMethodes, element.sk] : [element.sk]
+            if (item.shippingMethodes) {
+              if (!item.shippingMethodes.includes(element.sk)) {
+                item.shippingMethodes = [...item.shippingMethodes, { id: element.sk }]
+              }
+            }
+            else {
+              item.shippingMethodes = [{ id: element.sk }]
+            }
+            console.log(JSON.stringify(item))
+            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(
+                item
+              ),
+            });
+            e.target.textContent = '🟢'
+            generateShippingM(item)
+          }
+        }
+      }
+      for (let element of comparisions) {
+        const tr = filled.querySelector('#comparision-row[hidden]')
+        const cloned = tr.cloneNode(true)
+        cloned.setAttribute('sk', element.sk)
+        cloned.removeAttribute('hidden')
+        tr.parentNode.append(cloned)
+        cloned.querySelector('#comparision-input').textContent = element.value
+        let file
+        const setImage = () => {
+          cloned.querySelector('#comp-image').setAttribute('src', 'https://s3.amazonaws.com/checkout-admin-panel/' + element.path)
+          cloned.querySelector('#comp-image').removeAttribute('hidden')
+        }
+        element.path && setImage()
+        cloned.querySelector('#image-input').addEventListener('change', async (e) => {
+          console.log('changed')
+
+          const uploadButton = cloned.querySelector('#upload-button1');
+
+          // Check if a file is selected
+          if (e.target.files && e.target.files.length > 0) {
+            // If a file is chosen, show the file name and make the upload button visible
+            //const fileName = e.target.files[0].name; // Get the name of the file
+
+
+            //uploadButton.removeAttribute('hidden'); // Make the upload button visible
+
+            file = e.target.files[0]
+
+            const id = ownerid
+            const fileContent = await file
+
+            const fileName = fileContent.name
+            console.log(fileName)
+
+
+
+            const path = await upload(fileName, fileContent)
+            log1(path)
+            //push to db image
+            // Send a POST request using fetch
+            element = {
+              ...element,
+              path
+            }
+            const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(element),
+            });
+            cloned.querySelector('#comp-image').src = 'https://s3.amazonaws.com/checkout-admin-panel/' + path
+            cloned.querySelector('#comp-image').removeAttribute('hidden')
+
+
+
+          }
+
+        })
+
+        const c1 = cloned
+        const enableComp = async (e, runned) => {
+          if (c1.querySelector('#enable-comparision').textContent === '🟢') {
+            fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/sku~${pathItemSku}:${element.sk}`, {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+                // Add any additional headers if needed
+              },
+            })
+            c1.querySelector('#enable-comparision').textContent = '🔴'
+            return
+          }
+          console.log('enabling comp')
+          const p = { id: 'sku:' + sku, sk: element.sk }
+          console.log('pushing ' + JSON.stringify(p))
+          await postToDb(p)
+          const original = document.querySelector('#price_comparison_price_anchor_head[hidden]')
+          const cloned = original.cloneNode(true)
+          cloned.removeAttribute('hidden')
+          cloned.setAttribute('site', element.sk)
+          original.parentNode.append(cloned)
+          cloned.removeAttribute('hidden')
+          cloned.querySelector('#price_comparison_site').textContent = element.value
+          /*
+          cloned.querySelector('#price_comparison_price_head').onblur = (el) => {
+            document.querySelectorAll(`#price_comparison_price_anchor[key="${element.value}"]`).forEach(e => {
+              const pEl = e.querySelector('#price_comparison_price')
+              pEl.textContent = el.target.textContent
+              pEl.onblur({ target: pEl })
+            })
+          }*/
+          const original2 = document.querySelectorAll('#price_comparison_price_anchor[hidden]')
+          original2.forEach(async original => {
+            const cloned2 = original.cloneNode(true)
+            cloned2.setAttribute('key', element.sk)
+            original.parentNode.append(cloned2)
+            cloned2.removeAttribute('hidden')
+            const cPrice = cloned2.querySelector('#price_comparison_price')
+
+            const cAnchor = cloned2.querySelector('#price_comparison_anchor')
+            const sk = original.closest('tr').getAttribute('sk')
+            const condition = cloned2.closest('tr').getAttribute('condition')
+            console.log('ff sk ' + sk)
+            const checkedWareHouse = querySelectorAll1('#warehouse-zd[checked]')[0]?.parentNode.id || cloned2.getAttribute('warehouse')
+            if (!sk) {
+              return
+            }
+            const getItem = {
+              id: 'sku:' + pathItemSku,
+              sk: `comparison:${condition};${sk}`
+
+
+            }
+            const item = await fetch(`${backend_url}?id=sku:${sku}&sk=${getItem.sk}&startsWith=true`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then(e => e.json()).then(({ items }) => items[0])
+
+            console.log('ffitem ' + element.value + ' ' + JSON.stringify(item))
+            if (item && item[element.sk]) {
+              cPrice.textContent = item[element.sk].price
+              cAnchor.textContent = item[element.sk].anchor
+              item[element.sk].anchor && cAnchor.classList.add('filled')
+            }
+
+
+          })
+
+          c1.querySelector('#enable-comparision').textContent = '🟢'
+
+        }
+        cloned.querySelector('#enable-comparision').onclick = enableComp
+        const runnedItems = await fetch(`${backend_url}?id=sku:${sku}&sk=${element.sk}&startsWith=true`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(e => e.json()).then(({ items }) => items)
+        if (runnedItems.length) {
+          enableComp(undefined, true)
+
+        }
+      }
+
+
+    }
+    const showArticle= async (sku) => {
+      return
       pathItemSku = sku
       log1('showing sku original ' + sku)
 
