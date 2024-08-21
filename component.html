@@ -1549,7 +1549,7 @@
           <label class="l-2" id="collection-value"></label>
           <button class="b-3" id="collection-remove" onclick="removeCollection(event)">🗑️</button>
         </div>
-        <div id="collection-attached">
+        <div id="collection-attached" hidden>
           <details id="data-menu_collection" class="data-menu">
             <summary class="summary-L-3"><span class="l-3 b-dark-blue">🖨️ Data</span></summary>
             <details id="data_heading" class="data-menu">
@@ -19861,6 +19861,7 @@ headers: {
     }
     const attachCollection = (collection, flag, name) => {
       console.log('attaching' + JSON.stringify(collection))
+      getElementById1('collection-attached').removeAttribute('hidden')
       const cV = getElementById1('collection-value')
       cV.setAttribute('collection', collection.id)
 
