@@ -6515,23 +6515,29 @@
       location.reload()
     }
     const toggleGeneratedPage = () => {
-      const s = localStorage.getItem('generatedPageToggle')
-      if (!s) {
+  const anchorToggle = localStorage.getItem('anchorToggle');
 
-        getElementById1("sku-list").removeAttribute('hidden')
-        getElementById1('generated-page-iframe').removeAttribute('hidden')
-        getElementById1('generated-page-menu').removeAttribute('hidden')
-        getElementById1('toggle-generated-page').classList.add('b-selected')
-        localStorage.setItem('generatedPageToggle', 'true')
-      }
-      else {
-        getElementById1("sku-list").setAttribute('hidden', '')
-        getElementById1('generated-page-iframe').setAttribute('hidden', '')
-        getElementById1('generated-page-menu').setAttribute('hidden', '')
-        getElementById1('toggle-generated-page').classList.remove('b-selected')
-        localStorage.removeItem('generatedPageToggle')
-      }
-    }
+  if (anchorToggle === 'true') {
+    getElementById1('generated-page-menu').scrollIntoView({ behavior: 'smooth' });
+    return; 
+  }
+
+  const s = localStorage.getItem('generatedPageToggle');
+  
+  if (!s) {
+    getElementById1("sku-list").removeAttribute('hidden');
+    getElementById1('generated-page-iframe').removeAttribute('hidden');
+    getElementById1('generated-page-menu').removeAttribute('hidden');
+    getElementById1('toggle-generated-page').classList.add('b-selected');
+    localStorage.setItem('generatedPageToggle', 'true');
+  } else {
+    getElementById1("sku-list").setAttribute('hidden', '');
+    getElementById1('generated-page-iframe').setAttribute('hidden', '');
+    getElementById1('generated-page-menu').setAttribute('hidden', '');
+    getElementById1('toggle-generated-page').classList.remove('b-selected');
+    localStorage.removeItem('generatedPageToggle');
+  }
+}
     const generateDependeeMenu = (node) => {
       const sku = node.querySelector('#sku-value').textContent
       log1(sku)
