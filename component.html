@@ -1305,7 +1305,7 @@
               </tr>
 
 
-              <tr id="script_chatgpt_" >
+              <tr id="script_chatgpt_">
                 <td>
                   <input type="checkbox" id="script_execute_select" hidden>
                   <label id="script_status" class="l-3">🔴</label>
@@ -4267,14 +4267,14 @@
       //const id = pathItemSku || pathItem.id
       let mergedItems = []
       const ids = [...Object.keys(cache)]
-      if(pathItemArticle){
+      if (pathItemArticle) {
         ids.push('article:' + pathItemArticle)
       }
       else if (pathItemSku) {
         ids.push(pathItemSku)
         ids.push('sku:' + pathItemSku)
       }
-      
+
       else {
         ids.push(headContentItem.id)
       }
@@ -4404,19 +4404,19 @@
           }
 
         }
-        if(item.alt){
+        if (item.alt) {
           clonedRow.querySelector('#alt-input').textContent = item.alt
         }
-        if(item.picNumber){
+        if (item.picNumber) {
           clonedRow.querySelector('#pic_number').textContent = item.picNumber
         }
-        clonedRow.querySelector('#alt-input').onblur =(e)=>{
+        clonedRow.querySelector('#alt-input').onblur = (e) => {
           const v = e.target.textContent
           item.alt = v
           postToDb(item)
 
         }
-        clonedRow.querySelector('#pic_number').onblur =(e)=>{
+        clonedRow.querySelector('#pic_number').onblur = (e) => {
           const v = e.target.textContent
           item.picNumber = v
           postToDb(item)
@@ -5178,7 +5178,7 @@
 
     }
     const articleToPictures = async (sku, secondary) => {
-      const id = 'article:'+sku
+      const id = 'article:' + sku
       const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=sku-variables;&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
       const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=pics&startsWith=true`;
@@ -5457,9 +5457,9 @@
 
 
     }
-    
+
     const skuToPictures = async (sku, secondary) => {
-      const id = 'sku:'+sku
+      const id = 'sku:' + sku
       const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=sku-variables;&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
       const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=pics&startsWith=true`;
@@ -5796,7 +5796,7 @@
       const response2 = await fetch(pup_url, options2);
       console.log('done')
     }
-    
+
     const skuToPicturesApi = async () => {
       const lsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Content'
       const lsiD = pathItem.lsi1.split('|')[0] + '/Content/Main|Product_gallery-Content'
@@ -6863,6 +6863,7 @@
     var site1
     var pathItemSku
     var pathItemArticle
+    var pathItemCollection
     var headContentItem
     var selectedSku
     var dependencyItem
@@ -11037,7 +11038,7 @@ checkbox1.setAttribute('hidden', "");
       }
     }
     var publishSkuImages = async () => {
-      const sku =pathItemArticle || pathItemSku
+      const sku = pathItemArticle || pathItemSku
       const picitems = await fetch(`${backend_url}?id=sku:${sku}&sk=pics&startsWith=true`, {
         method: 'GET',
         headers: {
@@ -11125,7 +11126,7 @@ checkbox1.setAttribute('hidden', "");
           }).then(e => e.json()).then(({ items }) => items[0]?.list)
         }
         else if (name === 'attached_collection') {
-          const d = await fetch(`${backend_url}?id=${pathItem.collection}&sk=selected&startsWith=true`, {
+          const d = await fetch(`${backend_url}?id=${pathItemCollection}&sk=selected&startsWith=true`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -11135,7 +11136,7 @@ checkbox1.setAttribute('hidden', "");
           console.log('for name2' + JSON.stringify(items))
           list = items.filter(e => e)
           const site = pathItemPath.split('/')[0].toLowerCase()
-          const leadPUrl = `${backend_url}?id=${pathItem.collection}&sk=data_leadP:${site}&startsWith=true`
+          const leadPUrl = `${backend_url}?id=${pathItemCollection}&sk=data_leadP:${site}&startsWith=true`
           console.log('getting1 ' + leadPUrl)
           const leadP = await fetch(leadPUrl, {
             method: 'GET',
@@ -11145,7 +11146,7 @@ checkbox1.setAttribute('hidden', "");
           }).then(e => e.json()).then(({ items }) => items[0]?.value)
 
 
-          const headingUrl = `${backend_url}?id=${pathItem.collection}&sk=data_heading:${site}&startsWith=true`
+          const headingUrl = `${backend_url}?id=${pathItemCollection}&sk=data_heading:${site}&startsWith=true`
           console.log('getting1 ' + headingUrl)
           const heading = await fetch(headingUrl, {
             method: 'GET',
@@ -12235,11 +12236,13 @@ checkbox1.setAttribute('hidden', "");
               log1('head content item' + JSON.stringify(headContentItem))
               pathItemSku = headContentItem.sku
               pathItemArticle = headContentItem.article
+              pathItemCollection = headContentItem.collection
             })
         }
         else {
           pathItemSku = pathItem.sku
           pathItemArticle = pathItem.article
+          pathItemCollection = pathItem.collection
         }
       }
       await handleMenus()
@@ -17664,7 +17667,7 @@ elementsToRemove.forEach(element => element.remove());
         addDate: (new Date()).getTime()
       })
       postToDb({
-        id: pathItem.collection,
+        id: pathItemCollection,
         sk: 'addedSite:' + pathItemPath.split('/')[0].toLowerCase(),
         value: r.link?.replace('s3.amazonaws.com/', '').replace('index.html', ''),
         addDate: (new Date()).getTime()
@@ -20538,7 +20541,7 @@ headers: {
           generateCollectionColumn(collection.id, collectionName?.value || 'catalogue')
           console.log('flaaag' + flag)
           const attach = getElementById1('attach-to-page').checked
-          if ((collection.id === pathItem.collection && flag)) {
+          if ((collection.id === pathItemCollection && flag)) {
 
             attachCollection(collection, true, collectionName?.value)
           } else if (!flag) {
@@ -20616,9 +20619,15 @@ headers: {
       const el = getElementById1(collection.id)
       el.querySelector('#product-group-input').classList.add('collection-attached')
 
+      if (pathItemPath.split('/').includes('Stock')) {
+        pathItem.collection = collection.id
 
-      pathItem.collection = collection.id
-      postToDb(pathItem)
+        postToDb(pathItem)
+      }
+      else {
+        headContentItem.collection = collection.id
+        postToDb(headContentItem)
+      }
       const checkbox = getElementById1('attach-to-page')
       checkbox.checked = false
       checkbox.disabled = true
@@ -20639,11 +20648,13 @@ headers: {
       getElementById1('collection-attached').setAttribute('hidden', '')
       getElementById1(id).querySelector('#product-group-input').classList.remove('collection-attached')
       delete pathItem.collection
+      delete headContentItem.collection
       i.textContent = ''
       const checkbox = getElementById1('attach-to-page')
       checkbox.checked = true
       checkbox.disabled = false
       postToDb(pathItem)
+      postToDb(headContentItem)
     }
     const addCollection = async (event, value) => {
 
@@ -21341,7 +21352,7 @@ headers: {
           if (!pathItem.hub_items?.menus?.collection_menu_toggle) {
             continue
           }
-          pk = pathItem.collection
+          pk = pathItemCollection
         }
         else if (type === 'article') {
           if (!pathItem.hub_items?.menus?.article_menu_toggle) {
@@ -21564,89 +21575,89 @@ headers: {
 
     }
     const showPics = () => {
-     
 
 
-        
-          
-          const clonedFieldset = getElementById1('gallery-menu-wrapper')
-
-          // Assign a unique id to the cloned fieldset
-
-          // image input change 
-          clonedFieldset.querySelector('#image-input').addEventListener('change', async function (event) {
-            log1('changing')
-            var fileNameSpan = clonedFieldset.querySelector('#file-name');
-
-            var uploadButton = clonedFieldset.querySelector('#upload-button');
-
-            // Check if a file is selected
-            if (this.files && this.files.length > 0) {
-              // If a file is chosen, show the file name and make the upload button visible
-              var fileName = this.files[0].name; // Get the name of the file
-              //fileNameSpan.textContent = fileName; // Set the text content to the file name
-              //fileNameSpan.removeAttribute('hidden'); // Make the file name span visible
-              for (let file of this.files) {
-
-                let id
-                if (pathItemArticle) {
-                  id = "article:" + pathItemArticle
-                }
-                else if (pathItemSku) {
-                  id = 'sku:' + pathItemSku
-                }
-                else {
-                  id = headContentItem.id
-                }
-                const fileContent = await file
-                const fileName = fileContent.name
-
-                try {
-
-                  const path = await upload(fileName, fileContent)
-                  log1(path)
-                  //push to db image
-                  // Send a POST request using fetch
-                  const payload = {
-                    id,
-                    sk: path,
-                    date: getFormatedDate()
-                  }
-                  const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload),
-                  });
 
 
-                } catch (error) {
-                }
 
-              }
-              //uploadButton.removeAttribute('hidden'); // Make the upload button visible
+      const clonedFieldset = getElementById1('gallery-menu-wrapper')
 
-              loadImages(event.target.closest('[data-menu]'), src)
+      // Assign a unique id to the cloned fieldset
 
-            } else {
-              // If no file is chosen, hide the file name span and the upload button
-              fileNameSpan.hidden = true;
-              uploadButton.hidden = true;
+      // image input change 
+      clonedFieldset.querySelector('#image-input').addEventListener('change', async function (event) {
+        log1('changing')
+        var fileNameSpan = clonedFieldset.querySelector('#file-name');
+
+        var uploadButton = clonedFieldset.querySelector('#upload-button');
+
+        // Check if a file is selected
+        if (this.files && this.files.length > 0) {
+          // If a file is chosen, show the file name and make the upload button visible
+          var fileName = this.files[0].name; // Get the name of the file
+          //fileNameSpan.textContent = fileName; // Set the text content to the file name
+          //fileNameSpan.removeAttribute('hidden'); // Make the file name span visible
+          for (let file of this.files) {
+
+            let id
+            if (pathItemArticle) {
+              id = "article:" + pathItemArticle
             }
-          })
+            else if (pathItemSku) {
+              id = 'sku:' + pathItemSku
+            }
+            else {
+              id = headContentItem.id
+            }
+            const fileContent = await file
+            const fileName = fileContent.name
+
+            try {
+
+              const path = await upload(fileName, fileContent)
+              log1(path)
+              //push to db image
+              // Send a POST request using fetch
+              const payload = {
+                id,
+                sk: path,
+                date: getFormatedDate()
+              }
+              const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+              });
+
+
+            } catch (error) {
+            }
+
+          }
+          //uploadButton.removeAttribute('hidden'); // Make the upload button visible
+
+          loadImages(event.target.closest('[data-menu]'), src)
+
+        } else {
+          // If no file is chosen, hide the file name span and the upload button
+          fileNameSpan.hidden = true;
+          uploadButton.hidden = true;
+        }
+      })
 
 
 
 
-          loadImages(clonedFieldset)
-          // Insert the cloned fieldset after the specified element
-         
+      loadImages(clonedFieldset)
+      // Insert the cloned fieldset after the specified element
 
 
-        
 
-      
+
+
+
     }
 
     const showSku2 = async (sku) => {
