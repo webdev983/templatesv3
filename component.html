@@ -865,6 +865,39 @@
                   <label class="l-3"><input type="checkbox" id="execute_in_template" />🚧</label>
                 </td>
               </tr>
+              <tr id="script_import_article_pictures">
+                <!-- 
+                data-product
+                price
+                sku-variables
+                -->
+                <td>
+                  <input type="checkbox" id="script_execute_select" hidden>
+                  <label id="script_status" class="l-3">🔴</label>
+                  <button hidden id="cancel_script" class="b-3">❌</button>
+                  <label class="l-3" style="margin: 10px;">📦 import article pictures</label>
+                </td>
+                <td>
+                  <span class="l-3">🦾</span>
+                  <span class="l-3" id="last_script_execute_time">never</span>
+                </td>
+                <td>
+                  <span id="queue_number_container">
+                    <span class="l-3">🔀 </span>
+                    <span class="l-3  queue" contenteditable id="queue_number">~</span>
+                  </span>
+                </td>
+
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_on_red_checkbox" />🟥</label>
+                </td>
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_requires_reload" />🔃</label>
+                </td>
+                <td>
+                  <label class="l-3"><input type="checkbox" id="execute_in_template" />🚧</label>
+                </td>
+              </tr>
 
 
               <tr id="script_sku_data_to_html">
@@ -5144,10 +5177,11 @@
 
 
     }
-    const skuToPictures = async (sku, secondary) => {
-      const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=sku-variables;&startsWith=true`)
+    const skuToPictures = async (sku, secondary,article) => {
+      const id = article ? ('article:'+sku) : ('sku:'+sku)
+      const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=sku-variables;&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
-      const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=pics&startsWith=true`;
+      const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=pics&startsWith=true`;
       const { items } = await fetch(url).then(e => e.json())
       let pics = items.filter(e => e.secondary)
       let image
@@ -5164,7 +5198,7 @@
         image = querySelectorAll1('.product_lead_img')[0]
       }
 
-      const cropedImages = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=crop:&startsWith=true`)
+      const cropedImages = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=crop:&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
 
       const withSku = pics.filter(e =>
@@ -5423,6 +5457,65 @@
 
 
     }
+    const articleToPicturesApi = async () => {
+      const lsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Content'
+      const lsiD = pathItem.lsi1.split('|')[0] + '/Content/Main|Product_gallery-Content'
+      const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${lsi}`;
+      const url2 = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${lsiD}`;
+      const res = await fetch(url).then(e => e.json())
+      const res2 = await fetch(url2).then(e => e.json())
+      const eventData1 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res.items[0].id}&clean=1&ownerid=${localStorage.getItem('ownerid')}` };
+      console.log('clean ' + eventData1.url)
+      // Fetch options
+      const options0 = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData1)
+      };
+      //await fetch(pup_url, options0);
+      const eventData3 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res2.items[0].id}&clean=1&ownerid=${localStorage.getItem('ownerid')}` };
+      console.log('clean ' + eventData3.url)
+      // Fetch options
+      const options3 = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData3)
+      };
+      await fetch(pup_url, options3);
+
+
+      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res2.items[0].id}&articleToPictures=${pathItemArticle}&secondary=true&ownerid=${localStorage.getItem('ownerid')}` };
+
+      // Fetch options
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData)
+      };
+      console.log('secondary' + eventData.url)
+      const response = await fetch(pup_url, options);
+
+      const eventData2 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res.items[0].id}&articleToPictures=${pathItemArticle}&ownerid=${localStorage.getItem('ownerid')}` };
+
+      // Fetch options
+      const options2 = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData2)
+      };
+      console.log('main' + eventData2.url)
+      const response2 = await fetch(pup_url, options2);
+      console.log('done')
+    }
+    
     const skuToPicturesApi = async () => {
       const lsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Content'
       const lsiD = pathItem.lsi1.split('|')[0] + '/Content/Main|Product_gallery-Content'
@@ -11598,6 +11691,7 @@ checkbox1.setAttribute('hidden', "");
       script_refresh_catalog: refreshCatalogue,
       script_sku_data_to_html: skuToHtmlApi,
       script_import_product_pictures: skuToPicturesApi,
+      script_import_article_pictures: articleToPicturesApi,
       script_import_product_buttons_pictures: skuToButtonPicturesApi
     }
     const onLoad = async () => {
@@ -11800,6 +11894,7 @@ checkbox1.setAttribute('hidden', "");
       const importValue = urlParams.get('val')
       const message = urlParams.get('message')
       const skuToPicturesItem = urlParams.get('skuToPictures')
+      const articleToPicturesItem = urlParams.get('articleToPictures')
       const skuToButtonPics = urlParams.get('skuToButtonPics')
       const generateHtmlFromSku = urlParams.get('generateHtmlFromSku')
       ownerid = localStorage.getItem('ownerid') || urlParams.get('ownerid')
@@ -12018,6 +12113,10 @@ checkbox1.setAttribute('hidden', "");
       if (skuToPicturesItem) {
         const secondary = urlParams.get('secondary')
         await skuToPictures(skuToPicturesItem, secondary)
+      }
+      if (articleToPicturesItem) {
+        const secondary = urlParams.get('secondary')
+        await skuToPictures(articleToPicturesItem, secondary,true)
       }
       if (skuToButtonPics) {
         //const secondary = urlParams.get('secondary')
