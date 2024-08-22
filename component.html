@@ -9425,7 +9425,16 @@
                     //fileNameSpan.removeAttribute('hidden'); // Make the file name span visible
                     for (let file of this.files) {
 
-                      const id = pathItemSku ? ('sku:' + pathItemSku) : pathItem.id
+                      let id 
+                      if(pathItemArticle){
+                        id = "article:"+pathItemArticle
+                      }
+                      else if(pathItemSku){
+                        id = 'sku:' + pathItemSku
+                      }
+                      else{
+                        id = headContentItem.id
+                      }
                       const fileContent = await file
                       const fileName = fileContent.name
 
