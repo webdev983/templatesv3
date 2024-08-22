@@ -6733,22 +6733,29 @@
 }
 
 
-    const toggleHead = () => {
-      const s = localStorage.getItem('headToggle')
-      if (!s) {
+const toggleHead = () => {
+  const anchorToggle = localStorage.getItem('anchorToggle');
 
-        getElementById1('head-1').removeAttribute('hidden')
-        getElementById1('head-menu').removeAttribute('hidden', '')
-        getElementById1('toggle-head').classList.add('b-selected')
-        localStorage.setItem('headToggle', 'true')
-      }
-      else {
-        getElementById1('head-1').setAttribute('hidden', '')
-        getElementById1('head-menu').setAttribute('hidden', '')
-        getElementById1('toggle-head').classList.remove('b-selected')
-        localStorage.removeItem('headToggle')
-      }
-    }
+  // Если anchorToggle == 'true', просто скроллим и выходим из функции
+  if (anchorToggle === 'true') {
+    getElementById1('head-1').scrollIntoView({ behavior: 'smooth' });
+    return; // Прерываем выполнение функции, чтобы дальше код не выполнялся
+  }
+
+  const s = localStorage.getItem('headToggle');
+  
+  if (!s) {
+    getElementById1('head-1').removeAttribute('hidden');
+    getElementById1('head-menu').removeAttribute('hidden');
+    getElementById1('toggle-head').classList.add('b-selected');
+    localStorage.setItem('headToggle', 'true');
+  } else {
+    getElementById1('head-1').setAttribute('hidden', '');
+    getElementById1('head-menu').setAttribute('hidden', '');
+    getElementById1('toggle-head').classList.remove('b-selected');
+    localStorage.removeItem('headToggle');
+  }
+}
     const toggleCodeTree = () => {
       const s = localStorage.getItem('codeTreeToggle')
       if (!s) {
