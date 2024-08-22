@@ -6788,22 +6788,28 @@ const toggleHead = () => {
       }
     }
     const toggleComponentTree = () => {
-      const s = localStorage.getItem('componentTreeToggle')
-      if (!s) {
+  const anchorToggle = localStorage.getItem('anchorToggle');
 
-        getElementById1('components-tree').removeAttribute('hidden')
-        getElementById1('components-tree-menu').removeAttribute('hidden', '')
-        getElementById1('toggle-component-tree').classList.add('b-selected')
+  // Если anchorToggle == 'true', скроллим к components-tree-menu и выходим из функции
+  if (anchorToggle === 'true') {
+    getElementById1('components-tree-menu').scrollIntoView({ behavior: 'smooth' });
+    return; // Прерываем выполнение функции, чтобы дальше код не выполнялся
+  }
 
-        localStorage.setItem('componentTreeToggle', 'true')
-      }
-      else {
-        getElementById1('components-tree').setAttribute('hidden', '')
-        getElementById1('components-tree-menu').setAttribute('hidden', '')
-        getElementById1('toggle-component-tree').classList.remove('b-selected')
-        localStorage.removeItem('componentTreeToggle')
-      }
-    }
+  const s = localStorage.getItem('componentTreeToggle');
+
+  if (!s) {
+    getElementById1('components-tree').removeAttribute('hidden');
+    getElementById1('components-tree-menu').removeAttribute('hidden');
+    getElementById1('toggle-component-tree').classList.add('b-selected');
+    localStorage.setItem('componentTreeToggle', 'true');
+  } else {
+    getElementById1('components-tree').setAttribute('hidden', '');
+    getElementById1('components-tree-menu').setAttribute('hidden', '');
+    getElementById1('toggle-component-tree').classList.remove('b-selected');
+    localStorage.removeItem('componentTreeToggle');
+  }
+}
     document.addEventListener('DOMContentLoaded', function () {
       const iframe = document.getElementById("generated-page-iframe");
 
