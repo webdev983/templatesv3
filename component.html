@@ -4234,12 +4234,16 @@
       //const id = pathItemSku || pathItem.id
       let mergedItems = []
       const ids = [...Object.keys(cache)]
-      if (pathItemSku) {
+      if(pathItemArticle){
+        ids.push('article:' + pathItemArticle)
+      }
+      else if (pathItemSku) {
         ids.push(pathItemSku)
         ids.push('sku:' + pathItemSku)
       }
+      
       else {
-        ids.push(pathItem.id)
+        ids.push(headContentItem.id)
       }
       const res = await Promise.all(ids.map(e => fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${e}&sk=pics&startsWith=true`, {
         method: 'GET',
