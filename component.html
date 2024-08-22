@@ -6756,22 +6756,28 @@ const toggleHead = () => {
     localStorage.removeItem('headToggle');
   }
 }
-    const toggleCodeTree = () => {
-      const s = localStorage.getItem('codeTreeToggle')
-      if (!s) {
+const toggleCodeTree = () => {
+  const anchorToggle = localStorage.getItem('anchorToggle');
 
-        getElementById1('code-tree').removeAttribute('hidden')
-        getElementById1('code-tree-menu').removeAttribute('hidden', '')
-        getElementById1('toggle-code-tree').classList.add('b-selected')
-        localStorage.setItem('codeTreeToggle', 'true')
-      }
-      else {
-        getElementById1('code-tree').setAttribute('hidden', '')
-        getElementById1('code-tree-menu').setAttribute('hidden', '')
-        getElementById1('toggle-code-tree').classList.remove('b-selected')
-        localStorage.removeItem('codeTreeToggle')
-      }
-    }
+  if (anchorToggle === 'true') {
+    getElementById1('code-tree-menu').scrollIntoView({ behavior: 'smooth' });
+    return; // 
+  }
+
+  const s = localStorage.getItem('codeTreeToggle');
+  
+  if (!s) {
+    getElementById1('code-tree').removeAttribute('hidden');
+    getElementById1('code-tree-menu').removeAttribute('hidden');
+    getElementById1('toggle-code-tree').classList.add('b-selected');
+    localStorage.setItem('codeTreeToggle', 'true');
+  } else {
+    getElementById1('code-tree').setAttribute('hidden', '');
+    getElementById1('code-tree-menu').setAttribute('hidden', '');
+    getElementById1('toggle-code-tree').classList.remove('b-selected');
+    localStorage.removeItem('codeTreeToggle');
+  }
+}
     const toggleExecution = (e) => {
       const s = localStorage.getItem('executionToggle')
       if (!s) {
