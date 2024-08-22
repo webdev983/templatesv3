@@ -2596,7 +2596,7 @@
                   </div>
                   <div>
                     <span class="l-3 b-dark-blue">alt: </span>
-                    <span class="l-3" contenteditable>~</span>
+                    <span class="l-3" id="alt-input" contenteditable>~</span>
                   </div>
                   <div>
                     <button class="b-3" data-select-image>✅ Attach</button>
@@ -4371,7 +4371,24 @@
           }
 
         }
+        if(item.alt){
+          item.querySelector('#alt-input').textContent = item.alt
+        }
+        if(item.picNumber){
+          item.querySelector('#pic_number').textContent = item.picNumber
+        }
+        item.querySelector('#alt-input').onblur =(e)=>{
+          const v = e.target.textContent
+          item.alt = v
+          postToDb(item)
 
+        }
+        item.querySelector('#pic_number').onblur =(e)=>{
+          const v = e.target.textContent
+          item.picNumber = v
+          postToDb(item)
+
+        }
 
         // Set a unique id for the cloned row (assuming you have a property named id in the item)
         clonedRow.id = `image-body-${item.sk}`;
