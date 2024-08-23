@@ -11288,24 +11288,14 @@ checkbox1.setAttribute('hidden', "");
                 'Content-Type': 'application/json',
               },
             }).then(e => e.json()).then(({ items }) => items)
-            const images = await fetch(`${backend_url}?id=sku:${element}&sk=pics&startsWith=true`, {
+            const images = await fetch(`${backend_url}?id=sku:${element}&sk=data_catalog-image&startsWith=true`, {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
               },
             }).then(e => e.json())
-            console.log('')
-            const image = images.items.find(e => e.main)
-            const uuid = image?.sk.replace('pics', '').split('.')[0]
-            console.log('uuid:' + uuid)
-            const croped = await fetch(`${backend_url}?id=sku:${element}&sk=crop:&startsWith=true`, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            }).then(e => e.json())
-            console.log(JSON.stringify(croped))
-            const src = croped?.items.find(z => z.sk.endsWith(uuid))?.list[0].split(' ')[0]
+            
+            const src = images?.items.split(',')[0].split(' ')[0]
             const img = cloned.querySelector('.product_lead_img').setAttribute('src', src)
             const heading = cloned.querySelector('.product_heading')
 
