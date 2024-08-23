@@ -4275,10 +4275,10 @@
         secondaryCheckbox.checked = !!item.secondary
         secondaryCheckbox.onchange = e => handleSecondaryChange(e, item)
         const promoCheckbox = clonedRow.querySelector('[data-picture-promo-checkbox]')
-        promoCheckbox.checked = !!item.main
+        promoCheckbox.checked = !!item.promo
         promoCheckbox.onchange = (e) => handlePromoChange(e, item)
         const catalogueCheckbox = clonedRow.querySelector('[data-picture-catalog-checkbox]')
-        catalogueCheckbox.checked = !!item.main
+        catalogueCheckbox.checked = !!item.catalogue
         catalogueCheckbox.onchange = (e) => handleCatalogueChange(e, item)
         clonedRow.removeAttribute('hidden'); // Show the cloned row
         clonedRow.querySelector('[data-select-image]').onclick = selectImage
@@ -5578,7 +5578,7 @@
 
         }
         await pushAction(payload3)
-        postToDb({ id: `sku:${sku}`, sk: 'data_lead-image', crops: payload3.value })
+        //postToDb({ id: `sku:${sku}`, sk: 'data_lead-image', crops: payload3.value })
         //keys = Object.keys(picsWithCondition)
         console.log('with ' + JSON.stringify(picsWithCondition))
       }
@@ -11067,6 +11067,9 @@ checkbox1.setAttribute('hidden', "");
         throw new Error('no pics')
       }
       const site = pathItemPath.split('/')[0].toLowerCase()
+      let mainCrop
+      let promoCrop
+      let catalogCrop
       for (const element of picitems) {
         const sk = element.sk
         const imageUUID = sk.split('.')[0].replace('pics', '')
@@ -11095,6 +11098,17 @@ checkbox1.setAttribute('hidden', "");
               return true
             });
           if (!flag) {
+            if (element.main && !mainCrop) {
+              mainCrop = crop[imageUUID].join(',')
+            }
+            if (element.promo && !promoCrop) {
+              promoCrop = crop[imageUUID].join(',')
+            }
+            if (element.catalogue && !catalogCrop) {
+              catalogCrop = crop[imageUUID].join(',')
+
+            }
+
             continue
           }
         }
@@ -11120,8 +11134,21 @@ checkbox1.setAttribute('hidden', "");
           splited.push([l, s].join('.'))
           return splited.join('_') + ' ' + l
         })
+        if (element.main && !mainCrop) {
+          mainCrop = crop[imageUUID].join(',')
+        }
+        if (element.promo && !promoCrop) {
+          promoCrop = crop[imageUUID].join(',')
+        }
+        if (element.catalogue && !catalogCrop) {
+          catalogCrop = crop[imageUUID].join(',')
+
+        }
       }
       postToDb(crop)
+      postToDb({ id, sk: 'data_lead-image', crops: mainCrop })
+      postToDb({ id, sk: 'data_catalog-image', crops: catalogCrop || mainCrop })
+      postToDb({ id, sk: 'data_promo-image', crops: promoCrop ||mainCrop})
       article ? articleToPicturesApi(crop) : skuToPicturesApi(crop)
 
     }
