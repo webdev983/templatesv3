@@ -2544,9 +2544,9 @@
             <span class="l-4">💾</span>
             <label class="l-4"><input checked="" type="radio" id="global-input" vtype="global"
                 name="product-group-text-save">global</label>
-                <label class="l-4"><input type="radio"  id="site-input" vtype="site"
-                  name="product-group-text-save">current site</label>
-  
+            <label class="l-4"><input type="radio" id="site-input" vtype="site" name="product-group-text-save">current
+              site</label>
+
           </form>
           <table style=" border-collapse: collapse;" class="table-1">
             <thead>
@@ -5128,7 +5128,7 @@
 
 
     }
-    const articleToPictures = async (sku, secondary,hid) => {
+    const articleToPictures = async (sku, secondary, hid) => {
       const id = 'article:' + sku
       const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=sku-variables;&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
@@ -5409,7 +5409,7 @@
 
     }
 
-    const skuToPictures = async (sku, secondary,hid) => {
+    const skuToPictures = async (sku, secondary, hid) => {
       const id = 'sku:' + sku
       const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=sku-variables;&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
@@ -11066,7 +11066,7 @@ checkbox1.setAttribute('hidden', "");
         throw new Error('no pics')
       }
       const site = pathItemPath.split('/')[0].toLowerCase()
-      picitems.forEach(async element => {
+      for (const element of picitems) {
         const sk = element.sk
         const imageUUID = sk.split('.')[0].replace('pics', '')
         if (crop[imageUUID]) {
@@ -11118,7 +11118,7 @@ checkbox1.setAttribute('hidden', "");
           splited.push([l, s].join('.'))
           return splited.join('_') + ' ' + l
         })
-      })
+      }
       postToDb(crop)
       article ? articleToPicturesApi(crop) : skuToPicturesApi(crop)
 
@@ -12430,12 +12430,12 @@ checkbox1.setAttribute('hidden', "");
       if (skuToPicturesItem) {
         const secondary = urlParams.get('secondary')
         const hid = urlParams.get('hid')
-        await skuToPictures(skuToPicturesItem, secondary,hid)
+        await skuToPictures(skuToPicturesItem, secondary, hid)
       }
       if (articleToPicturesItem) {
         const secondary = urlParams.get('secondary')
         const hid = urlParams.get('hid')
-        await articleToPictures(articleToPicturesItem, secondary,hid)
+        await articleToPictures(articleToPicturesItem, secondary, hid)
       }
       if (skuToButtonPics) {
         //const secondary = urlParams.get('secondary')
