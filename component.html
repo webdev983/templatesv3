@@ -25174,6 +25174,26 @@ element.setAttribute('data-product', [first, name].join(';'))
   console.log('hello');
 
   </script>
+  <script>// Шаг 1: Прочитать timestamp из localStorage
+    const lastTimestamp = localStorage.getItem('lastReloadTimestamp');
+    
+    // Шаг 2: Если timestamp отсутствует, сохраняем текущий момент и перезагружаем страницу
+    if (!lastTimestamp) {
+      localStorage.setItem('lastReloadTimestamp', Date.now());
+      window.location.reload();
+    } else {
+      const currentTime = Date.now(); // Текущее время в миллисекундах
+      const timeDiff = currentTime - parseInt(lastTimestamp, 10);
+    
+      // Шаг 3: Если прошло более 5 секунд, обновляем timestamp и перезагружаем страницу
+      if (timeDiff > 5000) {
+        localStorage.setItem('lastReloadTimestamp', currentTime);
+        window.location.reload(); // Перезагружаем страницу
+      } else {
+        console.log('Меньше 5 секунд прошло, ничего не делаем.');
+      }
+    }
+    </script>
 </body>
 
 </html>
