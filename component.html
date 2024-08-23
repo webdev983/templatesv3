@@ -6870,15 +6870,44 @@
     var lastCompPath
     var reload
     console.log('trying to load')
+    async function waitForIframeLoad(iframe) {
+      // Ensure the iframe is valid
+      if (!iframe) {
+        throw new Error("Invalid iframe element");
+      }
+
+      // Return a promise that resolves when the iframe loads
+      return new Promise((resolve, reject) => {
+        // Check if iframe is already loaded
+        if (iframe.contentDocument.readyState === 'complete') {
+          resolve();
+          return;
+        }
+
+        // Add event listener to resolve the promise when iframe loads
+        const onLoad = () => {
+          iframe.removeEventListener('load', onLoad); // Clean up
+          resolve();
+        };
+
+        // Handle possible errors
+        const onError = (error) => {
+          iframe.removeEventListener('error', onError); // Clean up
+          reject(error);
+        };
+
+        iframe.addEventListener('load', onLoad);
+        iframe.addEventListener('error', onError);
+      });
+    }
     async function loadFirst() {
       console.log('loading first')
       var iframe = document.getElementById("generated-page-iframe");
 
       // Wait for the iframe to load completely
-      await new Promise(resolve => {
-        iframe.addEventListener("load", resolve);
-
-      });
+      console.log('waiting for iframe')
+      await waitForIframeLoad(iframe)
+      console.log('iframe loaded')
       var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
       const lastActionTime = getElementById1('last-action-time');
       lastActionTime.addEventListener('dblclick', function () {
