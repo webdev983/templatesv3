@@ -839,38 +839,6 @@
               </tr>
 
 
-              <tr id="script_import_product_pictures">
-                <!-- 
-                data-product
-                price
-                sku-variables
-                -->
-                <td>
-                  <input type="checkbox" id="script_execute_select" hidden>
-                  <label id="script_status" class="l-3">🔴</label>
-                  <button hidden id="cancel_script" class="b-3">❌</button>
-                  <label class="l-3" style="margin: 10px;"> 🖼️ import pictures</label>
-                </td>
-                <td>
-                  <span class="l-3">🦾</span>
-                  <span class="l-3" id="last_script_execute_time">never</span>
-                </td>
-                <td>
-                  <span id="queue_number_container">
-                    <span class="l-3">🔀 </span>
-                    <span class="l-3  queue" contenteditable id="queue_number">~</span>
-                  </span>
-                </td>
-
-                <td>
-                  <label class="l-3"><input type="checkbox" id="execute_on_red_checkbox" />🟥</label>
-                </td>
-                <td>
-                  <label class="l-3"><input type="checkbox" id="execute_requires_reload" />🔃</label>
-                </td>
-                <td>
-                  <label class="l-3"><input type="checkbox" id="execute_in_template" />🚧</label>
-                </td>
               </tr>
               <tr id="script_import_article_pictures">
                 <!-- 
@@ -11094,7 +11062,7 @@ checkbox1.setAttribute('hidden', "");
       }
     }
     var publishSkuImages = async () => {
-      const sku = pathItemArticle || pathItemSku
+      const sku = pathItemArticle || pathItemSku || headContentItem.id
       const picitems = await fetch(`${backend_url}?id=sku:${sku}&sk=pics&startsWith=true`, {
         method: 'GET',
         headers: {
@@ -11141,7 +11109,7 @@ checkbox1.setAttribute('hidden', "");
         })
       )
       await Promise.all(promise)
-
+      skuToPicturesApi()
 
     }
     var generateCollection = async () => {
@@ -12028,7 +11996,6 @@ checkbox1.setAttribute('hidden', "");
       script_chatgpt_: () => { },
       script_refresh_catalog: refreshCatalogue,
       script_sku_data_to_html: skuToHtmlApi,
-      script_import_product_pictures: skuToPicturesApi,
       script_import_article_pictures: articleToPicturesApi,
       script_import_product_buttons_pictures: skuToButtonPicturesApi
     }
