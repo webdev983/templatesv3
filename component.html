@@ -5170,8 +5170,8 @@
       );
       const skToPic = (sk) => {
         const uuid = sk.split('.')[0].replace('pics', '')
-        const found = cropedImages.find(e => e.sk.endsWith(':' + uuid))
-        return found.list.join(' ,')
+        const found = cropedImages[uuid]
+        return found.join(' ,')
         return { src, data_src, imageUUID: sk.split('.')[0].replace('pics', '') }
       }
       const picsWithCondition = {}
@@ -5366,8 +5366,8 @@
           await pushAction(actionObject)
           //const key = pics[i].sk
           const uuid = withoutSku[i].sk.split('.')[0].replace('pics', '')
-          const found = cropedImages.find(e => e.sk.endsWith(':' + uuid))
-          const set = found.list.join(',')
+          const found = cropedImages[uuid]
+          const set = found.join(',')
           const payload3 = {
 
             time: (new Date()).getTime().toString(),
