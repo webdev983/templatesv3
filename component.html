@@ -5128,7 +5128,7 @@
 
 
     }
-    const articleToPictures = async (sku, secondary) => {
+    const articleToPictures = async (sku, secondary,hid) => {
       const id = 'article:' + sku
       const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=sku-variables;&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
@@ -5149,7 +5149,7 @@
         image = querySelectorAll1('[data-import_article="img"]')[0]
       }
 
-      const cropedImages = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=crop:&startsWith=true`)
+      const cropedImages = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${hid}&sk=crop:article&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
 
       const withSku = pics.filter(e =>
@@ -5409,7 +5409,7 @@
 
     }
 
-    const skuToPictures = async (sku, secondary) => {
+    const skuToPictures = async (sku, secondary,hid) => {
       const id = 'sku:' + sku
       const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=sku-variables;&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
@@ -5430,7 +5430,7 @@
         image = querySelectorAll1('.product_lead_img')[0]
       }
 
-      const cropedImages = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=crop:&startsWith=true`)
+      const cropedImages = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${hid}&sk=crop:product&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
 
       const withSku = pics.filter(e =>
@@ -5451,7 +5451,7 @@
       );
       const skToPic = (sk) => {
         const uuid = sk.split('.')[0].replace('pics', '')
-        const found = cropedImages.find(e => e.sk.endsWith(':' + uuid))
+        const found = cropedImages[uuid]
         return found.list.join(' ,')
         return { src, data_src, imageUUID: sk.split('.')[0].replace('pics', '') }
       }
@@ -5647,7 +5647,7 @@
           await pushAction(actionObject)
           //const key = pics[i].sk
           const uuid = withoutSku[i].sk.split('.')[0].replace('pics', '')
-          const found = cropedImages.find(e => e.sk.endsWith(':' + uuid))
+          const found = cropedImages[uuid]
           const set = found.list.join(',')
           const payload3 = {
 
@@ -5720,7 +5720,7 @@
       await fetch(pup_url, options3);
 
 
-      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res2.items[0].id}&articleToPictures=${pathItemArticle}&secondary=true&ownerid=${localStorage.getItem('ownerid')}` };
+      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res2.items[0].id}&hid=${crop.id}&articleToPictures=${pathItemArticle}&secondary=true&ownerid=${localStorage.getItem('ownerid')}` };
 
       // Fetch options
       const options = {
@@ -5733,7 +5733,7 @@
       console.log('secondary' + eventData.url)
       const response = await fetch(pup_url, options);
 
-      const eventData2 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res.items[0].id}&articleToPictures=${pathItemArticle}&ownerid=${localStorage.getItem('ownerid')}` };
+      const eventData2 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res.items[0].id}&hid=${crop.id}&articleToPictures=${pathItemArticle}&ownerid=${localStorage.getItem('ownerid')}` };
 
       // Fetch options
       const options2 = {
@@ -5748,7 +5748,7 @@
       console.log('done')
     }
 
-    const skuToPicturesApi = async () => {
+    const skuToPicturesApi = async (crop) => {
       const lsi = pathItem.lsi1.split('|')[0] + '/Content/Main|Product-Content'
       const lsiD = pathItem.lsi1.split('|')[0] + '/Content/Main|Product_gallery-Content'
       const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${lsi}`;
@@ -5779,7 +5779,7 @@
       await fetch(pup_url, options3);
 
 
-      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res2.items[0].id}&skuToPictures=${pathItemSku}&secondary=true&ownerid=${localStorage.getItem('ownerid')}` };
+      const eventData = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res2.items[0].id}&skuToPictures=${pathItemSku}&hid=${crop.id}&secondary=true&ownerid=${localStorage.getItem('ownerid')}` };
 
       // Fetch options
       const options = {
@@ -5792,7 +5792,7 @@
       console.log('secondary' + eventData.url)
       const response = await fetch(pup_url, options);
 
-      const eventData2 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res.items[0].id}&skuToPictures=${pathItemSku}&ownerid=${localStorage.getItem('ownerid')}` };
+      const eventData2 = { url: `https://webdev983.github.io/templatesv3/component.html?id=${res.items[0].id}&skuToPictures=${pathItemSku}&hid=${crop.id}&ownerid=${localStorage.getItem('ownerid')}` };
 
       // Fetch options
       const options2 = {
@@ -11120,7 +11120,7 @@ checkbox1.setAttribute('hidden', "");
         })
       })
       postToDb(crop)
-      article ? articleToPicturesApi() : skuToPicturesApi()
+      article ? articleToPicturesApi(crop) : skuToPicturesApi(crop)
 
     }
     var generateCollection = async () => {
@@ -12429,11 +12429,13 @@ checkbox1.setAttribute('hidden', "");
       }
       if (skuToPicturesItem) {
         const secondary = urlParams.get('secondary')
-        await skuToPictures(skuToPicturesItem, secondary)
+        const hid = urlParams.get('hid')
+        await skuToPictures(skuToPicturesItem, secondary,hid)
       }
       if (articleToPicturesItem) {
         const secondary = urlParams.get('secondary')
-        await articleToPictures(articleToPicturesItem, secondary)
+        const hid = urlParams.get('hid')
+        await articleToPictures(articleToPicturesItem, secondary,hid)
       }
       if (skuToButtonPics) {
         //const secondary = urlParams.get('secondary')
