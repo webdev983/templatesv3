@@ -840,39 +840,7 @@
 
 
               </tr>
-              <tr id="script_import_article_pictures">
-                <!-- 
-                data-product
-                price
-                sku-variables
-                -->
-                <td>
-                  <input type="checkbox" id="script_execute_select" hidden>
-                  <label id="script_status" class="l-3">🔴</label>
-                  <button hidden id="cancel_script" class="b-3">❌</button>
-                  <label class="l-3" style="margin: 10px;">📦 import article pictures</label>
-                </td>
-                <td>
-                  <span class="l-3">🦾</span>
-                  <span class="l-3" id="last_script_execute_time">never</span>
-                </td>
-                <td>
-                  <span id="queue_number_container">
-                    <span class="l-3">🔀 </span>
-                    <span class="l-3  queue" contenteditable id="queue_number">~</span>
-                  </span>
-                </td>
-
-                <td>
-                  <label class="l-3"><input type="checkbox" id="execute_on_red_checkbox" />🟥</label>
-                </td>
-                <td>
-                  <label class="l-3"><input type="checkbox" id="execute_requires_reload" />🔃</label>
-                </td>
-                <td>
-                  <label class="l-3"><input type="checkbox" id="execute_in_template" />🚧</label>
-                </td>
-              </tr>
+              
 
 
               <tr id="script_sku_data_to_html">
@@ -11062,8 +11030,15 @@ checkbox1.setAttribute('hidden', "");
       }
     }
     var publishSkuImages = async () => {
-      const sku = pathItemArticle || pathItemSku || headContentItem.id
-      const picitems = await fetch(`${backend_url}?id=sku:${sku}&sk=pics&startsWith=true`, {
+      let id
+      if (pathItemArticle) {
+        id = "article:" + pathItemArticle
+      }
+      else if (pathItemSku) {
+        id = 'sku:' + pathItemSku
+      }
+
+      const picitems = await fetch(`${backend_url}?id=${id}&sk=pics&startsWith=true`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -11110,6 +11085,7 @@ checkbox1.setAttribute('hidden', "");
       )
       await Promise.all(promise)
       skuToPicturesApi()
+      articleToPicturesApi()
 
     }
     var generateCollection = async () => {
@@ -11996,7 +11972,6 @@ checkbox1.setAttribute('hidden', "");
       script_chatgpt_: () => { },
       script_refresh_catalog: refreshCatalogue,
       script_sku_data_to_html: skuToHtmlApi,
-      script_import_article_pictures: articleToPicturesApi,
       script_import_product_buttons_pictures: skuToButtonPicturesApi
     }
     const onLoad = async () => {
@@ -21610,15 +21585,15 @@ headers: {
       let id
       if (pathItemArticle) {
         id = "article:" + pathItemArticle
-        picsMenu.setAttribute('data-pics-article','')
+        picsMenu.setAttribute('data-pics-article', '')
       }
       else if (pathItemSku) {
         id = 'sku:' + pathItemSku
-        picsMenu.setAttribute('data-pics-sku','')
+        picsMenu.setAttribute('data-pics-sku', '')
       }
       else {
         id = headContentItem.id
-        picsMenu.setAttribute('data-pics-head','')
+        picsMenu.setAttribute('data-pics-head', '')
       }
       // image input change 
       clonedFieldset.querySelector('#image-input').addEventListener('change', async function (event) {
