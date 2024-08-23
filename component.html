@@ -6870,6 +6870,314 @@
     var lastCompPath
     var reload
     console.log('trying to load')
+    async function loadFirst() {
+      console.log('loading first')
+      var iframe = document.getElementById("generated-page-iframe");
+
+      // Wait for the iframe to load completely
+      await new Promise(resolve => {
+        iframe.addEventListener("load", resolve);
+
+      });
+      var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+      const lastActionTime = getElementById1('last-action-time');
+      lastActionTime.addEventListener('dblclick', function () {
+        // Handle double-click event here
+        log1('Double-clicked on the button');
+        // Add your custom logic for double-click handling
+      });
+      const loadingScreen = getElementById1('loading');
+      loadingScreen.style.display = 'flex';
+      const timerElement = getElementById1('timer');
+      let tenthsOfSeconds = 0;
+      const interval = setInterval(function () {
+        tenthsOfSeconds++;
+        timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
+      }, 100);
+      const urlParams = new URLSearchParams(window.location.search);
+      const idFromQuery = urlParams.get('id');
+      const toPublish = urlParams.get('publish')
+      const generatetable = urlParams.get('generatetable')
+      const generatebreadcrumb = urlParams.get('generatebreadcrumb')
+      const generateSpec = urlParams.get('generatespec')
+      const generateAnchorHref = urlParams.get('generateanchor')
+      const importAttribute = urlParams.get('attr')
+      const cleanAttribute = urlParams.get('cleanAttr')
+      const clean = urlParams.get('clean')
+      const importValue = urlParams.get('val')
+      const message = urlParams.get('message')
+      const skuToPicturesItem = urlParams.get('skuToPictures')
+      const articleToPicturesItem = urlParams.get('articleToPictures')
+      const skuToButtonPics = urlParams.get('skuToButtonPics')
+      const generateHtmlFromSku = urlParams.get('generateHtmlFromSku')
+      ownerid = localStorage.getItem('ownerid') || urlParams.get('ownerid')
+      if (urlParams.get('ownerid')) {
+        localStorage.setItem('executionToggle', 'true')
+      }
+      if (idFromQuery) {
+        // Change the id of the element with id "component-element"
+        const compTree = getElementById1('components-tree')
+        const component_el = getElementById1('component-element')
+        const newEl2 = component_el.cloneNode(true)
+        newEl2.id = idFromQuery + '-tree'
+        compTree.append(newEl2)
+
+        const builderElement = getElementById1('63ae5927-390f-4391-993d-b25ab09c8ada');
+        if (builderElement) {
+          builderElement.id = idFromQuery;
+        }
+
+        // Change the text content of the button with data-element "code-tree-tag-name-button"
+        const componentNameButton = document.querySelector('[data-element="code-tree-tag-name-button"]');
+        if (componentNameButton) {
+          componentNameButton.innerText = `🧩${idFromQuery}`;
+        }
+        //get pathItem
+        const responseData = await getRes(idFromQuery, true)
+        const { items } = responseData
+        pathItem = items.find(e => e.sk === 'path')
+        //converst lsi1 to old
+        pathItemPath = convertToOldPath(pathItem.lsi1)
+        site1 = pathItemPath.split('/')[0]
+        if (generatebreadcrumb) {
+          await Promise.all(items.filter(e => e.action && e.action !== 'Add_Component').map(item => {
+            return fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id}:${item.sk}`, {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+                // Add any additional headers if needed
+              },
+            });
+          }))
+        }
+        //get head content
+        if (!pathItemPath.split('/').includes('Stock')) {
+          const headLsi = pathItem.lsi1.split(';')[0].split('|')[0].split('/').slice(0, 3).join('/') + '/Content/Page|Head-Content'
+
+          log1('head lsi' + headLsi)
+          const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headLsi}`;
+          await fetch(url).then(res => res.json())
+            .then(async ({ items }) => {
+              if (!items.length) {
+                return
+              }
+              log1(JSON.stringify(items))
+              headContentItem = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${items[0].id}:${items[0].sk}`).then(re => re.json())
+              headContentItem.id = items[0].id
+              log1('head content item' + JSON.stringify(headContentItem))
+              pathItemSku = headContentItem.sku
+              pathItemArticle = headContentItem.article
+              pathItemCollection = headContentItem.collection
+            })
+        }
+        else {
+          pathItemSku = pathItem.sku
+          pathItemArticle = pathItem.article
+          pathItemCollection = pathItem.collection
+        }
+      }
+      await handleMenus()
+      try {
+        await onOpen1()
+      }
+      catch (e) {
+        console.log(e.message)
+      }
+      await loadFromDb()
+      if (pathItem.hub_items?.menus?.import_menu_toggle) {
+        document.getElementById('import-menu-2').removeAttribute('hidden')
+        await handleImportMenu2()
+      }
+      clearInterval(interval);
+      lastActionTime.textContent = timerElement.textContent;
+      loadingScreen.style.display = 'none';
+      if (updateComponentsMap) {
+        const componentsIds = Object.keys(cache)
+        const response1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id: idFromQuery, sk: 'componentsMap', items: componentsIds }),
+        });
+
+      }
+      await handleHead()
+      await handleSelectedDependeeChange()
+      await handleDependency()
+      await handleWebPageMenu()
+      //await handleTableGeneration()
+      await handleBreadCrumbStatus()
+      //await handleSpecStatus()
+      await handleItemLink()
+      //dispatch event
+      await handleImportMenu()
+
+      setHubItems()
+
+
+      document.querySelectorAll('[data-file-name-show]').forEach(
+        element => {
+          const p = element.getAttribute('data-file-name-show')
+          if (pathItemPath.split(';')[0].includes(p)) {
+            element.removeAttribute('hidden')
+          }
+        }
+      )
+      await handleDataMenus()
+      //await runScripts()
+      try {
+        await onLoad()
+
+      }
+      catch (e) {
+        console.log(e.message)
+      }
+
+      if (toPublish || republish) {
+        console.log('publishing')
+        await publish()
+      }
+      const imagePs = imagesIds.map(async (imageId) => {
+        const element = getElementById1(imageId)
+        if (!element) {
+          return
+        }
+        if (pathItemPath.split(';')[0].endsWith('/Main-Content') && !element.hasAttribute('srcset') && element.hasAttribute('data-src')) {
+          setSrcSet(element)
+        }
+        const flag = await fetch('https://api.allorigins.win/raw?url=' + element.getAttribute('src'))
+          .then(async response => {
+            if (response.ok || response.status === 200) {
+              const t = await response.text()
+              if (t.includes('404')) {
+                log1('image doesnt exist')
+                republish = true
+                return true
+              }
+              else {
+                log1('Image exists.');
+              }
+
+            } else {
+              log1('image doesnt exist')
+              republish = true
+              return true
+            }
+          })
+          .catch(error => {
+            console.error('Error checking image existence:', error);
+
+            republish = true
+            return true
+          });
+        if (!flag) {
+          return
+        }
+        const site = pathItemPath.split('/')[0]
+
+        const nsrc = element.getAttribute('src')
+        const splited = nsrc.split('/')
+        const last = splited[splited.length - 1]
+        const [name, ext] = last.split('.')
+        const splited2 = name.split('_')
+        const randomString = splited2.shift
+        const res = splited2.pop()
+        const uuid = element.getAttribute('data-builder-image-source')
+        const panelSrc = `https://s3.amazonaws.com/checkout-admin-panel/pics${uuid}.${ext}`
+        const defaultRes = element.getAttribute('data-builder-image-default')
+        splited.splice(0, 3)
+        splited.pop()
+        const body = {
+          site,
+
+          name: randomString + '_' + splited2.join('_'),
+          imageSrc: panelSrc,
+          defaultRes,
+          pagePath: splited.join('/')
+        }
+        const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/resize', {
+          method: 'POST',
+          body: JSON.stringify(body),
+        });
+      }
+      )
+      await Promise.all(imagePs)
+
+      if (generatetable) {
+        await generateTable(generatetable)
+      }
+      if (generateHtmlFromSku) {
+        await skuToHtml(generateHtmlFromSku)
+      }
+      if (generatebreadcrumb) {
+        await generateBreadCrumb()
+      }
+      if (generateSpec) {
+        await generateTableSpec(generateSpec)
+      }
+      if (cleanAttribute) {
+        await cleanImport(cleanAttribute)
+      }
+      if (clean) {
+        await cleanImport()
+      }
+      if (importAttribute) {
+        await handleImportGpt(importValue, importAttribute)
+      }
+      if (skuToPicturesItem) {
+        const secondary = urlParams.get('secondary')
+        const hid = urlParams.get('hid')
+        await skuToPictures(skuToPicturesItem, secondary, hid)
+      }
+      if (articleToPicturesItem) {
+        const secondary = urlParams.get('secondary')
+        const hid = urlParams.get('hid')
+        await articleToPictures(articleToPicturesItem, secondary, hid)
+      }
+      if (skuToButtonPics) {
+        //const secondary = urlParams.get('secondary')
+        await skuToButtonPictures(skuToButtonPics)
+      }
+      if (message) {
+        const ip = urlParams.get('ip')
+        const stars = urlParams.get('stars')
+        const name = urlParams.get('name')
+        const date = urlParams.get('date')
+        const heading = urlParams.get('heading')
+        await generateReview(heading, date, name, stars, ip, message)
+      }
+      if (generateAnchorHref) {
+        await generateAnchor(generateAnchorHref)
+      }
+      //const pagePathContent = pathItemPath;
+      if (reload) {
+        location.reload()
+      }
+      // Use the textContent as needed, for example, log it to the console
+      log1('Publishing:', pathItemPath);
+      //generateSchema(pagePathContent.split(';')[0], new Date())
+
+
+      const event = new CustomEvent("pageloaded")
+      document.dispatchEvent(event)
+      console.log('pageloaded')
+
+
+      //first menu
+      let buttons = querySelectorAll1('button[data-element="code-tree-tag-name-button"]');
+      /*
+      buttons.forEach(function (button) {
+        button.addEventListener('click', e => loader(e, handleComponentClick));
+      });*/
+
+      log1(timerElement.textContent)
+      if (localStorage.getItem('visualOn')) {
+
+        getElementById1('transform').click()
+      }
+    }
+
     loadFirst()
     var getAbsolutePath = (currentPath, relativePath) => {
       // Split current path and relative path into arrays of directories and filename
@@ -12192,313 +12500,7 @@ checkbox1.setAttribute('hidden', "");
 
     }
 
-    async function loadFirst() {
-      var iframe = getElementById1("generated-page-iframe");
-
-      // Wait for the iframe to load completely
-      await new Promise(resolve => {
-        iframe.addEventListener("load", resolve);
-
-      });
-      var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-      const lastActionTime = getElementById1('last-action-time');
-      lastActionTime.addEventListener('dblclick', function () {
-        // Handle double-click event here
-        log1('Double-clicked on the button');
-        // Add your custom logic for double-click handling
-      });
-      const loadingScreen = getElementById1('loading');
-      loadingScreen.style.display = 'flex';
-      const timerElement = getElementById1('timer');
-      let tenthsOfSeconds = 0;
-      const interval = setInterval(function () {
-        tenthsOfSeconds++;
-        timerElement.textContent = (tenthsOfSeconds / 10).toFixed(1);
-      }, 100);
-      const urlParams = new URLSearchParams(window.location.search);
-      const idFromQuery = urlParams.get('id');
-      const toPublish = urlParams.get('publish')
-      const generatetable = urlParams.get('generatetable')
-      const generatebreadcrumb = urlParams.get('generatebreadcrumb')
-      const generateSpec = urlParams.get('generatespec')
-      const generateAnchorHref = urlParams.get('generateanchor')
-      const importAttribute = urlParams.get('attr')
-      const cleanAttribute = urlParams.get('cleanAttr')
-      const clean = urlParams.get('clean')
-      const importValue = urlParams.get('val')
-      const message = urlParams.get('message')
-      const skuToPicturesItem = urlParams.get('skuToPictures')
-      const articleToPicturesItem = urlParams.get('articleToPictures')
-      const skuToButtonPics = urlParams.get('skuToButtonPics')
-      const generateHtmlFromSku = urlParams.get('generateHtmlFromSku')
-      ownerid = localStorage.getItem('ownerid') || urlParams.get('ownerid')
-      if (urlParams.get('ownerid')) {
-        localStorage.setItem('executionToggle', 'true')
-      }
-      if (idFromQuery) {
-        // Change the id of the element with id "component-element"
-        const compTree = getElementById1('components-tree')
-        const component_el = getElementById1('component-element')
-        const newEl2 = component_el.cloneNode(true)
-        newEl2.id = idFromQuery + '-tree'
-        compTree.append(newEl2)
-
-        const builderElement = getElementById1('63ae5927-390f-4391-993d-b25ab09c8ada');
-        if (builderElement) {
-          builderElement.id = idFromQuery;
-        }
-
-        // Change the text content of the button with data-element "code-tree-tag-name-button"
-        const componentNameButton = document.querySelector('[data-element="code-tree-tag-name-button"]');
-        if (componentNameButton) {
-          componentNameButton.innerText = `🧩${idFromQuery}`;
-        }
-        //get pathItem
-        const responseData = await getRes(idFromQuery, true)
-        const { items } = responseData
-        pathItem = items.find(e => e.sk === 'path')
-        //converst lsi1 to old
-        pathItemPath = convertToOldPath(pathItem.lsi1)
-        site1 = pathItemPath.split('/')[0]
-        if (generatebreadcrumb) {
-          await Promise.all(items.filter(e => e.action && e.action !== 'Add_Component').map(item => {
-            return fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id}:${item.sk}`, {
-              method: 'DELETE',
-              headers: {
-                'Content-Type': 'application/json',
-                // Add any additional headers if needed
-              },
-            });
-          }))
-        }
-        //get head content
-        if (!pathItemPath.split('/').includes('Stock')) {
-          const headLsi = pathItem.lsi1.split(';')[0].split('|')[0].split('/').slice(0, 3).join('/') + '/Content/Page|Head-Content'
-
-          log1('head lsi' + headLsi)
-          const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headLsi}`;
-          await fetch(url).then(res => res.json())
-            .then(async ({ items }) => {
-              if (!items.length) {
-                return
-              }
-              log1(JSON.stringify(items))
-              headContentItem = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${items[0].id}:${items[0].sk}`).then(re => re.json())
-              headContentItem.id = items[0].id
-              log1('head content item' + JSON.stringify(headContentItem))
-              pathItemSku = headContentItem.sku
-              pathItemArticle = headContentItem.article
-              pathItemCollection = headContentItem.collection
-            })
-        }
-        else {
-          pathItemSku = pathItem.sku
-          pathItemArticle = pathItem.article
-          pathItemCollection = pathItem.collection
-        }
-      }
-      await handleMenus()
-      try {
-        await onOpen1()
-      }
-      catch (e) {
-        console.log(e.message)
-      }
-      await loadFromDb()
-      if (pathItem.hub_items?.menus?.import_menu_toggle) {
-        document.getElementById('import-menu-2').removeAttribute('hidden')
-        await handleImportMenu2()
-      }
-      clearInterval(interval);
-      lastActionTime.textContent = timerElement.textContent;
-      loadingScreen.style.display = 'none';
-      if (updateComponentsMap) {
-        const componentsIds = Object.keys(cache)
-        const response1 = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ id: idFromQuery, sk: 'componentsMap', items: componentsIds }),
-        });
-
-      }
-      await handleHead()
-      await handleSelectedDependeeChange()
-      await handleDependency()
-      await handleWebPageMenu()
-      //await handleTableGeneration()
-      await handleBreadCrumbStatus()
-      //await handleSpecStatus()
-      await handleItemLink()
-      //dispatch event
-      await handleImportMenu()
-
-      setHubItems()
-
-
-      document.querySelectorAll('[data-file-name-show]').forEach(
-        element => {
-          const p = element.getAttribute('data-file-name-show')
-          if (pathItemPath.split(';')[0].includes(p)) {
-            element.removeAttribute('hidden')
-          }
-        }
-      )
-      await handleDataMenus()
-      //await runScripts()
-      try {
-        await onLoad()
-
-      }
-      catch (e) {
-        console.log(e.message)
-      }
-
-      if (toPublish || republish) {
-        console.log('publishing')
-        await publish()
-      }
-      const imagePs = imagesIds.map(async (imageId) => {
-        const element = getElementById1(imageId)
-        if (!element) {
-          return
-        }
-        if (pathItemPath.split(';')[0].endsWith('/Main-Content') && !element.hasAttribute('srcset') && element.hasAttribute('data-src')) {
-          setSrcSet(element)
-        }
-        const flag = await fetch('https://api.allorigins.win/raw?url=' + element.getAttribute('src'))
-          .then(async response => {
-            if (response.ok || response.status === 200) {
-              const t = await response.text()
-              if (t.includes('404')) {
-                log1('image doesnt exist')
-                republish = true
-                return true
-              }
-              else {
-                log1('Image exists.');
-              }
-
-            } else {
-              log1('image doesnt exist')
-              republish = true
-              return true
-            }
-          })
-          .catch(error => {
-            console.error('Error checking image existence:', error);
-
-            republish = true
-            return true
-          });
-        if (!flag) {
-          return
-        }
-        const site = pathItemPath.split('/')[0]
-
-        const nsrc = element.getAttribute('src')
-        const splited = nsrc.split('/')
-        const last = splited[splited.length - 1]
-        const [name, ext] = last.split('.')
-        const splited2 = name.split('_')
-        const randomString = splited2.shift
-        const res = splited2.pop()
-        const uuid = element.getAttribute('data-builder-image-source')
-        const panelSrc = `https://s3.amazonaws.com/checkout-admin-panel/pics${uuid}.${ext}`
-        const defaultRes = element.getAttribute('data-builder-image-default')
-        splited.splice(0, 3)
-        splited.pop()
-        const body = {
-          site,
-
-          name: randomString + '_' + splited2.join('_'),
-          imageSrc: panelSrc,
-          defaultRes,
-          pagePath: splited.join('/')
-        }
-        const response = await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/resize', {
-          method: 'POST',
-          body: JSON.stringify(body),
-        });
-      }
-      )
-      await Promise.all(imagePs)
-
-      if (generatetable) {
-        await generateTable(generatetable)
-      }
-      if (generateHtmlFromSku) {
-        await skuToHtml(generateHtmlFromSku)
-      }
-      if (generatebreadcrumb) {
-        await generateBreadCrumb()
-      }
-      if (generateSpec) {
-        await generateTableSpec(generateSpec)
-      }
-      if (cleanAttribute) {
-        await cleanImport(cleanAttribute)
-      }
-      if (clean) {
-        await cleanImport()
-      }
-      if (importAttribute) {
-        await handleImportGpt(importValue, importAttribute)
-      }
-      if (skuToPicturesItem) {
-        const secondary = urlParams.get('secondary')
-        const hid = urlParams.get('hid')
-        await skuToPictures(skuToPicturesItem, secondary, hid)
-      }
-      if (articleToPicturesItem) {
-        const secondary = urlParams.get('secondary')
-        const hid = urlParams.get('hid')
-        await articleToPictures(articleToPicturesItem, secondary, hid)
-      }
-      if (skuToButtonPics) {
-        //const secondary = urlParams.get('secondary')
-        await skuToButtonPictures(skuToButtonPics)
-      }
-      if (message) {
-        const ip = urlParams.get('ip')
-        const stars = urlParams.get('stars')
-        const name = urlParams.get('name')
-        const date = urlParams.get('date')
-        const heading = urlParams.get('heading')
-        await generateReview(heading, date, name, stars, ip, message)
-      }
-      if (generateAnchorHref) {
-        await generateAnchor(generateAnchorHref)
-      }
-      //const pagePathContent = pathItemPath;
-      if (reload) {
-        location.reload()
-      }
-      // Use the textContent as needed, for example, log it to the console
-      log1('Publishing:', pathItemPath);
-      //generateSchema(pagePathContent.split(';')[0], new Date())
-
-
-      const event = new CustomEvent("pageloaded")
-      document.dispatchEvent(event)
-      console.log('pageloaded')
-
-
-      //first menu
-      let buttons = querySelectorAll1('button[data-element="code-tree-tag-name-button"]');
-      /*
-      buttons.forEach(function (button) {
-        button.addEventListener('click', e => loader(e, handleComponentClick));
-      });*/
-
-      log1(timerElement.textContent)
-      if (localStorage.getItem('visualOn')) {
-
-        getElementById1('transform').click()
-      }
-    }
-
+    
     var actionLog = []
     var selected = []
     var components = []
