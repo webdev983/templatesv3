@@ -11031,8 +11031,10 @@ checkbox1.setAttribute('hidden', "");
     }
     var publishSkuImages = async () => {
       let id
+      let article
       if (pathItemArticle) {
         id = "article:" + pathItemArticle
+        article = 1
       }
       else if (pathItemSku) {
         id = 'sku:' + pathItemSku
@@ -11084,8 +11086,8 @@ checkbox1.setAttribute('hidden', "");
         })
       )
       await Promise.all(promise)
-      skuToPicturesApi()
-      articleToPicturesApi()
+      
+      article ? articleToPicturesApi() : skuToPicturesApi()
 
     }
     var generateCollection = async () => {
