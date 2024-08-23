@@ -11148,7 +11148,7 @@ checkbox1.setAttribute('hidden', "");
       postToDb(crop)
       postToDb({ id, sk: 'data_lead-image', crops: mainCrop })
       postToDb({ id, sk: 'data_catalog-image', crops: catalogCrop || mainCrop })
-      postToDb({ id, sk: 'data_promo-image', crops: promoCrop ||mainCrop})
+      postToDb({ id, sk: 'data_promo-image', crops: promoCrop || mainCrop })
       article ? articleToPicturesApi(crop) : skuToPicturesApi(crop)
 
     }
@@ -11294,7 +11294,7 @@ checkbox1.setAttribute('hidden', "");
                 'Content-Type': 'application/json',
               },
             }).then(e => e.json())
-            
+
             const src = images?.items[0]?.crops?.split(',')[0].split(' ')[0]
             const img = cloned.querySelector('.product_lead_img').setAttribute('src', src)
             const heading = cloned.querySelector('.product_heading')
@@ -12191,15 +12191,43 @@ checkbox1.setAttribute('hidden', "");
       await updateHeadContentItem()
 
     }
+    async function waitForIframeLoad(iframe) {
+      // Ensure the iframe is valid
+      if (!iframe) {
+        throw new Error("Invalid iframe element");
+      }
 
+      // Return a promise that resolves when the iframe loads
+      return new Promise((resolve, reject) => {
+        // Check if iframe is already loaded
+        if (iframe.contentDocument.readyState === 'complete') {
+          resolve();
+          return;
+        }
+
+        // Add event listener to resolve the promise when iframe loads
+        const onLoad = () => {
+          iframe.removeEventListener('load', onLoad); // Clean up
+          resolve();
+        };
+
+        // Handle possible errors
+        const onError = (error) => {
+          iframe.removeEventListener('error', onError); // Clean up
+          reject(error);
+        };
+
+        iframe.addEventListener('load', onLoad);
+        iframe.addEventListener('error', onError);
+      });
+    }
     async function loadFirst() {
       var iframe = getElementById1("generated-page-iframe");
 
       // Wait for the iframe to load completely
-      await new Promise(resolve => {
-        iframe.addEventListener("load", resolve);
-
-      });
+      console.log('trying to load iframe')
+      await waitForIframeLoad()
+      console.log('iframe loaded')
       var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
       const lastActionTime = getElementById1('last-action-time');
       lastActionTime.addEventListener('dblclick', function () {
@@ -25170,17 +25198,17 @@ element.setAttribute('data-product', [first, name].join(';'))
 
   </script>
 
-<script>
-  console.log('hello');
-  let seconds = 1;
+  <script>
+    console.log('hello');
+    let seconds = 1;
 
-const intervalId = setInterval(() => {
-  console.log(seconds);
-  seconds += 1;
-}, 1000);
+    const intervalId = setInterval(() => {
+      console.log(seconds);
+      seconds += 1;
+    }, 1000);
 
   </script>
-  
+
 </body>
 
 </html>
