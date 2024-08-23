@@ -5431,7 +5431,7 @@
       }
 
       const cropedImages = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${hid}&sk=crop:product&startsWith=true`)
-        .then(response => response.json()).then(res => res.items)
+        .then(response => response.json()).then(res => res.items[0])
 
       const withSku = pics.filter(e =>
         e.gallery_variables_sku_variables && Object.keys(e.gallery_variables_sku_variables).some(key =>
