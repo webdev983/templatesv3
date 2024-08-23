@@ -27,10 +27,11 @@
       <div style="margin-top: 3px;">
         <button class="b-1 b-select" id="log-open">🪵</button>
 
-        
+
         <button class="b-1 " id="execute-commands" onclick="toggleExecution(event)">🌴</button>
 
-        <button style="margin-top:65px;" class="b-1 " id="toggle-component-tree" onclick="toggleComponentTree()">🧩</button>
+        <button style="margin-top:65px;" class="b-1 " id="toggle-component-tree"
+          onclick="toggleComponentTree()">🧩</button>
         <button class="b-1 " id="toggle-code-tree" onclick="toggleCodeTree()">🏷️</button>
         <button class="b-1 " id="toggle-head" onclick="toggleHead()">🗿</button>
         <button class="b-1 " id="toggle-generated-page" onclick="toggleGeneratedPage()">👁️</button>
@@ -2594,6 +2595,7 @@
       </details>
 
       <style>
+<<<<<<< HEAD
 #pics-menu #remove-galeryMenu,
 #pics-menu [data-select-image],
 #data-pics-head [pics-menu-choose-save-destination],
@@ -2604,6 +2606,12 @@
 
 
 
+=======
+        #pics-menu #remove-galeryMenu,
+        #pics-menu [data-select-image] {
+          display: none;
+        }
+>>>>>>> refs/remotes/origin/main
       </style>
       <details id="pics-menu" style="margin-bottom: 7px;">
         <summary class="summary-L-3"><span class="l-3 b-dark-blue">🖼️ Pics</span></summary>
@@ -6536,29 +6544,29 @@
       location.reload()
     }
     const toggleGeneratedPage = () => {
-  const anchorToggle = localStorage.getItem('anchorToggle');
+      const anchorToggle = localStorage.getItem('anchorToggle');
 
-  if (anchorToggle === 'true') {
-    getElementById1('generated-page-menu').scrollIntoView({ behavior: 'auto' });
-    return; 
-  }
+      if (anchorToggle === 'true') {
+        getElementById1('generated-page-menu').scrollIntoView({ behavior: 'auto' });
+        return;
+      }
 
-  const s = localStorage.getItem('generatedPageToggle');
-  
-  if (!s) {
-    getElementById1("sku-list").removeAttribute('hidden');
-    getElementById1('generated-page-iframe').removeAttribute('hidden');
-    getElementById1('generated-page-menu').removeAttribute('hidden');
-    getElementById1('toggle-generated-page').classList.add('b-selected');
-    localStorage.setItem('generatedPageToggle', 'true');
-  } else {
-    getElementById1("sku-list").setAttribute('hidden', '');
-    getElementById1('generated-page-iframe').setAttribute('hidden', '');
-    getElementById1('generated-page-menu').setAttribute('hidden', '');
-    getElementById1('toggle-generated-page').classList.remove('b-selected');
-    localStorage.removeItem('generatedPageToggle');
-  }
-}
+      const s = localStorage.getItem('generatedPageToggle');
+
+      if (!s) {
+        getElementById1("sku-list").removeAttribute('hidden');
+        getElementById1('generated-page-iframe').removeAttribute('hidden');
+        getElementById1('generated-page-menu').removeAttribute('hidden');
+        getElementById1('toggle-generated-page').classList.add('b-selected');
+        localStorage.setItem('generatedPageToggle', 'true');
+      } else {
+        getElementById1("sku-list").setAttribute('hidden', '');
+        getElementById1('generated-page-iframe').setAttribute('hidden', '');
+        getElementById1('generated-page-menu').setAttribute('hidden', '');
+        getElementById1('toggle-generated-page').classList.remove('b-selected');
+        localStorage.removeItem('generatedPageToggle');
+      }
+    }
     const generateDependeeMenu = (node) => {
       const sku = node.querySelector('#sku-value').textContent
       log1(sku)
@@ -6749,62 +6757,62 @@
     }
 
     const toggleAnchor = () => {
-  const s = localStorage.getItem('anchorToggle')
-  if (!s) {
-    getElementById1('toggle-anchor').classList.add('b-selected')
-    localStorage.setItem('anchorToggle', 'true')
-  } else {
-    getElementById1('toggle-anchor').classList.remove('b-selected')
-    localStorage.removeItem('anchorToggle')
-  }
-}
+      const s = localStorage.getItem('anchorToggle')
+      if (!s) {
+        getElementById1('toggle-anchor').classList.add('b-selected')
+        localStorage.setItem('anchorToggle', 'true')
+      } else {
+        getElementById1('toggle-anchor').classList.remove('b-selected')
+        localStorage.removeItem('anchorToggle')
+      }
+    }
 
 
-const toggleHead = () => {
-  const anchorToggle = localStorage.getItem('anchorToggle');
+    const toggleHead = () => {
+      const anchorToggle = localStorage.getItem('anchorToggle');
 
-  // Если anchorToggle == 'true', просто скроллим и выходим из функции
-  if (anchorToggle === 'true') {
-    getElementById1('head-menu').scrollIntoView({ behavior: 'auto' });
-    return; // Прерываем выполнение функции, чтобы дальше код не выполнялся
-  }
+      // Если anchorToggle == 'true', просто скроллим и выходим из функции
+      if (anchorToggle === 'true') {
+        getElementById1('head-menu').scrollIntoView({ behavior: 'auto' });
+        return; // Прерываем выполнение функции, чтобы дальше код не выполнялся
+      }
 
-  const s = localStorage.getItem('headToggle');
-  
-  if (!s) {
-    getElementById1('head-1').removeAttribute('hidden');
-    getElementById1('head-menu').removeAttribute('hidden');
-    getElementById1('toggle-head').classList.add('b-selected');
-    localStorage.setItem('headToggle', 'true');
-  } else {
-    getElementById1('head-1').setAttribute('hidden', '');
-    getElementById1('head-menu').setAttribute('hidden', '');
-    getElementById1('toggle-head').classList.remove('b-selected');
-    localStorage.removeItem('headToggle');
-  }
-}
-const toggleCodeTree = () => {
-  const anchorToggle = localStorage.getItem('anchorToggle');
+      const s = localStorage.getItem('headToggle');
 
-  if (anchorToggle === 'true') {
-    getElementById1('code-tree-menu').scrollIntoView({ behavior: 'auto' });
-    return; // 
-  }
+      if (!s) {
+        getElementById1('head-1').removeAttribute('hidden');
+        getElementById1('head-menu').removeAttribute('hidden');
+        getElementById1('toggle-head').classList.add('b-selected');
+        localStorage.setItem('headToggle', 'true');
+      } else {
+        getElementById1('head-1').setAttribute('hidden', '');
+        getElementById1('head-menu').setAttribute('hidden', '');
+        getElementById1('toggle-head').classList.remove('b-selected');
+        localStorage.removeItem('headToggle');
+      }
+    }
+    const toggleCodeTree = () => {
+      const anchorToggle = localStorage.getItem('anchorToggle');
 
-  const s = localStorage.getItem('codeTreeToggle');
-  
-  if (!s) {
-    getElementById1('code-tree').removeAttribute('hidden');
-    getElementById1('code-tree-menu').removeAttribute('hidden');
-    getElementById1('toggle-code-tree').classList.add('b-selected');
-    localStorage.setItem('codeTreeToggle', 'true');
-  } else {
-    getElementById1('code-tree').setAttribute('hidden', '');
-    getElementById1('code-tree-menu').setAttribute('hidden', '');
-    getElementById1('toggle-code-tree').classList.remove('b-selected');
-    localStorage.removeItem('codeTreeToggle');
-  }
-}
+      if (anchorToggle === 'true') {
+        getElementById1('code-tree-menu').scrollIntoView({ behavior: 'auto' });
+        return; // 
+      }
+
+      const s = localStorage.getItem('codeTreeToggle');
+
+      if (!s) {
+        getElementById1('code-tree').removeAttribute('hidden');
+        getElementById1('code-tree-menu').removeAttribute('hidden');
+        getElementById1('toggle-code-tree').classList.add('b-selected');
+        localStorage.setItem('codeTreeToggle', 'true');
+      } else {
+        getElementById1('code-tree').setAttribute('hidden', '');
+        getElementById1('code-tree-menu').setAttribute('hidden', '');
+        getElementById1('toggle-code-tree').classList.remove('b-selected');
+        localStorage.removeItem('codeTreeToggle');
+      }
+    }
     const toggleExecution = (e) => {
       const s = localStorage.getItem('executionToggle')
       if (!s) {
@@ -6821,27 +6829,27 @@ const toggleCodeTree = () => {
       }
     }
     const toggleComponentTree = () => {
-  const anchorToggle = localStorage.getItem('anchorToggle');
+      const anchorToggle = localStorage.getItem('anchorToggle');
 
-  if (anchorToggle === 'true') {
-    getElementById1('path-panel').scrollIntoView({ behavior: 'auto' });
-    return; // 
-  }
+      if (anchorToggle === 'true') {
+        getElementById1('path-panel').scrollIntoView({ behavior: 'auto' });
+        return; // 
+      }
 
-  const s = localStorage.getItem('componentTreeToggle');
+      const s = localStorage.getItem('componentTreeToggle');
 
-  if (!s) {
-    getElementById1('components-tree').removeAttribute('hidden');
-    getElementById1('components-tree-menu').removeAttribute('hidden');
-    getElementById1('toggle-component-tree').classList.add('b-selected');
-    localStorage.setItem('componentTreeToggle', 'true');
-  } else {
-    getElementById1('components-tree').setAttribute('hidden', '');
-    getElementById1('components-tree-menu').setAttribute('hidden', '');
-    getElementById1('toggle-component-tree').classList.remove('b-selected');
-    localStorage.removeItem('componentTreeToggle');
-  }
-}
+      if (!s) {
+        getElementById1('components-tree').removeAttribute('hidden');
+        getElementById1('components-tree-menu').removeAttribute('hidden');
+        getElementById1('toggle-component-tree').classList.add('b-selected');
+        localStorage.setItem('componentTreeToggle', 'true');
+      } else {
+        getElementById1('components-tree').setAttribute('hidden', '');
+        getElementById1('components-tree-menu').setAttribute('hidden', '');
+        getElementById1('toggle-component-tree').classList.remove('b-selected');
+        localStorage.removeItem('componentTreeToggle');
+      }
+    }
     document.addEventListener('DOMContentLoaded', function () {
       const iframe = document.getElementById("generated-page-iframe");
 
@@ -21646,11 +21654,23 @@ headers: {
 
 
 
-
-      const clonedFieldset = getElementById1('gallery-menu-wrapper')
+      const picsMenu = getElementById1('pics-menu')
+      const clonedFieldset = picsMenu.querySelector('#gallery-menu-wrapper')
 
       // Assign a unique id to the cloned fieldset
-
+      let id
+      if (pathItemArticle) {
+        id = "article:" + pathItemArticle
+        picsMenu.setAttribute('data-pics-article','')
+      }
+      else if (pathItemSku) {
+        id = 'sku:' + pathItemSku
+        picsMenu.setAttribute('data-pics-sku','')
+      }
+      else {
+        id = headContentItem.id
+        picsMenu.setAttribute('data-pics-head','')
+      }
       // image input change 
       clonedFieldset.querySelector('#image-input').addEventListener('change', async function (event) {
         log1('changing')
@@ -21666,16 +21686,7 @@ headers: {
           //fileNameSpan.removeAttribute('hidden'); // Make the file name span visible
           for (let file of this.files) {
 
-            let id
-            if (pathItemArticle) {
-              id = "article:" + pathItemArticle
-            }
-            else if (pathItemSku) {
-              id = 'sku:' + pathItemSku
-            }
-            else {
-              id = headContentItem.id
-            }
+
             const fileContent = await file
             const fileName = fileContent.name
 
@@ -25112,70 +25123,70 @@ element.setAttribute('data-product', [first, name].join(';'))
   <script>
     function openLeftPanel() {
 
-var logOpenButton = document.getElementById('log-open'); 
-var asideElement = document.querySelector('.aside');
-var leftElement = document.querySelector('.left');
-var bottomButton = document.getElementById('bottom-buttons'); 
-var refreshPageButton = document.getElementById('refresh-page'); 
-var codeLog = document.getElementById('code-log');
-var searchActions = document.getElementById('search-actions');
-var refreshPage = document.getElementById('refresh-page');
-var executeCommands = document.getElementById('execute-commands'); // Получаем элемент execute-commands
-var toggleAnchor = document.getElementById('toggle-anchor'); // Получаем элемент toggle-anchor
+      var logOpenButton = document.getElementById('log-open');
+      var asideElement = document.querySelector('.aside');
+      var leftElement = document.querySelector('.left');
+      var bottomButton = document.getElementById('bottom-buttons');
+      var refreshPageButton = document.getElementById('refresh-page');
+      var codeLog = document.getElementById('code-log');
+      var searchActions = document.getElementById('search-actions');
+      var refreshPage = document.getElementById('refresh-page');
+      var executeCommands = document.getElementById('execute-commands'); // Получаем элемент execute-commands
+      var toggleAnchor = document.getElementById('toggle-anchor'); // Получаем элемент toggle-anchor
 
-if (logOpenButton.hasAttribute('data-log-opened')) {
+      if (logOpenButton.hasAttribute('data-log-opened')) {
 
-  document.getElementById('toggle-component-tree').removeAttribute('hidden');
-  document.getElementById('toggle-code-tree').removeAttribute('hidden');
-  document.getElementById('toggle-head').removeAttribute('hidden');
-  document.getElementById('toggle-generated-page').removeAttribute('hidden');
+        document.getElementById('toggle-component-tree').removeAttribute('hidden');
+        document.getElementById('toggle-code-tree').removeAttribute('hidden');
+        document.getElementById('toggle-head').removeAttribute('hidden');
+        document.getElementById('toggle-generated-page').removeAttribute('hidden');
 
-  document.getElementById('remove-duplicate-actions').hidden = true;
+        document.getElementById('remove-duplicate-actions').hidden = true;
 
-  // Показать execute-commands и toggle-anchor
-  executeCommands.removeAttribute('hidden');
-  toggleAnchor.removeAttribute('hidden');
-  
-  asideElement.style.width = '70px';
-  leftElement.style.width = '60px';
-  logOpenButton.removeAttribute('data-log-opened');
-  logOpenButton.classList.remove('b-selected');
-  refreshPage.setAttribute('hidden', '');
-  codeLog.setAttribute('hidden','');
-  searchActions.setAttribute('hidden','');
-  refreshPageButton.setAttribute('hidden','');
-  bottomButton.removeAttribute('hidden');
+        // Показать execute-commands и toggle-anchor
+        executeCommands.removeAttribute('hidden');
+        toggleAnchor.removeAttribute('hidden');
 
-} else {
+        asideElement.style.width = '70px';
+        leftElement.style.width = '60px';
+        logOpenButton.removeAttribute('data-log-opened');
+        logOpenButton.classList.remove('b-selected');
+        refreshPage.setAttribute('hidden', '');
+        codeLog.setAttribute('hidden', '');
+        searchActions.setAttribute('hidden', '');
+        refreshPageButton.setAttribute('hidden', '');
+        bottomButton.removeAttribute('hidden');
 
-  document.getElementById('toggle-component-tree').hidden = true;
-  document.getElementById('toggle-code-tree').hidden = true;
-  document.getElementById('toggle-head').hidden = true;
-  document.getElementById('toggle-generated-page').hidden = true;
-  document.getElementById('remove-duplicate-actions').removeAttribute('hidden');
+      } else {
 
-  // Скрыть execute-commands и toggle-anchor
-  executeCommands.setAttribute('hidden', '');
-  toggleAnchor.setAttribute('hidden', '');
+        document.getElementById('toggle-component-tree').hidden = true;
+        document.getElementById('toggle-code-tree').hidden = true;
+        document.getElementById('toggle-head').hidden = true;
+        document.getElementById('toggle-generated-page').hidden = true;
+        document.getElementById('remove-duplicate-actions').removeAttribute('hidden');
 
-  logOpenButton.setAttribute('data-log-opened', '');
-  bottomButton.setAttribute('hidden','');
-  logOpenButton.classList.add('b-selected');
-  refreshPage.removeAttribute('hidden');
-  codeLog.removeAttribute('hidden');
-  searchActions.removeAttribute('hidden');
-  refreshPageButton.removeAttribute('hidden');
-  asideElement.style.width = '625px';
-  leftElement.style.width = '615px';
-}
-}
+        // Скрыть execute-commands и toggle-anchor
+        executeCommands.setAttribute('hidden', '');
+        toggleAnchor.setAttribute('hidden', '');
 
-document.getElementById('log-open').addEventListener('click', openLeftPanel);
+        logOpenButton.setAttribute('data-log-opened', '');
+        bottomButton.setAttribute('hidden', '');
+        logOpenButton.classList.add('b-selected');
+        refreshPage.removeAttribute('hidden');
+        codeLog.removeAttribute('hidden');
+        searchActions.removeAttribute('hidden');
+        refreshPageButton.removeAttribute('hidden');
+        asideElement.style.width = '625px';
+        leftElement.style.width = '615px';
+      }
+    }
 
-function reloadPage(event) {
-event.preventDefault(); // Эта строка предотвращает выполнение действия по умолчанию для события (например, перезагрузка страницы)
-window.location.reload(); // Эта строка перезагружает текущую страницу
-}
+    document.getElementById('log-open').addEventListener('click', openLeftPanel);
+
+    function reloadPage(event) {
+      event.preventDefault(); // Эта строка предотвращает выполнение действия по умолчанию для события (например, перезагрузка страницы)
+      window.location.reload(); // Эта строка перезагружает текущую страницу
+    }
 
   </script>
 
