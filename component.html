@@ -840,7 +840,7 @@
 
 
               </tr>
-              
+
 
 
               <tr id="script_sku_data_to_html">
@@ -11039,7 +11039,21 @@ checkbox1.setAttribute('hidden', "");
       else if (pathItemSku) {
         id = 'sku:' + pathItemSku
       }
-
+      // get crop
+      const sk = article ? 'crop:article' : 'crop:product'
+      const cropItems = await fetch(`${backend_url}?id=${headContentItem.id}&sk=${sk}&startsWith=true`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(e => e.json()).then(({ items }) => items)
+      let crop = {
+        id: headContentItem.id,
+        sk
+      }
+      if (cropItems.length) {
+        crop = cropItems[0]
+      }
       const picitems = await fetch(`${backend_url}?id=${id}&sk=pics&startsWith=true`, {
         method: 'GET',
         headers: {
@@ -11051,8 +11065,37 @@ checkbox1.setAttribute('hidden', "");
         throw new Error('no pics')
       }
       const site = pathItemPath.split('/')[0].toLowerCase()
-      let p = picitems.map(async element => {
+      picitems.forEach(async element => {
         const sk = element.sk
+        const imageUUID = sk.split('.')[0].replace('pics', '')
+        if (crop[imageUUID]) {
+          const first = crop[imageUUID].split(',')[0].split(' ')[0]
+          const flag = await fetch('https://api.allorigins.win/raw?url=' + first)
+            .then(async response => {
+              if (response.ok || response.status === 200) {
+                const t = await response.text()
+                if (t.includes('404')) {
+
+                  return true
+                }
+                else {
+                  log1('Image exists.');
+                }
+
+              } else {
+                log1('image doesnt exist')
+                return true
+              }
+            })
+            .catch(error => {
+              console.error('Error checking image existence:', error);
+
+              return true
+            });
+          if (!flag) {
+            return
+          }
+        }
         const imageSrc = 'https://s3.amazonaws.com/checkout-admin-panel/' + sk
         const name = 'product_image'
 
@@ -11066,27 +11109,16 @@ checkbox1.setAttribute('hidden', "");
         randomStrings.push(randomString)
         let newName = randomString + '_' + name
         const { src, data_src } = await resizeApi(newName, imageSrc, '300w')
-        return { src, data_src, imageUUID: sk.split('.')[0].replace('pics', '') }
-      })
-      p = await Promise.all(p)
-      console.log(JSON.stringify(p))
-
-      const promise = p.map(element =>
-        postToDb({
-          id: `sku:${sku}`,
-          sk: `crop:${site}:${element.imageUUID}`,
-          list: element.data_src.split(',').map(src => {
-            const splited = element.src.split('_')
-            splited.pop()
-            const [p, s] = src.split('.')
-            const l = p + 'w'
-            splited.push([l, s].join('.'))
-            return splited.join('_') + ' ' + l
-          })
+        crop[imageUUID] = data_src.split(',').map(src => {
+          const splited = element.src.split('_')
+          splited.pop()
+          const [p, s] = src.split('.')
+          const l = p + 'w'
+          splited.push([l, s].join('.'))
+          return splited.join('_') + ' ' + l
         })
-      )
-      await Promise.all(promise)
-      
+      })
+      postToDb(crop)
       article ? articleToPicturesApi() : skuToPicturesApi()
 
     }
