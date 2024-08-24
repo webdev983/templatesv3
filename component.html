@@ -4,7 +4,7 @@
 <head>
 
   <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
@@ -6943,7 +6943,7 @@
       const articleToPicturesItem = urlParams.get('articleToPictures')
       const skuToButtonPics = urlParams.get('skuToButtonPics')
       const generateHtmlFromSku = urlParams.get('generateHtmlFromSku')
-      ownerid = urlParams.get('ownerid') || localStorage.getItem('ownerid') 
+      ownerid = urlParams.get('ownerid') || localStorage.getItem('ownerid')
       if (urlParams.get('ownerid')) {
         localStorage.setItem('executionToggle', 'true')
         localStorage.setItem('ownerid', urlParams.get('ownerid'))
@@ -11495,7 +11495,7 @@ checkbox1.setAttribute('hidden', "");
       postToDb(crop)
       postToDb({ id, sk: 'data_lead-image', crops: mainCrop })
       postToDb({ id, sk: 'data_catalog-image', crops: catalogCrop || mainCrop })
-      postToDb({ id, sk: 'data_promo-image', crops: promoCrop ||mainCrop})
+      postToDb({ id, sk: 'data_promo-image', crops: promoCrop || mainCrop })
       article ? articleToPicturesApi(crop) : skuToPicturesApi(crop)
 
     }
@@ -11641,7 +11641,7 @@ checkbox1.setAttribute('hidden', "");
                 'Content-Type': 'application/json',
               },
             }).then(e => e.json())
-            
+
             const src = images?.items[0]?.crops?.split(',')[0].split(' ')[0]
             const img = cloned.querySelector('.product_lead_img').setAttribute('src', src)
             const heading = cloned.querySelector('.product_heading')
@@ -12235,7 +12235,7 @@ checkbox1.setAttribute('hidden', "");
         imports2 = imports1.map(item => {
           console.log(JSON.stringify(item))
           const found = data2.items.find(e => e.lsi1.split(';')[0].split('|')[1] === item.component)
-          
+
           const compLsi1 = found.lsi1.split(';')[0]
           const currentLsi = pathItemPath.replace(';publish:published', "")
           const relativePath = getRelativePath(currentLsi, convertToOldPath(compLsi1));
@@ -12539,7 +12539,7 @@ checkbox1.setAttribute('hidden', "");
 
     }
 
-    
+
     var actionLog = []
     var selected = []
     var components = []
@@ -21499,21 +21499,24 @@ headers: {
             const skuQtyValue = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=sku-variables;&startsWith=true`)
               .then(response => response.json()).then(res => res.items)
             const element = skuQtyValue[0]
-            console.log(detail.id)
-            const splited = element.sk.split(';')
-            splited.shift()
-            splited.pop()
-            const values = splited.map(e => e.split(':')[0])
-            console.log('values' + JSON.stringify(values))
-            for (const value of values) {
-              const cloned = varButton.cloneNode(true)
-              varButton.parentNode.append(cloned)
-              cloned.textContent = value
-              cloned.onclick = (e) => {
-                copyTextToClipboard('#' + value + '-var')
+            if (element) {
+              console.log(detail.id)
+              const splited = element.sk.split(';')
+              splited.shift()
+              splited.pop()
+              const values = splited.map(e => e.split(':')[0])
+              console.log('values' + JSON.stringify(values))
+              for (const value of values) {
+                const cloned = varButton.cloneNode(true)
+                varButton.parentNode.append(cloned)
+                cloned.textContent = value
+                cloned.onclick = (e) => {
+                  copyTextToClipboard('#' + value + '-var')
+                }
               }
+              varButton.remove()
             }
-            varButton.remove()
+
           }
           if (button) {
             button.onclick = async (e) => {
@@ -25210,7 +25213,7 @@ element.setAttribute('data-product', [first, name].join(';'))
 
   </script>
 
-  
+
 </body>
 
 </html>
