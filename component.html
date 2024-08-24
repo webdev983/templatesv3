@@ -6986,7 +6986,16 @@
         }
         //get head content
         if (!pathItemPath.split('/').includes('Stock')) {
-          const headLsi = pathItem.lsi1.split(';')[0].split('|')[0].split('/').slice(0, 3).join('/') + '/Content/Page|Head-Content'
+          const spl = pathItem.lsi1.split(';')[0].split('|')[0].split('/')
+          
+          let headLsi = spl.slice(0, 3).join('/') + '/Content/Page|Head-Content'
+          if(spl.includes('Content')){
+            const index = spl.findIndex(str => str.includes('Content'));
+            headLsi = spl.slice(0, index )+ '/Content/Page|Head-Content';
+          }
+          else{
+            headLsi =  spl.join('/') + '/Content/Page|Head-Content';
+          }
 
           log1('head lsi' + headLsi)
           const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=path:${ownerid}&gsi1lsi1=true&lsi1=${headLsi}`;
