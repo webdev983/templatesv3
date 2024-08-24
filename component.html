@@ -5139,10 +5139,10 @@
       const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=pics&startsWith=true`;
       const { items } = await fetch(url).then(e => e.json())
       let pics = items.filter(e => e.secondary)
-      pics.sort((a, b) =>parseInt(a.picNumber ||1) -parseInt(b.picNumber||1));
+      pics.sort((a, b) => parseInt(a.picNumber || 1) - parseInt(b.picNumber || 1));
       let image
       let mainPics = items.filter(e => e.main)
-      mainPics.sort((a, b) =>parseInt(a.picNumber ||1) -parseInt(b.picNumber||1));
+      mainPics.sort((a, b) => parseInt(a.picNumber || 1) - parseInt(b.picNumber || 1));
       if (secondary) {
 
 
@@ -6989,14 +6989,14 @@
         //get head content
         if (!pathItemPath.split('/').includes('Stock')) {
           const spl = pathItem.lsi1.split(';')[0].split('|')[0].split('/')
-          
+
           let headLsi = spl.slice(0, 3).join('/') + '/Content/Page|Head-Content'
-          if(spl.includes('Content')){
+          if (spl.includes('Content')) {
             const index = spl.findIndex(str => str.includes('Content'));
-            headLsi = spl.slice(0, index ).join('/')+ '/Content/Page|Head-Content';
+            headLsi = spl.slice(0, index).join('/') + '/Content/Page|Head-Content';
           }
-          else{
-            headLsi =  spl.join('/') + '/Content/Page|Head-Content';
+          else {
+            headLsi = spl.join('/') + '/Content/Page|Head-Content';
           }
 
           console.log('head lsi' + headLsi)
@@ -10172,19 +10172,31 @@
                     var fileName = this.files[0].name; // Get the name of the file
                     //fileNameSpan.textContent = fileName; // Set the text content to the file name
                     //fileNameSpan.removeAttribute('hidden'); // Make the file name span visible
-                    for (let file of this.files) {
+                    let id
+                    if (pathItemArticle) {
+                      id = "article:" + pathItemArticle
+                    }
+                    else if (pathItemSku) {
+                      id = 'sku:' + pathItemSku
+                    }
+                    else {
+                      id = headContentItem.id
+                    }
+                    let files = Array.from(this.files);
+                    files = await Promise.all(files)
+                    files.sort((a, b) => {
+                      if (a.name < b.name) {
+                        return -1;
+                      }
+                      if (a.name > b.name) {
+                        return 1;
+                      }
+                      return 0;
+                    });
+                    for (let file of files) {
 
-                      let id
-                      if (pathItemArticle) {
-                        id = "article:" + pathItemArticle
-                      }
-                      else if (pathItemSku) {
-                        id = 'sku:' + pathItemSku
-                      }
-                      else {
-                        id = headContentItem.id
-                      }
-                      const fileContent = await file
+
+                      const fileContent = file
                       const fileName = fileContent.name
 
                       try {
@@ -21719,7 +21731,19 @@ headers: {
           var fileName = this.files[0].name; // Get the name of the file
           //fileNameSpan.textContent = fileName; // Set the text content to the file name
           //fileNameSpan.removeAttribute('hidden'); // Make the file name span visible
-          for (let file of this.files) {
+          let files = Array.from(this.files);
+          files = await Promise.all(files)
+          files.sort((a, b) => {
+            if (a.name < b.name) {
+              return -1;
+            }
+            if (a.name > b.name) {
+              return 1;
+            }
+            return 0;
+          });
+
+          for (let file of files) {
 
 
             const fileContent = await file
