@@ -3963,9 +3963,9 @@
     var cancelGalleryMenu = (event) => {
       event.target.closest('#menu-1').style.display = 'none';
     }
-    var handleMainChange = async (e, item,global) => {
-      const site = pathItemPath.split('/')[0]
-      const s = global.checked ? ':global' : ':'+site
+    var handleMainChange = async (e, item, global) => {
+      const site = pathItemPath.split('/')[0].toLowerCase()
+      const s = global.checked ? ':global' : ':' + site
       const checked = e.target.checked
       const item1 = await fetch(`${backend_url}?id=${item.id}&sk=${item.sk}&startsWith=true`, {
         method: 'GET',
@@ -3979,7 +3979,7 @@
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-          { ...item1, ['main'+s]: checked }
+          { ...item1, ['main' + s]: checked }
         ),
       });
     }
@@ -4161,10 +4161,10 @@
       }
       document.getElementById('real-reviews').value = JSON.stringify(json, null, 4)
     }
-    var handleSecondaryChange = async (e, item,global) => {
+    var handleSecondaryChange = async (e, item, global) => {
       const checked = e.target.checked
-      const site = pathItemPath.split('/')[0]
-      const s = global.checked ? ':global' : ':'+site
+      const site = pathItemPath.split('/')[0].toLowerCase()
+      const s = global.checked ? ':global' : ':' + site
       const item1 = await fetch(`${backend_url}?id=${item.id}&sk=${item.sk}&startsWith=true`, {
         method: 'GET',
         headers: {
@@ -4177,14 +4177,14 @@
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-          { ...item1, ['secondary'+s]: checked }
+          { ...item1, ['secondary' + s]: checked }
         ),
       });
     }
-    var handlePromoChange = async (e, item,global) => {
+    var handlePromoChange = async (e, item, global) => {
       const checked = e.target.checked
-      const site = pathItemPath.split('/')[0]
-      const s = global.checked ? ':global' : ':'+site
+      const site = pathItemPath.split('/')[0].toLowerCase()
+      const s = global.checked ? ':global' : ':' + site
       const item1 = await fetch(`${backend_url}?id=${item.id}&sk=${item.sk}&startsWith=true`, {
         method: 'GET',
         headers: {
@@ -4197,14 +4197,14 @@
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-          { ...item1, ['promo'+s]: checked }
+          { ...item1, ['promo' + s]: checked }
         ),
       });
     }
-    var handleCatalogueChange = async (e, item,global) => {
+    var handleCatalogueChange = async (e, item, global) => {
       const checked = e.target.checked
-      const site = pathItemPath.split('/')[0]
-      const s = global.checked ? ':global' : ':'+site
+      const site = pathItemPath.split('/')[0].toLowerCase()
+      const s = global.checked ? ':global' : ':' + site
       const item1 = await fetch(`${backend_url}?id=${item.id}&sk=${item.sk}&startsWith=true`, {
         method: 'GET',
         headers: {
@@ -4217,21 +4217,21 @@
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-          { ...item1, ['catalogue'+s]: checked }
+          { ...item1, ['catalogue' + s]: checked }
         ),
       });
     }
     var loadImages = async (clonedFieldset, src) => {
-      
+
       clonedFieldset.querySelector('#remove-galeryMenu').onclick = (e) => {
         e.target.closest('fieldset').remove()
       }
       const global = clonedFieldset.querySelector('#global-input')
-      global.onchange = ()=>{
-        loadImages(clonedFieldset,src)
+      global.onchange = () => {
+        loadImages(clonedFieldset, src)
       }
-      clonedFieldset.querySelector('#site-input').onchange = ()=>{
-        loadImages(clonedFieldset,src)
+      clonedFieldset.querySelector('#site-input').onchange = () => {
+        loadImages(clonedFieldset, src)
       }
       //clonedFieldset.querySelector('#upload-button').onclick = (e) => handleUpload1(e, src)
       //const id = pathItemSku || pathItem.id
@@ -4289,18 +4289,19 @@
         const clonedRow = templateRow.cloneNode(true);
         clonedRow.querySelector('[data-picture-time]').textContent = item.date || ''
         const mainCheckbox = clonedRow.querySelector('[data-picture-main-checkbox]')
-        const s = global.checked ? ':global' : ':'+site
-        mainCheckbox.checked = !!item['main'+s]
-        mainCheckbox.onchange = (e) => handleMainChange(e, item,global)
+        const site = pathItemPath.split('/')[0].toLowerCase()
+        const s = global.checked ? ':global' : ':' + site
+        mainCheckbox.checked = !!item['main' + s]
+        mainCheckbox.onchange = (e) => handleMainChange(e, item, global)
         const secondaryCheckbox = clonedRow.querySelector('[data-picture-secondary-checkbox]')
-        secondaryCheckbox.checked = !!item['secondary'+s]
-        secondaryCheckbox.onchange = e => handleSecondaryChange(e, item,global)
+        secondaryCheckbox.checked = !!item['secondary' + s]
+        secondaryCheckbox.onchange = e => handleSecondaryChange(e, item, global)
         const promoCheckbox = clonedRow.querySelector('[data-picture-promo-checkbox]')
-        promoCheckbox.checked = !!item['promo'+s]
-        promoCheckbox.onchange = (e) => handlePromoChange(e, item,global)
+        promoCheckbox.checked = !!item['promo' + s]
+        promoCheckbox.onchange = (e) => handlePromoChange(e, item, global)
         const catalogueCheckbox = clonedRow.querySelector('[data-picture-catalog-checkbox]')
-        catalogueCheckbox.checked = !!item['catalogue'+s]
-        catalogueCheckbox.onchange = (e) => handleCatalogueChange(e, item,global)
+        catalogueCheckbox.checked = !!item['catalogue' + s]
+        catalogueCheckbox.onchange = (e) => handleCatalogueChange(e, item, global)
         clonedRow.removeAttribute('hidden'); // Show the cloned row
         clonedRow.querySelector('[data-select-image]').onclick = selectImage
         //clonedRow.querySelector('[data-show-menu]').onclick = showMenu
@@ -4322,11 +4323,11 @@
         if (skuMap) {
           const skuVRow = clonedRow.querySelector('#item-sku-variable-details')
           const optionsRow = clonedRow.querySelector('#item-gallery-details')
-          if (!item['gallery_variables_sku_variables'+s]) {
-            item['gallery_variables_sku_variables'+s] = {}
+          if (!item['gallery_variables_sku_variables' + s]) {
+            item['gallery_variables_sku_variables' + s] = {}
           }
           if (!item.picture_buttons_sku_variables) {
-            item['picture_buttons_sku_variables'+s] = {}
+            item['picture_buttons_sku_variables' + s] = {}
           }
           for (const key of Object.keys(skuMap)) {
             const cloned = skuVRow.cloneNode(true)
@@ -4338,10 +4339,10 @@
             cloned.querySelector('select').onchange = (e) => {
               const selectedValues = Array.from(e.target.selectedOptions).map(option => option.id);
               if (selectedValues.includes('none')) {
-                item['picture_buttons_sku_variables'+s][key] = []
+                item['picture_buttons_sku_variables' + s][key] = []
               }
               else {
-                item['picture_buttons_sku_variables'+s][key] = selectedValues
+                item['picture_buttons_sku_variables' + s][key] = selectedValues
               }
 
               postToDb(item)
@@ -4349,10 +4350,10 @@
             cloned2.querySelector('select').onchange = (e) => {
               const selectedValues = Array.from(e.target.selectedOptions).map(option => option.id);
               if (selectedValues.includes('none')) {
-                item['gallery_variables_sku_variables'+s][key] = []
+                item['gallery_variables_sku_variables' + s][key] = []
               }
               else {
-                item['gallery_variables_sku_variables'+s][key] = selectedValues
+                item['gallery_variables_sku_variables' + s][key] = selectedValues
               }
               postToDb(item)
             }
@@ -4367,9 +4368,9 @@
               option2.textContent = value
               cloned2.querySelector('select').append(option2)
             }
-            const a =item['picture_buttons_sku_variables'+s] ? item['picture_buttons_sku_variables'+s][key] : []
+            const a = item['picture_buttons_sku_variables' + s] ? item['picture_buttons_sku_variables' + s][key] : []
             preSelectOptions(cloned.querySelector('select'), a);
-            const b = item['gallery_variables_sku_variables'+s] ? item['gallery_variables_sku_variables'+s][key] :[]
+            const b = item['gallery_variables_sku_variables' + s] ? item['gallery_variables_sku_variables' + s][key] : []
             // Pre-select options for cloned2 select element
             preSelectOptions(cloned2.querySelector('select'), b);
             skuVRow.parentNode.append(cloned)
@@ -4377,21 +4378,21 @@
           }
 
         }
-        if (item['alt'+s]) {
-          clonedRow.querySelector('#alt-input').textContent = item['alt'+s]
+        if (item['alt' + s]) {
+          clonedRow.querySelector('#alt-input').textContent = item['alt' + s]
         }
-        if (item['picNumber'+s]) {
-          clonedRow.querySelector('#pic_number').textContent = item['picNumber'+s]
+        if (item['picNumber' + s]) {
+          clonedRow.querySelector('#pic_number').textContent = item['picNumber' + s]
         }
         clonedRow.querySelector('#alt-input').onblur = (e) => {
           const v = e.target.textContent
-          item['alt'+s] = v
+          item['alt' + s] = v
           postToDb(item)
 
         }
         clonedRow.querySelector('#pic_number').onblur = (e) => {
           const v = e.target.textContent
-          item['picNumber'+s] = v
+          item['picNumber' + s] = v
           postToDb(item)
 
         }
@@ -11534,10 +11535,10 @@ checkbox1.setAttribute('hidden', "");
         }
       }
       postToDb(crop)
-      
-      postToDb({ id, sk: 'data_lead-image:'+site, crops: mainCrop })
-      postToDb({ id, sk: 'data_catalog-image:'+site, crops: catalogCrop || mainCrop })
-      postToDb({ id, sk: 'data_promo-image:'+site, crops: promoCrop || mainCrop })
+
+      postToDb({ id, sk: 'data_lead-image:' + site, crops: mainCrop })
+      postToDb({ id, sk: 'data_catalog-image:' + site, crops: catalogCrop || mainCrop })
+      postToDb({ id, sk: 'data_promo-image:' + site, crops: promoCrop || mainCrop })
       article ? articleToPicturesApi(crop) : skuToPicturesApi(crop)
 
     }
@@ -12426,21 +12427,20 @@ checkbox1.setAttribute('hidden', "");
         console.log('no onload')
         return
       }
-      for (const item of onLoad) {
-        console.log('name ' + item.name)
+      const execute1 = async (item) => {
         if (!item.execute_in_template && pathItem.lsi1.toLowerCase().includes('seositeshome.com')) {
           console.log('no execute in template')
-          continue
+          return
         }
         const item1 = body.querySelector('#' + item.name.replace('.', '\\.'))
         if (!item1) {
           console.log('item ' + item.name + ' not found ')
-          continue
+          return
         }
         const status = item1.querySelector('#script_status')
         if (status.textContent === '🟢' && item.execute_on_red_checkbox) {
           console.log('execute on red')
-          continue
+          return
         }
 
         try {
@@ -12448,7 +12448,7 @@ checkbox1.setAttribute('hidden', "");
         }
         catch (e) {
           console.error(item.name + ' errored ' + e.message)
-          continue
+          return
         }
 
         status.textContent = '🟢'
@@ -12464,6 +12464,23 @@ checkbox1.setAttribute('hidden', "");
         if (item.execute_requires_reload) {
           reload = true
         }
+      }
+      const grouped = onLoad.reduce((acc, item) => {
+        // Check if the queue_number already exists in the accumulator object
+        if (!acc[item.queue_number]) {
+          // If not, create an empty array for it
+          acc[item.queue_number] = [];
+        }
+        // Push the item into the appropriate array
+        acc[item.queue_number].push(item);
+        return acc;
+      }, {});
+
+      // Step 2: Convert the grouped object into an array of arrays
+      const result = Object.values(grouped);
+      for (const item of grouped) {
+        await Promise.all(item.map(element=>execute1(element)))
+
       }
       await updateHeadContentItem()
     }
@@ -21723,7 +21740,7 @@ headers: {
 
       const picsMenu = getElementById1('pics-menu')
       const clonedFieldset = picsMenu.querySelector('#gallery-menu-wrapper')
-      
+
       // Assign a unique id to the cloned fieldset
       let id
       if (pathItemArticle) {
