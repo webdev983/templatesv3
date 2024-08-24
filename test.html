@@ -3,44 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Получение одного файла 100 раз</title>
+  <title>Fetching Files (3rd to 111th Copy)</title>
+  <style>
+    hr {
+      width: 3px;
+      background-color: black;
+      border: none;
+      height: 20px; /* Height to make the line visible vertically */
+    }
+  </style>
 </head>
 <body>
-  <h1>Получение одного файла 100 раз</h1>
-  <button id="fetchButton">Получить файлы</button>
+  <h1>Fetching Files from 3rd to 111th Copy</h1>
+  <button id="fetchButton">Fetch Files</button>
   <div id="fileContents"></div>
 
   <script>
-    // Массив с одним URL, который можно поменять
-    const urls = ["https://webdev983.github.io/templatesv3/test.js"];
+    // Array of file URLs from test (3rd copy).js to test (111th copy).js
+    const urls = [];
+    for (let i = 3; i <= 111; i++) {
+      urls.push(`https://your-domain.com/path/to/test%20(${i}th%20copy).js`); // Adjust the URL to your domain and path
+    }
     
     const fileContents = document.getElementById('fileContents');
     const fetchButton = document.getElementById('fetchButton');
 
-    // Функция для получения данных из одного файла
+    // Function to fetch the content of a file
     async function fetchFile(url, index) {
       try {
-        const response = await fetch(url); // Отправляем запрос
+        const response = await fetch(url); // Send the request
         if (response.ok) {
-          const text = await response.text(); // Читаем ответ как текст
-          fileContents.innerHTML += `<h3>Запрос ${index}:</h3><pre>${text}</pre><br>`; // Выводим содержимое
+          const text = await response.text(); // Read the response as text
+          fileContents.innerHTML += `<h3>Fetched from: test (${index}th copy).js</h3><pre>${text}</pre><hr>`; // Display the content and file name
         } else {
-          fileContents.innerHTML += `<h3>Запрос ${index}:</h3><pre>Ошибка: ${response.status}</pre><br>`; // Ошибка
+          fileContents.innerHTML += `<h3>Fetched from: test (${index}th copy).js</h3><pre>Error: ${response.status}</pre><hr>`; // Handle error
         }
       } catch (error) {
-        fileContents.innerHTML += `<h3>Запрос ${index}:</h3><pre>Ошибка: ${error.message}</pre><br>`; // Ошибка сети
+        fileContents.innerHTML += `<h3>Fetched from: test (${index}th copy).js</h3><pre>Error: ${error.message}</pre><hr>`; // Handle network error
       }
     }
 
-    // Основная функция для отправки 100 запросов
+    // Main function to send 109 requests (from 3rd to 111th copy)
     async function fetchFileMultipleTimes() {
-      fileContents.innerHTML = ''; // Очищаем содержимое перед началом
-      for (let i = 1; i <= 100; i++) {
-        await fetchFile(urls[0], i); // Вызываем fetch для URL из массива 100 раз
+      fileContents.innerHTML = ''; // Clear the content before starting
+      for (let i = 3; i <= 111; i++) {
+        await fetchFile(urls[i - 3], i); // Fetch each file by its index and show the file name
       }
     }
 
-    // Добавляем обработчик события на кнопку
+    // Add event listener to the button
     fetchButton.addEventListener('click', fetchFileMultipleTimes);
   </script>
 </body>
