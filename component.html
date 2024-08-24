@@ -5302,7 +5302,7 @@
 
         }
         await pushAction(payload3)
-        postToDb({ id: `article:${sku}`, sk: 'data_lead-image', crops: payload3.value })
+        //postToDb({ id: `article:${sku}`, sk: 'data_lead-image:'+site, crops: payload3.value })
         //keys = Object.keys(picsWithCondition)
         console.log('with ' + JSON.stringify(picsWithCondition))
       }
@@ -5321,7 +5321,7 @@
 
           }
           await pushAction(payload3)
-          postToDb({ id: `article:${sku}`, sk: 'data_lead-image', crops: payload3.value })
+          //postToDb({ id: `article:${sku}`, sk: 'data_lead-image', crops: payload3.value })
 
         }
       }
@@ -5603,7 +5603,7 @@
 
           }
           await pushAction(payload3)
-          postToDb({ id: `sku:${sku}`, sk: 'data_lead-image', crops: payload3.value })
+          //postToDb({ id: `sku:${sku}`, sk: 'data_lead-image', crops: payload3.value })
 
         }
       }
@@ -11516,9 +11516,10 @@ checkbox1.setAttribute('hidden', "");
         }
       }
       postToDb(crop)
-      postToDb({ id, sk: 'data_lead-image', crops: mainCrop })
-      postToDb({ id, sk: 'data_catalog-image', crops: catalogCrop || mainCrop })
-      postToDb({ id, sk: 'data_promo-image', crops: promoCrop || mainCrop })
+      
+      postToDb({ id, sk: 'data_lead-image:'+site, crops: mainCrop })
+      postToDb({ id, sk: 'data_catalog-image:'+site, crops: catalogCrop || mainCrop })
+      postToDb({ id, sk: 'data_promo-image:'+site, crops: promoCrop || mainCrop })
       article ? articleToPicturesApi(crop) : skuToPicturesApi(crop)
 
     }
@@ -11658,7 +11659,8 @@ checkbox1.setAttribute('hidden', "");
                 'Content-Type': 'application/json',
               },
             }).then(e => e.json()).then(({ items }) => items)
-            const images = await fetch(`${backend_url}?id=sku:${element}&sk=data_catalog-image&startsWith=true`, {
+            const site = pathItemPath.split('/')[0].toLowerCase()
+            const images = await fetch(`${backend_url}?id=sku:${element}&sk=data_catalog-image:${site}&startsWith=true`, {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
