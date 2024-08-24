@@ -4222,11 +4222,14 @@
       });
     }
     var loadImages = async (clonedFieldset, src) => {
-
+      
       clonedFieldset.querySelector('#remove-galeryMenu').onclick = (e) => {
         e.target.closest('fieldset').remove()
       }
       const global = clonedFieldset.querySelector('#global-input')
+      global.onchange = ()=>{
+        loadImages(clonedFieldset,src)
+      }
       //clonedFieldset.querySelector('#upload-button').onclick = (e) => handleUpload1(e, src)
       //const id = pathItemSku || pathItem.id
       let mergedItems = []
