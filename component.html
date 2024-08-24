@@ -12466,22 +12466,20 @@ checkbox1.setAttribute('hidden', "");
         }
       }
       const grouped = onLoad.reduce((acc, item) => {
-        // Check if the queue_number already exists in the accumulator object
         if (!acc[item.queue_number]) {
-          // If not, create an empty array for it
           acc[item.queue_number] = [];
         }
-        // Push the item into the appropriate array
         acc[item.queue_number].push(item);
         return acc;
       }, {});
-
-      // Step 2: Convert the grouped object into an array of arrays
+      console.log(JSON.stringify(grouped))
+      // Step 2: Convert grouped object into a sorted array of arrays
       const result = Object.keys(grouped)
-        .sort((a, b) => a - b) // Sort keys numerically
+        .map(Number) // Convert keys to numbers for proper sorting
+        .sort((a, b) => a - b) // Sort numerically
         .map(key => grouped[key]);
       for (const item of grouped) {
-        await Promise.all(item.map(element => execute1(element)))
+        await Promise.all(item.map(element => execute1(element.name)))
 
       }
       await updateHeadContentItem()
