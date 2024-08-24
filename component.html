@@ -4363,10 +4363,11 @@
               option2.textContent = value
               cloned2.querySelector('select').append(option2)
             }
-            preSelectOptions(cloned.querySelector('select'), item['picture_buttons_sku_variables'+s][key]);
-
+            const a =item['picture_buttons_sku_variables'+s] ? item['picture_buttons_sku_variables'+s][key] : []
+            preSelectOptions(cloned.querySelector('select'), a);
+            const b = item['gallery_variables_sku_variables'+s] ? item['gallery_variables_sku_variables'+s][key] :[]
             // Pre-select options for cloned2 select element
-            preSelectOptions(cloned2.querySelector('select'), item['picture_buttons_sku_variables'+s][key]);
+            preSelectOptions(cloned2.querySelector('select'), b);
             skuVRow.parentNode.append(cloned)
             optionsRow.parentNode.append(cloned2)
           }
