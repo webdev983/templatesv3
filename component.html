@@ -5442,9 +5442,21 @@
       const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=pics&startsWith=true`;
       const { items } = await fetch(url).then(e => e.json())
       const site = pathItemPath.split('/')[0].toLowerCase()
-      let pics = items.filter(e => e['secondary:'+site] || e.secondary)
+      let pics = items.filter(e => e['secondary:'+site] )
+      if(!pics.length){
+        pics = items.filter(e => e['secondary:global'] )
+      }
+      if(!pics.length){
+        pics =items.filter(e => e['secondary'] )
+      }
       let image
-      let mainPics = items.filter(e => e['main:'+site] || e.main)
+      let mainPics = items.filter(e => e['main:'+site] )
+      if(!mainPics.length){
+        pics = items.filter(e => e['main:global'] )
+      }
+      if(!mainPics.length){
+        pics =items.filter(e => e['main'] )
+      }
       if (secondary) {
 
 
