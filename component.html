@@ -4282,16 +4282,17 @@
         const clonedRow = templateRow.cloneNode(true);
         clonedRow.querySelector('[data-picture-time]').textContent = item.date || ''
         const mainCheckbox = clonedRow.querySelector('[data-picture-main-checkbox]')
-        mainCheckbox.checked = !!item['main:global']
+        const s = global.checked ? ':global' : ':'+site
+        mainCheckbox.checked = !!item['main'+s]
         mainCheckbox.onchange = (e) => handleMainChange(e, item,global)
         const secondaryCheckbox = clonedRow.querySelector('[data-picture-secondary-checkbox]')
-        secondaryCheckbox.checked = !!item['secondary:global']
+        secondaryCheckbox.checked = !!item['secondary'+s]
         secondaryCheckbox.onchange = e => handleSecondaryChange(e, item,global)
         const promoCheckbox = clonedRow.querySelector('[data-picture-promo-checkbox]')
-        promoCheckbox.checked = !!item['promo:global']
+        promoCheckbox.checked = !!item['promo'+s]
         promoCheckbox.onchange = (e) => handlePromoChange(e, item,global)
         const catalogueCheckbox = clonedRow.querySelector('[data-picture-catalog-checkbox]')
-        catalogueCheckbox.checked = !!item['catalogue:global']
+        catalogueCheckbox.checked = !!item['catalogue'+s]
         catalogueCheckbox.onchange = (e) => handleCatalogueChange(e, item,global)
         clonedRow.removeAttribute('hidden'); // Show the cloned row
         clonedRow.querySelector('[data-select-image]').onclick = selectImage
@@ -4314,11 +4315,11 @@
         if (skuMap) {
           const skuVRow = clonedRow.querySelector('#item-sku-variable-details')
           const optionsRow = clonedRow.querySelector('#item-gallery-details')
-          if (!item.gallery_variables_sku_variables) {
-            item.gallery_variables_sku_variables = {}
+          if (!item['gallery_variables_sku_variables'+s]) {
+            item['gallery_variables_sku_variables'+s] = {}
           }
           if (!item.picture_buttons_sku_variables) {
-            item.picture_buttons_sku_variables = {}
+            item['picture_buttons_sku_variables'+s] = {}
           }
           for (const key of Object.keys(skuMap)) {
             const cloned = skuVRow.cloneNode(true)
@@ -4330,10 +4331,10 @@
             cloned.querySelector('select').onchange = (e) => {
               const selectedValues = Array.from(e.target.selectedOptions).map(option => option.id);
               if (selectedValues.includes('none')) {
-                item.picture_buttons_sku_variables[key] = []
+                item['picture_buttons_sku_variables'+s][key] = []
               }
               else {
-                item.picture_buttons_sku_variables[key] = selectedValues
+                item['picture_buttons_sku_variables'+s][key] = selectedValues
               }
 
               postToDb(item)
@@ -4341,10 +4342,10 @@
             cloned2.querySelector('select').onchange = (e) => {
               const selectedValues = Array.from(e.target.selectedOptions).map(option => option.id);
               if (selectedValues.includes('none')) {
-                item.gallery_variables_sku_variables[key] = []
+                item['gallery_variables_sku_variables'+s][key] = []
               }
               else {
-                item.gallery_variables_sku_variables[key] = selectedValues
+                item['gallery_variables_sku_variables'+s][key] = selectedValues
               }
               postToDb(item)
             }
@@ -4359,30 +4360,30 @@
               option2.textContent = value
               cloned2.querySelector('select').append(option2)
             }
-            preSelectOptions(cloned.querySelector('select'), item.picture_buttons_sku_variables[key]);
+            preSelectOptions(cloned.querySelector('select'), item['picture_buttons_sku_variables'+s][key]);
 
             // Pre-select options for cloned2 select element
-            preSelectOptions(cloned2.querySelector('select'), item.gallery_variables_sku_variables[key]);
+            preSelectOptions(cloned2.querySelector('select'), item['picture_buttons_sku_variables'+s][key]);
             skuVRow.parentNode.append(cloned)
             optionsRow.parentNode.append(cloned2)
           }
 
         }
-        if (item.alt) {
-          clonedRow.querySelector('#alt-input').textContent = item.alt
+        if (item['alt'+s]) {
+          clonedRow.querySelector('#alt-input').textContent = item['alt'+s]
         }
-        if (item.picNumber) {
-          clonedRow.querySelector('#pic_number').textContent = item.picNumber
+        if (item['picNumber'+s]) {
+          clonedRow.querySelector('#pic_number').textContent = item['picNumber'+s]
         }
         clonedRow.querySelector('#alt-input').onblur = (e) => {
           const v = e.target.textContent
-          item.alt = v
+          item['alt'+s] = v
           postToDb(item)
 
         }
         clonedRow.querySelector('#pic_number').onblur = (e) => {
           const v = e.target.textContent
-          item.picNumber = v
+          item['picNumber'+s] = v
           postToDb(item)
 
         }
