@@ -5158,10 +5158,10 @@
       const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=pics&startsWith=true`;
       const { items } = await fetch(url).then(e => e.json())
       const site = pathItemPath.split('/')[0].toLowerCase()
-      let pics = items.filter(e => e['secondary:'+site])
+      let pics = items.filter(e => e['secondary:'+site] || e.secondary)
       pics.sort((a, b) => parseInt(a.picNumber || 1) - parseInt(b.picNumber || 1));
       let image
-      let mainPics = items.filter(e => e['main:'+site])
+      let mainPics = items.filter(e => e['main:'+site] || e.main)
       mainPics.sort((a, b) => parseInt(a.picNumber || 1) - parseInt(b.picNumber || 1));
       if (secondary) {
 
