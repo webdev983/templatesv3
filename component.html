@@ -11648,6 +11648,7 @@ checkbox1.setAttribute('hidden', "");
           else {
             max = parseInt(number)
           }
+          list = list.filter(e=>e)
           for (let i = 0; i < max; i++) {
             console.log('in')
             const element = list[i]
@@ -11721,7 +11722,7 @@ checkbox1.setAttribute('hidden', "");
                 decimal1.textContent = oldprice.toFixed(2).split('.')[1]
               }
               else {
-                pV.textContent = price.toFixed(2)
+                pV.textContent = price?.toFixed(2)
                 ov.textContent = oldprice.toFixed(2)
 
               }
@@ -11729,7 +11730,7 @@ checkbox1.setAttribute('hidden', "");
 
             }
             else {
-              const price = Math.min(...prices.map(obj => parseInt(obj.price)));
+              const price =prices[0] ? Math.min(...prices.map(obj => parseInt(obj.price))) : 0
               const pV = cloned.querySelector('.price_normal').querySelector('.price_value')
 
               const integer = pV.querySelector('.product_price_integer')
