@@ -3963,7 +3963,9 @@
     var cancelGalleryMenu = (event) => {
       event.target.closest('#menu-1').style.display = 'none';
     }
-    var handleMainChange = async (e, item) => {
+    var handleMainChange = async (e, item,global) => {
+      const site = pathItemPath.split('/')[0]
+      const s = global ? ':global' : ':'+site
       const checked = e.target.checked
       const item1 = await fetch(`${backend_url}?id=${item.id}&sk=${item.sk}&startsWith=true`, {
         method: 'GET',
@@ -3977,7 +3979,7 @@
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-          { ...item1, main: checked }
+          { ...item1, ['main'+s]: checked }
         ),
       });
     }
@@ -4159,8 +4161,10 @@
       }
       document.getElementById('real-reviews').value = JSON.stringify(json, null, 4)
     }
-    var handleSecondaryChange = async (e, item) => {
+    var handleSecondaryChange = async (e, item,global) => {
       const checked = e.target.checked
+      const site = pathItemPath.split('/')[0]
+      const s = global ? ':global' : ':'+site
       const item1 = await fetch(`${backend_url}?id=${item.id}&sk=${item.sk}&startsWith=true`, {
         method: 'GET',
         headers: {
@@ -4173,12 +4177,14 @@
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-          { ...item1, secondary: checked }
+          { ...item1, ['secondary'+s]: checked }
         ),
       });
     }
-    var handlePromoChange = async (e, item) => {
+    var handlePromoChange = async (e, item,global) => {
       const checked = e.target.checked
+      const site = pathItemPath.split('/')[0]
+      const s = global ? ':global' : ':'+site
       const item1 = await fetch(`${backend_url}?id=${item.id}&sk=${item.sk}&startsWith=true`, {
         method: 'GET',
         headers: {
@@ -4191,12 +4197,14 @@
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-          { ...item1, promo: checked }
+          { ...item1, ['promo'+s]: checked }
         ),
       });
     }
-    var handleCatalogueChange = async (e, item) => {
+    var handleCatalogueChange = async (e, item,global) => {
       const checked = e.target.checked
+      const site = pathItemPath.split('/')[0]
+      const s = global ? ':global' : ':'+site
       const item1 = await fetch(`${backend_url}?id=${item.id}&sk=${item.sk}&startsWith=true`, {
         method: 'GET',
         headers: {
@@ -4209,7 +4217,7 @@
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-          { ...item1, catalogue: checked }
+          { ...item1, ['catalogue'+s]: checked }
         ),
       });
     }
@@ -4218,6 +4226,7 @@
       clonedFieldset.querySelector('#remove-galeryMenu').onclick = (e) => {
         e.target.closest('fieldset').remove()
       }
+      const global = clonedFieldset.querySelector('#global-input')
       //clonedFieldset.querySelector('#upload-button').onclick = (e) => handleUpload1(e, src)
       //const id = pathItemSku || pathItem.id
       let mergedItems = []
@@ -4273,17 +4282,17 @@
         const clonedRow = templateRow.cloneNode(true);
         clonedRow.querySelector('[data-picture-time]').textContent = item.date || ''
         const mainCheckbox = clonedRow.querySelector('[data-picture-main-checkbox]')
-        mainCheckbox.checked = !!item.main
-        mainCheckbox.onchange = (e) => handleMainChange(e, item)
+        mainCheckbox.checked = !!item['main:global']
+        mainCheckbox.onchange = (e) => handleMainChange(e, item,global)
         const secondaryCheckbox = clonedRow.querySelector('[data-picture-secondary-checkbox]')
-        secondaryCheckbox.checked = !!item.secondary
-        secondaryCheckbox.onchange = e => handleSecondaryChange(e, item)
+        secondaryCheckbox.checked = !!item['secondary:global']
+        secondaryCheckbox.onchange = e => handleSecondaryChange(e, item,global)
         const promoCheckbox = clonedRow.querySelector('[data-picture-promo-checkbox]')
-        promoCheckbox.checked = !!item.promo
-        promoCheckbox.onchange = (e) => handlePromoChange(e, item)
+        promoCheckbox.checked = !!item['promo:global']
+        promoCheckbox.onchange = (e) => handlePromoChange(e, item,global)
         const catalogueCheckbox = clonedRow.querySelector('[data-picture-catalog-checkbox]')
-        catalogueCheckbox.checked = !!item.catalogue
-        catalogueCheckbox.onchange = (e) => handleCatalogueChange(e, item)
+        catalogueCheckbox.checked = !!item['catalogue:global']
+        catalogueCheckbox.onchange = (e) => handleCatalogueChange(e, item,global)
         clonedRow.removeAttribute('hidden'); // Show the cloned row
         clonedRow.querySelector('[data-select-image]').onclick = selectImage
         //clonedRow.querySelector('[data-show-menu]').onclick = showMenu
@@ -21705,7 +21714,7 @@ headers: {
 
       const picsMenu = getElementById1('pics-menu')
       const clonedFieldset = picsMenu.querySelector('#gallery-menu-wrapper')
-
+      
       // Assign a unique id to the cloned fieldset
       let id
       if (pathItemArticle) {
