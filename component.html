@@ -5158,21 +5158,21 @@
       const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=pics&startsWith=true`;
       const { items } = await fetch(url).then(e => e.json())
       const site = pathItemPath.split('/')[0].toLowerCase()
-      let pics = items.filter(e => e['secondary:'+site] )
-      if(!pics.length){
-        pics = items.filter(e => e['secondary:global'] )
+      let pics = items.filter(e => e['secondary:' + site])
+      if (!pics.length) {
+        pics = items.filter(e => e['secondary:global'])
       }
-      if(!pics.length){
-        pics =items.filter(e => e['secondary'] )
+      if (!pics.length) {
+        pics = items.filter(e => e['secondary'])
       }
       pics.sort((a, b) => parseInt(a.picNumber || 1) - parseInt(b.picNumber || 1));
       let image
-      let mainPics = items.filter(e => e['main:'+site] )
-      if(!mainPics.length){
-        mainPics = items.filter(e => e['main:global'] )
+      let mainPics = items.filter(e => e['main:' + site])
+      if (!mainPics.length) {
+        mainPics = items.filter(e => e['main:global'])
       }
-      if(!mainPics.length){
-        mainPics =items.filter(e => e['main'] )
+      if (!mainPics.length) {
+        mainPics = items.filter(e => e['main'])
       }
       mainPics.sort((a, b) => parseInt(a.picNumber || 1) - parseInt(b.picNumber || 1));
       if (secondary) {
@@ -5454,20 +5454,20 @@
       const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=pics&startsWith=true`;
       const { items } = await fetch(url).then(e => e.json())
       const site = pathItemPath.split('/')[0].toLowerCase()
-      let pics = items.filter(e => e['secondary:'+site] )
-      if(!pics.length){
-        pics = items.filter(e => e['secondary:global'] )
+      let pics = items.filter(e => e['secondary:' + site])
+      if (!pics.length) {
+        pics = items.filter(e => e['secondary:global'])
       }
-      if(!pics.length){
-        pics =items.filter(e => e['secondary'] )
+      if (!pics.length) {
+        pics = items.filter(e => e['secondary'])
       }
       let image
-      let mainPics = items.filter(e => e['main:'+site] )
-      if(!mainPics.length){
-        mainPics = items.filter(e => e['main:global'] )
+      let mainPics = items.filter(e => e['main:' + site])
+      if (!mainPics.length) {
+        mainPics = items.filter(e => e['main:global'])
       }
-      if(!mainPics.length){
-        mainPics =items.filter(e => e['main'] )
+      if (!mainPics.length) {
+        mainPics = items.filter(e => e['main'])
       }
       if (secondary) {
 
@@ -11674,11 +11674,11 @@ checkbox1.setAttribute('hidden', "");
           else {
             max = parseInt(number)
           }
-          list = list.filter(e=>e)
+          list = list.filter(e => e)
           for (let i = 0; i < max; i++) {
             console.log('in')
             const element = list[i]
-            if(!element){
+            if (!element) {
               break;
             }
             const cloned = originalCart.cloneNode(true)
@@ -11759,7 +11759,7 @@ checkbox1.setAttribute('hidden', "");
 
             }
             else {
-              const price =prices[0] ? Math.min(...prices.map(obj => parseInt(obj.price))) : 0
+              const price = prices[0] ? Math.min(...prices.map(obj => parseInt(obj.price))) : 0
               const pV = cloned.querySelector('.price_normal').querySelector('.price_value')
 
               const integer = pV.querySelector('.product_price_integer')
@@ -18405,40 +18405,42 @@ elementsToRemove.forEach(element => element.remove());
           if (tag === 'img') {
             const src = child.getAttribute('src')
             const alt = child.getAttribute('alt')
+            if (src) {
+              const response = await fetch('https://api.allorigins.win/raw?url=' + src);
+              const blob = await response.blob()
 
-            const response = await fetch('https://api.allorigins.win/raw?url=' + src);
-            const blob = await response.blob()
+              const splited = src.split('/')
+              const name = splited[splited.length - 1].split('?')[0]
 
-            const splited = src.split('/')
-            const name = splited[splited.length - 1].split('?')[0]
+              const path = await upload(name, blob)
 
-            const path = await upload(name, blob)
+              log1('path ' + path)
+              const id = pathItem.id
+              const payload2 = {
 
-            log1('path ' + path)
-            const id = pathItem.id
-            const payload2 = {
+                time: (new Date()).getTime().toString(),
+                action: 'setAttribute',
+                target_element: foundE.element.id + '-tree',
+                key: 'alt',
+                value: alt,
 
-              time: (new Date()).getTime().toString(),
-              action: 'setAttribute',
-              target_element: foundE.element.id + '-tree',
-              key: 'alt',
-              value: alt,
-
+              }
+              pushAction(payload2)
+              const payload = {
+                id,
+                sk: path
+              }
+              await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+              });
+              const imageSrc = `https://s3.amazonaws.com/checkout-admin-panel/${path}`
+              await selectImage1(foundE.element.id + '-tree', imageSrc, path.split('.')[0].replace('pics', ''))
             }
-            pushAction(payload2)
-            const payload = {
-              id,
-              sk: path
-            }
-            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(payload),
-            });
-            const imageSrc = `https://s3.amazonaws.com/checkout-admin-panel/${path}`
-            await selectImage1(foundE.element.id + '-tree', imageSrc, path.split('.')[0].replace('pics', ''))
+
 
 
           }
@@ -18495,39 +18497,41 @@ elementsToRemove.forEach(element => element.remove());
           if (tag === 'img') {
             const src = child.getAttribute('src')
             const alt = child.getAttribute('alt')
-            const payload2 = {
+            if (src) {
+              const payload2 = {
 
-              time: (new Date()).getTime().toString(),
-              action: 'setAttribute',
-              target_element: newId,
-              key: 'alt',
-              value: alt,
+                time: (new Date()).getTime().toString(),
+                action: 'setAttribute',
+                target_element: newId,
+                key: 'alt',
+                value: alt,
 
+              }
+              pushAction(payload2)
+              const response = await fetch('https://api.allorigins.win/raw?url=' + src);
+              const blob = await response.blob()
+
+              const splited = src.split('/')
+              const name = splited[splited.length - 1].split('?')[0]
+
+              const path = await upload(name, blob)
+
+              log1('path ' + path)
+              const id = pathItem.id
+              const payload = {
+                id,
+                sk: path
+              }
+              await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+              });
+              const imageSrc = `https://s3.amazonaws.com/checkout-admin-panel/${path}`
+              await selectImage1(newId, imageSrc, path.split('.')[0].replace('pics', ''))
             }
-            pushAction(payload2)
-            const response = await fetch('https://api.allorigins.win/raw?url=' + src);
-            const blob = await response.blob()
-
-            const splited = src.split('/')
-            const name = splited[splited.length - 1].split('?')[0]
-
-            const path = await upload(name, blob)
-
-            log1('path ' + path)
-            const id = pathItem.id
-            const payload = {
-              id,
-              sk: path
-            }
-            await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(payload),
-            });
-            const imageSrc = `https://s3.amazonaws.com/checkout-admin-panel/${path}`
-            await selectImage1(newId, imageSrc, path.split('.')[0].replace('pics', ''))
 
 
           }
@@ -18742,40 +18746,41 @@ elementsToRemove.forEach(element => element.remove());
                   if (tag === 'img') {
                     const src = child.getAttribute('src')
                     const alt = child.getAttribute('alt')
+                    if (src) {
+                      const response = await fetch('https://api.allorigins.win/raw?url=' + src);
+                      const blob = await response.blob()
 
-                    const response = await fetch('https://api.allorigins.win/raw?url=' + src);
-                    const blob = await response.blob()
+                      const splited = src.split('/')
+                      const name = splited[splited.length - 1].split('?')[0]
 
-                    const splited = src.split('/')
-                    const name = splited[splited.length - 1].split('?')[0]
+                      const path = await upload(name, blob)
 
-                    const path = await upload(name, blob)
+                      log1('path ' + path)
+                      const id = pathItem.id
+                      const payload2 = {
 
-                    log1('path ' + path)
-                    const id = pathItem.id
-                    const payload2 = {
+                        time: (new Date()).getTime().toString(),
+                        action: 'setAttribute',
+                        target_element: foundE.element.id + '-tree',
+                        key: 'alt',
+                        value: alt,
 
-                      time: (new Date()).getTime().toString(),
-                      action: 'setAttribute',
-                      target_element: foundE.element.id + '-tree',
-                      key: 'alt',
-                      value: alt,
-
+                      }
+                      pushAction(payload2)
+                      const payload = {
+                        id,
+                        sk: path
+                      }
+                      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload),
+                      });
+                      const imageSrc = `https://s3.amazonaws.com/checkout-admin-panel/${path}`
+                      await selectImage1(foundE.element.id + '-tree', imageSrc, path.split('.')[0].replace('pics', ''))
                     }
-                    pushAction(payload2)
-                    const payload = {
-                      id,
-                      sk: path
-                    }
-                    await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify(payload),
-                    });
-                    const imageSrc = `https://s3.amazonaws.com/checkout-admin-panel/${path}`
-                    await selectImage1(foundE.element.id + '-tree', imageSrc, path.split('.')[0].replace('pics', ''))
 
 
                   }
@@ -18836,39 +18841,41 @@ elementsToRemove.forEach(element => element.remove());
                   if (tag === 'img') {
                     const src = child.getAttribute('src')
                     const alt = child.getAttribute('alt')
-                    const payload2 = {
+                    if (src) {
+                      const payload2 = {
 
-                      time: (new Date()).getTime().toString(),
-                      action: 'setAttribute',
-                      target_element: newId,
-                      key: 'alt',
-                      value: alt,
+                        time: (new Date()).getTime().toString(),
+                        action: 'setAttribute',
+                        target_element: newId,
+                        key: 'alt',
+                        value: alt,
 
+                      }
+                      pushAction(payload2)
+                      const response = await fetch('https://api.allorigins.win/raw?url=' + src);
+                      const blob = await response.blob()
+
+                      const splited = src.split('/')
+                      const name = splited[splited.length - 1].split('?')[0]
+
+                      const path = await upload(name, blob)
+
+                      log1('path ' + path)
+                      const id = pathItem.id
+                      const payload = {
+                        id,
+                        sk: path
+                      }
+                      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload),
+                      });
+                      const imageSrc = `https://s3.amazonaws.com/checkout-admin-panel/${path}`
+                      await selectImage1(newId, imageSrc, path.split('.')[0].replace('pics', ''))
                     }
-                    pushAction(payload2)
-                    const response = await fetch('https://api.allorigins.win/raw?url=' + src);
-                    const blob = await response.blob()
-
-                    const splited = src.split('/')
-                    const name = splited[splited.length - 1].split('?')[0]
-
-                    const path = await upload(name, blob)
-
-                    log1('path ' + path)
-                    const id = pathItem.id
-                    const payload = {
-                      id,
-                      sk: path
-                    }
-                    await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify(payload),
-                    });
-                    const imageSrc = `https://s3.amazonaws.com/checkout-admin-panel/${path}`
-                    await selectImage1(newId, imageSrc, path.split('.')[0].replace('pics', ''))
 
 
                   }
