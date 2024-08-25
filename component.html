@@ -5151,10 +5151,9 @@
 
 
     }
-    const articleToPictures = async (sku, secondary, hid) => {
+    const articleToPictures = async (sku, hid) => {
+      const secondary = true
       const id = 'article:' + sku
-      const skuVariables = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=sku-variables;&startsWith=true`)
-        .then(response => response.json()).then(res => res.items)
       const url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${id}&sk=pics&startsWith=true`;
       const { items } = await fetch(url).then(e => e.json())
       const site = pathItemPath.split('/')[0].toLowerCase()
@@ -5166,7 +5165,7 @@
         pics = items.filter(e => e['secondary'])
       }
       pics.sort((a, b) => parseInt(a.picNumber || 1) - parseInt(b.picNumber || 1));
-      let image
+
       let mainPics = items.filter(e => e['main:' + site])
       if (!mainPics.length) {
         mainPics = items.filter(e => e['main:global'])
@@ -5175,129 +5174,30 @@
         mainPics = items.filter(e => e['main'])
       }
       mainPics.sort((a, b) => parseInt(a.picNumber || 1) - parseInt(b.picNumber || 1));
-      if (secondary) {
 
 
-        image = querySelectorAll1('[data-import_article="img-lead"]')[0]
-      }
-      else {
-        if (!mainPics.length) {
-          return
-        }
-        image = querySelectorAll1('[data-import_article="img"]')[0]
-      }
+
+      mainImage = querySelectorAll1('.article_lead_img')[0]
+
+
+      secondaryImages = Array.from(querySelectorAll1('.article_img'))
+
 
       const cropedImages = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${hid}&sk=crop:article&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
 
-      const withSku = pics.filter(e =>
-        e.gallery_variables_sku_variables && Object.keys(e.gallery_variables_sku_variables).some(key =>
-          e.gallery_variables_sku_variables[key].length > 0
-        )
-      );
-      const withoutSku = pics.filter(e =>
-        !e.gallery_variables_sku_variables || Object.keys(e.gallery_variables_sku_variables).every(key =>
-          e.gallery_variables_sku_variables[key].length === 0
-        )
-      );
 
-      const mainwithSku = mainPics.filter(e =>
-        e.gallery_variables_sku_variables && Object.keys(e.gallery_variables_sku_variables).some(key =>
-          e.gallery_variables_sku_variables[key].length > 0
-        )
-      );
       const skToPic = (sk) => {
         const uuid = sk.split('.')[0].replace('pics', '')
         const found = cropedImages[uuid]
         return found.join(' ,')
         return { src, data_src, imageUUID: sk.split('.')[0].replace('pics', '') }
       }
-      const picsWithCondition = {}
-      console.log('with sku' + JSON.stringify(withSku))
-      for (const element of withSku) {
-        const keys = Object.keys(element.gallery_variables_sku_variables)
-        const data = []
-        for (const key of keys) {
-          data.push({
-            legend: key,
-            items: element.gallery_variables_sku_variables[key]
-          })
-        }
-        const combinations = generateCombinations(data)
-        for (const combination of combinations) {
-          const r = skToPic(element.sk)
-          if (picsWithCondition[combination]?.length) {
-            picsWithCondition[combination].push(r)
-          }
-          else {
-            picsWithCondition[combination] = [r]
-          }
-        }
-
-      }
-      const mainpicsWithCondition = {}
-      console.log(JSON.stringify(withSku))
-      for (const element of mainwithSku) {
-        const keys = Object.keys(element.gallery_variables_sku_variables)
-        const data = []
-        for (const key of keys) {
-          data.push({
-            legend: key,
-            items: element.gallery_variables_sku_variables[key]
-          })
-        }
-        const combinations = generateCombinations(data)
-        for (const combination of combinations) {
-          const r = skToPic(element.sk)
-          if (mainpicsWithCondition[combination]?.length) {
-            mainpicsWithCondition[combination].push(r)
-          }
-          else {
-            mainpicsWithCondition[combination] = [r]
-          }
-        }
-
-      }
 
 
-      console.log('res 5 ' + JSON.stringify(picsWithCondition))
 
-      /*
-      let varibleMap = skuVariables.map(e => e.sk.replace('sku-variables;', '')).map(async combination => {
-        const splited = combination.split(';')
 
-        const pics = []
-        for (const pic of withSku) {
-          let matched = 1
-          for (const element of splited) {
-            const [key, value] = element.split(':')
-            if (!pic.gallery_variables_sku_variables[key]) {
-              continue
-            }
-            else if (pic.gallery_variables_sku_variables[key].includes(value)) {
-              continue
-            }
-            else {
-              matched = 0
-              break;
-            }
-          }
-          if (matched) {
-            pics.push(pic)
-          }
-        }
-        let transformedPics = pics.map(e => e.sk)
-          .map(async sk => {
-            const uuid = sk.split('.')[0].replace('pics', '')
-            const found = cropedImages.find(e => e.sk.endsWith(':' + uuid))
-            return found.list.join(',')
-            return { src, data_src, imageUUID: sk.split('.')[0].replace('pics', '') }
-          })
-        transformedPics = await Promise.all(transformedPics)
-        return { combination: sku + ';' + combination, pics: transformedPics }
-      })
-      */
-      let keys = Object.keys(mainpicsWithCondition)
+
       function filterObjectByIndex(obj, index) {
         let result = {};
         for (let key in obj) {
@@ -5312,122 +5212,41 @@
         }
         return result;
       }
-      let lastEl = image.id + "-tree"
-      if (keys.length) {
-        const payload2 = {
 
-          time: (new Date()).getTime().toString(),
-          action: 'setAttribute',
-          target_element: lastEl,
-          key: 'data-var-img',
-          value: JSON.stringify(filterObjectByIndex(mainpicsWithCondition, 0)),
 
-        }
-        await pushAction(payload2)
+      const sk = mainPics[0].sk
+      if (sk) {
         const payload3 = {
 
           time: (new Date()).getTime().toString(),
           action: 'setAttribute',
-          target_element: lastEl,
+          target_element: mainImage.id + '-tree',
           key: 'srcset',
-          value: mainpicsWithCondition[keys[0]][0],
+          value: skToPic(sk),
 
         }
         await pushAction(payload3)
-        //postToDb({ id: `article:${sku}`, sk: 'data_lead-image:'+site, crops: payload3.value })
-        //keys = Object.keys(picsWithCondition)
-        console.log('with ' + JSON.stringify(picsWithCondition))
-      }
-      else {
-        console.log(pics)
-        console.log(JSON.stringify(withoutSku))
-        const sk = mainPics[0].sk
-        if (sk) {
-          const payload3 = {
-
-            time: (new Date()).getTime().toString(),
-            action: 'setAttribute',
-            target_element: lastEl,
-            key: 'srcset',
-            value: skToPic(sk),
-
-          }
-          await pushAction(payload3)
-          //postToDb({ id: `article:${sku}`, sk: 'data_lead-image', crops: payload3.value })
-
-        }
-      }
-
-      if (secondary) {
-        for (let i = 0; i < picsWithCondition[keys[0]]?.length || 0; i++) {
-          let newId = duplicateId(image.id).id
-          const actionObject = {
-            time: (new Date()).getTime(),
-            action: 'InsertAfter',
-            target_element: lastEl,
-            inserted_element: { originalId: image.id + '-tree', id: newId },
-          };
-          await pushAction(actionObject)
-
-
-          const payload3 = {
-
-            time: (new Date()).getTime().toString(),
-            action: 'setAttribute',
-            target_element: newId,
-            key: 'srcset',
-            value: picsWithCondition[keys[0]][i],
-
-          }
-          await pushAction(payload3)
-          const payload2 = {
-
-            time: (new Date()).getTime().toString(),
-            action: 'setAttribute',
-            target_element: newId,
-            key: 'data-var-img',
-            value: JSON.stringify(filterObjectByIndex(picsWithCondition, i)),
-
-          }
-          await pushAction(payload2)
-          lastEl = newId
-        }
-        console.log(JSON.stringify(withoutSku))
-        for (let i = 0; i < withoutSku.length; i++) {
-          let newId = duplicateId(image.id).id
-          const actionObject = {
-            time: (new Date()).getTime(),
-            action: 'InsertAfter',
-            target_element: lastEl,
-            inserted_element: { originalId: image.id + '-tree', id: newId },
-          };
-          await pushAction(actionObject)
-          //const key = pics[i].sk
-          const uuid = withoutSku[i].sk.split('.')[0].replace('pics', '')
-          const found = cropedImages[uuid]
-          const set = found.join(',')
-          const payload3 = {
-
-            time: (new Date()).getTime().toString(),
-            action: 'setAttribute',
-            target_element: newId,
-            key: 'srcset',
-            value: set,
-
-          }
-          await pushAction(payload3)
-          const el = {
-            time: (new Date()).getTime(),
-            action: 'removeAttribute',
-            target_element: newId,
-            key: "data-var-img"
-          }
-          await pushAction(el)
-          // await selectImage1(newId, 'https://s3.amazonaws.com/checkout-admin-panel/' + key, key.split('.')[0].replace('pics', ''))
-          lastEl = newId
-        }
+        //postToDb({ id: `article:${sku}`, sk: 'data_lead-image', crops: payload3.value })
 
       }
+
+
+
+      for (let i = 0; i < secondaryImages?.length || 0; i++) {
+        const payload3 = {
+
+          time: (new Date()).getTime().toString(),
+          action: 'setAttribute',
+          target_element: secondaryImages[i].id + '-tree',
+          key: 'srcset',
+          value: skToPic(pics[i].sk),
+
+        }
+        await pushAction(payload3)
+
+      }
+
+
 
       /*
       for (let i = 1; i < pics.length; i++) {
@@ -5785,7 +5604,7 @@
       console.log('secondary' + eventData.url)
       const response = await fetch(pup_url, options);
 
-      
+
       console.log('done')
     }
 
@@ -7215,9 +7034,8 @@
         await skuToPictures(skuToPicturesItem, secondary, hid)
       }
       if (articleToPicturesItem) {
-        const secondary = urlParams.get('secondary')
         const hid = urlParams.get('hid')
-        await articleToPictures(articleToPicturesItem, secondary, hid)
+        await articleToPictures(articleToPicturesItem, hid)
       }
       if (skuToButtonPics) {
         //const secondary = urlParams.get('secondary')
