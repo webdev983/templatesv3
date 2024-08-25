@@ -11606,8 +11606,10 @@ checkbox1.setAttribute('hidden', "");
             'Content-Type': 'application/json',
           },
         }).then(e => e.json()).then(({ items }) => items[0]?.value)
-        section.querySelector('.collection_products_heading').textContent = heading
-        section.querySelector('.collection_products_lead_paragraph').textContent = leadP
+        const h = section.querySelector('.collection_products_heading')
+        h && (h.textContent = heading)
+        const l = section.querySelector('.collection_products_lead_paragraph')
+        l &&(l.textContent = leadP)
         if (name === 'related_products') {
           list = await fetch(`${backend_url}?id=sku:${pathItemSku}&sk=relatedProducts&startsWith=true`, {
             method: 'GET',
