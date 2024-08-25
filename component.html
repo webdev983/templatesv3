@@ -5339,9 +5339,9 @@
       if (!pics.length) {
         pics = items.filter(e => e['secondary'])
       }
-      console.log('not sorted'+JSON.stringify(pics))
-      pics.sort((a, b) => parseInt(a['picNumber:global'] || a['picNumber:'+site] ) - parseInt(b['picNumber:global'] || b['picNumber:'+site]  ));
-      console.log('sorted'+JSON.stringify(pics))
+      console.log('not sorted' + JSON.stringify(pics))
+      pics.sort((a, b) => parseInt(a['picNumber:global'] || a['picNumber:' + site]) - parseInt(b['picNumber:global'] || b['picNumber:' + site]));
+      console.log('sorted' + JSON.stringify(pics))
 
       let mainPics = items.filter(e => e['main:' + site])
       if (!mainPics.length) {
@@ -5350,7 +5350,7 @@
       if (!mainPics.length) {
         mainPics = items.filter(e => e['main'])
       }
-      mainPics.sort((a, b) => parseInt(b['picNumber:global'] || b['picNumber:'+site] || 1) - parseInt(a['picNumber:global'] || a['picNumber:'+site]  || 1));
+      mainPics.sort((a, b) => parseInt(b['picNumber:global'] || b['picNumber:' + site] || 1) - parseInt(a['picNumber:global'] || a['picNumber:' + site] || 1));
 
 
 
@@ -5365,7 +5365,7 @@
 
 
       const skToPic = (sk) => {
-        console.log('sk to pics'+ sk)
+        console.log('sk to pics' + sk)
         const uuid = sk.split('.')[0].replace('pics', '')
         const found = cropedImages[uuid]
         return found.join(' ,')
@@ -5411,7 +5411,7 @@
 
 
       for (let i = 0; i < secondaryImages?.length || 0; i++) {
-        if(!pics[i]){
+        if (!pics[i]) {
           break;
         }
         const payload3 = {
@@ -7115,7 +7115,7 @@
 
       }
       catch (e) {
-        
+
         console.log(e.message)
       }
 
@@ -11502,13 +11502,13 @@ checkbox1.setAttribute('hidden', "");
               return true
             });
           if (!flag) {
-            if ((element.main || element['main:'+site] ||element['main:global']) && !mainCrop) {
+            if ((element.main || element['main:' + site] || element['main:global']) && !mainCrop) {
               mainCrop = crop[imageUUID].join(',')
             }
-            if ((element.promo || element['promo:'+site] ||element['promo:global']) && !promoCrop) {
+            if ((element.promo || element['promo:' + site] || element['promo:global']) && !promoCrop) {
               promoCrop = crop[imageUUID].join(',')
             }
-            if ((element.catalogue || element['catalogue:'+site] ||element['catalogue:global']) && !catalogCrop) {
+            if ((element.catalogue || element['catalogue:' + site] || element['catalogue:global']) && !catalogCrop) {
               catalogCrop = crop[imageUUID].join(',')
 
             }
@@ -11538,13 +11538,13 @@ checkbox1.setAttribute('hidden', "");
           splited.push([l, s].join('.'))
           return splited.join('_') + ' ' + l
         })
-        if ((element.main || element['main:'+site] ||element['main:global'])&& !mainCrop) {
+        if ((element.main || element['main:' + site] || element['main:global']) && !mainCrop) {
           mainCrop = crop[imageUUID].join(',')
         }
-        if ((element.promo || element['promo:'+site] ||element['promo:global']) && !promoCrop) {
+        if ((element.promo || element['promo:' + site] || element['promo:global']) && !promoCrop) {
           promoCrop = crop[imageUUID].join(',')
         }
-        if ((element.catalogue || element['catalogue:'+site] ||element['catalogue:global']) && !catalogCrop) {
+        if ((element.catalogue || element['catalogue:' + site] || element['catalogue:global']) && !catalogCrop) {
           catalogCrop = crop[imageUUID].join(',')
 
         }
@@ -11583,10 +11583,31 @@ checkbox1.setAttribute('hidden', "");
         console.log('section ' + section.id)
         const [name, number] = section.getAttribute('data-builder-collection').split(':')
         const originalCart = section.querySelector('.catalog_product')
-        
+
         //get related products
         let list
         console.log('name ' + name)
+        const site = pathItemPath.split('/')[0].toLowerCase()
+        const leadPUrl = `${backend_url}?id=${pathItemCollection}&sk=data_leadP:${site}&startsWith=true`
+        console.log('getting1 ' + leadPUrl)
+        const leadP = await fetch(leadPUrl, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(e => e.json()).then(({ items }) => items[0]?.value)
+
+
+        const headingUrl = `${backend_url}?id=${pathItemCollection}&sk=data_heading:${site}&startsWith=true`
+        console.log('getting1 ' + headingUrl)
+        const heading = await fetch(headingUrl, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(e => e.json()).then(({ items }) => items[0]?.value)
+        section.querySelector('.collection_products_heading').textContent = heading
+        section.querySelector('.collection_products_lead_paragraph').textContent = leadP
         if (name === 'related_products') {
           list = await fetch(`${backend_url}?id=sku:${pathItemSku}&sk=relatedProducts&startsWith=true`, {
             method: 'GET',
@@ -11605,27 +11626,7 @@ checkbox1.setAttribute('hidden', "");
           const items = d.items[0].items
           console.log('for name2' + JSON.stringify(items))
           list = items.filter(e => e)
-          const site = pathItemPath.split('/')[0].toLowerCase()
-          const leadPUrl = `${backend_url}?id=${pathItemCollection}&sk=data_leadP:${site}&startsWith=true`
-          console.log('getting1 ' + leadPUrl)
-          const leadP = await fetch(leadPUrl, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }).then(e => e.json()).then(({ items }) => items[0]?.value)
 
-
-          const headingUrl = `${backend_url}?id=${pathItemCollection}&sk=data_heading:${site}&startsWith=true`
-          console.log('getting1 ' + headingUrl)
-          const heading = await fetch(headingUrl, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }).then(e => e.json()).then(({ items }) => items[0]?.value)
-          querySelectorAll1('.collection_products_heading')[0].textContent = heading
-          querySelectorAll1('.collection_products_lead_paragraph')[0].textContent = leadP
         }
 
         else {
@@ -11665,19 +11666,19 @@ checkbox1.setAttribute('hidden', "");
             max = parseInt(number)
           }
           list = list.filter(e => e)
-          console.log('max is '+max)
+          console.log('max is ' + max)
           for (let i = 0; i < max; i++) {
             console.log('in')
             const element = list[i]
             if (!element) {
-              
+
               break;
             }
             let cloned = section
-            if(max>1){
+            if (max > 1) {
               cloned = originalCart.cloneNode(true)
             }
-             
+
             const anchorUrl = `${backend_url}?id=sku:${element}&sk=addedSite:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`
             console.log('getting ' + anchorUrl)
             const anchor = await fetch(anchorUrl, {
@@ -11778,7 +11779,7 @@ checkbox1.setAttribute('hidden', "");
           originalCart && originalCart.remove()
         }
         catch (e) {
-          
+
           console.log('prooob ' + e.message)
         }
       }
@@ -12474,7 +12475,7 @@ checkbox1.setAttribute('hidden', "");
           await funcDictionary[item.name]()
         }
         catch (e) {
-          
+
           console.error(item.name + ' errored ' + e.message)
           return
         }
@@ -12835,7 +12836,7 @@ checkbox1.setAttribute('hidden', "");
       }
 
       catch (e) {
-        
+
         if (!errored) {
           console.log('\tname: ' + e.name + ' message: ' + e.message + ' at: ' + e.at + ' text: ' + e.text);
           log1(e.stack);
