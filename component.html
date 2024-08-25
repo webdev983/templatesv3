@@ -11583,6 +11583,7 @@ checkbox1.setAttribute('hidden', "");
         console.log('section ' + section.id)
         const [name, number] = section.getAttribute('data-builder-collection').split(':')
         const originalCart = section.querySelector('.catalog_product')
+        
         //get related products
         let list
         console.log('name ' + name)
@@ -11670,7 +11671,11 @@ checkbox1.setAttribute('hidden', "");
             if (!element) {
               break;
             }
-            const cloned = originalCart.cloneNode(true)
+            let cloned = section
+            if(max>1){
+              cloned = originalCart.cloneNode(true)
+            }
+             
             const anchorUrl = `${backend_url}?id=sku:${element}&sk=addedSite:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`
             console.log('getting ' + anchorUrl)
             const anchor = await fetch(anchorUrl, {
@@ -11768,7 +11773,7 @@ checkbox1.setAttribute('hidden', "");
             originalCart.parentNode.append(cloned)
 
           }
-          originalCart.remove()
+          originalCart && originalCart.remove()
         }
         catch (e) {
           
