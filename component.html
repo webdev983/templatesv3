@@ -17322,12 +17322,12 @@ elementsToRemove.forEach(element => element.remove());
 
                     // Get positions of element1 and element2
                     const pos1 = getPositionInDOM(clonerAttributes[i]);
-                    const pos2 = getPositionInDOM(clonerAttributes[i+1]);
+                    const pos2 =clonerAttributes[i+1] ? getPositionInDOM(clonerAttributes[i+1]) : undefined;
 
                     // Filter elements that are after element1 and before element2
                     const filteredElements = Array.from(elements).filter(element => {
                       const pos = getPositionInDOM(element);
-                      return pos > pos1 && pos < pos2;
+                      return pos > pos1 &&(!pos2 || pos < pos2);
                     });
 
                     filteredElements.forEach(element => {
