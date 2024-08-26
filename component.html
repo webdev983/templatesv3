@@ -17320,7 +17320,12 @@ elementsToRemove.forEach(element => element.remove());
                     objectFromClonedElements[attributeKey] = clonerAttribute.innerHTML
                   }
                   else {
-                    clonerAttribute.querySelectorAll('[data-transfer-sender]:not([data-b-value=""]').forEach(element => {
+                    const elements = clonerAttribute.querySelectorAll('[data-transfer-sender]:not([data-b-value=""]')
+                    const next = clonerAttribute.nextElementSibling
+                    if(next && next.hasAttribute('data-transfer-sender') && !next.hasAttribute('data-transfer-cloner')){
+                      elements.push(next)
+                    }
+                    elements.forEach(element => {
                       const attributeKey = element.getAttribute('data-transfer-sender').replace(`${sender}.${currentPath}.`, '');
                       if (objectFromClonedElements[attributeKey] === null) {
                         // If the attribute key contains dots indicating sub-objects
