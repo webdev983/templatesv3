@@ -2594,7 +2594,7 @@
               <textarea data-text-value class="textdata" id="textdata" rows="20"></textarea>
             </details>
 
-  
+
 
 
           </details>
@@ -2602,14 +2602,15 @@
         </div>
       </details>
       <details id="collection-menu" hidden style="margin-bottom: 7px;">
-        <summary class="summary-L-3"><span class="l-2">✨</span><span class="l-3 b-dark-blue">collections</span></summary>
+        <summary class="summary-L-3"><span class="l-2">✨</span><span class="l-3 b-dark-blue">collections</span>
+        </summary>
 
         <form style="padding: 10px; margin-left:25px;">
-          <label class="l-4"><input type="radio" checked="" id="product-collection-selection" 
+          <label class="l-4"><input type="radio" checked="" id="product-collection-selection"
               name="collection-selection">
-              <span class="l-4">📦 Product</span></label>
-          <label class="l-4"><input type="radio" id="article-collection-selection" 
-              name="collection-selection"><span class="l-4">✍🏽 Article</span></label>
+            <span class="l-4">📦 Product</span></label>
+          <label class="l-4"><input type="radio" id="article-collection-selection" name="collection-selection"><span
+              class="l-4">✍🏽 Article</span></label>
         </form>
 
 
@@ -2765,7 +2766,7 @@
                   class="l-3 b-dark-blue">.</span></label>
             </td>
 
-            
+
 
           </tr>
           <tr id="sku-collection-item" hidden>
@@ -11466,7 +11467,7 @@ checkbox1.setAttribute('hidden', "");
         const h = section.querySelector('.collection_products_heading')
         h && (h.textContent = heading)
         const l = section.querySelector('.collection_products_lead_paragraph')
-        l &&(l.textContent = leadP)
+        l && (l.textContent = leadP)
         if (name === 'related_products') {
           list = await fetch(`${backend_url}?id=sku:${pathItemSku}&sk=relatedProducts&startsWith=true`, {
             method: 'GET',
@@ -17302,7 +17303,18 @@ elementsToRemove.forEach(element => element.remove());
                       log1('inner ' + clonerAttribute.innerText)
                       objectFromClonedElements[attributeKey] = clonerAttribute.innerText;
                     }
-
+                    const next = clonerAttribute.nextElementSibling
+                    if (next && next.hasAttribute('data-transfer-sender')) {
+                      console.log('next found ' + next.id + ' ' + next.tagName)
+                      const attributeKey = next.getAttribute('data-transfer-sender').split('.').pop();
+                      if (objectFromClonedElements[attributeKey] === null) {
+                        objectFromClonedElements[attributeKey] = parseInt(next.innerText);
+                      }
+                      else {
+                        log1('inner ' + clonerAttribute.innerText)
+                        objectFromClonedElements[attributeKey] = next.innerText;
+                      }
+                    }
                   }
                   else if (clonerAttribute.hasAttribute('data-transfer-sender-href')) {
                     const attributeKey = clonerAttribute.getAttribute('data-transfer-sender-href').split('.').pop();
@@ -17322,8 +17334,8 @@ elementsToRemove.forEach(element => element.remove());
                   else {
                     const elements = clonerAttribute.querySelectorAll('[data-transfer-sender]:not([data-b-value=""]')
                     const next = clonerAttribute.nextElementSibling
-                    if(next && next.hasAttribute('data-transfer-sender') ){
-                      console.log('next found '+next.id + ' '+next.tagName)
+                    if (next && next.hasAttribute('data-transfer-sender')) {
+                      console.log('next found ' + next.id + ' ' + next.tagName)
                       elements.push(next)
                     }
                     elements.forEach(element => {
