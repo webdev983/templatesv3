@@ -2594,7 +2594,7 @@
               <textarea data-text-value class="textdata" id="textdata" rows="20"></textarea>
             </details>
 
-  
+
 
 
           </details>
@@ -2602,14 +2602,15 @@
         </div>
       </details>
       <details id="collection-menu" hidden style="margin-bottom: 7px;">
-        <summary class="summary-L-3"><span class="l-2">✨</span><span class="l-3 b-dark-blue">collections</span></summary>
+        <summary class="summary-L-3"><span class="l-2">✨</span><span class="l-3 b-dark-blue">collections</span>
+        </summary>
 
         <form style="padding: 10px; margin-left:25px;">
-          <label class="l-4"><input type="radio" checked="" id="product-collection-selection" 
+          <label class="l-4"><input type="radio" checked="" id="product-collection-selection"
               name="collection-selection">
-              <span class="l-4">📦 Product</span></label>
-          <label class="l-4"><input type="radio" id="article-collection-selection" 
-              name="collection-selection"><span class="l-4">✍🏽 Article</span></label>
+            <span class="l-4">📦 Product</span></label>
+          <label class="l-4"><input type="radio" id="article-collection-selection" name="collection-selection"><span
+              class="l-4">✍🏽 Article</span></label>
         </form>
 
 
@@ -2765,7 +2766,7 @@
                   class="l-3 b-dark-blue">.</span></label>
             </td>
 
-            
+
 
           </tr>
           <tr id="sku-collection-item" hidden>
@@ -11466,7 +11467,7 @@ checkbox1.setAttribute('hidden', "");
         const h = section.querySelector('.collection_products_heading')
         h && (h.textContent = heading)
         const l = section.querySelector('.collection_products_lead_paragraph')
-        l &&(l.textContent = leadP)
+        l && (l.textContent = leadP)
         if (name === 'related_products') {
           list = await fetch(`${backend_url}?id=sku:${pathItemSku}&sk=relatedProducts&startsWith=true`, {
             method: 'GET',
@@ -17274,7 +17275,7 @@ elementsToRemove.forEach(element => element.remove());
             if (clonerAttributes.length > 0) {
               const arrayOfObjects = [];
               // Iterate through each set of cloned elements
-              clonerAttributes.forEach((clonerAttribute,i) => {
+              clonerAttributes.forEach((clonerAttribute, i) => {
                 if (typeof json[key][0] === 'string') {
                   if (clonerAttribute.hasAttribute('data-transfer-sender')) {
                     arrayOfObjects.push(clonerAttribute.innerText);
@@ -17310,13 +17311,26 @@ elementsToRemove.forEach(element => element.remove());
                   }
                   else {
                     const elements = querySelectorAll1(`[data-transfer-sender^="${sender}.${currentPath}."]:not([data-b-value=""]`)
-                    const rect1 = clonerAttribute.getBoundingClientRect();
-                    const rect2 = clonerAttributes[i+1]?.getBoundingClientRect();
-                    const filteredElements = Array.from(elements).filter(element => {
-                        const rect = element.getBoundingClientRect();
-                        return rect.top > rect1.bottom && (!rect2 || rect.bottom < rect2.top);
-                      });
-                    console.log('senders '+ Array.from(elements).map(e=>e.getAttribute('data-transfer-sender')).join(' ,'))
+                    function getPositionInDOM(el) {
+                      let position = 0;
+                      while (el.previousElementSibling) {
+                        position++;
+                        el = el.previousElementSibling;
+                      }
+                      return position;
+                    }
+
+                    // Get positions of element1 and element2
+                    const pos1 = getPositionInDOM(element1);
+                    const pos2 = getPositionInDOM(element2);
+
+                    // Filter elements that are after element1 and before element2
+                    const filteredElements = elementsArray.filter(element => {
+                      const pos = getPositionInDOM(element);
+                      return pos > pos1 && pos < pos2;
+                    });
+
+                    console.log('senders ' + Array.from(elements).map(e => e.getAttribute('data-transfer-sender')).join(' ,'))
                     filteredElements.forEach(element => {
                       const attributeKey = element.getAttribute('data-transfer-sender').replace(`${sender}.${currentPath}.`, '');
                       if (objectFromClonedElements[attributeKey] === null) {
