@@ -17293,18 +17293,7 @@ elementsToRemove.forEach(element => element.remove());
                 else {
                   const objectFromClonedElements = deepCopy(or)//{ ...json[key][0] };
                   // Iterate through each cloned element within the current set
-                  if (clonerAttribute.hasAttribute('data-transfer-sender')) {
-                    const attributeKey = clonerAttribute.getAttribute('data-transfer-sender').split('.').pop();
-                    if (objectFromClonedElements[attributeKey] === null) {
-                      objectFromClonedElements[attributeKey] = parseInt(clonerAttribute.innerText);
-                    }
-                    else {
-                      log1('inner ' + clonerAttribute.innerText)
-                      objectFromClonedElements[attributeKey] = clonerAttribute.innerText;
-                    }
-                    
-                  }
-                  else if (clonerAttribute.hasAttribute('data-transfer-sender-href')) {
+                  if (clonerAttribute.hasAttribute('data-transfer-sender-href')) {
                     const attributeKey = clonerAttribute.getAttribute('data-transfer-sender-href').split('.').pop();
 
                     objectFromClonedElements[attributeKey] = clonerAttribute.getAttribute('href');
