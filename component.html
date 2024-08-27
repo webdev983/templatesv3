@@ -5910,19 +5910,17 @@
         }
       })
       const totalReviews = [...reviews, ...fakeReviews]
-      if(!totalReviews.length){
-        querySelectorAll1('.product_reviews_list')[0].setAttribute('hidden','')
-        querySelectorAll1('[data-transfer-sender="product-schema-org.aggregateRating.ratingValue"]').forEach(e=>
-          {
-            e.removeAttribute('data-transfer-sender')
-          }
+      if (!totalReviews.length) {
+        querySelectorAll1('.product_reviews_list')[0].setAttribute('hidden', '')
+        querySelectorAll1('[data-transfer-sender="product-schema-org.aggregateRating.ratingValue"]').forEach(e => {
+          e.removeAttribute('data-transfer-sender')
+        }
         )
-         querySelectorAll1('[data-transfer-sender="product-schema-org.aggregateRating.reviewCount"]').forEach(e=>
-          {
-            e.removeAttribute('data-transfer-sender')
-          }
+        querySelectorAll1('[data-transfer-sender="product-schema-org.aggregateRating.reviewCount"]').forEach(e => {
+          e.removeAttribute('data-transfer-sender')
+        }
         )
-        querySelectorAll1('.load_more_reviews').forEach(e=>e.setAttribute('hidden',''))
+        querySelectorAll1('.load_more_reviews').forEach(e => e.setAttribute('hidden', ''))
         return
       }
       totalReviews.sort((a, b) => new Date(b.dbstimestamp) - new Date(a.dbstimestamp));
@@ -5968,7 +5966,7 @@
         }
 
       }
-      
+
       if (!loadMore) {
         querySelectorAll1('.load_more_reviews')[0].setAttribute('hidden', '')
       }
@@ -11673,6 +11671,8 @@ checkbox1.setAttribute('hidden', "");
       const descriptionWithVar = getElementById1('data_product_description-schema-with-vars').querySelector('#textdata').value
       const skuSiteValue = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${pathItemSku}&sk=site_price:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`)
         .then(response => response.json()).then(res => res.items)
+      const site = pathItemPath.split('/')[0].toLowerCase()
+
       if (skuVariables.length > 1) {
         single && single.remove()
         multiple.setAttribute('data-transfer-receiver', 'product-schema-org')
@@ -11689,8 +11689,7 @@ checkbox1.setAttribute('hidden', "");
             'Content-Type': 'application/json',
           },
         }).then(e => e.json())
-        const site = pathItemPath.split('/')[0].toLowerCase()
-        const image = images.items.find(e => e.main) ||  images.items.find(e => e['main:'+site]) ||  images.items.find(e => e['main:global']) 
+        const image = images.items.find(e => e.main) || images.items.find(e => e['main:' + site]) || images.items.find(e => e['main:global'])
         const uuid = image.sk.replace('pics', '').split('.')[0]
         console.log('uuid:' + uuid)
         const croped = await fetch(`${backend_url}?id=sku:${pathItemSku}&sk=crop:&startsWith=true`, {
@@ -11791,8 +11790,8 @@ checkbox1.setAttribute('hidden', "");
             'Content-Type': 'application/json',
           },
         }).then(e => e.json())
-        const image = images.items.find(e => e.main) ||  images.items.find(e => e['main:'+site]) ||  images.items.find(e => e['main:global']) 
-        
+        const image = images.items.find(e => e.main) || images.items.find(e => e['main:' + site]) || images.items.find(e => e['main:global'])
+
         const uuid = image.sk.replace('pics', '').split('.')[0]
         console.log('uuid:' + uuid)
         const croped = await fetch(`${backend_url}?id=sku:${pathItemSku}&sk=crop:&startsWith=true`, {
@@ -17323,12 +17322,12 @@ elementsToRemove.forEach(element => element.remove());
 
                     // Get positions of element1 and element2
                     const pos1 = getPositionInDOM(clonerAttributes[i]);
-                    const pos2 =clonerAttributes[i+1] ? getPositionInDOM(clonerAttributes[i+1]) : undefined;
+                    const pos2 = clonerAttributes[i + 1] ? getPositionInDOM(clonerAttributes[i + 1]) : undefined;
 
                     // Filter elements that are after element1 and before element2
                     const filteredElements = Array.from(elements).filter(element => {
                       const pos = getPositionInDOM(element);
-                      return pos >= pos1 &&(!pos2 || pos < pos2);
+                      return pos >= pos1 && (!pos2 || pos < pos2);
                     });
 
                     filteredElements.forEach(element => {
