@@ -5912,6 +5912,17 @@
       const totalReviews = [...reviews, ...fakeReviews]
       if(!totalReviews.length){
         querySelectorAll1('.product_reviews_list')[0].setAttribute('hidden','')
+        querySelectorAll1('[data-transfer-sender="product-schema-org.aggregateRating.ratingValue"]').forEach(e=>
+          {
+            e.removeAttribute('data-transfer-sender')
+          }
+        )
+         querySelectorAll1('[data-transfer-sender="product-schema-org.aggregateRating.reviewCount"]').forEach(e=>
+          {
+            e.removeAttribute('data-transfer-sender')
+          }
+        )
+        querySelectorAll1('[load_more_reviews]').forEach(e=>e.setAttribute('hidden',''))
         return
       }
       totalReviews.sort((a, b) => new Date(b.dbstimestamp) - new Date(a.dbstimestamp));
