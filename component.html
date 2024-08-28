@@ -11444,29 +11444,8 @@ checkbox1.setAttribute('hidden', "");
         let list
         console.log('name ' + name)
         const site = pathItemPath.split('/')[0].toLowerCase()
-        const leadPUrl = `${backend_url}?id=${pathItemCollection}&sk=data_leadP:${site}&startsWith=true`
-        console.log('getting2 ' + leadPUrl)
-        const leadP = await fetch(leadPUrl, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }).then(e => e.json()).then(({ items }) => items[0]?.value)
+        //console.log('getting1 ' + leadPUrl)
 
-
-        const headingUrl = `${backend_url}?id=${pathItemCollection}&sk=data_heading:${site}&startsWith=true`
-        console.log('getting2 ' + headingUrl)
-        const heading = await fetch(headingUrl, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }).then(e => e.json()).then(({ items }) => items[0]?.value)
-        const h = section.querySelector('.collection_products_heading')
-        h && (h.textContent = heading)
-        const l = section.querySelector('.collection_products_lead_paragraph')
-        
-        l && (l.textContent = leadP)
         if (name === 'related_products') {
           list = await fetch(`${backend_url}?id=sku:${pathItemSku}&sk=relatedProducts&startsWith=true`, {
             method: 'GET',
@@ -11474,6 +11453,28 @@ checkbox1.setAttribute('hidden', "");
               'Content-Type': 'application/json',
             },
           }).then(e => e.json()).then(({ items }) => items[0]?.list)
+          const leadPUrl = `${backend_url}?id=${pathItemCollection}&sk=data_leadP:${site}&startsWith=true`
+
+          const leadP = await fetch(leadPUrl, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json()).then(({ items }) => items[0]?.value)
+
+
+          const headingUrl = `${backend_url}?id=${pathItemCollection}&sk=data_heading:${site}&startsWith=true`
+          console.log('getting1 ' + headingUrl)
+          const heading = await fetch(headingUrl, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json()).then(({ items }) => items[0]?.value)
+          const h = section.querySelector('.collection_products_heading')
+          h && (h.textContent = heading)
+          const l = section.querySelector('.collection_products_lead_paragraph')
+          l && (l.textContent = leadP)
         }
         else if (name === 'attached_collection') {
           const d = await fetch(`${backend_url}?id=${pathItemCollection}&sk=selected&startsWith=true`, {
@@ -11485,6 +11486,28 @@ checkbox1.setAttribute('hidden', "");
           const items = d.items[0].items
           console.log('for name2' + JSON.stringify(items))
           list = items.filter(e => e)
+          const leadPUrl = `${backend_url}?id=${pathItemCollection}&sk=data_leadP:${site}&startsWith=true`
+
+          const leadP = await fetch(leadPUrl, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json()).then(({ items }) => items[0]?.value)
+
+
+          const headingUrl = `${backend_url}?id=${pathItemCollection}&sk=data_heading:${site}&startsWith=true`
+          console.log('getting1 ' + headingUrl)
+          const heading = await fetch(headingUrl, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json()).then(({ items }) => items[0]?.value)
+          const h = section.querySelector('.collection_products_heading')
+          h && (h.textContent = heading)
+          const l = section.querySelector('.collection_products_lead_paragraph')
+          l && (l.textContent = leadP)
 
         }
 
@@ -11511,6 +11534,28 @@ checkbox1.setAttribute('hidden', "");
           const items = d.items[0].items
           console.log('for name2' + JSON.stringify(items))
           list = items
+          const leadPUrl = `${backend_url}?id=${colId}&sk=data_leadP:${site}&startsWith=true`
+
+          const leadP = await fetch(leadPUrl, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json()).then(({ items }) => items[0]?.value)
+
+
+          const headingUrl = `${backend_url}?id=${colId}&sk=data_heading:${site}&startsWith=true`
+          console.log('getting1 ' + headingUrl)
+          const heading = await fetch(headingUrl, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json()).then(({ items }) => items[0]?.value)
+          const h = section.querySelector('.collection_products_heading')
+          h && (h.textContent = heading)
+          const l = section.querySelector('.collection_products_lead_paragraph')
+          l && (l.textContent = leadP)
 
         }
 
@@ -17278,7 +17323,7 @@ elementsToRemove.forEach(element => element.remove());
               // Iterate through each set of cloned elements
               clonerAttributes.forEach((clonerAttribute, i) => {
                 if (typeof json[key][0] === 'string') {
-                  console.log('adding '+ clonerAttribute.innerText + ` for [data-transfer-cloner="${sender}.${currentPath}"]:not([data-b-value=""]`)
+                  console.log('adding ' + clonerAttribute.innerText + ` for [data-transfer-cloner="${sender}.${currentPath}"]:not([data-b-value=""]`)
                   if (clonerAttribute.hasAttribute('data-transfer-sender')) {
                     arrayOfObjects.push(clonerAttribute.innerText);
                   }
