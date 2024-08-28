@@ -4828,7 +4828,8 @@
           'Content-Type': 'application/json',
         },
       }).then(e => e.json()).then(({ items }) => items)
-      const pitems = await fetch(`${backend_url}?id=sku:${sku}&sk=site_price:&startsWith=true`, {
+      const site = pathItemPath.split('/')[0].toLowerCase()
+      const pitems = await fetch(`${backend_url}?id=sku:${sku}&sk=site_price:${site}&startsWith=true`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
