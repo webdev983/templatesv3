@@ -12002,7 +12002,8 @@ checkbox1.setAttribute('hidden', "");
           has.description = hasDescription
           const priceItem = skuSiteValue.find(e => e.sk.endsWith(sp.join(';') + ';'))
           has.offers.price = parseFloat(priceItem.price)
-          for (const image of images.items.filter(e => e.main)) {
+          const main = images.items.filter(e => e['main:'+site])
+          for (const image of main) {
             let match = 1
             if (!image.gallery_variables_sku_variables) {
               found = image
