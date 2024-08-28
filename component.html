@@ -2589,7 +2589,7 @@
       <details id="collection-menu" hidden style="margin-bottom: 7px;">
         <summary class="summary-L-3"><span class="l-2"></span><span class="l-3 b-dark-blue">📦 product collection</span>
         </summary>
-<!--
+        <!--
         <form style="padding: 10px; margin-left:25px;">
           <label class="l-4"><input type="radio" checked="" id="product-collection-selection"
               name="collection-selection">
@@ -2781,9 +2781,10 @@
 
 
       <details id="article-collection-menu" hidden style="margin-bottom: 7px;">
-        <summary class="summary-L-3"><span class="l-2"></span><span class="l-3 b-dark-blue"> ✍🏽 Article collections</span>
+        <summary class="summary-L-3"><span class="l-2"></span><span class="l-3 b-dark-blue"> ✍🏽 Article
+            collections</span>
         </summary>
-<!--
+        <!--
         <form style="padding: 10px; margin-left:25px;">
           <label class="l-4"><input type="radio" checked="" id="product-collection-selection"
               name="collection-selection">
@@ -20879,9 +20880,9 @@ headers: {
           const attach = getElementById1('attach-to-page').checked
           if ((collection.id === pathItemCollection && flag)) {
 
-            attachCollection(collection, true, collectionName?.value)
+            attachArticleCollection(collection, true, collectionName?.value)
           } else if (!flag) {
-            attach && attachCollection(collection, true, collectionName?.value)
+            attach && attachArticleCollection(collection, true, collectionName?.value)
           }
           //generateConditionTable(v,condSk)
         }
@@ -21144,7 +21145,7 @@ headers: {
         body: JSON.stringify(item),
       });
     }
-    const attachCollection = (collection, flag, name) => {
+    const attachArticleCollection = (collection, flag, name) => {
       console.log('attaching' + JSON.stringify(collection))
       const d = getElementById1('article-collection-menu')
       d.querySelector('#collection-attached').removeAttribute('hidden')
@@ -21155,6 +21156,40 @@ headers: {
 
       cV.classList.add('collection-attached')
       const wrapper = d.querySelector('#attached-collection-wrapper')
+      wrapper.removeAttribute('hidden')
+      const el = getElementById1(collection.id)
+      el.querySelector('#product-group-input').classList.add('collection-attached')
+
+      if (pathItemPath.split('/').includes('Stock')) {
+        pathItem.collection = collection.id
+
+        postToDb(pathItem)
+      }
+      else {
+        headContentItem.collection = collection.id
+        postToDb(headContentItem)
+      }
+      const checkbox = getElementById1('attach-to-page')
+      checkbox.checked = false
+      checkbox.disabled = true
+      const addDate = (new Date()).getTime()
+      postToDb({
+        id: collection.id,
+        sk: 'addedSite:' + pathItemPath.split('/')[0].toLowerCase(),
+        value: getElementById1('published-site-label').getAttribute('href'),
+        addDate
+      })
+    }
+    const attachCollection = (collection, flag, name) => {
+      console.log('attaching' + JSON.stringify(collection))
+      getElementById1('collection-attached').removeAttribute('hidden')
+      const cV = getElementById1('collection-value')
+      cV.setAttribute('collection', collection.id)
+
+      cV.textContent = name
+
+      cV.classList.add('collection-attached')
+      const wrapper = getElementById1('attached-collection-wrapper')
       wrapper.removeAttribute('hidden')
       const el = getElementById1(collection.id)
       el.querySelector('#product-group-input').classList.add('collection-attached')
