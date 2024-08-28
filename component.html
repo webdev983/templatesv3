@@ -11621,6 +11621,25 @@ checkbox1.setAttribute('hidden', "");
 
 
     }
+    var generateArticleCollection = async () => {
+      const cols = querySelectorAll1('[data-builder-article-collection]')
+      for (const col1 of cols) {
+        const [coltype, col] = col1.getAttribute('data-builder-article-collection').split(':')
+        const collName = col
+        if (col && coltype && coltype !== 'related_products') {
+          mains = {
+            id: 'article-collections',
+            sk: coltype,
+          }
+          await postToDb(mains)
+        }
+
+      }
+
+
+
+
+    }
     var generateRelated = async () => {
       console.log('generating ')
       const sections = querySelectorAll1('[data-builder-collection]')
@@ -11719,7 +11738,7 @@ checkbox1.setAttribute('hidden', "");
               'Content-Type': 'application/json',
             },
           }).then(e => e.json())
-          console.log('colId '+colId)
+          console.log('colId ' + colId)
           console.log('fx ' + JSON.stringify(d))
           const items = d.items[0].items
           console.log('for name2' + JSON.stringify(items))
@@ -11753,13 +11772,13 @@ checkbox1.setAttribute('hidden', "");
           }).then(e => e.json()).then(({ items }) => items[0]?.value)
           console.log(anchor)
           const a = section.querySelector('.anchor_collection_products')
-          if(anchor && a){
+          if (anchor && a) {
             const wAnchor = anchor.startsWith('https://') ? anchor : 'https://' + anchor
-            console.log('setting anchor1'+ wAnchor)
-            console.log('setting to  '+ +a.id + ' '+wAnchor)
-            section.querySelectorAll('.anchor_collection_products').forEach(e=>e.setAttribute('href', wAnchor))
+            console.log('setting anchor1' + wAnchor)
+            console.log('setting to  ' + +a.id + ' ' + wAnchor)
+            section.querySelectorAll('.anchor_collection_products').forEach(e => e.setAttribute('href', wAnchor))
           }
-         
+
           const h = section.querySelector('.collection_products_heading')
           h && (h.textContent = heading)
           const l = section.querySelector('.collection_products_lead_paragraph')
@@ -12483,8 +12502,8 @@ checkbox1.setAttribute('hidden', "");
       //todo
       if (pathItem.hub_items?.menus?.article_collection_menu_toggle) {
         document.getElementById('article-collection-menu').removeAttribute('hidden')
-        //await generateCollection()
-        //showCollection()
+        await generateArticleCollection()
+        showArticleCollection()
       }
 
 
@@ -20672,14 +20691,218 @@ headers: {
         }
       })
     }
+    const showArticleCollection = async () => {
+
+      //load skus
+      url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=sku:${ownerid}`;
+      const { items } = await fetch(url).then(e => e.json())
+      console.log('items are ' + JSON.stringify(items))
+      const d = getElementById1('article-collection-menu')
+      const original = d.querySelector('#sku-collection-item')
+      const table = d.querySelector('#sku-collection-table')
+      url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=article-collections&startsWith=true`;
+      const res = await fetch(url).then(e => e.json())
+      const types = res.items.map(e => e.sk)
+
+      for (const item of items) {
+        const cloned = original.cloneNode(true)
+        const sku = item.id.replace('sku:', '')
+        cloned.querySelector('#sku-name').textContent = sku
+        cloned.removeAttribute('hidden')
+        cloned.setAttribute('sku', sku)
+        const original1 = cloned.querySelector('#related_product_sku[hidden]')
+
+
+
+        cloned.querySelector('#add_cancel').onclick = (e) => {
+          e.target.setAttribute('hidden', '')
+          cloned.querySelector('#add_related_product').removeAttribute('hidden')
+          table.querySelectorAll('#sku-collection-item[sku]').forEach(e => {
+
+            const label = e.querySelector('#select_related_product')
+            label.setAttribute('hidden', '')
+            label.querySelector('input').checked = false
+            cloned.querySelectorAll('#related_product_sku:not([hidden])').forEach(e => e.remove());
+            e.querySelector('#add_related_product').removeAttribute('hidden')
+          })
+        }
+        cloned.querySelector('#add_related_product').onclick = async () => {
+          const cancel = cloned.querySelector('#add_cancel')
+          cloned.querySelector('#add_related_product').setAttribute('hidden', '')
+          cancel.removeAttribute('hidden')
+          url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=relatedProducts&startsWith=true`;
+          const res = await fetch(url).then(e => e.json())
+
+          if (res.items[0]) {
+            for (const item1 of res.items[0].list) {
+              const cloned2 = original1.cloneNode(true)
+              cloned2.removeAttribute('hidden')
+              //original1.parentNode.append(cloned2)
+              insertAfter(cloned2, original1)
+              cloned2.querySelector('#related_product_sku_name').textContent = item1
+              cloned2.setAttribute('sku', item1)
+              cloned2.querySelector('button').onclick = async (e) => {
+                url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=relatedProducts&startsWith=true`;
+                const { items } = await fetch(url).then(e => e.json())
+                const item = items[0]
+                item.list = item.list.filter(e => e !== item1)
+                await postToDb(item)
+
+                cloned2.remove()
+              }
+            }
+          }
+
+          table.querySelectorAll('#sku-collection-item[sku]').forEach(e => {
+            const fSku = e.getAttribute('sku')
+            console.log(fSku)
+            if (fSku !== sku) {
+              const label = e.querySelector('#select_related_product')
+              label.removeAttribute('hidden')
+              if (res.items[0]?.list.includes(fSku)) {
+                label.querySelector('input').checked = true
+              }
+              else {
+                label.querySelector('input').checked = false
+              }
+              label.querySelector('input').onclick = async (e) => {
+                if (e.target.checked) {
+                  const cloned2 = original1.cloneNode(true)
+                  cloned2.removeAttribute('hidden')
+                  original1.parentNode.append(cloned2)
+                  cloned2.querySelector('#related_product_sku_name').textContent = fSku
+                  cloned2.setAttribute('sku', fSku)
+                  cloned2.querySelector('button').onclick = async (e) => {
+                    url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=relatedProducts&startsWith=true`;
+                    const { items } = await fetch(url).then(e => e.json())
+                    const item = items[0]
+                    item.list = item.list.filter(e => e !== fSku)
+                    await postToDb(item)
+
+                    cloned2.remove()
+                  }
+                  url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=relatedProducts&startsWith=true`;
+                  const { items } = await fetch(url).then(e => e.json())
+                  let list
+                  if (items.length) {
+                    list = items[0]
+                    list.list.push(fSku)
+                  }
+                  else {
+                    list = {
+                      id: 'sku:' + sku,
+                      sk: 'relatedProducts',
+                      list: [fSku]
+                    }
+                  }
+                  postToDb(list)
+                }
+              }
+              e.querySelector('#add_related_product').setAttribute('hidden', '')
+            }
+          })
+        }
+        table.append(cloned)
+      }
+      //load collections
+      const filled = getElementById1('product-group-table')
+      const tr = filled.querySelector('#product-group-row[hidden]')
+
+      const selected = tr.querySelector('.select-collection-type')
+      for (const type of types) {
+        const el = document.createElement('option')
+        el.id = type
+        el.textContent = type
+        el.value = type
+        selected.append(el)
+      }
+      const collections1 = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=collection:${ownerid}`)
+        .then(response => response.json()).then(res => res.items)
+      const collections = await Promise.all(collections1.map(collection =>
+        fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=${collection.sk}&startsWith=true`)
+          .then(response => response.json()).then(res => res.items[0])
+      ))
+      for (const collection of collections) {
+        const cloned = tr.cloneNode(true)
+        cloned.removeAttribute('hidden')
+        const collectionName = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=collectionName&startsWith=true`)
+          .then(response => response.json()).then(res => res.items[0])
+        cloned.querySelector('#product-group-input').textContent = collectionName?.value || 'catalogue'
+        //cloned.querySelector('#multi-input').checked = collection.multi || false
+        const lead = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=data_leadP:global&startsWith=true`)
+          .then(response => response.json()).then(res => res.items[0])
+        const heading = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=data_heading:global&startsWith=true`)
+          .then(response => response.json()).then(res => res.items[0])
+        cloned.querySelector('#heading-value').value = heading?.value || ''
+        cloned.querySelector('#lead-p-value').value = lead?.value || ''
+        if (collection.id) {
+          url1 = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=collectionType&startsWith=true`;
+          const res = await fetch(url1).then(e => e.json())
+          if (res.items) {
+            const type = res.items[0]?.lsi1
+            const select = cloned.querySelector('.select-collection-type')
+            if (select && type) {
+              // Loop through the options to find the one that matches the type
+              for (let option of select.options) {
+                if (option.value === type) {
+                  option.selected = true;
+                  break;
+                }
+              }
+            }
+          }
+        }
+        tr.parentNode.append(cloned)
+        cloned.setAttribute('sk', collection.sk)
+        cloned.setAttribute('id', collection.id)
+
+
+        const enableButton = cloned.querySelector('#enable-product-group')
+        const enabled = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collection.id}&sk=enabled&startsWith=true`)
+          .then(response => response.json()).then(res => res.items[0])
+        const enableG = (e, flag) => {
+          if (enableButton.textContent === '🟢') {
+            fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${collection.id.replace(':', '~')}:enabled`, {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+                // Add any additional headers if needed
+              },
+            })
+            enableButton.textContent = '🔴'
+            return
+          }
+          enableButton.textContent = '🟢'
+          postToDb({ id: collection.id, sk: 'enabled' })
+          generateCollectionColumn(collection.id, collectionName?.value || 'catalogue')
+          console.log('flaaag' + flag)
+          const attach = getElementById1('attach-to-page').checked
+          if ((collection.id === pathItemCollection && flag)) {
+
+            attachCollection(collection, true, collectionName?.value)
+          } else if (!flag) {
+            attach && attachCollection(collection, true, collectionName?.value)
+          }
+          //generateConditionTable(v,condSk)
+        }
+
+        if (enabled) {
+          enableG(undefined, true)
+        }
+        enableButton.onclick = enableG
+
+      }
+    }
+
     const showCollection = async () => {
 
       //load skus
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=sku:${ownerid}`;
       const { items } = await fetch(url).then(e => e.json())
       console.log('items are ' + JSON.stringify(items))
-      const original = getElementById1('sku-collection-item')
-      const table = getElementById1('sku-collection-table')
+      const d = getElementById1('collection-menu')
+      const original = d.querySelector('#sku-collection-item')
+      const table = d.querySelector('#sku-collection-table')
       url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=collections&startsWith=true`;
       const res = await fetch(url).then(e => e.json())
       const types = res.items.map(e => e.sk)
