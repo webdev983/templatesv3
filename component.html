@@ -2587,7 +2587,12 @@
         </div>
       </details>
       <details id="collection-menu" hidden style="margin-bottom: 7px;">
+<<<<<<< HEAD
         <summary class="summary-L-3"><span class="l-2"></span><span class="l-3 b-dark-blue">📦 product collection</span>
+=======
+        <summary class="summary-L-3"><span class="l-2">✨</span><span class="l-3 b-dark-blue">📦 product
+            collection</span>
+>>>>>>> 520cb00d (!)
         </summary>
 <!--
         <form style="padding: 10px; margin-left:25px;">
@@ -2874,7 +2879,7 @@
           <summary class="summary-L-3" style="margin-top: 5px; "><span class="l-3">➕ select group</span><span>
           </summary>
 
-          <button class="b-4" onclick="addCollection(event)">add</button>
+          <button class="b-4" onclick="addArticleCollection(event)">add</button>
           <label class="l-3"><input id="attach-to-page" type="checkbox">attach to page</label>
 
           <table id="product-group-table" class="table-1" style="margin-left: 30px; margin-top: 10px;">
@@ -2884,7 +2889,7 @@
                   <span class="l-3 enable-condition" id="enable-product-group">🔴</span>
                 </td>
                 <td>
-                  <span class="l-3 condition-name" onblur="setCollectionValue(event)" id="product-group-input"
+                  <span class="l-3 condition-name" onblur="setArticleCollectionValue(event)" id="product-group-input"
                     contenteditable>catalog</span>
                 </td>
                 <td>
@@ -21195,6 +21200,51 @@ headers: {
       postToDb(pathItem)
       postToDb(headContentItem)
     }
+    const addArticleCollection = async (event, value) => {
+
+      const filled = getElementById1('product-group-table')
+      const tr = filled.querySelector('#product-group-row[hidden]')
+
+      const cloned = tr.cloneNode(true)
+      cloned.removeAttribute('hidden')
+      tr.parentNode.append(cloned)
+      const item = {
+        id: 'collection:' + generateUUID(),
+        sk: 'created:' + (new Date()).getTime().toString(),
+        ownerUUID: 'collection:' + ownerid,
+        value: value || 'collection'
+      }
+      cloned.setAttribute('sk', item.sk)
+      const enableButton = cloned.querySelector('#enable-product-group')
+      enableButton.onclick = (e) => {
+        //e.target.textContent = '🟢'
+        const attach = getElementById1('attach-to-page').checked
+        if (enableButton.textContent === '🟢') {
+          fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2/${item.id.replace(':', '~')}:enabled`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              // Add any additional headers if needed
+            },
+          })
+          enableButton.textContent = '🔴'
+          return
+        }
+        enableButton.textContent = '🟢'
+        postToDb({ id: item.id, sk: 'enabled' })
+        generateCollectionColumn(item.id, cloned.querySelector('#product-group-input').textContent || 'catalogue')
+        attach && attachCollection(item, false, cloned.querySelector('#product-group-input').textContent)
+        //generateConditionTable(v,condSk)
+      }
+      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(item),
+      });
+    }
+
     const addCollection = async (event, value) => {
 
       const filled = getElementById1('product-group-table')
