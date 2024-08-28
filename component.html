@@ -21146,14 +21146,15 @@ headers: {
     }
     const attachCollection = (collection, flag, name) => {
       console.log('attaching' + JSON.stringify(collection))
-      getElementById1('collection-attached').removeAttribute('hidden')
-      const cV = getElementById1('collection-value')
-      cV.setAttribute('collection', collection.id)
+      const d = getElementById1('article-collection-menu')
+      d.querySelector('#collection-attached').removeAttribute('hidden')
+      const cV = d.querySelector('#collection-value')
+      cV.setAttribute('article-collection', collection.id)
 
       cV.textContent = name
 
       cV.classList.add('collection-attached')
-      const wrapper = getElementById1('attached-collection-wrapper')
+      const wrapper = d.querySelector('#attached-collection-wrapper')
       wrapper.removeAttribute('hidden')
       const el = getElementById1(collection.id)
       el.querySelector('#product-group-input').classList.add('collection-attached')
@@ -21204,10 +21205,10 @@ headers: {
       cloned.removeAttribute('hidden')
       tr.parentNode.append(cloned)
       const item = {
-        id: 'collection:' + generateUUID(),
+        id: 'article-collection:' + generateUUID(),
         sk: 'created:' + (new Date()).getTime().toString(),
-        ownerUUID: 'collection:' + ownerid,
-        value: value || 'collection'
+        ownerUUID: 'article-collection:' + ownerid,
+        value: value || 'article-collection'
       }
       cloned.setAttribute('sk', item.sk)
       const enableButton = cloned.querySelector('#enable-product-group')
@@ -21228,7 +21229,7 @@ headers: {
         enableButton.textContent = '🟢'
         postToDb({ id: item.id, sk: 'enabled' })
         generateCollectionColumn(item.id, cloned.querySelector('#product-group-input').textContent || 'catalogue')
-        attach && attachCollection(item, false, cloned.querySelector('#product-group-input').textContent)
+        attach && attachArticleCollection(item, false, cloned.querySelector('#product-group-input').textContent)
         //generateConditionTable(v,condSk)
       }
       await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
