@@ -11958,16 +11958,16 @@ checkbox1.setAttribute('hidden', "");
         multiV[0].name = name
         multiV[0].productGroupID = pathItemSku
         multiV[0].description = description
-        const images = await fetch(`${backend_url}?id=${headContentItem}&sk=pics&startsWith=true`, {
+        const images = await fetch(`${backend_url}?id=sku:${pathItemSku}&sk=pics&startsWith=true`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
           },
         }).then(e => e.json())
         const image = images.items.find(e => e.main) || images.items.find(e => e['main:' + site]) || images.items.find(e => e['main:global'])
-        const uuid = image.sk.replace('pics', '').split('.')[0]
+        const uuid = image?.sk.replace('pics', '').split('.')[0]
         console.log('uuid:' + uuid)
-        const croped = await fetch(`${backend_url}?id=sku:${pathItemSku}&sk=crop:&startsWith=true`, {
+        const croped = await fetch(`${backend_url}?id=${headContentItem.id}&sk=crop:&startsWith=true`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
