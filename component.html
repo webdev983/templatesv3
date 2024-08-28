@@ -11555,17 +11555,19 @@ checkbox1.setAttribute('hidden', "");
           }).then(e => e.json()).then(({ items }) => items[0]?.value)
 
           const anchorUrl = `${backend_url}?id=${colId}&sk=addedSite:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`
-          console.log('getting ' + anchorUrl)
+          console.log('getting3 ' + anchorUrl)
           const anchor = await fetch(anchorUrl, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
             },
           }).then(e => e.json()).then(({ items }) => items[0]?.value)
+          console.log(anchor)
           const a = section.querySelector('.anchor_collection_products')
-          if(anchor){
+          if(anchor && a){
             const wAnchor = anchor.startsWith('https://') ? anchor : 'https://' + anchor
-          a && (a.setAttribute('href', wAnchor))
+            console.log('setting anchor1'+ anchor)
+            a.setAttribute('href', wAnchor)
           }
          
           const h = section.querySelector('.collection_products_heading')
