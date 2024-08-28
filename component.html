@@ -11958,7 +11958,7 @@ checkbox1.setAttribute('hidden', "");
         multiV[0].name = name
         multiV[0].productGroupID = pathItemSku
         multiV[0].description = description
-        const images = await fetch(`${backend_url}?id=sku:${pathItemSku}&sk=pics&startsWith=true`, {
+        const images = await fetch(`${backend_url}?id=${headContentItem}&sk=pics&startsWith=true`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -11974,7 +11974,7 @@ checkbox1.setAttribute('hidden', "");
           },
         }).then(e => e.json())
         console.log(JSON.stringify(croped))
-        const src = croped.items.find(z => z.sk.endsWith(uuid))?.list[0].split(' ')[0]
+        const src = croped.items[0][uuid].split(' ')[0]
         multiV[0].image = src
         const hasVariantItem = { ...multiV[0].hasVariant[0] }
         multiV[0].hasVariant = []
@@ -12034,14 +12034,14 @@ checkbox1.setAttribute('hidden', "");
           }
           const uuid = found?.sk.replace('pics', '').split('.')[0] || image.sk.replace('pics', '').split('.')[0]
           console.log('uuid:' + uuid)
-          const croped = await fetch(`${backend_url}?id=sku:${pathItemSku}&sk=crop:&startsWith=true`, {
+          const croped = await fetch(`${backend_url}?id=${headContentItem.id}&sk=crop:&startsWith=true`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
             },
           }).then(e => e.json())
           console.log(JSON.stringify(croped))
-          const src = croped.items.find(z => z.sk.endsWith(uuid))?.list[0].split(' ')[0]
+          const src = croped.items[0][uuid].split(' ')[0]
           has.image = src || multiV[0].image
           multiV[0].hasVariant.push(has)
 
@@ -12077,7 +12077,7 @@ checkbox1.setAttribute('hidden', "");
           },
         }).then(e => e.json())
         console.log(JSON.stringify(croped))
-        const src = croped.items.find(z => z.sk.endsWith(uuid))?.list[0].split(' ')[0]
+        const src = croped.items[0][uuid].split(' ')[0]
         singleV.image = src
         single.innerHTML = JSON.stringify(singleV)
 
