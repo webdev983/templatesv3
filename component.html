@@ -11445,7 +11445,7 @@ checkbox1.setAttribute('hidden', "");
         console.log('name ' + name)
         const site = pathItemPath.split('/')[0].toLowerCase()
         const leadPUrl = `${backend_url}?id=${pathItemCollection}&sk=data_leadP:${site}&startsWith=true`
-        console.log('getting1 ' + leadPUrl)
+        console.log('getting2 ' + leadPUrl)
         const leadP = await fetch(leadPUrl, {
           method: 'GET',
           headers: {
@@ -11455,7 +11455,7 @@ checkbox1.setAttribute('hidden', "");
 
 
         const headingUrl = `${backend_url}?id=${pathItemCollection}&sk=data_heading:${site}&startsWith=true`
-        console.log('getting1 ' + headingUrl)
+        console.log('getting2 ' + headingUrl)
         const heading = await fetch(headingUrl, {
           method: 'GET',
           headers: {
@@ -11465,6 +11465,7 @@ checkbox1.setAttribute('hidden', "");
         const h = section.querySelector('.collection_products_heading')
         h && (h.textContent = heading)
         const l = section.querySelector('.collection_products_lead_paragraph')
+        
         l && (l.textContent = leadP)
         if (name === 'related_products') {
           list = await fetch(`${backend_url}?id=sku:${pathItemSku}&sk=relatedProducts&startsWith=true`, {
