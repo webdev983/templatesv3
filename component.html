@@ -11563,8 +11563,11 @@ checkbox1.setAttribute('hidden', "");
             },
           }).then(e => e.json()).then(({ items }) => items[0]?.value)
           const a = section.querySelector('.anchor_collection_products')
-          const wAnchor = anchor.startsWith('https://') ? anchor : 'https://' + anchor
+          if(anchor){
+            const wAnchor = anchor.startsWith('https://') ? anchor : 'https://' + anchor
           a && (a.setAttribute('href', wAnchor))
+          }
+         
           const h = section.querySelector('.collection_products_heading')
           h && (h.textContent = heading)
           const l = section.querySelector('.collection_products_lead_paragraph')
