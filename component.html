@@ -20696,7 +20696,7 @@ headers: {
     const showArticleCollection = async () => {
 
       //load skus
-      url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=sku:${ownerid}`;
+      url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?ownerUUID=article:${ownerid}`;
       const { items } = await fetch(url).then(e => e.json())
       console.log('items are ' + JSON.stringify(items))
       const d = getElementById1('article-collection-menu')
@@ -20708,7 +20708,7 @@ headers: {
 
       for (const item of items) {
         const cloned = original.cloneNode(true)
-        const sku = item.id.replace('sku:', '')
+        const sku = item.id.replace('article:', '')
         cloned.querySelector('#sku-name').textContent = sku
         cloned.removeAttribute('hidden')
         cloned.setAttribute('sku', sku)
@@ -20732,7 +20732,7 @@ headers: {
           const cancel = cloned.querySelector('#add_cancel')
           cloned.querySelector('#add_related_product').setAttribute('hidden', '')
           cancel.removeAttribute('hidden')
-          url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=relatedProducts&startsWith=true`;
+          url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=article:${sku}&sk=relatedProducts&startsWith=true`;
           const res = await fetch(url).then(e => e.json())
 
           if (res.items[0]) {
@@ -20744,7 +20744,7 @@ headers: {
               cloned2.querySelector('#related_product_sku_name').textContent = item1
               cloned2.setAttribute('sku', item1)
               cloned2.querySelector('button').onclick = async (e) => {
-                url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=relatedProducts&startsWith=true`;
+                url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=article:${sku}&sk=relatedProducts&startsWith=true`;
                 const { items } = await fetch(url).then(e => e.json())
                 const item = items[0]
                 item.list = item.list.filter(e => e !== item1)
@@ -20775,7 +20775,7 @@ headers: {
                   cloned2.querySelector('#related_product_sku_name').textContent = fSku
                   cloned2.setAttribute('sku', fSku)
                   cloned2.querySelector('button').onclick = async (e) => {
-                    url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=relatedProducts&startsWith=true`;
+                    url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=article:${sku}&sk=relatedProducts&startsWith=true`;
                     const { items } = await fetch(url).then(e => e.json())
                     const item = items[0]
                     item.list = item.list.filter(e => e !== fSku)
@@ -20783,7 +20783,7 @@ headers: {
 
                     cloned2.remove()
                   }
-                  url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=sku:${sku}&sk=relatedProducts&startsWith=true`;
+                  url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=article:${sku}&sk=relatedProducts&startsWith=true`;
                   const { items } = await fetch(url).then(e => e.json())
                   let list
                   if (items.length) {
@@ -20792,7 +20792,7 @@ headers: {
                   }
                   else {
                     list = {
-                      id: 'sku:' + sku,
+                      id: 'article:' + sku,
                       sk: 'relatedProducts',
                       list: [fSku]
                     }
