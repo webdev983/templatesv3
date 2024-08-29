@@ -21162,12 +21162,12 @@ headers: {
       el.querySelector('#product-group-input').classList.add('collection-attached')
 
       if (pathItemPath.split('/').includes('Stock')) {
-        pathItem.collection = collection.id
+        pathItem.article_collection = collection.id
 
         postToDb(pathItem)
       }
       else {
-        headContentItem.collection = collection.id
+        headContentItem.article_collection = collection.id
         postToDb(headContentItem)
       }
       const checkbox = getElementById1('attach-to-page')
@@ -21269,13 +21269,7 @@ headers: {
         attach && attachArticleCollection(item, false, cloned.querySelector('#product-group-input').textContent)
         //generateConditionTable(v,condSk)
       }
-      await fetch('https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(item),
-      });
+      postToDb(item)
     }
 
     const addCollection = async (event, value) => {
