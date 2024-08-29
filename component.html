@@ -11688,8 +11688,38 @@ checkbox1.setAttribute('hidden', "");
           const l = section.querySelector('.collection_products_lead_paragraph')
           l && (l.textContent = leadP)
         }
+        else if (name === 'related_articles_collection') {
+          list = await fetch(`${backend_url}?id=article:${pathItemArticle}&sk=relatedArticles&startsWith=true`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json()).then(({ items }) => items[0]?.list)
+          const leadPUrl = `${backend_url}?id=${pathItemArticleCollection}&sk=data_leadP:${site}&startsWith=true`
+
+          const leadP = await fetch(leadPUrl, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json()).then(({ items }) => items[0]?.value)
+
+
+          const headingUrl = `${backend_url}?id=${pathItemArticleCollection}&sk=data_heading:${site}&startsWith=true`
+          console.log('getting1 ' + headingUrl)
+          const heading = await fetch(headingUrl, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(e => e.json()).then(({ items }) => items[0]?.value)
+          const h = section.querySelector('.collection_products_heading')
+          h && (h.textContent = heading)
+          const l = section.querySelector('.collection_products_lead_paragraph')
+          l && (l.textContent = leadP)
+        }
         else if (name === 'attached_collection') {
-          const d = await fetch(`${backend_url}?id=${pathItemCollection}&sk=selected&startsWith=true`, {
+          const d = await fetch(`${backend_url}?id=${pathItemCollection || pathItemArticleCollection}&sk=selected&startsWith=true`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -20741,7 +20771,7 @@ headers: {
           const cancel = cloned.querySelector('#add_cancel')
           cloned.querySelector('#add_related_product').setAttribute('hidden', '')
           cancel.removeAttribute('hidden')
-          url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=article:${sku}&sk=relatedProducts&startsWith=true`;
+          url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=article:${sku}&sk=relatedArticles&startsWith=true`;
           const res = await fetch(url).then(e => e.json())
 
           if (res.items[0]) {
@@ -20753,7 +20783,7 @@ headers: {
               cloned2.querySelector('#related_product_sku_name').textContent = item1
               cloned2.setAttribute('sku', item1)
               cloned2.querySelector('button').onclick = async (e) => {
-                url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=article:${sku}&sk=relatedProducts&startsWith=true`;
+                url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=article:${sku}&sk=relatedArticles&startsWith=true`;
                 const { items } = await fetch(url).then(e => e.json())
                 const item = items[0]
                 item.list = item.list.filter(e => e !== item1)
@@ -20784,7 +20814,7 @@ headers: {
                   cloned2.querySelector('#related_product_sku_name').textContent = fSku
                   cloned2.setAttribute('sku', fSku)
                   cloned2.querySelector('button').onclick = async (e) => {
-                    url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=article:${sku}&sk=relatedProducts&startsWith=true`;
+                    url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=article:${sku}&sk=relatedArticles&startsWith=true`;
                     const { items } = await fetch(url).then(e => e.json())
                     const item = items[0]
                     item.list = item.list.filter(e => e !== fSku)
@@ -20792,7 +20822,7 @@ headers: {
 
                     cloned2.remove()
                   }
-                  url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=article:${sku}&sk=relatedProducts&startsWith=true`;
+                  url = `https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=article:${sku}&sk=relatedArticles&startsWith=true`;
                   const { items } = await fetch(url).then(e => e.json())
                   let list
                   if (items.length) {
@@ -20802,7 +20832,7 @@ headers: {
                   else {
                     list = {
                       id: 'article:' + sku,
-                      sk: 'relatedProducts',
+                      sk: 'relatedArticles',
                       list: [fSku]
                     }
                   }
