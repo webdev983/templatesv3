@@ -11849,8 +11849,8 @@ checkbox1.setAttribute('hidden', "");
             if (max > 1) {
               cloned = originalCart.cloneNode(true)
             }
-
-            const anchorUrl = `${backend_url}?id=sku:${element}&sk=addedSite:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`
+            const id1 = art ? `sku:${element}` :`article:${element}`
+            const anchorUrl = `${backend_url}?id=${id1}&sk=addedSite:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`
             console.log('getting ' + anchorUrl)
             const anchor = await fetch(anchorUrl, {
               method: 'GET',
@@ -11863,14 +11863,14 @@ checkbox1.setAttribute('hidden', "");
               continue
             }
             const st = pathItemPath.split('/')[0].toLowerCase()
-            const novar = await fetch(`${backend_url}?id=sku:${element}&sk=data_heading-without-vars-sku:${st}&startsWith=true`, {
+            const novar = await fetch(`${backend_url}?id=${id1}&sk=data_heading-without-vars-sku:${st}&startsWith=true`, {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
               },
             }).then(e => e.json()).then(({ items }) => items[0]?.value)
 
-            const prices = await fetch(`${backend_url}?id=sku:${element}&sk=site_price:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`, {
+            const prices = await fetch(`${backend_url}?id=${id1}&sk=site_price:${pathItemPath.split('/')[0].toLowerCase()}&startsWith=true`, {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
