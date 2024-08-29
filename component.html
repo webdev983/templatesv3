@@ -11652,13 +11652,16 @@ checkbox1.setAttribute('hidden', "");
         const [name, number] = section.getAttribute('data-builder-collection').split(':')
         let originalCart = section.querySelector('.catalog_product')
         const ar = section.querySelector('.catalog_article') 
+        if(art){
+          originalCart = art
+        }
 
         //get related products
         let list
         console.log('name ' + name)
         const site = pathItemPath.split('/')[0].toLowerCase()
         //console.log('getting1 ' + leadPUrl)
-
+        
         if (name === 'related_products') {
           list = await fetch(`${backend_url}?id=sku:${pathItemSku}&sk=relatedProducts&startsWith=true`, {
             method: 'GET',
@@ -11837,7 +11840,7 @@ checkbox1.setAttribute('hidden', "");
           for (let i = 0; i < max; i++) {
             console.log('in')
             const element = list[i]
-            const id1 = 
+             
             if (!element) {
 
               break;
