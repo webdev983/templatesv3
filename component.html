@@ -12035,7 +12035,7 @@ checkbox1.setAttribute('hidden', "");
           has.description = hasDescription
           const priceItem = skuSiteValue.find(e => e.sk.endsWith(sp.join(';') + ';'))
           has.offers.price = parseFloat(priceItem.price)
-          const main = images.items.filter(e => e['main:'+site])
+          const main = images.items.filter(e => e['main:' + site])
           for (const image of main) {
             let match = 1
             if (!image.gallery_variables_sku_variables) {
@@ -20689,6 +20689,50 @@ headers: {
       }
 
     }
+    const generateArticleCollectionColumn = async (collectionId, collectionName) => {
+      const d = getElementById1('article-collection-menu')
+      const collection = d.querySelector('#sku-collection-table')
+      const header = collection.querySelector('#checkbox-header[hidden]')
+      const cloned = header.cloneNode(true)
+      header.parentNode.insertBefore(cloned, header)
+      cloned.setAttribute('collectionId', collectionId)
+      cloned.removeAttribute('hidden')
+      cloned.querySelector('#span-3').textContent = collectionName
+      let selected = await fetch(`https://5jfh1fonoh.execute-api.us-east-1.amazonaws.com/prod/templatesv2?id=${collectionId}&sk=selected&startsWith=true`)
+        .then(response => response.json()).then(res => res.items[0])
+
+      if (!selected) {
+        selected = {
+          id: collectionId,
+          sk: 'selected',
+          items: []
+        }
+      }
+
+      collection.querySelectorAll('#checkbox-td[hidden]').forEach(element => {
+
+        const cloned = element.cloneNode(true)
+
+        element.parentNode.insertBefore(cloned, element)
+        cloned.removeAttribute('hidden')
+        cloned.setAttribute('collectionId', collectionId)
+        const tr = cloned.closest('tr')
+        const sku = tr.getAttribute('sku')
+        const input = cloned.querySelector('input')
+        if (selected.items.includes(sku)) {
+          input.checked = true
+        }
+        input.onclick = (e) => {
+          if (e.target.checked) {
+            selected.items.push(sku)
+          }
+          else {
+            selected.items = selected.items.filter(e => e !== sku)
+          }
+          postToDb(selected)
+        }
+      })
+    }
     const generateCollectionColumn = async (collectionId, collectionName) => {
       const collection = document.getElementById('sku-collection-table')
       const header = collection.querySelector('#checkbox-header[hidden]')
@@ -20915,7 +20959,7 @@ headers: {
           }
           enableButton.textContent = '🟢'
           postToDb({ id: collection.id, sk: 'enabled' })
-          generateCollectionColumn(collection.id, collectionName?.value || 'catalogue')
+          generateArticleCollectionColumn(collection.id, collectionName?.value || 'catalogue')
           console.log('flaaag' + flag)
           const attach = d.querySelector('#attach-to-page').checked
           if ((collection.id === pathItemArticleCollection && flag)) {
@@ -21305,7 +21349,7 @@ headers: {
         }
         enableButton.textContent = '🟢'
         postToDb({ id: item.id, sk: 'enabled' })
-        generateCollectionColumn(item.id, cloned.querySelector('#product-group-input').textContent || 'catalogue')
+        generateArticleCollectionColumn(item.id, cloned.querySelector('#product-group-input').textContent || 'catalogue')
         attach && attachArticleCollection(item, false, cloned.querySelector('#product-group-input').textContent)
         //generateConditionTable(v,condSk)
       }
