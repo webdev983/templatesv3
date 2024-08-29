@@ -11723,7 +11723,7 @@ checkbox1.setAttribute('hidden', "");
           l && (l.textContent = leadP)
         }
         else if (name === 'attached_collection') {
-          const d = await fetch(`${backend_url}?id=${pathItemCollection || pathItemArticleCollection}&sk=selected&startsWith=true`, {
+          const d = await fetch(`${backend_url}?id=${art ? pathItemArticleCollection :pathItemCollection}&sk=selected&startsWith=true`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -11732,7 +11732,7 @@ checkbox1.setAttribute('hidden', "");
           const items = d.items[0].items
           console.log('for name2' + JSON.stringify(items))
           list = items.filter(e => e)
-          const leadPUrl = `${backend_url}?id=${pathItemCollection}&sk=data_leadP:${site}&startsWith=true`
+          const leadPUrl = `${backend_url}?id=${art ? pathItemArticleCollection :pathItemCollection}&sk=data_leadP:${site}&startsWith=true`
 
           const leadP = await fetch(leadPUrl, {
             method: 'GET',
@@ -11742,7 +11742,7 @@ checkbox1.setAttribute('hidden', "");
           }).then(e => e.json()).then(({ items }) => items[0]?.value)
 
 
-          const headingUrl = `${backend_url}?id=${pathItemCollection}&sk=data_heading:${site}&startsWith=true`
+          const headingUrl = `${backend_url}?id=${art ? pathItemArticleCollection :pathItemCollection}&sk=data_heading:${site}&startsWith=true`
           console.log('getting1 ' + headingUrl)
           const heading = await fetch(headingUrl, {
             method: 'GET',
